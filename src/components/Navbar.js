@@ -160,7 +160,7 @@ export default (props) => {
                   <FontAwesomeIcon
                     icon={faSignOutAlt}
                     className="text-danger me-2"
-                  />{" "}
+                  />
                   Logout
                 </Dropdown.Item>
               </Dropdown.Menu>

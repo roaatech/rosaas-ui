@@ -1,7 +1,9 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { changePreloader } from "../store/slices/style";
+import { logOut } from "../store/slices/auth";
+import { changePreloader } from "../store/slices/main";
+import { addUserInfo } from "../store/slices/auth";
 
 const useApi = () => {
   let axiosObject = {
@@ -38,6 +40,13 @@ const useApi = () => {
       dispatch(changePreloader(false));
       res.headers.get("token") &&
         localStorage.setItem("token", res.headers.get("token"));
+      const roles = ["superAdmin"];
+      dispatch(
+        addUserInfo({
+          email: res.data.userAccount.email,
+          role: roles[res.data.userAccount.userType],
+        })
+      );
       return res;
     },
     async (err) => {
@@ -45,12 +54,10 @@ const useApi = () => {
       if (err.response) {
         //when the Access Token is expired
         if (err.response.metadata.errors[0].sysCode === 401) {
-          localStorage.removeItem("token");
-          // if the refresh token expired clear the local storage and navigate to login
           toast.error(err.response.metadata.errors[0].message, {
             position: toast.POSITION.TOP_CENTER,
           });
-          //     dispatch(removeAuth());
+          dispatch(logOut());
           return Promise.reject(err);
         } else {
           err.response.metadata.errors.map((element) => {

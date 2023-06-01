@@ -53,7 +53,7 @@ export default (props = {}) => {
             className="d-flex justify-content-between align-items-center">
             <span>
               <span className="sidebar-icon">
-                <FontAwesomeIcon icon={icon} />{" "}
+                <FontAwesomeIcon icon={icon} />
               </span>
               <span className="sidebar-text">{title}</span>
             </span>

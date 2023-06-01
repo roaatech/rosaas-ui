@@ -8,8 +8,9 @@ import { Button } from "@themesberg/react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { InputText } from "primereact/inputtext";
 import * as Yup from "yup";
-
+import useRequest from "../../../axios/apis/useRequest.js";
 const Login = () => {
+  const { signIn } = useRequest();
   const initialValues = {
     email: "",
     password: "",
@@ -20,11 +21,8 @@ const Login = () => {
     password: Yup.string().required("Password is required"),
   });
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    setTimeout(() => {
-      alert(JSON.stringify(values, null, 2));
-      setSubmitting(false);
-    }, 400);
+  const handleSubmit = async (values, { setSubmitting }) => {
+    const loginPass = await signIn(values);
   };
 
   return (
