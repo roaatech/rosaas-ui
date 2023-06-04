@@ -27,12 +27,18 @@ import Tabs from "./pages/components/Tabs";
 import Tooltips from "./pages/components/Tooltips";
 import Toasts from "./pages/components/Toasts";
 import NotFoundPage from "./pages/examples/NotFound";
+import Tenant from "./pages/Tenant";
 
 export const Routes = {
   // pages
   DashboardOverview: {
     path: "/dashboard",
     component: DashboardOverview,
+    roles: ["superAdmin"],
+  },
+  Tenant: {
+    path: "/tenant",
+    component: Tenant,
     roles: ["superAdmin"],
   },
   Transactions: {

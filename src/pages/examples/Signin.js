@@ -11,7 +11,9 @@ import Login from "../../components/custom/login/Login";
 export default () => {
   return (
     <main>
-      <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
+      <section
+        className="d-flex align-items-center"
+        style={{ minHeight: "100vh" }}>
         <Container>
           <Row
             className="justify-content-center form-bg-image"

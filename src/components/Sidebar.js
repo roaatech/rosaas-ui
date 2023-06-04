@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faUserTie,
   faBook,
   faBoxOpen,
   faChartPie,
@@ -170,6 +171,11 @@ export default (props = {}) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
+              <NavItem
+                title="Tenant"
+                link={Routes.Tenant.path}
+                icon={faUserTie}
+              />
               <NavItem
                 title="Overview"
                 link={Routes.DashboardOverview.path}
