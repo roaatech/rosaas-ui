@@ -6,8 +6,16 @@ import { BsSearch } from "react-icons/bs";
 import { Dialog } from "primereact/dialog";
 
 let x = 0;
-const TableHead = ({ label, icon, setSearchValue, children }) => {
-  const [visible, setVisible] = useState(false);
+const TableHead = ({
+  label,
+  icon,
+  setSearchValue,
+  children,
+  setFirst,
+  visibleHead,
+  setVisibleHead,
+}) => {
+  // const [] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const changeValue = (e) => {
     setInputValue(e.target.value);
@@ -17,7 +25,7 @@ const TableHead = ({ label, icon, setSearchValue, children }) => {
     setTimeout(() => {
       if (x === y) {
         setSearchValue(oldText);
-        console.log(oldText);
+        setFirst(0);
       }
     }, 1000);
   };
@@ -28,7 +36,7 @@ const TableHead = ({ label, icon, setSearchValue, children }) => {
           size="small"
           label={label}
           icon={` pi ${icon}`}
-          onClick={() => setVisible(true)}
+          onClick={() => setVisibleHead(true)}
         />
       </div>
 
@@ -41,10 +49,11 @@ const TableHead = ({ label, icon, setSearchValue, children }) => {
         />
       </div>
       <Dialog
+        headerClassName="pb-0"
         header={"Create Tenant"}
-        visible={visible}
+        visible={visibleHead}
         style={{ width: "30vw", minWidth: "300px" }}
-        onHide={() => setVisible(false)}>
+        onHide={() => setVisibleHead(false)}>
         {children}
       </Dialog>
     </Wrapper>

@@ -7,7 +7,7 @@ import { addUserInfo } from "../store/slices/auth";
 
 const useApi = () => {
   let axiosObject = {
-    baseURL: "https://localhost:44359/api/",
+    baseURL: "https://dev.rosas.roaa.tech/api/",
   };
 
   const mainInstance = axios.create(axiosObject);
@@ -17,14 +17,16 @@ const useApi = () => {
   mainInstance.interceptors.request.use(
     function (config) {
       dispatch(changePreloader(true));
-      const noAuthRoutes = ["dentity/admin/v1/Account/Signin"];
-      config.headers["Client-Id"] = "SPA.Rosas.Admin.Panel.Client";
+      const noAuthRoutes = ["identity/management/v1/Auth/Signin"];
       //* add auth
+      console.log({ ddd: config.url });
       if (!noAuthRoutes.includes(config.url)) {
         const localStorageToken = localStorage.getItem("token");
         config.headers.Authorization = localStorageToken
           ? `Bearer ${localStorageToken}`
           : "";
+      } else {
+        config.headers["Client-Id"] = "SPA.Rosas.Admin.Panel.Client";
       }
       //* end auth
       return config;
@@ -38,29 +40,32 @@ const useApi = () => {
   mainInstance.interceptors.response.use(
     async (res) => {
       dispatch(changePreloader(false));
-      res.headers.get("token") &&
-        localStorage.setItem("token", res.headers.get("token"));
-      const roles = ["superAdmin"];
-      dispatch(
-        addUserInfo({
-          email: res.data.userAccount.email,
-          role: roles[res.data.userAccount.userType],
-        })
-      );
+      res.data?.data?.token?.accessToken &&
+        localStorage.setItem("token", res.data?.data?.token?.accessToken);
+      const roles = ["", "superAdmin"];
+      console.log(res.data, "oooooooo");
+      if (res.data?.data?.userAccount?.email) {
+        dispatch(
+          addUserInfo({
+            email: res.data?.data?.userAccount?.email,
+            role: roles[res.data?.data?.userAccount?.userType],
+          })
+        );
+      }
       return res;
     },
     async (err) => {
       dispatch(changePreloader(false));
-      if (err.response) {
+      if (err?.response?.data?.metadata) {
         //when the Access Token is expired
-        if (err.response.metadata.errors[0].sysCode === 401) {
-          toast.error(err.response.metadata.errors[0].message, {
+        if (err?.response?.data?.metadata.errors[0].sysCode === "2001") {
+          toast.error(err.response.data.metadata.errors[0].message, {
             position: toast.POSITION.TOP_CENTER,
           });
           dispatch(logOut());
           return Promise.reject(err);
         } else {
-          err.response.metadata.errors.map((element) => {
+          err.response.data.metadata.errors.map((element) => {
             toast.error(element.message, {
               position: toast.POSITION.TOP_CENTER,
             });

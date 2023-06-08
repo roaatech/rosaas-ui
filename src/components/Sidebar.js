@@ -31,14 +31,18 @@ import {
 import { Link } from "react-router-dom";
 import { Routes } from "../routes";
 import ThemesbergLogo from "../assets/img/themesberg.svg";
-import ReactHero from "../assets/img/technologies/react-hero-logo.svg";
-import ProfilePicture from "../assets/img/team/profile-picture-3.jpg";
+import logo from "../assets/img/brand/roaa-tech.png";
+import ProfilePicture from "../assets/img/team/profile-picture-1.png";
+import { logOut } from "../store/slices/auth";
+import { useDispatch, useSelector } from "react-redux";
 
 export default (props = {}) => {
   const location = useLocation();
   const { pathname } = location;
   const [show, setShow] = useState(false);
   const showClass = show ? "show" : "";
+  const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.auth.userInfo);
 
   const onCollapse = () => setShow(!show);
 
@@ -130,7 +134,7 @@ export default (props = {}) => {
           className="me-lg-5"
           as={Link}
           to={Routes.DashboardOverview.path}>
-          <Image src={ReactHero} className="navbar-brand-light" />
+          <Image src={logo} className="navbar-brand-light" />
         </Navbar.Brand>
         <Navbar.Toggle
           as={Button}
@@ -152,12 +156,13 @@ export default (props = {}) => {
                   />
                 </div>
                 <div className="d-block">
-                  <h6>Hi, Jane</h6>
+                  <h6>Hi, {userInfo.email}</h6>
                   <Button
                     as={Link}
                     variant="secondary"
                     size="xs"
-                    to={Routes.Signin.path}
+                    // to={Routes.Signin.path}
+                    onClick={() => dispatch(logOut())}
                     className="text-dark">
                     <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />{" "}
                     Sign Out
@@ -171,17 +176,23 @@ export default (props = {}) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
+              <img
+                src={logo}
+                alt="logo"
+                className="my-3"
+                style={{ maxWidth: "200px" }}
+              />
+              <NavItem
+                title="Dashboard"
+                link={Routes.DashboardOverview.path}
+                icon={faChartPie}
+              />
               <NavItem
                 title="Tenant"
                 link={Routes.Tenant.path}
                 icon={faUserTie}
               />
-              <NavItem
-                title="Overview"
-                link={Routes.DashboardOverview.path}
-                icon={faChartPie}
-              />
-              <NavItem
+              {/* <NavItem
                 external
                 title="Messages"
                 link="https://demo.themesberg.com/volt-pro-react/#/messages"
@@ -301,7 +312,7 @@ export default (props = {}) => {
                 className="upgrade-to-pro">
                 <FontAwesomeIcon icon={faRocket} className="me-1" /> Upgrade to
                 Pro
-              </Button>
+              </Button> */}
             </Nav>
           </div>
         </SimpleBar>

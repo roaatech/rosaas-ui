@@ -4,6 +4,18 @@
 // consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
 
 // Color system
+$dark: #262b40;
+$default: #262b40;
+$primary: #262b40;
+$ct-series-colors: (
+  #1b998b,
+  #17a5ce,
+  #262b40,
+  #f5b759,
+  #c96480,
+  #ffffff,
+  #17a5ce
+);
 
 // Shades of grey
 $white: #ffffff;
@@ -16,7 +28,6 @@ $gray-600: #93a5be;
 $gray-700: #66799e;
 $gray-800: #506690;
 $gray-900: #4a5073;
-$dark: #262b40;
 $black: #2e3650;
 
 // fusv-disable
@@ -68,23 +79,12 @@ $colors: (
 // scss-docs-end colors-map
 
 // Color scheme
-$default: #262b40;
-$primary: #262b40;
 $secondary: #61dafb;
 $tertiary: #1b998b;
 $quaternary: #c96480;
 
 // Series names and colors. This can be extended or customized as desired. Just add more series and colors.
 $ct-series-names: (a, b, c, d, e, f, g) !default;
-$ct-series-colors: (
-  #1b998b,
-  #17a5ce,
-  #262b40,
-  #f5b759,
-  #c96480,
-  #ffffff,
-  #17a5ce
-);
 
 // Mobile landing color scheme
 $primary-app: #ebf4f6;

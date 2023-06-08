@@ -7,7 +7,14 @@ import * as Yup from "yup";
 import useRequest from "../../../../axios/apis/useRequest.js";
 import { Product_id } from "../../../../const/index.js";
 
-const TenantForm = ({ type, tenantData }) => {
+const TenantForm = ({
+  type,
+  tenantData,
+  update,
+  setUpdate,
+  setVisibleHead,
+  setVisible,
+}) => {
   const { createTenantRequest, editTenantRequest } = useRequest();
 
   const initialValues = {
@@ -19,9 +26,9 @@ const TenantForm = ({ type, tenantData }) => {
     title: Yup.string().max(100, "Must be maximum 100 digits"),
     uniqueName: Yup.string()
       .max(100, "Must be maximum 100 digits")
-      .required("UniqueName is required")
+      .required("Unique Name is required")
       .matches(
-        /^[\w]+$/,
+        /^[a-zA-Z0-9_-]+$/,
         "English Characters, numbers, and underscores are only accepted."
       ),
   });
@@ -32,7 +39,7 @@ const TenantForm = ({ type, tenantData }) => {
       const createTenant = await createTenantRequest({
         title: values.title,
         uniqueName: values.uniqueName,
-        ProductsIds: [Product_id],
+        productsIds: [Product_id],
       });
     } else {
       const editTenant = await editTenantRequest({
@@ -41,6 +48,9 @@ const TenantForm = ({ type, tenantData }) => {
         id: tenantData.id,
       });
     }
+    setVisible && setVisible(false);
+    setVisibleHead && setVisibleHead(false);
+    setUpdate(update + 1);
   };
 
   return (
@@ -50,14 +60,17 @@ const TenantForm = ({ type, tenantData }) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}>
         {({ isSubmitting }) => (
-          <Form className="mt-4">
+          <Form className="pt-4">
             <div>
-              <label htmlFor="title" className="pb-2">
+              {/* <label htmlFor="title" className="pb-2">
                 Title:
-              </label>
-              <div className="inputContainer mb-3">
+              </label> */}
+              <div className="inputContainer mb-4">
                 <div className="inputContainerWithIcon">
-                  <Field type="text" id="title" name="title" as={InputText} />
+                  <span className="p-float-label">
+                    <Field type="text" id="title" name="title" as={InputText} />
+                    <label htmlFor="title">Title:</label>
+                  </span>
                 </div>
                 <ErrorMessage
                   name="title"
@@ -67,17 +80,22 @@ const TenantForm = ({ type, tenantData }) => {
               </div>
             </div>
             <div>
-              <label htmlFor="uniqueName" className="pb-2">
+              {/* <label htmlFor="uniqueName" className="pb-2">
                 Unique Name:
-              </label>
+              </label> */}
               <div className="inputContainer mb-3">
                 <div className="inputContainerWithIcon">
-                  <Field
-                    type="text"
-                    id="uniqueName"
-                    name="uniqueName"
-                    as={InputText}
-                  />
+                  <span className="p-float-label">
+                    <Field
+                      type="text"
+                      id="uniqueName"
+                      name="uniqueName"
+                      as={InputText}
+                    />
+                    <label htmlFor="uniqueName">
+                      Unique Name:<span style={{ color: "red" }}>*</span>
+                    </label>
+                  </span>
                 </div>
                 <ErrorMessage
                   name="uniqueName"

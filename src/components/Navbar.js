@@ -23,12 +23,20 @@ import {
 } from "@themesberg/react-bootstrap";
 
 import NOTIFICATIONS_DATA from "../data/notifications";
-import Profile3 from "../assets/img/team/profile-picture-3.jpg";
+import Profile3 from "../assets/img/team/profile-picture.png";
+import Profile1 from "../assets/img/team/profile-picture-1.png";
 import useGlobal from "../lib/hocks/global";
 import { useSelector } from "react-redux";
+import { logOut } from "../store/slices/auth";
+import { useDispatch } from "react-redux";
+import { changeMode } from "../store/slices/main";
 export default (props) => {
+  const dispatch = useDispatch();
   const { changeDirection } = useGlobal();
   const direction = useSelector((state) => state.main.direction);
+  const userInfo = useSelector((state) => state.auth.userInfo);
+  const darkMode = useSelector((state) => state.main.darkMode);
+
   const xDirection = direction === "rtl" ? "ltr" : "rtl";
   const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
   const areNotificationsRead = notifications.reduce(
@@ -92,12 +100,12 @@ export default (props) => {
               <Dropdown.Toggle
                 as={Nav.Link}
                 className="text-dark icon-notifications me-lg-3">
-                <span className="icon icon-sm">
+                {/* <span className="icon icon-sm">
                   <FontAwesomeIcon icon={faBell} className="bell-shake" />
                   {areNotificationsRead ? null : (
                     <span className="icon-badge rounded-circle unread-notifications" />
                   )}
-                </span>
+                </span> */}
               </Dropdown.Toggle>
               <Dropdown.Menu className="dashboard-dropdown notifications-dropdown dropdown-menu-lg dropdown-menu-center mt-2 py-0">
                 <ListGroup className="list-group-flush">
@@ -122,18 +130,18 @@ export default (props) => {
               <Dropdown.Toggle as={Nav.Link} className="pt-1 px-0">
                 <div className="media d-flex align-items-center">
                   <Image
-                    src={Profile3}
+                    src={darkMode ? Profile1 : Profile3}
                     className="user-avatar md-avatar rounded-circle"
                   />
                   <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
                     <span className="mb-0 font-small fw-bold">
-                      Bonnie Green
+                      {userInfo.email}
                     </span>
                   </div>
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
-                <Dropdown.Item className="fw-bold">
+                {/* <Dropdown.Item className="fw-bold">
                   <FontAwesomeIcon icon={faUserCircle} className="me-2" /> My
                   Profile
                 </Dropdown.Item>
@@ -146,17 +154,24 @@ export default (props) => {
                   <FontAwesomeIcon icon={faCog} className="me-2" /> Settings
                 </Dropdown.Item>
                 <Dropdown.Item className="fw-bold">
-                  <FontAwesomeIcon icon={faEnvelopeOpen} className="me-2" />{" "}
+                  <FontAwesomeIcon icon={faEnvelopeOpen} className="me-2" />
                   Messages
-                </Dropdown.Item>
-                <Dropdown.Item className="fw-bold">
-                  <FontAwesomeIcon icon={faUserShield} className="me-2" />{" "}
-                  Support
+                </Dropdown.Item>*/}
+                <Dropdown.Item
+                  className="fw-bold"
+                  onClick={() => {
+                    console.log(darkMode, "ddddd");
+                    dispatch(changeMode(!darkMode));
+                  }}>
+                  <FontAwesomeIcon icon={faUserShield} className="me-2" />
+                  {darkMode == false ? "Dark Mode" : "Light Mode"}
                 </Dropdown.Item>
 
-                <Dropdown.Divider />
+                {/* <Dropdown.Divider /> */}
 
-                <Dropdown.Item className="fw-bold">
+                <Dropdown.Item
+                  className="fw-bold"
+                  onClick={() => dispatch(logOut())}>
                   <FontAwesomeIcon
                     icon={faSignOutAlt}
                     className="text-danger me-2"

@@ -27,7 +27,8 @@ import Tabs from "./pages/components/Tabs";
 import Tooltips from "./pages/components/Tooltips";
 import Toasts from "./pages/components/Toasts";
 import NotFoundPage from "./pages/examples/NotFound";
-import Tenant from "./pages/Tenant";
+import Tenant from "./pages/Tenant/Tenant";
+import TenantDetails from "./pages/TenantDetails";
 
 export const Routes = {
   // pages
@@ -39,6 +40,11 @@ export const Routes = {
   Tenant: {
     path: "/tenant",
     component: Tenant,
+    roles: ["superAdmin"],
+  },
+  TenantDetails: {
+    path: "/tenantDetails/:id",
+    component: TenantDetails,
     roles: ["superAdmin"],
   },
   Transactions: {

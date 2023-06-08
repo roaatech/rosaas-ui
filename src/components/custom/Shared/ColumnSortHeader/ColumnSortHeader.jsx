@@ -9,6 +9,7 @@ const ColumnSortHeader = ({
   setSortField,
   setSortValue,
   field,
+  setFirst,
 }) => {
   const columnIcon = [<BsArrowsExpand />, <BsSortDown />, <BsSortUpAlt />];
   const [CurrentSort, setCurrentSort] = useState(0);
@@ -26,10 +27,10 @@ const ColumnSortHeader = ({
     return columnIcon[x];
   };
 
-  const toggleSearch = () => {
+  const toggleSort = () => {
     setHasAction(true);
     setSortField(field);
-
+    setFirst(0);
     if (CurrentSort !== 2) {
       setCurrentSort(2);
       setSortValue(2);
@@ -37,11 +38,12 @@ const ColumnSortHeader = ({
       setCurrentSort(1);
       setSortValue(1);
     }
+
     setRebase(rebase + 1);
   };
 
   return (
-    <Wrapper onClick={toggleSearch}>
+    <Wrapper onClick={toggleSort}>
       {text} {currentColumn(CurrentSort)}
     </Wrapper>
   );

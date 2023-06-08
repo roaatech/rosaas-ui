@@ -10,14 +10,15 @@ import Login from "../../components/custom/login/Login";
 
 export default () => {
   return (
-    <main>
+    <main
+      style={{
+        background: "linear-gradient(216deg,   rgb(81 81 81), rgb(4 4 4) )",
+      }}>
       <section
         className="d-flex align-items-center"
         style={{ minHeight: "100vh" }}>
         <Container>
-          <Row
-            className="justify-content-center form-bg-image"
-            style={{ backgroundImage: `url(${BgImage})` }}>
+          <Row className="justify-content-center form-bg-image">
             <Col
               xs={12}
               className="d-flex align-items-center justify-content-center">

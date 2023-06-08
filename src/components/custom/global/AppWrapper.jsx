@@ -7,13 +7,16 @@ import useGlobal from "../../../lib/hocks/global.js";
 import { useSelector, useDispatch } from "react-redux";
 import GlobalStyles from "./Wrapper.styled.jsx";
 import { ToastContainer } from "react-toastify";
-import Preloader from "../../Preloader";
+import Preloader from "../../../components/custom/global/Preloader/Preloader";
 import { changePreloader } from "../../../store/slices/main";
+import useRequest from "../../../axios/apis/useRequest";
 
 const AppWrapper = ({ children }) => {
+  const { userData } = useRequest();
   const dispatch = useDispatch();
   const { changeDirection } = useGlobal();
   let direction = useSelector((state) => state.main.direction);
+  let darkMode = useSelector((state) => state.main.darkMode);
   let loaded = useSelector((state) => state.main.preloader);
   useEffect(() => {
     (async () => {
@@ -23,14 +26,13 @@ const AppWrapper = ({ children }) => {
         changeDirection("rtl");
       }
 
-      const token = localStorage.getItem("token");
-      if (token) {
-        // send token to get userData then set it in the store
-      }
+      // const token = localStorage.getItem("token");
+      // if (token) {
+      //   await userData();
+      //   // send token to get userData then set it in the store
+      // }
 
-      setTimeout(() => {
-        dispatch(changePreloader(false));
-      }, 1000);
+      dispatch(changePreloader(false));
     })();
   }, []);
 
@@ -39,9 +41,7 @@ const AppWrapper = ({ children }) => {
     <>
       <Preloader show={loaded} />
       <ToastContainer />
-      <GlobalStyles direction={direction} key={direction} />
-      {console.log({ loaded })}
-
+      <GlobalStyles direction={direction} key={direction} darkMode={darkMode} />
       <IntlProvider
         locale={direction === "rtl" ? "ar" : "en"}
         messages={messages}>

@@ -3,12 +3,17 @@ import { createSlice } from "@reduxjs/toolkit";
 export const mainSlice = createSlice({
   name: "main",
   initialState: {
+    darkMode: false,
     direction: "ltr",
     preloader: true,
   },
   reducers: {
     directionFun: (state, action) => {
       state.direction = action.payload;
+    },
+    changeMode: (state, action) => {
+      console.log(action.payload, "ddddd");
+      state.darkMode = action.payload;
     },
     changePreloader: (state, action) => {
       console.log("object");
@@ -18,5 +23,5 @@ export const mainSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { directionFun, changePreloader } = mainSlice.actions;
+export const { directionFun, changePreloader, changeMode } = mainSlice.actions;
 export default mainSlice.reducer;

@@ -13,7 +13,9 @@ export const Wrapper = styled.div`
   .dateCont {
     position: absolute;
     background: white;
-    border: 1px solid var(--gray);
+    background: var(--themeBackground);
+    color: var(--themeColor);
+    border: 1px solid;
     padding: 0.5rem;
     border-radius: 10px;
     left: 50%;
