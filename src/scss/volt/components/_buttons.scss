@@ -53,7 +53,7 @@
 .copy-code-button {
   position: absolute;
   top: 22px;
-  #{$direction-reverse}: 20px;
+  #{$directionreverse}: 20px;
   background-color: transparent;
   color: $gray-600;
   border: 0;
@@ -70,5 +70,5 @@
 .copy-code-text {
   position: absolute;
   top: 24px;
-  #{$direction-reverse}: 90px;
+  #{$directionreverse}: 90px;
 }

@@ -7,7 +7,7 @@
     top: $value;
   }
   .right-#{$size} {
-    #{$direction-reverse}: $value;
+    #{$directionreverse}: $value;
   }
   .bottom-#{$size} {
     bottom: $value;

@@ -158,7 +158,7 @@
   display: inline-block;
   position: absolute;
   top: -11px;
-  #{$direction-reverse}: 6px;
+  #{$directionreverse}: 6px;
   height: 7px;
   width: 7px;
   background-color: $danger;
@@ -166,7 +166,7 @@
 
 .github-big-icon {
   position: absolute;
-  #{$direction-reverse}: 200px;
+  #{$directionreverse}: 200px;
   top: 165px;
 
   span {
@@ -185,13 +185,13 @@
   opacity: 0.05;
 
   @include media-breakpoint-up(lg) {
-    #{$direction-reverse}: -35%;
+    #{$directionreverse}: -35%;
     bottom: -30%;
     font-size: 800px;
   }
 
   @include media-breakpoint-up(xl) {
-    #{$direction-reverse}: -15%;
+    #{$directionreverse}: -15%;
     bottom: -35%;
     font-size: 800px;
   }

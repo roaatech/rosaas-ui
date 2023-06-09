@@ -139,7 +139,7 @@
     }
   }
   .badge {
-    margin-#{$direction-reverse}: 0.5rem;
+    margin-#{$directionreverse}: 0.5rem;
   }
   .modal-footer {
     .btn {
@@ -370,7 +370,7 @@
 .copy-docs {
   position: absolute;
   top: 5px;
-  #{$direction-reverse}: 5px;
+  #{$directionreverse}: 5px;
   transition: $transition-base;
   &.copied {
     background: $success;
@@ -398,7 +398,7 @@
 
 .index-icon-bootstrap {
   bottom: -150px;
-  #{$direction-reverse}: -7%;
+  #{$directionreverse}: -7%;
 }
 
 .index-icon-bootstrap:hover {
@@ -428,7 +428,7 @@
 }
 
 .index-icon-html5 {
-  #{$direction-reverse}: 30px;
+  #{$directionreverse}: 30px;
   bottom: 150px;
 }
 
@@ -437,7 +437,7 @@
 }
 
 .index-icon-css3 {
-  #{$direction-reverse}: 40px;
+  #{$directionreverse}: 40px;
   bottom: -20px;
 }
 
@@ -446,7 +446,7 @@
 }
 
 .index-icon-npm {
-  #{$direction-reverse}: 180px;
+  #{$directionreverse}: 180px;
   bottom: 20px;
 }
 
@@ -455,7 +455,7 @@
 }
 
 .index-icon-fontawesome {
-  #{$direction-reverse}: 340px;
+  #{$directionreverse}: 340px;
   bottom: -40px;
 }
 

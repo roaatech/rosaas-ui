@@ -90,13 +90,13 @@
 }
 
 .user-dropdown.dropdown-menu.show {
-  #{$direction-reverse}: 0 !important;
+  #{$directionreverse}: 0 !important;
   #{$direction}: auto !important;
 }
 
 @include media-breakpoint-down(lg) {
   .notifications-dropdown[style] {
     #{$direction}: auto !important;
-    #{$direction-reverse}: 0 !important;
+    #{$directionreverse}: 0 !important;
   }
 }

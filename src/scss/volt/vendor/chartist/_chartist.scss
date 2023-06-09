@@ -44,7 +44,7 @@
   @if ($ct-text-justify == "flex-start") {
     text-align: $direction;
   } @else if ($ct-text-justify == "flex-end") {
-    text-align: $direction-reverse;
+    text-align: $directionreverse;
   } @else {
     text-align: center;
   }

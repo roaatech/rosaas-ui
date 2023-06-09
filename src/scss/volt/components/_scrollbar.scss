@@ -24,7 +24,7 @@
   #{$direction}: 0;
   top: 0;
   bottom: 0;
-  #{$direction-reverse}: 0;
+  #{$directionreverse}: 0;
   width: auto !important;
   height: auto !important;
   z-index: 0;
@@ -38,7 +38,7 @@
   top: 0;
   #{$direction}: 0;
   bottom: 0;
-  #{$direction-reverse}: 0;
+  #{$directionreverse}: 0;
   padding: 0;
   margin: 0;
   -webkit-overflow-scrolling: touch;
@@ -113,7 +113,7 @@
 .simplebar-track {
   z-index: 1;
   position: absolute;
-  #{$direction-reverse}: 0;
+  #{$directionreverse}: 0;
   bottom: 0;
   pointer-events: none;
   overflow: hidden;
@@ -132,7 +132,7 @@
 .simplebar-scrollbar {
   position: absolute;
   #{$direction}: 0;
-  #{$direction-reverse}: 0;
+  #{$directionreverse}: 0;
   min-height: 10px;
 }
 
@@ -142,7 +142,7 @@
   background: black;
   border-radius: 7px;
   #{$direction}: 2px;
-  #{$direction-reverse}: 2px;
+  #{$directionreverse}: 2px;
   opacity: 0;
   transition: opacity 0.2s 0.5s linear;
 }
@@ -171,7 +171,7 @@
   top: 2px;
   bottom: 2px;
   #{$direction}: 2px;
-  #{$direction-reverse}: 2px;
+  #{$directionreverse}: 2px;
 }
 
 .simplebar-track.simplebar-horizontal {
@@ -180,7 +180,7 @@
 }
 
 .simplebar-track.simplebar-horizontal .simplebar-scrollbar {
-  #{$direction-reverse}: auto;
+  #{$directionreverse}: auto;
   #{$direction}: 0;
   top: 0;
   bottom: 0;
@@ -191,7 +191,7 @@
 
 /* Rtl support */
 [data-simplebar-left="rtl"] .simplebar-track.simplebar-vertical {
-  #{$direction-reverse}: auto;
+  #{$directionreverse}: auto;
   #{$direction}: 0;
 }
 

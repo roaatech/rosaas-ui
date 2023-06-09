@@ -43,8 +43,8 @@
         content: "";
         position: absolute;
         top: 50%;
-        #{$direction-reverse}: 0;
-        margin-#{$direction-reverse}: -5px;
+        #{$directionreverse}: 0;
+        margin-#{$directionreverse}: -5px;
         border: 8px solid $black;
         border-color: transparent #e0e6ec #e0e6ec transparent;
         -webkit-box-sizing: border-box;
@@ -111,11 +111,11 @@
 
       > div {
         text-align: center;
-        margin-#{$direction-reverse}: 1rem;
+        margin-#{$directionreverse}: 1rem;
         padding: 0.875rem;
 
         &:last-child {
-          margin-#{$direction-reverse}: 0;
+          margin-#{$directionreverse}: 0;
         }
 
         .heading {
@@ -193,7 +193,7 @@
     background: rgba($dark, 0.85);
     padding: 10px 0;
     border-bottom-#{$direction}-radius: $border-radius;
-    border-bottom-#{$direction-reverse}-radius: $border-radius;
+    border-bottom-#{$directionreverse}-radius: $border-radius;
     width: calc(100% + 28px);
     #{$direction}: -14px;
     opacity: 0;
@@ -235,12 +235,12 @@
 .theme-settings {
   z-index: 99;
   position: fixed;
-  #{$direction-reverse}: 15px;
+  #{$directionreverse}: 15px;
   bottom: 0;
 
   &,
   .card-body {
-    border-bottom-#{$direction-reverse}-radius: 0;
+    border-bottom-#{$directionreverse}-radius: 0;
     border-bottom-left-radius: 0;
   }
 }
@@ -248,12 +248,12 @@
 .theme-settings-close {
   position: absolute;
   top: 5px;
-  #{$direction-reverse}: 5px;
+  #{$directionreverse}: 5px;
   font-size: 0.65rem;
 }
 
 .theme-settings-expand {
-  #{$direction-reverse}: 15px;
+  #{$directionreverse}: 15px;
   bottom: 0;
 
   &:hover {

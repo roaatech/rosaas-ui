@@ -14,8 +14,8 @@
       padding-#{$direction}: 0;
     }
     &:not(:last-child) {
-      border-#{$direction-reverse}: 0;
-      padding-#{$direction-reverse}: 0;
+      border-#{$directionreverse}: 0;
+      padding-#{$directionreverse}: 0;
     }
     &:focus {
       box-shadow: none;
@@ -26,11 +26,11 @@
 .input-group-text {
   font-size: $font-size-sm;
   transition: $input-transition;
-  border-#{$direction-reverse}: 0;
+  border-#{$directionreverse}: 0;
 }
 
 .input-group-prepend {
-  margin-#{$direction-reverse}: -2px;
+  margin-#{$directionreverse}: -2px;
 }
 
 // .focus class is applied dinamycally from theme.js

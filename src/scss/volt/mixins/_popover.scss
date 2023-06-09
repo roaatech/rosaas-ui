@@ -19,7 +19,7 @@
   }
   &.bs-popover-right {
     .arrow::after {
-      border-#{$direction-reverse}-color: $background;
+      border-#{$directionreverse}-color: $background;
     }
   }
   &.bs-popover-bottom {

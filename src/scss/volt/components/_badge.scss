@@ -17,13 +17,13 @@
 
 // Variations
 .badge-pill {
-  padding-#{$direction-reverse}: $badge-pill-padding-x;
+  padding-#{$directionreverse}: $badge-pill-padding-x;
   padding-#{$direction}: $badge-pill-padding-x;
 }
 
 // Multiple inline badges
 .badge-inline {
-  margin-#{$direction-reverse}: 0.625rem;
+  margin-#{$directionreverse}: 0.625rem;
 
   & + span {
     top: 2px;
@@ -55,12 +55,12 @@
   .badge-corner {
     position: absolute;
     top: -50%;
-    #{$direction-reverse}: 0.5rem;
+    #{$directionreverse}: 0.5rem;
     transform: translate(50%, 50%);
     margin: 0;
     border: 3px solid;
     padding-#{$direction}: 0.5rem;
-    padding-#{$direction-reverse}: 0.5rem;
+    padding-#{$directionreverse}: 0.5rem;
   }
 }
 //Tags
@@ -81,7 +81,7 @@
   font-size: 1.25rem;
   text-transform: uppercase;
   font-weight: $font-weight-bold;
-  #{$direction-reverse}: -20px;
+  #{$directionreverse}: -20px;
   padding: 5px 14px;
   top: -46px;
   background: $white;
@@ -89,7 +89,7 @@
   box-shadow: $box-shadow-sm;
   @include media-breakpoint-down(sm) {
     font-size: $font-size-base;
-    #{$direction-reverse}: -13px;
+    #{$directionreverse}: -13px;
     padding: 5px 10px;
     top: -23px;
   }
@@ -97,6 +97,6 @@
 
 .subscription-badge {
   top: -19px;
-  #{$direction-reverse}: -12px;
+  #{$directionreverse}: -12px;
   font-size: 0.75rem;
 }

@@ -33,7 +33,7 @@
       }
 
       &:last-child a {
-        padding-#{$direction-reverse}: 0;
+        padding-#{$directionreverse}: 0;
       }
     }
 
@@ -41,7 +41,7 @@
       li {
         display: block;
         margin-#{$direction}: -5px;
-        margin-#{$direction-reverse}: -5px;
+        margin-#{$directionreverse}: -5px;
 
         a {
           padding: 5px;

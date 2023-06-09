@@ -11,11 +11,11 @@ const GlobalStyles = createGlobalStyle`
   ${require("primereact/resources/themes/lara-light-indigo/theme.css")}
   ${require("primereact/resources/primereact.min.css")}
   ${require("primeicons/primeicons.css")}
-  ${(props) => {
+  /* ${(props) => {
     props.direction == "rtl"
       ? require("../../../scss/voltrtl.scss")
       : require("../../../scss/voltltr.scss");
-  }}
+  }} */
 
 :root{
   --darkBackground:${darkBackground};

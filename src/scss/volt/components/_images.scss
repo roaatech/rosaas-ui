@@ -55,7 +55,7 @@
 .gallery-feed {
   img {
     width: 20%;
-    margin-#{$direction-reverse}: 0.5rem;
+    margin-#{$directionreverse}: 0.5rem;
     margin-bottom: 0.5rem;
     float: $direction;
   }
@@ -64,7 +64,7 @@
 .language-flag {
   width: auto;
   height: 1rem;
-  margin-#{$direction-reverse}: 0.4rem;
+  margin-#{$directionreverse}: 0.4rem;
   position: relative;
   top: -2px;
 }
@@ -72,7 +72,7 @@
 @include media-breakpoint-up(sm) {
   .effect-img-2 {
     position: absolute;
-    #{$direction-reverse}: 5rem;
+    #{$directionreverse}: 5rem;
     top: 19%;
     z-index: 2;
     margin: 0;
@@ -88,7 +88,7 @@
 
 @include media-breakpoint-down(md) {
   .effect-img-2 {
-    #{$direction-reverse}: 0.425rem;
+    #{$directionreverse}: 0.425rem;
     top: 0;
   }
 }

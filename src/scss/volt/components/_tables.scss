@@ -98,7 +98,7 @@
   td,
   th {
     border-#{$direction}: 0;
-    border-#{$direction-reverse}: 0;
+    border-#{$directionreverse}: 0;
   }
 
   tbody {
@@ -129,7 +129,7 @@
     td,
     th {
       padding-#{$direction}: $card-spacer-x;
-      padding-#{$direction-reverse}: $card-spacer-x;
+      padding-#{$directionreverse}: $card-spacer-x;
     }
   }
 }
@@ -176,7 +176,7 @@
   }
 
   .dataTables_paginate {
-    padding-#{$direction-reverse}: 1.5rem;
+    padding-#{$directionreverse}: 1.5rem;
   }
 
   .dataTables_length {
@@ -186,7 +186,7 @@
   }
 
   .dataTables_filter {
-    padding-#{$direction-reverse}: 1.5rem;
+    padding-#{$directionreverse}: 1.5rem;
   }
 }
 
@@ -338,7 +338,7 @@
   &[multiple],
   &[size]:not([size="1"]) {
     height: auto;
-    padding-#{$direction-reverse}: $form-select-padding-x;
+    padding-#{$directionreverse}: $form-select-padding-x;
     background-image: none;
   }
 

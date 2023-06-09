@@ -23,7 +23,7 @@
     .nav-link[data-toggle="collapse"] > .icon {
       transform: rotateZ(-90deg);
       position: relative;
-      #{$direction-reverse}: 0.25rem;
+      #{$directionreverse}: 0.25rem;
     }
 
     .nav {

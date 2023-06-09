@@ -107,7 +107,7 @@
       top: 0;
       #{$direction}: calc(100% - 2px);
       margin-#{$direction}: 0.1rem;
-      margin-#{$direction-reverse}: 0.1rem;
+      margin-#{$directionreverse}: 0.1rem;
       opacity: 0;
       display: none;
 
@@ -240,7 +240,7 @@
       }
 
       .dropdown-item {
-        padding-#{$direction-reverse}: 0;
+        padding-#{$directionreverse}: 0;
       }
 
       .dropdown:not(.mega-dropdown) {
@@ -280,18 +280,18 @@
     }
     .nav-link {
       i {
-        margin-#{$direction-reverse}: 0.3rem;
+        margin-#{$directionreverse}: 0.3rem;
         font-size: $font-size-xs;
       }
     }
 
     .nav-link-icon {
       padding-#{$direction}: 0.5rem;
-      padding-#{$direction-reverse}: 0.5rem;
+      padding-#{$directionreverse}: 0.5rem;
       font-size: 1rem;
 
       i {
-        margin-#{$direction-reverse}: 0;
+        margin-#{$directionreverse}: 0;
       }
     }
 
@@ -304,7 +304,7 @@
 
     .dropdown-menu-right {
       &:before {
-        #{$direction-reverse}: 20px;
+        #{$directionreverse}: 20px;
         #{$direction}: auto;
       }
     }
@@ -395,7 +395,7 @@
   }
 
   .dropdown-menu-center {
-    #{$direction-reverse}: 0;
+    #{$directionreverse}: 0;
     #{$direction}: auto;
     transform: translate(0, 0);
   }
@@ -404,7 +404,7 @@
     width: calc(100% - 30px);
     position: absolute;
     top: 0;
-    #{$direction-reverse}: 15px;
+    #{$directionreverse}: 15px;
     z-index: 1050;
     overflow-y: auto;
     // using !important to overwrite Bootstrap's inline styles
@@ -440,7 +440,7 @@
     }
 
     .collapse-close {
-      text-align: $direction-reverse;
+      text-align: $directionreverse;
     }
   }
 
@@ -465,7 +465,7 @@
 .icon-notifications {
   .unread-notifications {
     position: absolute;
-    #{$direction-reverse}: -5px;
+    #{$directionreverse}: -5px;
     top: -5px;
   }
 }
