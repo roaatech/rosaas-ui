@@ -1,6 +1,6 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
+// // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { Breadcrumb } from "@themesberg/react-bootstrap";
 
 import { PageTrafficTable, RankingTable } from "../../components/Tables";
@@ -14,7 +14,7 @@ export default () => {
             className="d-none d-md-inline-block"
             listProps={{ className: "breadcrumb-dark breadcrumb-transparent" }}>
             <Breadcrumb.Item>
-              <FontAwesomeIcon icon={faHome} />
+              {/* <FontAwesomeIcon icon={faHome} /> */}
             </Breadcrumb.Item>
             <Breadcrumb.Item>Tables</Breadcrumb.Item>
             <Breadcrumb.Item active>Bootstrap tables</Breadcrumb.Item>

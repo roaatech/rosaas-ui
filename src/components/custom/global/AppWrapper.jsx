@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import Preloader from "../../../components/custom/global/Preloader/Preloader";
 import { changePreloader } from "../../../store/slices/main";
 import useRequest from "../../../axios/apis/useRequest";
+// import "../../../../node_modules/primeflex/primeflex.css";
 
 const AppWrapper = ({ children }) => {
   const { userData } = useRequest();
@@ -26,11 +27,11 @@ const AppWrapper = ({ children }) => {
         changeDirection("rtl");
       }
 
-      // const token = localStorage.getItem("token");
-      // if (token) {
-      //   await userData();
-      //   // send token to get userData then set it in the store
-      // }
+      const token = localStorage.getItem("token");
+      if (token) {
+        await userData();
+        // send token to get userData then set it in the store
+      }
 
       dispatch(changePreloader(false));
     })();

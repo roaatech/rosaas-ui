@@ -9,12 +9,12 @@ import {
   Image,
   Button,
 } from "@themesberg/react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCogs,
-  faDownload,
-  faRocket,
-} from "@fortawesome/free-solid-svg-icons";
+// // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import {
+//   faCogs,
+//   faDownload,
+//   faRocket,
+// } from "@fortawesome/free-solid-svg-icons";
 import BS5Logo from "../assets/img/technologies/bootstrap-5-logo.svg";
 import ReactLogo from "../assets/img/technologies/react-logo.svg";
 import LaravelLogo from "../assets/img/technologies/laravel-logo.svg";
@@ -49,20 +49,13 @@ export default (props) => {
                   💙
                 </span>
               </p>
-              <GitHubButton
-                href="https://github.com/themesberg/volt-react-dashboard"
-                data-size="large"
-                data-show-count="true"
-                aria-label="Star themesberg/volt-react-dashboard on GitHub">
-                Star
-              </GitHubButton>
             </div>
             <Button
               href="https://themesberg.com/product/dashboard/volt-react"
               target="_blank"
               variant="primary"
               className="mb-3 w-100">
-              <FontAwesomeIcon icon={faDownload} className="me-1" /> Download
+              {/* <FontAwesomeIcon icon={faDownload} className="me-1" /> Download */}
             </Button>
             <p className="fs-7 text-gray-700 text-center">
               Available in the following technologies:
@@ -124,7 +117,7 @@ export default (props) => {
           }}>
           <Card.Body className="p-3 py-2">
             <span className="fw-bold h6">
-              <FontAwesomeIcon icon={faCogs} className="me-1 fs-7" /> Settings
+              {/* <FontAwesomeIcon icon={faCogs} className="me-1 fs-7" /> Settings */}
             </span>
           </Card.Body>
         </Card>

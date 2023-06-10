@@ -24,7 +24,7 @@ const LoginWrapper = styled.div`
     border: 0 !important;
     border-radius: 0;
     border-left: 1px solid var(--gray) !important;
-   }
+  }
 `;
 
 export default LoginWrapper;

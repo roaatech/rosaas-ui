@@ -29,6 +29,7 @@ import Toasts from "./pages/components/Toasts";
 import NotFoundPage from "./pages/examples/NotFound";
 import Tenant from "./pages/Tenant/Tenant";
 import TenantDetails from "./pages/TenantDetails";
+import Redirect from "./components/custom/global/Redirect/Redirect";
 
 export const Routes = {
   // pages
@@ -86,13 +87,13 @@ export const Routes = {
     path: "/examples/lock",
     component: Lock,
     type: "noSidebar",
-    roles: ["*"],
+    roles: "*",
   },
   ServerError: {
     path: "/examples/500",
     component: ServerError,
     type: "noSidebar",
-    roles: ["*"],
+    roles: "*",
   },
 
   Accordions: {
@@ -168,5 +169,10 @@ export const Routes = {
     roles: "*",
     component: NotFoundPage,
     type: "noSidebar",
+  },
+  redirect: {
+    path: "*",
+    component: Redirect,
+    roles: "*",
   },
 };

@@ -4,7 +4,6 @@
 
 // * Product Page: https://themesberg.com/product/dashboard/volt-react
 // * Copyright 2021 Themesberg (https://www.themesberg.com)
-// * Official Repository: https://github.com/themesberg/volt-react-dashboard
 // * License: MIT License (https://themesberg.com/licensing)
 
 // * Designed and coded by https://themesberg.com

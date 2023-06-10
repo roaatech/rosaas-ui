@@ -1,6 +1,6 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+// // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Card, Container } from "@themesberg/react-bootstrap";
 import { Link } from "react-router-dom";
 import { Routes } from "../../routes";
@@ -12,7 +12,7 @@ export default () => {
   return (
     <main
       style={{
-        background: "linear-gradient(216deg,   rgb(81 81 81), rgb(4 4 4) )",
+        background: "linear-gradient(216deg, rgb(0 40 84), rgb(228 228 228))",
       }}>
       <section
         className="d-flex align-items-center"
@@ -22,7 +22,7 @@ export default () => {
             <Col
               xs={12}
               className="d-flex align-items-center justify-content-center">
-              <div className="bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
+              <div className="bg-white shadow-soft border border-round border-light p-4 p-lg-5 w-100 fmxw-500">
                 <div className="text-center text-md-center mb-4 mt-md-0">
                   <h3 className="mb-0">
                     <FormattedMessage id="singInPlatform" />

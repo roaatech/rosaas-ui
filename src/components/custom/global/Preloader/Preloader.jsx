@@ -8,7 +8,7 @@ export default (props) => {
     <>
       {show && (
         <Wrapper>
-          <div class="loader">
+          <div className="loader">
             <div></div>
             <div></div>
             <div></div>

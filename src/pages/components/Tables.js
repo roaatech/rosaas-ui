@@ -1,8 +1,7 @@
-
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
-import { Col, Row, Table, Image, Container } from '@themesberg/react-bootstrap';
+// // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import { Col, Row, Table, Image, Container } from "@themesberg/react-bootstrap";
 
 import Documentation from "../../components/Documentation";
 
@@ -12,7 +11,6 @@ import UKFlag from "../../assets/img/flags/united-kingdom.svg";
 import FranceFlag from "../../assets/img/flags/france.svg";
 import JapanFlag from "../../assets/img/flags/japan.svg";
 import GermanyFlag from "../../assets/img/flags/germany.svg";
-
 
 export default () => {
   return (
@@ -31,13 +29,26 @@ export default () => {
           title="Example"
           description={
             <>
-              <p>The <code>&#x3C;Table&#x3E;</code> component can be used to show more complex amounts of data. We recommend you to use the local <code>&#x3C;TableRow&#x3E;</code> method and component to build rows for the table and set the columns and props from there.</p>
-              <p>In this example, the props from <code>&#x3C;TableRow&#x3E;</code>, such as the <code>country</code>, <code>countryIcon</code>, <code>value</code>, and <code>percentage</code> are being set as props. After that, the <code>&#x3C;TableRow&#x3E;</code> components are being added in the final <code>&#x3C;Table&#x3E;</code> rendering.</p>
+              <p>
+                The <code>&#x3C;Table&#x3E;</code> component can be used to show
+                more complex amounts of data. We recommend you to use the local{" "}
+                <code>&#x3C;TableRow&#x3E;</code> method and component to build
+                rows for the table and set the columns and props from there.
+              </p>
+              <p>
+                In this example, the props from{" "}
+                <code>&#x3C;TableRow&#x3E;</code>, such as the{" "}
+                <code>country</code>, <code>countryIcon</code>,{" "}
+                <code>value</code>, and <code>percentage</code> are being set as
+                props. After that, the <code>&#x3C;TableRow&#x3E;</code>{" "}
+                components are being added in the final{" "}
+                <code>&#x3C;Table&#x3E;</code> rendering.
+              </p>
             </>
           }
-          scope={{ Image, Table, FontAwesomeIcon, faAngleDown, faAngleUp, USAFlag, CanadaFlag, UKFlag, FranceFlag, JapanFlag, GermanyFlag }}
+          // scope={{ Image, Table, FontAwesomeIcon, faAngleDown, faAngleUp, USAFlag, CanadaFlag, UKFlag, FranceFlag, JapanFlag, GermanyFlag }}
           imports={`import { Image, Table } from '@themesberg/react-bootstrap';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 
 import USAFlag from "src/assets/img/flags/united-states-of-america.svg";

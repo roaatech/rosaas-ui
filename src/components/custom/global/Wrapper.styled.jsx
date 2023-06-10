@@ -11,12 +11,12 @@ const GlobalStyles = createGlobalStyle`
   ${require("primereact/resources/themes/lara-light-indigo/theme.css")}
   ${require("primereact/resources/primereact.min.css")}
   ${require("primeicons/primeicons.css")}
-  /* ${(props) => {
-    props.direction == "rtl"
-      ? require("../../../scss/voltrtl.scss")
-      : require("../../../scss/voltltr.scss");
-  }} */
-
+ ${require("../../../scss/voltltr.scss")}  
+ /* ${(props) => {
+   props.direction == "rtl"
+     ? require("../../../scss/voltrtl.scss")
+     : require("../../../scss/voltltr.scss");
+ }}   */
 :root{
   --darkBackground:${darkBackground};
   --gray: #d1d5db;
@@ -28,6 +28,7 @@ const GlobalStyles = createGlobalStyle`
   --red:#ff6868;
   --primaryBackground:#262b40;
   --primaryColor:#262b40;
+  --primary-color:#262b40;
    --themeBackground:${(props) =>
      props.darkMode ? darkBackground : lightBackground};
   --themeColor:${(props) => (props.darkMode ? lightColor : darkColor)};

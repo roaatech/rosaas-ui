@@ -1,16 +1,16 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleDown,
-  faAngleUp,
-  faArrowDown,
-  faArrowUp,
-  faEdit,
-  faEllipsisH,
-  faExternalLinkAlt,
-  faEye,
-  faTrashAlt,
-} from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import {
+//   faAngleDown,
+//   faAngleUp,
+//   faArrowDown,
+//   faArrowUp,
+//   faEdit,
+//   faEllipsisH,
+//   faExternalLinkAlt,
+//   faEye,
+//   faTrashAlt,
+// } from "@fortawesome/free-solid-svg-icons";
 import {
   Col,
   Row,
@@ -32,12 +32,12 @@ import transactions from "../data/transactions";
 import commands from "../data/commands";
 
 const ValueChange = ({ value, suffix }) => {
-  const valueIcon = value < 0 ? faAngleDown : faAngleUp;
+  // const valueIcon = value < 0 ? faAngleDown : faAngleUp;
   const valueTxtColor = value < 0 ? "text-danger" : "text-success";
 
   return value ? (
     <span className={valueTxtColor}>
-      <FontAwesomeIcon icon={valueIcon} />
+      {/* <FontAwesomeIcon icon={valueIcon} /> */}
       <span className="fw-bold ms-1">
         {Math.abs(value)}
         {suffix}
@@ -51,7 +51,7 @@ const ValueChange = ({ value, suffix }) => {
 export const PageVisitsTable = () => {
   const TableRow = (props) => {
     const { pageName, views, returnValue, bounceRate } = props;
-    const bounceIcon = bounceRate < 0 ? faArrowDown : faArrowUp;
+    // const bounceIcon = bounceRate < 0 ? faArrowDown : faArrowUp;
     const bounceTxtColor = bounceRate < 0 ? "text-danger" : "text-success";
 
     return (
@@ -60,10 +60,10 @@ export const PageVisitsTable = () => {
         <td>{views}</td>
         <td>${returnValue}</td>
         <td>
-          <FontAwesomeIcon
+          {/* <FontAwesomeIcon
             icon={bounceIcon}
             className={`${bounceTxtColor} me-3`}
-          />
+          /> */}
           {Math.abs(bounceRate)}%
         </td>
       </tr>
@@ -125,10 +125,10 @@ export const PageTrafficTable = () => {
           </Card.Link>
         </td>
         <td className="fw-bold">
-          <FontAwesomeIcon
+          {/* <FontAwesomeIcon
             icon={sourceIcon}
             className={`icon icon-xs text-${sourceIconColor} w-30`}
-          />
+          /> */}
           {source}
         </td>
         <td>{sourceType}</td>
@@ -296,18 +296,18 @@ export const TransactionsTable = () => {
               variant="link"
               className="text-dark m-0 p-0">
               <span className="icon icon-sm">
-                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                {/* <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" /> */}
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item>
-                <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
+                {/* <FontAwesomeIcon icon={faEye} className="me-2" /> View Details */}
               </Dropdown.Item>
               <Dropdown.Item>
-                <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
+                {/* <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit */}
               </Dropdown.Item>
               <Dropdown.Item className="text-danger">
-                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
+                {/* <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove */}
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -383,7 +383,7 @@ export const CommandsTable = () => {
           <pre>
             <Card.Link href={link} target="_blank">
               Read More{" "}
-              <FontAwesomeIcon icon={faExternalLinkAlt} className="ms-1" />
+              {/* <FontAwesomeIcon icon={faExternalLinkAlt} className="ms-1" /> */}
             </Card.Link>
           </pre>
         </td>

@@ -1,9 +1,9 @@
 import React from "react";
 import LoginWrapper from "./LoginWrapper.styled";
 import { FormattedMessage } from "react-intl";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-import { faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { BsFillEnvelopeOpenFill, BsUnlockFill } from "react-icons/bs";
+// import { faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@themesberg/react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { InputText } from "primereact/inputtext";
@@ -39,7 +39,7 @@ const Login = () => {
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
-                  <FontAwesomeIcon icon={faEnvelope} />
+                  <BsFillEnvelopeOpenFill />
                   <Field type="email" id="email" name="email" as={InputText} />
                 </div>
                 <ErrorMessage
@@ -55,7 +55,7 @@ const Login = () => {
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
-                  <FontAwesomeIcon icon={faUnlockAlt} />
+                  <BsUnlockFill />
                   <Field
                     type="password"
                     id="password"

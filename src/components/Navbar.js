@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBell,
-  faCog,
-  faEnvelopeOpen,
-  faSearch,
-  faSignOutAlt,
-  faUserShield,
-} from "@fortawesome/free-solid-svg-icons";
-import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
+// // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import {
+//   faBell,
+//   faCog,
+//   faEnvelopeOpen,
+//   faSearch,
+//   faSignOutAlt,
+//   faUserShield,
+// } from "@fortawesome/free-solid-svg-icons";
+// import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import {
   Row,
   Col,
@@ -163,7 +163,7 @@ export default (props) => {
                     console.log(darkMode, "ddddd");
                     dispatch(changeMode(!darkMode));
                   }}>
-                  <FontAwesomeIcon icon={faUserShield} className="me-2" />
+                  {/* <FontAwesomeIcon icon={faUserShield} className="me-2" /> */}
                   {darkMode == false ? "Dark Mode" : "Light Mode"}
                 </Dropdown.Item>
 
@@ -172,10 +172,10 @@ export default (props) => {
                 <Dropdown.Item
                   className="fw-bold"
                   onClick={() => dispatch(logOut())}>
-                  <FontAwesomeIcon
+                  {/* <FontAwesomeIcon
                     icon={faSignOutAlt}
                     className="text-danger me-2"
-                  />
+                  /> */}
                   Logout
                 </Dropdown.Item>
               </Dropdown.Menu>

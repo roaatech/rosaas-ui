@@ -4,7 +4,6 @@
 
 // * Product Page: https://themesberg.com/product/dashboard/volt-react
 // * Copyright 2021 Themesberg (https://www.themesberg.com)
-// * Official Repository: https://github.com/themesberg/volt-react-dashboard
 // * License: MIT License (https://themesberg.com/licensing)
 
 // * Designed and coded by https://themesberg.com
@@ -12,31 +11,33 @@
 // =========================================================
 
 // * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. Please contact us to request a removal.
-
 $direction: left;
 $directionreverse: right;
-html[dir="ltr"] {
-  @import url("https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800&display=swap");
-  @import "../../node_modules/bootstrap/scss/mixins";
-  @import "../../node_modules/bootstrap/scss/functions";
-  @import "volt/variablesltr";
-  @import "../../node_modules/bootstrap/scss/bootstrap";
-  // Vendor
-  @import "volt/vendor";
+// html[dir="ltr"] {
+@import url("https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800&display=swap");
 
-  // volt mixins & functions
-  @import "volt/mixins";
-  @import "volt/functions";
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/functions";
+@import "volt/variablesltr";
+@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "primeflex/primeflex";
 
-  // Utilities
-  @import "volt/reboot";
-  @import "volt/utilities";
+// Vendor
+@import "volt/vendor";
 
-  // Layout
-  @import "volt/layout";
+// volt mixins & functions
+@import "volt/mixins";
+@import "volt/functions";
 
-  // Components
-  @import "volt/components";
+// Utilities
+@import "volt/reboot";
+@import "volt/utilities";
 
-  //   // write your custom styles here!
-}
+// Layout
+@import "volt/layout";
+
+// Components
+@import "volt/components";
+
+//   // write your custom styles here!
+// }

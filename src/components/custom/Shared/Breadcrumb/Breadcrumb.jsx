@@ -1,9 +1,15 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Breadcrumb } from "@themesberg/react-bootstrap";
 import { Wrapper } from "./Breadcrumb.styled";
 
-const BreadcrumbComponent = ({ description, title, child, icon, parent }) => {
+const BreadcrumbComponent = ({
+  description,
+  title,
+  child,
+  icon: Icon,
+  parent,
+}) => {
   return (
     <>
       {title && (
@@ -14,9 +20,9 @@ const BreadcrumbComponent = ({ description, title, child, icon, parent }) => {
               listProps={{
                 className: "breadcrumb-dark breadcrumb-transparent",
               }}>
-              {icon && (
+              {Icon && (
                 <Breadcrumb.Item>
-                  <FontAwesomeIcon icon={icon} />
+                  <Icon />
                 </Breadcrumb.Item>
               )}
               <Breadcrumb.Item>{parent}</Breadcrumb.Item>

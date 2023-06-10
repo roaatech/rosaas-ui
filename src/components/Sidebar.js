@@ -2,23 +2,25 @@ import React, { useState } from "react";
 import SimpleBar from "simplebar-react";
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUserTie,
-  faBook,
-  faBoxOpen,
-  faChartPie,
-  faCog,
-  faFileAlt,
-  faHandHoldingUsd,
-  faSignOutAlt,
-  faTable,
-  faTimes,
-  faCalendarAlt,
-  faMapPin,
-  faInbox,
-  faRocket,
-} from "@fortawesome/free-solid-svg-icons";
+// // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { BsFillPersonLinesFill } from "react-icons/bs";
+
+// import {
+//   faUserTie,
+//   faBook,
+//   faBoxOpen,
+//   faChartPie,
+//   faCog,
+//   faFileAlt,
+//   faHandHoldingUsd,
+//   faSignOutAlt,
+//   faTable,
+//   faTimes,
+//   faCalendarAlt,
+//   faMapPin,
+//   faInbox,
+//   faRocket,
+// } from "@fortawesome/free-solid-svg-icons";
 import {
   Nav,
   Badge,
@@ -58,7 +60,7 @@ export default (props = {}) => {
             className="d-flex justify-content-between align-items-center">
             <span>
               <span className="sidebar-icon">
-                <FontAwesomeIcon icon={icon} />
+                {/* <FontAwesomeIcon icon={icon} /> */}
               </span>
               <span className="sidebar-text">{title}</span>
             </span>
@@ -77,7 +79,7 @@ export default (props = {}) => {
       link,
       external,
       target,
-      icon,
+      icon: Icon,
       image,
       badgeText,
       badgeBg = "secondary",
@@ -93,9 +95,9 @@ export default (props = {}) => {
       <Nav.Item className={navItemClassName} onClick={() => setShow(false)}>
         <Nav.Link {...linkProps} target={target} className={classNames}>
           <span>
-            {icon ? (
+            {Icon ? (
               <span className="sidebar-icon">
-                <FontAwesomeIcon icon={icon} />{" "}
+                <Icon />
               </span>
             ) : null}
             {image ? (
@@ -164,7 +166,7 @@ export default (props = {}) => {
                     // to={Routes.Signin.path}
                     onClick={() => dispatch(logOut())}
                     className="text-dark">
-                    <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />{" "}
+                    {/* <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />{" "} */}
                     Sign Out
                   </Button>
                 </div>
@@ -172,7 +174,7 @@ export default (props = {}) => {
               <Nav.Link
                 className="collapse-close d-md-none"
                 onClick={onCollapse}>
-                <FontAwesomeIcon icon={faTimes} />
+                {/* <FontAwesomeIcon icon={faTimes} /> */}
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
@@ -182,15 +184,15 @@ export default (props = {}) => {
                 className="my-3"
                 style={{ maxWidth: "200px" }}
               />
-              <NavItem
+              {/* <NavItem
                 title="Dashboard"
                 link={Routes.DashboardOverview.path}
-                icon={faChartPie}
-              />
+                // icon={faChartPie}
+              /> */}
               <NavItem
                 title="Tenant"
                 link={Routes.Tenant.path}
-                icon={faUserTie}
+                icon={BsFillPersonLinesFill}
               />
               {/* <NavItem
                 external

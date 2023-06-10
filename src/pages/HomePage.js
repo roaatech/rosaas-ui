@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
 import { Routes } from "../routes";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { useSelector } from "react-redux";
 import useRequest from "../axios/apis/useRequest";
+import { Route, Routes as RouteG } from "react-router-dom";
 
 const HomePage = () => {
   const { userData } = useRequest();
@@ -28,23 +28,23 @@ const HomePage = () => {
         <Route
           exact
           path={path}
-          render={(props) => (
+          element={
             <>
               {type === "noSidebar" ? (
                 <>
-                  <Component {...props} />
+                  <Component />
                 </>
               ) : (
                 <>
                   <Sidebar />
                   <main className="content">
                     <Navbar />
-                    <Component {...props} />
+                    <Component />
                   </main>
                 </>
               )}
             </>
-          )}
+          }
         />
       );
     }
@@ -53,18 +53,13 @@ const HomePage = () => {
   return (
     <>
       {load && (
-        <Switch>
-          {[
-            ...Object.values(Routes).map((route) => generateRoutes(route)),
-            <Redirect
-              to={
-                userRole == "notAuth"
-                  ? Routes.Signin.path
-                  : Routes.DashboardOverview.path
-              }
-            />,
-          ]}
-        </Switch>
+        <RouteG>
+          {[...Object.values(Routes).map((route) => generateRoutes(route))]}
+
+          {/* <Navigate
+            to={userRole == "notAuth" ? Routes.Signin.path : Routes.Tenant.path}
+          /> */}
+        </RouteG>
       )}
     </>
   );

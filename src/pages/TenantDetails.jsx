@@ -1,10 +1,12 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Card, Table } from "@themesberg/react-bootstrap";
 import BreadcrumbComponent from "../components/custom/Shared/Breadcrumb/Breadcrumb";
-import { faUserTie } from "@fortawesome/free-solid-svg-icons";
+// import { faUserTie } from "@fortawesome/free-solid-svg-icons";
+import { BsFillPersonLinesFill } from "react-icons/bs";
+
 import TenantStatus from "../components/custom/tenant/TenantStatus/TenantStatus";
 import useGlobal from "../lib/hocks/global";
 import { Button } from "primereact/button";
@@ -12,6 +14,7 @@ import DeleteConfirmation from "../components/custom/global/DeleteConfirmation/D
 import useRequest from "../axios/apis/useRequest";
 import { Dialog } from "primereact/dialog";
 import TenantForm from "../components/custom/tenant/TenantForm/TenantForm";
+
 const TenantDetails = () => {
   const [confirm, setConfirm] = useState(false);
   const [currentId, setCurrentId] = useState("");
@@ -20,7 +23,8 @@ const TenantDetails = () => {
   const { getTenant, deleteTenantReq } = useRequest();
   const { DataTransform } = useGlobal();
   const routeParams = useParams();
-  const history = useHistory();
+
+  const navigate = useNavigate();
 
   const deleteConfirm = (id) => {
     setCurrentId(id);
@@ -28,7 +32,7 @@ const TenantDetails = () => {
   };
   const deleteTenant = async () => {
     await deleteTenantReq({ id: currentId });
-    history.push(`/tenant`);
+    navigate(`/tenant`);
   };
 
   useEffect(() => {
@@ -45,7 +49,7 @@ const TenantDetails = () => {
         parent={"Tenant"}
         description={"Tenant details"}
         child={tenantData && tenantData.data.title}
-        icon={faUserTie}
+        icon={BsFillPersonLinesFill}
       />
       {tenantData && (
         <Card border="light" className="shadow-sm mb-4">
@@ -66,7 +70,7 @@ const TenantDetails = () => {
                   <td className="fw-bold">Products</td>
                   <td>
                     {tenantData.data.products.map((product) => (
-                      <span className="p-2 border rounded-pill me-2">
+                      <span className="p-1 border-round border-1 border-400 me-2">
                         {product.name}
                       </span>
                     ))}

@@ -8,7 +8,9 @@ import {
 } from "react-icons/bs";
 import { Paginator } from "primereact/paginator";
 import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
-import { faUserTie } from "@fortawesome/free-solid-svg-icons";
+// import { faUserTie } from "@fortawesome/free-solid-svg-icons";
+import { BsFillPersonLinesFill } from "react-icons/bs";
+
 import ColumnSortHeader from "../../components/custom/Shared/ColumnSortHeader/ColumnSortHeader";
 import TableHead from "../../components/custom/Shared/TableHead/TableHead";
 import TableDate from "../../components/custom/Shared/TableDate/TableDate";
@@ -17,7 +19,7 @@ import useRequest from "../../axios/apis/useRequest";
 import { Dialog } from "primereact/dialog";
 import TenantStatus from "../../components/custom/tenant/TenantStatus/TenantStatus";
 import DeleteConfirmation from "../../components/custom/global/DeleteConfirmation/DeleteConfirmation.jsx";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Wrapper } from "./Tenant.styled";
 export default function Tenant({ children }) {
   const { getTenant, getTenantList, deleteTenantReq } = useRequest();
@@ -34,7 +36,7 @@ export default function Tenant({ children }) {
   const [confirm, setConfirm] = useState(false);
   const [currentId, setCurrentId] = useState("");
   const [update, setUpdate] = useState(1);
-  const history = useHistory();
+  const navigate = useNavigate();
   const deleteConfirm = (id) => {
     setCurrentId(id);
     setConfirm(true);
@@ -87,7 +89,7 @@ export default function Tenant({ children }) {
       <BreadcrumbComponent
         title={"Tenant List"}
         parent={"Tenant"}
-        icon={faUserTie}
+        icon={BsFillPersonLinesFill}
       />
       <TableHead
         label={"Add Tenant"}
@@ -184,7 +186,7 @@ export default function Tenant({ children }) {
             body={(data, options) => (
               <>
                 <BsFillEyeFill
-                  onClick={() => history.push(`/TenantDetails/${data.id}`)}
+                  onClick={() => navigate(`/TenantDetails/${data.id}`)}
                   style={{ cursor: "pointer" }}
                 />
               </>
