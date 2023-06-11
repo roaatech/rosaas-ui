@@ -27,15 +27,21 @@ import Tabs from "./pages/components/Tabs";
 import Tooltips from "./pages/components/Tooltips";
 import Toasts from "./pages/components/Toasts";
 import NotFoundPage from "./pages/examples/NotFound";
-import Tenant from "./pages/Tenant/Tenant";
+import Tenant from "./pages/TenantSOON/Tenant";
 import TenantDetails from "./pages/TenantDetails";
 import Redirect from "./components/custom/global/Redirect/Redirect";
+import Welcome from "./pages/Welcome/Welcome";
 
 export const Routes = {
   // pages
   DashboardOverview: {
     path: "/dashboard",
     component: DashboardOverview,
+    roles: ["superAdmin"],
+  },
+  Welcome: {
+    path: "/Welcome",
+    component: Welcome,
     roles: ["superAdmin"],
   },
   Tenant: {

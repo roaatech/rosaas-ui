@@ -9,7 +9,7 @@ const Redirect = () => {
 
   return (
     <Navigate
-      to={userRole == "notAuth" ? Routes.Signin.path : Routes.Tenant.path}
+      to={userRole == "notAuth" ? Routes.Signin.path : Routes.Welcome.path}
     />
   );
 };

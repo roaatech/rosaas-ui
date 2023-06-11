@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Routes } from "../routes";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/Sidebar/Sidebar";
 import Navbar from "../components/Navbar";
 import { useSelector } from "react-redux";
 import useRequest from "../axios/apis/useRequest";

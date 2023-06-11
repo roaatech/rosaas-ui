@@ -32,7 +32,7 @@ const TenantDetails = () => {
   };
   const deleteTenant = async () => {
     await deleteTenantReq({ id: currentId });
-    navigate(`/tenant`);
+    navigate(`/welcome`);
   };
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const TenantDetails = () => {
       const tenantData = await getTenant(routeParams.id);
       setTenantData(tenantData.data);
     })();
-  }, [visible]);
+  }, [visible, routeParams.id]);
 
   return (
     <div>

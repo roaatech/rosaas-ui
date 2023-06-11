@@ -6,6 +6,7 @@ export const mainSlice = createSlice({
     darkMode: false,
     direction: "ltr",
     preloader: true,
+    sidebar: 1,
   },
   reducers: {
     directionFun: (state, action) => {
@@ -19,9 +20,14 @@ export const mainSlice = createSlice({
       console.log("object");
       state.preloader = action.payload;
     },
+    updateSidebar: (state) => {
+      console.log("object");
+      state.sidebar++;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { directionFun, changePreloader, changeMode } = mainSlice.actions;
+export const { directionFun, changePreloader, changeMode, updateSidebar } =
+  mainSlice.actions;
 export default mainSlice.reducer;
