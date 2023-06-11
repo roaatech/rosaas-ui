@@ -21,11 +21,11 @@ const AppWrapper = ({ children }) => {
   let loaded = useSelector((state) => state.main.preloader);
   useEffect(() => {
     (async () => {
-      if (localStorage.getItem("direction") === "ltr") {
-        changeDirection("ltr");
-      } else {
-        changeDirection("rtl");
-      }
+      // if (localStorage.getItem("direction") === "ltr") {
+      //   changeDirection("ltr");
+      // } else {
+      //   changeDirection("rtl");
+      // }
 
       const token = localStorage.getItem("token");
       if (token) {

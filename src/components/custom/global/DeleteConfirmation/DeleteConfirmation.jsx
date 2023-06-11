@@ -20,11 +20,11 @@ export default function DeleteConfirmation({
 
   const toast = useRef(null);
 
-  const accept = () => {
-    confirmFunction();
+  const accept = async () => {
+    await confirmFunction();
     setConfirm(false);
     console.log(update);
-    update && setUpdate(update + 2);
+    setUpdate(update + 1);
   };
 
   const reject = () => {

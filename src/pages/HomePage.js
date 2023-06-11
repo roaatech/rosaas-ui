@@ -22,10 +22,14 @@ const HomePage = () => {
     })();
   }, []);
 
-  const generateRoutes = ({ component: Component, path, type, roles }) => {
+  const generateRoutes = (
+    { component: Component, path, type, roles },
+    index
+  ) => {
     if (roles.includes(userRole) || roles === "*") {
       return (
         <Route
+          key={index}
           exact
           path={path}
           element={
@@ -54,7 +58,11 @@ const HomePage = () => {
     <>
       {load && (
         <RouteG>
-          {[...Object.values(Routes).map((route) => generateRoutes(route))]}
+          {[
+            ...Object.values(Routes).map((route, index) =>
+              generateRoutes(route, index)
+            ),
+          ]}
 
           {/* <Navigate
             to={userRole == "notAuth" ? Routes.Signin.path : Routes.Tenant.path}

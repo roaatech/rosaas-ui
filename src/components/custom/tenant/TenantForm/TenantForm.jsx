@@ -50,6 +50,7 @@ const TenantForm = ({
     }
     setVisible && setVisible(false);
     setVisibleHead && setVisibleHead(false);
+    console.log(update);
     setUpdate(update + 1);
   };
 

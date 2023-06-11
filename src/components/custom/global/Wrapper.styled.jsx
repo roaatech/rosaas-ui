@@ -129,7 +129,11 @@ const GlobalStyles = createGlobalStyle`
  color: var(--themeColor);
     border-bottom: 1px solid white;
 }
-
+.p-float-label input.p-filled~label, .p-float-label input:focus ~ label {
+    top: 0rem!important;
+    background: white!important;
+    padding: 0 10px;
+}
 
 .list-group-flush.list-group > a {
     color: gray;

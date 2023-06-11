@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { logOut } from "../store/slices/auth";
 import { changePreloader } from "../store/slices/main";
 import { addUserInfo } from "../store/slices/auth";
-
+import { Client_id } from "../const";
 const useApi = () => {
   let axiosObject = {
     baseURL: "https://dev.rosas.roaa.tech/api/",
@@ -26,7 +26,7 @@ const useApi = () => {
           ? `Bearer ${localStorageToken}`
           : "";
       } else {
-        config.headers["Client-Id"] = "SPA.Rosas.Admin.Panel.Client";
+        config.headers["Client-Id"] = Client_id;
       }
       //* end auth
       return config;

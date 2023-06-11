@@ -21,6 +21,7 @@ import TenantStatus from "../../components/custom/tenant/TenantStatus/TenantStat
 import DeleteConfirmation from "../../components/custom/global/DeleteConfirmation/DeleteConfirmation.jsx";
 import { useNavigate } from "react-router-dom";
 import { Wrapper } from "./Tenant.styled";
+import CustomPaginator from "../../components/custom/Shared/CustomPaginator/CustomPaginator";
 export default function Tenant({ children }) {
   const { getTenant, getTenantList, deleteTenantReq } = useRequest();
   const [visible, setVisible] = useState(false);
@@ -219,12 +220,10 @@ export default function Tenant({ children }) {
           />
         </DataTable>
 
-        <Paginator
-          size={"small"}
+        <CustomPaginator
           first={first}
           rows={rows}
-          totalRecords={totalCount}
-          rowsPerPageOptions={[10, 20, 30]}
+          totalCount={totalCount}
           onPageChange={onPageChange}
         />
 
