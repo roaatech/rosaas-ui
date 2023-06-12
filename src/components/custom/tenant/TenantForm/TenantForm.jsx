@@ -6,6 +6,8 @@ import { InputText } from "primereact/inputtext";
 import * as Yup from "yup";
 import useRequest from "../../../../axios/apis/useRequest.js";
 import { Product_id } from "../../../../const/index.js";
+import { updateSidebar } from "../../../../store/slices/main";
+import { useDispatch } from "react-redux";
 
 const TenantForm = ({
   type,
@@ -16,6 +18,7 @@ const TenantForm = ({
   setVisible,
 }) => {
   const { createTenantRequest, editTenantRequest } = useRequest();
+  const dispatch = useDispatch();
 
   const initialValues = {
     title: tenantData ? tenantData.title : "",
@@ -50,8 +53,7 @@ const TenantForm = ({
     }
     setVisible && setVisible(false);
     setVisibleHead && setVisibleHead(false);
-    console.log(update);
-    setUpdate(update + 1);
+    dispatch(updateSidebar());
   };
 
   return (

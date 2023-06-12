@@ -28,7 +28,7 @@ import Tooltips from "./pages/components/Tooltips";
 import Toasts from "./pages/components/Toasts";
 import NotFoundPage from "./pages/examples/NotFound";
 import Tenant from "./pages/TenantSOON/Tenant";
-import TenantDetails from "./pages/TenantDetails";
+import TenantDetails from "./pages/TenantDetails/TenantDetails";
 import Redirect from "./components/custom/global/Redirect/Redirect";
 import Welcome from "./pages/Welcome/Welcome";
 

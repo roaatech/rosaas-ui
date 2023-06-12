@@ -13,8 +13,8 @@ export const mainSlice = createSlice({
       state.direction = action.payload;
     },
     changeMode: (state, action) => {
-      console.log(action.payload, "ddddd");
       state.darkMode = action.payload;
+      localStorage.setItem("dark", action.payload);
     },
     changePreloader: (state, action) => {
       console.log("object");

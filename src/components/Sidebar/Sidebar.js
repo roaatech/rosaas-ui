@@ -40,6 +40,8 @@ export default (props = {}) => {
   const [update, setUpdate] = useState(1);
   const { getTenantList } = useRequest();
   const [list, setList] = useState([]);
+  const [inactive, setInactive] = useState([]);
+  const [active, setActive] = useState([]);
 
   const onCollapse = () => setShow(!show);
 
@@ -129,6 +131,8 @@ export default (props = {}) => {
     (async () => {
       const listData = await getTenantList(query);
       setList(listData.data.data.items);
+      setActive(listData.data.data.items.filter((item) => item.status == 1));
+      setInactive(listData.data.data.items.filter((item) => item.status == 2));
     })();
   }, [first, searchValue, update, updateSlider]);
 
@@ -155,7 +159,7 @@ export default (props = {}) => {
       <CSSTransition timeout={300} in={show} classNames="sidebar-transition">
         <SimpleBar
           className={`collapse ${showClass} sidebar d-md-block bg-primary text-white`}>
-          <div className="sidebar-inner px-4 pt-3">
+          <div className="sidebar-inner px-4 pt-3 pb-6">
             <div className="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
               <div className="d-flex align-items-center">
                 <div className="user-avatar lg-avatar me-4">
@@ -207,13 +211,30 @@ export default (props = {}) => {
                   setVisibleHead={setVisibleHead}
                 />
               </TableHead>
-              <CollapsableNavItem
-                eventKey="open"
-                title="Active Tenant"
-                icon={BsFillPersonLinesFill}>
-                {list
-                  .filter((item) => item.status == 1)
-                  .map((item) => (
+              {active.length ? (
+                <CollapsableNavItem
+                  eventKey="open"
+                  title="Active Tenant"
+                  icon={BsFillPersonLinesFill}>
+                  {active
+                    .filter((item) => item.status == 1)
+                    .map((item) => (
+                      <>
+                        <NavItem
+                          title={item.uniqueName}
+                          link={`/tenantDetails/${item.id}`}
+                        />
+                      </>
+                    ))}
+                  {console.log({ active })}
+                </CollapsableNavItem>
+              ) : null}
+              {inactive.length ? (
+                <CollapsableNavItem
+                  eventKey="open"
+                  title="Inactive Tenant"
+                  icon={BsFillPersonLinesFill}>
+                  {inactive.map((item) => (
                     <>
                       <NavItem
                         title={item.uniqueName}
@@ -221,22 +242,8 @@ export default (props = {}) => {
                       />
                     </>
                   ))}
-              </CollapsableNavItem>
-              <CollapsableNavItem
-                eventKey="open"
-                title="Inactive Tenant"
-                icon={BsFillPersonLinesFill}>
-                {list
-                  .filter((item) => item.status == 2)
-                  .map((item) => (
-                    <>
-                      <NavItem
-                        title={item.uniqueName}
-                        link={`/tenantDetails/${item.id}`}
-                      />
-                    </>
-                  ))}
-              </CollapsableNavItem>
+                </CollapsableNavItem>
+              ) : null}
             </Nav>
           </div>
         </SimpleBar>

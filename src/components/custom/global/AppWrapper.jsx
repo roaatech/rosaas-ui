@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import GlobalStyles from "./Wrapper.styled.jsx";
 import { ToastContainer } from "react-toastify";
 import Preloader from "../../../components/custom/global/Preloader/Preloader";
-import { changePreloader } from "../../../store/slices/main";
+import { changeMode, changePreloader } from "../../../store/slices/main";
 import useRequest from "../../../axios/apis/useRequest";
 // import "../../../../node_modules/primeflex/primeflex.css";
 
@@ -26,6 +26,11 @@ const AppWrapper = ({ children }) => {
       // } else {
       //   changeDirection("rtl");
       // }
+      if (localStorage.getItem("dark") == "true") {
+        dispatch(changeMode(true));
+      } else {
+        dispatch(changeMode(false));
+      }
 
       const token = localStorage.getItem("token");
       if (token) {

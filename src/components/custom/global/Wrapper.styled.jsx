@@ -4,7 +4,6 @@ const darkBackground = "#373d58";
 const darkColor = "#262b40";
 const lightBackground = "#f5f8fb";
 const lightColor = "#f5f8fb";
-
 const GlobalStyles = createGlobalStyle`
 
   ${require("react-toastify/dist/ReactToastify.css")}
@@ -34,7 +33,9 @@ const GlobalStyles = createGlobalStyle`
   --themeColor:${(props) => (props.darkMode ? lightColor : darkColor)};
    --unThemeBackground:${(props) =>
      props.darkMode ? lightBackground : darkBackground};
-  --unThemeColor:${(props) => (props.darkMode ? darkColor : lightColor)}
+  --unThemeColor:${(props) => (props.darkMode ? darkColor : lightColor)};
+  --themeSecColor:${(props) => (props.darkMode ? darkColor : "white")};
+  --themeGray:${(props) => (props.darkMode ? "#565656" : "#eaedf2")};
 
 }
   *{
@@ -112,7 +113,6 @@ const GlobalStyles = createGlobalStyle`
 .p-dropdown {
     background: var(--themeBackground);
     .p-inputtext{
-
       color: var(--themeColor);
     }
 }
@@ -156,6 +156,10 @@ nav svg.svg-inline--fa.fa-bell {
     color: var(--themeColor)!important;
 }
 
+.email{
+  color: var(--themeColor)!important;
+
+}
 
 
 `;

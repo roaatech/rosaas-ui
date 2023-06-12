@@ -3,17 +3,18 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Table } from "@themesberg/react-bootstrap";
-import BreadcrumbComponent from "../components/custom/Shared/Breadcrumb/Breadcrumb";
+import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
 // import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 import { BsFillPersonLinesFill } from "react-icons/bs";
 
-import TenantStatus from "../components/custom/tenant/TenantStatus/TenantStatus";
-import useGlobal from "../lib/hocks/global";
+import TenantStatus from "../../components/custom/tenant/TenantStatus/TenantStatus";
+import useGlobal from "../../lib/hocks/global";
 import { Button } from "primereact/button";
-import DeleteConfirmation from "../components/custom/global/DeleteConfirmation/DeleteConfirmation";
-import useRequest from "../axios/apis/useRequest";
+import DeleteConfirmation from "../../components/custom/global/DeleteConfirmation/DeleteConfirmation";
+import useRequest from "../../axios/apis/useRequest";
 import { Dialog } from "primereact/dialog";
-import TenantForm from "../components/custom/tenant/TenantForm/TenantForm";
+import TenantForm from "../../components/custom/tenant/TenantForm/TenantForm";
+import { Wrapper } from "./TenantDetails.styled";
 
 const TenantDetails = () => {
   const [confirm, setConfirm] = useState(false);
@@ -43,7 +44,7 @@ const TenantDetails = () => {
   }, [visible, routeParams.id]);
 
   return (
-    <div>
+    <Wrapper>
       <BreadcrumbComponent
         title={tenantData && tenantData.data.title}
         parent={"Tenant"}
@@ -132,7 +133,7 @@ const TenantDetails = () => {
           setVisible={setVisible}
         />
       </Dialog>
-    </div>
+    </Wrapper>
   );
 };
 export default TenantDetails;
