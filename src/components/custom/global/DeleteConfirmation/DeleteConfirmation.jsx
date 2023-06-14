@@ -14,40 +14,23 @@ export default function DeleteConfirmation({
   message,
   icon,
 }) {
-  //   useEffect(() => {
-  //     if (confirm) {
-  //       confirm2();
-  //     }
-  //   }, [confirm]);
-
-  const toast = useRef(null);
   const dispatch = useDispatch();
 
   const accept = async () => {
     await confirmFunction();
     setConfirm(false);
-    dispatch(updateSidebar());
 
     if (update) {
       console.log(update);
       setUpdate(update + 1);
+    } else {
+      dispatch(updateSidebar());
     }
   };
 
   const reject = () => {
     setConfirm(false);
   };
-
-  //   const confirm2 = () => {
-  //     confirmDialog({
-  //       message: "Do you want to delete this Tenant?",
-  //       header: "Delete Confirmation",
-  //       //   icon: "pi pi-info-circle",
-  //       acceptClassName: "p-button-danger",
-  //       accept,
-  //       reject,
-  //     });
-  //   };
 
   return (
     <>

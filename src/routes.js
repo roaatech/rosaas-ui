@@ -29,9 +29,10 @@ import Toasts from "./pages/components/Toasts";
 import NotFoundPage from "./pages/examples/NotFound";
 import Tenant from "./pages/TenantSOON/Tenant";
 import TenantDetails from "./pages/TenantDetails/TenantDetails";
+import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import Redirect from "./components/custom/global/Redirect/Redirect";
 import Welcome from "./pages/Welcome/Welcome";
-
+import Product from "./pages/Product/Product";
 export const Routes = {
   // pages
   DashboardOverview: {
@@ -44,6 +45,11 @@ export const Routes = {
     component: Welcome,
     roles: ["superAdmin"],
   },
+  Product: {
+    path: "/product",
+    component: Product,
+    roles: ["superAdmin"],
+  },
   Tenant: {
     path: "/tenant",
     component: Tenant,
@@ -52,6 +58,11 @@ export const Routes = {
   TenantDetails: {
     path: "/tenantDetails/:id",
     component: TenantDetails,
+    roles: ["superAdmin"],
+  },
+  ProductDetails: {
+    path: "/ProductDetails/:id",
+    component: ProductDetails,
     roles: ["superAdmin"],
   },
   Transactions: {

@@ -14,16 +14,16 @@ import { BsFillPersonLinesFill } from "react-icons/bs";
 import ColumnSortHeader from "../../components/custom/Shared/ColumnSortHeader/ColumnSortHeader";
 import TableHead from "../../components/custom/Shared/TableHead/TableHead";
 import TableDate from "../../components/custom/Shared/TableDate/TableDate";
-import TenantForm from "../../components/custom/tenant/TenantForm/TenantForm";
+import ProductForm from "../../components/custom/Product/ProductForm/ProductForm";
 import useRequest from "../../axios/apis/useRequest";
 import { Dialog } from "primereact/dialog";
-import TenantStatus from "../../components/custom/tenant/TenantStatus/TenantStatus";
+import ProductStatus from "../../components/custom/Product/ProductStatus/ProductStatus";
 import DeleteConfirmation from "../../components/custom/global/DeleteConfirmation/DeleteConfirmation.jsx";
 import { useNavigate } from "react-router-dom";
-import { Wrapper } from "./Tenant.styled";
+import { Wrapper } from "./Product.styled";
 import CustomPaginator from "../../components/custom/Shared/CustomPaginator/CustomPaginator";
-export default function Tenant({ children }) {
-  const { getTenant, getTenantList, deleteTenantReq } = useRequest();
+export default function Product({ children }) {
+  // const { getProduct, getProductList, deleteProductReq } = useRequest();
   const [visible, setVisible] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [visibleHead, setVisibleHead] = useState(false);
@@ -42,8 +42,8 @@ export default function Tenant({ children }) {
     setCurrentId(id);
     setConfirm(true);
   };
-  const deleteTenant = async () => {
-    await deleteTenantReq({ id: currentId });
+  const deleteProduct = async () => {
+    // await deleteProductReq({ id: currentId });
   };
 
   useEffect(() => {
@@ -55,15 +55,102 @@ export default function Tenant({ children }) {
     if (sortValue) query += `&sort.Direction=${sortValue}`;
 
     (async () => {
-      const listData = await getTenantList(query);
-      setTotalCount(listData.data.data.totalCount);
-      setList(listData.data.data.items);
+      // const listData = await getProductList(query);
+      // setTotalCount(listData.data.data.totalCount);
+      // setList(listData.data.data.items);
+      setTotalCount(7);
+      setList([
+        {
+          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
+          name: "qwero",
+          url: "qwerqwr",
+          clientId: {
+            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
+            name: "osos",
+          },
+          status: 1,
+          createdDate: "2023-06-13T07:22:43",
+          editedDate: "2023-06-13T07:32:04",
+        },
+        {
+          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
+          name: "qwero",
+          url: "qwerqwr",
+          clientId: {
+            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
+            name: "osos",
+          },
+          status: 1,
+          createdDate: "2023-06-13T07:22:43",
+          editedDate: "2023-06-13T07:32:04",
+        },
+        {
+          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
+          name: "qwero",
+          url: "qwerqwr",
+          clientId: {
+            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
+            name: "osos",
+          },
+          status: 1,
+          createdDate: "2023-06-13T07:22:43",
+          editedDate: "2023-06-13T07:32:04",
+        },
+        {
+          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
+          name: "qwero",
+          url: "qwerqwr",
+          clientId: {
+            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
+            name: "osos",
+          },
+          status: 1,
+          createdDate: "2023-06-13T07:22:43",
+          editedDate: "2023-06-13T07:32:04",
+        },
+        {
+          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
+          name: "qwero",
+          url: "qwerqwr",
+          clientId: {
+            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
+            name: "osos",
+          },
+          status: 1,
+          createdDate: "2023-06-13T07:22:43",
+          editedDate: "2023-06-13T07:32:04",
+        },
+        {
+          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
+          name: "qwero",
+          url: "qwerqwr",
+          clientId: {
+            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
+            name: "osos",
+          },
+          status: 1,
+          createdDate: "2023-06-13T07:22:43",
+          editedDate: "2023-06-13T07:32:04",
+        },
+        {
+          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
+          name: "qwero",
+          url: "qwerqwr",
+          clientId: {
+            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
+            name: "osos",
+          },
+          status: 1,
+          createdDate: "2023-06-13T07:22:43",
+          editedDate: "2023-06-13T07:32:04",
+        },
+      ]);
     })();
   }, [first, rows, searchValue, sortField, sortValue, update]);
 
   const statusBodyTemplate = (rowData) => {
     console.log(rowData);
-    return <TenantStatus rowData={rowData} key={rowData.id} />;
+    return <ProductStatus rowData={rowData} key={rowData.id} />;
   };
 
   /******************************* */
@@ -75,30 +162,40 @@ export default function Tenant({ children }) {
   };
 
   /****************************** */
-  const [tenantData, setTenantData] = useState();
+  const [productData, setProductData] = useState();
   const editForm = async (id) => {
-    const tenantData = await getTenant(id);
-    console.log("dddddddd", tenantData);
-    setTenantData(tenantData.data);
+    // const productData = await getProduct(id);
+    const productData = {
+      data: {
+        data: {
+          id: "e952885d-0174-4ad2-bf6d-1146eadd9718",
+          name: "asdf",
+          url: "asdfooo",
+          createdDate: "2023-06-11T09:32:28",
+          editedDate: "2023-06-12T09:57:38",
+        },
+      },
+    };
+    setProductData(productData.data);
     setVisible(true);
   };
 
   return (
     <Wrapper>
       <BreadcrumbComponent
-        title={"Tenant List"}
-        parent={"Tenant"}
+        title={"Product List"}
+        parent={"Product"}
         icon={BsFillPersonLinesFill}
       />
       <TableHead
-        label={"Add Tenant"}
-        popupLabel={"Create Tenant"}
-        icon={"pi-user-plus"}
+        label={"Add Product"}
+        popupLabel={"Create Product"}
+        icon={"pi-box"}
         setSearchValue={setSearchValue}
         visibleHead={visibleHead}
         setVisibleHead={setVisibleHead}
         setFirst={setFirst}>
-        <TenantForm
+        <ProductForm
           type={"create"}
           update={update}
           setUpdate={setUpdate}
@@ -112,11 +209,11 @@ export default function Tenant({ children }) {
           tableStyle={{ minWidth: "50rem" }}
           size={"small"}>
           <Column
-            field="title"
+            field="name"
             header={
               <ColumnSortHeader
-                text="Title"
-                field="uniqueName"
+                text="Name"
+                field="name"
                 rebase={rebase}
                 setRebase={setRebase}
                 sortField={sortField}
@@ -127,11 +224,11 @@ export default function Tenant({ children }) {
               />
             }></Column>
           <Column
-            field="uniqueName"
+            field="url"
             header={
               <ColumnSortHeader
-                text="Unique Name"
-                field="uniqueName"
+                text="Url"
+                field="url"
                 rebase={rebase}
                 setRebase={setRebase}
                 sortField={sortField}
@@ -141,6 +238,24 @@ export default function Tenant({ children }) {
                 setFirst={setFirst}
               />
             }></Column>
+
+          <Column
+            field={"clientId.name"}
+            header={
+              <ColumnSortHeader
+                text="Client"
+                field="client"
+                rebase={rebase}
+                setRebase={setRebase}
+                sortField={sortField}
+                sortValue={sortValue}
+                setSortField={setSortField}
+                setSortValue={setSortValue}
+                setFirst={setFirst}
+              />
+            }
+            showFilterMenu={false}
+          />
           <Column
             field="status"
             header={
@@ -186,7 +301,7 @@ export default function Tenant({ children }) {
             body={(data, options) => (
               <>
                 <BsFillEyeFill
-                  onClick={() => navigate(`/TenantDetails/${data.id}`)}
+                  onClick={() => navigate(`/ProductDetails/${data.id}`)}
                   style={{ cursor: "pointer" }}
                 />
               </>
@@ -228,14 +343,14 @@ export default function Tenant({ children }) {
 
         <Dialog
           headerClassName="pb-0"
-          className="tenantForm"
-          header={"Edit Tenant"}
+          className="productForm"
+          header={"Edit Product"}
           visible={visible}
           style={{ width: "30vw", minWidth: "300px" }}
           onHide={() => setVisible(false)}>
-          <TenantForm
+          <ProductForm
             type={"edit"}
-            tenantData={tenantData?.data}
+            productData={productData?.data}
             update={update}
             setUpdate={setUpdate}
             setVisible={setVisible}
@@ -243,11 +358,11 @@ export default function Tenant({ children }) {
         </Dialog>
       </div>
       <DeleteConfirmation
-        message="Do you want to delete this Tenant?"
+        message="Do you want to delete this Product?"
         icon="pi pi-exclamation-triangle"
         confirm={confirm}
         setConfirm={setConfirm}
-        confirmFunction={deleteTenant}
+        confirmFunction={deleteProduct}
         update={update}
         setUpdate={setUpdate}
       />

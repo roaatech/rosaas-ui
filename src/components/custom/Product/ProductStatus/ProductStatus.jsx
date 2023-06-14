@@ -3,11 +3,12 @@ import { Tag } from "primereact/tag";
 import { useState } from "react";
 import useRequest from "../../../../axios/apis/useRequest";
 import { Button } from "primereact/button";
-import { Wrapper } from "./TenantStatus.styled";
+import { Wrapper } from "./ProductStatus.styled";
 import { updateSidebar } from "../../../../store/slices/main";
 import { useDispatch } from "react-redux";
 import { statusArray, statusColor } from "../../../../const";
-const TenantStatus = ({ rowData, setFirst }) => {
+
+const ProductStatus = ({ rowData, setFirst }) => {
   const [status, setStatus] = useState(2);
 
   useEffect(() => {
@@ -30,4 +31,4 @@ const TenantStatus = ({ rowData, setFirst }) => {
   );
 };
 
-export default TenantStatus;
+export default ProductStatus;

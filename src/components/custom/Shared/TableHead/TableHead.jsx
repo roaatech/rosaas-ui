@@ -14,6 +14,7 @@ const TableHead = ({
   setFirst,
   visibleHead,
   setVisibleHead,
+  popupLabel,
 }) => {
   // const [] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -50,7 +51,7 @@ const TableHead = ({
       </div>
       <Dialog
         headerClassName="pb-0"
-        header={"Create Tenant"}
+        header={popupLabel}
         visible={visibleHead}
         style={{ width: "30vw", minWidth: "300px" }}
         onHide={() => setVisibleHead(false)}>

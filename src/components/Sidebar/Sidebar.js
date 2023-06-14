@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import SimpleBar from "simplebar-react";
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
-import { BsFillPersonLinesFill } from "react-icons/bs";
+import { BsFillPersonLinesFill, BsBoxSeam } from "react-icons/bs";
 import {
   Nav,
   Badge,
@@ -244,6 +244,7 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
+              <NavItem title="Product" link={`/product`} icon={BsBoxSeam} />
             </Nav>
           </div>
         </SimpleBar>
