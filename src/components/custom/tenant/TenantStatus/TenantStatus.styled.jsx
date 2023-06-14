@@ -6,14 +6,9 @@ const redB = css`
   background-color: var(--red);
 `;
 export const Wrapper = styled.span`
-  .p-tag {
-    cursor: pointer;
-    width: 80px;
-    height: 32px;
-    font-size: var(--smallFont);
-    ${(props) => (props.status == 1 ? greenB : redB)};
-    padding: 0 !important;
-    box-shadow: 1px 1px 2px 1px var(--gray);
-    border: 1px solid;
+  .label {
+    font-weight: bold;
+    padding: 7px 12px;
+    border-radius: 5px;
   }
 `;

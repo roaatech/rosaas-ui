@@ -51,7 +51,7 @@ export default (props = {}) => {
     // const x = ["ActiveTenant ", "InactiveTenant"];
     return (
       <Wrapper>
-        <Accordion as={Nav.Item} defaultActiveKey={"open"} alwaysOpen>
+        <Accordion as={Nav.Item} defaultActiveKey={"open"}>
           <Accordion.Item eventKey={eventKey}>
             <Accordion.Button
               as={Nav.Link}

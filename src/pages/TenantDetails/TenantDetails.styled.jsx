@@ -23,4 +23,8 @@ export const Wrapper = styled.div`
   .card.border-light {
     border-color: var(--themeGray) !important;
   }
+
+  /* .main {
+    display: flex;
+  } */
 `;
