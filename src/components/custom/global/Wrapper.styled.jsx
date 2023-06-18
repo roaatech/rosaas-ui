@@ -120,7 +120,6 @@ const GlobalStyles = createGlobalStyle`
 
  .p-dropdown-panel, .p-datatable-wrapper {
     background: var(--themeBackground)!important;
- 
 }
 .card,.dropdown-menu-center.mt-2.py-0.dropdown-menu.show{
   overflow-y: hidden;
@@ -129,7 +128,7 @@ const GlobalStyles = createGlobalStyle`
  color: var(--themeColor);
     border-bottom: 1px solid white;
 }
-.p-float-label input.p-filled~label, .p-float-label input:focus ~ label {
+.p-float-label .p-inputwrapper-focus ~ label,.p-float-label .p-inputwrapper-filled ~ label, .p-float-label input:focus ~ label {
     top: 0rem!important;
     background: white!important;
     padding: 0 10px;
@@ -158,10 +157,28 @@ nav svg.svg-inline--fa.fa-bell {
 
 .email{
   color: var(--themeColor)!important;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--themeBackground);
 
 }
 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--unThemeBackground);
+  border-radius: 10px;
 
+}
+
+   
 `;
 
 export default GlobalStyles;

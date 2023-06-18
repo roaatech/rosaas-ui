@@ -173,6 +173,7 @@ const TenantDetails = () => {
               confirm={confirm}
               setConfirm={setConfirm}
               confirmFunction={deleteTenant}
+              sideBar={true}
             />
 
             <Dialog

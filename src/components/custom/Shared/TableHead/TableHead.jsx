@@ -4,8 +4,7 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { BsSearch } from "react-icons/bs";
 import { Dialog } from "primereact/dialog";
-
-let x = 0;
+import useGlobal from "../../../../lib/hocks/global";
 const TableHead = ({
   label,
   icon,
@@ -17,19 +16,9 @@ const TableHead = ({
   popupLabel,
 }) => {
   // const [] = useState(false);
+  const { searchWait } = useGlobal();
   const [inputValue, setInputValue] = useState("");
-  const changeValue = (e) => {
-    setInputValue(e.target.value);
-    const oldText = e.target.value;
-    x++;
-    const y = x;
-    setTimeout(() => {
-      if (x === y) {
-        setSearchValue(oldText);
-        setFirst(0);
-      }
-    }, 1000);
-  };
+
   return (
     <Wrapper>
       <div className="addNew  mt-2 ">
@@ -40,14 +29,20 @@ const TableHead = ({
           onClick={() => setVisibleHead(true)}
         />
       </div>
-
-      <div className="p-input-icon-left mt-2">
-        <BsSearch />
-        <InputText
-          placeholder="Search"
-          value={inputValue}
-          onChange={(e) => changeValue(e)}
-        />
+      <div>
+        {children.length > 1 ? (
+          <div className="p-input-icon-left mt-2 mr-2">{children[1]}</div>
+        ) : null}
+        <div className="p-input-icon-left mt-2">
+          <BsSearch />
+          <InputText
+            placeholder="Search"
+            value={inputValue}
+            onChange={(e) =>
+              searchWait(e, setInputValue, setSearchValue, setFirst)
+            }
+          />
+        </div>
       </div>
       <Dialog
         headerClassName="pb-0"
@@ -55,7 +50,7 @@ const TableHead = ({
         visible={visibleHead}
         style={{ width: "30vw", minWidth: "300px" }}
         onHide={() => setVisibleHead(false)}>
-        {children}
+        {children.length > 1 ? children[0] : children}
       </Dialog>
     </Wrapper>
   );

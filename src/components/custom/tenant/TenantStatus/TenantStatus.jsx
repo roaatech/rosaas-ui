@@ -8,7 +8,7 @@ import { updateSidebar } from "../../../../store/slices/main";
 import { useDispatch } from "react-redux";
 import { statusArray, statusColor } from "../../../../const";
 const TenantStatus = ({ rowData, setFirst }) => {
-  const [status, setStatus] = useState(2);
+  const [status, setStatus] = useState(5);
 
   useEffect(() => {
     // setStatus(rowData.status - 1);

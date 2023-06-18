@@ -5,11 +5,10 @@ import {
   BsPencilSquare,
   BsFillTrash3Fill,
   BsFillEyeFill,
+  BsBoxSeam,
 } from "react-icons/bs";
-import { Paginator } from "primereact/paginator";
 import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
 // import { faUserTie } from "@fortawesome/free-solid-svg-icons";
-import { BsFillPersonLinesFill } from "react-icons/bs";
 
 import ColumnSortHeader from "../../components/custom/Shared/ColumnSortHeader/ColumnSortHeader";
 import TableHead from "../../components/custom/Shared/TableHead/TableHead";
@@ -185,7 +184,7 @@ export default function Product({ children }) {
       <BreadcrumbComponent
         title={"Product List"}
         parent={"Product"}
-        icon={BsFillPersonLinesFill}
+        icon={BsBoxSeam}
       />
       <TableHead
         label={"Add Product"}
@@ -365,6 +364,7 @@ export default function Product({ children }) {
         confirmFunction={deleteProduct}
         update={update}
         setUpdate={setUpdate}
+        sideBar={false}
       />
     </Wrapper>
   );

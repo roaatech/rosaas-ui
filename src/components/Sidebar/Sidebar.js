@@ -244,6 +244,11 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
+              <NavItem
+                title="Tenant"
+                link={`/tenant`}
+                icon={BsFillPersonLinesFill}
+              />
               <NavItem title="Product" link={`/product`} icon={BsBoxSeam} />
             </Nav>
           </div>

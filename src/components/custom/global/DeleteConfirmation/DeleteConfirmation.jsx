@@ -13,6 +13,7 @@ export default function DeleteConfirmation({
   confirmFunction,
   message,
   icon,
+  sideBar,
 }) {
   const dispatch = useDispatch();
 
@@ -23,7 +24,8 @@ export default function DeleteConfirmation({
     if (update) {
       console.log(update);
       setUpdate(update + 1);
-    } else {
+    }
+    if (sideBar == true) {
       dispatch(updateSidebar());
     }
   };
