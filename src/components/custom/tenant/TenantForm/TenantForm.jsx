@@ -103,9 +103,13 @@ const TenantForm = ({
   useEffect(() => {
     tenantData?.product?.id && setSelectedProduct(tenantData.product.id);
   }, []);
-  // useEffect(() => {
-  //   console.log(selectedProduct, "*/*/*/*/");
-  // }, [selectedProduct]);
+  useEffect(() => {
+    (async () => {
+      setTimeout(async () => {
+        await formik.validateField("product");
+      }, 100);
+    })();
+  }, [submitLoading]);
 
   return (
     <div>
