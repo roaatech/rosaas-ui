@@ -6,12 +6,12 @@ import { Button } from "primereact/button";
 import { Wrapper } from "./TenantStatus.styled";
 import { updateSidebar } from "../../../../store/slices/main";
 import { useDispatch } from "react-redux";
-import { statusArray, statusColor } from "../../../../const";
-const TenantStatus = ({ rowData, setFirst }) => {
-  const [status, setStatus] = useState(5);
+import { statusArray, statusColor, statusOpacity } from "../../../../const";
+const TenantStatus = ({ rowData }) => {
+  const [status, setStatus] = useState();
 
   useEffect(() => {
-    // setStatus(rowData.status - 1);
+    setStatus(rowData.status - 1);
   }, [rowData.status]);
 
   return (
@@ -19,10 +19,8 @@ const TenantStatus = ({ rowData, setFirst }) => {
       <span
         className="label"
         style={{
-          color: statusColor[Math.floor(status / 2)],
-          background:
-            statusColor[Math.floor(status / 2)] +
-            (status % 2 > 0 ? "35" : "15"),
+          color: statusColor[status],
+          background: statusColor[status] + statusOpacity[status],
         }}>
         {statusArray[status]}
       </span>

@@ -11,28 +11,28 @@ const useRequest = () => {
   };
 
   const signIn = async (data) => {
-    return await Request.post("identity/management/v1/Auth/Signin", data);
+    return await Request.post("identity/sadmin/v1/Auth/Signin", data);
   };
   const userData = async () => {
-    return await Request.get("identity/management/v1/Account");
+    return await Request.get("identity/sadmin/v1/Account");
   };
   const createTenantRequest = async (data) => {
-    return await Request.post("main/management/v1/Tenant", data);
+    return await Request.post("management/sadmin/v1/Tenants", data);
   };
   const editTenantRequest = async (data) => {
-    return await Request.put("main/management/v1/Tenant", data);
+    return await Request.put("management/sadmin/v1/Tenants", data);
   };
   const getTenant = async (id) => {
-    return await Request.get(`main/management/v1/Tenant/${id}`);
+    return await Request.get(`management/sadmin/v1/Tenants/${id}`);
   };
   const getTenantList = async (params) => {
-    return await Request.get(`main/management/v1/Tenant${params}`);
+    return await Request.get(`management/sadmin/v1/Tenants${params}`);
   };
   const editTenantStatus = async (data) => {
-    return await Request.put("main/management/v1/Tenant/Status", data);
+    return await Request.put("management/sadmin/v1/Tenants/status", data);
   };
   const deleteTenantReq = async (data) => {
-    return await Request.delete(`main/management/v1/Tenant`, { data });
+    return await Request.delete(`management/sadmin/v1/Tenants`, { data });
   };
 
   return {

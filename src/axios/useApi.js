@@ -5,6 +5,7 @@ import { logOut } from "../store/slices/auth";
 import { changePreloader } from "../store/slices/main";
 import { addUserInfo } from "../store/slices/auth";
 import { Client_id } from "../const";
+
 const useApi = () => {
   let axiosObject = {
     baseURL: "https://dev.rosas.roaa.tech/api/",
@@ -17,7 +18,7 @@ const useApi = () => {
   mainInstance.interceptors.request.use(
     function (config) {
       dispatch(changePreloader(true));
-      const noAuthRoutes = ["identity/management/v1/Auth/Signin"];
+      const noAuthRoutes = ["identity/sadmin/v1/Auth/Signin"];
       //* add auth
       console.log({ ddd: config.url });
       if (!noAuthRoutes.includes(config.url)) {

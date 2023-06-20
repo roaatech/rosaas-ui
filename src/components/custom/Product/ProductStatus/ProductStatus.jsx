@@ -6,7 +6,7 @@ import { Button } from "primereact/button";
 import { Wrapper } from "./ProductStatus.styled";
 import { updateSidebar } from "../../../../store/slices/main";
 import { useDispatch } from "react-redux";
-import { statusArray, statusColor } from "../../../../const";
+import { statusArray, statusColor, statusOpacity } from "../../../../const";
 
 const ProductStatus = ({ rowData, setFirst }) => {
   const [status, setStatus] = useState(2);
@@ -20,10 +20,8 @@ const ProductStatus = ({ rowData, setFirst }) => {
       <span
         className="label"
         style={{
-          color: statusColor[Math.floor(status / 2)],
-          background:
-            statusColor[Math.floor(status / 2)] +
-            (status % 2 > 0 ? "35" : "15"),
+          color: statusColor[status],
+          background: statusColor[status] + statusOpacity[status],
         }}>
         {statusArray[status]}
       </span>

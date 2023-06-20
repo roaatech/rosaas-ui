@@ -131,8 +131,16 @@ export default (props = {}) => {
     (async () => {
       const listData = await getTenantList(query);
       setList(listData.data.data.items);
-      setActive(listData.data.data.items.filter((item) => item.status == 1));
-      setInactive(listData.data.data.items.filter((item) => item.status == 2));
+      setActive(
+        listData.data.data.items.filter(
+          (item) => item.status == 4 || item.status == 7
+        )
+      );
+      setInactive(
+        listData.data.data.items.filter(
+          (item) => !(item.status == 4 || item.status == 7)
+        )
+      );
     })();
   }, [first, searchValue, update, updateSlider]);
 
@@ -202,13 +210,15 @@ export default (props = {}) => {
                 setSearchValue={setSearchValue}
                 visibleHead={visibleHead}
                 setVisibleHead={setVisibleHead}
-                setFirst={setFirst}>
+                setFirst={setFirst}
+                popupLabel={"Create Tenant"}>
                 <TenantForm
                   type={"create"}
                   update={update}
                   setUpdate={setUpdate}
                   visibleHead={visibleHead}
                   setVisibleHead={setVisibleHead}
+                  sideBar={true}
                 />
               </TableHead>
               {active.length ? (
@@ -216,16 +226,14 @@ export default (props = {}) => {
                   eventKey="open"
                   title="Active Tenant"
                   icon={BsFillPersonLinesFill}>
-                  {active
-                    .filter((item) => item.status == 1)
-                    .map((item) => (
-                      <>
-                        <NavItem
-                          title={item.uniqueName}
-                          link={`/tenantDetails/${item.id}`}
-                        />
-                      </>
-                    ))}
+                  {active.map((item) => (
+                    <>
+                      <NavItem
+                        title={item.uniqueName}
+                        link={`/tenantDetails/${item.id}`}
+                      />
+                    </>
+                  ))}
                   {console.log({ active })}
                 </CollapsableNavItem>
               ) : null}

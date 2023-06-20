@@ -17,6 +17,7 @@ const TenantForm = ({
   setUpdate,
   setVisibleHead,
   setVisible,
+  sideBar,
 }) => {
   const { createTenantRequest, editTenantRequest } = useRequest();
   const dispatch = useDispatch();
@@ -33,29 +34,25 @@ const TenantForm = ({
         "English Characters, numbers, and underscores are only accepted."
       ),
 
-    // product: Yup.string().required("Product is required"),
-    product: Yup.string()
-      .required("Product is required")
-      .test("custom", "Product is invalid", (v) => {
-        console.log({ v });
-        if (selectedProduct.length > 0) {
-          return true;
-        }
-        return false;
-      }),
+    // product: Yup.string()
+    //   .required("Product is required")
+    //   .test("custom", "Product is invalid", (v) => {
+    //     if (selectedProduct.length > 0) {
+    //       return true;
+    //     }
+    //     return false;
+    //   }),
   });
   const initialValues = {
     title: tenantData ? tenantData.title : "",
     uniqueName: tenantData ? tenantData.uniqueName : "",
-    product: tenantData ? tenantData?.product?.name : "",
+    // product: tenantData ? tenantData?.product?.name : "",
   };
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
-    onSubmit: async (e, values) => {
-      e.preventDefault();
+    onSubmit: async (values) => {
       // Handle form submission
-      console.log({ values });
       if (type == "create") {
         const createTenant = await createTenantRequest({
           title: values.title,
@@ -63,6 +60,13 @@ const TenantForm = ({
           productsIds: [Product_id],
           // product: selectedProduct,
         });
+        if (update) {
+          console.log(update);
+          setUpdate(update + 1);
+        }
+        if (sideBar == true) {
+          dispatch(updateSidebar());
+        }
       } else {
         const editTenant = await editTenantRequest({
           title: values.title,
@@ -70,6 +74,13 @@ const TenantForm = ({
           id: tenantData.id,
           // product: selectedProduct,
         });
+        if (update) {
+          console.log(update);
+          setUpdate(update + 1);
+        }
+        if (sideBar == true) {
+          dispatch(updateSidebar());
+        }
       }
       setVisible && setVisible(false);
       setVisibleHead && setVisibleHead(false);
@@ -100,19 +111,20 @@ const TenantForm = ({
       ],
     };
   };
-  useEffect(() => {
-    tenantData?.product?.id && setSelectedProduct(tenantData.product.id);
-  }, []);
-  useEffect(() => {
-    (async () => {
-      setTimeout(async () => {
-        await formik.validateField("product");
-      }, 100);
-    })();
-  }, [submitLoading]);
+  // useEffect(() => {
+  //   tenantData?.product?.id && setSelectedProduct(tenantData.product.id);
+  // }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     setTimeout(async () => {
+  //       await formik.validateField("product");
+  //     }, 100);
+  //   })();
+  // }, [submitLoading]);
 
   return (
     <div>
+      {/* <form className="pt-4"> */}
       <form className="pt-4" onSubmit={formik.handleSubmit}>
         <div>
           <div className="inputContainer mb-4">
@@ -152,13 +164,13 @@ const TenantForm = ({
               <div className="error-message">{formik.errors.uniqueName}</div>
             )}
           </div>
-          <div className="inputContainer mb-3">
+          {/* <div className="inputContainer mb-3">
             <AutoCompleteFiled
               class={"p-float-label"}
               name="product"
               id="product"
               dataFunction={productOptions}
-              label="Proudct"
+              label="Product"
               className="p-float-label"
               setSelectedProduct={setSelectedProduct}
               value={formik.values.product}
@@ -168,7 +180,7 @@ const TenantForm = ({
             {formik.touched.product && formik.errors.product && (
               <div className="error-message">{formik.errors.product}</div>
             )}
-          </div>
+          </div> */}
         </div>
         <div className="pt-1">
           <Button
