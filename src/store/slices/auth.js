@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
     userInfo: {},
-    // userInfo: { role: "superAdmin" },
   },
   reducers: {
     logOut: (state) => {
+      console.log("logout", "******************************");
       state.userInfo = {};
       localStorage.removeItem("token");
+      window.location.href = "/";
     },
     addUserInfo: (state, action) => {
       state.userInfo = action.payload;
