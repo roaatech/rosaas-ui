@@ -1,5 +1,16 @@
 import { styled } from "styled-components";
 export const Wrapper = styled.div`
+  max-width: 100%;
+
+  * {
+    max-width: 100%;
+  }
+
+  .sidebar-text {
+    white-space: break-spaces;
+    text-wrap: wrap;
+    word-wrap: break-word;
+  }
   .accordion-item > * {
     transition: 0.5s;
   }

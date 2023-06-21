@@ -5,15 +5,15 @@ export const Wrapper = styled.div`
   justify-content: space-between;
   margin-bottom: 10px;
   flex-wrap: wrap;
-  .addNew {
-    margin-right: 10px;
-  }
+  width: 100%;
+
   input.p-inputtext.p-component {
     background: var(--themeBackground);
     color: var(--themeColor);
   }
 
   .p-button.p-button-sm {
+    width: 100%;
     background: var(--unThemeBackground);
     color: var(--unThemeColor);
   }

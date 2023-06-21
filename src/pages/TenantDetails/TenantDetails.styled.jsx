@@ -32,7 +32,7 @@ export const Wrapper = styled.div`
     flex-wrap: wrap;
   }
   .tableSec {
-    width: calc(100% - 360px);
+    width: calc(65% - 15px);
     @media (max-width: 1100px) {
       width: 100%;
     }
@@ -43,32 +43,12 @@ export const Wrapper = styled.div`
       width: 100%;
       margin-left: 0;
     }
-    width: 340px;
+    width: 35%;
     margin: 0 0 0 15px;
     font-size: var(--smallFont);
     background: var(--themeSecColor);
     padding: 15px 10px;
     border-radius: 10px;
     margin-bottom: 20px;
-
-    .timeLineCont {
-      max-height: calc(100vh - 250px);
-      overflow-y: auto;
-      .timeLineItemCont {
-        margin: 0 5px;
-
-        margin-bottom: 9px;
-        background: var(--themeBackground);
-        padding: 10px;
-        border-radius: 5px;
-        .author {
-          font-weight: bold;
-        }
-        .info {
-          display: flex;
-          justify-content: space-between;
-        }
-      }
-    }
   }
 `;

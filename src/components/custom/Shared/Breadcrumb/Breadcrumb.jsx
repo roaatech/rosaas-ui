@@ -2,7 +2,7 @@ import React from "react";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Breadcrumb } from "@themesberg/react-bootstrap";
 import { Wrapper } from "./Breadcrumb.styled";
-
+import { useEffect } from "react";
 const BreadcrumbComponent = ({
   description,
   title,
@@ -10,6 +10,14 @@ const BreadcrumbComponent = ({
   icon: Icon,
   parent,
 }) => {
+  useEffect(() => {
+    if (child) {
+      document.title = `ROSAS-${child}`;
+    } else if (parent) {
+      document.title = `ROSAS-${parent}`;
+    }
+  });
+
   return (
     <>
       {title && (

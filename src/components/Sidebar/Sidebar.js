@@ -41,6 +41,7 @@ export default (props = {}) => {
   const { getTenantList } = useRequest();
   const [list, setList] = useState([]);
   const [inactive, setInactive] = useState([]);
+  const [archived, setArchived] = useState([]);
   const [active, setActive] = useState([]);
 
   const onCollapse = () => setShow(!show);
@@ -138,9 +139,10 @@ export default (props = {}) => {
       );
       setInactive(
         listData.data.data.items.filter(
-          (item) => !(item.status == 4 || item.status == 7)
+          (item) => !(item.status == 4 || item.status == 7 || item.status == 13)
         )
       );
+      setArchived(listData.data.data.items.filter((item) => item.status == 13));
     })();
   }, [first, searchValue, update, updateSlider]);
 
@@ -206,7 +208,8 @@ export default (props = {}) => {
 
               <TableHead
                 label={"Add Tenant"}
-                icon={"pi-user-plus"}
+                // icon={"pi-user-plus"}
+                icon={"pi-plus"}
                 setSearchValue={setSearchValue}
                 visibleHead={visibleHead}
                 setVisibleHead={setVisibleHead}
@@ -252,12 +255,27 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
-              <NavItem
+              {archived.length ? (
+                <CollapsableNavItem
+                  eventKey="open"
+                  title="Archived Tenant"
+                  icon={BsFillPersonLinesFill}>
+                  {archived.map((item) => (
+                    <>
+                      <NavItem
+                        title={item.uniqueName}
+                        link={`/tenantDetails/${item.id}`}
+                      />
+                    </>
+                  ))}
+                </CollapsableNavItem>
+              ) : null}
+              {/* <NavItem
                 title="Tenant"
                 link={`/tenant`}
                 icon={BsFillPersonLinesFill}
               />
-              <NavItem title="Product" link={`/product`} icon={BsBoxSeam} />
+              <NavItem title="Product" link={`/product`} icon={BsBoxSeam} /> */}
             </Nav>
           </div>
         </SimpleBar>

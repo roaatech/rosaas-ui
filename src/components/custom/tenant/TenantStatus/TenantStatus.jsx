@@ -7,12 +7,12 @@ import { Wrapper } from "./TenantStatus.styled";
 import { updateSidebar } from "../../../../store/slices/main";
 import { useDispatch } from "react-redux";
 import { statusArray, statusColor, statusOpacity } from "../../../../const";
-const TenantStatus = ({ rowData }) => {
+const TenantStatus = ({ statusValue }) => {
   const [status, setStatus] = useState();
 
   useEffect(() => {
-    setStatus(rowData.status - 1);
-  }, [rowData.status]);
+    setStatus(statusValue - 1);
+  }, [statusValue]);
 
   return (
     <Wrapper>

@@ -17,67 +17,21 @@ import TenantForm from "../../components/custom/tenant/TenantForm/TenantForm";
 import { Wrapper } from "./TenantDetails.styled";
 import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../store/slices/main";
-import TimelineData from "../../components/custom/tenant/TimelineData/TimelineData";
-import { statusArray, statusColor, statusIcon } from "../../const";
+import { statusColor, statusIcon } from "../../const";
+import Workflow from "../../components/custom/Shared/Workflow/Workflow";
 
 const TenantDetails = () => {
   const [confirm, setConfirm] = useState(false);
   const [currentId, setCurrentId] = useState("");
   const [tenantData, setTenantData] = useState();
   const [updateDetails, setUpdateDetails] = useState();
-  const { DataTransform } = useGlobal(0);
-
   const [visible, setVisible] = useState(false);
   const [action, setAction] = useState();
 
-  const timeLine = [
-    {
-      author: "Super Admin",
-      action: "pre-creating",
-      time: "2023-06-11T15:02:45",
-      message:
-        "ROSAS -Super Admin called the external system ({name}) to create the tenant resources for it.",
-    },
-    {
-      author: "Super Admin",
-      action: "pre-creating",
-      time: "2023-06-11T15:02:45",
-      message:
-        "ROSAS -Super Admin called the external system ({name}) to create the tenant resources for it.",
-    },
-    {
-      author: "Super Admin",
-      action: "pre-creating",
-      time: "2023-06-11T15:02:45",
-      message:
-        "ROSAS -Super Admin called the external system ({name}) to create the tenant resources for it.",
-    },
-    {
-      author: "Super Admin",
-      action: "pre-creating",
-      time: "2023-06-11T15:02:45",
-      message:
-        "ROSAS -Super Admin called the external system ({name}) to create the tenant resources for it.",
-    },
-    {
-      author: "Super Admin",
-      action: "pre-creating",
-      time: "2023-06-11T15:02:45",
-      message:
-        "ROSAS -Super Admin called the external system ({name}) to create the tenant resources for it.",
-    },
-    {
-      author: "Super Admin",
-      action: "pre-creating",
-      time: "2023-06-11T15:02:45",
-      message:
-        "ROSAS -Super Admin called the external system ({name}) to create the tenant resources for it.",
-    },
-  ];
+  const { DataTransform } = useGlobal();
 
-  const { getTenant, deleteTenantReq } = useRequest();
+  const { getTenant, deleteTenantReq, editTenantStatus } = useRequest();
   const routeParams = useParams();
-  const { editTenantStatus } = useRequest();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -96,7 +50,7 @@ const TenantDetails = () => {
   };
   const deleteTenant = async () => {
     await deleteTenantReq({ id: currentId });
-    navigate(`/welcome`);
+    navigate(`/Dashboard`);
   };
 
   useEffect(() => {
@@ -148,7 +102,9 @@ const TenantDetails = () => {
                         <tr>
                           <td className="fw-bold">status</td>
                           <td>
-                            <TenantStatus rowData={tenantData.data} />
+                            <TenantStatus
+                              statusValue={tenantData.data.status}
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -165,16 +121,18 @@ const TenantDetails = () => {
                 </Card>
 
                 <div className="action">
-                  {/* <Button
-                    className="mx-2"
-                    label="Delete"
-                    icon="pi pi-trash"
-                    onClick={() => deleteConfirm(tenantData.data.id)}
-                    style={{
-                      backgroundColor: "var(--red)",
-                      borderColor: "var(--red)",
-                    }}
-                  /> */}
+                  {tenantData.data.status == 13 ? (
+                    <Button
+                      className="mx-2"
+                      label="Delete"
+                      icon="pi pi-trash"
+                      onClick={() => deleteConfirm(tenantData.data.id)}
+                      style={{
+                        backgroundColor: "var(--red)",
+                        borderColor: "var(--red)",
+                      }}
+                    />
+                  ) : null}
                   <Button
                     className="mx-2"
                     label="Edit"
@@ -217,25 +175,11 @@ const TenantDetails = () => {
                   />
                 </Dialog>
               </div>
-              {/* <div className="timeline">
-            <TimelineData />
-          </div> */}
             </div>
           </div>
 
           <div className="timeLine">
-            <div className="timeLineCont">
-              {timeLine.map((item) => (
-                <div className="timeLineItemCont">
-                  <div className="author">{item.author}</div>
-                  <div className="info">
-                    <div className="action">{item.action}</div>
-                    <div className="time">{DataTransform(item.time)}</div>
-                  </div>
-                  <div className="message">{item.message}</div>
-                </div>
-              ))}
-            </div>
+            <Workflow updateDetails={updateDetails} />
           </div>
         </div>
       )}

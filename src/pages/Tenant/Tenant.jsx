@@ -68,7 +68,7 @@ export default function Tenant({ children }) {
 
   const statusBodyTemplate = (rowData) => {
     console.log(rowData);
-    return <TenantStatus rowData={rowData} key={rowData.id} />;
+    return <TenantStatus statusValue={rowData.status} key={rowData.id} />;
   };
 
   /******************************* */
@@ -244,7 +244,7 @@ export default function Tenant({ children }) {
               )}
               header="Edit"
             />
-            <Column
+            {/* <Column
               style={{ width: "60px", textAlign: "center" }}
               body={(data, options) => (
                 <>
@@ -255,7 +255,7 @@ export default function Tenant({ children }) {
                 </>
               )}
               header="Delete"
-            />
+            /> */}
           </DataTable>
 
           <CustomPaginator

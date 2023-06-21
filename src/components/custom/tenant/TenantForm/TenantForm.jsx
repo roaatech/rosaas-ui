@@ -9,6 +9,7 @@ import { Product_id } from "../../../../const/index.js";
 import { updateSidebar } from "../../../../store/slices/main";
 import { useDispatch } from "react-redux";
 import AutoCompleteFiled from "../../Shared/AutoCompleteFiled/AutoCompleteFiled.jsx";
+import { useNavigate } from "react-router-dom";
 
 const TenantForm = ({
   type,
@@ -23,6 +24,7 @@ const TenantForm = ({
   const dispatch = useDispatch();
   const [selectedProduct, setSelectedProduct] = useState("");
   const [submitLoading, setSubmitLoading] = useState();
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().max(100, "Must be maximum 100 digits"),
@@ -60,6 +62,7 @@ const TenantForm = ({
           productsIds: [Product_id],
           // product: selectedProduct,
         });
+        navigate(`/tenantDetails/${createTenant.data.data.id}`);
         if (update) {
           console.log(update);
           setUpdate(update + 1);

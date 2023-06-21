@@ -1,5 +1,10 @@
 const Product_id = "88e67328-3b20-413e-b6e1-010b48fa7bc9";
 const Client_id = "spa_rosas_admin_panel";
+const Owner = {
+  1: "Super Admin",
+  101: "External System",
+};
+
 const statusArray = [
   "Created in db",
   "Creating",
@@ -31,6 +36,7 @@ const statusOpacity = [
   "15",
   "35",
 ];
+
 const statusColor = [
   "#155dd7",
   "#155dd7",
@@ -68,4 +74,5 @@ export {
   statusColor,
   statusIcon,
   statusOpacity,
+  Owner,
 };

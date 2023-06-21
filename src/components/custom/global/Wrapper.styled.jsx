@@ -38,6 +38,14 @@ const GlobalStyles = createGlobalStyle`
   --themeGray:${(props) => (props.darkMode ? "#565656" : "#eaedf2")};
 
 }
+
+
+
+.sidebar-inner .addNew {
+  width: 100%;
+}
+
+
   *{
     font-family: "Nunito Sans", sans-serif;
   }

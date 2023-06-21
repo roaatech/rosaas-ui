@@ -34,6 +34,9 @@ const useRequest = () => {
   const deleteTenantReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Tenants`, { data });
   };
+  const getTimeLine = async (id) => {
+    return await Request.get(`management/sadmin/v1/Tenants/${id}/processes`);
+  };
 
   return {
     signIn,
@@ -45,6 +48,7 @@ const useRequest = () => {
     getTenantList,
     editTenantStatus,
     deleteTenantReq,
+    getTimeLine,
   };
 };
 export default useRequest;
