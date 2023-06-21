@@ -75,6 +75,7 @@ const TenantDetails = () => {
 
       <div className="refresh">
         <Button
+          onClick={() => window.location.reload()}
           type="button"
           icon={<FiRefreshCw />}
           tooltip="Refresh Data"
