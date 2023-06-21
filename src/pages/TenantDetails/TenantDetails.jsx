@@ -6,6 +6,7 @@ import { Card, Table } from "@themesberg/react-bootstrap";
 import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
 // import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 import { BsFillPersonLinesFill } from "react-icons/bs";
+import { FiRefreshCw } from "react-icons/fi";
 
 import TenantStatus from "../../components/custom/tenant/TenantStatus/TenantStatus";
 import useGlobal from "../../lib/hocks/global";
@@ -19,12 +20,13 @@ import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../store/slices/main";
 import { statusColor, statusIcon } from "../../const";
 import Workflow from "../../components/custom/Shared/Workflow/Workflow";
+import { Tooltip } from "bootstrap";
 
 const TenantDetails = () => {
   const [confirm, setConfirm] = useState(false);
   const [currentId, setCurrentId] = useState("");
   const [tenantData, setTenantData] = useState();
-  const [updateDetails, setUpdateDetails] = useState();
+  const [updateDetails, setUpdateDetails] = useState(0);
   const [visible, setVisible] = useState(false);
   const [action, setAction] = useState();
 
@@ -70,6 +72,20 @@ const TenantDetails = () => {
         child={tenantData && tenantData.data.title}
         icon={BsFillPersonLinesFill}
       />
+
+      <div className="refresh">
+        <Button
+          type="button"
+          icon={<FiRefreshCw />}
+          tooltip="Refresh Data"
+          tooltipOptions={{
+            position: "left",
+            mouseTrack: true,
+            mouseTrackTop: 15,
+          }}
+        />
+      </div>
+
       {tenantData && (
         <div className="pageWrapper">
           <div className="tableSec">
@@ -140,8 +156,9 @@ const TenantDetails = () => {
                     onClick={() => setVisible(true)}
                   />
                   {action &&
-                    action.map((item) => (
+                    action.map((item, index) => (
                       <Button
+                        key={index}
                         className="mx-2"
                         label={item.name}
                         icon={`pi ${statusIcon[item.status - 1]}`}

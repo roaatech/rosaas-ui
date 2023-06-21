@@ -17,11 +17,9 @@ export const mainSlice = createSlice({
       localStorage.setItem("dark", action.payload);
     },
     changePreloader: (state, action) => {
-      console.log("object");
       state.preloader = action.payload;
     },
     updateSidebar: (state) => {
-      console.log("object");
       state.sidebar++;
     },
   },

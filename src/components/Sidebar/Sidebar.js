@@ -25,6 +25,7 @@ import { Wrapper } from "./Sidebar.styled";
 import TableHead from "../custom/Shared/TableHead/TableHead";
 import TenantForm from "../custom/tenant/TenantForm/TenantForm";
 import useRequest from "../../axios/apis/useRequest";
+import { useParams } from "react-router-dom";
 
 export default (props = {}) => {
   const location = useLocation();
@@ -124,6 +125,7 @@ export default (props = {}) => {
       </Nav.Item>
     );
   };
+  const paramsID = useParams().id;
 
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=SearchTerm`;
@@ -144,7 +146,8 @@ export default (props = {}) => {
       );
       setArchived(listData.data.data.items.filter((item) => item.status == 13));
     })();
-  }, [first, searchValue, update, updateSlider]);
+    console.log("xxxxxx");
+  }, [first, searchValue, update, updateSlider, paramsID]);
 
   return (
     <>

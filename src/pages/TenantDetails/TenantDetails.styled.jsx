@@ -27,8 +27,8 @@ export const Wrapper = styled.div`
   }
 
   .pageWrapper {
+    align-items: flex-start;
     display: flex;
-    padding: 0 10px;
     flex-wrap: wrap;
   }
   .tableSec {
@@ -50,5 +50,19 @@ export const Wrapper = styled.div`
     padding: 15px 10px;
     border-radius: 10px;
     margin-bottom: 20px;
+  }
+
+  .refresh {
+    button.p-button.p-component.p-button-icon-only {
+      padding: 0.3rem !important;
+      text-align: center;
+      min-width: auto;
+      width: 40px;
+      display: flex;
+      margin: 0px 0 10px auto;
+      .svg {
+        font-size: 22px;
+      }
+    }
   }
 `;

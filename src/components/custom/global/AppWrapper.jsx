@@ -10,7 +10,6 @@ import { ToastContainer } from "react-toastify";
 import Preloader from "../../../components/custom/global/Preloader/Preloader";
 import { changeMode, changePreloader } from "../../../store/slices/main";
 import useRequest from "../../../axios/apis/useRequest";
-// import "../../../../node_modules/primeflex/primeflex.css";
 
 const AppWrapper = ({ children }) => {
   const { userData } = useRequest();
