@@ -1,0 +1,54 @@
+
+variables:
+  - name: YARN_CACHE_FOLDER
+    value: $(Pipeline.Workspace)/.yarn
+trigger:
+  branches:
+    include:
+      - develop
+  tags:
+    include:
+      - "*"
+pool:
+  vmImage: "ubuntu-latest"
+jobs:
+  - job: BuildAdminPanelApp
+    displayName: Build Admin Panel App
+    steps:
+      - task: Cache@2
+        inputs:
+          key: 'yarn | "$(Agent.OS)" | yarn.lock'
+          restoreKeys: |
+            yarn | "$(Agent.OS)"
+            yarn
+          path: $(YARN_CACHE_FOLDER)
+        displayName: Cache Yarn packages
+      - script: yarn --frozen-lockfile
+        displayName: Install Packages
+      - script: yarn build
+        displayName: Build Admin Panel
+      - task: PublishPipelineArtifact@1
+        displayName: Publish Admin Panel Files
+        inputs:
+          targetPath: 'build'
+          artifact: 'rosas-admin'
+  - job: BuildDockerImage
+    displayName: Build Admin Panel Docker Image
+    dependsOn: BuildAdminPanelApp
+    steps: 
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: 'rosas-admin'
+          targetPath: '$(Build.SourcesDirectory)'
+      - task: Docker@2
+        displayName: 'Build and push docker image'
+        inputs:
+          containerRegistry: 'Roaa Registry'
+          repository: 'rosas/admin-panel'
+          command: 'buildAndPush'
+          dockerfile: Dockerfile
+          buildContext: .
+          tags: "ci-$(Build.BuildNumber)"
+          addPipelineData: false
+          addBaseImageData: false
