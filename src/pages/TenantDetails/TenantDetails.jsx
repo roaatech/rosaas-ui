@@ -18,7 +18,7 @@ import TenantForm from "../../components/custom/tenant/TenantForm/TenantForm";
 import { Wrapper } from "./TenantDetails.styled";
 import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../store/slices/main";
-import { statusColor, statusIcon } from "../../const";
+import { statusConst } from "../../const";
 import Workflow from "../../components/custom/Shared/Workflow/Workflow";
 import { Tooltip } from "bootstrap";
 
@@ -68,24 +68,9 @@ const TenantDetails = () => {
       <BreadcrumbComponent
         title={tenantData && tenantData.data.title}
         parent={"Tenant"}
-        description={"Tenant details"}
         child={tenantData && tenantData.data.title}
         icon={BsFillPersonLinesFill}
       />
-
-      <div className="refresh">
-        <Button
-          onClick={() => window.location.reload()}
-          type="button"
-          icon={<FiRefreshCw />}
-          tooltip="Refresh Data"
-          tooltipOptions={{
-            position: "left",
-            mouseTrack: true,
-            mouseTrackTop: 15,
-          }}
-        />
-      </div>
 
       {tenantData && (
         <div className="pageWrapper">
@@ -109,8 +94,10 @@ const TenantDetails = () => {
                         <tr>
                           <td className="fw-bold">Products</td>
                           <td>
-                            {tenantData.data.products.map((product) => (
-                              <span className="p-1 border-round border-1 border-400 me-2">
+                            {tenantData.data.products.map((product, index) => (
+                              <span
+                                key={index}
+                                className="p-1 border-round border-1 border-400 me-2">
                                 {product.name}
                               </span>
                             ))}
@@ -137,40 +124,65 @@ const TenantDetails = () => {
                   </Card.Body>
                 </Card>
 
-                <div className="action">
-                  {tenantData.data.status == 13 ? (
+                <div className="buttons">
+                  <div className="action">
+                    {tenantData.data.status == 13 ? (
+                      <Button
+                        className="mx-2"
+                        label="Delete"
+                        icon="pi pi-trash"
+                        onClick={() => deleteConfirm(tenantData.data.id)}
+                        style={{
+                          backgroundColor: "var(--red)",
+                          borderColor: "var(--red)",
+                        }}
+                      />
+                    ) : null}
+                    {tenantData.data.status != 13 ? (
+                      <Button
+                        className="mx-2"
+                        label="Edit"
+                        icon="pi pi-pencil"
+                        onClick={() => setVisible(true)}
+                        style={{
+                          backgroundColor: "var(--primaryColor)",
+                          borderColor: "var(--primaryColor)",
+                        }}
+                      />
+                    ) : null}
+                    {action &&
+                      action.map((item, index) => (
+                        <Button
+                          key={index}
+                          className="mx-2"
+                          label={item.name}
+                          icon={`pi ${statusConst[item.status].icon}`}
+                          style={{
+                            backgroundColor: statusConst[item.status].color,
+                            borderColor: statusConst[item.status].color,
+                          }}
+                          onClick={() => chagneStatus(item.status)}
+                        />
+                      ))}
+                  </div>
+                  <div className="refresh">
                     <Button
-                      className="mx-2"
-                      label="Delete"
-                      icon="pi pi-trash"
-                      onClick={() => deleteConfirm(tenantData.data.id)}
-                      style={{
-                        backgroundColor: "var(--red)",
-                        borderColor: "var(--red)",
+                      onClick={() => {
+                        setUpdateDetails(updateDetails + 1);
+                        dispatch(updateSidebar());
+                      }}
+                      type="button"
+                      icon={<FiRefreshCw />}
+                      tooltip="Refresh Data"
+                      tooltipOptions={{
+                        position: "left",
+                        mouseTrack: true,
+                        mouseTrackTop: 15,
                       }}
                     />
-                  ) : null}
-                  <Button
-                    className="mx-2"
-                    label="Edit"
-                    icon="pi pi-pencil"
-                    onClick={() => setVisible(true)}
-                  />
-                  {action &&
-                    action.map((item, index) => (
-                      <Button
-                        key={index}
-                        className="mx-2"
-                        label={item.name}
-                        icon={`pi ${statusIcon[item.status - 1]}`}
-                        style={{
-                          backgroundColor: statusColor[item.status - 1],
-                          borderColor: statusColor[item.status - 1],
-                        }}
-                        onClick={() => chagneStatus(item.status)}
-                      />
-                    ))}
+                  </div>
                 </div>
+
                 <DeleteConfirmation
                   message="Do you want to delete this Tenant?"
                   icon="pi pi-exclamation-triangle"

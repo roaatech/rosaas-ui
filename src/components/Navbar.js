@@ -149,7 +149,6 @@ export default (props) => {
                   className="fw-bold"
                   onClick={() => {
                     changeDirection(xDirection);
-                    console.log("dddddd", xDirection);
                   }}>
                   <FontAwesomeIcon icon={faCog} className="me-2" /> Settings
                 </Dropdown.Item>
@@ -160,7 +159,6 @@ export default (props) => {
                 <Dropdown.Item
                   className="fw-bold"
                   onClick={() => {
-                    console.log(darkMode, "ddddd");
                     dispatch(changeMode(!darkMode));
                   }}>
                   {/* <FontAwesomeIcon icon={faUserShield} className="me-2" /> */}

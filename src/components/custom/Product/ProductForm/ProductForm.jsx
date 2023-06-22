@@ -29,7 +29,6 @@ const ProductForm = ({
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    console.log({ values });
     if (type == "create") {
       // const createProduct = await createProductRequest({
       //   name: values.name,

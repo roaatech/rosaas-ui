@@ -93,9 +93,9 @@ const GlobalStyles = createGlobalStyle`
     background-color: var(--primaryBackground);
     border-color: var(--primaryBackground);
 
-    &:hover{
+    /* &:hover{
       background-color: var(--primaryBackground)!important;
-    }
+    } */
 }
 
 .p-datatable .p-datatable-thead > tr > th{

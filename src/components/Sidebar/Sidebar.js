@@ -146,7 +146,6 @@ export default (props = {}) => {
       );
       setArchived(listData.data.data.items.filter((item) => item.status == 13));
     })();
-    console.log("xxxxxx");
   }, [first, searchValue, update, updateSlider, paramsID]);
 
   return (
@@ -211,7 +210,6 @@ export default (props = {}) => {
 
               <TableHead
                 label={"Add Tenant"}
-                // icon={"pi-user-plus"}
                 icon={"pi-plus"}
                 setSearchValue={setSearchValue}
                 visibleHead={visibleHead}
@@ -232,44 +230,40 @@ export default (props = {}) => {
                   eventKey="open"
                   title="Active Tenant"
                   icon={BsFillPersonLinesFill}>
-                  {active.map((item) => (
-                    <>
-                      <NavItem
-                        title={item.uniqueName}
-                        link={`/tenantDetails/${item.id}`}
-                      />
-                    </>
+                  {active.map((item, index) => (
+                    <NavItem
+                      key={index}
+                      title={item.uniqueName}
+                      link={`/tenantDetails/${item.id}`}
+                    />
                   ))}
-                  {console.log({ active })}
                 </CollapsableNavItem>
               ) : null}
               {inactive.length ? (
                 <CollapsableNavItem
-                  eventKey="open"
+                  eventKey="close"
                   title="Inactive Tenant"
                   icon={BsFillPersonLinesFill}>
-                  {inactive.map((item) => (
-                    <>
-                      <NavItem
-                        title={item.uniqueName}
-                        link={`/tenantDetails/${item.id}`}
-                      />
-                    </>
+                  {inactive.map((item, index) => (
+                    <NavItem
+                      key={index}
+                      title={item.uniqueName}
+                      link={`/tenantDetails/${item.id}`}
+                    />
                   ))}
                 </CollapsableNavItem>
               ) : null}
               {archived.length ? (
                 <CollapsableNavItem
-                  eventKey="open"
+                  eventKey="close"
                   title="Archived Tenant"
                   icon={BsFillPersonLinesFill}>
-                  {archived.map((item) => (
-                    <>
-                      <NavItem
-                        title={item.uniqueName}
-                        link={`/tenantDetails/${item.id}`}
-                      />
-                    </>
+                  {archived.map((item, index) => (
+                    <NavItem
+                      key={index}
+                      title={item.uniqueName}
+                      link={`/tenantDetails/${item.id}`}
+                    />
                   ))}
                 </CollapsableNavItem>
               ) : null}

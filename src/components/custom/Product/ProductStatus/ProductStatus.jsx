@@ -6,24 +6,22 @@ import { Button } from "primereact/button";
 import { Wrapper } from "./ProductStatus.styled";
 import { updateSidebar } from "../../../../store/slices/main";
 import { useDispatch } from "react-redux";
-import { statusArray, statusColor, statusOpacity } from "../../../../const";
+import { statusConst } from "../../../../const";
 
 const ProductStatus = ({ rowData, setFirst }) => {
   const [status, setStatus] = useState(2);
 
-  useEffect(() => {
-    // setStatus(rowData.status - 1);
-  }, [rowData.status]);
+  useEffect(() => {}, [rowData.status]);
 
   return (
     <Wrapper>
       <span
         className="label"
         style={{
-          color: statusColor[status],
-          background: statusColor[status] + statusOpacity[status],
+          color: statusConst[status].color,
+          background: statusConst[status].color + statusConst[status].opacity,
         }}>
-        {statusArray[status]}
+        {statusConst[status].string}
       </span>
     </Wrapper>
   );

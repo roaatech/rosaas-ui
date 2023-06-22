@@ -1,7 +1,13 @@
 import styled from "styled-components";
 export const Wrapper = styled.div`
+  background: var(--themeSecColor);
+  padding: 10px 25px;
+  margin: 15px 0;
+  border-radius: 10px;
+
   h4 {
     color: var(--themeColor) !important;
+    margin-bottom: 0px;
   }
 
   .breadcrumb {

@@ -148,7 +148,6 @@ export default function Product({ children }) {
   }, [first, rows, searchValue, sortField, sortValue, update]);
 
   const statusBodyTemplate = (rowData) => {
-    console.log(rowData);
     return <ProductStatus rowData={rowData} key={rowData.id} />;
   };
 
@@ -157,7 +156,6 @@ export default function Product({ children }) {
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
-    console.log(event.first, event.rows);
   };
 
   /****************************** */

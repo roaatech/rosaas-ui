@@ -22,8 +22,8 @@ const Workflow = ({ updateDetails }) => {
   return (
     <Wrapper>
       <div className="timeLineCont">
-        {timeLine.map((item) => (
-          <div className="timeLineItemCont">
+        {timeLine.map((item, index) => (
+          <div className="timeLineItemCont" key={index}>
             <div className="author">{Owner[item.ownerType]}</div>
             <div className="info">
               <div className="action">

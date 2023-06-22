@@ -8,7 +8,8 @@ import { Client_id } from "../const";
 
 const useApi = () => {
   let axiosObject = {
-    baseURL: "https://dev.rosas.roaa.tech/api/",
+    // baseURL: process.env.REACT_APP_API_URL,
+    baseURL: window.localStorage.getItem("url"),
   };
 
   const mainInstance = axios.create(axiosObject);
@@ -20,7 +21,6 @@ const useApi = () => {
       dispatch(changePreloader(true));
       const noAuthRoutes = ["identity/sadmin/v1/Auth/Signin"];
       //* add auth
-      console.log({ ddd: config.url });
       if (!noAuthRoutes.includes(config.url)) {
         const localStorageToken = localStorage.getItem("token");
         config.headers.Authorization = localStorageToken

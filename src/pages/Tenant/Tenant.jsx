@@ -67,7 +67,6 @@ export default function Tenant({ children }) {
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct]);
 
   const statusBodyTemplate = (rowData) => {
-    console.log(rowData);
     return <TenantStatus statusValue={rowData.status} key={rowData.id} />;
   };
 
@@ -76,7 +75,6 @@ export default function Tenant({ children }) {
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
-    console.log(event.first, event.rows);
   };
 
   const productOptions = async (text) => {

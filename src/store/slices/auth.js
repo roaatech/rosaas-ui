@@ -6,7 +6,6 @@ export const authSlice = createSlice({
   },
   reducers: {
     logOut: (state) => {
-      console.log("logout", "******************************");
       state.userInfo = {};
       localStorage.removeItem("token");
       window.location.href = "/";

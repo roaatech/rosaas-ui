@@ -64,7 +64,6 @@ const TenantForm = ({
         });
         navigate(`/tenantDetails/${createTenant.data.data.id}`);
         if (update) {
-          console.log(update);
           setUpdate(update + 1);
         }
         if (sideBar == true) {
@@ -78,7 +77,6 @@ const TenantForm = ({
           // product: selectedProduct,
         });
         if (update) {
-          console.log(update);
           setUpdate(update + 1);
         }
         if (sideBar == true) {

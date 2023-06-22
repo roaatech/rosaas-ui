@@ -22,7 +22,6 @@ export default function DeleteConfirmation({
     setConfirm(false);
 
     if (update) {
-      console.log(update);
       setUpdate(update + 1);
     }
     if (sideBar == true) {

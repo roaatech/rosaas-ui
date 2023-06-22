@@ -18,7 +18,6 @@ export default function AutoCompleteFiled({
   const [items, setItems] = useState([]);
 
   const search = async (currentValue) => {
-    console.log("search");
     x++;
     const y = x;
 

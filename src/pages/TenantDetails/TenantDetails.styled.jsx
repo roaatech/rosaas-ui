@@ -52,16 +52,30 @@ export const Wrapper = styled.div`
     margin-bottom: 20px;
   }
 
-  .refresh {
-    button.p-button.p-component.p-button-icon-only {
-      padding: 0.3rem !important;
-      text-align: center;
-      min-width: auto;
-      width: 40px;
-      display: flex;
-      margin: 0px 0 10px auto;
-      .svg {
-        font-size: 22px;
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    button:hover {
+      opacity: 90%;
+    }
+
+    .refresh {
+      button.p-button.p-component.p-button-icon-only {
+        padding: 0.3rem !important;
+        text-align: center;
+        min-width: auto;
+        width: 40px;
+        display: flex;
+        margin: 0 10px;
+        background: #239dff;
+        border-color: #00569b;
+
+        .svg {
+          font-size: 22px;
+        }
       }
     }
   }
