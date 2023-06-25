@@ -165,22 +165,25 @@ const TenantDetails = () => {
                         />
                       ))}
                   </div>
-                  <div className="refresh">
-                    <Button
-                      onClick={() => {
-                        setUpdateDetails(updateDetails + 1);
-                        dispatch(updateSidebar());
-                      }}
-                      type="button"
-                      icon={<FiRefreshCw />}
-                      tooltip="Refresh Data"
-                      tooltipOptions={{
-                        position: "left",
-                        mouseTrack: true,
-                        mouseTrackTop: 15,
-                      }}
-                    />
-                  </div>
+
+                  {tenantData.data.status != 13 ? (
+                    <div className="refresh">
+                      <Button
+                        onClick={() => {
+                          setUpdateDetails(updateDetails + 1);
+                          dispatch(updateSidebar());
+                        }}
+                        type="button"
+                        icon={<FiRefreshCw />}
+                        tooltip="Refresh Data"
+                        tooltipOptions={{
+                          position: "left",
+                          mouseTrack: true,
+                          mouseTrackTop: 15,
+                        }}
+                      />
+                    </div>
+                  ) : null}
                 </div>
 
                 <DeleteConfirmation
