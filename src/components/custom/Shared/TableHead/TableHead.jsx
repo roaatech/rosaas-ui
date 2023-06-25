@@ -14,6 +14,7 @@ const TableHead = ({
   visibleHead,
   setVisibleHead,
   popupLabel,
+  search = true,
 }) => {
   // const [] = useState(false);
   const { searchWait } = useGlobal();
@@ -33,16 +34,18 @@ const TableHead = ({
         {children.length > 1 ? (
           <div className="p-input-icon-left mt-2 mr-2">{children[1]}</div>
         ) : null}
-        <div className="p-input-icon-left mt-2">
-          <BsSearch />
-          <InputText
-            placeholder="Search"
-            value={inputValue}
-            onChange={(e) =>
-              searchWait(e, setInputValue, setSearchValue, setFirst)
-            }
-          />
-        </div>
+        {search && (
+          <div className="p-input-icon-left mt-2">
+            <BsSearch />
+            <InputText
+              placeholder="Search"
+              value={inputValue}
+              onChange={(e) =>
+                searchWait(e, setInputValue, setSearchValue, setFirst)
+              }
+            />
+          </div>
+        )}
       </div>
       <Dialog
         headerClassName="pb-0"

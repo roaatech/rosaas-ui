@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { BsPencilSquare, BsFillEyeFill } from "react-icons/bs";
+import {
+  BsPencilSquare,
+  BsFillEyeFill,
+  BsFillTrash3Fill,
+} from "react-icons/bs";
 import { Paginator } from "primereact/paginator";
-import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
 // import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 import { BsFillPersonLinesFill } from "react-icons/bs";
 
-import ColumnSortHeader from "../../components/custom/Shared/ColumnSortHeader/ColumnSortHeader";
-import TableHead from "../../components/custom/Shared/TableHead/TableHead";
-import TableDate from "../../components/custom/Shared/TableDate/TableDate";
+import ColumnSortHeader from "../../Shared/ColumnSortHeader/ColumnSortHeader";
+import TableHead from "../../Shared/TableHead/TableHead";
+import TableDate from "../../Shared/TableDate/TableDate";
 import FeatureForm from "../FeatureForm/FeatureForm";
-import useRequest from "../../axios/apis/useRequest";
+import useRequest from "../../../../axios/apis/useRequest";
 import { Dialog } from "primereact/dialog";
-import DeleteConfirmation from "../../components/custom/global/DeleteConfirmation/DeleteConfirmation.jsx";
+import DeleteConfirmation from "../../global/DeleteConfirmation/DeleteConfirmation.jsx";
 import { useNavigate } from "react-router-dom";
 import { Wrapper } from "./FeatureTable.styled";
 import CustomPaginator from "../../Shared/CustomPaginator/CustomPaginator";
 import AutoCompleteFiled from "../../Shared/AutoCompleteFiled/AutoCompleteFiled";
 
 export default function FeatureTable({ children }) {
-  const { getFeature, getFeatureList, deleteFeatureReq } = useRequest();
+  const { getTenant, getTenantList, deleteTenantReq } = useRequest();
   const [visible, setVisible] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [visibleHead, setVisibleHead] = useState(false);
@@ -41,7 +44,7 @@ export default function FeatureTable({ children }) {
     setConfirm(true);
   };
   const deleteFeature = async () => {
-    await deleteFeatureReq({ id: currentId });
+    await deleteTenantReq({ id: currentId });
   };
 
   useEffect(() => {
@@ -55,7 +58,7 @@ export default function FeatureTable({ children }) {
       query += `&filters[1].Field=selectedProduct&filters[1].Value=${selectedProduct}`;
 
     (async () => {
-      const listData = await getFeatureList(query);
+      const listData = await getTenantList(query);
       setTotalCount(listData.data.data.totalCount);
       setList(listData.data.data.items);
     })();
@@ -96,28 +99,23 @@ export default function FeatureTable({ children }) {
   /****************************** */
   const [featureData, setFeatureData] = useState();
   const editForm = async (id) => {
-    const featureData = await getFeature(id);
+    const featureData = await getTenant(id);
     setFeatureData(featureData.data);
     setVisible(true);
   };
 
   return (
     <Wrapper>
-      <BreadcrumbComponent
-        title={"Feature List"}
-        parent={"Feature"}
-        icon={BsFillPersonLinesFill}
-      />
-
       <div className="tableSec">
         <TableHead
           label={"Add Feature"}
           popupLabel={"Create Feature"}
-          icon={"pi-user-plus"}
+          icon={"pi-plus"}
           setSearchValue={setSearchValue}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
-          setFirst={setFirst}>
+          setFirst={setFirst}
+          search={false}>
           <FeatureForm
             type={"create"}
             update={update}
@@ -126,73 +124,30 @@ export default function FeatureTable({ children }) {
             setVisibleHead={setVisibleHead}
             sideBar={false}
           />
-
-          <AutoCompleteFiled
-            placeHolder="Select Product"
-            dataFunction={productOptions}
-            setSelectedProduct={setSelectedProduct}
-          />
         </TableHead>
         <div className="card">
           <DataTable
             value={list}
             tableStyle={{ minWidth: "50rem" }}
             size={"small"}>
-            <Column
-              field="title"
-              header={
-                <ColumnSortHeader
-                  text="Title"
-                  field="uniqueName"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
-              }></Column>
-            <Column
-              field="uniqueName"
-              header={
-                <ColumnSortHeader
-                  text="Unique Name"
-                  field="uniqueName"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
-              }
-            />
+            <Column field="title" header="Name" />
+            <Column field="title" header="Type" />
+            <Column field="title" header="Unit" />
+            <Column field="title" header="Reset" />
+            <Column field="title" header="Description" />
 
             <Column
+              header="Date"
+              field="editedDate"
+              style={{ width: "250px", maxidth: "250px" }}
               body={(data, options) => (
                 <TableDate
                   createdDate={data.createdDate}
                   editedDate={data.editedDate}
                 />
-              )}
-              style={{ width: "250px", maxidth: "250px" }}
-              header={
-                <ColumnSortHeader
-                  text="Date"
-                  field="editedDate"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
-              }
-            />
-            <Column
+              )}></Column>
+
+            {/* <Column
               style={{ width: "60px", textAlign: "center" }}
               body={(data, options) => (
                 <>
@@ -203,7 +158,7 @@ export default function FeatureTable({ children }) {
                 </>
               )}
               header="View"
-            />
+            /> */}
             <Column
               style={{ width: "60px", textAlign: "center" }}
               body={(data, options) => (
@@ -216,7 +171,7 @@ export default function FeatureTable({ children }) {
               )}
               header="Edit"
             />
-            {/* <Column
+            <Column
               style={{ width: "60px", textAlign: "center" }}
               body={(data, options) => (
                 <>
@@ -227,15 +182,8 @@ export default function FeatureTable({ children }) {
                 </>
               )}
               header="Delete"
-            /> */}
+            />
           </DataTable>
-
-          <CustomPaginator
-            first={first}
-            rows={rows}
-            totalCount={totalCount}
-            onPageChange={onPageChange}
-          />
 
           <Dialog
             headerClassName="pb-0"

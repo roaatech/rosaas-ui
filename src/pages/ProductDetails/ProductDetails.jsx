@@ -17,31 +17,18 @@ import { Wrapper } from "./ProductDetails.styled";
 import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../store/slices/main";
 import ProductForm from "../../components/custom/Product/ProductForm/ProductForm";
+import ProductDetailsTab from "../../components/custom/Product/ProdcutDetailsTab/ProdcutDetailsTab";
 // import { productArray, productColor, productIcon } from "../../const";
+import { TabView, TabPanel } from "primereact/tabview";
+import FeatureTable from "../../components/custom/Feature/FeatureTable/FeatureTable";
+import TimelineData from "../../components/custom/tenant/TimelineData/TimelineData";
 
 const ProductDetails = () => {
   const [confirm, setConfirm] = useState(false);
   const [currentId, setCurrentId] = useState("");
   const [productData, setProductData] = useState();
   const [visible, setVisible] = useState(false);
-  // const [action, setAction] = useState([
-  //   {
-  //     name: "name1",
-  //     product: 1,
-  //   },
-  //   {
-  //     name: "name2",
-  //     product: 3,
-  //   },
-  //   {
-  //     name: "name3",
-  //     product: 5,
-  //   },
-  //   {
-  //     name: "name3",
-  //     product: 8,
-  //   },
-  // ]);
+
   // const { getProduct, deleteProductReq } = useRequest();
   const { DataTransform } = useGlobal();
   const routeParams = useParams();
@@ -93,109 +80,300 @@ const ProductDetails = () => {
       <BreadcrumbComponent
         title={productData && productData.data.name}
         parent={"Product"}
-        description={"Product details"}
         child={productData && productData.data.name}
         icon={BsBoxSeam}
       />
-      {productData && (
-        <div className="main">
-          <div className="details">
-            <Card border="light" className="shadow-sm mb-4">
-              <Card.Body className="pb-0">
-                <Table
-                  responsive
-                  className="table-centered table-nowrap rounded mb-0">
-                  <tbody>
-                    <tr>
-                      <td className="fw-bold">Name</td>
-                      <td>{productData.data.name}</td>
-                    </tr>
-                    <tr>
-                      <td className="fw-bold">Url</td>
-                      <td>{productData.data.url}</td>
-                    </tr>
-                    <tr>
-                      <td className="fw-bold">Client</td>
-                      <td>{productData.data.clientId.name}</td>
-                    </tr>
-                    <tr>
-                      <td className="fw-bold">Status</td>
-                      <td>
-                        <ProductStatus rowData={productData.data} />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="fw-bold">Created Date</td>
-                      <td>{DataTransform(productData.data.createdDate)}</td>
-                    </tr>
-                    <tr>
-                      <td className="fw-bold">Last Updated Date</td>
-                      <td>{DataTransform(productData.data.editedDate)}</td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
+      <div className="card mb-5">
+        <TabView>
+          <TabPanel header="Details">
+            <ProductDetailsTab />
+          </TabPanel>
+          <TabPanel header="Feature">
+            <FeatureTable />
+          </TabPanel>
+          <TabPanel header="Plan">
+            <p className="m-0">
+              At vero eos et accusamus et iusto odio dignissimos ducimus qui
+              blanditiis praesentium voluptatum deleniti atque corrupti quos
+              dolores et quas molestias excepturi sint occaecati cupiditate non
+              provident, similique sunt in culpa qui officia deserunt mollitia
+              animi, id est laborum et dolorum fuga. Et harum quidem rerum
+              facilis est et expedita distinctio. Nam libero tempore, cum soluta
+              nobis est eligendi optio cumque nihil impedit quo minus.
+            </p>
+          </TabPanel>
+          <TabPanel header="Test">
+            <div className="moreTsec">
+              <ProductDetailsTab />
 
-            <div className="action">
-              <Button
-                className="mx-2"
-                label="Delete"
-                icon="pi pi-trash"
-                onClick={() => deleteConfirm(productData.data.id)}
-                style={{
-                  backgroundColor: "var(--red)",
-                  borderColor: "var(--red)",
-                }}
-              />
-              <Button
-                className="mx-2"
-                label="Edit"
-                icon="pi pi-pencil"
-                onClick={() => setVisible(true)}
-              />
-              {/* {action &&
-                action.map((item) => (
-                  <Button
-                    className="mx-2"
-                    label={item.name}
-                    // icon={`pi ${productIcon[Math.floor((item.product - 1) / 2)]}`}
-                    // style={{
-                    //   backgroundColor:
-                    //     productColor[Math.floor((item.product - 1) / 2)],
-                    //   borderColor:
-                    //     productColor[Math.floor((item.product - 1) / 2)],
-                    // }}
-                    onClick={() => chagneProduct(item.product)}
-                  />
-                ))} */}
+              <div className="timeLine">
+                <div className="sc-eErDDp jraFy">
+                  <div className="timeLineCont">
+                    <div className="timeLineItemCont">
+                      <div className="author">External System</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style="color: rgb(0, 166, 117); background: rgba(0, 166, 117, 0.208);"
+                            >
+                              Created As Active
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:12:51 PM</div>
+                      </div>
+                      <div className="message">
+                        The external system created the tenant resources
+                      </div>
+                    </div>
+                    <div className="timeLineItemCont">
+                      <div className="author">Super Admin</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style="color: rgb(21, 93, 215); background: rgba(21, 93, 215, 0.082);"
+                            >
+                              Creating
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:11:24 PM</div>
+                      </div>
+                      <div className="message">
+                        The external system is creating the tenant resources
+                      </div>
+                    </div>
+                    <div className="timeLineItemCont">
+                      <div className="author">Super Admin</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style={
+                              //   "color: rgb(21, 93, 215); background: rgba(21, 93, 215, 0.063);"
+                              // }
+                            >
+                              Pre-Creating
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:11:24 PM</div>
+                      </div>
+                      <div className="message">
+                        ROSAS - Super Admin called the external system to create
+                        the tenant resources for it
+                      </div>
+                    </div>
+                    <div className="timeLineItemCont">
+                      <div className="author">Super Admin</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style="color: rgb(21, 93, 215); background: rgba(21, 93, 215, 0.208);"
+                            >
+                              Created in db
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:11:24 PM</div>
+                      </div>
+                      <div className="message">
+                        ROSAS - Super Admin created a tenant record in ROSAS's
+                        database
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <DeleteConfirmation
-              message="Do you want to delete this Product?"
-              icon="pi pi-exclamation-triangle"
-              confirm={confirm}
-              setConfirm={setConfirm}
-              confirmFunction={deleteProduct}
-              sideBar={false}
-            />
+          </TabPanel>
+          <TabPanel header="Test">
+            <div className="moreTsec">
+              <ProductDetailsTab />
 
-            <Dialog
-              header={"Edit Product"}
-              visible={visible}
-              style={{ width: "30vw", minWidth: "300px" }}
-              onHide={() => setVisible(false)}>
-              <ProductForm
-                type={"edit"}
-                productData={productData?.data}
-                setVisible={setVisible}
-              />
-            </Dialog>
-          </div>
-          {/* <div className="timeline">
-            <TimelineData />
-          </div> */}
-        </div>
-      )}
+              <div className="timeLine">
+                <div className="sc-eErDDp jraFy">
+                  <div className="timeLineCont">
+                    <div className="timeLineItemCont">
+                      <div className="author">External System</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style="color: rgb(0, 166, 117); background: rgba(0, 166, 117, 0.208);"
+                            >
+                              Created As Active
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:12:51 PM</div>
+                      </div>
+                      <div className="message">
+                        The external system created the tenant resources
+                      </div>
+                    </div>
+                    <div className="timeLineItemCont">
+                      <div className="author">Super Admin</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style="color: rgb(21, 93, 215); background: rgba(21, 93, 215, 0.082);"
+                            >
+                              Creating
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:11:24 PM</div>
+                      </div>
+                      <div className="message">
+                        The external system is creating the tenant resources
+                      </div>
+                    </div>
+                    <div className="timeLineItemCont">
+                      <div className="author">Super Admin</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style={
+                              //   "color: rgb(21, 93, 215); background: rgba(21, 93, 215, 0.063);"
+                              // }
+                            >
+                              Pre-Creating
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:11:24 PM</div>
+                      </div>
+                      <div className="message">
+                        ROSAS - Super Admin called the external system to create
+                        the tenant resources for it
+                      </div>
+                    </div>
+                    <div className="timeLineItemCont">
+                      <div className="author">Super Admin</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style="color: rgb(21, 93, 215); background: rgba(21, 93, 215, 0.208);"
+                            >
+                              Created in db
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:11:24 PM</div>
+                      </div>
+                      <div className="message">
+                        ROSAS - Super Admin created a tenant record in ROSAS's
+                        database
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="timeLine">
+                <div className="sc-eErDDp jraFy">
+                  <div className="timeLineCont">
+                    <div className="timeLineItemCont">
+                      <div className="author">External System</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style="color: rgb(0, 166, 117); background: rgba(0, 166, 117, 0.208);"
+                            >
+                              Created As Active
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:12:51 PM</div>
+                      </div>
+                      <div className="message">
+                        The external system created the tenant resources
+                      </div>
+                    </div>
+                    <div className="timeLineItemCont">
+                      <div className="author">Super Admin</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style="color: rgb(21, 93, 215); background: rgba(21, 93, 215, 0.082);"
+                            >
+                              Creating
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:11:24 PM</div>
+                      </div>
+                      <div className="message">
+                        The external system is creating the tenant resources
+                      </div>
+                    </div>
+                    <div className="timeLineItemCont">
+                      <div className="author">Super Admin</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style={
+                              //   "color: rgb(21, 93, 215); background: rgba(21, 93, 215, 0.063);"
+                              // }
+                            >
+                              Pre-Creating
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:11:24 PM</div>
+                      </div>
+                      <div className="message">
+                        ROSAS - Super Admin called the external system to create
+                        the tenant resources for it
+                      </div>
+                    </div>
+                    <div className="timeLineItemCont">
+                      <div className="author">Super Admin</div>
+                      <div className="info">
+                        <div className="action">
+                          <span className="sc-bXxmBy bJUTwo">
+                            <span
+                              className="label"
+                              // style="color: rgb(21, 93, 215); background: rgba(21, 93, 215, 0.208);"
+                            >
+                              Created in db
+                            </span>
+                          </span>
+                        </div>
+                        <div className="time">6/21/2023, 3:11:24 PM</div>
+                      </div>
+                      <div className="message">
+                        ROSAS - Super Admin created a tenant record in ROSAS's
+                        database
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabPanel>
+        </TabView>
+      </div>
     </Wrapper>
   );
 };
