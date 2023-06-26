@@ -184,186 +184,188 @@ export default function Product({ children }) {
         parent={"Product"}
         icon={BsBoxSeam}
       />
-      <TableHead
-        label={"Add Product"}
-        popupLabel={"Create Product"}
-        icon={"pi-box"}
-        setSearchValue={setSearchValue}
-        visibleHead={visibleHead}
-        setVisibleHead={setVisibleHead}
-        setFirst={setFirst}>
-        <ProductForm
-          type={"create"}
-          update={update}
-          setUpdate={setUpdate}
+      <div className="mainContainer">
+        <TableHead
+          label={"Add Product"}
+          popupLabel={"Create Product"}
+          icon={"pi-box"}
+          setSearchValue={setSearchValue}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
-        />
-      </TableHead>
-      <div className="card">
-        <DataTable
-          value={list}
-          tableStyle={{ minWidth: "50rem" }}
-          size={"small"}>
-          <Column
-            field="name"
-            header={
-              <ColumnSortHeader
-                text="Name"
-                field="name"
-                rebase={rebase}
-                setRebase={setRebase}
-                sortField={sortField}
-                sortValue={sortValue}
-                setSortField={setSortField}
-                setSortValue={setSortValue}
-                setFirst={setFirst}
-              />
-            }></Column>
-          <Column
-            field="url"
-            header={
-              <ColumnSortHeader
-                text="Url"
-                field="url"
-                rebase={rebase}
-                setRebase={setRebase}
-                sortField={sortField}
-                sortValue={sortValue}
-                setSortField={setSortField}
-                setSortValue={setSortValue}
-                setFirst={setFirst}
-              />
-            }></Column>
-
-          <Column
-            field={"clientId.name"}
-            header={
-              <ColumnSortHeader
-                text="Client"
-                field="client"
-                rebase={rebase}
-                setRebase={setRebase}
-                sortField={sortField}
-                sortValue={sortValue}
-                setSortField={setSortField}
-                setSortValue={setSortValue}
-                setFirst={setFirst}
-              />
-            }
-            showFilterMenu={false}
-          />
-          <Column
-            field="status"
-            header={
-              <ColumnSortHeader
-                text="Status"
-                field="status"
-                rebase={rebase}
-                setRebase={setRebase}
-                sortField={sortField}
-                sortValue={sortValue}
-                setSortField={setSortField}
-                setSortValue={setSortValue}
-                setFirst={setFirst}
-              />
-            }
-            showFilterMenu={false}
-            body={statusBodyTemplate}
-          />
-          <Column
-            body={(data, options) => (
-              <TableDate
-                createdDate={data.createdDate}
-                editedDate={data.editedDate}
-              />
-            )}
-            style={{ width: "250px", maxidth: "250px" }}
-            header={
-              <ColumnSortHeader
-                text="Date"
-                field="editedDate"
-                rebase={rebase}
-                setRebase={setRebase}
-                sortField={sortField}
-                sortValue={sortValue}
-                setSortField={setSortField}
-                setSortValue={setSortValue}
-                setFirst={setFirst}
-              />
-            }
-          />
-          <Column
-            style={{ width: "60px", textAlign: "center" }}
-            body={(data, options) => (
-              <>
-                <BsFillEyeFill
-                  onClick={() => navigate(`/ProductDetails/${data.id}`)}
-                  style={{ cursor: "pointer" }}
-                />
-              </>
-            )}
-            header="View"
-          />
-          <Column
-            style={{ width: "60px", textAlign: "center" }}
-            body={(data, options) => (
-              <>
-                <BsPencilSquare
-                  onClick={() => editForm(data.id)}
-                  style={{ cursor: "pointer" }}
-                />
-              </>
-            )}
-            header="Edit"
-          />
-          <Column
-            style={{ width: "60px", textAlign: "center" }}
-            body={(data, options) => (
-              <>
-                <BsFillTrash3Fill
-                  onClick={() => deleteConfirm(data.id)}
-                  style={{ cursor: "pointer" }}
-                />
-              </>
-            )}
-            header="Delete"
-          />
-        </DataTable>
-
-        <CustomPaginator
-          first={first}
-          rows={rows}
-          totalCount={totalCount}
-          onPageChange={onPageChange}
-        />
-
-        <Dialog
-          headerClassName="pb-0"
-          className="productForm"
-          header={"Edit Product"}
-          visible={visible}
-          style={{ width: "30vw", minWidth: "300px" }}
-          onHide={() => setVisible(false)}>
+          setFirst={setFirst}>
           <ProductForm
-            type={"edit"}
-            productData={productData?.data}
+            type={"create"}
             update={update}
             setUpdate={setUpdate}
-            setVisible={setVisible}
+            visibleHead={visibleHead}
+            setVisibleHead={setVisibleHead}
           />
-        </Dialog>
+        </TableHead>
+        <div className="card">
+          <DataTable
+            value={list}
+            tableStyle={{ minWidth: "50rem" }}
+            size={"small"}>
+            <Column
+              field="name"
+              header={
+                <ColumnSortHeader
+                  text="Name"
+                  field="name"
+                  rebase={rebase}
+                  setRebase={setRebase}
+                  sortField={sortField}
+                  sortValue={sortValue}
+                  setSortField={setSortField}
+                  setSortValue={setSortValue}
+                  setFirst={setFirst}
+                />
+              }></Column>
+            <Column
+              field="url"
+              header={
+                <ColumnSortHeader
+                  text="Url"
+                  field="url"
+                  rebase={rebase}
+                  setRebase={setRebase}
+                  sortField={sortField}
+                  sortValue={sortValue}
+                  setSortField={setSortField}
+                  setSortValue={setSortValue}
+                  setFirst={setFirst}
+                />
+              }></Column>
+
+            <Column
+              field={"clientId.name"}
+              header={
+                <ColumnSortHeader
+                  text="Client"
+                  field="client"
+                  rebase={rebase}
+                  setRebase={setRebase}
+                  sortField={sortField}
+                  sortValue={sortValue}
+                  setSortField={setSortField}
+                  setSortValue={setSortValue}
+                  setFirst={setFirst}
+                />
+              }
+              showFilterMenu={false}
+            />
+            <Column
+              field="status"
+              header={
+                <ColumnSortHeader
+                  text="Status"
+                  field="status"
+                  rebase={rebase}
+                  setRebase={setRebase}
+                  sortField={sortField}
+                  sortValue={sortValue}
+                  setSortField={setSortField}
+                  setSortValue={setSortValue}
+                  setFirst={setFirst}
+                />
+              }
+              showFilterMenu={false}
+              body={statusBodyTemplate}
+            />
+            <Column
+              body={(data, options) => (
+                <TableDate
+                  createdDate={data.createdDate}
+                  editedDate={data.editedDate}
+                />
+              )}
+              style={{ width: "250px", maxidth: "250px" }}
+              header={
+                <ColumnSortHeader
+                  text="Date"
+                  field="editedDate"
+                  rebase={rebase}
+                  setRebase={setRebase}
+                  sortField={sortField}
+                  sortValue={sortValue}
+                  setSortField={setSortField}
+                  setSortValue={setSortValue}
+                  setFirst={setFirst}
+                />
+              }
+            />
+            <Column
+              style={{ width: "60px", textAlign: "center" }}
+              body={(data, options) => (
+                <>
+                  <BsFillEyeFill
+                    onClick={() => navigate(`/ProductDetails/${data.id}`)}
+                    style={{ cursor: "pointer" }}
+                  />
+                </>
+              )}
+              header="View"
+            />
+            <Column
+              style={{ width: "60px", textAlign: "center" }}
+              body={(data, options) => (
+                <>
+                  <BsPencilSquare
+                    onClick={() => editForm(data.id)}
+                    style={{ cursor: "pointer" }}
+                  />
+                </>
+              )}
+              header="Edit"
+            />
+            <Column
+              style={{ width: "60px", textAlign: "center" }}
+              body={(data, options) => (
+                <>
+                  <BsFillTrash3Fill
+                    onClick={() => deleteConfirm(data.id)}
+                    style={{ cursor: "pointer" }}
+                  />
+                </>
+              )}
+              header="Delete"
+            />
+          </DataTable>
+
+          <CustomPaginator
+            first={first}
+            rows={rows}
+            totalCount={totalCount}
+            onPageChange={onPageChange}
+          />
+
+          <Dialog
+            headerClassName="pb-0"
+            className="productForm"
+            header={"Edit Product"}
+            visible={visible}
+            style={{ width: "30vw", minWidth: "300px" }}
+            onHide={() => setVisible(false)}>
+            <ProductForm
+              type={"edit"}
+              productData={productData?.data}
+              update={update}
+              setUpdate={setUpdate}
+              setVisible={setVisible}
+            />
+          </Dialog>
+        </div>
+        <DeleteConfirmation
+          message="Do you want to delete this Product?"
+          icon="pi pi-exclamation-triangle"
+          confirm={confirm}
+          setConfirm={setConfirm}
+          confirmFunction={deleteProduct}
+          update={update}
+          setUpdate={setUpdate}
+          sideBar={false}
+        />
       </div>
-      <DeleteConfirmation
-        message="Do you want to delete this Product?"
-        icon="pi pi-exclamation-triangle"
-        confirm={confirm}
-        setConfirm={setConfirm}
-        confirmFunction={deleteProduct}
-        update={update}
-        setUpdate={setUpdate}
-        sideBar={false}
-      />
     </Wrapper>
   );
 }

@@ -1,14 +1,32 @@
 import { styled } from "styled-components";
 export const Wrapper = styled.div`
+  .card {
+    border: 0;
+  }
+
   .p-tabview.p-component {
-    border: 10px solid var(--themeSecColor);
-    background: var(--themeBackground);
+    /* border: 10px solid var(--themeSecColor);
+    background: var(--themeBackground); */
 
     .p-tabview-panels {
-      background: var(--themeBackground);
-      padding: 1rem;
-      min-height: calc(100vh - 250px);
+      /* background: var(--themeBackground);
+      padding: 1rem; */
+      min-height: calc(100vh - 270px);
+      /* padding: 0; */
     }
+  }
+
+  ul.p-tabview-nav {
+    border-bottom-width: 1px !important;
+  }
+
+  .card-body {
+    padding: 0px;
+    background: unset;
+  }
+
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    padding: 1.75rem 2.5rem;
   }
 
   /***************** */

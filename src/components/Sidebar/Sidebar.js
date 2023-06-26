@@ -272,7 +272,8 @@ export default (props = {}) => {
                 link={`/tenant`}
                 icon={BsFillPersonLinesFill}
               />
-              <NavItem title="Product" link={`/product`} icon={BsBoxSeam} /> */}
+              */}
+              <NavItem title="Product" link={`/product`} icon={BsBoxSeam} />
             </Nav>
           </div>
         </SimpleBar>

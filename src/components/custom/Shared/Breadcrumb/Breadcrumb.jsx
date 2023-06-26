@@ -3,6 +3,7 @@ import React from "react";
 import { Breadcrumb } from "@themesberg/react-bootstrap";
 import { Wrapper } from "./Breadcrumb.styled";
 import { useEffect } from "react";
+import Navbar from "../../../Navbar";
 const BreadcrumbComponent = ({
   description,
   title,
@@ -39,6 +40,7 @@ const BreadcrumbComponent = ({
             {<h4>{title}</h4>}
             {description && <p className="mb-0">{description}</p>}
           </div>
+          <Navbar />
         </Wrapper>
       )}
     </>

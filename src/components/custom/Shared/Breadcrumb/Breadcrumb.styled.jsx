@@ -2,8 +2,9 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   background: var(--themeSecColor);
   padding: 10px 25px;
-  margin: 15px 0;
-  border-radius: 10px;
+  margin: 0;
+  margin-bottom: 3rem;
+  display: flex;
 
   h4 {
     color: var(--themeColor) !important;
@@ -24,5 +25,8 @@ export const Wrapper = styled.div`
   }
   * {
     color: var(--themeColor) !important;
+  }
+  nav.ps-0.pe-2.pb-0.navbar.navbar-expand.navbar-dark {
+    padding: 0;
   }
 `;

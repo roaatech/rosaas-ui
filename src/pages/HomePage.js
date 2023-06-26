@@ -42,7 +42,7 @@ const HomePage = () => {
                 <>
                   <Sidebar />
                   <main className="content">
-                    <Navbar />
+                    {/* <Navbar /> */}
                     <Component />
                   </main>
                 </>

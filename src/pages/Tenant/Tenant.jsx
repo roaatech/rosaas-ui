@@ -117,132 +117,132 @@ export default function Tenant({ children }) {
         parent={"Tenant"}
         icon={BsFillPersonLinesFill}
       />
-
-      <div className="tableSec">
-        <TableHead
-          label={"Add Tenant"}
-          popupLabel={"Create Tenant"}
-          icon={"pi-user-plus"}
-          setSearchValue={setSearchValue}
-          visibleHead={visibleHead}
-          setVisibleHead={setVisibleHead}
-          setFirst={setFirst}>
-          <TenantForm
-            type={"create"}
-            update={update}
-            setUpdate={setUpdate}
+      <div className="mainContainer">
+        <div className="tableSec">
+          <TableHead
+            label={"Add Tenant"}
+            popupLabel={"Create Tenant"}
+            icon={"pi-user-plus"}
+            setSearchValue={setSearchValue}
             visibleHead={visibleHead}
             setVisibleHead={setVisibleHead}
-            sideBar={false}
-          />
+            setFirst={setFirst}>
+            <TenantForm
+              type={"create"}
+              update={update}
+              setUpdate={setUpdate}
+              visibleHead={visibleHead}
+              setVisibleHead={setVisibleHead}
+              sideBar={false}
+            />
 
-          <AutoCompleteFiled
-            placeHolder="Select Product"
-            dataFunction={productOptions}
-            setSelectedProduct={setSelectedProduct}
-          />
-        </TableHead>
-        <div className="card">
-          <DataTable
-            value={list}
-            tableStyle={{ minWidth: "50rem" }}
-            size={"small"}>
-            <Column
-              field="title"
-              header={
-                <ColumnSortHeader
-                  text="Title"
-                  field="uniqueName"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
-              }></Column>
-            <Column
-              field="uniqueName"
-              header={
-                <ColumnSortHeader
-                  text="Unique Name"
-                  field="uniqueName"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
-              }
+            <AutoCompleteFiled
+              placeHolder="Select Product"
+              dataFunction={productOptions}
+              setSelectedProduct={setSelectedProduct}
             />
-            <Column
-              field="status"
-              header={
-                <ColumnSortHeader
-                  text="Status"
-                  field="status"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
-              }
-              showFilterMenu={false}
-              body={statusBodyTemplate}
-            />
-            <Column
-              body={(data, options) => (
-                <TableDate
-                  createdDate={data.createdDate}
-                  editedDate={data.editedDate}
-                />
-              )}
-              style={{ width: "250px", maxidth: "250px" }}
-              header={
-                <ColumnSortHeader
-                  text="Date"
-                  field="editedDate"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
-              }
-            />
-            <Column
-              style={{ width: "60px", textAlign: "center" }}
-              body={(data, options) => (
-                <>
-                  <BsFillEyeFill
-                    onClick={() => navigate(`/TenantDetails/${data.id}`)}
-                    style={{ cursor: "pointer" }}
+          </TableHead>
+          <div className="card">
+            <DataTable
+              value={list}
+              tableStyle={{ minWidth: "50rem" }}
+              size={"small"}>
+              <Column
+                field="title"
+                header={
+                  <ColumnSortHeader
+                    text="Title"
+                    field="uniqueName"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
                   />
-                </>
-              )}
-              header="View"
-            />
-            <Column
-              style={{ width: "60px", textAlign: "center" }}
-              body={(data, options) => (
-                <>
-                  <BsPencilSquare
-                    onClick={() => editForm(data.id)}
-                    style={{ cursor: "pointer" }}
+                }></Column>
+              <Column
+                field="uniqueName"
+                header={
+                  <ColumnSortHeader
+                    text="Unique Name"
+                    field="uniqueName"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
                   />
-                </>
-              )}
-              header="Edit"
-            />
-            {/* <Column
+                }
+              />
+              <Column
+                field="status"
+                header={
+                  <ColumnSortHeader
+                    text="Status"
+                    field="status"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                showFilterMenu={false}
+                body={statusBodyTemplate}
+              />
+              <Column
+                body={(data, options) => (
+                  <TableDate
+                    createdDate={data.createdDate}
+                    editedDate={data.editedDate}
+                  />
+                )}
+                style={{ width: "250px", maxidth: "250px" }}
+                header={
+                  <ColumnSortHeader
+                    text="Date"
+                    field="editedDate"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+              />
+              <Column
+                style={{ width: "60px", textAlign: "center" }}
+                body={(data, options) => (
+                  <>
+                    <BsFillEyeFill
+                      onClick={() => navigate(`/TenantDetails/${data.id}`)}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </>
+                )}
+                header="View"
+              />
+              <Column
+                style={{ width: "60px", textAlign: "center" }}
+                body={(data, options) => (
+                  <>
+                    <BsPencilSquare
+                      onClick={() => editForm(data.id)}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </>
+                )}
+                header="Edit"
+              />
+              {/* <Column
               style={{ width: "60px", textAlign: "center" }}
               body={(data, options) => (
                 <>
@@ -254,44 +254,45 @@ export default function Tenant({ children }) {
               )}
               header="Delete"
             /> */}
-          </DataTable>
+            </DataTable>
 
-          <CustomPaginator
-            first={first}
-            rows={rows}
-            totalCount={totalCount}
-            onPageChange={onPageChange}
-          />
-
-          <Dialog
-            headerClassName="pb-0"
-            className="tenantForm"
-            header={"Edit Tenant"}
-            visible={visible}
-            style={{ width: "30vw", minWidth: "300px" }}
-            onHide={() => setVisible(false)}>
-            <TenantForm
-              type={"edit"}
-              tenantData={tenantData?.data}
-              update={update}
-              setUpdate={setUpdate}
-              setVisible={setVisible}
-              sideBar={false}
+            <CustomPaginator
+              first={first}
+              rows={rows}
+              totalCount={totalCount}
+              onPageChange={onPageChange}
             />
-          </Dialog>
-        </div>
-      </div>
 
-      <DeleteConfirmation
-        message="Do you want to delete this Tenant?"
-        icon="pi pi-exclamation-triangle"
-        confirm={confirm}
-        setConfirm={setConfirm}
-        confirmFunction={deleteTenant}
-        update={update}
-        setUpdate={setUpdate}
-        sideBar={false}
-      />
+            <Dialog
+              headerClassName="pb-0"
+              className="tenantForm"
+              header={"Edit Tenant"}
+              visible={visible}
+              style={{ width: "30vw", minWidth: "300px" }}
+              onHide={() => setVisible(false)}>
+              <TenantForm
+                type={"edit"}
+                tenantData={tenantData?.data}
+                update={update}
+                setUpdate={setUpdate}
+                setVisible={setVisible}
+                sideBar={false}
+              />
+            </Dialog>
+          </div>
+        </div>
+
+        <DeleteConfirmation
+          message="Do you want to delete this Tenant?"
+          icon="pi pi-exclamation-triangle"
+          confirm={confirm}
+          setConfirm={setConfirm}
+          confirmFunction={deleteTenant}
+          update={update}
+          setUpdate={setUpdate}
+          sideBar={false}
+        />
+      </div>
     </Wrapper>
   );
 }

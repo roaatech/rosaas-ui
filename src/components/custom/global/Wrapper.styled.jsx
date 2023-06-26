@@ -136,7 +136,8 @@ const GlobalStyles = createGlobalStyle`
  color: var(--themeColor);
     border-bottom: 1px solid white;
 }
-.p-float-label .p-inputwrapper-focus ~ label,.p-float-label .p-inputwrapper-filled ~ label, .p-float-label input:focus ~ label {
+.p-float-label .p-inputwrapper-focus ~ label,.p-float-label .p-inputwrapper-filled ~ label, .p-float-label input:focus ~ label,
+ .p-float-label textarea:focus ~ label, .p-float-label textarea.p-filled ~ label ,  .p-float-label input.p-filled ~ label{
     top: 0rem!important;
     background: white!important;
     padding: 0 10px;
@@ -185,8 +186,23 @@ nav svg.svg-inline--fa.fa-bell {
   border-radius: 10px;
 
 }
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus{
+  box-shadow:unset
+}
 
-   
+.content{
+  padding:0
+}
+
+.mainContainer{
+  padding:1rem
+}
+
+
+.p-dropdown {
+    width: 100%;
+    min-height: 42px;
+}
 `;
 
 export default GlobalStyles;

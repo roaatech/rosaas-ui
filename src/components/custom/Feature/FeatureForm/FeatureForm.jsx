@@ -10,6 +10,8 @@ import { updateSidebar } from "../../../../store/slices/main.js";
 import { useDispatch } from "react-redux";
 import AutoCompleteFiled from "../../Shared/AutoCompleteFiled/AutoCompleteFiled.jsx";
 import { useNavigate } from "react-router-dom";
+import { Dropdown } from "primereact/dropdown";
+import { InputTextarea } from "primereact/inputtextarea";
 
 const FeatureForm = ({
   type,
@@ -27,14 +29,11 @@ const FeatureForm = ({
   const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().max(100, "Must be maximum 100 digits"),
-    uniqueName: Yup.string()
-      .max(100, "Must be maximum 100 digits")
-      .required("Unique Name is required")
-      .matches(
-        /^[a-zA-Z0-9_-]+$/,
-        "English Characters, numbers, and underscores are only accepted."
-      ),
+    name: Yup.string().required("Name is required"),
+    type: Yup.string().required("Type is required"),
+    unit: Yup.string(),
+    reset: Yup.string().required("Reset is required"),
+    description: Yup.string(),
 
     // product: Yup.string()
     //   .required("Product is required")
@@ -46,72 +45,54 @@ const FeatureForm = ({
     //   }),
   });
   const initialValues = {
-    title: featureData ? featureData.title : "",
-    uniqueName: featureData ? featureData.uniqueName : "",
-    // product: featureData ? featureData?.product?.name : "",
+    name: featureData ? featureData.name : "",
+    type: featureData ? featureData.type : "number",
+    unit: featureData ? featureData.unit : "",
+    reset: featureData ? featureData.reset : "never",
+    description: featureData ? featureData.description : "",
   };
+
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      console.log(values);
+      // try {
       // Handle form submission
       if (type == "create") {
-        const createFeature = await createFeatureRequest({
-          title: values.title,
-          uniqueName: values.uniqueName,
-          productsIds: [Product_id],
-          // product: selectedProduct,
-        });
-        navigate(`/featureDetails/${createFeature.data.data.id}`);
+        // const createFeature = await createFeatureRequest({
+        //   name: values.name,
+        //   type: values.type,
+        //   unit: values.unit,
+        //   reset: values.reset,
+        //   description: values.description,
+        // });
+        // navigate(`/featureDetails/${createFeature.data.data.id}`);
         if (update) {
           setUpdate(update + 1);
-        }
-        if (sideBar == true) {
-          dispatch(updateSidebar());
         }
       } else {
-        const editFeature = await editFeatureRequest({
-          title: values.title,
-          uniqueName: values.uniqueName,
-          id: featureData.id,
-          // product: selectedProduct,
-        });
+        // const editFeature = await editFeatureRequest({
+        //   name: values.name,
+        //   type: values.type,
+        //   unit: values.unit,
+        //   reset: values.reset,
+        //   description: values.description,
+        // });
         if (update) {
           setUpdate(update + 1);
         }
-        if (sideBar == true) {
-          dispatch(updateSidebar());
-        }
+        console.log(values);
       }
       setVisible && setVisible(false);
       setVisibleHead && setVisibleHead(false);
       dispatch(updateSidebar());
+      // } catch (error) {
+      //   console.log(error);
+      // }
     },
   });
-  const productOptions = async (text) => {
-    // const allOptions = await getProductSearch();
-    // return allOptions.data;
-    return {
-      data: [
-        {
-          id: "asfdasf1",
-          name: "product1",
-        },
-        {
-          id: "asfdasf2",
-          name: "product2",
-        },
-        {
-          id: "asfdasf3",
-          name: "product3",
-        },
-        {
-          id: "asfdasf4",
-          name: "product4",
-        },
-      ],
-    };
-  };
+
   // useEffect(() => {
   //   featureData?.product?.id && setSelectedProduct(featureData.product.id);
   // }, []);
@@ -123,25 +104,44 @@ const FeatureForm = ({
   //   })();
   // }, [submitLoading]);
 
+  const TypeOptions = [
+    { label: "Number", value: "number" },
+    { label: "Yes/No", value: "yes/no" },
+  ];
+  const UnitOptions = [
+    { label: " ", value: "" },
+    { label: "K", value: "K" },
+    { label: "MB", value: "MB" },
+    { label: "GB", value: "GB" },
+  ];
+  const ResetOptions = [
+    { label: "Never", value: "never" },
+    { label: "Weekly", value: "weekly" },
+    { label: "Monthly", value: "monthly" },
+    { label: "Annual", value: "annual" },
+  ];
+
   return (
     <div>
-      {/* <form className="pt-4"> */}
       <form className="pt-4" onSubmit={formik.handleSubmit}>
         <div>
           <div className="inputContainer mb-4">
             <div className="inputContainerWithIcon">
               <span className="p-float-label">
                 <InputText
-                  id="title"
-                  name="title"
+                  id="name"
+                  name="name"
                   onChange={formik.handleChange}
-                  value={formik.values.title}
+                  // onBlur={formik.handleBlur}
+                  value={formik.values.name}
                 />
-                <label htmlFor="title">Title: </label>
+                <label htmlFor="name">
+                  Name: <span style={{ color: "red" }}>*</span>
+                </label>
               </span>
             </div>
-            {formik.touched.title && formik.errors.title && (
-              <div className="error-message">{formik.errors.title}</div>
+            {formik.touched.name && formik.errors.name && (
+              <div className="error-message">{formik.errors.name}</div>
             )}
           </div>
         </div>
@@ -149,46 +149,92 @@ const FeatureForm = ({
           <div className="inputContainer mb-4">
             <div className="inputContainerWithIcon">
               <span className="p-float-label">
-                <InputText
-                  id="uniqueName"
-                  name="uniqueName"
-                  onChange={formik.handleChange}
-                  // onBlur={formik.handleBlur}
-                  value={formik.values.uniqueName}
+                <Dropdown
+                  id="type"
+                  options={TypeOptions}
+                  value={formik.values.type}
+                  onChange={(e) => formik.setFieldValue("type", e.value)}
+                  // placeholder="Type"
+                  name="type"
                 />
-                <label htmlFor="uniqueName">
-                  UniqueName: <span style={{ color: "red" }}>*</span>
+                <label htmlFor="type">
+                  Type: <span style={{ color: "red" }}>*</span>
                 </label>
               </span>
             </div>
-            {formik.touched.uniqueName && formik.errors.uniqueName && (
-              <div className="error-message">{formik.errors.uniqueName}</div>
+            {formik.touched.type && formik.errors.type && (
+              <div className="error">{formik.errors.type}</div>
             )}
           </div>
-          {/* <div className="inputContainer mb-3">
-            <AutoCompleteFiled
-              class={"p-float-label"}
-              name="product"
-              id="product"
-              dataFunction={productOptions}
-              label="Product"
-              className="p-float-label"
-              setSelectedProduct={setSelectedProduct}
-              value={formik.values.product}
-              onChange={(event) => formik.setFieldValue("product", event.value)}
-              setSubmitLoading={setSubmitLoading}
-            />
-            {formik.touched.product && formik.errors.product && (
-              <div className="error-message">{formik.errors.product}</div>
-            )}
-          </div> */}
         </div>
+        <div>
+          <div className="inputContainer mb-4">
+            <div className="inputContainerWithIcon">
+              <span className="p-float-label">
+                <Dropdown
+                  id="unit"
+                  options={UnitOptions}
+                  value={formik.values.unit}
+                  onChange={(e) => formik.setFieldValue("unit", e.value)}
+                  // placeholder="Unit"
+                  name="unit"
+                />
+                <label htmlFor="unit">Unit:</label>
+              </span>
+            </div>
+            {formik.touched.unit && formik.errors.unit && (
+              <div className="error">{formik.errors.unit}</div>
+            )}
+          </div>
+        </div>
+        <div>
+          <div className="inputContainer mb-4">
+            <div className="inputContainerWithIcon">
+              <span className="p-float-label">
+                <Dropdown
+                  id="reset"
+                  options={ResetOptions}
+                  value={formik.values.reset}
+                  onChange={(e) => formik.setFieldValue("reset", e.value)}
+                  // placeholder="Reset"
+                  name="reset"
+                />
+                <label htmlFor="reset">
+                  Reset: <span style={{ color: "red" }}>*</span>
+                </label>
+              </span>
+            </div>
+            {formik.touched.reset && formik.errors.reset && (
+              <div className="error">{formik.errors.reset}</div>
+            )}
+          </div>
+        </div>
+        <div>
+          <div className="inputContainer mb-4">
+            <div className="inputContainerWithIcon">
+              <span className="p-float-label">
+                <InputTextarea
+                  id="description"
+                  name="description"
+                  onChange={formik.handleChange}
+                  value={formik.values.description}
+                />
+                <label htmlFor="description">Description:</label>
+              </span>
+            </div>
+            {formik.touched.description && formik.errors.description && (
+              <div className="error-message">{formik.errors.description}</div>
+            )}
+          </div>
+        </div>
+
         <div className="pt-1">
           <Button
             variant="primary"
             type="submit"
             className="w-100"
-            disabled={submitLoading}>
+            // disabled={submitLoading}
+          >
             Submit
           </Button>
         </div>
