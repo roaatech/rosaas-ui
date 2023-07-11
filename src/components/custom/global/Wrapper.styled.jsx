@@ -117,7 +117,12 @@ const GlobalStyles = createGlobalStyle`
     background: var(--themeBackground);
     border-color: var(--themeColor);
     color: var(--themeColor);
-}
+    
+  }
+  
+      .p-paginator-pages {
+      display: flex;
+  }
 .p-dropdown {
     background: var(--themeBackground);
     .p-inputtext{

@@ -25,7 +25,7 @@ const ProductDetailsTab = () => {
   const [productData, setProductData] = useState();
   const [visible, setVisible] = useState(false);
 
-  // const { getProduct, deleteProductReq } = useRequest();
+  const { getProduct, deleteProductReq } = useRequest();
   const { DataTransform } = useGlobal();
   const routeParams = useParams();
   const { editProductProduct } = useRequest();
@@ -45,29 +45,15 @@ const ProductDetailsTab = () => {
     setConfirm(true);
   };
   const deleteProduct = async () => {
-    // await deleteProductReq({ id: currentId });
+    await deleteProductReq({ id: currentId });
     navigate(`/Product`);
   };
 
   useEffect(() => {
     (async () => {
-      // const productData = await getProduct(routeParams.id);
-      // // setAction(productData.data.data.actions);
-      // setProductData(productData.data);
-      setProductData({
-        data: {
-          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
-          name: "qwero",
-          url: "qwerqwr",
-          clientId: {
-            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
-            name: "osos",
-          },
-          status: 1,
-          createdDate: "2023-06-13T07:22:43",
-          editedDate: "2023-06-13T07:32:04",
-        },
-      });
+      const productDataReq = await getProduct(routeParams.id);
+      // setAction(productData.data.data.actions);
+      setProductData(productDataReq.data);
     })();
   }, [visible, routeParams.id]);
 
@@ -92,14 +78,14 @@ const ProductDetailsTab = () => {
                     </tr>
                     <tr>
                       <td className="fw-bold">Client</td>
-                      <td>{productData.data.clientId.name}</td>
+                      <td>{productData.data.client.name}</td>
                     </tr>
-                    <tr>
+                    {/* <tr>
                       <td className="fw-bold">Status</td>
                       <td>
                         <ProductStatus rowData={productData.data} />
                       </td>
-                    </tr>
+                    </tr> */}
                     <tr>
                       <td className="fw-bold">Created Date</td>
                       <td>{DataTransform(productData.data.createdDate)}</td>

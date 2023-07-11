@@ -71,4 +71,27 @@ export const Wrapper = styled.div`
       }
     }
   }
+
+  // urls
+  .bar {
+    padding: 5px;
+    border-radius: 5px;
+    margin: 10px 0;
+    border: 1px solid;
+
+    .method {
+      font-size: var(--smallFont);
+      color: var(--themeSecColor);
+      padding: 5px 20px;
+      border-radius: 5px;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .url {
+      font-weight: bold;
+      font-size: var(--normalFont);
+      font-weight: bold;
+    }
+  }
 `;

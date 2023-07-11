@@ -22,17 +22,27 @@ import ProductDetailsTab from "../../components/custom/Product/ProdcutDetailsTab
 import { TabView, TabPanel } from "primereact/tabview";
 import FeatureTable from "../../components/custom/Feature/FeatureTable/FeatureTable";
 import TimelineData from "../../components/custom/tenant/TimelineData/TimelineData";
+import { urlStyle } from "../../const";
 
 const ProductDetails = () => {
+  const [URLS, setURLS] = useState([
+    { method: "GET", path: "http://localhost:5000/tenantDetails" },
+    { method: "POST", path: "http://localhost:5000/tenantDetails" },
+    { method: "GET", path: "http://localhost:5000/tenantDetails" },
+    { method: "PUT", path: "http://localhost:5000/tenantDetails" },
+    { method: "DELETE", path: "http://localhost:5000/tenantDetails" },
+  ]);
+
   const [confirm, setConfirm] = useState(false);
-  const [currentId, setCurrentId] = useState("");
   const [productData, setProductData] = useState();
   const [visible, setVisible] = useState(false);
+  const [currentId, setCurrentId] = useState("");
+  const [featureData, setFeatureData] = useState();
 
-  // const { getProduct, deleteProductReq } = useRequest();
+  const { getProduct, deleteProductReq } = useRequest();
   const { DataTransform } = useGlobal();
   const routeParams = useParams();
-  const { editProductProduct } = useRequest();
+  const { editProductProduct, getTenantList } = useRequest();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -49,29 +59,24 @@ const ProductDetails = () => {
     setConfirm(true);
   };
   const deleteProduct = async () => {
-    // await deleteProductReq({ id: currentId });
+    await deleteProductReq({ id: currentId });
     navigate(`/Product`);
   };
 
   useEffect(() => {
     (async () => {
-      // const productData = await getProduct(routeParams.id);
-      // // setAction(productData.data.data.actions);
-      // setProductData(productData.data);
-      setProductData({
-        data: {
-          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
-          name: "qwero",
-          url: "qwerqwr",
-          clientId: {
-            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
-            name: "osos",
-          },
-          status: 1,
-          createdDate: "2023-06-13T07:22:43",
-          editedDate: "2023-06-13T07:32:04",
-        },
-      });
+      const featureDataReq = await getTenantList(
+        `?page=1&pageSize=10&filters[0].Field=SearchTerm`
+      );
+      setFeatureData(featureDataReq);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const productData = await getProduct(routeParams.id);
+      // setAction(productData.data.data.actions);
+      setProductData(productData.data);
     })();
   }, [visible, routeParams.id]);
 
@@ -90,10 +95,27 @@ const ProductDetails = () => {
               <ProductDetailsTab />
             </TabPanel>
             <TabPanel header="Features">
-              <FeatureTable />
+              <FeatureTable data={featureData} />
             </TabPanel>
             <TabPanel header="Plans">
               <p className="m-0">Plans</p>
+            </TabPanel>
+            <TabPanel header="Urls">
+              {URLS.map((url) => (
+                <div
+                  className="bar"
+                  style={{
+                    background: urlStyle[url.method].lightColor,
+                    borderColor: urlStyle[url.method].darkColor,
+                  }}>
+                  <span
+                    className="method"
+                    style={{ background: urlStyle[url.method].darkColor }}>
+                    {url.method}
+                  </span>
+                  <span className="url">{url.path}</span>
+                </div>
+              ))}
             </TabPanel>
           </TabView>
         </div>

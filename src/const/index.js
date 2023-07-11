@@ -1,4 +1,5 @@
 const Product_id = "88e67328-3b20-413e-b6e1-010b48fa7bc9";
+const Product_Client_id = "88283b02-e969-485a-a5a3-9e5d1d0d3337";
 const Client_id = "spa_rosas_admin_panel";
 const Owner = {
   1: "Super Admin",
@@ -7,21 +8,19 @@ const Owner = {
 
 const statusConst = {
   1: {
-    string: "Created in db",
+    string: "Rosas resource created",
     opacity: "35",
     color: "#155dd7",
     icon: "pi-user-plus",
   },
   2: {
-    string: "Pre-Creating",
-
+    string: "Create request is sent",
     opacity: "10",
     color: "#155dd7",
     icon: "pi-user-plus",
   },
   3: {
     string: "Creating",
-
     opacity: "15",
     color: "#155dd7",
     icon: "pi-user-plus",
@@ -88,4 +87,34 @@ const statusConst = {
     icon: "pi-trash",
   },
 };
-export { Product_id, Client_id, statusConst, Owner };
+
+const urlStyle = {
+  GET: {
+    method: "GET",
+    darkColor: "#61affe",
+    lightColor: "#ebf3fb",
+  },
+  POST: {
+    method: "POST",
+    darkColor: "#49cc90",
+    lightColor: "#e8f6f0",
+  },
+  PUT: {
+    method: "PUT",
+    darkColor: "#fca130",
+    lightColor: "#fbf1e6",
+  },
+  DELETE: {
+    method: "DELETE",
+    darkColor: "#f93e3e",
+    lightColor: "#fae7e7",
+  },
+};
+export {
+  Product_id,
+  Client_id,
+  statusConst,
+  Owner,
+  urlStyle,
+  Product_Client_id,
+};

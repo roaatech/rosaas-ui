@@ -7,7 +7,8 @@ import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Bread
 // import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 import { BsFillPersonLinesFill } from "react-icons/bs";
 import { FiRefreshCw } from "react-icons/fi";
-
+import { TabView, TabPanel } from "primereact/tabview";
+import ChildTable from "../../components/custom/tenant/ChildTable/ChildTable";
 import TenantStatus from "../../components/custom/tenant/TenantStatus/TenantStatus";
 import useGlobal from "../../lib/hocks/global";
 import { Button } from "primereact/button";
@@ -77,56 +78,69 @@ const TenantDetails = () => {
             <div className="tableSec">
               <div className="main">
                 <div className="details">
-                  <Card border="light" className="shadow-sm mb-4">
-                    <Card.Body className="pb-0">
-                      <Table
-                        responsive
-                        className="table-centered table-nowrap rounded mb-0">
-                        <tbody>
-                          <tr>
-                            <td className="fw-bold">Title</td>
-                            <td>{tenantData.data.title}</td>
-                          </tr>
-                          <tr>
-                            <td className="fw-bold">Unique Name</td>
-                            <td>{tenantData.data.uniqueName}</td>
-                          </tr>
-                          <tr>
-                            <td className="fw-bold">Products</td>
-                            <td>
-                              {tenantData.data.products.map(
-                                (product, index) => (
-                                  <span
-                                    key={index}
-                                    className="p-1 border-round border-1 border-400 me-2">
-                                    {product.name}
-                                  </span>
-                                )
-                              )}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="fw-bold">status</td>
-                            <td>
-                              <TenantStatus
-                                statusValue={tenantData.data.status}
-                              />
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="fw-bold">Created Date</td>
-                            <td>
-                              {DataTransform(tenantData.data.createdDate)}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="fw-bold">Last Updated Date</td>
-                            <td>{DataTransform(tenantData.data.editedDate)}</td>
-                          </tr>
-                        </tbody>
-                      </Table>
-                    </Card.Body>
-                  </Card>
+                  <TabView>
+                    <TabPanel header="Details">
+                      <Card border="light" className="shadow-sm mb-4">
+                        <Card.Body className="pb-0">
+                          <Table
+                            responsive
+                            className="table-centered table-nowrap rounded mb-0">
+                            <tbody>
+                              <tr>
+                                <td className="fw-bold">Title</td>
+                                <td>{tenantData.data.title}</td>
+                              </tr>
+                              <tr>
+                                <td className="fw-bold">Unique Name</td>
+                                <td>{tenantData.data.uniqueName}</td>
+                              </tr>
+                              <tr>
+                                <td className="fw-bold">Products</td>
+                                <td>
+                                  {tenantData.data.products.map(
+                                    (product, index) => (
+                                      <span
+                                        key={index}
+                                        className="p-1 border-round border-1 border-400 me-2">
+                                        {product.name}
+                                      </span>
+                                    )
+                                  )}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="fw-bold">status</td>
+                                <td>
+                                  <TenantStatus
+                                    statusValue={tenantData.data.status}
+                                  />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="fw-bold">Created Date</td>
+                                <td>
+                                  {DataTransform(tenantData.data.createdDate)}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="fw-bold">Last Updated Date</td>
+                                <td>
+                                  {DataTransform(tenantData.data.editedDate)}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </Table>
+                        </Card.Body>
+                      </Card>
+                    </TabPanel>
+                    <TabPanel header="Metadata">
+                      {/* <Card border="light" className="shadow-sm mb-4">
+                        <Card.Body className="pb-0"> */}
+                      <ChildTable />
+                      {/* </Card.Body>
+                      </Card> */}
+                    </TabPanel>
+                  </TabView>
 
                   <div className="buttons">
                     <div className="action">
@@ -189,7 +203,6 @@ const TenantDetails = () => {
                       </div>
                     ) : null}
                   </div>
-
                   <DeleteConfirmation
                     message="Do you want to delete this Tenant?"
                     icon="pi pi-exclamation-triangle"
@@ -198,7 +211,6 @@ const TenantDetails = () => {
                     confirmFunction={deleteTenant}
                     sideBar={true}
                   />
-
                   <Dialog
                     header={"Edit Tenant"}
                     visible={visible}

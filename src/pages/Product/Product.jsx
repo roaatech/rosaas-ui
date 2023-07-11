@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { Wrapper } from "./Product.styled";
 import CustomPaginator from "../../components/custom/Shared/CustomPaginator/CustomPaginator";
 export default function Product({ children }) {
-  // const { getProduct, getProductList, deleteProductReq } = useRequest();
+  const { getProduct, getProductList, deleteProductReq } = useRequest();
   const [visible, setVisible] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [visibleHead, setVisibleHead] = useState(false);
@@ -42,7 +42,7 @@ export default function Product({ children }) {
     setConfirm(true);
   };
   const deleteProduct = async () => {
-    // await deleteProductReq({ id: currentId });
+    await deleteProductReq({ id: currentId });
   };
 
   useEffect(() => {
@@ -54,96 +54,9 @@ export default function Product({ children }) {
     if (sortValue) query += `&sort.Direction=${sortValue}`;
 
     (async () => {
-      // const listData = await getProductList(query);
-      // setTotalCount(listData.data.data.totalCount);
-      // setList(listData.data.data.items);
-      setTotalCount(7);
-      setList([
-        {
-          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
-          name: "qwero",
-          url: "qwerqwr",
-          clientId: {
-            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
-            name: "osos",
-          },
-          status: 1,
-          createdDate: "2023-06-13T07:22:43",
-          editedDate: "2023-06-13T07:32:04",
-        },
-        {
-          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
-          name: "qwero",
-          url: "qwerqwr",
-          clientId: {
-            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
-            name: "osos",
-          },
-          status: 1,
-          createdDate: "2023-06-13T07:22:43",
-          editedDate: "2023-06-13T07:32:04",
-        },
-        {
-          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
-          name: "qwero",
-          url: "qwerqwr",
-          clientId: {
-            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
-            name: "osos",
-          },
-          status: 1,
-          createdDate: "2023-06-13T07:22:43",
-          editedDate: "2023-06-13T07:32:04",
-        },
-        {
-          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
-          name: "qwero",
-          url: "qwerqwr",
-          clientId: {
-            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
-            name: "osos",
-          },
-          status: 1,
-          createdDate: "2023-06-13T07:22:43",
-          editedDate: "2023-06-13T07:32:04",
-        },
-        {
-          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
-          name: "qwero",
-          url: "qwerqwr",
-          clientId: {
-            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
-            name: "osos",
-          },
-          status: 1,
-          createdDate: "2023-06-13T07:22:43",
-          editedDate: "2023-06-13T07:32:04",
-        },
-        {
-          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
-          name: "qwero",
-          url: "qwerqwr",
-          clientId: {
-            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
-            name: "osos",
-          },
-          status: 1,
-          createdDate: "2023-06-13T07:22:43",
-          editedDate: "2023-06-13T07:32:04",
-        },
-        {
-          id: "c12bd0e3-5127-480b-9b46-ace7285ab4df",
-          name: "qwero",
-          url: "qwerqwr",
-          clientId: {
-            id: "88e67328-3b20-413e-b6e1-010b48fa7bc9",
-            name: "osos",
-          },
-          status: 1,
-          createdDate: "2023-06-13T07:22:43",
-          editedDate: "2023-06-13T07:32:04",
-        },
-      ]);
+      const listData = await getProductList(query);
+      setTotalCount(listData.data.data.totalCount);
+      setList(listData.data.data.items);
     })();
   }, [first, rows, searchValue, sortField, sortValue, update]);
 
@@ -161,18 +74,8 @@ export default function Product({ children }) {
   /****************************** */
   const [productData, setProductData] = useState();
   const editForm = async (id) => {
-    // const productData = await getProduct(id);
-    const productData = {
-      data: {
-        data: {
-          id: "e952885d-0174-4ad2-bf6d-1146eadd9718",
-          name: "asdf",
-          url: "asdfooo",
-          createdDate: "2023-06-11T09:32:28",
-          editedDate: "2023-06-12T09:57:38",
-        },
-      },
-    };
+    const productData = await getProduct(id);
+
     setProductData(productData.data);
     setVisible(true);
   };
@@ -238,7 +141,7 @@ export default function Product({ children }) {
               }></Column>
 
             <Column
-              field={"clientId.name"}
+              field={"client.name"}
               header={
                 <ColumnSortHeader
                   text="Client"
@@ -254,7 +157,7 @@ export default function Product({ children }) {
               }
               showFilterMenu={false}
             />
-            <Column
+            {/* <Column
               field="status"
               header={
                 <ColumnSortHeader
@@ -271,7 +174,7 @@ export default function Product({ children }) {
               }
               showFilterMenu={false}
               body={statusBodyTemplate}
-            />
+            /> */}
             <Column
               body={(data, options) => (
                 <TableDate

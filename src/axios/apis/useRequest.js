@@ -28,11 +28,29 @@ const useRequest = () => {
   const getTenantList = async (params) => {
     return await Request.get(`management/sadmin/v1/Tenants${params}`);
   };
-  const editTenantStatus = async (data) => {
-    return await Request.put("management/sadmin/v1/Tenants/status", data);
-  };
   const deleteTenantReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Tenants`, { data });
+  };
+  const createProductRequest = async (data) => {
+    return await Request.post("management/sadmin/v1/Products", data);
+  };
+  const editProductRequest = async (data) => {
+    return await Request.put(
+      `management/sadmin/v1/Products/${data.id}`,
+      data.data
+    );
+  };
+  const getProduct = async (id) => {
+    return await Request.get(`management/sadmin/v1/Products/${id}`);
+  };
+  const getProductList = async (params) => {
+    return await Request.get(`management/sadmin/v1/Products${params}`);
+  };
+  const deleteProductReq = async (data) => {
+    return await Request.delete(`management/sadmin/v1/Products/${data.id}`);
+  };
+  const editTenantStatus = async (data) => {
+    return await Request.put("management/sadmin/v1/Tenants/status", data);
   };
   const getTimeLine = async (id) => {
     return await Request.get(`management/sadmin/v1/Tenants/${id}/processes`);
@@ -49,6 +67,11 @@ const useRequest = () => {
     editTenantStatus,
     deleteTenantReq,
     getTimeLine,
+    createProductRequest,
+    editProductRequest,
+    getProduct,
+    getProductList,
+    deleteProductReq,
   };
 };
 export default useRequest;

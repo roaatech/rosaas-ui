@@ -22,7 +22,8 @@ import { Wrapper } from "./FeatureTable.styled";
 import CustomPaginator from "../../Shared/CustomPaginator/CustomPaginator";
 import AutoCompleteFiled from "../../Shared/AutoCompleteFiled/AutoCompleteFiled";
 
-export default function FeatureTable({ children }) {
+export default function FeatureTable({ data }) {
+  console.log(data, "00000");
   const { getTenant, getTenantList, deleteTenantReq } = useRequest();
   const [visible, setVisible] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
@@ -48,6 +49,7 @@ export default function FeatureTable({ children }) {
   };
 
   useEffect(() => {
+    let listData;
     let query = `?page=${Math.ceil(
       (first + 1) / rows
     )}&pageSize=${rows}&filters[0].Field=SearchTerm`;
@@ -58,7 +60,11 @@ export default function FeatureTable({ children }) {
       query += `&filters[1].Field=selectedProduct&filters[1].Value=${selectedProduct}`;
 
     (async () => {
-      const listData = await getTenantList(query);
+      if (totalCount != 0) {
+        listData = await getTenantList(query);
+      } else {
+        listData = data;
+      }
       setTotalCount(listData.data.data.totalCount);
       setList(listData.data.data.items);
     })();
