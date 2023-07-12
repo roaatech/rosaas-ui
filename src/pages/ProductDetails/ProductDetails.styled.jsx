@@ -16,9 +16,6 @@ export const Wrapper = styled.div`
     }
   }
 
-  ul.p-tabview-nav {
-    border-bottom-width: 1px !important;
-  }
 
   .card-body {
     padding: 0px;

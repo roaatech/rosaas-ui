@@ -72,7 +72,7 @@ const TenantDetails = () => {
         child={tenantData && tenantData.data.title}
         icon={BsFillPersonLinesFill}
       />
-      <div className="mainContainer">
+      <div className="main-container">
         {tenantData && (
           <div className="pageWrapper">
             <div className="tableSec">

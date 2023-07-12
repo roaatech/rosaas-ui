@@ -82,23 +82,21 @@ const ProductDetails = () => {
         icon={BsBoxSeam}
       />
       {productData && (
-        <div className="mainContainer">
-          <div className="card mb-5">
-            <TabView>
-              <TabPanel header="Details">
-                <ProductDetailsTab data={productData} />
-              </TabPanel>
-              {/* <TabPanel header="Features">
+        <div className="main-container">
+          <TabView>
+            <TabPanel header="Details">
+              <ProductDetailsTab data={productData} />
+            </TabPanel>
+            {/* <TabPanel header="Features">
               <FeatureTable data={featureData} />
             </TabPanel>
             <TabPanel header="Plans">
               <p className="m-0">Plans</p>
             </TabPanel> */}
-              <TabPanel header="Urls">
-                <Urls data={productData.data} />
-              </TabPanel>
-            </TabView>
-          </div>
+            <TabPanel header="Urls">
+              <Urls data={productData.data} />
+            </TabPanel>
+          </TabView>
         </div>
       )}
     </Wrapper>

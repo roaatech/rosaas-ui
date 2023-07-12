@@ -10,7 +10,8 @@ const GlobalStyles = createGlobalStyle`
   ${require("primereact/resources/themes/lara-light-indigo/theme.css")}
   ${require("primereact/resources/primereact.min.css")}
   ${require("primeicons/primeicons.css")}
- ${require("../../../scss/voltltr.scss")}  
+ ${require("../../../scss/voltltr.scss")}   
+ ${require("../../../scss/custom.scss")}  
  /* ${(props) => {
    props.direction == "rtl"
      ? require("../../../scss/voltrtl.scss")
@@ -197,12 +198,7 @@ nav svg.svg-inline--fa.fa-bell {
 
 .content{
   padding:0
-}
-
-.mainContainer{
-  padding:1rem
-}
-
+} 
 
 .p-dropdown {
     width: 100%;
