@@ -209,6 +209,9 @@ const TenantDetails = () => {
                         </div>
                         <div className="timeLine">
                           <Card border="light" className="shadow-sm ">
+                          <Card.Header className="fs-6">
+                            History
+                          </Card.Header>
                             <Card.Body className="pb-0">
                               <Workflow updateDetails={updateDetails} />
                             </Card.Body>

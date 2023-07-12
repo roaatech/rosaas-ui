@@ -23,17 +23,19 @@ const Workflow = ({ updateDetails }) => {
     <Wrapper>
       <div className="timeLineCont">
         {timeLine.map((item, index) => (
-          <div className="timeLineItemCont" key={index}>
-            <div className="author">{Owner[item.ownerType]}</div>
-            <div className="info">
-              <div className="action">
-                <TenantStatus statusValue={item.status} />
+          <div className="time-line-item-container" key={index}> 
+            <div className="timeLineItemCont" key={index}>
+              <div className="author">{Owner[item.ownerType]}</div>
+              <div className="info">
+                <div className="action">
+                  <TenantStatus statusValue={item.status} />
+                </div>
+                {/* <div className="action">{statusArray[item.status]}</div> */}
+                <div className="time">{DataTransform(item.created)}</div>
               </div>
-              {/* <div className="action">{statusArray[item.status]}</div> */}
-              <div className="time">{DataTransform(item.created)}</div>
+              <div className="message">{item.message}</div>
             </div>
-            <div className="message">{item.message}</div>
-          </div>
+        </div>
         ))}
       </div>
     </Wrapper>
