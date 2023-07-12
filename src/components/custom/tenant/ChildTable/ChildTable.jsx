@@ -10,7 +10,7 @@ export default function ChildTable() {
   const rowExpansionTemplate = (data) => {
     return (
       <div className="">
-        <Card border="light" className="shadow-sm   border-0">
+        <Card border="light" className="  border-0">
           <Card.Body className="p-0">
             <Table
               responsive
@@ -18,7 +18,7 @@ export default function ChildTable() {
               <tbody>
                 {Object.keys(data).map((item, index) => (
                   <tr key={index}>
-                    <td className="fw-bold">{item}</td>
+                    <td className="fw-bold"> {item} :</td>
                     <td>{data[item]}</td>
                   </tr>
                 ))}

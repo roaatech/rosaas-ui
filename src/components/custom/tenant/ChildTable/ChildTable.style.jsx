@@ -12,13 +12,26 @@ const Wrapper = styled.div`
     span.statusTitle {
       /* text-transform: capitalize; */
     }
-  }
-
+  } 
+  .accordion-item { 
+    background-color: #fcfcfc !important; 
+}
+.accordion-item .card-body {
+  background-color: #fcfcfc !important; 
+}
+.accordion-item tr >* {
+  color: #787878 !important;
+}
   .accordion-item > * {
     transition: 0.5s;
   }
+ 
+.accordion-item tr .fw-bold {
+   width: 25%
+}
+  
   .accordion-body {
-    padding: 0;
+    padding: 10px 20px 10px 20px;
     border-radius: 0;
   }
 `;
