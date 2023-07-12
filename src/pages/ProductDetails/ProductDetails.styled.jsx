@@ -25,10 +25,6 @@ export const Wrapper = styled.div`
     background: unset;
   }
 
-  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
-    padding: 1.75rem 2.5rem;
-  }
-
   /***************** */
   .moreTsec {
     display: flex;
@@ -43,7 +39,7 @@ export const Wrapper = styled.div`
     max-height: calc(100vh - 220px);
     overflow-y: auto;
     .timeLineItemCont {
-      margin: 0 5px;
+      /* margin: 0 5px; */
 
       margin-bottom: 9px;
       background: var(--themeBackground);
@@ -69,29 +65,6 @@ export const Wrapper = styled.div`
           font-size: 10px;
         }
       }
-    }
-  }
-
-  // urls
-  .bar {
-    padding: 5px;
-    border-radius: 5px;
-    margin: 10px 0;
-    border: 1px solid;
-
-    .method {
-      font-size: var(--smallFont);
-      color: var(--themeSecColor);
-      padding: 5px 20px;
-      border-radius: 5px;
-      display: inline-block;
-      margin-right: 10px;
-    }
-
-    .url {
-      font-weight: bold;
-      font-size: var(--normalFont);
-      font-weight: bold;
     }
   }
 `;

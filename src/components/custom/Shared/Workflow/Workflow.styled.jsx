@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
     max-height: calc(100vh - 220px);
     overflow-y: auto;
     .timeLineItemCont {
-      margin: 0 5px;
+      /* margin: 0 5px; */
 
       margin-bottom: 9px;
       background: var(--themeBackground);

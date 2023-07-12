@@ -1,75 +1,24 @@
-import React, { useState, useEffect, useRef } from "react";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { Toast } from "primereact/toast";
+import React, { useState, useEffect } from "react";
+
 import { Card, Table } from "@themesberg/react-bootstrap";
+import { Wrapper } from "./ChildTable.style";
+import TenantStatus from "../TenantStatus/TenantStatus";
+import AccordionComponent from "../../../AccordionComponent";
 
 export default function ChildTable() {
-  const [products, setProducts] = useState([]);
-  const [expandedRows, setExpandedRows] = useState(null);
-  const toast = useRef(null);
-
-  useEffect(() => {
-    setProducts([
-      {
-        id: "1",
-        name: "Bamboo Watch",
-        metaData: {
-          id: "1000-0",
-          productCode: "f230fh0g3",
-          date: "2020-09-13",
-          amount: 65,
-          quantity: 1,
-          customer: "David James",
-          status: "PENDING",
-        },
-      },
-      {
-        name: "Black Watch",
-        id: "2",
-        metaData: {
-          id: "1001-0",
-          productCode: "nvklal433",
-          date: "2020-05-14",
-          amount: 72,
-          quantity: 1,
-          customer: "Maisha Jefferson",
-          status: "DELIVERED",
-        },
-      },
-      {
-        id: "3",
-        name: "Blue Band",
-        metaData: {
-          id: "1002-0",
-          productCode: "zz21cz3c1",
-          date: "2020-07-05",
-          amount: 79,
-          quantity: 1,
-          customer: "Stacey Leja",
-          status: "DELIVERED",
-        },
-      },
-    ]);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const allowExpansion = (rowData) => {
-    return Object.keys(rowData.metaData).length > 0;
-  };
-
   const rowExpansionTemplate = (data) => {
     return (
-      <div className="p-3">
-        <Card border="light" className="shadow-sm mb-4">
-          <Card.Body className="pb-0">
+      <div className="">
+        <Card border="light" className="shadow-sm   border-0">
+          <Card.Body className="p-0">
             <Table
               responsive
               className="table-centered table-nowrap rounded mb-0">
               <tbody>
-                {Object.keys(data.metaData).map((item, index) => (
+                {Object.keys(data).map((item, index) => (
                   <tr key={index}>
                     <td className="fw-bold">{item}</td>
-                    <td>{data.metaData[item]}</td>
+                    <td>{data[item]}</td>
                   </tr>
                 ))}
               </tbody>
@@ -80,18 +29,33 @@ export default function ChildTable() {
     );
   };
 
+  const [products, setProducts] = useState([
+    {
+      eventKey: "metadata0",
+      title: "Meta Data",
+      description: rowExpansionTemplate({
+        id: "1000-0",
+        productCode: "f230fh0g3",
+        date: "2020-09-13",
+        amount: 65,
+        quantity: 1,
+        customer: "David James",
+        status: "PENDING",
+      }),
+    },
+  ]);
+
   return (
-    <div className="card">
-      <Toast ref={toast} />
-      <DataTable
-        value={products}
-        expandedRows={expandedRows}
-        onRowToggle={(e) => setExpandedRows(e.data)}
-        rowExpansionTemplate={rowExpansionTemplate}
-        dataKey="id">
-        <Column expander={allowExpansion} header="" />
-        <Column field="name" header="" />
-      </DataTable>
-    </div>
+    <Wrapper>
+      <div className="card border-0">
+        <div className="status">
+          <span className="fw-bold statusTitle">status</span>
+          <span>
+            <TenantStatus statusValue={1} />
+          </span>
+        </div>
+        <AccordionComponent defaultKey="metaData" data={products} />
+      </div>
+    </Wrapper>
   );
 }

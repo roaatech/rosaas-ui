@@ -4,7 +4,11 @@ import React, { useEffect, useState } from "react";
 import SimpleBar from "simplebar-react";
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
-import { BsFillPersonLinesFill, BsBoxSeam } from "react-icons/bs";
+import {
+  BsFillPersonLinesFill,
+  BsBoxSeam,
+  BsFillLayersFill,
+} from "react-icons/bs";
 import {
   Nav,
   Badge,
@@ -274,6 +278,7 @@ export default (props = {}) => {
               />
               */}
               <NavItem title="Product" link={`/product`} icon={BsBoxSeam} />
+              {/* <NavItem title="Plan" link={`/plan`} icon={BsFillLayersFill} /> */}
             </Nav>
           </div>
         </SimpleBar>

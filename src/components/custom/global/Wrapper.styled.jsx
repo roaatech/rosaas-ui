@@ -97,7 +97,7 @@ const GlobalStyles = createGlobalStyle`
       background-color: var(--primaryBackground)!important;
     } */
 }
-
+ 
 .p-datatable .p-datatable-thead > tr > th{
   color: var(--themeColor) !important;
   background-color: var(--themeBackground) !important;

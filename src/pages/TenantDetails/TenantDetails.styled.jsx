@@ -12,7 +12,6 @@ export const Wrapper = styled.div`
   }
   .card-body {
     background: var(--themeSecColor);
-    padding-bottom: 1rem !important;
   }
 
   tr > td {
@@ -26,12 +25,12 @@ export const Wrapper = styled.div`
     border-color: var(--themeGray) !important;
   }
 
-  .pageWrapper {
+  .detailsContainer {
     align-items: flex-start;
     display: flex;
     flex-wrap: wrap;
   }
-  .tableSec {
+  .detailsInfo {
     width: calc(65% - 15px);
     @media (max-width: 1100px) {
       width: 100%;
@@ -47,12 +46,12 @@ export const Wrapper = styled.div`
     margin: 0 0 0 15px;
     font-size: var(--smallFont);
     background: var(--themeSecColor);
-    padding: 15px 10px;
     border-radius: 10px;
     margin-bottom: 20px;
   }
 
   .buttons {
+    margin-top: 20px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;

@@ -22,17 +22,9 @@ import ProductDetailsTab from "../../components/custom/Product/ProdcutDetailsTab
 import { TabView, TabPanel } from "primereact/tabview";
 import FeatureTable from "../../components/custom/Feature/FeatureTable/FeatureTable";
 import TimelineData from "../../components/custom/tenant/TimelineData/TimelineData";
-import { urlStyle } from "../../const";
+import Urls from "../../components/custom/Product/Urls/Urls";
 
 const ProductDetails = () => {
-  const [URLS, setURLS] = useState([
-    { method: "GET", path: "http://localhost:5000/tenantDetails" },
-    { method: "POST", path: "http://localhost:5000/tenantDetails" },
-    { method: "GET", path: "http://localhost:5000/tenantDetails" },
-    { method: "PUT", path: "http://localhost:5000/tenantDetails" },
-    { method: "DELETE", path: "http://localhost:5000/tenantDetails" },
-  ]);
-
   const [confirm, setConfirm] = useState(false);
   const [productData, setProductData] = useState();
   const [visible, setVisible] = useState(false);
@@ -65,10 +57,11 @@ const ProductDetails = () => {
 
   useEffect(() => {
     (async () => {
-      const featureDataReq = await getTenantList(
-        `?page=1&pageSize=10&filters[0].Field=SearchTerm`
-      );
-      setFeatureData(featureDataReq);
+      // const featureDataReq = await getTenantList(
+      //   `?page=1&pageSize=10&filters[0].Field=SearchTerm`
+      // );
+      // setFeatureData(featureDataReq);
+      // console.log(featureDataReq, "0000000000");
     })();
   }, []);
 
@@ -88,38 +81,26 @@ const ProductDetails = () => {
         child={productData && productData.data.name}
         icon={BsBoxSeam}
       />
-      <div className="mainContainer">
-        <div className="card mb-5">
-          <TabView>
-            <TabPanel header="Details">
-              <ProductDetailsTab />
-            </TabPanel>
-            <TabPanel header="Features">
+      {productData && (
+        <div className="mainContainer">
+          <div className="card mb-5">
+            <TabView>
+              <TabPanel header="Details">
+                <ProductDetailsTab data={productData} />
+              </TabPanel>
+              {/* <TabPanel header="Features">
               <FeatureTable data={featureData} />
             </TabPanel>
             <TabPanel header="Plans">
               <p className="m-0">Plans</p>
-            </TabPanel>
-            <TabPanel header="Urls">
-              {URLS.map((url) => (
-                <div
-                  className="bar"
-                  style={{
-                    background: urlStyle[url.method].lightColor,
-                    borderColor: urlStyle[url.method].darkColor,
-                  }}>
-                  <span
-                    className="method"
-                    style={{ background: urlStyle[url.method].darkColor }}>
-                    {url.method}
-                  </span>
-                  <span className="url">{url.path}</span>
-                </div>
-              ))}
-            </TabPanel>
-          </TabView>
+            </TabPanel> */}
+              <TabPanel header="Urls">
+                <Urls data={productData.data} />
+              </TabPanel>
+            </TabView>
+          </div>
         </div>
-      </div>
+      )}
     </Wrapper>
   );
 };

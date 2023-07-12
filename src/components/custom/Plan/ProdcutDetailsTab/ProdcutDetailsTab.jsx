@@ -19,7 +19,7 @@ import { updateSidebar } from "../../../../store/slices/main";
 import ProductForm from "../ProductForm/ProductForm";
 // import { productArray, productColor, productIcon } from "../../const";
 
-const ProductDetailsTab = ({ data }) => {
+const ProductDetailsTab = () => {
   const [confirm, setConfirm] = useState(false);
   const [currentId, setCurrentId] = useState("");
   const [productData, setProductData] = useState();
@@ -51,9 +51,9 @@ const ProductDetailsTab = ({ data }) => {
 
   useEffect(() => {
     (async () => {
-      // const productDataReq = await getProduct(routeParams.id);
+      const productDataReq = await getProduct(routeParams.id);
       // setAction(productData.data.data.actions);
-      setProductData(data);
+      setProductData(productDataReq.data);
     })();
   }, [visible, routeParams.id]);
 
@@ -101,7 +101,7 @@ const ProductDetailsTab = ({ data }) => {
 
             <div className="action">
               <Button
-                className="mr-3"
+                className="mr-4"
                 label="Delete"
                 icon="pi pi-trash"
                 onClick={() => deleteConfirm(productData.data.id)}
@@ -111,14 +111,10 @@ const ProductDetailsTab = ({ data }) => {
                 }}
               />
               <Button
-                className="mr-3"
+                className="mr-4"
                 label="Edit"
                 icon="pi pi-pencil"
                 onClick={() => setVisible(true)}
-                style={{
-                  backgroundColor: "var(--themeColor)",
-                  borderColor: "var(--themeColor)",
-                }}
               />
             </div>
             <DeleteConfirmation

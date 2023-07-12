@@ -33,6 +33,8 @@ import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import Redirect from "./components/custom/global/Redirect/Redirect";
 import Dashboard from "./pages/Welcome/Welcome";
 import Product from "./pages/Product/Product";
+import Plan from "./pages/Plan/plan";
+
 export const Routes = {
   // pages
   DashboardOverview: {
@@ -48,6 +50,11 @@ export const Routes = {
   Product: {
     path: "/product",
     component: Product,
+    roles: ["superAdmin"],
+  },
+  Plan: {
+    path: "/plan",
+    component: Plan,
     roles: ["superAdmin"],
   },
   Tenant: {
