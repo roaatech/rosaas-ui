@@ -5,7 +5,7 @@ import useGlobal from "../../../../lib/hocks/global";
 import { Owner } from "../../../../const";
 import { useParams } from "react-router-dom";
 import useRequest from "../../../../axios/apis/useRequest";
-
+import { Product_Client_id } from "../../../../const";
 const Workflow = ({ updateDetails }) => {
   const [timeLine, setTimeLine] = useState([]);
   const { getTimeLine } = useRequest();
@@ -14,7 +14,7 @@ const Workflow = ({ updateDetails }) => {
   const routeParams = useParams();
   useEffect(() => {
     (async () => {
-      const timeLineReq = await getTimeLine(routeParams.id);
+      const timeLineReq = await getTimeLine(routeParams.id, Product_Client_id);
       setTimeLine(timeLineReq.data.data);
     })();
   }, [updateDetails, routeParams.id]);
@@ -23,7 +23,7 @@ const Workflow = ({ updateDetails }) => {
     <Wrapper>
       <div className="timeLineCont">
         {timeLine.map((item, index) => (
-          <div className="time-line-item-container" key={index}> 
+          <div className="time-line-item-container" key={index}>
             <div className="timeLineItemCont" key={index}>
               <div className="author">{Owner[item.ownerType]}</div>
               <div className="info">
@@ -35,7 +35,7 @@ const Workflow = ({ updateDetails }) => {
               </div>
               <div className="message">{item.message}</div>
             </div>
-        </div>
+          </div>
         ))}
       </div>
     </Wrapper>

@@ -21,6 +21,7 @@ import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../store/slices/main";
 import { statusConst } from "../../const";
 import { Tooltip } from "bootstrap";
+import Actions from "../../components/custom/tenant/Actions/Actions";
 
 const TenantDetails = () => {
   const [confirm, setConfirm] = useState(false);
@@ -29,6 +30,7 @@ const TenantDetails = () => {
   const [updateDetails, setUpdateDetails] = useState(0);
   const [visible, setVisible] = useState(false);
   const [action, setAction] = useState();
+  const [tenantStatus, setTenantStatus] = useState();
 
   const { DataTransform } = useGlobal();
 
@@ -60,6 +62,24 @@ const TenantDetails = () => {
       const tenantData = await getTenant(routeParams.id);
       setAction(tenantData.data.data.actions);
       setTenantData(tenantData.data);
+      setTenantStatus(
+        tenantData.data.data.products
+          .flatMap((item) => item.actions.map((action) => action))
+          .filter(
+            (obj, index, self) =>
+              self.findIndex((o) => o.status === obj.status) === index
+          )
+      );
+
+      console.log(
+        "lllllllllllllll",
+        tenantData.data.data.products
+          .flatMap((item) => item.actions.map((action) => action))
+          .filter(
+            (obj, index, self) =>
+              self.findIndex((o) => o?.status === obj?.status) === index
+          )
+      );
     })();
   }, [visible, routeParams.id, updateDetails]);
 
@@ -78,135 +98,110 @@ const TenantDetails = () => {
               <div className="main">
                 <div className="details">
                   <TabView>
-                    <TabPanel header="Details">  
-                          <Card border="light" className="shadow-sm border-0">
-                            <Card.Body className="p-0">
-                              <Table
-                                responsive
-                                className="table-centered table-nowrap rounded mb-0">
-                                <tbody>
-                                  <tr>
-                                    <td className="fw-bold">Title</td>
-                                    <td>{tenantData.data.title}</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="fw-bold">Unique Name</td>
-                                    <td>{tenantData.data.uniqueName}</td>
-                                  </tr>
-                                  <tr>
-                                    <td className="fw-bold">Products</td>
-                                    <td>
-                                      {tenantData.data.products.map(
-                                        (product, index) => (
-                                          <span
-                                            key={index}
-                                            className="p-1 border-round border-1 border-400 me-2">
-                                            {product.name}
-                                          </span>
-                                        )
-                                      )}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="fw-bold">status</td>
-                                    <td>
-                                      <TenantStatus
-                                        statusValue={tenantData.data.status}
-                                      />
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="fw-bold">Created Date</td>
-                                    <td>
-                                      {DataTransform(
-                                        tenantData.data.createdDate
-                                      )}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="fw-bold">
-                                      Last Updated Date
-                                    </td>
-                                    <td>
-                                      {DataTransform(
-                                        tenantData.data.editedDate
-                                      )}
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </Table>
-                            </Card.Body>
-                          </Card> 
-                          <div className="buttons">
-                            <div className="action">
-                              {tenantData.data.status == 13 ? (
-                                <Button
-                                  className="mr-3"
-                                  label="Delete"
-                                  icon="pi pi-trash"
-                                  onClick={() =>
-                                    deleteConfirm(tenantData.data.id)
-                                  }
-                                  style={{
-                                    backgroundColor: "var(--red)",
-                                    borderColor: "var(--red)",
-                                  }}
-                                />
-                              ) : null}
-                              {tenantData.data.status != 13 ? (
-                                <Button
-                                  className="mr-3"
-                                  label="Edit"
-                                  icon="pi pi-pencil"
-                                  onClick={() => setVisible(true)}
-                                  style={{
-                                    backgroundColor: "var(--primaryColor)",
-                                    borderColor: "var(--primaryColor)",
-                                  }}
-                                />
-                              ) : null}
-                              {action &&
-                                action.map((item, index) => (
-                                  <Button
-                                    key={index}
-                                    className="mr-3"
-                                    label={item.name}
-                                    icon={`pi ${statusConst[item.status].icon}`}
-                                    style={{
-                                      backgroundColor:
-                                        statusConst[item.status].color,
-                                      borderColor:
-                                        statusConst[item.status].color,
-                                    }}
-                                    onClick={() => chagneStatus(item.status)}
+                    <TabPanel header="Details">
+                      <Card border="light" className="shadow-sm border-0">
+                        <Card.Body className="p-0">
+                          <Table
+                            responsive
+                            className="table-centered table-nowrap rounded mb-0">
+                            <tbody>
+                              <tr>
+                                <td className="fw-bold">Title</td>
+                                <td>{tenantData.data.title}</td>
+                              </tr>
+                              <tr>
+                                <td className="fw-bold">Unique Name</td>
+                                <td>{tenantData.data.uniqueName}</td>
+                              </tr>
+                              <tr>
+                                <td className="fw-bold">Products</td>
+                                <td>
+                                  {tenantData.data.products.map(
+                                    (product, index) => (
+                                      <span
+                                        key={index}
+                                        className="p-1 border-round border-1 border-400 me-2">
+                                        {product.name}
+                                      </span>
+                                    )
+                                  )}
+                                </td>
+                              </tr>
+                              {/* <tr>
+                                <td className="fw-bold">status</td>
+                                <td>
+                                  <TenantStatus
+                                    statusValue={tenantData.data.status}
                                   />
-                                ))}
-                            </div>
+                                </td>
+                              </tr> */}
+                              <tr>
+                                <td className="fw-bold">Created Date</td>
+                                <td>
+                                  {DataTransform(tenantData.data.createdDate)}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="fw-bold">Last Updated Date</td>
+                                <td>
+                                  {DataTransform(tenantData.data.editedDate)}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </Table>
+                        </Card.Body>
+                      </Card>
+                      <div className="buttons">
+                        <div className="action">
+                          {tenantStatus && tenantStatus[0]?.status != 13 ? (
+                            <Button
+                              className="mr-3"
+                              label="Edit"
+                              icon="pi pi-pencil"
+                              onClick={() => setVisible(true)}
+                              style={{
+                                backgroundColor: "var(--primaryColor)",
+                                borderColor: "var(--primaryColor)",
+                              }}
+                            />
+                          ) : null}
 
-                            {tenantData.data.status != 13 ? (
-                              <div className="refresh">
-                                <Button
-                                  onClick={() => {
-                                    setUpdateDetails(updateDetails + 1);
-                                    dispatch(updateSidebar());
-                                  }}
-                                  type="button"
-                                  icon={<FiRefreshCw />}
-                                  tooltip="Refresh Data"
-                                  tooltipOptions={{
-                                    position: "left",
-                                    mouseTrack: true,
-                                    mouseTrackTop: 15,
-                                  }}
-                                />
-                              </div>
-                            ) : null}
-                          </div> 
+                          <Actions
+                            tenantData={tenantData}
+                            actions={tenantStatus}
+                            deleteConfirm={deleteConfirm}
+                            chagneStatus={chagneStatus}
+                          />
+                        </div>
+
+                        {tenantData.data.status != 13 ? (
+                          <div className="refresh">
+                            <Button
+                              onClick={() => {
+                                setUpdateDetails(updateDetails + 1);
+                                dispatch(updateSidebar());
+                              }}
+                              type="button"
+                              icon={<FiRefreshCw />}
+                              tooltip="Refresh Data"
+                              tooltipOptions={{
+                                position: "left",
+                                mouseTrack: true,
+                                mouseTrackTop: 15,
+                              }}
+                            />
+                          </div>
+                        ) : null}
+                      </div>
                     </TabPanel>
-
                     {tenantData.data.products.map((product, index) => (
-                      <TabPanel header={product.name.toUpperCase()}>
-                        <ChildTable tenantDetails={tenantData.data}/>
+                      <TabPanel header={product.name.toUpperCase()} key={index}>
+                        {console.log(product)}
+                        <ChildTable
+                          tenantDetails={tenantData.data}
+                          tenantId={tenantData.data.id}
+                          productData={product}
+                        />
                       </TabPanel>
                     ))}
                   </TabView>

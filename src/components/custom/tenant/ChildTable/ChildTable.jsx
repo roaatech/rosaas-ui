@@ -4,23 +4,24 @@ import { Card, Table } from "@themesberg/react-bootstrap";
 import { Wrapper } from "./ChildTable.style";
 import TenantStatus from "../TenantStatus/TenantStatus";
 import AccordionComponent from "../../../AccordionComponent";
-import Workflow from "../../../../components/custom/Shared/Workflow/Workflow"; 
+import Workflow from "../../../../components/custom/Shared/Workflow/Workflow";
 import { Button } from "primereact/button";
 import { updateSidebar } from "../../../../store/slices/main";
 import { FiRefreshCw } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { statusConst } from "../../../../const";
 import useRequest from "../../../../axios/apis/useRequest";
+import Actions from "../Actions/Actions";
 
-export default function ChildTable(tenantDetails) {
-  const [action, setAction] = useState();
+export default function ChildTable({ productData, tenantId }) {
   const { editTenantStatus } = useRequest();
   const [updateDetails, setUpdateDetails] = useState(0);
   const dispatch = useDispatch();
   const chagneStatus = async (actionStatus) => {
     await editTenantStatus({
-      TenantId: tenantDetails.id,
+      TenantId: tenantId,
       status: actionStatus,
+      productId: productData.id,
     });
     setUpdateDetails(updateDetails + 1);
     dispatch(updateSidebar());
@@ -77,15 +78,13 @@ export default function ChildTable(tenantDetails) {
                 <tbody>
                   <tr>
                     <td className="fw-bold">Status</td>
-                    <td> <TenantStatus statusValue={10} /></td>
+                    <td>
+                      <TenantStatus statusValue={productData.status} />
+                    </td>
                   </tr>
                   <tr>
-                    <td className="fw-bold">
-                      Last Updated Date
-                    </td>
-                    <td>
-                      7/9/2023, 6:50:37 PM
-                    </td>
+                    <td className="fw-bold">Last Updated Date</td>
+                    <td>7/9/2023, 6:50:37 PM</td>
                   </tr>
                 </tbody>
               </Table>
@@ -93,56 +92,41 @@ export default function ChildTable(tenantDetails) {
           </Card>
           <AccordionComponent defaultKey="metaData" data={products} />
           <div className="buttons">
-                            <div className="action"> 
-                              {action &&
-                                action.map((item, index) => (
-                                  <Button
-                                    key={index}
-                                    className="mr-3"
-                                    label={item.name}
-                                    icon={`pi ${statusConst[item.status].icon}`}
-                                    style={{
-                                      backgroundColor:
-                                        statusConst[item.status].color,
-                                      borderColor:
-                                        statusConst[item.status].color,
-                                    }}
-                                    onClick={() => chagneStatus(item.status)}
-                                  />
-                                ))}
-                            </div>
+            <div className="action">
+              <Actions
+                actions={productData.actions}
+                chagneStatus={chagneStatus}
+              />
+            </div>
 
-                            {tenantDetails.status != 13 ? (
-                              <div className="refresh">
-                                <Button
-                                  onClick={() => {
-                                    setUpdateDetails(updateDetails + 1);
-                                    dispatch(updateSidebar());
-                                  }}
-                                  type="button"
-                                  icon={<FiRefreshCw />}
-                                  tooltip="Refresh Data"
-                                  tooltipOptions={{
-                                    position: "left",
-                                    mouseTrack: true,
-                                    mouseTrackTop: 15,
-                                  }}
-                                />
-                              </div>
-                            ) : null}
-                          </div> 
+            {productData?.status != 13 ? (
+              <div className="refresh">
+                <Button
+                  onClick={() => {
+                    setUpdateDetails(updateDetails + 1);
+                    dispatch(updateSidebar());
+                  }}
+                  type="button"
+                  icon={<FiRefreshCw />}
+                  tooltip="Refresh Data"
+                  tooltipOptions={{
+                    position: "left",
+                    mouseTrack: true,
+                    mouseTrackTop: 15,
+                  }}
+                />
+              </div>
+            ) : null}
+          </div>
         </div>
         <div className="content timeLine">
           <Card border="light" className="shadow-sm">
-            <Card.Header className="fs-6">
-              History
-            </Card.Header>
+            <Card.Header className="fs-6">History</Card.Header>
             <Card.Body className="pb-0">
               <Workflow updateDetails={updateDetails} />
             </Card.Body>
           </Card>
         </div>
-
       </div>
     </Wrapper>
   );

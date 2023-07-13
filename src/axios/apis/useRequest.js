@@ -52,8 +52,10 @@ const useRequest = () => {
   const editTenantStatus = async (data) => {
     return await Request.put("management/sadmin/v1/Tenants/status", data);
   };
-  const getTimeLine = async (id) => {
-    return await Request.get(`management/sadmin/v1/Tenants/${id}/processes`);
+  const getTimeLine = async (id, productId) => {
+    return await Request.get(
+      `management/sadmin/v1/Tenants/${id}/products/${productId}/processes`
+    );
   };
 
   return {
