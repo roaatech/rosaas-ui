@@ -87,7 +87,7 @@ export default function Product({ children }) {
         parent={"Product"}
         icon={BsBoxSeam}
       />
-      <div className="mainContainer">
+      <div className="main-container">
         <TableHead
           label={"Add Product"}
           popupLabel={"Create Product"}

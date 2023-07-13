@@ -117,7 +117,7 @@ export default function Tenant({ children }) {
         parent={"Tenant"}
         icon={BsFillPersonLinesFill}
       />
-      <div className="mainContainer">
+      <div className="main-container">
         <div className="tableSec">
           <TableHead
             label={"Add Tenant"}

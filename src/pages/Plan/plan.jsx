@@ -82,7 +82,7 @@ export default function Plan({ children }) {
         parent={"Plan"}
         icon={BsBoxSeam}
       />
-      <div className="mainContainer">
+      <div className="main-container">
         <TableHead
           label={"Add Plan"}
           popupLabel={"Create Plan"}
