@@ -20,7 +20,6 @@ import { Wrapper } from "./TenantDetails.styled";
 import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../store/slices/main";
 import { statusConst } from "../../const";
-import Workflow from "../../components/custom/Shared/Workflow/Workflow";
 import { Tooltip } from "bootstrap";
 
 const TenantDetails = () => {
@@ -79,9 +78,7 @@ const TenantDetails = () => {
               <div className="main">
                 <div className="details">
                   <TabView>
-                    <TabPanel header="Details">
-                      <div className="detailsContainer">
-                        <div className="detailsInfo">
+                    <TabPanel header="Details">  
                           <Card border="light" className="shadow-sm border-0">
                             <Card.Body className="p-0">
                               <Table
@@ -139,8 +136,7 @@ const TenantDetails = () => {
                                 </tbody>
                               </Table>
                             </Card.Body>
-                          </Card>
-
+                          </Card> 
                           <div className="buttons">
                             <div className="action">
                               {tenantData.data.status == 13 ? (
@@ -205,24 +201,12 @@ const TenantDetails = () => {
                                 />
                               </div>
                             ) : null}
-                          </div>
-                        </div>
-                        <div className="timeLine">
-                          <Card border="light" className="shadow-sm ">
-                          <Card.Header className="fs-6">
-                            History
-                          </Card.Header>
-                            <Card.Body className="pb-0">
-                              <Workflow updateDetails={updateDetails} />
-                            </Card.Body>
-                          </Card>
-                        </div>
-                      </div>
+                          </div> 
                     </TabPanel>
 
                     {tenantData.data.products.map((product, index) => (
                       <TabPanel header={product.name.toUpperCase()}>
-                        <ChildTable />
+                        <ChildTable tenantDetails={tenantData.data}/>
                       </TabPanel>
                     ))}
                   </TabView>

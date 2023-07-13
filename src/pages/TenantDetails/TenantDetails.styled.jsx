@@ -25,12 +25,12 @@ export const Wrapper = styled.div`
     border-color: var(--themeGray) !important;
   }
 
-  .detailsContainer {
+  .content-container {
     align-items: flex-start;
     display: flex;
     flex-wrap: wrap;
   }
-  .detailsInfo {
+  .content-details {
     width: calc(65% - 15px);
     @media (max-width: 1100px) {
       width: 100%;
