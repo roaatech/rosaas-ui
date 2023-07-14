@@ -23,6 +23,12 @@ export const Wrapper = styled.div`
     border-color: var(--themeGray) !important;
   }
 
+  
+  tr > td.url-container{
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  
   /* .main {
     display: flex;
   } */

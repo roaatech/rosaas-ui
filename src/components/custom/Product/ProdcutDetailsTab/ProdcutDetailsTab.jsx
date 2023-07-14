@@ -17,6 +17,7 @@ import { Wrapper } from "./ProdcutDetailsTab.styled";
 import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../../../store/slices/main";
 import ProductForm from "../ProductForm/ProductForm";
+import UrlItemList from "../../../../components/custom/Product/UrlItemList/UrlItemList";
 // import { productArray, productColor, productIcon } from "../../const";
 
 const ProductDetailsTab = ({ data }) => {
@@ -93,11 +94,12 @@ const ProductDetailsTab = ({ data }) => {
                     <tr>
                       <td className="fw-bold">Last Updated Date</td>
                       <td>{DataTransform(productData.data.editedDate)}</td>
-                    </tr>
+                    </tr> 
+                   <UrlItemList data={productData.data} />
                   </tbody>
-                </Table>
+                </Table> 
               </Card.Body>
-            </Card>
+            </Card> 
 
             <div className="action">
               <Button
