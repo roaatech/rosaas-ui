@@ -21,7 +21,8 @@ import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../store/slices/main";
 import { statusConst } from "../../const";
 import { Tooltip } from "bootstrap";
-import Actions from "../../components/custom/tenant/Actions/Actions";
+import Actions from "../../components/custom/tenant/Actions/Actions"; 
+import TableHead from "../../components/custom/Shared/TableHead/TableHead";
 
 const TenantDetails = () => {
   const [confirm, setConfirm] = useState(false);
@@ -84,14 +85,20 @@ const TenantDetails = () => {
   }, [visible, routeParams.id, updateDetails]);
 
   return (
-    <Wrapper>
-      <BreadcrumbComponent
-        title={tenantData && tenantData.data.title}
-        parent={"Tenant"}
-        child={tenantData && tenantData.data.title}
+    <Wrapper>  
+   {tenantData &&  <BreadcrumbComponent
+        breadcrumbInfo= {"TenantDetails" } 
+        param1={tenantData.data.id}
         icon={BsFillPersonLinesFill}
-      />
+      />}
+      
       <div className="main-container">
+      {tenantData &&  <TableHead 
+         label={"Tenant Details"}   
+        name={tenantData.data.uniqueName}  
+        active={false}
+        />}
+        
         {tenantData && (
           <div className="pageWrapper">
             <div className="tableSec">

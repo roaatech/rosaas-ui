@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import TableHead from "../../components/custom/Shared/TableHead/TableHead";
 import { Card, Table } from "@themesberg/react-bootstrap";
 import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
 import { BsBoxSeam } from "react-icons/bs";
@@ -17,7 +18,8 @@ import { Wrapper } from "./ProductDetails.styled";
 import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../store/slices/main";
 import ProductForm from "../../components/custom/Product/ProductForm/ProductForm";
-import ProductDetailsTab from "../../components/custom/Product/ProdcutDetailsTab/ProdcutDetailsTab";
+import ProductDetailsTab from "../../components/custom/Product/ProdcutDetailsTab/ProdcutDetailsTab"; 
+import ProductTenantsList from "../../components/custom/Product/ProductTenantsList/ProductTenantsList";
 // import { productArray, productColor, productIcon } from "../../const";
 import { TabView, TabPanel } from "primereact/tabview";
 import FeatureTable from "../../components/custom/Feature/FeatureTable/FeatureTable";
@@ -75,14 +77,24 @@ const ProductDetails = () => {
 
   return (
     <Wrapper>
-      <BreadcrumbComponent
-        title={productData && productData.data.name}
-        parent={"Product"}
-        child={productData && productData.data.name}
+    
+    {productData && <BreadcrumbComponent
+        breadcrumbInfo= {"ProductDetails" } 
+        param1={productData.data.id}
         icon={BsBoxSeam}
-      />
+      />}
+      
+               
+
+
+
       {productData && (
         <div className="main-container">
+        <TableHead 
+         label={"Product Details"}   
+        name={productData.data.name}  
+        active={false}
+        />  
           <TabView>
             <TabPanel header="Details">
               <ProductDetailsTab data={productData} />
@@ -95,6 +107,9 @@ const ProductDetails = () => {
             </TabPanel> */}
             <TabPanel header="Urls">
               <Urls data={productData.data} />
+            </TabPanel>
+            <TabPanel header="Subscriptions ">
+              <ProductTenantsList />
             </TabPanel>
           </TabView>
         </div>

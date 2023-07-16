@@ -2,8 +2,7 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   background: var(--themeSecColor);
   padding: 10px 25px;
-  margin: 0;
-  margin-bottom: 3rem;
+  margin: 0; 
   display: flex;
 
   h4 {

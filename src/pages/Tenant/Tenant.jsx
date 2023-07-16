@@ -24,6 +24,19 @@ import { Wrapper } from "./Tenant.styled";
 import CustomPaginator from "../../components/custom/Shared/CustomPaginator/CustomPaginator";
 import AutoCompleteFiled from "../../components/custom/Shared/AutoCompleteFiled/AutoCompleteFiled";
 import useGlobal from "../../lib/hocks/global";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faEllipsisH, faEye, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  Col,
+  Row,
+  Form,
+  Card,
+  Button,
+  ButtonGroup,
+  Breadcrumb,
+  InputGroup,
+  Dropdown,
+} from "@themesberg/react-bootstrap";
 export default function Tenant({ children }) {
   const { getTenant, getTenantList, deleteTenantReq } = useRequest();
   const [visible, setVisible] = useState(false);
@@ -112,13 +125,12 @@ export default function Tenant({ children }) {
 
   return (
     <Wrapper>
-      <BreadcrumbComponent
-        title={"Tenant List"}
-        parent={"Tenant"}
+     
+     <BreadcrumbComponent
+        breadcrumbInfo= {"TenantList" } 
         icon={BsFillPersonLinesFill}
       />
-      <div className="main-container">
-        <div className="tableSec">
+      <div className="main-container"> 
           <TableHead
             label={"Add Tenant"}
             popupLabel={"Create Tenant"}
@@ -142,7 +154,8 @@ export default function Tenant({ children }) {
               setSelectedProduct={setSelectedProduct}
             />
           </TableHead>
-          <div className="card">
+          <Card border="light" className="table-wrapper table-responsive shadow-sm">
+          <Card.Body className="pt-0">
             <DataTable
               value={list}
               tableStyle={{ minWidth: "50rem" }}
@@ -162,7 +175,7 @@ export default function Tenant({ children }) {
                     setFirst={setFirst}
                   />
                 }></Column>
-              <Column
+             <Column
                 field="uniqueName"
                 header={
                   <ColumnSortHeader
@@ -178,7 +191,7 @@ export default function Tenant({ children }) {
                   />
                 }
               />
-              <Column
+           {/* <Column
                 field="status"
                 header={
                   <ColumnSortHeader
@@ -195,7 +208,7 @@ export default function Tenant({ children }) {
                 }
                 showFilterMenu={false}
                 body={statusBodyTemplate}
-              />
+              />*/}
               <Column
                 body={(data, options) => (
                   <TableDate
@@ -217,43 +230,32 @@ export default function Tenant({ children }) {
                     setFirst={setFirst}
                   />
                 }
-              />
-              <Column
-                style={{ width: "60px", textAlign: "center" }}
+              /> 
+             <Column
                 body={(data, options) => (
-                  <>
-                    <BsFillEyeFill
-                      onClick={() => navigate(`/TenantDetails/${data.id}`)}
-                      style={{ cursor: "pointer" }}
-                    />
-                  </>
+                  <Dropdown as={ButtonGroup}>
+                    <Dropdown.Toggle
+                      as={Button}
+                      split
+                      variant="link"
+                      className="text-dark m-0 p-0">
+                      <span className="icon icon-sm">
+                        <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                      </span>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onSelect={() => navigate(`/TenantDetails/${data.id}`)}>
+                        <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
+                      </Dropdown.Item>
+                      <Dropdown.Item onSelect={() => editForm(data.id)}>
+                        <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
+                      </Dropdown.Item> 
+                    </Dropdown.Menu>
+                  </Dropdown>
                 )}
-                header="View"
-              />
-              <Column
                 style={{ width: "60px", textAlign: "center" }}
-                body={(data, options) => (
-                  <>
-                    <BsPencilSquare
-                      onClick={() => editForm(data.id)}
-                      style={{ cursor: "pointer" }}
-                    />
-                  </>
-                )}
-                header="Edit"
+                header="Actions"
               />
-              {/* <Column
-              style={{ width: "60px", textAlign: "center" }}
-              body={(data, options) => (
-                <>
-                  <BsFillTrash3Fill
-                    onClick={() => deleteConfirm(data.id)}
-                    style={{ cursor: "pointer" }}
-                  />
-                </>
-              )}
-              header="Delete"
-            /> */}
             </DataTable>
 
             <CustomPaginator
@@ -278,9 +280,7 @@ export default function Tenant({ children }) {
                 setVisible={setVisible}
                 sideBar={false}
               />
-            </Dialog>
-          </div>
-        </div>
+            </Dialog>  
 
         <DeleteConfirmation
           message="Do you want to delete this Tenant?"
@@ -292,6 +292,9 @@ export default function Tenant({ children }) {
           setUpdate={setUpdate}
           sideBar={false}
         />
+        
+        </Card.Body>
+        </Card>
       </div>
     </Wrapper>
   );

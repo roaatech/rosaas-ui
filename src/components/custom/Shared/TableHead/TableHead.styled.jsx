@@ -1,14 +1,14 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
-  display: flex;
+  /*display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
   flex-wrap: wrap;
-  width: 100%;
+  width: 100%;*/
 
   input.p-inputtext.p-component {
-    background: var(--themeBackground);
+    background: var(--themeSecColor);
     color: var(--themeColor);
   }
 

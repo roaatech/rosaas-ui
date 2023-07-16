@@ -110,6 +110,41 @@ const urlStyle = {
     lightColor: "#fae7e7",
   },
 };
+
+const breadcrumbConst = {
+  ProductList: {
+    title: "Product Management", 
+    name: "Products",
+    navigation: "/product", 
+    active:"Products",
+    icon: {},
+  },
+  ProductDetails: {
+    title: "Product Management", 
+    name: "Product Details",
+    active:"Product Details",
+    navigation: "/product",  
+    parent: "Products", 
+    parentNavigation: "/product", 
+    icon: {},
+  },
+  TenantList: {
+    title: "Tenant Management", 
+    name: "Tenants",
+    navigation: "/tnant", 
+    active:"Tenants",
+    icon: {},
+  },
+  TenantDetails: {
+    title: "Tenant Management", 
+    name: "Tenant Details",
+    active:"Tenant Details",
+    navigation: "/tenant",  
+    parent: "Tenants", 
+    parentNavigation: "/tenant", 
+    icon: {},
+  },
+};
 export {
   Product_id,
   Client_id,
@@ -117,4 +152,5 @@ export {
   Owner,
   urlStyle,
   Product_Client_id,
+  breadcrumbConst
 };
