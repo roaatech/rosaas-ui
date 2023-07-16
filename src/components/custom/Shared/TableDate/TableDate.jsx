@@ -21,7 +21,7 @@ const TableDate = ({
     <Wrapper onMouseLeave={handleLeave}>
       <div onMouseEnter={handleHover}>
         {!menuVisible ? (
-          `Last Update At  ${DataTransform(editedDate)}`
+          `${DataTransform(editedDate)}`
         ) : (
           <MdUpdate />
         )}
