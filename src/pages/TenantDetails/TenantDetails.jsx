@@ -21,7 +21,7 @@ import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../store/slices/main";
 import { statusConst } from "../../const";
 import { Tooltip } from "bootstrap";
-import Actions from "../../components/custom/tenant/Actions/Actions"; 
+import Actions from "../../components/custom/tenant/Actions/Actions";
 import TableHead from "../../components/custom/Shared/TableHead/TableHead";
 
 const TenantDetails = () => {
@@ -75,26 +75,30 @@ const TenantDetails = () => {
   }, [visible, routeParams.id, updateDetails]);
 
   return (
-    <Wrapper>  
-   {tenantData &&  <BreadcrumbComponent
-        breadcrumbInfo= {"TenantDetails" } 
-        param1={tenantData.data.id}
-        icon={BsFillPersonLinesFill}
-      />}
-      
+    <Wrapper>
+      {tenantData && (
+        <BreadcrumbComponent
+          breadcrumbInfo={"TenantDetails"}
+          param1={tenantData.data.id}
+          icon={BsFillPersonLinesFill}
+        />
+      )}
+
       <div className="main-container">
-      {tenantData &&  <TableHead 
-         label={"Tenant Details"}   
-        name={tenantData.data.uniqueName}  
-        active={false}
-        />}
-        
+        {tenantData && (
+          <TableHead
+            label={"Tenant Details"}
+            name={tenantData.data.uniqueName}
+            active={false}
+          />
+        )}
+
         {tenantData && (
           <div className="pageWrapper">
             <div className="tableSec">
               <div className="main">
                 <div className="details">
-                  <TabView>
+                  <TabView className="card">
                     <TabPanel header="Details">
                       <Card border="light" className="shadow-sm border-0">
                         <Card.Body className="p-0">

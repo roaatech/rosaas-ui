@@ -101,21 +101,19 @@ export default function ChildTable({ productData, tenantId }) {
 
             {productData?.status != 13 ? (
               <div className="refresh">
-                <div className="refresh">
-                  <Button
-                    onClick={() => {
-                      setUpdateDetails(updateDetails + 1);
-                      dispatch(updateSidebar());
-                    }}
-                    type="button"
-                    icon={<FiRefreshCw className="mr-2" />}
-                    label="Refresh"
-                    style={{
-                      backgroundColor: "#239dff",
-                      borderColor: "#239dff",
-                    }}
-                  />
-                </div>
+                <Button
+                  onClick={() => {
+                    setUpdateDetails(updateDetails + 1);
+                    dispatch(updateSidebar());
+                  }}
+                  type="button"
+                  icon={<FiRefreshCw className="mr-2" />}
+                  label="Refresh"
+                  style={{
+                    backgroundColor: "#239dff",
+                    borderColor: "#239dff",
+                  }}
+                />
               </div>
             ) : null}
           </div>
@@ -124,7 +122,7 @@ export default function ChildTable({ productData, tenantId }) {
           <Card border="light" className="shadow-sm">
             <Card.Header className="fs-6">History</Card.Header>
             <Card.Body className="pb-0">
-              <Workflow updateDetails={updateDetails} />
+              <Workflow productId={productData.id} />
             </Card.Body>
           </Card>
         </div>

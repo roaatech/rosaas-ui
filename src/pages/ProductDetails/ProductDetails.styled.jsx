@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 export const Wrapper = styled.div`
-  .card {
+  .p-tabview-panels .card {
     border: 0;
   }
 
@@ -15,7 +15,6 @@ export const Wrapper = styled.div`
       /* padding: 0; */
     }
   }
-
 
   .card-body {
     padding: 0px;

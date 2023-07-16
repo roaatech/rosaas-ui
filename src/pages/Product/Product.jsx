@@ -4,7 +4,12 @@ import { Column } from "primereact/column";
 import { BsBoxSeam } from "react-icons/bs";
 import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faEllipsisH, faEye, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faEllipsisH,
+  faEye,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import {
   Col,
   Row,
@@ -90,10 +95,7 @@ export default function Product({ children }) {
 
   return (
     <Wrapper>
-      <BreadcrumbComponent
-        breadcrumbInfo= {"ProductList" } 
-        icon={BsBoxSeam}
-      />
+      <BreadcrumbComponent breadcrumbInfo={"ProductList"} icon={BsBoxSeam} />
       <div className="main-container">
         <TableHead
           label={"Add Product"}
@@ -111,9 +113,10 @@ export default function Product({ children }) {
             setVisibleHead={setVisibleHead}
           />
         </TableHead>
-        <Card border="light" className="table-wrapper table-responsive shadow-sm">
+        <Card
+          border="light"
+          className="table-wrapper table-responsive shadow-sm">
           <Card.Body className="pt-0">
-
             <DataTable
               value={list}
               tableStyle={{ minWidth: "50rem" }}
@@ -215,18 +218,26 @@ export default function Product({ children }) {
                       variant="link"
                       className="text-dark m-0 p-0">
                       <span className="icon icon-sm">
-                        <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                        <FontAwesomeIcon
+                          icon={faEllipsisH}
+                          className="icon-dark"
+                        />
                       </span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item onSelect={() => navigate(`/ProductDetails/${data.id}`)}>
-                        <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
+                      <Dropdown.Item
+                        onSelect={() => navigate(`/ProductDetails/${data.id}`)}>
+                        <FontAwesomeIcon icon={faEye} className="me-2" /> View
+                        Details
                       </Dropdown.Item>
                       <Dropdown.Item onSelect={() => editForm(data.id)}>
                         <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
                       </Dropdown.Item>
-                      <Dropdown.Item onClick={() => deleteConfirm(data.id)} className="text-danger">
-                        <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
+                      <Dropdown.Item
+                        onClick={() => deleteConfirm(data.id)}
+                        className="text-danger">
+                        <FontAwesomeIcon icon={faTrashAlt} className="me-2" />{" "}
+                        Delete
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
@@ -234,13 +245,13 @@ export default function Product({ children }) {
                 style={{ width: "60px", textAlign: "center" }}
                 header="Actions"
               />
-            </DataTable> 
+            </DataTable>
             <CustomPaginator
               first={first}
               rows={rows}
               totalCount={totalCount}
               onPageChange={onPageChange}
-            /> 
+            />
             <Dialog
               headerClassName="pb-0"
               className="productForm"

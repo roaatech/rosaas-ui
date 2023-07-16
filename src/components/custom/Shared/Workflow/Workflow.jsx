@@ -5,8 +5,8 @@ import useGlobal from "../../../../lib/hocks/global";
 import { Owner } from "../../../../const";
 import { useParams } from "react-router-dom";
 import useRequest from "../../../../axios/apis/useRequest";
-import { Product_Client_id } from "../../../../const";
-const Workflow = ({ updateDetails }) => {
+
+const Workflow = ({ productId }) => {
   const [timeLine, setTimeLine] = useState([]);
   const { getTimeLine } = useRequest();
 
@@ -14,10 +14,10 @@ const Workflow = ({ updateDetails }) => {
   const routeParams = useParams();
   useEffect(() => {
     (async () => {
-      const timeLineReq = await getTimeLine(routeParams.id, Product_Client_id);
+      const timeLineReq = await getTimeLine(routeParams.id, productId);
       setTimeLine(timeLineReq.data.data);
     })();
-  }, [updateDetails, routeParams.id]);
+  }, [routeParams.id]);
 
   return (
     <Wrapper>

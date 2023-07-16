@@ -18,7 +18,7 @@ import { Wrapper } from "./ProductDetails.styled";
 import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../store/slices/main";
 import ProductForm from "../../components/custom/Product/ProductForm/ProductForm";
-import ProductDetailsTab from "../../components/custom/Product/ProdcutDetailsTab/ProdcutDetailsTab"; 
+import ProductDetailsTab from "../../components/custom/Product/ProdcutDetailsTab/ProdcutDetailsTab";
 import ProductTenantsList from "../../components/custom/Product/ProductTenantsList/ProductTenantsList";
 // import { productArray, productColor, productIcon } from "../../const";
 import { TabView, TabPanel } from "primereact/tabview";
@@ -77,25 +77,22 @@ const ProductDetails = () => {
 
   return (
     <Wrapper>
-    
-    {productData && <BreadcrumbComponent
-        breadcrumbInfo= {"ProductDetails" } 
-        param1={productData.data.id}
-        icon={BsBoxSeam}
-      />}
-      
-               
-
-
+      {productData && (
+        <BreadcrumbComponent
+          breadcrumbInfo={"ProductDetails"}
+          param1={productData.data.id}
+          icon={BsBoxSeam}
+        />
+      )}
 
       {productData && (
         <div className="main-container">
-        <TableHead 
-         label={"Product Details"}   
-        name={productData.data.name}  
-        active={false}
-        />  
-          <TabView>
+          <TableHead
+            label={"Product Details"}
+            name={productData.data.name}
+            active={false}
+          />
+          <TabView className="card">
             <TabPanel header="Details">
               <ProductDetailsTab data={productData} />
             </TabPanel>
@@ -104,10 +101,10 @@ const ProductDetails = () => {
             </TabPanel>
             <TabPanel header="Plans">
               <p className="m-0">Plans</p>
-            </TabPanel> */}
+            </TabPanel> 
             <TabPanel header="Urls">
               <Urls data={productData.data} />
-            </TabPanel>
+            </TabPanel>*/}
             <TabPanel header="Subscriptions ">
               <ProductTenantsList />
             </TabPanel>

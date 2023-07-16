@@ -94,12 +94,12 @@ const ProductDetailsTab = ({ data }) => {
                     <tr>
                       <td className="fw-bold">Last Updated Date</td>
                       <td>{DataTransform(productData.data.editedDate)}</td>
-                    </tr> 
-                   <UrlItemList data={productData.data} />
+                    </tr>
+                    <UrlItemList data={productData.data} />
                   </tbody>
-                </Table> 
+                </Table>
               </Card.Body>
-            </Card> 
+            </Card>
 
             <div className="action">
               <Button
