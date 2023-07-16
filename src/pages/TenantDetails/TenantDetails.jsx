@@ -70,16 +70,6 @@ const TenantDetails = () => {
               self.findIndex((o) => o.status === obj.status) === index
           )
       );
-
-      console.log(
-        "lllllllllllllll",
-        tenantData.data.data.products
-          .flatMap((item) => item.actions.map((action) => action))
-          .filter(
-            (obj, index, self) =>
-              self.findIndex((o) => o?.status === obj?.status) === index
-          )
-      );
     })();
   }, [visible, routeParams.id, updateDetails]);
 
@@ -173,25 +163,6 @@ const TenantDetails = () => {
                             chagneStatus={chagneStatus}
                           />
                         </div>
-
-                        {tenantData.data.status != 13 ? (
-                          <div className="refresh">
-                            <Button
-                              onClick={() => {
-                                setUpdateDetails(updateDetails + 1);
-                                dispatch(updateSidebar());
-                              }}
-                              type="button"
-                              icon={<FiRefreshCw />}
-                              tooltip="Refresh Data"
-                              tooltipOptions={{
-                                position: "left",
-                                mouseTrack: true,
-                                mouseTrackTop: 15,
-                              }}
-                            />
-                          </div>
-                        ) : null}
                       </div>
                     </TabPanel>
                     {tenantData.data.products.map((product, index) => (

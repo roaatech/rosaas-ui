@@ -101,20 +101,21 @@ export default function ChildTable({ productData, tenantId }) {
 
             {productData?.status != 13 ? (
               <div className="refresh">
-                <Button
-                  onClick={() => {
-                    setUpdateDetails(updateDetails + 1);
-                    dispatch(updateSidebar());
-                  }}
-                  type="button"
-                  icon={<FiRefreshCw />}
-                  tooltip="Refresh Data"
-                  tooltipOptions={{
-                    position: "left",
-                    mouseTrack: true,
-                    mouseTrackTop: 15,
-                  }}
-                />
+                <div className="refresh">
+                  <Button
+                    onClick={() => {
+                      setUpdateDetails(updateDetails + 1);
+                      dispatch(updateSidebar());
+                    }}
+                    type="button"
+                    icon={<FiRefreshCw className="mr-2" />}
+                    label="Refresh"
+                    style={{
+                      backgroundColor: "#239dff",
+                      borderColor: "#239dff",
+                    }}
+                  />
+                </div>
               </div>
             ) : null}
           </div>

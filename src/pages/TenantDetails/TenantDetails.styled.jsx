@@ -69,7 +69,7 @@ export const Wrapper = styled.div`
         width: 40px;
         display: flex;
         margin: 0 10px;
-        background: #239dff;
+        background: #239dff !important;
         border-color: #00569b;
 
         .svg {
