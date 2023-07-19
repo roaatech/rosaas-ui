@@ -13,6 +13,7 @@ import { statusConst } from "../../../../const";
 import useRequest from "../../../../axios/apis/useRequest";
 import Actions from "../Actions/Actions";
 import useGlobal from "../../../../lib/hocks/global";
+import ReactJson from "react-json-view";
 
 export default function ChildTable({ productData, tenantId }) {
   const { DataTransform } = useGlobal();
@@ -48,7 +49,8 @@ export default function ChildTable({ productData, tenantId }) {
                 ))}
               </tbody>
             </Table> */}
-            {JSON.stringify(data)}
+            <ReactJson src={data} />
+            {/* {JSON.stringify(data)} */}
           </Card.Body>
         </Card>
       </div>
