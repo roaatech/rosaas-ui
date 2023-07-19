@@ -105,8 +105,11 @@ const ProductDetails = () => {
             <TabPanel header="Urls">
               <Urls data={productData.data} />
             </TabPanel>*/}
-            <TabPanel header="Subscriptions ">
-              <ProductTenantsList />
+            <TabPanel header="Subscriptions">
+              <ProductTenantsList
+                productId={productData.data.id}
+                productName={productData.data.name}
+              />
             </TabPanel>
           </TabView>
         </div>

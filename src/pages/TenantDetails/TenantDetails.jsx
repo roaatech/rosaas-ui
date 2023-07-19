@@ -23,6 +23,7 @@ import { statusConst } from "../../const";
 import { Tooltip } from "bootstrap";
 import Actions from "../../components/custom/tenant/Actions/Actions";
 import TableHead from "../../components/custom/Shared/TableHead/TableHead";
+import ThemeDialog from "../../components/custom/Shared/ThemeDialog/ThemeDialog";
 
 const TenantDetails = () => {
   const [confirm, setConfirm] = useState(false);
@@ -32,7 +33,7 @@ const TenantDetails = () => {
   const [visible, setVisible] = useState(false);
   const [action, setAction] = useState();
   const [tenantStatus, setTenantStatus] = useState();
-
+  const [activeIndex, setActiveIndex] = useState(0);
   const { DataTransform } = useGlobal();
 
   const { getTenant, deleteTenantReq, editTenantStatus } = useRequest();
@@ -71,6 +72,11 @@ const TenantDetails = () => {
               self.findIndex((o) => o.status === obj.status) === index
           )
       );
+      tenantData.data.data.products.map((item, index) => {
+        if (item.name == window.location.href.split("#")[1]) {
+          setActiveIndex(index + 1);
+        }
+      });
     })();
   }, [visible, routeParams.id, updateDetails]);
 
@@ -98,7 +104,10 @@ const TenantDetails = () => {
             <div className="tableSec">
               <div className="main">
                 <div className="details">
-                  <TabView className="card">
+                  <TabView
+                    className="card"
+                    activeIndex={activeIndex}
+                    onTabChange={(e) => setActiveIndex(e.index)}>
                     <TabPanel header="Details">
                       <Card border="light" className="shadow-sm border-0">
                         <Card.Body className="p-0">
@@ -128,14 +137,7 @@ const TenantDetails = () => {
                                   )}
                                 </td>
                               </tr>
-                              {/* <tr>
-                                <td className="fw-bold">status</td>
-                                <td>
-                                  <TenantStatus
-                                    statusValue={tenantData.data.status}
-                                  />
-                                </td>
-                              </tr> */}
+
                               <tr>
                                 <td className="fw-bold">Created Date</td>
                                 <td>
@@ -196,7 +198,7 @@ const TenantDetails = () => {
                     confirmFunction={deleteTenant}
                     sideBar={true}
                   />
-                  <Dialog
+                  {/* <Dialog
                     header={"Edit Tenant"}
                     visible={visible}
                     style={{ width: "30vw", minWidth: "300px" }}
@@ -207,7 +209,16 @@ const TenantDetails = () => {
                       setVisible={setVisible}
                       sideBar={true}
                     />
-                  </Dialog>
+                  </Dialog> */}
+                  <ThemeDialog visible={visible} setVisible={setVisible}>
+                    <TenantForm
+                      popupLabel={"Edit Tenant"}
+                      type={"edit"}
+                      tenantData={tenantData?.data}
+                      setVisible={setVisible}
+                      sideBar={true}
+                    />
+                  </ThemeDialog>
                 </div>
               </div>
             </div>

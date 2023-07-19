@@ -28,6 +28,9 @@ const useRequest = () => {
   const getTenantList = async (params) => {
     return await Request.get(`management/sadmin/v1/Tenants${params}`);
   };
+  const getProductTenants = async (params) => {
+    return await Request.get(`management/sadmin/v1/products/${params}`);
+  };
   const deleteTenantReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Tenants`, { data });
   };
@@ -66,6 +69,7 @@ const useRequest = () => {
     editTenantRequest,
     getTenant,
     getTenantList,
+    getProductTenants,
     editTenantStatus,
     deleteTenantReq,
     getTimeLine,

@@ -11,11 +11,12 @@ import {
   ButtonGroup,
   Dropdown,
 } from "@themesberg/react-bootstrap";
+import TableDate from "../../Shared/TableDate/TableDate";
+import { Link, Navigate } from "react-router-dom";
 
-export const ProductTenantsList = () => {
+export const ProductTenantsList = ({ productId, productName }) => {
   const { DataTransform } = useGlobal();
-  const { getTenantList } = useRequest();
-  const [totalCount, setTotalCount] = useState(0);
+  const { getProductTenants } = useRequest();
   const [list, setList] = useState([]);
   const [searchValue] = useState("");
   const [sortField] = useState("");
@@ -26,18 +27,24 @@ export const ProductTenantsList = () => {
   const [selectedProduct] = useState();
 
   useEffect(() => {
-    let query = `?page=${Math.ceil((first + 1) / rows)}&pageSize=${100}`;
-    query += `&filters[1].Field=ProductId&filters[1].Value=88e67328-3b20-413e-b6e1-010b48fa7bc9`;
+    let params = `${productId}/Tenants`;
 
     (async () => {
-      const listData = await getTenantList(query);
-      setTotalCount(listData.data.data.totalCount);
-      setList(listData.data.data.items);
+      const listData = await getProductTenants(params);
+      console.log({ listData });
+      setList(listData.data.data);
     })();
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct]);
 
   const TableRow = (props) => {
-    const { title, uniqueName, status, createdDate } = props;
+    const {
+      title,
+      uniqueName,
+      status,
+      createdDate,
+      editedDate,
+      tenantId = "a00a5385-e535-4c65-a711-2446c3823515",
+    } = props;
 
     return (
       <tr>
@@ -49,11 +56,13 @@ export const ProductTenantsList = () => {
         </td>
         <td>
           <span className="fw-normal">
-            <TenantStatus statusValue={5} />
+            {status && <TenantStatus statusValue={status} />}
           </span>
         </td>
         <td>
-          <span className={`fw-normal`}>{DataTransform(createdDate)} </span>
+          <span className={`fw-normal`}>
+            <TableDate createdDate={createdDate} editedDate={editedDate} />
+          </span>
         </td>
         <td>
           <Dropdown as={ButtonGroup}>
@@ -67,8 +76,10 @@ export const ProductTenantsList = () => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item onSelect={() => console.log("1")}>
-                <FontAwesomeIcon icon={faGear} className="me-2" /> Manage
+              <Dropdown.Item>
+                <Link to={`/tenantDetails/${tenantId}#${productName}`}>
+                  <FontAwesomeIcon icon={faGear} className="me-2" /> Manage
+                </Link>
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

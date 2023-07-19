@@ -200,6 +200,11 @@ nav svg.svg-inline--fa.fa-bell {
   padding:0
 } 
 
+
+.modal-body {
+    max-height: calc(100vh - 200px);
+    overflow: auto;
+}
 .p-dropdown {
     width: 100%;
     min-height: 42px;

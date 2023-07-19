@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { updateSidebar } from "../../../../store/slices/main";
 import ProductForm from "../ProductForm/ProductForm";
 import UrlItemList from "../../../../components/custom/Product/UrlItemList/UrlItemList";
+import ThemeDialog from "../../Shared/ThemeDialog/ThemeDialog";
 // import { productArray, productColor, productIcon } from "../../const";
 
 const ProductDetailsTab = ({ data }) => {
@@ -132,17 +133,15 @@ const ProductDetailsTab = ({ data }) => {
               sideBar={false}
             />
 
-            <Dialog
-              header={"Edit Product"}
-              visible={visible}
-              style={{ width: "30vw", minWidth: "300px" }}
-              onHide={() => setVisible(false)}>
+            <ThemeDialog visible={visible} setVisible={setVisible}>
               <ProductForm
                 type={"edit"}
+                visible={visible}
                 productData={productData?.data}
                 setVisible={setVisible}
+                popupLabel={"Create Product"}
               />
-            </Dialog>
+            </ThemeDialog>
           </div>
         </div>
       )}

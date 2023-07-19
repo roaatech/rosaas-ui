@@ -17,6 +17,9 @@ import { Dialog } from "primereact/dialog";
 import useGlobal from "../../../../lib/hocks/global";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { Modal } from "@themesberg/react-bootstrap";
+import ThemeDialog from "../ThemeDialog/ThemeDialog";
+
 const TableHead = ({
   active = true,
   label,
@@ -27,7 +30,6 @@ const TableHead = ({
   setFirst,
   visibleHead,
   setVisibleHead,
-  popupLabel,
   search = true,
 }) => {
   const { searchWait } = useGlobal();
@@ -46,7 +48,8 @@ const TableHead = ({
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <ButtonGroup>
           <Button variant="secondary" onClick={() => setVisibleHead(true)}>
-            <FontAwesomeIcon icon={faPlus} className="me-2" /> {label}
+            <FontAwesomeIcon icon={faPlus} className="me-2" />
+            {label}
           </Button>
         </ButtonGroup>
 
@@ -70,14 +73,9 @@ const TableHead = ({
         </div>
       </div>
 
-      <Dialog
-        headerClassName="pb-0"
-        header={popupLabel}
-        visible={visibleHead}
-        style={{ width: "30vw", minWidth: "300px" }}
-        onHide={() => setVisibleHead(false)}>
+      <ThemeDialog visible={visibleHead} setVisible={setVisibleHead}>
         {children.length > 1 ? children[0] : children}
-      </Dialog>
+      </ThemeDialog>
     </Wrapper>
   );
 };

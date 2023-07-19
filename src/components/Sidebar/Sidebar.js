@@ -218,14 +218,14 @@ export default (props = {}) => {
                 setSearchValue={setSearchValue}
                 visibleHead={visibleHead}
                 setVisibleHead={setVisibleHead}
-                setFirst={setFirst}
-                popupLabel={"Create Tenant"}>
+                setFirst={setFirst}>
                 <TenantForm
+                  popupLabel={"Create Tenant"}
                   type={"create"}
                   update={update}
                   setUpdate={setUpdate}
-                  visibleHead={visibleHead}
-                  setVisibleHead={setVisibleHead}
+                  visible={visibleHead}
+                  setVisible={setVisibleHead}
                   sideBar={true}
                 />
               </TableHead>
@@ -246,7 +246,7 @@ export default (props = {}) => {
               {inactive.length ? (
                 <CollapsableNavItem
                   eventKey="close"
-                  title="Inactive Tenant"
+                  title="Inactive Tenants"
                   icon={BsFillPersonLinesFill}>
                   {inactive.map((item, index) => (
                     <NavItem
@@ -260,7 +260,7 @@ export default (props = {}) => {
               {archived.length ? (
                 <CollapsableNavItem
                   eventKey="close"
-                  title="Archived Tenant"
+                  title="Archived Tenants"
                   icon={BsFillPersonLinesFill}>
                   {archived.map((item, index) => (
                     <NavItem
@@ -272,12 +272,12 @@ export default (props = {}) => {
                 </CollapsableNavItem>
               ) : null}
               {/* <NavItem
-                title="Tenant"
+                title="Tenants"
                 link={`/tenant`}
                 icon={BsFillPersonLinesFill}
               />
               */}
-              <NavItem title="Product" link={`/product`} icon={BsBoxSeam} />
+              <NavItem title="Products" link={`/product`} icon={BsBoxSeam} />
               {/* <NavItem title="Plan" link={`/plan`} icon={BsFillLayersFill} /> */}
             </Nav>
           </div>

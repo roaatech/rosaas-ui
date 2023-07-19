@@ -1,19 +1,13 @@
 import React from "react";
-import { Button } from "@themesberg/react-bootstrap";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useFormik } from "formik";
 import { InputText } from "primereact/inputtext";
 import * as Yup from "yup";
 import useRequest from "../../../../axios/apis/useRequest.js";
 import { Product_Client_id } from "../../../../const/index.js";
+import { Modal, Button } from "@themesberg/react-bootstrap";
+import { Form } from "@themesberg/react-bootstrap";
 
-const ProductForm = ({
-  type,
-  productData,
-  update,
-  setUpdate,
-  setVisibleHead,
-  setVisible,
-}) => {
+const ProductForm = ({ type, productData, setVisible, popupLabel }) => {
   const { createProductRequest, editProductRequest } = useRequest();
   const initialValues = {
     name: productData ? productData.name : "",
@@ -31,20 +25,15 @@ const ProductForm = ({
       .url("Please enter a valid URL"),
   });
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    if (type == "create") {
-      const createProduct = await createProductRequest({
-        name: values.name,
-        url: values.url,
-        creationEndpoint: values.creationEndpoint,
-        activationEndpoint: values.activationEndpoint,
-        deactivationEndpoint: values.deactivationEndpoint,
-        deletionEndpoint: values.deletionEndpoint,
-        clientId: Product_Client_id,
-      });
-    } else {
-      const editProduct = await editProductRequest({
-        data: {
+  const formik = useFormik({
+    initialValues,
+    validationSchema: validationSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      console.log(values, "55555555", type);
+
+      if (type == "create") {
+        console.log("dddddddd");
+        const createProduct = await createProductRequest({
           name: values.name,
           url: values.url,
           creationEndpoint: values.creationEndpoint,
@@ -52,158 +41,191 @@ const ProductForm = ({
           deactivationEndpoint: values.deactivationEndpoint,
           deletionEndpoint: values.deletionEndpoint,
           clientId: Product_Client_id,
-        },
-        id: productData.id,
-      });
-    }
-    setVisible && setVisible(false);
-    setVisibleHead && setVisibleHead(false);
-  };
+        });
+      } else {
+        const editProduct = await editProductRequest({
+          data: {
+            name: values.name,
+            url: values.url,
+            creationEndpoint: values.creationEndpoint,
+            activationEndpoint: values.activationEndpoint,
+            deactivationEndpoint: values.deactivationEndpoint,
+            deletionEndpoint: values.deletionEndpoint,
+            clientId: Product_Client_id,
+          },
+          id: productData.id,
+        });
+      }
+      setVisible && setVisible(false);
+      setVisible && setVisible(false);
+    },
+  });
 
   return (
     <div>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}>
-        {({ isSubmitting }) => (
-          <Form className="pt-4">
-            <div>
-              {/* <label htmlFor="name" className="pb-2">
-                name:
-              </label> */}
-              <div className="inputContainer mb-4">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field type="text" id="name" name="name" as={InputText} />
-                    <label htmlFor="name">
-                      Name:<span style={{ color: "red" }}>*</span>
-                    </label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="name"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              {/* <label htmlFor="url" className="pb-2">
-                Unique Name:
-              </label> */}
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field type="text" id="url" name="url" as={InputText} />
-                    <label htmlFor="url">
-                      Url:<span style={{ color: "red" }}>*</span>
-                    </label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="url"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="creationEndpoint"
-                      name="creationEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="creationEndpoint">Creation Endpoint:</label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="creationEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="activationEndpoint"
-                      name="activationEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="activationEndpoint">
-                      Activation Endpoint:
-                    </label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="activationEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="deactivationEndpoint"
-                      name="deactivationEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="deactivationEndpoint">
-                      Deactivation Endpoint :
-                    </label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="deactivationEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="deletionEndpoint"
-                      name="deletionEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="deletionEndpoint">deletionEndpoint:</label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="deletionEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div className="pt-1">
-              <Button
-                variant="primary"
-                type="submit"
-                className="w-100"
-                disabled={isSubmitting}>
-                Submit
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
+      <Form onSubmit={formik.handleSubmit}>
+        <Modal.Header>
+          <Modal.Title className="h6">{popupLabel}</Modal.Title>
+          <Button
+            variant="close"
+            aria-label="Close"
+            onClick={() => setVisible(false)}
+          />
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                Name <span style={{ color: "red" }}>*</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                name="name"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+              />
+
+              {formik.touched.name && formik.errors.name && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: "block" }}>
+                  {formik.errors.name}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                Url <span style={{ color: "red" }}>*</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="url"
+                name="url"
+                onChange={formik.handleChange}
+                value={formik.values.url}
+              />
+
+              {formik.touched.url && formik.errors.url && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: "block" }}>
+                  {formik.errors.url}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>Creation Endpoint</Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="creationEndpoint"
+                name="creationEndpoint"
+                onChange={formik.handleChange}
+                value={formik.values.creationEndpoint}
+              />
+
+              {formik.touched.creationEndpoint &&
+                formik.errors.creationEndpoint && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: "block" }}>
+                    {formik.errors.creationEndpoint}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>Activation Endpoint</Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="activationEndpoint"
+                name="activationEndpoint"
+                onChange={formik.handleChange}
+                value={formik.values.activationEndpoint}
+              />
+
+              {formik.touched.activationEndpoint &&
+                formik.errors.activationEndpoint && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: "block" }}>
+                    {formik.errors.activationEndpoint}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>Deactivation Endpoint</Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="deactivationEndpoint"
+                name="deactivationEndpoint"
+                onChange={formik.handleChange}
+                value={formik.values.deactivationEndpoint}
+              />
+
+              {formik.touched.deactivationEndpoint &&
+                formik.errors.deactivationEndpoint && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: "block" }}>
+                    {formik.errors.deactivationEndpoint}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>Deletion Endpoint</Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="deletionEndpoint"
+                name="deletionEndpoint"
+                onChange={formik.handleChange}
+                value={formik.values.deletionEndpoint}
+              />
+
+              {formik.touched.deletionEndpoint &&
+                formik.errors.deletionEndpoint && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: "block" }}>
+                    {formik.errors.deletionEndpoint}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            type="submit"
+            // disabled={submitLoading}
+          >
+            Submit
+          </Button>
+          <Button
+            variant="link"
+            className="text-gray ms-auto"
+            onClick={() => setVisible(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Form>
     </div>
   );
 };

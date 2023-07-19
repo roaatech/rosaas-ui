@@ -125,7 +125,7 @@ const ProductDetailsTab = () => {
               confirmFunction={deleteProduct}
               sideBar={false}
             />
-
+            {/* 
             <Dialog
               header={"Edit Product"}
               visible={visible}
@@ -136,7 +136,7 @@ const ProductDetailsTab = () => {
                 productData={productData?.data}
                 setVisible={setVisible}
               />
-            </Dialog>
+            </Dialog> */}
           </div>
         </div>
       )}

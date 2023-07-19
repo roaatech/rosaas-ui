@@ -34,6 +34,7 @@ import DeleteConfirmation from "../../components/custom/global/DeleteConfirmatio
 import { useNavigate } from "react-router-dom";
 import { Wrapper } from "./Product.styled";
 import CustomPaginator from "../../components/custom/Shared/CustomPaginator/CustomPaginator";
+import ThemeDialog from "../../components/custom/Shared/ThemeDialog/ThemeDialog";
 export default function Product({ children }) {
   const { getProduct, getProductList, deleteProductReq } = useRequest();
   const [visible, setVisible] = useState(false);
@@ -99,18 +100,18 @@ export default function Product({ children }) {
       <div className="main-container">
         <TableHead
           label={"Add Product"}
-          popupLabel={"Create Product"}
           icon={"pi-box"}
           setSearchValue={setSearchValue}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
           setFirst={setFirst}>
           <ProductForm
+            popupLabel={"Create Product"}
             type={"create"}
             update={update}
             setUpdate={setUpdate}
-            visibleHead={visibleHead}
-            setVisibleHead={setVisibleHead}
+            visible={visibleHead}
+            setVisible={setVisibleHead}
           />
         </TableHead>
         <Card
@@ -169,24 +170,7 @@ export default function Product({ children }) {
                 }
                 showFilterMenu={false}
               />
-              {/* <Column
-              field="status"
-              header={
-                <ColumnSortHeader
-                  text="Status"
-                  field="status"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
-              }
-              showFilterMenu={false}
-              body={statusBodyTemplate}
-            /> */}
+
               <Column
                 body={(data, options) => (
                   <TableDate
@@ -252,21 +236,18 @@ export default function Product({ children }) {
               totalCount={totalCount}
               onPageChange={onPageChange}
             />
-            <Dialog
-              headerClassName="pb-0"
-              className="productForm"
-              header={"Edit Product"}
-              visible={visible}
-              style={{ width: "30vw", minWidth: "300px" }}
-              onHide={() => setVisible(false)}>
+
+            <ThemeDialog visible={visible} setVisible={setVisible}>
               <ProductForm
+                popupLabel={"Edit Product"}
                 type={"edit"}
                 productData={productData?.data}
                 update={update}
                 setUpdate={setUpdate}
                 setVisible={setVisible}
               />
-            </Dialog>
+            </ThemeDialog>
+
             <DeleteConfirmation
               message="Do you want to delete this Product?"
               icon="pi pi-exclamation-triangle"

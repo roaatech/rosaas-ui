@@ -12,11 +12,15 @@ import { useDispatch } from "react-redux";
 import { statusConst } from "../../../../const";
 import useRequest from "../../../../axios/apis/useRequest";
 import Actions from "../Actions/Actions";
+import useGlobal from "../../../../lib/hocks/global";
 
 export default function ChildTable({ productData, tenantId }) {
+  const { DataTransform } = useGlobal();
   const { editTenantStatus } = useRequest();
   const [updateDetails, setUpdateDetails] = useState(0);
   const dispatch = useDispatch();
+  console.log(productData, "*********************");
+
   const chagneStatus = async (actionStatus) => {
     await editTenantStatus({
       TenantId: tenantId,
@@ -32,7 +36,7 @@ export default function ChildTable({ productData, tenantId }) {
       <div className="">
         <Card border="light" className="  border-0">
           <Card.Body className="p-0">
-            <Table
+            {/* <Table
               responsive
               className="table-centered table-nowrap rounded mb-0">
               <tbody>
@@ -43,7 +47,8 @@ export default function ChildTable({ productData, tenantId }) {
                   </tr>
                 ))}
               </tbody>
-            </Table>
+            </Table> */}
+            {JSON.stringify(data)}
           </Card.Body>
         </Card>
       </div>
@@ -84,7 +89,7 @@ export default function ChildTable({ productData, tenantId }) {
                   </tr>
                   <tr>
                     <td className="fw-bold">Last Updated Date</td>
-                    <td>7/9/2023, 6:50:37 PM</td>
+                    <td>{DataTransform(productData.editedDate)} </td>
                   </tr>
                 </tbody>
               </Table>
