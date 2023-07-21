@@ -6,9 +6,20 @@ import useRequest from "../../../../axios/apis/useRequest.js";
 import { Product_Client_id } from "../../../../const/index.js";
 import { Modal, Button } from "@themesberg/react-bootstrap";
 import { Form } from "@themesberg/react-bootstrap";
+import { productInfo } from "../../../../store/slices/products.js";
+import { useDispatch } from "react-redux";
 
-const ProductForm = ({ type, productData, setVisible, popupLabel }) => {
+const ProductForm = ({
+  type,
+  productData,
+  setVisible,
+  popupLabel,
+  update,
+  setUpdate,
+}) => {
   const { createProductRequest, editProductRequest } = useRequest();
+  const dispatch = useDispatch();
+
   const initialValues = {
     name: productData ? productData.name : "",
     url: productData ? productData.url : "",
@@ -29,8 +40,6 @@ const ProductForm = ({ type, productData, setVisible, popupLabel }) => {
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      console.log(values, "55555555", type);
-
       if (type == "create") {
         console.log("dddddddd");
         const createProduct = await createProductRequest({
@@ -42,6 +51,7 @@ const ProductForm = ({ type, productData, setVisible, popupLabel }) => {
           deletionEndpoint: values.deletionEndpoint,
           clientId: Product_Client_id,
         });
+        setUpdate(update + 1);
       } else {
         const editProduct = await editProductRequest({
           data: {
@@ -55,7 +65,21 @@ const ProductForm = ({ type, productData, setVisible, popupLabel }) => {
           },
           id: productData.id,
         });
+
+        dispatch(
+          productInfo({
+            id: productData.id,
+            name: values.name,
+            url: values.url,
+            creationEndpoint: values.creationEndpoint,
+            activationEndpoint: values.activationEndpoint,
+            deactivationEndpoint: values.deactivationEndpoint,
+            deletionEndpoint: values.deletionEndpoint,
+            clientId: { id: Product_Client_id },
+          })
+        );
       }
+
       setVisible && setVisible(false);
       setVisible && setVisible(false);
     },

@@ -3,7 +3,7 @@ import useGlobal from "../../../../lib/hocks/global";
 import TenantStatus from "../../tenant/TenantStatus/TenantStatus";
 import useRequest from "../../../../axios/apis/useRequest";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisH, faEye, faGear } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisH, faGear } from "@fortawesome/free-solid-svg-icons";
 import {
   Card,
   Table,
@@ -31,20 +31,12 @@ export const ProductTenantsList = ({ productId, productName }) => {
 
     (async () => {
       const listData = await getProductTenants(params);
-      console.log({ listData });
       setList(listData.data.data);
     })();
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct]);
 
   const TableRow = (props) => {
-    const {
-      title,
-      uniqueName,
-      status,
-      createdDate,
-      editedDate,
-      tenantId = "a00a5385-e535-4c65-a711-2446c3823515",
-    } = props;
+    const { title, uniqueName, status, createdDate, editedDate, id } = props;
 
     return (
       <tr>
@@ -77,7 +69,9 @@ export const ProductTenantsList = ({ productId, productName }) => {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item>
-                <Link to={`/tenantDetails/${tenantId}#${productName}`}>
+                <Link
+                  to={`/tenantDetails/${id}#${productName}`}
+                  className="w-100 d-block">
                   <FontAwesomeIcon icon={faGear} className="me-2" /> Manage
                 </Link>
               </Dropdown.Item>

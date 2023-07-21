@@ -19,13 +19,9 @@ export const mainSlice = createSlice({
     changePreloader: (state, action) => {
       state.preloader = action.payload;
     },
-    updateSidebar: (state) => {
-      state.sidebar++;
-    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { directionFun, changePreloader, changeMode, updateSidebar } =
-  mainSlice.actions;
+export const { directionFun, changePreloader, changeMode } = mainSlice.actions;
 export default mainSlice.reducer;

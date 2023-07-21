@@ -3,7 +3,6 @@ import { urlStyle } from "../../../../const";
 import { Wrapper } from "./Urls.styled";
 
 const Urls = (data) => {
-  console.log(data, "00000");
   const [URLS, setURLS] = useState([
     {
       method: "POST",

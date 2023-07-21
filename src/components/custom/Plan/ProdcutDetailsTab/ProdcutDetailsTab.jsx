@@ -3,21 +3,13 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Table } from "@themesberg/react-bootstrap";
-import BreadcrumbComponent from "../../Shared/Breadcrumb/Breadcrumb";
-import { BsBoxSeam } from "react-icons/bs";
 
-import ProductStatus from "../ProductStatus/ProductStatus";
 import useGlobal from "../../../../lib/hocks/global";
 import { Button } from "primereact/button";
 import DeleteConfirmation from "../../global/DeleteConfirmation/DeleteConfirmation";
 import useRequest from "../../../../axios/apis/useRequest";
-import { Dialog } from "primereact/dialog";
-// import ProductForm from "../../components/custom/product/ProductForm/ProductForm";
 import { Wrapper } from "./ProdcutDetailsTab.styled";
 import { useDispatch } from "react-redux";
-import { updateSidebar } from "../../../../store/slices/main";
-import ProductForm from "../ProductForm/ProductForm";
-// import { productArray, productColor, productIcon } from "../../const";
 
 const ProductDetailsTab = () => {
   const [confirm, setConfirm] = useState(false);
@@ -32,14 +24,6 @@ const ProductDetailsTab = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const chagneProduct = async (actionStatus) => {
-    await editProductProduct({
-      ProductId: productData.data.id,
-      // product: actionStatus,
-    });
-    dispatch(updateSidebar());
-  };
-
   const deleteConfirm = (id) => {
     setCurrentId(id);
     setConfirm(true);
@@ -52,7 +36,6 @@ const ProductDetailsTab = () => {
   useEffect(() => {
     (async () => {
       const productDataReq = await getProduct(routeParams.id);
-      // setAction(productData.data.data.actions);
       setProductData(productDataReq.data);
     })();
   }, [visible, routeParams.id]);
@@ -80,12 +63,7 @@ const ProductDetailsTab = () => {
                       <td className="fw-bold">Client</td>
                       <td>{productData.data.client.name}</td>
                     </tr>
-                    {/* <tr>
-                      <td className="fw-bold">Status</td>
-                      <td>
-                        <ProductStatus rowData={productData.data} />
-                      </td>
-                    </tr> */}
+
                     <tr>
                       <td className="fw-bold">Created Date</td>
                       <td>{DataTransform(productData.data.createdDate)}</td>
@@ -125,18 +103,6 @@ const ProductDetailsTab = () => {
               confirmFunction={deleteProduct}
               sideBar={false}
             />
-            {/* 
-            <Dialog
-              header={"Edit Product"}
-              visible={visible}
-              style={{ width: "30vw", minWidth: "300px" }}
-              onHide={() => setVisible(false)}>
-              <ProductForm
-                type={"edit"}
-                productData={productData?.data}
-                setVisible={setVisible}
-              />
-            </Dialog> */}
           </div>
         </div>
       )}

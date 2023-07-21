@@ -1,8 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import React from "react";
+import { ConfirmDialog } from "primereact/confirmdialog";
 // import { Toast } from "primereact/toast";
-import { Button } from "primereact/button";
-import { updateSidebar } from "../../../../store/slices/main";
 import { useDispatch } from "react-redux";
 
 export default function DeleteConfirmation({
@@ -15,17 +13,12 @@ export default function DeleteConfirmation({
   icon,
   sideBar,
 }) {
-  const dispatch = useDispatch();
-
   const accept = async () => {
     await confirmFunction();
     setConfirm(false);
 
     if (update) {
       setUpdate(update + 1);
-    }
-    if (sideBar == true) {
-      dispatch(updateSidebar());
     }
   };
 

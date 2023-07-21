@@ -32,7 +32,7 @@ const statusConst = {
     icon: "pi-check-circle",
   },
   5: {
-    string: "Pre-Activating",
+    string: "Active request is sent",
     opacity: "10",
     color: "#00a675",
     icon: "pi-check-circle",
@@ -50,7 +50,7 @@ const statusConst = {
     icon: "pi-check-circle",
   },
   8: {
-    string: "Pre-Deactivating",
+    string: "Deactivate request is sent",
     opacity: "10",
     color: "#eda100",
     icon: "pi-exclamation-triangle",
@@ -68,7 +68,7 @@ const statusConst = {
     icon: "pi-exclamation-triangle",
   },
   11: {
-    string: "Pre-Deleting",
+    string: "Delete request is sent",
     opacity: "10",
     color: "#ff0f5f",
     icon: "pi-trash",
@@ -113,35 +113,35 @@ const urlStyle = {
 
 const breadcrumbConst = {
   ProductList: {
-    title: "Product Management", 
+    title: "Product Management",
     name: "Products",
-    navigation: "/product", 
-    active:"Products",
+    navigation: "/product",
+    active: "Products",
     icon: {},
   },
   ProductDetails: {
-    title: "Product Management", 
+    title: "Product Management",
     name: "Product Details",
-    active:"Product Details",
-    navigation: "/product",  
-    parent: "Products", 
-    parentNavigation: "/product", 
+    active: "Product Details",
+    navigation: "/product",
+    parent: "Products",
+    parentNavigation: "/product",
     icon: {},
   },
   TenantList: {
-    title: "Tenant Management", 
+    title: "Tenant Management",
     name: "Tenants",
-    navigation: "/tnant", 
-    active:"Tenants",
+    navigation: "/tnant",
+    active: "Tenants",
     icon: {},
   },
   TenantDetails: {
-    title: "Tenant Management", 
+    title: "Tenant Management",
     name: "Tenant Details",
-    active:"Tenant Details",
-    navigation: "/tenant",  
-    parent: "Tenants", 
-    parentNavigation: "/tenant", 
+    active: "Tenant Details",
+    navigation: "/tenant",
+    parent: "Tenants",
+    parentNavigation: "/tenant",
     icon: {},
   },
 };
@@ -152,5 +152,5 @@ export {
   Owner,
   urlStyle,
   Product_Client_id,
-  breadcrumbConst
+  breadcrumbConst,
 };

@@ -1,35 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import {
-  BsPencilSquare,
-  BsFillEyeFill,
-  BsFillTrash3Fill,
-} from "react-icons/bs";
-import { Paginator } from "primereact/paginator";
-// import { faUserTie } from "@fortawesome/free-solid-svg-icons";
-import { BsFillPersonLinesFill } from "react-icons/bs";
+import { BsPencilSquare, BsFillTrash3Fill } from "react-icons/bs";
 
-import ColumnSortHeader from "../../Shared/ColumnSortHeader/ColumnSortHeader";
 import TableHead from "../../Shared/TableHead/TableHead";
 import TableDate from "../../Shared/TableDate/TableDate";
 import FeatureForm from "../FeatureForm/FeatureForm";
 import useRequest from "../../../../axios/apis/useRequest";
 import { Dialog } from "primereact/dialog";
 import DeleteConfirmation from "../../global/DeleteConfirmation/DeleteConfirmation.jsx";
-import { useNavigate } from "react-router-dom";
 import { Wrapper } from "./FeatureTable.styled";
-import CustomPaginator from "../../Shared/CustomPaginator/CustomPaginator";
-import AutoCompleteFiled from "../../Shared/AutoCompleteFiled/AutoCompleteFiled";
 
 export default function FeatureTable({ data }) {
-  console.log(data, "00000");
   const { getTenant, getTenantList, deleteTenantReq } = useRequest();
   const [visible, setVisible] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [visibleHead, setVisibleHead] = useState(false);
   const [list, setList] = useState([]);
-  const [rebase, setRebase] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [sortField, setSortField] = useState("");
   const [sortValue, setSortValue] = useState("");
@@ -39,7 +26,6 @@ export default function FeatureTable({ data }) {
   const [currentId, setCurrentId] = useState("");
   const [update, setUpdate] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState();
-  const navigate = useNavigate();
   const deleteConfirm = (id) => {
     setCurrentId(id);
     setConfirm(true);
@@ -69,38 +55,6 @@ export default function FeatureTable({ data }) {
       setList(listData.data.data.items);
     })();
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct]);
-
-  /******************************* */
-
-  const onPageChange = (event) => {
-    setFirst(event.first);
-    setRows(event.rows);
-  };
-
-  const productOptions = async (text) => {
-    // const allOptions = await getProductSearch();
-    // return allOptions.data;
-    return {
-      data: [
-        {
-          id: "asfdasf1",
-          name: "product1",
-        },
-        {
-          id: "asfdasf2",
-          name: "product2",
-        },
-        {
-          id: "asfdasf3",
-          name: "product3",
-        },
-        {
-          id: "asfdasf4",
-          name: "product4",
-        },
-      ],
-    };
-  };
 
   /****************************** */
   const [featureData, setFeatureData] = useState();
@@ -153,18 +107,6 @@ export default function FeatureTable({ data }) {
                 />
               )}></Column>
 
-            {/* <Column
-              style={{ width: "60px", textAlign: "center" }}
-              body={(data, options) => (
-                <>
-                  <BsFillEyeFill
-                    onClick={() => navigate(`/FeatureDetails/${data.id}`)}
-                    style={{ cursor: "pointer" }}
-                  />
-                </>
-              )}
-              header="View"
-            /> */}
             <Column
               style={{ width: "60px", textAlign: "center" }}
               body={(data, options) => (

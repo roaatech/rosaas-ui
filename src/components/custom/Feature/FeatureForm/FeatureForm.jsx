@@ -1,15 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import React from "react";
 import { Button } from "@themesberg/react-bootstrap";
-import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
+import { useFormik } from "formik";
 import { InputText } from "primereact/inputtext";
 import * as Yup from "yup";
-import useRequest from "../../../../axios/apis/useRequest.js";
-import { Product_id } from "../../../../const/index.js";
-import { updateSidebar } from "../../../../store/slices/main.js";
-import { useDispatch } from "react-redux";
-import AutoCompleteFiled from "../../Shared/AutoCompleteFiled/AutoCompleteFiled.jsx";
-import { useNavigate } from "react-router-dom";
 import { Dropdown } from "primereact/dropdown";
 import { InputTextarea } from "primereact/inputtextarea";
 
@@ -20,29 +13,13 @@ const FeatureForm = ({
   setUpdate,
   setVisibleHead,
   setVisible,
-  sideBar,
 }) => {
-  const { createFeatureRequest, editFeatureRequest } = useRequest();
-  const dispatch = useDispatch();
-  const [selectedProduct, setSelectedProduct] = useState("");
-  const [submitLoading, setSubmitLoading] = useState();
-  const navigate = useNavigate();
-
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     type: Yup.string().required("Type is required"),
     unit: Yup.string(),
     reset: Yup.string().required("Reset is required"),
     description: Yup.string(),
-
-    // product: Yup.string()
-    //   .required("Product is required")
-    //   .test("custom", "Product is invalid", (v) => {
-    //     if (selectedProduct.length > 0) {
-    //       return true;
-    //     }
-    //     return false;
-    //   }),
   });
   const initialValues = {
     name: featureData ? featureData.name : "",
@@ -56,53 +33,19 @@ const FeatureForm = ({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
-      // try {
-      // Handle form submission
       if (type == "create") {
-        // const createFeature = await createFeatureRequest({
-        //   name: values.name,
-        //   type: values.type,
-        //   unit: values.unit,
-        //   reset: values.reset,
-        //   description: values.description,
-        // });
-        // navigate(`/featureDetails/${createFeature.data.data.id}`);
         if (update) {
           setUpdate(update + 1);
         }
       } else {
-        // const editFeature = await editFeatureRequest({
-        //   name: values.name,
-        //   type: values.type,
-        //   unit: values.unit,
-        //   reset: values.reset,
-        //   description: values.description,
-        // });
         if (update) {
           setUpdate(update + 1);
         }
-        console.log(values);
       }
       setVisible && setVisible(false);
       setVisibleHead && setVisibleHead(false);
-      dispatch(updateSidebar());
-      // } catch (error) {
-      //   console.log(error);
-      // }
     },
   });
-
-  // useEffect(() => {
-  //   featureData?.product?.id && setSelectedProduct(featureData.product.id);
-  // }, []);
-  // useEffect(() => {
-  //   (async () => {
-  //     setTimeout(async () => {
-  //       await formik.validateField("product");
-  //     }, 100);
-  //   })();
-  // }, [submitLoading]);
 
   const TypeOptions = [
     { label: "Number", value: "number" },
@@ -132,7 +75,6 @@ const FeatureForm = ({
                   id="name"
                   name="name"
                   onChange={formik.handleChange}
-                  // onBlur={formik.handleBlur}
                   value={formik.values.name}
                 />
                 <label htmlFor="name">
@@ -176,7 +118,6 @@ const FeatureForm = ({
                   options={UnitOptions}
                   value={formik.values.unit}
                   onChange={(e) => formik.setFieldValue("unit", e.value)}
-                  // placeholder="Unit"
                   name="unit"
                 />
                 <label htmlFor="unit">Unit:</label>
@@ -196,7 +137,6 @@ const FeatureForm = ({
                   options={ResetOptions}
                   value={formik.values.reset}
                   onChange={(e) => formik.setFieldValue("reset", e.value)}
-                  // placeholder="Reset"
                   name="reset"
                 />
                 <label htmlFor="reset">

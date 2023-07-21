@@ -20,7 +20,6 @@ import {
 } from "@themesberg/react-bootstrap";
 import { Link } from "react-router-dom";
 import { Routes } from "../../routes";
-import ThemesbergLogo from "../../assets/img/themesberg.svg";
 import logo from "../../assets/img/brand/roaa-tech.png";
 import ProfilePicture from "../../assets/img/team/profile-picture-1.png";
 import { logOut } from "../../store/slices/auth";
@@ -30,6 +29,7 @@ import TableHead from "../custom/Shared/TableHead/TableHead";
 import TenantForm from "../custom/tenant/TenantForm/TenantForm";
 import useRequest from "../../axios/apis/useRequest";
 import { useParams } from "react-router-dom";
+import { setAllTenant } from "../../store/slices/tenants";
 
 export default (props = {}) => {
   const location = useLocation();
@@ -38,23 +38,19 @@ export default (props = {}) => {
   const showClass = show ? "show" : "";
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.auth.userInfo);
-  const updateSlider = useSelector((state) => state.main.sidebar);
+  const tenantsData = useSelector((state) => state.tenants.tenants);
   const [searchValue, setSearchValue] = useState("");
   const [visibleHead, setVisibleHead] = useState(false);
   const [first, setFirst] = useState(0);
   const [update, setUpdate] = useState(1);
   const { getTenantList } = useRequest();
-  const [list, setList] = useState([]);
-  const [inactive, setInactive] = useState([]);
-  const [archived, setArchived] = useState([]);
-  const [active, setActive] = useState([]);
 
   const onCollapse = () => setShow(!show);
 
   const CollapsableNavItem = (props) => {
     const { eventKey, title, icon, children = null } = props;
     const defaultKey = pathname.indexOf(eventKey) !== -1 ? eventKey : "";
-    // const x = ["ActiveTenant ", "InactiveTenant"];
+
     return (
       <Wrapper>
         <Accordion as={Nav.Item} defaultActiveKey={"open"}>
@@ -131,26 +127,27 @@ export default (props = {}) => {
   };
   const paramsID = useParams().id;
 
+  let allTenant = Object.values(tenantsData);
+
+  const active = allTenant.filter(
+    (item) => item.status == 4 || item.status == 7
+  );
+  const inactive = allTenant.filter(
+    (item) => !(item.status == 4 || item.status == 7 || item.status == 13)
+  );
+  const archived = allTenant.filter((item) => item.status == 13);
+
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=SearchTerm`;
     if (searchValue) query += `&filters[0].Value=${searchValue}`;
 
     (async () => {
+      // if (Object.keys(tenantsData).length == 0) {
       const listData = await getTenantList(query);
-      setList(listData.data.data.items);
-      setActive(
-        listData.data.data.items.filter(
-          (item) => item.status == 4 || item.status == 7
-        )
-      );
-      setInactive(
-        listData.data.data.items.filter(
-          (item) => !(item.status == 4 || item.status == 7 || item.status == 13)
-        )
-      );
-      setArchived(listData.data.data.items.filter((item) => item.status == 13));
+      dispatch(setAllTenant(listData.data.data.items));
+      // }
     })();
-  }, [first, searchValue, update, updateSlider, paramsID]);
+  }, [first, searchValue, update, paramsID]);
 
   return (
     <>

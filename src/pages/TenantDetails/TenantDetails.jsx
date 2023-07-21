@@ -4,102 +4,107 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Table } from "@themesberg/react-bootstrap";
 import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
-// import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 import { BsFillPersonLinesFill } from "react-icons/bs";
-import { FiRefreshCw } from "react-icons/fi";
 import { TabView, TabPanel } from "primereact/tabview";
 import ChildTable from "../../components/custom/tenant/ChildTable/ChildTable";
-import TenantStatus from "../../components/custom/tenant/TenantStatus/TenantStatus";
 import useGlobal from "../../lib/hocks/global";
 import { Button } from "primereact/button";
 import DeleteConfirmation from "../../components/custom/global/DeleteConfirmation/DeleteConfirmation";
 import useRequest from "../../axios/apis/useRequest";
-import { Dialog } from "primereact/dialog";
 import TenantForm from "../../components/custom/tenant/TenantForm/TenantForm";
 import { Wrapper } from "./TenantDetails.styled";
-import { useDispatch } from "react-redux";
-import { updateSidebar } from "../../store/slices/main";
-import { statusConst } from "../../const";
-import { Tooltip } from "bootstrap";
 import Actions from "../../components/custom/tenant/Actions/Actions";
 import TableHead from "../../components/custom/Shared/TableHead/TableHead";
 import ThemeDialog from "../../components/custom/Shared/ThemeDialog/ThemeDialog";
+import { useDispatch, useSelector } from "react-redux";
+import { tenantInfo } from "../../store/slices/tenants";
+import { removeTenant } from "../../store/slices/tenants";
 
 const TenantDetails = () => {
   const [confirm, setConfirm] = useState(false);
   const [currentId, setCurrentId] = useState("");
-  const [tenantData, setTenantData] = useState();
   const [updateDetails, setUpdateDetails] = useState(0);
   const [visible, setVisible] = useState(false);
-  const [action, setAction] = useState();
-  const [tenantStatus, setTenantStatus] = useState();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [store, setStore] = useState({});
   const { DataTransform } = useGlobal();
+  const tenantsData = useSelector((state) => state.tenants.tenants);
 
   const { getTenant, deleteTenantReq, editTenantStatus } = useRequest();
   const routeParams = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const updateTenant = async () => {
+    await dispatch(removeTenant(routeParams.id));
+    setUpdateDetails(updateDetails + 1);
+  };
 
   const chagneStatus = async (actionStatus) => {
     await editTenantStatus({
-      TenantId: tenantData.data.id,
+      // TenantId: tenantData.data.id,
       status: actionStatus,
     });
-    setUpdateDetails(updateDetails + 1);
-    dispatch(updateSidebar());
+    updateTenant();
   };
 
   const deleteConfirm = (id) => {
     setCurrentId(id);
     setConfirm(true);
   };
+
   const deleteTenant = async () => {
     await deleteTenantReq({ id: currentId });
+    dispatch(removeTenant(routeParams.id));
     navigate(`/Dashboard`);
   };
 
+  let tenantObject = tenantsData[routeParams.id];
+  let tenantStatus = tenantObject?.products[0].actions
+    ? tenantObject?.products
+        ?.flatMap((item) => item?.actions?.map((action) => action))
+        .filter(
+          (obj, index, self) =>
+            self.findIndex((o) => o?.status === obj?.status) === index
+        )
+    : null;
+
+  tenantObject?.products.map((item, index) => {
+    if (item?.name == window.location.href.split("#")[1]) {
+      setActiveIndex(index + 1);
+    }
+  });
+
   useEffect(() => {
     (async () => {
-      const tenantData = await getTenant(routeParams.id);
-      setAction(tenantData.data.data.actions);
-      setTenantData(tenantData.data);
-      setTenantStatus(
-        tenantData.data.data.products
-          .flatMap((item) => item.actions.map((action) => action))
-          .filter(
-            (obj, index, self) =>
-              self.findIndex((o) => o.status === obj.status) === index
-          )
-      );
-      tenantData.data.data.products.map((item, index) => {
-        if (item.name == window.location.href.split("#")[1]) {
-          setActiveIndex(index + 1);
-        }
-      });
+      if (!tenantsData[routeParams.id]?.products[0]?.status) {
+        const tenantData = await getTenant(routeParams.id);
+        console.log(tenantData.data.data, "44444444444");
+        dispatch(tenantInfo(tenantData.data.data));
+      }
     })();
   }, [visible, routeParams.id, updateDetails]);
 
   return (
     <Wrapper>
-      {tenantData && (
+      {tenantObject && (
         <BreadcrumbComponent
           breadcrumbInfo={"TenantDetails"}
-          param1={tenantData.data.id}
+          param1={tenantObject.id}
           icon={BsFillPersonLinesFill}
         />
       )}
 
       <div className="main-container">
-        {tenantData && (
+        {tenantObject && (
           <TableHead
             label={"Tenant Details"}
-            name={tenantData.data.uniqueName}
+            name={tenantObject.uniqueName}
             active={false}
           />
         )}
 
-        {tenantData && (
+        {tenantObject && tenantStatus && (
           <div className="pageWrapper">
             <div className="tableSec">
               <div className="main">
@@ -117,21 +122,21 @@ const TenantDetails = () => {
                             <tbody>
                               <tr>
                                 <td className="fw-bold">Title</td>
-                                <td>{tenantData.data.title}</td>
+                                <td>{tenantObject.title}</td>
                               </tr>
                               <tr>
                                 <td className="fw-bold">Unique Name</td>
-                                <td>{tenantData.data.uniqueName}</td>
+                                <td>{tenantObject.uniqueName}</td>
                               </tr>
                               <tr>
                                 <td className="fw-bold">Products</td>
                                 <td>
-                                  {tenantData.data.products.map(
+                                  {tenantObject.products.map(
                                     (product, index) => (
                                       <span
                                         key={index}
                                         className="p-1 border-round border-1 border-400 me-2">
-                                        {product.name}
+                                        {product?.name}
                                       </span>
                                     )
                                   )}
@@ -141,13 +146,13 @@ const TenantDetails = () => {
                               <tr>
                                 <td className="fw-bold">Created Date</td>
                                 <td>
-                                  {DataTransform(tenantData.data.createdDate)}
+                                  {DataTransform(tenantObject.createdDate)}
                                 </td>
                               </tr>
                               <tr>
                                 <td className="fw-bold">Last Updated Date</td>
                                 <td>
-                                  {DataTransform(tenantData.data.editedDate)}
+                                  {DataTransform(tenantObject.editedDate)}
                                 </td>
                               </tr>
                             </tbody>
@@ -170,7 +175,7 @@ const TenantDetails = () => {
                           ) : null}
 
                           <Actions
-                            tenantData={tenantData}
+                            tenantData={tenantObject}
                             actions={tenantStatus}
                             deleteConfirm={deleteConfirm}
                             chagneStatus={chagneStatus}
@@ -178,13 +183,16 @@ const TenantDetails = () => {
                         </div>
                       </div>
                     </TabPanel>
-                    {tenantData.data.products.map((product, index) => (
-                      <TabPanel header={product.name.toUpperCase()} key={index}>
-                        {console.log(product)}
+                    {tenantObject.products.map((product, index) => (
+                      <TabPanel
+                        header={product?.name.toUpperCase()}
+                        key={index}>
                         <ChildTable
-                          tenantDetails={tenantData.data}
-                          tenantId={tenantData.data.id}
+                          tenantDetails={tenantObject}
+                          tenantId={tenantObject.id}
                           productData={product}
+                          updateDetails={updateDetails}
+                          updateTenant={updateTenant}
                         />
                       </TabPanel>
                     ))}
@@ -198,25 +206,15 @@ const TenantDetails = () => {
                     confirmFunction={deleteTenant}
                     sideBar={true}
                   />
-                  {/* <Dialog
-                    header={"Edit Tenant"}
-                    visible={visible}
-                    style={{ width: "30vw", minWidth: "300px" }}
-                    onHide={() => setVisible(false)}>
-                    <TenantForm
-                      type={"edit"}
-                      tenantData={tenantData?.data}
-                      setVisible={setVisible}
-                      sideBar={true}
-                    />
-                  </Dialog> */}
+
                   <ThemeDialog visible={visible} setVisible={setVisible}>
                     <TenantForm
                       popupLabel={"Edit Tenant"}
                       type={"edit"}
-                      tenantData={tenantData?.data}
+                      tenantData={tenantObject}
                       setVisible={setVisible}
                       sideBar={true}
+                      updateTenant={updateTenant}
                     />
                   </ThemeDialog>
                 </div>

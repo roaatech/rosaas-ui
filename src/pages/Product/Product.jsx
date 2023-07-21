@@ -35,12 +35,16 @@ import { useNavigate } from "react-router-dom";
 import { Wrapper } from "./Product.styled";
 import CustomPaginator from "../../components/custom/Shared/CustomPaginator/CustomPaginator";
 import ThemeDialog from "../../components/custom/Shared/ThemeDialog/ThemeDialog";
+import { productInfo, setAllProduct } from "../../store/slices/products";
+import { useDispatch, useSelector } from "react-redux";
+
 export default function Product({ children }) {
+  const dispatch = useDispatch();
   const { getProduct, getProductList, deleteProductReq } = useRequest();
   const [visible, setVisible] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [visibleHead, setVisibleHead] = useState(false);
-  const [list, setList] = useState([]);
+  // const [list, setList] = useState([]);
   const [rebase, setRebase] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [sortField, setSortField] = useState("");
@@ -59,6 +63,9 @@ export default function Product({ children }) {
     await deleteProductReq({ id: currentId });
   };
 
+  const listData = useSelector((state) => state.products.products);
+  let list = Object.values(listData);
+
   useEffect(() => {
     let query = `?page=${Math.ceil(
       (first + 1) / rows
@@ -68,9 +75,11 @@ export default function Product({ children }) {
     if (sortValue) query += `&sort.Direction=${sortValue}`;
 
     (async () => {
-      const listData = await getProductList(query);
-      setTotalCount(listData.data.data.totalCount);
-      setList(listData.data.data.items);
+      // if (Object.values(listData).length == 0) {
+      const productList = await getProductList(query);
+      dispatch(setAllProduct(productList.data.data.items));
+      setTotalCount(productList.data.data.totalCount);
+      // }
     })();
   }, [first, rows, searchValue, sortField, sortValue, update]);
 
@@ -86,11 +95,12 @@ export default function Product({ children }) {
   };
 
   /****************************** */
-  const [productData, setProductData] = useState();
   const editForm = async (id) => {
-    const productData = await getProduct(id);
-
-    setProductData(productData.data);
+    if (!listData[id].creationEndpoint) {
+      const productData = await getProduct(id);
+      dispatch(productInfo(productData.data.data));
+    }
+    setCurrentId(id);
     setVisible(true);
   };
 
@@ -241,7 +251,7 @@ export default function Product({ children }) {
               <ProductForm
                 popupLabel={"Edit Product"}
                 type={"edit"}
-                productData={productData?.data}
+                productData={listData[currentId]}
                 update={update}
                 setUpdate={setUpdate}
                 setVisible={setVisible}

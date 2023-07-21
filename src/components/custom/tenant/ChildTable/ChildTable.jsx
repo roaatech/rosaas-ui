@@ -6,21 +6,22 @@ import TenantStatus from "../TenantStatus/TenantStatus";
 import AccordionComponent from "../../../AccordionComponent";
 import Workflow from "../../../../components/custom/Shared/Workflow/Workflow";
 import { Button } from "primereact/button";
-import { updateSidebar } from "../../../../store/slices/main";
 import { FiRefreshCw } from "react-icons/fi";
 import { useDispatch } from "react-redux";
-import { statusConst } from "../../../../const";
 import useRequest from "../../../../axios/apis/useRequest";
 import Actions from "../Actions/Actions";
 import useGlobal from "../../../../lib/hocks/global";
 import ReactJson from "react-json-view";
 
-export default function ChildTable({ productData, tenantId }) {
+export default function ChildTable({
+  productData,
+  tenantId,
+  updateDetails,
+  updateTenant,
+}) {
   const { DataTransform } = useGlobal();
   const { editTenantStatus } = useRequest();
-  const [updateDetails, setUpdateDetails] = useState(0);
   const dispatch = useDispatch();
-  console.log(productData, "*********************");
 
   const chagneStatus = async (actionStatus) => {
     await editTenantStatus({
@@ -28,8 +29,7 @@ export default function ChildTable({ productData, tenantId }) {
       status: actionStatus,
       productId: productData.id,
     });
-    setUpdateDetails(updateDetails + 1);
-    dispatch(updateSidebar());
+    updateTenant();
   };
 
   const rowExpansionTemplate = (data) => {
@@ -37,20 +37,7 @@ export default function ChildTable({ productData, tenantId }) {
       <div className="">
         <Card border="light" className="  border-0">
           <Card.Body className="p-0">
-            {/* <Table
-              responsive
-              className="table-centered table-nowrap rounded mb-0">
-              <tbody>
-                {Object.keys(data).map((item, index) => (
-                  <tr key={index}>
-                    <td className="fw-bold"> {item} :</td>
-                    <td>{data[item]}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table> */}
             <ReactJson src={data} />
-            {/* {JSON.stringify(data)} */}
           </Card.Body>
         </Card>
       </div>
@@ -110,8 +97,7 @@ export default function ChildTable({ productData, tenantId }) {
               <div className="refresh">
                 <Button
                   onClick={() => {
-                    setUpdateDetails(updateDetails + 1);
-                    dispatch(updateSidebar());
+                    updateTenant();
                   }}
                   type="button"
                   icon={<FiRefreshCw className="mr-2" />}
@@ -129,7 +115,10 @@ export default function ChildTable({ productData, tenantId }) {
           <Card border="light" className="shadow-sm">
             <Card.Header className="fs-6">History</Card.Header>
             <Card.Body className="pb-0">
-              <Workflow productId={productData.id} />
+              <Workflow
+                productId={productData.id}
+                updateDetails={updateDetails}
+              />
             </Card.Body>
           </Card>
         </div>

@@ -6,7 +6,7 @@ import { Owner } from "../../../../const";
 import { useParams } from "react-router-dom";
 import useRequest from "../../../../axios/apis/useRequest";
 
-const Workflow = ({ productId }) => {
+const Workflow = ({ productId, updateDetails }) => {
   const [timeLine, setTimeLine] = useState([]);
   const { getTimeLine } = useRequest();
 
@@ -17,7 +17,7 @@ const Workflow = ({ productId }) => {
       const timeLineReq = await getTimeLine(routeParams.id, productId);
       setTimeLine(timeLineReq.data.data);
     })();
-  }, [routeParams.id]);
+  }, [routeParams.id, updateDetails]);
 
   return (
     <Wrapper>

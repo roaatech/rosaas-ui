@@ -3,23 +3,16 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Table } from "@themesberg/react-bootstrap";
-import BreadcrumbComponent from "../../Shared/Breadcrumb/Breadcrumb";
-import { BsBoxSeam } from "react-icons/bs";
 
-import ProductStatus from "../ProductStatus/ProductStatus";
 import useGlobal from "../../../../lib/hocks/global";
 import { Button } from "primereact/button";
 import DeleteConfirmation from "../../global/DeleteConfirmation/DeleteConfirmation";
 import useRequest from "../../../../axios/apis/useRequest";
-import { Dialog } from "primereact/dialog";
-// import ProductForm from "../../components/custom/product/ProductForm/ProductForm";
+
 import { Wrapper } from "./ProdcutDetailsTab.styled";
-import { useDispatch } from "react-redux";
-import { updateSidebar } from "../../../../store/slices/main";
 import ProductForm from "../ProductForm/ProductForm";
 import UrlItemList from "../../../../components/custom/Product/UrlItemList/UrlItemList";
 import ThemeDialog from "../../Shared/ThemeDialog/ThemeDialog";
-// import { productArray, productColor, productIcon } from "../../const";
 
 const ProductDetailsTab = ({ data }) => {
   const [confirm, setConfirm] = useState(false);
@@ -27,20 +20,10 @@ const ProductDetailsTab = ({ data }) => {
   const [productData, setProductData] = useState();
   const [visible, setVisible] = useState(false);
 
-  const { getProduct, deleteProductReq } = useRequest();
+  const { deleteProductReq } = useRequest();
   const { DataTransform } = useGlobal();
   const routeParams = useParams();
-  const { editProductProduct } = useRequest();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const chagneProduct = async (actionStatus) => {
-    await editProductProduct({
-      ProductId: productData.data.id,
-      // product: actionStatus,
-    });
-    dispatch(updateSidebar());
-  };
 
   const deleteConfirm = (id) => {
     setCurrentId(id);
@@ -53,8 +36,6 @@ const ProductDetailsTab = ({ data }) => {
 
   useEffect(() => {
     (async () => {
-      // const productDataReq = await getProduct(routeParams.id);
-      // setAction(productData.data.data.actions);
       setProductData(data);
     })();
   }, [visible, routeParams.id]);
@@ -72,31 +53,25 @@ const ProductDetailsTab = ({ data }) => {
                   <tbody>
                     <tr>
                       <td className="fw-bold">Name</td>
-                      <td>{productData.data.name}</td>
+                      <td>{productData.name}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">Url</td>
-                      <td>{productData.data.url}</td>
+                      <td>{productData.url}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">Client</td>
-                      <td>{productData.data.client.name}</td>
+                      <td>{productData.client.name}</td>
                     </tr>
-                    {/* <tr>
-                      <td className="fw-bold">Status</td>
-                      <td>
-                        <ProductStatus rowData={productData.data} />
-                      </td>
-                    </tr> */}
                     <tr>
                       <td className="fw-bold">Created Date</td>
-                      <td>{DataTransform(productData.data.createdDate)}</td>
+                      <td>{DataTransform(productData.createdDate)}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">Last Updated Date</td>
-                      <td>{DataTransform(productData.data.editedDate)}</td>
+                      <td>{DataTransform(productData.editedDate)}</td>
                     </tr>
-                    <UrlItemList data={productData.data} />
+                    <UrlItemList data={productData} />
                   </tbody>
                 </Table>
               </Card.Body>
@@ -107,7 +82,7 @@ const ProductDetailsTab = ({ data }) => {
                 className="mr-3"
                 label="Delete"
                 icon="pi pi-trash"
-                onClick={() => deleteConfirm(productData.data.id)}
+                onClick={() => deleteConfirm(productData.id)}
                 style={{
                   backgroundColor: "var(--red)",
                   borderColor: "var(--red)",
@@ -137,9 +112,9 @@ const ProductDetailsTab = ({ data }) => {
               <ProductForm
                 type={"edit"}
                 visible={visible}
-                productData={productData?.data}
+                productData={productData}
                 setVisible={setVisible}
-                popupLabel={"Create Product"}
+                popupLabel={"Edit Product"}
               />
             </ThemeDialog>
           </div>

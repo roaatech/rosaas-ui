@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import {
-  BsPencilSquare,
-  BsFillTrash3Fill,
-  BsFillEyeFill,
-} from "react-icons/bs";
-import { Paginator } from "primereact/paginator";
 import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
-// import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 import { BsFillPersonLinesFill } from "react-icons/bs";
 
 import ColumnSortHeader from "../../components/custom/Shared/ColumnSortHeader/ColumnSortHeader";
@@ -23,18 +16,12 @@ import { useNavigate } from "react-router-dom";
 import { Wrapper } from "./Tenant.styled";
 import CustomPaginator from "../../components/custom/Shared/CustomPaginator/CustomPaginator";
 import AutoCompleteFiled from "../../components/custom/Shared/AutoCompleteFiled/AutoCompleteFiled";
-import useGlobal from "../../lib/hocks/global";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faEllipsisH, faEye, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faEllipsisH, faEye } from "@fortawesome/free-solid-svg-icons";
 import {
-  Col,
-  Row,
-  Form,
   Card,
   Button,
   ButtonGroup,
-  Breadcrumb,
-  InputGroup,
   Dropdown,
 } from "@themesberg/react-bootstrap";
 export default function Tenant({ children }) {
@@ -73,9 +60,9 @@ export default function Tenant({ children }) {
       query += `&filters[1].Field=selectedProduct&filters[1].Value=${selectedProduct}`;
 
     (async () => {
-      const listData = await getTenantList(query);
-      setTotalCount(listData.data.data.totalCount);
-      setList(listData.data.data.items);
+      // const listData = await getTenantList(query);
+      // setTotalCount(listData.data.data.totalCount);
+      // setList(listData.data.data.items);
     })();
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct]);
 
@@ -91,8 +78,6 @@ export default function Tenant({ children }) {
   };
 
   const productOptions = async (text) => {
-    // const allOptions = await getProductSearch();
-    // return allOptions.data;
     return {
       data: [
         {
@@ -125,36 +110,37 @@ export default function Tenant({ children }) {
 
   return (
     <Wrapper>
-     
-     <BreadcrumbComponent
-        breadcrumbInfo= {"TenantList" } 
+      <BreadcrumbComponent
+        breadcrumbInfo={"TenantList"}
         icon={BsFillPersonLinesFill}
       />
-      <div className="main-container"> 
-          <TableHead
-            label={"Add Tenant"}
-            popupLabel={"Create Tenant"}
-            icon={"pi-user-plus"}
-            setSearchValue={setSearchValue}
+      <div className="main-container">
+        <TableHead
+          label={"Add Tenant"}
+          popupLabel={"Create Tenant"}
+          icon={"pi-user-plus"}
+          setSearchValue={setSearchValue}
+          visibleHead={visibleHead}
+          setVisibleHead={setVisibleHead}
+          setFirst={setFirst}>
+          <TenantForm
+            type={"create"}
+            update={update}
+            setUpdate={setUpdate}
             visibleHead={visibleHead}
             setVisibleHead={setVisibleHead}
-            setFirst={setFirst}>
-            <TenantForm
-              type={"create"}
-              update={update}
-              setUpdate={setUpdate}
-              visibleHead={visibleHead}
-              setVisibleHead={setVisibleHead}
-              sideBar={false}
-            />
+            sideBar={false}
+          />
 
-            <AutoCompleteFiled
-              placeHolder="Select Product"
-              dataFunction={productOptions}
-              setSelectedProduct={setSelectedProduct}
-            />
-          </TableHead>
-          <Card border="light" className="table-wrapper table-responsive shadow-sm">
+          <AutoCompleteFiled
+            placeHolder="Select Product"
+            dataFunction={productOptions}
+            setSelectedProduct={setSelectedProduct}
+          />
+        </TableHead>
+        <Card
+          border="light"
+          className="table-wrapper table-responsive shadow-sm">
           <Card.Body className="pt-0">
             <DataTable
               value={list}
@@ -175,7 +161,7 @@ export default function Tenant({ children }) {
                     setFirst={setFirst}
                   />
                 }></Column>
-             <Column
+              <Column
                 field="uniqueName"
                 header={
                   <ColumnSortHeader
@@ -191,7 +177,7 @@ export default function Tenant({ children }) {
                   />
                 }
               />
-           {/* <Column
+              {/* <Column
                 field="status"
                 header={
                   <ColumnSortHeader
@@ -230,8 +216,8 @@ export default function Tenant({ children }) {
                     setFirst={setFirst}
                   />
                 }
-              /> 
-             <Column
+              />
+              <Column
                 body={(data, options) => (
                   <Dropdown as={ButtonGroup}>
                     <Dropdown.Toggle
@@ -240,16 +226,21 @@ export default function Tenant({ children }) {
                       variant="link"
                       className="text-dark m-0 p-0">
                       <span className="icon icon-sm">
-                        <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                        <FontAwesomeIcon
+                          icon={faEllipsisH}
+                          className="icon-dark"
+                        />
                       </span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item onSelect={() => navigate(`/TenantDetails/${data.id}`)}>
-                        <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
+                      <Dropdown.Item
+                        onSelect={() => navigate(`/TenantDetails/${data.id}`)}>
+                        <FontAwesomeIcon icon={faEye} className="me-2" /> View
+                        Details
                       </Dropdown.Item>
                       <Dropdown.Item onSelect={() => editForm(data.id)}>
                         <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
-                      </Dropdown.Item> 
+                      </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 )}
@@ -280,20 +271,19 @@ export default function Tenant({ children }) {
                 setVisible={setVisible}
                 sideBar={false}
               />
-            </Dialog>  
+            </Dialog>
 
-        <DeleteConfirmation
-          message="Do you want to delete this Tenant?"
-          icon="pi pi-exclamation-triangle"
-          confirm={confirm}
-          setConfirm={setConfirm}
-          confirmFunction={deleteTenant}
-          update={update}
-          setUpdate={setUpdate}
-          sideBar={false}
-        />
-        
-        </Card.Body>
+            <DeleteConfirmation
+              message="Do you want to delete this Tenant?"
+              icon="pi pi-exclamation-triangle"
+              confirm={confirm}
+              setConfirm={setConfirm}
+              confirmFunction={deleteTenant}
+              update={update}
+              setUpdate={setUpdate}
+              sideBar={false}
+            />
+          </Card.Body>
         </Card>
       </div>
     </Wrapper>
