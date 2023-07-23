@@ -13,11 +13,13 @@ import {
 } from "@themesberg/react-bootstrap";
 import TableDate from "../../Shared/TableDate/TableDate";
 import { Link, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { productInfo, subscribe } from "../../../../store/slices/products";
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { DataTransform } = useGlobal();
   const { getProductTenants } = useRequest();
-  const [list, setList] = useState([]);
+  // const [list, setList] = useState([]);
   const [searchValue] = useState("");
   const [sortField] = useState("");
   const [sortValue] = useState("");
@@ -26,12 +28,20 @@ export const ProductTenantsList = ({ productId, productName }) => {
   const [update] = useState(1);
   const [selectedProduct] = useState();
 
+  const dispatch = useDispatch();
+
+  const list = useSelector(
+    (state) => state.products.products[productId]?.subscribe
+  );
+
   useEffect(() => {
     let params = `${productId}/Tenants`;
 
     (async () => {
-      const listData = await getProductTenants(params);
-      setList(listData.data.data);
+      if (!list) {
+        const listData = await getProductTenants(params);
+        dispatch(subscribe({ id: productId, data: listData.data.data }));
+      }
     })();
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct]);
 
@@ -96,9 +106,9 @@ export const ProductTenantsList = ({ productId, productName }) => {
             </tr>
           </thead>
           <tbody>
-            {list.map((t, index) => (
-              <TableRow key={`index`} {...t} />
-            ))}
+            {list?.length
+              ? list?.map((t, index) => <TableRow key={`index`} {...t} />)
+              : null}
           </tbody>
         </Table>
       </Card.Body>

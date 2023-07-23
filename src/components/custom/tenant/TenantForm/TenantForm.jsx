@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import useRequest from "../../../../axios/apis/useRequest.js";
 import { Product_id } from "../../../../const/index.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Form } from "@themesberg/react-bootstrap";
 import { Modal, Button } from "@themesberg/react-bootstrap";
 import { tenantInfo } from "../../../../store/slices/tenants.js";
+import { setAllProduct } from "../../../../store/slices/products.js";
 
 const TenantForm = ({
   type,
@@ -21,15 +22,31 @@ const TenantForm = ({
   const [submitLoading, setSubmitLoading] = useState();
   const navigate = useNavigate();
 
-  const options = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
-  ];
+  const dispatch = useDispatch();
+  const { getProductList } = useRequest();
+
+  const listData = useSelector((state) => state.products.products);
+  let list = Object.values(listData);
+  const options = list.map((item, index) => {
+    return { value: item.id, label: item.name };
+  });
+
+  useEffect(() => {
+    let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`;
+
+    (async () => {
+      if (list.length == 0) {
+        const productList = await getProductList(query);
+        dispatch(setAllProduct(productList.data.data.items));
+      }
+    })();
+  }, []);
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().max(100, "Must be maximum 100 digits"),
-    product: Yup.array().min(1, "Please select a product"),
+    product: Yup.array()
+      .required("Please select a product")
+      .min(1, "Please select a product"),
     uniqueName: Yup.string()
       .max(100, "Must be maximum 100 digits")
       .required("Unique Name is required")
@@ -54,8 +71,7 @@ const TenantForm = ({
         const createTenant = await createTenantRequest({
           title: values.title,
           uniqueName: values.uniqueName,
-          // productsIds: values.product,
-          productsIds: [Product_id],
+          productsIds: values.product,
         });
         navigate(`/tenantDetails/${createTenant.data.data.id}`);
       } else {
@@ -139,7 +155,7 @@ const TenantForm = ({
                 value={formik.values.product}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.product && !!formik.errors.product}
+                isInvalid={formik.touched.product && formik.errors.product}
                 multiple>
                 {options.map((option) => (
                   <option key={option.value} value={option.value}>

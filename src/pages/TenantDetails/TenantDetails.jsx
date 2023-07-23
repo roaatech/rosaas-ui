@@ -18,17 +18,18 @@ import TableHead from "../../components/custom/Shared/TableHead/TableHead";
 import ThemeDialog from "../../components/custom/Shared/ThemeDialog/ThemeDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { tenantInfo } from "../../store/slices/tenants";
-import { removeTenant } from "../../store/slices/tenants";
+import { removeTenant, setActiveIndex } from "../../store/slices/tenants";
 
+let firstLoad = 0;
 const TenantDetails = () => {
   const [confirm, setConfirm] = useState(false);
   const [currentId, setCurrentId] = useState("");
   const [updateDetails, setUpdateDetails] = useState(0);
   const [visible, setVisible] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [store, setStore] = useState({});
   const { DataTransform } = useGlobal();
+
   const tenantsData = useSelector((state) => state.tenants.tenants);
+  const activeIndex = useSelector((state) => state.tenants.currentTab);
 
   const { getTenant, deleteTenantReq, editTenantStatus } = useRequest();
   const routeParams = useParams();
@@ -60,6 +61,7 @@ const TenantDetails = () => {
   };
 
   let tenantObject = tenantsData[routeParams.id];
+
   let tenantStatus = tenantObject?.products[0].actions
     ? tenantObject?.products
         ?.flatMap((item) => item?.actions?.map((action) => action))
@@ -70,8 +72,9 @@ const TenantDetails = () => {
     : null;
 
   tenantObject?.products.map((item, index) => {
-    if (item?.name == window.location.href.split("#")[1]) {
-      setActiveIndex(index + 1);
+    if (firstLoad == 0 && item?.name == window.location.href.split("#")[1]) {
+      dispatch(setActiveIndex(index + 1));
+      firstLoad++;
     }
   });
 
@@ -79,10 +82,11 @@ const TenantDetails = () => {
     (async () => {
       if (!tenantsData[routeParams.id]?.products[0]?.status) {
         const tenantData = await getTenant(routeParams.id);
-        console.log(tenantData.data.data, "44444444444");
         dispatch(tenantInfo(tenantData.data.data));
       }
     })();
+
+    return () => dispatch(setActiveIndex(0));
   }, [visible, routeParams.id, updateDetails]);
 
   return (
@@ -112,7 +116,9 @@ const TenantDetails = () => {
                   <TabView
                     className="card"
                     activeIndex={activeIndex}
-                    onTabChange={(e) => setActiveIndex(e.index)}>
+                    onTabChange={(e) => {
+                      dispatch(setActiveIndex(e.index));
+                    }}>
                     <TabPanel header="Details">
                       <Card border="light" className="shadow-sm border-0">
                         <Card.Body className="p-0">
@@ -193,6 +199,7 @@ const TenantDetails = () => {
                           productData={product}
                           updateDetails={updateDetails}
                           updateTenant={updateTenant}
+                          productIndex={index}
                         />
                       </TabPanel>
                     ))}

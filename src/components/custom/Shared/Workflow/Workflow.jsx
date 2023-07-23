@@ -5,24 +5,38 @@ import useGlobal from "../../../../lib/hocks/global";
 import { Owner } from "../../../../const";
 import { useParams } from "react-router-dom";
 import useRequest from "../../../../axios/apis/useRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { history } from "../../../../store/slices/tenants";
 
-const Workflow = ({ productId, updateDetails }) => {
-  const [timeLine, setTimeLine] = useState([]);
+const Workflow = ({ productId, updateDetails, productIndex }) => {
+  // const [timeLine, setTimeLine] = useState([]);
   const { getTimeLine } = useRequest();
-
+  const dispatch = useDispatch();
   const { DataTransform } = useGlobal();
   const routeParams = useParams();
+  const tenantsData = useSelector((state) => state.tenants.tenants);
+
+  const timeLine = tenantsData[routeParams.id].products[productIndex].history;
+
   useEffect(() => {
     (async () => {
-      const timeLineReq = await getTimeLine(routeParams.id, productId);
-      setTimeLine(timeLineReq.data.data);
+      if (!tenantsData[routeParams.id].products[productIndex].history) {
+        const timeLineReq = await getTimeLine(routeParams.id, productId);
+        dispatch(
+          history({
+            tenantId: routeParams.id,
+            productIndex,
+            data: timeLineReq.data.data,
+          })
+        );
+      }
     })();
   }, [routeParams.id, updateDetails]);
 
   return (
     <Wrapper>
       <div className="timeLineCont">
-        {timeLine.map((item, index) => (
+        {timeLine?.map((item, index) => (
           <div className="time-line-item-container" key={index}>
             <div className="timeLineItemCont" key={index}>
               <div className="author">{Owner[item.ownerType]}</div>

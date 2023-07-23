@@ -1,9 +1,11 @@
 import { createSlice, current } from "@reduxjs/toolkit";
+const _ = require("lodash");
 
 export const tenantsSlice = createSlice({
   name: "tenants",
   initialState: {
     tenants: {},
+    currentTab: 0,
   },
 
   reducers: {
@@ -16,7 +18,7 @@ export const tenantsSlice = createSlice({
           allTenant[item.id] = { ...current(state.tenants) }[item.id];
         }
       });
-      console.log(Object.values(allTenant), "9999");
+
       state.tenants = allTenant;
     },
     tenantInfo: (state, action) => {
@@ -24,14 +26,35 @@ export const tenantsSlice = createSlice({
       currentTenants[action.payload.id] = action.payload;
       state.tenants = currentTenants;
     },
+    history: (state, action) => {
+      const currentTenants = { ...current(state.tenants) };
+      const tenant = JSON.parse(
+        JSON.stringify(currentTenants[action.payload.tenantId])
+      );
+
+      tenant.products[parseInt(action.payload.productIndex)].history =
+        action.payload.data;
+
+      currentTenants[action.payload.tenantId] = tenant;
+      state.tenants = currentTenants;
+    },
     removeTenant: (state, action) => {
       const currentTenants = { ...current(state.tenants) };
       delete currentTenants[action.payload];
       state.tenants = currentTenants;
     },
+    setActiveIndex: (state, action) => {
+      state.currentTab = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setAllTenant, tenantInfo, removeTenant } = tenantsSlice.actions;
+export const {
+  setAllTenant,
+  tenantInfo,
+  removeTenant,
+  history,
+  setActiveIndex,
+} = tenantsSlice.actions;
 export default tenantsSlice.reducer;

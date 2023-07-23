@@ -18,6 +18,7 @@ export default function ChildTable({
   tenantId,
   updateDetails,
   updateTenant,
+  productIndex,
 }) {
   const { DataTransform } = useGlobal();
   const { editTenantStatus } = useRequest();
@@ -118,6 +119,7 @@ export default function ChildTable({
               <Workflow
                 productId={productData.id}
                 updateDetails={updateDetails}
+                productIndex={productIndex}
               />
             </Card.Body>
           </Card>
