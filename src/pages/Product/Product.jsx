@@ -151,7 +151,7 @@ export default function Product({ children }) {
                 field="url"
                 header={
                   <ColumnSortHeader
-                    text="Url"
+                    text="Default Health Check Url"
                     field="url"
                     rebase={rebase}
                     setRebase={setRebase}

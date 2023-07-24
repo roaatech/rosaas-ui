@@ -118,7 +118,7 @@ const PlanForm = ({
                       name="creationEndpoint"
                       as={InputText}
                     />
-                    <label htmlFor="creationEndpoint">Creation Endpoint:</label>
+                    <label htmlFor="creationEndpoint">Creation Url:</label>
                   </span>
                 </div>
                 <ErrorMessage
@@ -138,9 +138,7 @@ const PlanForm = ({
                       name="activationEndpoint"
                       as={InputText}
                     />
-                    <label htmlFor="activationEndpoint">
-                      Activation Endpoint:
-                    </label>
+                    <label htmlFor="activationEndpoint">Activation Url:</label>
                   </span>
                 </div>
                 <ErrorMessage
@@ -161,7 +159,7 @@ const PlanForm = ({
                       as={InputText}
                     />
                     <label htmlFor="deactivationEndpoint">
-                      Deactivation Endpoint :
+                      Deactivation Url :
                     </label>
                   </span>
                 </div>

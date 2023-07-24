@@ -10,6 +10,8 @@ import {
   Button,
   ButtonGroup,
   Dropdown,
+  Tooltip,
+  OverlayTrigger,
 } from "@themesberg/react-bootstrap";
 import TableDate from "../../Shared/TableDate/TableDate";
 import { Link, Navigate } from "react-router-dom";
@@ -19,7 +21,6 @@ import { productInfo, subscribe } from "../../../../store/slices/products";
 export const ProductTenantsList = ({ productId, productName }) => {
   const { DataTransform } = useGlobal();
   const { getProductTenants } = useRequest();
-  // const [list, setList] = useState([]);
   const [searchValue] = useState("");
   const [sortField] = useState("");
   const [sortValue] = useState("");
@@ -30,15 +31,13 @@ export const ProductTenantsList = ({ productId, productName }) => {
 
   const dispatch = useDispatch();
 
-  const list = useSelector(
-    (state) => state.products.products[productId]?.subscribe
-  );
+  const list = useSelector((state) => state.products.products[productId]);
 
   useEffect(() => {
     let params = `${productId}/Tenants`;
 
     (async () => {
-      if (!list) {
+      if (!list?.subscribe) {
         const listData = await getProductTenants(params);
         dispatch(subscribe({ id: productId, data: listData.data.data }));
       }
@@ -55,6 +54,20 @@ export const ProductTenantsList = ({ productId, productName }) => {
         </td>
         <td>
           <span className="fw-normal">{uniqueName}</span>
+        </td>
+        <td>
+          <span className="fw-normal">
+            <OverlayTrigger
+              trigger={["hover", "focus"]}
+              overlay={<Tooltip>{list?.url}</Tooltip>}>
+              <span
+                variant="secondary"
+                size="sm"
+                className="p-1 border-round border-1 border-400 me-2">
+                yes
+              </span>
+            </OverlayTrigger>
+          </span>
         </td>
         <td>
           <span className="fw-normal">
@@ -100,14 +113,18 @@ export const ProductTenantsList = ({ productId, productName }) => {
             <tr>
               <th className="border-bottom">Title</th>
               <th className="border-bottom">Unique Name</th>
+              <th className="border-bottom">Health Check Url Is Overridden</th>
               <th className="border-bottom">Status</th>
               <th className="border-bottom">Created Date</th>
               <th className="border-bottom">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {list?.length
-              ? list?.map((t, index) => <TableRow key={`index`} {...t} />)
+            {console.log(list, "8888")}
+            {list?.subscribe?.length
+              ? list?.subscribe?.map((t, index) => (
+                  <TableRow key={`index`} {...t} />
+                ))
               : null}
           </tbody>
         </Table>

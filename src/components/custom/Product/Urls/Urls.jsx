@@ -7,22 +7,22 @@ const Urls = (data) => {
     {
       method: "POST",
       path: data.data.creationEndpoint,
-      title: "Creation Endpoint",
+      title: "Creation Url",
     },
     {
       method: "PUT",
       path: data.data.activationEndpoint,
-      title: "Activation Endpoint",
+      title: "Activation Url",
     },
     {
       method: "PUT",
       path: data.data.deactivationEndpoint,
-      title: "Deactivation Endpoint",
+      title: "Deactivation Url",
     },
     {
       method: "DELETE",
       path: data.data.deletionEndpoint,
-      title: "Deletion Endpoint",
+      title: "Deletion Url",
     },
   ]);
 

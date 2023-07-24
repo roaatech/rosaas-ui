@@ -17,7 +17,7 @@ import ThemeDialog from "../../Shared/ThemeDialog/ThemeDialog";
 const ProductDetailsTab = ({ data }) => {
   const [confirm, setConfirm] = useState(false);
   const [currentId, setCurrentId] = useState("");
-  const [productData, setProductData] = useState();
+  const [productData, setProductData] = useState(data);
   const [visible, setVisible] = useState(false);
 
   const { deleteProductReq } = useRequest();
@@ -36,13 +36,13 @@ const ProductDetailsTab = ({ data }) => {
 
   useEffect(() => {
     (async () => {
-      setProductData(data);
+      // setProductData(data);
     })();
   }, [visible, routeParams.id]);
 
   return (
     <Wrapper>
-      {productData && (
+      {data && (
         <div className="main">
           <div className="details">
             <Card border="light" className="shadow-sm mb-4">
@@ -53,25 +53,22 @@ const ProductDetailsTab = ({ data }) => {
                   <tbody>
                     <tr>
                       <td className="fw-bold">Name</td>
-                      <td>{productData.name}</td>
+                      <td>{data.name}</td>
                     </tr>
-                    <tr>
-                      <td className="fw-bold">Url</td>
-                      <td>{productData.url}</td>
-                    </tr>
+
                     <tr>
                       <td className="fw-bold">Client</td>
-                      <td>{productData.client.name}</td>
+                      <td>{data.client.name}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">Created Date</td>
-                      <td>{DataTransform(productData.createdDate)}</td>
+                      <td>{DataTransform(data.createdDate)}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">Last Updated Date</td>
-                      <td>{DataTransform(productData.editedDate)}</td>
+                      <td>{DataTransform(data.editedDate)}</td>
                     </tr>
-                    <UrlItemList data={productData} />
+                    <UrlItemList data={data} />
                   </tbody>
                 </Table>
               </Card.Body>
@@ -82,7 +79,7 @@ const ProductDetailsTab = ({ data }) => {
                 className="mr-3"
                 label="Delete"
                 icon="pi pi-trash"
-                onClick={() => deleteConfirm(productData.id)}
+                onClick={() => deleteConfirm(data.id)}
                 style={{
                   backgroundColor: "var(--red)",
                   borderColor: "var(--red)",
@@ -112,7 +109,7 @@ const ProductDetailsTab = ({ data }) => {
               <ProductForm
                 type={"edit"}
                 visible={visible}
-                productData={productData}
+                productData={data}
                 setVisible={setVisible}
                 popupLabel={"Edit Product"}
               />

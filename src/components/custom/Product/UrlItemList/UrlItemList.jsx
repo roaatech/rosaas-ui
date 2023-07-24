@@ -1,40 +1,52 @@
-import React, { useState } from "react"; 
+import React, { useEffect, useState } from "react";
 import ProductUrl from "../UrlItem/UrlItem";
 
-const UrlItemList = (data) => { 
-  const [UrlItemList, setURLS] = useState([
-    {
-      method: "POST",
-      path: data.data.creationEndpoint,
-      title: "Creation Endpoint",
-    },
-    {
-      method: "PUT",
-      path: data.data.activationEndpoint,
-      title: "Activation Endpoint",
-    },
-    {
-      method: "PUT",
-      path: data.data.deactivationEndpoint,
-      title: "Deactivation Endpoint",
-    },
-    {
-      method: "DELETE",
-      path: data.data.deletionEndpoint,
-      title: "Deletion Endpoint",
-    },
-  ]);
+const UrlItemList = ({ data }) => {
+  const [UrlItemList, setURLS] = useState([]);
 
-  return (  
-    UrlItemList.map((url) => ( 
-        <tr>
-        <td className="fw-bold">{url.title}</td>
-        <td className="url-container">  
-         <ProductUrl data={url} />
-        </td>
-        </tr>
-      )) 
-  );
+  useEffect(() => {
+    setURLS([
+      {
+        method: "GET",
+        path: data.url,
+        title: "Default Health Check Url",
+      },
+      {
+        method: "POST",
+        path: "data.HealthStatusChangeUrl",
+        title: "Health Status Change Url",
+      },
+      {
+        method: "POST",
+        path: data.creationEndpoint,
+        title: "Creation Url",
+      },
+      {
+        method: "PUT",
+        path: data.activationEndpoint,
+        title: "Activation Url",
+      },
+      {
+        method: "PUT",
+        path: data.deactivationEndpoint,
+        title: "Deactivation Url",
+      },
+      {
+        method: "DELETE",
+        path: data.deletionEndpoint,
+        title: "Deletion Url",
+      },
+    ]);
+  }, [data]);
+
+  return UrlItemList.map((url) => (
+    <tr>
+      <td className="fw-bold">{url.title}</td>
+      <td className="url-container">
+        <ProductUrl data={url} />
+      </td>
+    </tr>
+  ));
 };
 
 export default UrlItemList;

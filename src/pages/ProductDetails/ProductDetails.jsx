@@ -17,7 +17,6 @@ const ProductDetails = () => {
   const routeParams = useParams();
   const listData = useSelector((state) => state.products.products);
   let productData = listData[routeParams.id];
-  console.log(productData, "##############");
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
 

@@ -22,7 +22,7 @@ const ProductForm = ({
 
   const initialValues = {
     name: productData ? productData.name : "",
-    url: productData ? productData.url : "",
+    DefaultHealthCheckUrl: productData ? productData.url : "",
     creationEndpoint: productData ? productData.creationEndpoint : "",
     activationEndpoint: productData ? productData.activationEndpoint : "",
     deactivationEndpoint: productData ? productData.deactivationEndpoint : "",
@@ -31,9 +31,9 @@ const ProductForm = ({
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Product Name is required"),
-    url: Yup.string()
-      .required("Url is required")
-      .url("Please enter a valid URL"),
+    DefaultHealthCheckUrl: Yup.string()
+      .required("Default Health Check Url is required")
+      .url("Please enter a valid Default Health Check Url"),
   });
 
   const formik = useFormik({
@@ -44,7 +44,7 @@ const ProductForm = ({
         console.log("dddddddd");
         const createProduct = await createProductRequest({
           name: values.name,
-          url: values.url,
+          url: values.DefaultHealthCheckUrl,
           creationEndpoint: values.creationEndpoint,
           activationEndpoint: values.activationEndpoint,
           deactivationEndpoint: values.deactivationEndpoint,
@@ -56,7 +56,7 @@ const ProductForm = ({
         const editProduct = await editProductRequest({
           data: {
             name: values.name,
-            url: values.url,
+            url: values.DefaultHealthCheckUrl,
             creationEndpoint: values.creationEndpoint,
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
@@ -70,7 +70,7 @@ const ProductForm = ({
           productInfo({
             id: productData.id,
             name: values.name,
-            url: values.url,
+            url: values.DefaultHealthCheckUrl,
             creationEndpoint: values.creationEndpoint,
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
@@ -124,30 +124,31 @@ const ProductForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                Url <span style={{ color: "red" }}>*</span>
+                Default Health Check Url <span style={{ color: "red" }}>*</span>
               </Form.Label>
               <input
                 type="text"
                 className="form-control"
-                id="url"
-                name="url"
+                id="DefaultHealthCheckUrl"
+                name="DefaultHealthCheckUrl"
                 onChange={formik.handleChange}
-                value={formik.values.url}
+                value={formik.values.DefaultHealthCheckUrl}
               />
 
-              {formik.touched.url && formik.errors.url && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: "block" }}>
-                  {formik.errors.url}
-                </Form.Control.Feedback>
-              )}
+              {formik.touched.DefaultHealthCheckUrl &&
+                formik.errors.DefaultHealthCheckUrl && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: "block" }}>
+                    {formik.errors.DefaultHealthCheckUrl}
+                  </Form.Control.Feedback>
+                )}
             </Form.Group>
           </div>
 
           <div>
             <Form.Group className="mb-3">
-              <Form.Label>Creation Endpoint</Form.Label>
+              <Form.Label>Creation Url</Form.Label>
               <input
                 type="text"
                 className="form-control"
@@ -169,7 +170,7 @@ const ProductForm = ({
           </div>
           <div>
             <Form.Group className="mb-3">
-              <Form.Label>Activation Endpoint</Form.Label>
+              <Form.Label>Activation Url</Form.Label>
               <input
                 type="text"
                 className="form-control"
@@ -191,7 +192,7 @@ const ProductForm = ({
           </div>
           <div>
             <Form.Group className="mb-3">
-              <Form.Label>Deactivation Endpoint</Form.Label>
+              <Form.Label>Deactivation Url</Form.Label>
               <input
                 type="text"
                 className="form-control"
@@ -213,7 +214,7 @@ const ProductForm = ({
           </div>
           <div>
             <Form.Group className="mb-3">
-              <Form.Label>Deletion Endpoint</Form.Label>
+              <Form.Label>Deletion Url</Form.Label>
               <input
                 type="text"
                 className="form-control"

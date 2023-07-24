@@ -55,10 +55,15 @@ const TenantForm = ({
         "English Characters, Numbers, and Underscores are only accepted."
       ),
   });
+
+  const selectedProduct = tenantData?.products?.map((product) => {
+    return product.id;
+  });
+
   const initialValues = {
     title: tenantData ? tenantData.title : "",
     uniqueName: tenantData ? tenantData.uniqueName : "",
-    product: tenantData ? tenantData?.product?.name : "",
+    product: tenantData ? selectedProduct : "",
   };
   const formik = useFormik({
     initialValues,
@@ -143,7 +148,7 @@ const TenantForm = ({
               )}
             </Form.Group>
           </div>
-          <div>
+          <div style={{ display: type == "edit" ? "none" : "block" }}>
             <Form.Group className="mb-3">
               <Form.Label>
                 Product <span style={{ color: "red" }}>*</span>
