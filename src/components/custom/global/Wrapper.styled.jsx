@@ -195,7 +195,9 @@ nav svg.svg-inline--fa.fa-bell {
 .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus{
   box-shadow:unset
 }
-
+.p-tabview-nav-link{
+  border-width: 0 0 3px 0!important;
+}
 .content{
   padding:0
 } 

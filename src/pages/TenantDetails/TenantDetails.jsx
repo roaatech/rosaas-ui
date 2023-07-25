@@ -85,9 +85,10 @@ const TenantDetails = () => {
         dispatch(tenantInfo(tenantData.data.data));
       }
     })();
-
-    return () => dispatch(setActiveIndex(0));
   }, [visible, routeParams.id, updateDetails]);
+  useEffect(() => {
+    return () => dispatch(setActiveIndex(0));
+  }, [routeParams.id]);
 
   return (
     <Wrapper>

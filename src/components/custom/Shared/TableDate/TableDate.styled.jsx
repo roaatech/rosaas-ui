@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   font-size: var(--smallFont);
-  position: relative;
+  /* position: relative; */
   min-height: 20px;
   svg {
     font-size: var(--largeFont);
@@ -11,7 +11,8 @@ export const Wrapper = styled.div`
   }
 
   .dateCont {
-    position: fixed;
+    position: absolute;
+    margin-left: -1rem;
     background: var(--themeBackground);
     color: var(--themeColor);
     border: 1px solid;
