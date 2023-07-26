@@ -47,8 +47,8 @@ export const Routes = {
     component: Dashboard,
     roles: ["superAdmin"],
   },
-  Product: {
-    path: "/product",
+  products: {
+    path: "/products",
     component: Product,
     roles: ["superAdmin"],
   },
@@ -58,17 +58,17 @@ export const Routes = {
     roles: ["superAdmin"],
   },
   Tenant: {
-    path: "/tenant",
+    path: "/tenants",
     component: Tenant,
     roles: ["superAdmin"],
   },
   TenantDetails: {
-    path: "/tenantDetails/:id",
+    path: "/tenants/:id",
     component: TenantDetails,
     roles: ["superAdmin"],
   },
   ProductDetails: {
-    path: "/ProductDetails/:id",
+    path: "/products/:id",
     component: ProductDetails,
     roles: ["superAdmin"],
   },

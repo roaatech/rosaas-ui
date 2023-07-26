@@ -63,7 +63,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
         <td>
           <span className="fw-normal">{uniqueName}</span>
         </td>
-        <td>
+        {/* <td>
           <span className="fw-normal">
             <OverlayTrigger
               trigger={["hover", "focus"]}
@@ -80,7 +80,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
               </span>
             </OverlayTrigger>
           </span>
-        </td>
+        </td> */}
         <td>
           <span className="fw-normal">
             {status && <TenantStatus statusValue={status} />}
@@ -105,7 +105,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
             <Dropdown.Menu>
               <Dropdown.Item>
                 <Link
-                  to={`/tenantDetails/${id}#${productName}`}
+                  to={`/tenants/${id}#${productName}`}
                   className="w-100 d-block">
                   <FontAwesomeIcon icon={faGear} className="me-2" /> Manage
                 </Link>
@@ -125,7 +125,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
             <tr>
               <th className="border-bottom">Title</th>
               <th className="border-bottom">Unique Name</th>
-              <th className="border-bottom">Health Check Url Is Overridden</th>
+              {/* <th className="border-bottom">Health Check Url Is Overridden</th> */}
               <th className="border-bottom">Status</th>
               <th className="border-bottom">Created Date</th>
               <th className="border-bottom">Actions</th>

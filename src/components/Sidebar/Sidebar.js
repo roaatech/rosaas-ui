@@ -7,7 +7,7 @@ import { CSSTransition } from "react-transition-group";
 import {
   BsFillPersonLinesFill,
   BsBoxSeam,
-  BsFillLayersFill,
+  BsFillPersonFill,
 } from "react-icons/bs";
 import {
   Nav,
@@ -215,6 +215,7 @@ export default (props = {}) => {
                 setSearchValue={setSearchValue}
                 visibleHead={visibleHead}
                 setVisibleHead={setVisibleHead}
+                fullWidth={true}
                 setFirst={setFirst}>
                 <TenantForm
                   popupLabel={"Create Tenant"}
@@ -235,7 +236,8 @@ export default (props = {}) => {
                     <NavItem
                       key={index}
                       title={item.uniqueName}
-                      link={`/tenantDetails/${item.id}`}
+                      link={`/tenants/${item.id}`}
+                      icon={BsFillPersonFill}
                     />
                   ))}
                 </CollapsableNavItem>
@@ -249,7 +251,8 @@ export default (props = {}) => {
                     <NavItem
                       key={index}
                       title={item.uniqueName}
-                      link={`/tenantDetails/${item.id}`}
+                      link={`/tenants/${item.id}`}
+                      icon={BsFillPersonFill}
                     />
                   ))}
                 </CollapsableNavItem>
@@ -263,7 +266,7 @@ export default (props = {}) => {
                     <NavItem
                       key={index}
                       title={item.uniqueName}
-                      link={`/tenantDetails/${item.id}`}
+                      link={`/tenants/${item.id}`}
                     />
                   ))}
                 </CollapsableNavItem>
@@ -274,7 +277,7 @@ export default (props = {}) => {
                 icon={BsFillPersonLinesFill}
               />
               */}
-              <NavItem title="Products" link={`/product`} icon={BsBoxSeam} />
+              <NavItem title="Products" link={`/products`} icon={BsBoxSeam} />
               {/* <NavItem title="Plan" link={`/plan`} icon={BsFillLayersFill} /> */}
             </Nav>
           </div>

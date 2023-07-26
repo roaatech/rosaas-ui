@@ -31,6 +31,7 @@ const TableHead = ({
   visibleHead,
   setVisibleHead,
   search = true,
+  fullWidth = false,
 }) => {
   const { searchWait } = useGlobal();
   const [inputValue, setInputValue] = useState("");
@@ -46,7 +47,7 @@ const TableHead = ({
   return (
     <Wrapper>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-        <ButtonGroup>
+        <ButtonGroup className={fullWidth && "w-100"}>
           <Button variant="secondary" onClick={() => setVisibleHead(true)}>
             <FontAwesomeIcon icon={faPlus} className="me-2" />
             {label}

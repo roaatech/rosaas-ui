@@ -234,7 +234,7 @@ export default function Tenant({ children }) {
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       <Dropdown.Item
-                        onSelect={() => navigate(`/TenantDetails/${data.id}`)}>
+                        onSelect={() => navigate(`/tenants/${data.id}`)}>
                         <FontAwesomeIcon icon={faEye} className="me-2" /> View
                         Details
                       </Dropdown.Item>

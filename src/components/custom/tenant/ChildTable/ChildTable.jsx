@@ -38,7 +38,7 @@ export default function ChildTable({
       <div className="">
         <Card border="light" className="  border-0">
           <Card.Body className="p-0">
-            <ReactJson src={data} />
+            <ReactJson src={data} name={false} />
           </Card.Body>
         </Card>
       </div>
@@ -50,14 +50,7 @@ export default function ChildTable({
     {
       eventKey: "metadata0",
       title: "Meta Data",
-      description: metadata
-        ? rowExpansionTemplate(
-            JSON.parse(metadata)
-            // JSON.parse(
-            //   '{"root":{"id":"1000-0","productCode":"f230fh0g3","date":"2020-09-13","amount":65,"quantity":1,"customer":"David James","status":"PENDING"}}'
-            // )
-          )
-        : "",
+      description: metadata ? rowExpansionTemplate(JSON.parse(metadata)) : null,
     },
   ]);
 
