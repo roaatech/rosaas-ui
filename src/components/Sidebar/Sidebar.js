@@ -20,7 +20,7 @@ import {
 } from "@themesberg/react-bootstrap";
 import { Link } from "react-router-dom";
 import { Routes } from "../../routes";
-import logo from "../../assets/img/brand/roaa-tech.png";
+import logo from "../../assets/img/brand/rosas.png";
 import ProfilePicture from "../../assets/img/team/profile-picture-1.png";
 import { logOut } from "../../store/slices/auth";
 import { useDispatch, useSelector } from "react-redux";
