@@ -60,7 +60,7 @@ export default (props = {}) => {
               className="d-flex justify-content-between align-items-center">
               <span>
                 <span className="sidebar-icon">
-                  {/* <FontAwesomeIcon icon={icon} /> */}
+                  <BsFillPersonLinesFill />
                 </span>
                 <span className="sidebar-text">{title}</span>
               </span>
@@ -243,7 +243,7 @@ export default (props = {}) => {
               {inactive.length ? (
                 <CollapsableNavItem
                   eventKey="close"
-                  title="Inactive Tenants"
+                  title="Tenants"
                   icon={BsFillPersonLinesFill}>
                   {inactive.map((item, index) => (
                     <NavItem

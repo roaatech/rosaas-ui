@@ -45,19 +45,19 @@ export default function ChildTable({
     );
   };
 
+  const metadata = productData?.metadata ? productData.metadata : null;
   const [products, setProducts] = useState([
     {
       eventKey: "metadata0",
       title: "Meta Data",
-      description: rowExpansionTemplate({
-        id: "1000-0",
-        productCode: "f230fh0g3",
-        date: "2020-09-13",
-        amount: 65,
-        quantity: 1,
-        customer: "David James",
-        status: "PENDING",
-      }),
+      description: metadata
+        ? rowExpansionTemplate(
+            JSON.parse(metadata)
+            // JSON.parse(
+            //   '{"root":{"id":"1000-0","productCode":"f230fh0g3","date":"2020-09-13","amount":65,"quantity":1,"customer":"David James","status":"PENDING"}}'
+            // )
+          )
+        : "",
     },
   ]);
 
