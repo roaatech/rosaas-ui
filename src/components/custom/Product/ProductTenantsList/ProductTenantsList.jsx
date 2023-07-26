@@ -17,7 +17,7 @@ import TableDate from "../../Shared/TableDate/TableDate";
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { productInfo, subscribe } from "../../../../store/slices/products";
-
+import { urlIsOverridden } from "../../../../const";
 export const ProductTenantsList = ({ productId, productName }) => {
   const { DataTransform } = useGlobal();
   const { getProductTenants } = useRequest();
@@ -45,7 +45,15 @@ export const ProductTenantsList = ({ productId, productName }) => {
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct]);
 
   const TableRow = (props) => {
-    const { title, uniqueName, status, createdDate, editedDate, id } = props;
+    const {
+      title,
+      uniqueName,
+      status,
+      createdDate,
+      editedDate,
+      id,
+      healthCheckUrlIsOverridden,
+    } = props;
 
     return (
       <tr>
@@ -59,12 +67,16 @@ export const ProductTenantsList = ({ productId, productName }) => {
           <span className="fw-normal">
             <OverlayTrigger
               trigger={["hover", "focus"]}
-              overlay={<Tooltip>{list?.url}</Tooltip>}>
+              overlay={<Tooltip>{list?.defaultHealthCheckUrl}</Tooltip>}>
               <span
-                variant="secondary"
+                style={{
+                  background:
+                    urlIsOverridden[healthCheckUrlIsOverridden.toString()]
+                      .background,
+                }}
                 size="sm"
                 className="p-1 border-round border-1 border-400 me-2">
-                yes
+                {urlIsOverridden[healthCheckUrlIsOverridden.toString()].value}
               </span>
             </OverlayTrigger>
           </span>

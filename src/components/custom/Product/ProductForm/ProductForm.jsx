@@ -22,7 +22,8 @@ const ProductForm = ({
 
   const initialValues = {
     name: productData ? productData.name : "",
-    DefaultHealthCheckUrl: productData ? productData.url : "",
+    defaultHealthCheckUrl: productData ? productData.defaultHealthCheckUrl : "",
+    healthStatusChangeUrl: productData ? productData.healthStatusChangeUrl : "",
     creationEndpoint: productData ? productData.creationEndpoint : "",
     activationEndpoint: productData ? productData.activationEndpoint : "",
     deactivationEndpoint: productData ? productData.deactivationEndpoint : "",
@@ -31,7 +32,7 @@ const ProductForm = ({
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Product Name is required"),
-    DefaultHealthCheckUrl: Yup.string()
+    defaultHealthCheckUrl: Yup.string()
       .required("Default Health Check Url is required")
       .url("Please enter a valid Default Health Check Url"),
   });
@@ -44,7 +45,8 @@ const ProductForm = ({
         console.log("dddddddd");
         const createProduct = await createProductRequest({
           name: values.name,
-          url: values.DefaultHealthCheckUrl,
+          defaultHealthCheckUrl: values.defaultHealthCheckUrl,
+          healthStatusChangeUrl: values.healthStatusChangeUrl,
           creationEndpoint: values.creationEndpoint,
           activationEndpoint: values.activationEndpoint,
           deactivationEndpoint: values.deactivationEndpoint,
@@ -56,7 +58,8 @@ const ProductForm = ({
         const editProduct = await editProductRequest({
           data: {
             name: values.name,
-            url: values.DefaultHealthCheckUrl,
+            defaultHealthCheckUrl: values.defaultHealthCheckUrl,
+            healthStatusChangeUrl: values.healthStatusChangeUrl,
             creationEndpoint: values.creationEndpoint,
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
@@ -70,7 +73,8 @@ const ProductForm = ({
           productInfo({
             id: productData.id,
             name: values.name,
-            url: values.DefaultHealthCheckUrl,
+            defaultHealthCheckUrl: values.defaultHealthCheckUrl,
+            healthStatusChangeUrl: values.healthStatusChangeUrl,
             creationEndpoint: values.creationEndpoint,
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
@@ -129,18 +133,42 @@ const ProductForm = ({
               <input
                 type="text"
                 className="form-control"
-                id="DefaultHealthCheckUrl"
-                name="DefaultHealthCheckUrl"
+                id="defaultHealthCheckUrl"
+                name="defaultHealthCheckUrl"
                 onChange={formik.handleChange}
-                value={formik.values.DefaultHealthCheckUrl}
+                value={formik.values.defaultHealthCheckUrl}
               />
 
-              {formik.touched.DefaultHealthCheckUrl &&
-                formik.errors.DefaultHealthCheckUrl && (
+              {formik.touched.defaultHealthCheckUrl &&
+                formik.errors.defaultHealthCheckUrl && (
                   <Form.Control.Feedback
                     type="invalid"
                     style={{ display: "block" }}>
-                    {formik.errors.DefaultHealthCheckUrl}
+                    {formik.errors.defaultHealthCheckUrl}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                Health Status Change Url <span style={{ color: "red" }}>*</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="healthStatusChangeUrl"
+                name="healthStatusChangeUrl"
+                onChange={formik.handleChange}
+                value={formik.values.healthStatusChangeUrl}
+              />
+
+              {formik.touched.healthStatusChangeUrl &&
+                formik.errors.healthStatusChangeUrl && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: "block" }}>
+                    {formik.errors.healthStatusChangeUrl}
                   </Form.Control.Feedback>
                 )}
             </Form.Group>

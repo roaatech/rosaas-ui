@@ -8,12 +8,12 @@ const UrlItemList = ({ data }) => {
     setURLS([
       {
         method: "GET",
-        path: data.url,
+        path: data.defaultHealthCheckUrl,
         title: "Default Health Check Url",
       },
       {
         method: "POST",
-        path: "data.HealthStatusChangeUrl",
+        path: data.healthStatusChangeUrl,
         title: "Health Status Change Url",
       },
       {

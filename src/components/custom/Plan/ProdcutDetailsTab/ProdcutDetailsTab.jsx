@@ -57,7 +57,7 @@ const ProductDetailsTab = () => {
                     </tr>
                     <tr>
                       <td className="fw-bold">Url</td>
-                      <td>{productData.data.url}</td>
+                      <td>{productData.data.defaultHealthCheckUrl}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">Client</td>

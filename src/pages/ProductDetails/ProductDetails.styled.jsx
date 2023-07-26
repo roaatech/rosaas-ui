@@ -63,4 +63,19 @@ export const Wrapper = styled.div`
       }
     }
   }
+
+  .dropup,
+  .dropend,
+  .dropdown,
+  .dropstart,
+  .dropup-center,
+  .dropdown-center {
+    position: unset !important;
+  }
+
+  .table-responsive,
+  .card {
+    overflow-x: unset !important;
+    overflow-y: unset !important;
+  }
 `;

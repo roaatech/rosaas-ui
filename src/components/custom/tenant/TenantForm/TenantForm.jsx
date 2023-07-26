@@ -35,10 +35,10 @@ const TenantForm = ({
     let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`;
 
     (async () => {
-      if (list.length == 0) {
-        const productList = await getProductList(query);
-        dispatch(setAllProduct(productList.data.data.items));
-      }
+      // if (list.length == 0) {
+      const productList = await getProductList(query);
+      dispatch(setAllProduct(productList.data.data.items));
+      // }
     })();
   }, []);
 

@@ -6,6 +6,10 @@ const Owner = {
   101: "External System",
 };
 
+const urlIsOverridden = {
+  true: { background: "#eee5ff", value: "Yes" },
+  false: { background: "#e1f0ff", value: "No" },
+};
 const statusConst = {
   1: {
     string: "Rosas resource created",
@@ -153,4 +157,5 @@ export {
   urlStyle,
   Product_Client_id,
   breadcrumbConst,
+  urlIsOverridden,
 };

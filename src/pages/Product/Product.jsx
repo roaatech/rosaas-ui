@@ -148,11 +148,11 @@ export default function Product({ children }) {
                   />
                 }></Column>
               <Column
-                field="url"
+                field="defaultHealthCheckUrl"
                 header={
                   <ColumnSortHeader
                     text="Default Health Check Url"
-                    field="url"
+                    field="defaultHealthCheckUrl"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
