@@ -1,7 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 
-const darkBackground = "#373d58";
-const darkColor = "#262b40";
+const darkBackground = "#676668";
+const darkColor = "#414042";
 const lightBackground = "#f5f8fb";
 const lightColor = "#f5f8fb";
 const GlobalStyles = createGlobalStyle`
@@ -26,9 +26,12 @@ const GlobalStyles = createGlobalStyle`
   --errorColor:red;
   --green:#3bc76f;
   --red:#ff6868;
-  --primaryBackground:#262b40;
+  --primaryBackground:#414042;
+  --primaryColor:#414042;
+  --primary-color:#414042;
+  /* --primaryBackground:#262b40;
   --primaryColor:#262b40;
-  --primary-color:#262b40;
+  --primary-color:#262b40; */
    --themeBackground:${(props) =>
      props.darkMode ? darkBackground : lightBackground};
   --themeColor:${(props) => (props.darkMode ? lightColor : darkColor)};
@@ -38,8 +41,33 @@ const GlobalStyles = createGlobalStyle`
   --themeSecColor:${(props) => (props.darkMode ? darkColor : "white")};
   --themeGray:${(props) => (props.darkMode ? "#565656" : "#eaedf2")};
 
+/// theme override
+--bs-btn-border-color:#ffab03;
+--bs-btn-bg:#ffab03
+ 
+
+
 }
  
+
+
+.btn-secondary {
+    --bs-btn-color: #414042;
+    --bs-btn-bg: #ffab03;
+    --bs-btn-border-color: #ffab03;
+    --bs-btn-hover-color: #414042;
+    --bs-btn-hover-bg: #ffbc35;
+    --bs-btn-hover-border-color: #ffbc35;
+    --bs-btn-focus-shadow-rgb: 88, 192, 223;
+    --bs-btn-active-color: #414042;
+    --bs-btn-active-bg: #ffbc35;
+    --bs-btn-active-border-color: #ffbc35;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(46, 54, 80, 0.125);
+    --bs-btn-disabled-color: #414042;
+    --bs-btn-disabled-bg: #ffab03;
+    --bs-btn-disabled-border-color: #ffab03;
+}
+
 
 .sidebar-inner .addNew {
   width: 100%;
