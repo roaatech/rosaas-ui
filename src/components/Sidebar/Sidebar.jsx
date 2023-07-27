@@ -24,7 +24,7 @@ import logo from "../../assets/img/brand/rosas.png";
 import ProfilePicture from "../../assets/img/team/profile-picture-1.png";
 import { logOut } from "../../store/slices/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { Wrapper } from "./Sidebar.styled";
+import { SidebarWrapper, Wrapper } from "./Sidebar.styled";
 import TableHead from "../custom/Shared/TableHead/TableHead";
 import TenantForm from "../custom/tenant/TenantForm/TenantForm";
 import useRequest from "../../axios/apis/useRequest";
@@ -57,7 +57,8 @@ export default (props = {}) => {
           <Accordion.Item eventKey={eventKey}>
             <Accordion.Button
               as={Nav.Link}
-              className="d-flex justify-content-between align-items-center">
+              className="d-flex justify-content-between align-items-center"
+            >
               <span>
                 <span className="sidebar-icon">
                   <BsFillPersonLinesFill />
@@ -117,7 +118,8 @@ export default (props = {}) => {
               pill
               bg={badgeBg}
               text={badgeColor}
-              className="badge-md notification-count ms-2">
+              className="badge-md notification-count ms-2"
+            >
               {badgeText}
             </Badge>
           ) : null}
@@ -150,28 +152,32 @@ export default (props = {}) => {
   }, [first, searchValue, update, paramsID]);
 
   return (
-    <>
+    <SidebarWrapper>
       <Navbar
         expand={false}
         collapseOnSelect
         variant="dark"
-        className="navbar-theme-primary px-4 d-md-none">
+        className="navbar-theme-primary px-4 d-md-none"
+      >
         <Navbar.Brand
           className="me-lg-5"
           as={Link}
-          to={Routes.DashboardOverview.path}>
+          to={Routes.DashboardOverview.path}
+        >
           <Image src={logo} className="navbar-brand-light" />
         </Navbar.Brand>
         <Navbar.Toggle
           as={Button}
           aria-controls="main-navbar"
-          onClick={onCollapse}>
+          onClick={onCollapse}
+        >
           <span className="navbar-toggler-icon" />
         </Navbar.Toggle>
       </Navbar>
       <CSSTransition timeout={300} in={show} classNames="sidebar-transition">
         <SimpleBar
-          className={`collapse ${showClass} sidebar d-md-block bg-primary text-white`}>
+          className={`collapse ${showClass} sidebar d-md-block bg-primary text-white`}
+        >
           <div className="sidebar-inner px-4 pt-3 pb-6">
             <div className="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
               <div className="d-flex align-items-center">
@@ -189,7 +195,8 @@ export default (props = {}) => {
                     size="xs"
                     // to={Routes.Signin.path}
                     onClick={() => dispatch(logOut())}
-                    className="text-dark">
+                    className="text-dark"
+                  >
                     {/* <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />{" "} */}
                     Sign Out
                   </Button>
@@ -197,17 +204,13 @@ export default (props = {}) => {
               </div>
               <Nav.Link
                 className="collapse-close d-md-none"
-                onClick={onCollapse}>
+                onClick={onCollapse}
+              >
                 {/* <FontAwesomeIcon icon={faTimes} /> */}
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              <img
-                src={logo}
-                alt="logo"
-                className="my-3"
-                style={{ maxWidth: "200px" }}
-              />
+              <img src={logo} alt="logo" className="my-3 logo" />
 
               <TableHead
                 label={"Add Tenant"}
@@ -216,7 +219,8 @@ export default (props = {}) => {
                 visibleHead={visibleHead}
                 setVisibleHead={setVisibleHead}
                 fullWidth={true}
-                setFirst={setFirst}>
+                setFirst={setFirst}
+              >
                 <TenantForm
                   popupLabel={"Create Tenant"}
                   type={"create"}
@@ -231,7 +235,8 @@ export default (props = {}) => {
                 <CollapsableNavItem
                   eventKey="open"
                   title="Active Tenant"
-                  icon={BsFillPersonLinesFill}>
+                  icon={BsFillPersonLinesFill}
+                >
                   {active.map((item, index) => (
                     <NavItem
                       key={index}
@@ -246,7 +251,8 @@ export default (props = {}) => {
                 <CollapsableNavItem
                   eventKey="close"
                   title="Tenants"
-                  icon={BsFillPersonLinesFill}>
+                  icon={BsFillPersonLinesFill}
+                >
                   {inactive.map((item, index) => (
                     <NavItem
                       key={index}
@@ -261,7 +267,8 @@ export default (props = {}) => {
                 <CollapsableNavItem
                   eventKey="close"
                   title="Archived Tenants"
-                  icon={BsFillPersonLinesFill}>
+                  icon={BsFillPersonLinesFill}
+                >
                   {archived.map((item, index) => (
                     <NavItem
                       key={index}
@@ -283,6 +290,6 @@ export default (props = {}) => {
           </div>
         </SimpleBar>
       </CSSTransition>
-    </>
+    </SidebarWrapper>
   );
 };

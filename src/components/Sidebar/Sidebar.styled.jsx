@@ -25,12 +25,12 @@ export const Wrapper = styled.div`
     font-weight: 900;
     font-size: 12px;
     font-family: monospace;
-    /* margin-top: -5px; */
   }
 
   .accordion-item {
-    border-color: #262b40 !important;
+    border: none;
   }
+
   .accordion-button:not(.collapsed) {
     box-shadow: none;
     background-color: #2e3650;
@@ -44,4 +44,18 @@ export const Wrapper = styled.div`
   /*.multi-level .nav-link {
     padding-left: 15px;
   }*/
+`;
+export const SidebarWrapper = styled.div`
+  .logo {
+    width: 150px;
+    margin: auto;
+  }
+
+  .sidebar .nav {
+    padding-top: 0 !important;
+  }
+
+  .sidebar .nav-item .nav-link {
+    border: none;
+  }
 `;
