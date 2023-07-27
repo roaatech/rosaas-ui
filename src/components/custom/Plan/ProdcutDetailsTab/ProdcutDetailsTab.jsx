@@ -30,7 +30,7 @@ const ProductDetailsTab = () => {
   };
   const deleteProduct = async () => {
     await deleteProductReq({ id: currentId });
-    navigate(`/Product`);
+    navigate(`/products`);
   };
 
   useEffect(() => {

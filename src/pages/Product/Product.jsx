@@ -220,7 +220,7 @@ export default function Product({ children }) {
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       <Dropdown.Item
-                        onSelect={() => navigate(`/ProductDetails/${data.id}`)}>
+                        onSelect={() => navigate(`/products/${data.id}`)}>
                         <FontAwesomeIcon icon={faEye} className="me-2" /> View
                         Details
                       </Dropdown.Item>

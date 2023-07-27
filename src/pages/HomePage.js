@@ -42,7 +42,6 @@ const HomePage = () => {
                 <>
                   <Sidebar />
                   <main className="content">
-                    {/* <Navbar /> */}
                     <Component />
                   </main>
                 </>
@@ -63,10 +62,6 @@ const HomePage = () => {
               generateRoutes(route, index)
             ),
           ]}
-
-          {/* <Navigate
-            to={userRole == "notAuth" ? Routes.Signin.path : Routes.Tenant.path}
-          /> */}
         </RouteG>
       )}
     </>

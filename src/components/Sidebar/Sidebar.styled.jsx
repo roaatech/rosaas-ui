@@ -5,7 +5,8 @@ export const Wrapper = styled.div`
   * {
     max-width: 100%;
   }
-
+  .accordion-item {
+  }
   .sidebar-text {
     white-space: break-spaces;
     text-wrap: wrap;
@@ -28,18 +29,19 @@ export const Wrapper = styled.div`
   }
 
   .accordion-item {
-    border-color: var(--gray-700) !important;
+    border-color: #262b40 !important;
   }
   .accordion-button:not(.collapsed) {
-    box-shadow: inset 0 calc(-1 * var(--bs-accordion-border-width)) 0
-      var(--gray-700) !important;
+    box-shadow: none;
+    background-color: #2e3650;
+    border: 0.0625rem solid #4c5680;
   }
 
   .nav-item > .nav-link {
-    margin: 3px 10px !important;
+    margin: 3px 0px !important;
   }
 
-  .multi-level .nav-link {
+  /*.multi-level .nav-link {
     padding-left: 15px;
-  }
+  }*/
 `;

@@ -78,7 +78,7 @@ const TenantForm = ({
           uniqueName: values.uniqueName,
           productsIds: values.product,
         });
-        navigate(`/tenantDetails/${createTenant.data.data.id}`);
+        navigate(`/tenants/${createTenant.data.data.id}`);
       } else {
         const editTenant = await editTenantRequest({
           title: values.title,
