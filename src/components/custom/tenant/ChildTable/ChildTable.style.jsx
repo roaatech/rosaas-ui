@@ -30,10 +30,24 @@ const Wrapper = styled.div`
    width: 25%
 }
   
-  .accordion-body {
-    padding: 10px 20px 10px 20px;
-    border-radius: 0;
-  }
+.accordion-body {
+  padding: 10px 20px 10px 20px;
+  border-radius: 0;
+}
+
+.accordion-button {
+     background-color: var(--themeBackground);
+}
+.accordion-button:focus {
+     box-shadow: unset;
+}
+
+.accordion-button:hover {
+  background-color: var(--primary3);
+}
+.accordion-button:not(.collapsed){
+  background-color: var(--primary2);
+}
 `;
 
 export { Wrapper };

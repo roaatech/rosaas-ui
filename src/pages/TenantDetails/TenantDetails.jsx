@@ -175,8 +175,8 @@ const TenantDetails = () => {
                               icon="pi pi-pencil"
                               onClick={() => setVisible(true)}
                               style={{
-                                backgroundColor: "var(--primaryColor)",
-                                borderColor: "var(--primaryColor)",
+                                backgroundColor: "var(--primary-color)",
+                                borderColor: "var(--primary-color)",
                               }}
                             />
                           ) : null}

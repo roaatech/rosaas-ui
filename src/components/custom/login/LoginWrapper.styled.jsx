@@ -6,7 +6,7 @@ const LoginWrapper = styled.div`
   }
   .inputContainerWithIcon {
     border-radius: 7px;
-    border: 2px solid var(--gray);
+    border: 2px solid var(--primary4);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,8 +23,16 @@ const LoginWrapper = styled.div`
     background: white;
     border: 0 !important;
     border-radius: 0;
-    border-left: 1px solid var(--gray) !important;
+    border-left: 2px solid var(--primary4) !important;
   }
+
+
+  .p-inputtext:enabled:focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: none;
+  }
+
 `;
 
 export default LoginWrapper;

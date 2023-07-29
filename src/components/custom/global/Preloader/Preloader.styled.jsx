@@ -3,8 +3,8 @@ export const Wrapper = styled.div`
   position: fixed;
   width: 100vw;
   height: 100vh;
-  background: #e2e8f8bf;
   display: flex;
+  background:#41404261;
   align-items: center;
   justify-content: center;
   z-index: 1000000000;
@@ -22,10 +22,10 @@ export const Wrapper = styled.div`
     width: 64px;
     height: 64px;
     margin: 8px;
-    border: 8px solid var(--primaryColor);
+    border: 8px solid var(--primary-color);
     border-radius: 50%;
     animation: loader 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: var(--primaryColor) transparent transparent transparent;
+    border-color: var(--primary-color) transparent transparent transparent;
   }
 
   .loader div:nth-child(1) {

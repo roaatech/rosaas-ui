@@ -78,4 +78,15 @@ export const Wrapper = styled.div`
     overflow-x: unset !important;
     overflow-y: unset !important;
   }
+
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+     border-color: var(--second-color);
+    color: var(--second-color);
+}
+
+.p-tabview .p-tabview-nav .p-tabview-ink-bar{
+  background-color: var(--second-color);
+
+}
+
 `;

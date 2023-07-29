@@ -12,8 +12,7 @@ export default () => {
   return (
     <main
       style={{
-        background: "linear-gradient(216deg, rgb(0 40 84), rgb(228 228 228))",
-      }}>
+        background: "linear-gradient(216deg, #ffaa00, #ffffff, #000000)"       }}>
       <section
         className="d-flex align-items-center"
         style={{ minHeight: "100vh" }}>

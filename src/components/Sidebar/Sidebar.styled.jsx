@@ -15,11 +15,14 @@ export const Wrapper = styled.div`
   .accordion-item > * {
     transition: 0.5s;
   }
-  .accordion-item,
+  /* .accordion-item,
   .accordion-item a {
-    background: var(--primaryColor);
-  }
+    background: var(--primary6);
+  } */
+  .accordion-collapse.collapse.show{
+    background: var(--primary6);
 
+  }
   .accordion-button::after {
     content: "▶" !important;
     font-weight: 900;
@@ -44,6 +47,9 @@ export const Wrapper = styled.div`
   /*.multi-level .nav-link {
     padding-left: 15px;
   }*/
+
+
+
 `;
 export const SidebarWrapper = styled.div`
   .logo {
@@ -57,5 +63,25 @@ export const SidebarWrapper = styled.div`
 
   .sidebar .nav-item .nav-link {
     border: none;
+   }
+   .accordion-item{
+     background-color:var(--primary7)
+   }
+
+  .nav-item.active > .nav-link{
+    background-color:var(--primary7)
   }
+
+  .sidebar .nav-item .nav-link:hover {
+     background-color: var(--primary4);
+}
+
+  .sidebar-inner .accordion-button:not(.collapsed){
+  }
+  
+  .align-items-center.accordion-button.nav-link {
+    background: var(--primary7);
+ }
+
+
 `;

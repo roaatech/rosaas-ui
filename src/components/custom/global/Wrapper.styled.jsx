@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 const darkBackground = "#676668";
 const darkColor = "#414042";
-const lightBackground = "#f5f8fb";
+const lightBackground = "#f9f9f9";
 const lightColor = "#f5f8fb";
 const GlobalStyles = createGlobalStyle`
 
@@ -19,19 +19,26 @@ const GlobalStyles = createGlobalStyle`
  }}   */
 :root{
   --darkBackground:${darkBackground};
-  --gray: #d1d5db;
+  --gray: #f9f9f9;
   --smallFont:12px;
   --normalFont:16px;
   --largeFont:19px;
   --errorColor:red;
   --green:#3bc76f;
   --red:#ff6868;
-  --primaryBackground:#414042;
-  --primaryColor:#414042;
   --primary-color:#414042;
-  /* --primaryBackground:#262b40;
-  --primaryColor:#262b40;
-  --primary-color:#262b40; */
+ 
+
+  --primary1:#ECECEC;
+  --primary2:#DCDCDC;
+  --primary3:#C4C4C4;
+  --primary4:#676668;
+  --primary5:#414042;
+  --primary6:#3B3A3C;
+  --primary7:#2E2D2F;
+  --second-color:#ffab03;
+  --second-color-1:#ffe8b9;
+ --table-hover:#eff0f2;
    --themeBackground:${(props) =>
      props.darkMode ? darkBackground : lightBackground};
   --themeColor:${(props) => (props.darkMode ? lightColor : darkColor)};
@@ -44,10 +51,11 @@ const GlobalStyles = createGlobalStyle`
 /// theme override
 --bs-btn-border-color:#ffab03;
 --bs-btn-bg:#ffab03
- 
+
 
 
 }
+ 
  
 
 
@@ -67,7 +75,22 @@ const GlobalStyles = createGlobalStyle`
     --bs-btn-disabled-bg: #ffab03;
     --bs-btn-disabled-border-color: #ffab03;
 }
-
+.btn-primary {
+    --bs-btn-color: #ffffff;
+    --bs-btn-bg: #414042;
+    --bs-btn-border-color: #414042;
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: #676668;
+    --bs-btn-hover-border-color: #414042;
+    --bs-btn-focus-shadow-rgb: 71, 75, 93;
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-active-bg: #414042;
+    --bs-btn-active-border-color: #414042;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(46, 54, 80, 0.125);
+    --bs-btn-disabled-color: #ffffff;
+    --bs-btn-disabled-bg: #414042;
+    --bs-btn-disabled-border-color: #414042;
+}
 
 .sidebar-inner .addNew {
   width: 100%;
@@ -83,6 +106,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body{
+    --bs-body-color: var(--primary-color);
     background-color: var(--themeBackground)!important;
     overflow-x: hidden;
   }
@@ -90,10 +114,10 @@ const GlobalStyles = createGlobalStyle`
   padding:0.5rem 0.5rem;
  width:100%
  }
- .dropdown-item:hover, .dropdown-item:active {
+ /* .dropdown-item:hover, .dropdown-item:active {
     background: var(--gray)!important;
  
-}
+} */
  .dashboard-dropdown.notifications-dropdown.dropdown-menu-lg.dropdown-menu-center.mt-2.py-0.dropdown-menu.show {
     right: 0!important;
     left: unset!important;
@@ -118,11 +142,11 @@ const GlobalStyles = createGlobalStyle`
 .p-button {
     padding: 0.5rem 1.25rem!important;
     border-radius: 5px!important;
-    background-color: var(--primaryBackground);
-    border-color: var(--primaryBackground);
+    background-color: var(--primary5);
+    border-color: var(--primary5);
 
     /* &:hover{
-      background-color: var(--primaryBackground)!important;
+      background-color: var(--primary5)!important;
     } */
 }
  
@@ -237,6 +261,46 @@ nav svg.svg-inline--fa.fa-bell {
 .p-dropdown {
     width: 100%;
     min-height: 42px;
+}
+
+.p-dropdown:not(.p-disabled):hover, .p-dropdown:not(.p-disabled):focus {
+  border-color: var(--second-color) !important;
+  box-shadow: 0 0 0 0.2rem  var(--second-color-1)!important;
+  
+}
+ .p-dropdown:not(.p-disabled) {
+  border-color: none!important;
+  box-shadow:  none!important;
+  border-color: var(--gray)!important;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    color: var(--primary4);
+     background: var(--gray);
+}
+
+.p-button:focus {
+    box-shadow:none;
+}
+
+.p-button:enabled:hover, .p-button:not(button):not(a):not(.p-disabled):hover {
+    opacity: 90%;
+}
+
+
+.dropdown-item:hover, .dropdown-item:focus{
+  background-color: var(--table-hover);
+}
+
+.p-inputtext:enabled:hover {
+    border-color: var(--primary3);
+}
+
+.p-inputtext:focus {
+    background-color: #ffffff;
+    outline: 0;
+    border-color: var(--primary3)!important;
+    box-shadow: inset 0 1px 2px rgba(46, 54, 80, 0.075), 0 0 0 0.2rem rgba(38, 43, 64, 0.25) !important;
 }
 `;
 

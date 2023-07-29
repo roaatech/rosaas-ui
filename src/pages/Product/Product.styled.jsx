@@ -4,7 +4,7 @@ export const Wrapper = styled.div`
     display: none;
   }
   .p-datatable.p-datatable-sm .p-datatable-tbody > tr[role="row"]:hover td {
-    background-color: #eff0f2 !important;
+    background-color: var(--table-hover) !important;
   }
 
   /* .btn-group,
@@ -26,4 +26,13 @@ export const Wrapper = styled.div`
     overflow-x: unset !important;
     overflow-y: unset !important;
   }
+
+
+  .dropdown-menu .dropdown-item {
+    color: var(--primary5);
+  }
+
+
+
+
 `;
