@@ -42,9 +42,11 @@ export default (props = {}) => {
   const [searchValue, setSearchValue] = useState("");
   const [visibleHead, setVisibleHead] = useState(false);
   const [first, setFirst] = useState(0);
-  const [update, setUpdate] = useState(1);
   const { getTenantList } = useRequest();
+  const [update, setUpdate] = useState(1);
 
+ 
+  
   const onCollapse = () => setShow(!show);
 
   const CollapsableNavItem = (props) => {
@@ -86,15 +88,16 @@ export default (props = {}) => {
       badgeText,
       badgeBg = "secondary",
       badgeColor = "primary",
+      isActive=false
     } = props;
     const classNames = badgeText
       ? "d-flex justify-content-start align-items-center justify-content-between"
       : "";
-    const navItemClassName = link === pathname ? "active" : "";
+    const navItemClassName = link === pathname || isActive ? "active" : "";
     const linkProps = external ? { href: link } : { as: Link, to: link };
 
     return (
-      <Nav.Item className={navItemClassName} onClick={() => setShow(false)}>
+      <Nav.Item className={navItemClassName } onClick={() => setShow(false)}>
         <Nav.Link {...linkProps} target={target} className={classNames}>
           <span>
             {Icon ? (
@@ -127,6 +130,13 @@ export default (props = {}) => {
       </Nav.Item>
     );
   };
+
+  
+  const sidebarStatus = (group) => {
+   return group.some(obj => location.pathname.includes(obj.id))
+ };
+
+
   const paramsID = useParams().id;
 
   let allTenant = Object.values(tenantsData);
@@ -139,15 +149,19 @@ export default (props = {}) => {
   );
   const archived = allTenant.filter((item) => item.status == 13);
 
+  const inactiveIsOpen = sidebarStatus(inactive) ? "open": "close"
+  const activeIsOpen = sidebarStatus(active) ? "open": "close"
+  const archivedIsOpen = sidebarStatus(archived) ? "open": "close"
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=SearchTerm`;
     if (searchValue) query += `&filters[0].Value=${searchValue}`;
 
-    (async () => {
+     (async () => {
       // if (Object.keys(tenantsData).length == 0) {
       const listData = await getTenantList(query);
       dispatch(setAllTenant(listData.data.data.items));
       // }
+ 
     })();
   }, [first, searchValue, update, paramsID]);
 
@@ -233,7 +247,7 @@ export default (props = {}) => {
               </TableHead>
               {active.length ? (
                 <CollapsableNavItem
-                  eventKey="open"
+                  eventKey={activeIsOpen}
                   title="Active Tenant"
                   icon={BsFillPersonLinesFill}
                 >
@@ -246,10 +260,10 @@ export default (props = {}) => {
                     />
                   ))}
                 </CollapsableNavItem>
-              ) : null}
+              ) : null} 
               {inactive.length ? (
                 <CollapsableNavItem
-                  eventKey="close"
+                  eventKey={inactiveIsOpen}
                   title="Tenants"
                   icon={BsFillPersonLinesFill}
                 >
@@ -265,17 +279,18 @@ export default (props = {}) => {
               ) : null}
               {archived.length ? (
                 <CollapsableNavItem
-                  eventKey="close"
+                  eventKey={archivedIsOpen}
                   title="Archived Tenants"
                   icon={BsFillPersonLinesFill}
                 >
-                  {archived.map((item, index) => (
+                  {archived.map((item, index) => (                    
                     <NavItem
                       key={index}
                       title={item.uniqueName}
                       link={`/tenants/${item.id}`}
                     />
                   ))}
+
                 </CollapsableNavItem>
               ) : null}
               {/* <NavItem
@@ -284,7 +299,7 @@ export default (props = {}) => {
                 icon={BsFillPersonLinesFill}
               />
               */}
-              <NavItem title="Products" link={`/products`} icon={BsBoxSeam} />
+              <NavItem title="Products" link={`/products`} icon={BsBoxSeam} isActive={location.pathname.includes("products")}/>
               {/* <NavItem title="Plan" link={`/plan`} icon={BsFillLayersFill} /> */}
             </Nav>
           </div>

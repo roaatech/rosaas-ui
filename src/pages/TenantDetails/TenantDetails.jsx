@@ -30,8 +30,7 @@ const TenantDetails = () => {
 
   const tenantsData = useSelector((state) => state.tenants.tenants);
   const activeIndex = useSelector((state) => state.tenants.currentTab);
-
-  const { getTenant, deleteTenantReq, editTenantStatus } = useRequest();
+   const { getTenant, deleteTenantReq, editTenantStatus } = useRequest();
   const routeParams = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -43,7 +42,7 @@ const TenantDetails = () => {
 
   const chagneStatus = async (actionStatus) => {
     await editTenantStatus({
-      // TenantId: tenantData.data.id,
+      TenantId:routeParams.id,
       status: actionStatus,
     });
     updateTenant();

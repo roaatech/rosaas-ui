@@ -75,13 +75,16 @@ export const SidebarWrapper = styled.div`
   .sidebar .nav-item .nav-link:hover {
      background-color: var(--primary4);
 }
-
-  .sidebar-inner .accordion-button:not(.collapsed){
-  }
   
-  .align-items-center.accordion-button.nav-link {
+.align-items-center.accordion-button.nav-link {
+  background: var(--primary5);
+}
+  .align-items-center.accordion-button.nav-link:not(.collapsed) {
     background: var(--primary7);
  }
-
+ .sidebar .nav-link:focus{
+  box-shadow: none;
+ }
 
 `;
+

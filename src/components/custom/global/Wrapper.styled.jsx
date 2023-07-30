@@ -139,6 +139,9 @@ const GlobalStyles = createGlobalStyle`
   height:2.8rem;
 }
 
+#webpack-dev-server-client-overlay{
+  display: none;
+}
 .p-button {
     padding: 0.5rem 1.25rem!important;
     border-radius: 5px!important;
@@ -148,6 +151,29 @@ const GlobalStyles = createGlobalStyle`
     /* &:hover{
       background-color: var(--primary5)!important;
     } */
+}
+
+.p-dialog-mask{
+  
+.p-button:not(.p-button-text) {
+    padding: 0.5rem 1.25rem!important;
+    border-radius: 5px!important;
+    background-color: var(--primary5);
+    border-color: var(--primary5);
+
+    &:hover{
+      background-color: var(--primary5)!important;
+    }
+}
+
+.p-button-text{
+
+  color:var(--primary5);
+  &:hover{
+      color: var(--primary7) !important;
+      background-color: var(--primary1);
+    }
+}
 }
  
 .p-datatable .p-datatable-thead > tr > th{
