@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 const Wrapper = styled.div`
   thead.p-datatable-thead {
     display: none;
@@ -12,42 +12,48 @@ const Wrapper = styled.div`
     span.statusTitle {
       /* text-transform: capitalize; */
     }
-  } 
-  .accordion-item { 
-    background-color: #fcfcfc !important; 
-}
-.accordion-item .card-body {
-  background-color: #fcfcfc !important; 
-}
-.accordion-item tr >* {
-  color: #787878 !important;
-}
+  }
+  .accordion-item {
+    background-color: #fcfcfc !important;
+  }
+  .accordion-item .card-body {
+    background-color: #fcfcfc !important;
+  }
+  .accordion-item tr > * {
+    color: #787878 !important;
+  }
   .accordion-item > * {
     transition: 0.5s;
   }
- 
-.accordion-item tr .fw-bold {
-   width: 25%
-}
-  
-.accordion-body {
-  padding: 10px 20px 10px 20px;
-  border-radius: 0;
-}
 
-.accordion-button {
-     background-color: var(--themeBackground);
-}
-.accordion-button:focus {
-     box-shadow: unset;
-}
+  .accordion-item tr .fw-bold {
+    width: 25%;
+  }
 
-.accordion-button:hover {
-  background-color: var(--primary3);
-}
-.accordion-button:not(.collapsed){
-  background-color: var(--primary2);
-}
-`;
+  .accordion-body {
+    padding: 10px 20px 10px 20px;
+    border-radius: 0;
+  }
 
-export { Wrapper };
+  .accordion-button {
+    background-color: var(--themeBackground);
+  }
+  .accordion-button:focus {
+    box-shadow: unset;
+  }
+
+  .accordion-button:hover {
+    background-color: var(--primary3);
+  }
+  .accordion-button:not(.collapsed) {
+    background-color: var(--primary2);
+  }
+
+  .checkurl {
+    word-break: break-all;
+    white-space: break-spaces;
+    display: inline-block;
+  }
+`
+
+export { Wrapper }

@@ -152,6 +152,18 @@ export default (props = {}) => {
   const inactiveIsOpen = sidebarStatus(inactive) ? "open": "close"
   const activeIsOpen = sidebarStatus(active) ? "open": "close"
   const archivedIsOpen = sidebarStatus(archived) ? "open": "close"
+  // useEffect(() => {
+  //   let query = `?pageSize=${100}&ProductId=1b18cc3b-5599-450e-8eec-c1353ea0173c`;
+  //   if (searchValue) query += `&filters[0].Value=${searchValue}`;
+
+  //    (async () => {
+  //     // if (Object.keys(tenantsData).length == 0) {
+  //     const listData = await getTenantList(query);
+  //     dispatch(setAllTenant(listData.data.data.items));
+  //     // }
+ 
+  //   })();
+  // }, [first, searchValue, update, paramsID]);
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=SearchTerm`;
     if (searchValue) query += `&filters[0].Value=${searchValue}`;
