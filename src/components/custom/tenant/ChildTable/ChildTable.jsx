@@ -117,14 +117,16 @@ export default function ChildTable({
                 </td>
               </tr>
 
-              <tr>
-                <td colSpan={2}>
-                  <HealthCheckAccordion
-                    defaultKey="HealthCheckStatus"
-                    data={[productData]}
-                  />
-                </td>
-              </tr>
+              {(productData?.status == 4 || productData?.status == 7) && (
+                <tr>
+                  <td colSpan={2}>
+                    <HealthCheckAccordion
+                      defaultKey="HealthCheckStatus"
+                      data={[productData]}
+                    />
+                  </td>
+                </tr>
+              )}
             </tbody>
           </Table>
 
