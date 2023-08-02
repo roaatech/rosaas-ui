@@ -74,11 +74,8 @@ export default function ChildTable({
               </tr>
               <tr>
                 <td className="fw-bold">Health Check Url </td>
-                <td className="d-flex justify-content-between">
-                  <span className="mr-2 checkurl">
-                    {productData.healthCheckUrl}
-                  </span>
-                  <span>
+                <td className=""> {/*d-flex justify-content-between*/}
+                <span className="mr-2">
                     <Label
                       value={
                         productData.healthCheckUrlIsOverridden
@@ -87,6 +84,10 @@ export default function ChildTable({
                       }
                     />
                   </span>
+                   <span className="mr-2 checkurl">
+                    {productData.healthCheckUrl}
+                  </span>
+                 
                 </td>
               </tr>
               <tr>
@@ -95,12 +96,12 @@ export default function ChildTable({
               </tr>
 
               <tr>
-                <td colSpan={2}>
+                <td className="pl-0 pr-0" colSpan={2}>
                   <MetaDataAccordion defaultKey="metaData" data={products} />
                 </td>
               </tr>
 
-              <tr>
+           {/*    <tr>
                 <td className="fw-bold">Health status: </td>
                 <td className="d-flex  justify-content-between">
                   <span className="mr-2 checkurl">
@@ -115,11 +116,11 @@ export default function ChildTable({
                         )}`}
                   </span>
                 </td>
-              </tr>
+                        </tr>  */}
 
               {(productData?.status == 4 || productData?.status == 7) && (
                 <tr>
-                  <td colSpan={2}>
+                  <td  className="pl-0 pr-0"  colSpan={2}>
                     <HealthCheckAccordion
                       defaultKey="HealthCheckStatus"
                       data={[productData]}
