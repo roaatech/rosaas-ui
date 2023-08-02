@@ -1,21 +1,21 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components'
 
-const darkBackground = "#676668";
-const darkColor = "#414042";
-const lightBackground = "#f9f9f9";
-const lightColor = "#f5f8fb";
+const darkBackground = '#676668'
+const darkColor = '#414042'
+const lightBackground = '#f9f9f9'
+const lightColor = '#f5f8fb'
 const GlobalStyles = createGlobalStyle`
 
-  ${require("react-toastify/dist/ReactToastify.css")}
-  ${require("primereact/resources/themes/lara-light-indigo/theme.css")}
-  ${require("primereact/resources/primereact.min.css")}
-  ${require("primeicons/primeicons.css")}
- ${require("../../../scss/voltltr.scss")}   
- ${require("../../../scss/custom.scss")}  
+  ${require('react-toastify/dist/ReactToastify.css')}
+  ${require('primereact/resources/themes/lara-light-indigo/theme.css')}
+  ${require('primereact/resources/primereact.min.css')}
+  ${require('primeicons/primeicons.css')}
+ ${require('../../../scss/voltltr.scss')}   
+ ${require('../../../scss/custom.scss')}  
  /* ${(props) => {
-   props.direction == "rtl"
-     ? require("../../../scss/voltrtl.scss")
-     : require("../../../scss/voltltr.scss");
+   props.direction == 'rtl'
+     ? require('../../../scss/voltrtl.scss')
+     : require('../../../scss/voltltr.scss')
  }}   */
 :root{
   --darkBackground:${darkBackground};
@@ -45,8 +45,8 @@ const GlobalStyles = createGlobalStyle`
    --unThemeBackground:${(props) =>
      props.darkMode ? lightBackground : darkBackground};
   --unThemeColor:${(props) => (props.darkMode ? darkColor : lightColor)};
-  --themeSecColor:${(props) => (props.darkMode ? darkColor : "white")};
-  --themeGray:${(props) => (props.darkMode ? "#565656" : "#eaedf2")};
+  --themeSecColor:${(props) => (props.darkMode ? darkColor : 'white')};
+  --themeGray:${(props) => (props.darkMode ? '#565656' : '#eaedf2')};
 
 /// theme override
 --bs-btn-border-color:#ffab03;
@@ -57,7 +57,6 @@ const GlobalStyles = createGlobalStyle`
 }
  
  
-
 
 .btn-secondary {
     --bs-btn-color: #414042;
@@ -96,7 +95,10 @@ const GlobalStyles = createGlobalStyle`
   width: 100%;
 }
 
+.navbar-theme-primary:not(.headroom){
+  background-color: var(--primary5);
 
+}
   *{
     font-family: "Nunito Sans", sans-serif;
   }
@@ -139,6 +141,7 @@ const GlobalStyles = createGlobalStyle`
   height:2.8rem;
 }
 
+
 #webpack-dev-server-client-overlay{
   display: none;
 }
@@ -180,6 +183,10 @@ const GlobalStyles = createGlobalStyle`
   color: var(--themeColor) !important;
   background-color: var(--themeBackground) !important;
  }
+
+ .table thead th {
+    text-transform: unset;
+}
 
  .p-datatable .p-datatable-tbody > tr {
     background: var(--themeBackground);
@@ -328,6 +335,6 @@ nav svg.svg-inline--fa.fa-bell {
     border-color: var(--primary3)!important;
     box-shadow: inset 0 1px 2px rgba(46, 54, 80, 0.075), 0 0 0 0.2rem rgba(38, 43, 64, 0.25) !important;
 }
-`;
+`
 
-export default GlobalStyles;
+export default GlobalStyles

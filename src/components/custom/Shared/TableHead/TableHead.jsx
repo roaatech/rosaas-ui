@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Wrapper } from "./TableHead.styled";
+import React, { useState } from 'react'
+import { Wrapper } from './TableHead.styled'
 import {
   Button,
   ButtonGroup,
@@ -10,15 +10,15 @@ import {
   Card,
   Breadcrumb,
   Dropdown,
-} from "@themesberg/react-bootstrap";
-import { InputText } from "primereact/inputtext";
-import { BsSearch } from "react-icons/bs";
-import { Dialog } from "primereact/dialog";
-import useGlobal from "../../../../lib/hocks/global";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { Modal } from "@themesberg/react-bootstrap";
-import ThemeDialog from "../ThemeDialog/ThemeDialog";
+} from '@themesberg/react-bootstrap'
+import { InputText } from 'primereact/inputtext'
+import { BsSearch } from 'react-icons/bs'
+import { Dialog } from 'primereact/dialog'
+import useGlobal from '../../../../lib/hocks/global'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { Modal } from '@themesberg/react-bootstrap'
+import ThemeDialog from '../ThemeDialog/ThemeDialog'
 
 const TableHead = ({
   active = true,
@@ -33,8 +33,8 @@ const TableHead = ({
   search = true,
   fullWidth = false,
 }) => {
-  const { searchWait } = useGlobal();
-  const [inputValue, setInputValue] = useState("");
+  const { searchWait } = useGlobal()
+  const [inputValue, setInputValue] = useState('')
   if (!active) {
     return (
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -42,24 +42,24 @@ const TableHead = ({
           {label} : {name}
         </h4>
       </div>
-    );
+    )
   }
   return (
     <Wrapper>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-        <ButtonGroup className={fullWidth && "w-100"}>
+        <ButtonGroup className={fullWidth && 'w-100'}>
           <Button variant="secondary" onClick={() => setVisibleHead(true)}>
             <FontAwesomeIcon icon={faPlus} className="me-2" />
             {label}
           </Button>
         </ButtonGroup>
 
-        <div>
+        <div className={fullWidth && 'w-100'}>
           {children.length > 1 ? (
             <div className="p-input-icon-left mt-2 mr-2">{children[1]}</div>
           ) : null}
           {search && (
-            <div className="p-input-icon-left mt-2">
+            <div className={`${fullWidth && 'w-100'} p-input-icon-left mt-2`}>
               <BsSearch />
               <InputText
                 className="form-control"
@@ -78,7 +78,7 @@ const TableHead = ({
         {children.length > 1 ? children[0] : children}
       </ThemeDialog>
     </Wrapper>
-  );
-};
+  )
+}
 
-export default TableHead;
+export default TableHead

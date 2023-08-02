@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components'
 export const Wrapper = styled.div`
   .p-tabview-panels .card {
     border: 0;
@@ -19,6 +19,7 @@ export const Wrapper = styled.div`
   .card-body {
     padding: 0px;
     background: unset;
+    overflow: auto;
   }
 
   /***************** */
@@ -80,13 +81,11 @@ export const Wrapper = styled.div`
   }
 
   .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-     border-color: var(--second-color);
+    border-color: var(--second-color);
     color: var(--second-color);
-}
+  }
 
-.p-tabview .p-tabview-nav .p-tabview-ink-bar{
-  background-color: var(--second-color);
-
-}
-
-`;
+  .p-tabview .p-tabview-nav .p-tabview-ink-bar {
+    background-color: var(--second-color);
+  }
+`

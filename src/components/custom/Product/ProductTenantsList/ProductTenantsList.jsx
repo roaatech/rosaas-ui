@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import useGlobal from "../../../../lib/hocks/global";
-import TenantStatus from "../../tenant/TenantStatus/TenantStatus";
-import useRequest from "../../../../axios/apis/useRequest";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisH, faGear } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from 'react'
+import useGlobal from '../../../../lib/hocks/global'
+import TenantStatus from '../../tenant/TenantStatus/TenantStatus'
+import useRequest from '../../../../axios/apis/useRequest'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEllipsisH, faGear } from '@fortawesome/free-solid-svg-icons'
 import {
   Card,
   Table,
@@ -12,37 +12,37 @@ import {
   Dropdown,
   Tooltip,
   OverlayTrigger,
-} from "@themesberg/react-bootstrap";
-import TableDate from "../../Shared/TableDate/TableDate";
-import { Link, Navigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { productInfo, subscribe } from "../../../../store/slices/products";
-import { urlIsOverridden } from "../../../../const";
+} from '@themesberg/react-bootstrap'
+import TableDate from '../../Shared/TableDate/TableDate'
+import { Link, Navigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { productInfo, subscribe } from '../../../../store/slices/products'
+
 export const ProductTenantsList = ({ productId, productName }) => {
-  const { DataTransform } = useGlobal();
-  const { getProductTenants } = useRequest();
-  const [searchValue] = useState("");
-  const [sortField] = useState("");
-  const [sortValue] = useState("");
-  const [first] = useState(0);
-  const [rows] = useState(10);
-  const [update] = useState(1);
-  const [selectedProduct] = useState();
+  const { DataTransform } = useGlobal()
+  const { getProductTenants } = useRequest()
+  const [searchValue] = useState('')
+  const [sortField] = useState('')
+  const [sortValue] = useState('')
+  const [first] = useState(0)
+  const [rows] = useState(10)
+  const [update] = useState(1)
+  const [selectedProduct] = useState()
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const list = useSelector((state) => state.products.products[productId]);
+  const list = useSelector((state) => state.products.products[productId])
 
   useEffect(() => {
-    let params = `${productId}/Tenants`;
+    let params = `${productId}/Tenants`
 
-    (async () => {
+    ;(async () => {
       if (!list?.subscribe) {
-        const listData = await getProductTenants(params);
-        dispatch(subscribe({ id: productId, data: listData.data.data }));
+        const listData = await getProductTenants(params)
+        dispatch(subscribe({ id: productId, data: listData.data.data }))
       }
-    })();
-  }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct]);
+    })()
+  }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
 
   const TableRow = (props) => {
     const {
@@ -53,7 +53,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
       editedDate,
       id,
       healthCheckUrlIsOverridden,
-    } = props;
+    } = props
 
     return (
       <tr>
@@ -97,7 +97,8 @@ export const ProductTenantsList = ({ productId, productName }) => {
               as={Button}
               split
               variant="link"
-              className="text-dark m-0 p-0">
+              className="text-dark m-0 p-0"
+            >
               <span className="icon icon-sm">
                 <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
               </span>
@@ -106,7 +107,8 @@ export const ProductTenantsList = ({ productId, productName }) => {
               <Dropdown.Item>
                 <Link
                   to={`/tenants/${id}#${productName}`}
-                  className="w-100 d-block">
+                  className="w-100 d-block"
+                >
                   <FontAwesomeIcon icon={faGear} className="me-2" /> Manage
                 </Link>
               </Dropdown.Item>
@@ -114,8 +116,8 @@ export const ProductTenantsList = ({ productId, productName }) => {
           </Dropdown>
         </td>
       </tr>
-    );
-  };
+    )
+  }
 
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm">
@@ -132,7 +134,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
             </tr>
           </thead>
           <tbody>
-            {console.log(list, "8888")}
+            {console.log(list, '8888')}
             {list?.subscribe?.length
               ? list?.subscribe?.map((t, index) => (
                   <TableRow key={`index`} {...t} />
@@ -142,7 +144,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
         </Table>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
 
-export default ProductTenantsList;
+export default ProductTenantsList

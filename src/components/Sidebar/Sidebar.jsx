@@ -1,14 +1,14 @@
 /* eslint-disable import/no-anonymous-default-export */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import SimpleBar from "simplebar-react";
-import { useLocation } from "react-router-dom";
-import { CSSTransition } from "react-transition-group";
+import React, { useEffect, useState } from 'react'
+import SimpleBar from 'simplebar-react'
+import { useLocation } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 import {
   BsFillPersonLinesFill,
   BsBoxSeam,
   BsFillPersonFill,
-} from "react-icons/bs";
+} from 'react-icons/bs'
 import {
   Nav,
   Badge,
@@ -17,45 +17,45 @@ import {
   Dropdown,
   Accordion,
   Navbar,
-} from "@themesberg/react-bootstrap";
-import { Link } from "react-router-dom";
-import { Routes } from "../../routes";
-import logo from "../../assets/img/brand/rosas.png";
-import ProfilePicture from "../../assets/img/team/profile-picture-1.png";
-import { logOut } from "../../store/slices/auth";
-import { useDispatch, useSelector } from "react-redux";
-import { SidebarWrapper, Wrapper } from "./Sidebar.styled";
-import TableHead from "../custom/Shared/TableHead/TableHead";
-import TenantForm from "../custom/tenant/TenantForm/TenantForm";
-import useRequest from "../../axios/apis/useRequest";
-import { useParams } from "react-router-dom";
-import { setAllTenant } from "../../store/slices/tenants";
+} from '@themesberg/react-bootstrap'
+import { Link } from 'react-router-dom'
+import { Routes } from '../../routes'
+import logo from '../../assets/img/brand/rosas.png'
+import ProfilePicture from '../../assets/img/team/profile-picture-1.png'
+import { logOut } from '../../store/slices/auth'
+import { useDispatch, useSelector } from 'react-redux'
+import { SidebarWrapper, Wrapper } from './Sidebar.styled'
+import TableHead from '../custom/Shared/TableHead/TableHead'
+import TenantForm from '../custom/tenant/TenantForm/TenantForm'
+import useRequest from '../../axios/apis/useRequest'
+import { useParams } from 'react-router-dom'
+import { setAllTenant } from '../../store/slices/tenants'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimes, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
 export default (props = {}) => {
-  const location = useLocation();
-  const { pathname } = location;
-  const [show, setShow] = useState(false);
-  const showClass = show ? "show" : "";
-  const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.auth.userInfo);
-  const tenantsData = useSelector((state) => state.tenants.tenants);
-  const [searchValue, setSearchValue] = useState("");
-  const [visibleHead, setVisibleHead] = useState(false);
-  const [first, setFirst] = useState(0);
-  const { getTenantList } = useRequest();
-  const [update, setUpdate] = useState(1);
+  const location = useLocation()
+  const { pathname } = location
+  const [show, setShow] = useState(false)
+  const showClass = show ? 'show' : ''
+  const dispatch = useDispatch()
+  const userInfo = useSelector((state) => state.auth.userInfo)
+  const tenantsData = useSelector((state) => state.tenants.tenants)
+  const [searchValue, setSearchValue] = useState('')
+  const [visibleHead, setVisibleHead] = useState(false)
+  const [first, setFirst] = useState(0)
+  const { getTenantList } = useRequest()
+  const [update, setUpdate] = useState(1)
 
- 
-  
-  const onCollapse = () => setShow(!show);
+  const onCollapse = () => setShow(!show)
 
   const CollapsableNavItem = (props) => {
-    const { eventKey, title, icon, children = null } = props;
-    const defaultKey = pathname.indexOf(eventKey) !== -1 ? eventKey : "";
+    const { eventKey, title, icon, children = null } = props
+    const defaultKey = pathname.indexOf(eventKey) !== -1 ? eventKey : ''
 
     return (
       <Wrapper>
-        <Accordion as={Nav.Item} defaultActiveKey={"open"}>
+        <Accordion as={Nav.Item} defaultActiveKey={'open'}>
           <Accordion.Item eventKey={eventKey}>
             <Accordion.Button
               as={Nav.Link}
@@ -74,8 +74,8 @@ export default (props = {}) => {
           </Accordion.Item>
         </Accordion>
       </Wrapper>
-    );
-  };
+    )
+  }
 
   const NavItem = (props) => {
     const {
@@ -86,18 +86,18 @@ export default (props = {}) => {
       icon: Icon,
       image,
       badgeText,
-      badgeBg = "secondary",
-      badgeColor = "primary",
-      isActive=false
-    } = props;
+      badgeBg = 'secondary',
+      badgeColor = 'primary',
+      isActive = false,
+    } = props
     const classNames = badgeText
-      ? "d-flex justify-content-start align-items-center justify-content-between"
-      : "";
-    const navItemClassName = link === pathname || isActive ? "active" : "";
-    const linkProps = external ? { href: link } : { as: Link, to: link };
+      ? 'd-flex justify-content-start align-items-center justify-content-between'
+      : ''
+    const navItemClassName = link === pathname || isActive ? 'active' : ''
+    const linkProps = external ? { href: link } : { as: Link, to: link }
 
     return (
-      <Nav.Item className={navItemClassName } onClick={() => setShow(false)}>
+      <Nav.Item className={navItemClassName} onClick={() => setShow(false)}>
         <Nav.Link {...linkProps} target={target} className={classNames}>
           <span>
             {Icon ? (
@@ -128,30 +128,28 @@ export default (props = {}) => {
           ) : null}
         </Nav.Link>
       </Nav.Item>
-    );
-  };
+    )
+  }
 
-  
   const sidebarStatus = (group) => {
-   return group.some(obj => location.pathname.includes(obj.id))
- };
+    return group.some((obj) => location.pathname.includes(obj.id))
+  }
 
+  const paramsID = useParams().id
 
-  const paramsID = useParams().id;
-
-  let allTenant = Object.values(tenantsData);
+  let allTenant = Object.values(tenantsData)
 
   const active = allTenant.filter(
     (item) => item.status == 4 || item.status == 7
-  );
+  )
   const inactive = allTenant.filter(
     (item) => !(item.status == 4 || item.status == 7 || item.status == 13)
-  );
-  const archived = allTenant.filter((item) => item.status == 13);
+  )
+  const archived = allTenant.filter((item) => item.status == 13)
 
-  const inactiveIsOpen = sidebarStatus(inactive) ? "open": "close"
-  const activeIsOpen = sidebarStatus(active) ? "open": "close"
-  const archivedIsOpen = sidebarStatus(archived) ? "open": "close"
+  const inactiveIsOpen = sidebarStatus(inactive) ? 'open' : 'close'
+  const activeIsOpen = sidebarStatus(active) ? 'open' : 'close'
+  const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
   // useEffect(() => {
   //   let query = `?pageSize=${100}&ProductId=1b18cc3b-5599-450e-8eec-c1353ea0173c`;
   //   if (searchValue) query += `&filters[0].Value=${searchValue}`;
@@ -161,21 +159,19 @@ export default (props = {}) => {
   //     const listData = await getTenantList(query);
   //     dispatch(setAllTenant(listData.data.data.items));
   //     // }
- 
+
   //   })();
   // }, [first, searchValue, update, paramsID]);
   useEffect(() => {
-    let query = `?pageSize=${100}&filters[0].Field=SearchTerm`;
-    if (searchValue) query += `&filters[0].Value=${searchValue}`;
-
-     (async () => {
+    let query = `?pageSize=${100}&filters[0].Field=SearchTerm`
+    if (searchValue) query += `&filters[0].Value=${searchValue}`
+    ;(async () => {
       // if (Object.keys(tenantsData).length == 0) {
-      const listData = await getTenantList(query);
-      dispatch(setAllTenant(listData.data.data.items));
+      const listData = await getTenantList(query)
+      dispatch(setAllTenant(listData.data.data.items))
       // }
- 
-    })();
-  }, [first, searchValue, update, paramsID]);
+    })()
+  }, [first, searchValue, update, paramsID])
 
   return (
     <SidebarWrapper>
@@ -223,7 +219,7 @@ export default (props = {}) => {
                     onClick={() => dispatch(logOut())}
                     className="text-dark"
                   >
-                    {/* <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />{" "} */}
+                    <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
                     Sign Out
                   </Button>
                 </div>
@@ -232,15 +228,15 @@ export default (props = {}) => {
                 className="collapse-close d-md-none"
                 onClick={onCollapse}
               >
-                {/* <FontAwesomeIcon icon={faTimes} /> */}
+                <FontAwesomeIcon icon={faTimes} />
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
               <img src={logo} alt="logo" className="my-3 logo" />
 
               <TableHead
-                label={"Add Tenant"}
-                icon={"pi-plus"}
+                label={'Add Tenant'}
+                icon={'pi-plus'}
                 setSearchValue={setSearchValue}
                 visibleHead={visibleHead}
                 setVisibleHead={setVisibleHead}
@@ -248,8 +244,8 @@ export default (props = {}) => {
                 setFirst={setFirst}
               >
                 <TenantForm
-                  popupLabel={"Create Tenant"}
-                  type={"create"}
+                  popupLabel={'Create Tenant'}
+                  type={'create'}
                   update={update}
                   setUpdate={setUpdate}
                   visible={visibleHead}
@@ -272,7 +268,7 @@ export default (props = {}) => {
                     />
                   ))}
                 </CollapsableNavItem>
-              ) : null} 
+              ) : null}
               {inactive.length ? (
                 <CollapsableNavItem
                   eventKey={inactiveIsOpen}
@@ -295,14 +291,13 @@ export default (props = {}) => {
                   title="Archived Tenants"
                   icon={BsFillPersonLinesFill}
                 >
-                  {archived.map((item, index) => (                    
+                  {archived.map((item, index) => (
                     <NavItem
                       key={index}
                       title={item.uniqueName}
                       link={`/tenants/${item.id}`}
                     />
                   ))}
-
                 </CollapsableNavItem>
               ) : null}
               {/* <NavItem
@@ -311,12 +306,17 @@ export default (props = {}) => {
                 icon={BsFillPersonLinesFill}
               />
               */}
-              <NavItem title="Products" link={`/products`} icon={BsBoxSeam} isActive={location.pathname.includes("products")}/>
+              <NavItem
+                title="Products"
+                link={`/products`}
+                icon={BsBoxSeam}
+                isActive={location.pathname.includes('products')}
+              />
               {/* <NavItem title="Plan" link={`/plan`} icon={BsFillLayersFill} /> */}
             </Nav>
           </div>
         </SimpleBar>
       </CSSTransition>
     </SidebarWrapper>
-  );
-};
+  )
+}
