@@ -9,6 +9,7 @@ import {
   BsBoxSeam,
   BsFillPersonFill,
   BsGearFill,
+  BsFillClipboard2CheckFill,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -63,9 +64,7 @@ export default (props = {}) => {
               className="d-flex justify-content-between align-items-center"
             >
               <span>
-                <span className="sidebar-icon">
-                  <BsFillPersonLinesFill />
-                </span>
+                <span className="sidebar-icon">{icon}</span>
                 <span className="sidebar-text">{title}</span>
               </span>
             </Accordion.Button>
@@ -148,21 +147,12 @@ export default (props = {}) => {
   )
   const archived = allTenant.filter((item) => item.status == 13)
 
+  console.log(archived, inactive, active, '555')
   const inactiveIsOpen = sidebarStatus(inactive) ? 'open' : 'close'
   const activeIsOpen = sidebarStatus(active) ? 'open' : 'close'
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
-  // useEffect(() => {
-  //   let query = `?pageSize=${100}&ProductId=1b18cc3b-5599-450e-8eec-c1353ea0173c`;
-  //   if (searchValue) query += `&filters[0].Value=${searchValue}`;
+  const settingIsOpen = sidebarStatus([{ id: 'setting' }]) ? 'open' : 'close'
 
-  //    (async () => {
-  //     // if (Object.keys(tenantsData).length == 0) {
-  //     const listData = await getTenantList(query);
-  //     dispatch(setAllTenant(listData.data.data.items));
-  //     // }
-
-  //   })();
-  // }, [first, searchValue, update, paramsID]);
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=SearchTerm`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
@@ -274,7 +264,7 @@ export default (props = {}) => {
                 <CollapsableNavItem
                   eventKey={inactiveIsOpen}
                   title="Tenants"
-                  icon={BsFillPersonLinesFill}
+                  icon={<BsFillPersonLinesFill />}
                 >
                   {inactive.map((item, index) => (
                     <NavItem
@@ -290,7 +280,7 @@ export default (props = {}) => {
                 <CollapsableNavItem
                   eventKey={archivedIsOpen}
                   title="Archived Tenants"
-                  icon={BsFillPersonLinesFill}
+                  icon={<BsFillPersonLinesFill />}
                 >
                   {archived.map((item, index) => (
                     <NavItem
@@ -301,19 +291,25 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
-              {/* <NavItem
-                title="Tenants"
-                link={`/tenant`}
-                icon={BsFillPersonLinesFill}
-              />
-              */}
+
               <NavItem
                 title="Products"
                 link={`/products`}
                 icon={BsBoxSeam}
                 isActive={location.pathname.includes('products')}
               />
-              <NavItem title="Settings" link={`/settings`} icon={BsGearFill} />
+
+              <CollapsableNavItem
+                eventKey={settingIsOpen}
+                title="Settings"
+                icon={<BsGearFill />}
+              >
+                <NavItem
+                  title="Health Check"
+                  link={`/settings/health-check`}
+                  icon={BsFillClipboard2CheckFill}
+                />
+              </CollapsableNavItem>
             </Nav>
           </div>
         </SimpleBar>

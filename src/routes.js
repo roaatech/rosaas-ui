@@ -77,7 +77,11 @@ export const Routes = {
     component: Transactions,
     roles: ['superAdmin'],
   },
-  Settings: { path: '/settings', component: Settings, roles: ['superAdmin'] },
+  Settings: {
+    path: '/settings/health-check',
+    component: Settings,
+    roles: ['superAdmin'],
+  },
   Upgrade: { path: '/upgrade', component: Upgrade, roles: ['superAdmin'] },
   BootstrapTables: {
     path: '/tables/bootstrap-tables',
