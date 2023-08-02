@@ -8,6 +8,7 @@ import {
   BsFillPersonLinesFill,
   BsBoxSeam,
   BsFillPersonFill,
+  BsGearFill,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -312,7 +313,7 @@ export default (props = {}) => {
                 icon={BsBoxSeam}
                 isActive={location.pathname.includes('products')}
               />
-              {/* <NavItem title="Plan" link={`/plan`} icon={BsFillLayersFill} /> */}
+              <NavItem title="Settings" link={`/settings`} icon={BsGearFill} />
             </Nav>
           </div>
         </SimpleBar>

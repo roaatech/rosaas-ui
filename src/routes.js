@@ -1,202 +1,202 @@
 // pages
-import Upgrade from "./pages/Upgrade";
-import DashboardOverview from "./pages/dashboard/DashboardOverview";
-import Transactions from "./pages/Transactions";
-import Settings from "./pages/Settings";
-import BootstrapTables from "./pages/tables/BootstrapTables";
-import Signin from "./pages/examples/Signin";
-import Signup from "./pages/examples/Signup";
-import ForgotPassword from "./pages/examples/ForgotPassword";
-import ResetPassword from "./pages/examples/ResetPassword";
-import Lock from "./pages/examples/Lock";
-import ServerError from "./pages/examples/ServerError";
-import Accordions from "./pages/components/Accordion";
-import Alerts from "./pages/components/Alerts";
-import Badges from "./pages/components/Badges";
-import Breadcrumbs from "./pages/components/Breadcrumbs";
-import Buttons from "./pages/components/Buttons";
-import Forms from "./pages/components/Forms";
-import Modals from "./pages/components/Modals";
-import Navs from "./pages/components/Navs";
-import Navbars from "./pages/components/Navbars";
-import Pagination from "./pages/components/Pagination";
-import Popovers from "./pages/components/Popovers";
-import Progress from "./pages/components/Progress";
-import Tables from "./pages/components/Tables";
-import Tabs from "./pages/components/Tabs";
-import Tooltips from "./pages/components/Tooltips";
-import Toasts from "./pages/components/Toasts";
-import NotFoundPage from "./pages/examples/NotFound";
-import Tenant from "./pages/Tenant/Tenant";
-import TenantDetails from "./pages/TenantDetails/TenantDetails";
-import ProductDetails from "./pages/ProductDetails/ProductDetails";
-import Redirect from "./components/custom/global/Redirect/Redirect";
-import Dashboard from "./pages/Welcome/Welcome";
-import Product from "./pages/Product/Product";
-import Plan from "./pages/Plan/plan";
+import Upgrade from './pages/Upgrade'
+import DashboardOverview from './pages/dashboard/DashboardOverview'
+import Transactions from './pages/Transactions'
+import Settings from './pages/Settings/Settings'
+import BootstrapTables from './pages/tables/BootstrapTables'
+import Signin from './pages/examples/Signin'
+import Signup from './pages/examples/Signup'
+import ForgotPassword from './pages/examples/ForgotPassword'
+import ResetPassword from './pages/examples/ResetPassword'
+import Lock from './pages/examples/Lock'
+import ServerError from './pages/examples/ServerError'
+import Accordions from './pages/components/Accordion'
+import Alerts from './pages/components/Alerts'
+import Badges from './pages/components/Badges'
+import Breadcrumbs from './pages/components/Breadcrumbs'
+import Buttons from './pages/components/Buttons'
+import Forms from './pages/components/Forms'
+import Modals from './pages/components/Modals'
+import Navs from './pages/components/Navs'
+import Navbars from './pages/components/Navbars'
+import Pagination from './pages/components/Pagination'
+import Popovers from './pages/components/Popovers'
+import Progress from './pages/components/Progress'
+import Tables from './pages/components/Tables'
+import Tabs from './pages/components/Tabs'
+import Tooltips from './pages/components/Tooltips'
+import Toasts from './pages/components/Toasts'
+import NotFoundPage from './pages/examples/NotFound'
+import Tenant from './pages/Tenant/Tenant'
+import TenantDetails from './pages/TenantDetails/TenantDetails'
+import ProductDetails from './pages/ProductDetails/ProductDetails'
+import Redirect from './components/custom/global/Redirect/Redirect'
+import Dashboard from './pages/Welcome/Welcome'
+import Product from './pages/Product/Product'
+import Plan from './pages/Plan/plan'
 
 export const Routes = {
   // pages
   DashboardOverview: {
-    path: "/DashboardOverview",
+    path: '/DashboardOverview',
     component: DashboardOverview,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Dashboard: {
-    path: "/Dashboard",
+    path: '/Dashboard',
     component: Dashboard,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   products: {
-    path: "/products",
+    path: '/products',
     component: Product,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Plan: {
-    path: "/plan",
+    path: '/plan',
     component: Plan,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Tenant: {
-    path: "/tenants",
+    path: '/tenants',
     component: Tenant,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   TenantDetails: {
-    path: "/tenants/:id",
+    path: '/tenants/:id',
     component: TenantDetails,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   ProductDetails: {
-    path: "/products/:id",
+    path: '/products/:id',
     component: ProductDetails,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Transactions: {
-    path: "/transactions",
+    path: '/transactions',
     component: Transactions,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
-  Settings: { path: "/settings", component: Settings, roles: ["superAdmin"] },
-  Upgrade: { path: "/upgrade", component: Upgrade, roles: ["superAdmin"] },
+  Settings: { path: '/settings', component: Settings, roles: ['superAdmin'] },
+  Upgrade: { path: '/upgrade', component: Upgrade, roles: ['superAdmin'] },
   BootstrapTables: {
-    path: "/tables/bootstrap-tables",
+    path: '/tables/bootstrap-tables',
     component: BootstrapTables,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Signin: {
-    path: "/",
+    path: '/',
     component: Signin,
-    roles: ["notAuth"],
-    type: "noSidebar",
+    roles: ['notAuth'],
+    type: 'noSidebar',
   },
   Signup: {
-    path: "/examples/sign-up",
+    path: '/examples/sign-up',
     component: Signup,
-    roles: ["notAuth"],
+    roles: ['notAuth'],
   },
   ForgotPassword: {
-    path: "/examples/forgot-password",
+    path: '/examples/forgot-password',
     component: ForgotPassword,
-    type: "noSidebar",
-    roles: ["notAuth"],
+    type: 'noSidebar',
+    roles: ['notAuth'],
   },
   ResetPassword: {
-    path: "/examples/reset-password",
+    path: '/examples/reset-password',
     component: ResetPassword,
-    type: "noSidebar",
-    roles: ["notAuth"],
+    type: 'noSidebar',
+    roles: ['notAuth'],
   },
   Lock: {
-    path: "/examples/lock",
+    path: '/examples/lock',
     component: Lock,
-    type: "noSidebar",
-    roles: "*",
+    type: 'noSidebar',
+    roles: '*',
   },
   ServerError: {
-    path: "/examples/500",
+    path: '/examples/500',
     component: ServerError,
-    type: "noSidebar",
-    roles: "*",
+    type: 'noSidebar',
+    roles: '*',
   },
 
   Accordions: {
-    path: "/components/accordions",
+    path: '/components/accordions',
     component: Accordions,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Alerts: {
-    path: "/components/alerts",
+    path: '/components/alerts',
     component: Alerts,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Badges: {
-    path: "/components/badges",
+    path: '/components/badges',
     component: Badges,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Breadcrumbs: {
-    path: "/components/breadcrumbs",
+    path: '/components/breadcrumbs',
     component: Breadcrumbs,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Buttons: {
-    path: "/components/buttons",
+    path: '/components/buttons',
     component: Buttons,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
-  Forms: { path: "/components/forms", component: Forms, roles: ["superAdmin"] },
+  Forms: { path: '/components/forms', component: Forms, roles: ['superAdmin'] },
   Modals: {
-    path: "/components/modals",
+    path: '/components/modals',
     component: Modals,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
-  Navs: { path: "/components/navs", component: Navs, roles: ["superAdmin"] },
+  Navs: { path: '/components/navs', component: Navs, roles: ['superAdmin'] },
   Navbars: {
-    path: "/components/navbars",
+    path: '/components/navbars',
     component: Navbars,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Pagination: {
-    path: "/components/pagination",
+    path: '/components/pagination',
     component: Pagination,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Popovers: {
-    path: "/components/popovers",
+    path: '/components/popovers',
     component: Popovers,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Progress: {
-    path: "/components/progress",
+    path: '/components/progress',
     component: Progress,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Tables: {
-    path: "/components/tables",
+    path: '/components/tables',
     component: Tables,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
-  Tabs: { path: "/components/tabs", component: Tabs, roles: ["superAdmin"] },
+  Tabs: { path: '/components/tabs', component: Tabs, roles: ['superAdmin'] },
   Tooltips: {
-    path: "/components/tooltips",
+    path: '/components/tooltips',
     component: Tooltips,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   Toasts: {
-    path: "/components/toasts",
+    path: '/components/toasts',
     component: Toasts,
-    roles: ["superAdmin"],
+    roles: ['superAdmin'],
   },
   NotFound: {
-    path: "/404",
-    roles: "*",
+    path: '/404',
+    roles: '*',
     component: NotFoundPage,
-    type: "noSidebar",
+    type: 'noSidebar',
   },
   redirect: {
-    path: "*",
+    path: '*',
     component: Redirect,
-    roles: "*",
+    roles: '*',
   },
-};
+}
