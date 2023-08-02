@@ -7,8 +7,6 @@ import {
   BsFillExclamationCircleFill,
 } from 'react-icons/bs'
 
-
-
 const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
   const AccordionItem = (item) => {
     const HealthStatus = {
@@ -33,69 +31,36 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
           variant="link"
           className="w-100 d-flex justify-content-between"
         >
-          <span className=" mb-0 fw-bold d-flex justify-content-between  w-100">
-            <span>Health Check Status </span>
+          <span className=" mb-0 fw-bold d-flex   w-100">
+            <span className="firstTd">Health Check Status </span>
             <span className="mr-2">
               <span className="mr-2">
-                <Label className="mr-2" {...HealthStatus[item.healthCheckStatus.isHealthy]} />
+                <Label
+                  className="mr-2"
+                  {...HealthStatus[item.healthCheckStatus.isHealthy]}
+                />
               </span>
-              <span  >
+              <span>
                 {item.healthCheckStatus.isHealthy == true
                   ? `last checked at ${DataTransform(
-                    item.healthCheckStatus.lastCheckDate
-                  )}`
+                      item.healthCheckStatus.lastCheckDate
+                    )}`
                   : ` since ${DataTransform(
-                    item.healthCheckStatus.checkDate
-                  )} , last checked ${DataTransform(
-                    item.healthCheckStatus.lastCheckDate
-                  )}`}
+                      item.healthCheckStatus.checkDate
+                    )} , last checked ${DataTransform(
+                      item.healthCheckStatus.lastCheckDate
+                    )}`}
               </span>
-            </span>
-            <span className="mr-2">
-
-            </span>
-            <span className="mr-2">
-
-            </span>
-            <span className="mr-2">
-
-            </span>
-            <span className="mr-2">
-
-            </span>
-            <span className="mr-2">
-
             </span>
           </span>
         </Accordion.Button>
         <Accordion.Body>
           <Card.Body className="py-0 px-0">
             <Card.Text className="mb-0 ">
-            <span className=" mb-0 d-flex justify-content-between  ">
-            <span className="mr-2"> 
-            </span>
-            <span className="mr-2">
-
-            </span>
-            <span>Url: </span>
-            <span className="mr-2">
-            {item.healthCheckStatus.healthCheckUrl}
-            </span>
-           
-            <span className="mr-2">
-
-            </span>
-            <span className="mr-2">
-
-            </span>
-            <span className="mr-2">
-
-            </span>
-            <span className="mr-2">
-
-            </span>
-          </span>
-             
+              <span className="">
+                <span>Url: </span>
+                <span>{item.healthCheckStatus.healthCheckUrl}</span>
+              </span>
             </Card.Text>
           </Card.Body>
         </Accordion.Body>

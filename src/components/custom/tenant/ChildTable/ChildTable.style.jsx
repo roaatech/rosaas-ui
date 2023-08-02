@@ -36,7 +36,7 @@ const Wrapper = styled.div`
   }
 
   .accordion-button {
-    background-color: #fdfdfd; /* var(--themeBackground);*/
+    background-color: var(--primary0);
     padding: 0.75rem 1.5rem;
     font-size: 0.875rem;
   }
@@ -55,6 +55,9 @@ const Wrapper = styled.div`
     word-break: break-all;
     white-space: break-spaces;
     display: inline-block;
+  }
+  .firstTd {
+    width: 165px;
   }
 `
 
