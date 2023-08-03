@@ -1,65 +1,66 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Card, Table } from "@themesberg/react-bootstrap";
-import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
-import { BsFillPersonLinesFill } from "react-icons/bs";
-import { TabView, TabPanel } from "primereact/tabview";
-import ChildTable from "../../components/custom/tenant/ChildTable/ChildTable";
-import useGlobal from "../../lib/hocks/global";
-import { Button } from "primereact/button";
-import DeleteConfirmation from "../../components/custom/global/DeleteConfirmation/DeleteConfirmation";
-import useRequest from "../../axios/apis/useRequest";
-import TenantForm from "../../components/custom/tenant/TenantForm/TenantForm";
-import { Wrapper } from "./TenantDetails.styled";
-import Actions from "../../components/custom/tenant/Actions/Actions";
-import TableHead from "../../components/custom/Shared/TableHead/TableHead";
-import ThemeDialog from "../../components/custom/Shared/ThemeDialog/ThemeDialog";
-import { useDispatch, useSelector } from "react-redux";
-import { tenantInfo } from "../../store/slices/tenants";
-import { removeTenant, setActiveIndex } from "../../store/slices/tenants";
+import React from 'react'
+import { useState } from 'react'
+import { useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Card, Table } from '@themesberg/react-bootstrap'
+import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
+import { BsFillPersonLinesFill } from 'react-icons/bs'
+import { TabView, TabPanel } from 'primereact/tabview'
+import ChildTable from '../../components/custom/tenant/ChildTable/ChildTable'
+import useGlobal from '../../lib/hocks/global'
+import { Button } from 'primereact/button'
+import DeleteConfirmation from '../../components/custom/global/DeleteConfirmation/DeleteConfirmation'
+import useRequest from '../../axios/apis/useRequest'
+import TenantForm from '../../components/custom/tenant/TenantForm/TenantForm'
+import { Wrapper } from './TenantDetails.styled'
+import Actions from '../../components/custom/tenant/Actions/Actions'
+import TableHead from '../../components/custom/Shared/TableHead/TableHead'
+import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
+import { useDispatch, useSelector } from 'react-redux'
+import { tenantInfo } from '../../store/slices/tenants'
+import { removeTenant, setActiveIndex } from '../../store/slices/tenants'
+import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 
-let firstLoad = 0;
+let firstLoad = 0
 const TenantDetails = () => {
-  const [confirm, setConfirm] = useState(false);
-  const [currentId, setCurrentId] = useState("");
-  const [updateDetails, setUpdateDetails] = useState(0);
-  const [visible, setVisible] = useState(false);
-  const { DataTransform } = useGlobal();
+  const [confirm, setConfirm] = useState(false)
+  const [currentId, setCurrentId] = useState('')
+  const [updateDetails, setUpdateDetails] = useState(0)
+  const [visible, setVisible] = useState(false)
+  const { DataTransform } = useGlobal()
 
-  const tenantsData = useSelector((state) => state.tenants.tenants);
-  const activeIndex = useSelector((state) => state.tenants.currentTab);
-   const { getTenant, deleteTenantReq, editTenantStatus } = useRequest();
-  const routeParams = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const tenantsData = useSelector((state) => state.tenants.tenants)
+  const activeIndex = useSelector((state) => state.tenants.currentTab)
+  const { getTenant, deleteTenantReq, editTenantStatus } = useRequest()
+  const routeParams = useParams()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const updateTenant = async () => {
-    await dispatch(removeTenant(routeParams.id));
-    setUpdateDetails(updateDetails + 1);
-  };
+    await dispatch(removeTenant(routeParams.id))
+    setUpdateDetails(updateDetails + 1)
+  }
 
   const chagneStatus = async (actionStatus) => {
     await editTenantStatus({
-      TenantId:routeParams.id,
+      TenantId: routeParams.id,
       status: actionStatus,
-    });
-    updateTenant();
-  };
+    })
+    updateTenant()
+  }
 
   const deleteConfirm = (id) => {
-    setCurrentId(id);
-    setConfirm(true);
-  };
+    setCurrentId(id)
+    setConfirm(true)
+  }
 
   const deleteTenant = async () => {
-    await deleteTenantReq({ id: currentId });
-    dispatch(removeTenant(routeParams.id));
-    navigate(`/Dashboard`);
-  };
+    await deleteTenantReq({ id: currentId })
+    dispatch(removeTenant(routeParams.id))
+    navigate(`/Dashboard`)
+  }
 
-  let tenantObject = tenantsData[routeParams.id];
+  let tenantObject = tenantsData[routeParams.id]
 
   let tenantStatus = tenantObject?.products[0].actions
     ? tenantObject?.products
@@ -68,32 +69,32 @@ const TenantDetails = () => {
           (obj, index, self) =>
             self.findIndex((o) => o?.status === obj?.status) === index
         )
-    : null;
+    : null
 
   tenantObject?.products.map((item, index) => {
-    if (firstLoad == 0 && item?.name == window.location.href.split("#")[1]) {
-      dispatch(setActiveIndex(index + 1));
-      firstLoad++;
+    if (firstLoad == 0 && item?.name == window.location.href.split('#')[1]) {
+      dispatch(setActiveIndex(index + 1))
+      firstLoad++
     }
-  });
+  })
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       if (!tenantsData[routeParams.id]?.products[0]?.status) {
-        const tenantData = await getTenant(routeParams.id);
-        dispatch(tenantInfo(tenantData.data.data));
+        const tenantData = await getTenant(routeParams.id)
+        dispatch(tenantInfo(tenantData.data.data))
       }
-    })();
-  }, [visible, routeParams.id, updateDetails]);
+    })()
+  }, [visible, routeParams.id, updateDetails])
   useEffect(() => {
-    return () => dispatch(setActiveIndex(0));
-  }, [routeParams.id]);
+    return () => dispatch(setActiveIndex(0))
+  }, [routeParams.id])
 
   return (
     <Wrapper>
       {tenantObject && (
         <BreadcrumbComponent
-          breadcrumbInfo={"TenantDetails"}
+          breadcrumbInfo={'TenantDetails'}
           param1={tenantObject.id}
           icon={BsFillPersonLinesFill}
         />
@@ -101,11 +102,9 @@ const TenantDetails = () => {
 
       <div className="main-container">
         {tenantObject && (
-          <TableHead
-            label={"Tenant Details"}
-            name={tenantObject.uniqueName}
-            active={false}
-          />
+          <UpperContent>
+            <h4 className="m-0">Tenant Details : {tenantObject.uniqueName}</h4>
+          </UpperContent>
         )}
 
         {tenantObject && tenantStatus && (
@@ -117,14 +116,16 @@ const TenantDetails = () => {
                     className="card"
                     activeIndex={activeIndex}
                     onTabChange={(e) => {
-                      dispatch(setActiveIndex(e.index));
-                    }}>
+                      dispatch(setActiveIndex(e.index))
+                    }}
+                  >
                     <TabPanel header="Details">
                       <Card border="light" className="shadow-sm border-0">
                         <Card.Body className="p-0">
                           <Table
                             responsive
-                            className="table-centered table-nowrap rounded mb-0">
+                            className="table-centered table-nowrap rounded mb-0"
+                          >
                             <tbody>
                               <tr>
                                 <td className="fw-bold">Title</td>
@@ -141,7 +142,8 @@ const TenantDetails = () => {
                                     (product, index) => (
                                       <span
                                         key={index}
-                                        className="p-1 border-round border-1 border-400 me-2">
+                                        className="p-1 border-round border-1 border-400 me-2"
+                                      >
                                         {product?.name}
                                       </span>
                                     )
@@ -174,8 +176,8 @@ const TenantDetails = () => {
                               icon="pi pi-pencil"
                               onClick={() => setVisible(true)}
                               style={{
-                                backgroundColor: "var(--primary-color)",
-                                borderColor: "var(--primary-color)",
+                                backgroundColor: 'var(--primary-color)',
+                                borderColor: 'var(--primary-color)',
                               }}
                             />
                           ) : null}
@@ -192,7 +194,8 @@ const TenantDetails = () => {
                     {tenantObject.products.map((product, index) => (
                       <TabPanel
                         header={product?.name.toUpperCase()}
-                        key={index}>
+                        key={index}
+                      >
                         <ChildTable
                           tenantDetails={tenantObject}
                           tenantId={tenantObject.id}
@@ -216,8 +219,8 @@ const TenantDetails = () => {
 
                   <ThemeDialog visible={visible} setVisible={setVisible}>
                     <TenantForm
-                      popupLabel={"Edit Tenant"}
-                      type={"edit"}
+                      popupLabel={'Edit Tenant'}
+                      type={'edit'}
                       tenantData={tenantObject}
                       setVisible={setVisible}
                       sideBar={true}
@@ -231,6 +234,6 @@ const TenantDetails = () => {
         )}
       </div>
     </Wrapper>
-  );
-};
-export default TenantDetails;
+  )
+}
+export default TenantDetails

@@ -88,4 +88,7 @@ export const Wrapper = styled.div`
   .p-tabview .p-tabview-nav .p-tabview-ink-bar {
     background-color: var(--second-color);
   }
+  .table.user-table thead th {
+    font-size: var(--defaultFont);
+  }
 `

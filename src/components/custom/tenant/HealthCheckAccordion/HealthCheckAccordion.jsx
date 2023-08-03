@@ -1,5 +1,10 @@
 import React from 'react'
-import { Card, Accordion } from '@themesberg/react-bootstrap'
+import {
+  Card,
+  Accordion,
+  OverlayTrigger,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
 import Label from '../../Shared/label/Label'
 import useGlobal from '../../../../lib/hocks/global'
 import {
@@ -23,7 +28,11 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
         icon: <BsFillExclamationCircleFill />,
       },
     }
-    const { DataTransform } = useGlobal()
+    const { DataTransform, timeDifferenceFromNow } = useGlobal()
+
+    const timeDifference = timeDifferenceFromNow(
+      item.healthCheckStatus.lastCheckDate
+    )
 
     return (
       <Accordion.Item eventKey={'eventKey'}>
@@ -41,15 +50,33 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                 />
               </span>
               <span>
-                {item.healthCheckStatus.isHealthy == true
-                  ? `last checked at ${DataTransform(
-                      item.healthCheckStatus.lastCheckDate
-                    )}`
-                  : ` since ${DataTransform(
-                      item.healthCheckStatus.checkDate
-                    )} , last checked ${DataTransform(
-                      item.healthCheckStatus.lastCheckDate
-                    )}`}
+                {item.healthCheckStatus.isHealthy == true ? (
+                  <>
+                    <span className="fw-normal">
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            {DataTransform(
+                              item.healthCheckStatus.lastCheckDate
+                            )}
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          last checked {timeDifference.hours} hours and{' '}
+                          {timeDifference.minutes} minutes ago
+                        </span>
+                      </OverlayTrigger>
+                    </span>
+                  </>
+                ) : (
+                  ` since ${DataTransform(
+                    item.healthCheckStatus.checkDate
+                  )} , last checked ${DataTransform(
+                    item.healthCheckStatus.lastCheckDate
+                  )}`
+                )}
               </span>
             </span>
           </span>
@@ -59,6 +86,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
             <Card.Text className="mb-0 ">
               <span className="">
                 <span>Url: </span>
+
                 <span>{item.healthCheckStatus.healthCheckUrl}</span>
               </span>
             </Card.Text>

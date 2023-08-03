@@ -21,7 +21,6 @@ import { Modal } from '@themesberg/react-bootstrap'
 import ThemeDialog from '../ThemeDialog/ThemeDialog'
 
 const TableHead = ({
-  active = true,
   label,
   name,
   icon,
@@ -35,18 +34,10 @@ const TableHead = ({
 }) => {
   const { searchWait } = useGlobal()
   const [inputValue, setInputValue] = useState('')
-  if (!active) {
-    return (
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-        <h4>
-          {label} : {name}
-        </h4>
-      </div>
-    )
-  }
+
   return (
     <Wrapper>
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 wrapper">
         <ButtonGroup className={fullWidth && 'w-100'}>
           <Button variant="secondary" onClick={() => setVisibleHead(true)}>
             <FontAwesomeIcon icon={faPlus} className="me-2" />

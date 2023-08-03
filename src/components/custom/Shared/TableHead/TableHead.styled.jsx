@@ -1,12 +1,9 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Wrapper = styled.div`
-  /*display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-  width: 100%;*/
-
+  .wrapper {
+    min-height: 95px;
+  }
   input.p-inputtext.p-component {
     background: var(--themeSecColor);
     color: var(--themeColor);
@@ -21,4 +18,4 @@ export const Wrapper = styled.div`
     background: var(--themeBackground) !important;
     color: var(--themeColor);
   }
-`;
+`

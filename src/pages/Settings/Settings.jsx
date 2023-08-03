@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import moment from 'moment-timezone'
 import Datetime from 'react-datetime'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { AiFillSave, AiFillEdit } from 'react-icons/ai'
+
 import {
   Col,
   Row,
@@ -10,27 +10,33 @@ import {
   Form,
   Button,
   InputGroup,
+  OverlayTrigger,
+  Tooltip,
 } from '@themesberg/react-bootstrap'
 import { Wrapper } from './Settings.styled'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
-import { BsGearFill } from 'react-icons/bs'
+import {
+  BsGearFill,
+  BsFillBackspaceFill,
+  BsFillQuestionCircleFill,
+} from 'react-icons/bs'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useEffect } from 'react'
+import useRequest from '../../axios/apis/useRequest'
+import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 
 const Settings = () => {
   const [edit, setEdit] = useState(false)
   const [oldData, setOldData] = useState({})
+  const { getHeathCheckSettings, putHeathCheckSettings } = useRequest()
 
   useEffect(() => {
-    const old = {
-      available: 1,
-      unavailable: 2,
-      inaccessible: 3,
-      checkDown: 4,
-    }
-    setOldData(old)
-    formik.setValues(old)
+    ;(async () => {
+      const heathCheck = await getHeathCheckSettings()
+      setOldData(heathCheck.data.data)
+      formik.setValues(heathCheck.data.data)
+    })()
   }, [])
 
   const cancel = () => {
@@ -40,28 +46,28 @@ const Settings = () => {
 
   const initialValues = {}
   const validationSchema = Yup.object().shape({
-    available: Yup.number()
+    availableCheckTimePeriod: Yup.number()
       .required('The feild is required!')
       .test(
         'Is positive?',
         'Add a valid number',
         (value) => value > 0 && value % 1 == 0
       ),
-    unavailable: Yup.number()
+    unavailableCheckTimePeriod: Yup.number()
       .required('The feild is required!')
       .test(
         'Is positive?',
         'Add a valid number',
         (value) => value > 0 && value % 1 == 0
       ),
-    inaccessible: Yup.number()
+    inaccessibleCheckTimePeriod: Yup.number()
       .required('The feild is required!')
       .test(
         'Is positive?',
         'Add a valid number',
         (value) => value > 0 && value % 1 == 0
       ),
-    checkDown: Yup.number()
+    timesNumberBeforeInformExternalSys: Yup.number()
       .required('The feild is required!')
       .test(
         'Is positive?',
@@ -74,6 +80,7 @@ const Settings = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       console.log(values)
+      putHeathCheckSettings(values)
       setOldData(values)
       setEdit(false)
     },
@@ -83,85 +90,71 @@ const Settings = () => {
     <>
       <BreadcrumbComponent breadcrumbInfo={'HealthCheck'} icon={BsGearFill} />
       <Wrapper>
-        <h5 className="title">General information</h5>
-        <Card className="m-3 mt-0">
-          <Card.Body>
-            <Form onSubmit={formik.handleSubmit} className="my-2">
-              <div className="mb-3">
-                <Button
-                  className={edit ? 'd-none' : ''}
-                  variant="primary"
-                  type="button"
-                  onClick={() => {
-                    setEdit(true)
-                  }}
-                >
-                  Edit
-                </Button>
+        <Form onSubmit={formik.handleSubmit}>
+          <UpperContent>
+            <Button
+              className={edit ? 'd-none' : ''}
+              variant="primary"
+              type="button"
+              onClick={() => {
+                setEdit(true)
+              }}
+            >
+              <AiFillEdit /> Edit
+            </Button>
 
-                <span className={!edit ? 'd-none' : ''}>
-                  <Button variant="primary" type="submit">
-                    Save All
-                  </Button>
-                  <Button
-                    type="button"
-                    className="ml-2 cancel"
-                    onClick={cancel}
-                  >
-                    Cancel
-                  </Button>
-                </span>
-              </div>
+            <span className={!edit ? 'd-none' : ''}>
+              <Button variant="primary" type="submit">
+                <AiFillSave /> Save All
+              </Button>
+              <Button type="button" className="ml-2 cancel" onClick={cancel}>
+                <BsFillBackspaceFill /> Cancel
+              </Button>
+            </span>
+          </UpperContent>
+
+          <Card className="m-3 mt-0">
+            <Card.Body>
+              <h5 className="mb-4">Health Check Settings</h5>
               <Row>
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      Health Status Change Url
-                      <span style={{ color: 'red' }}>*</span>
+                      Available Check Period
+                      <span style={{ color: 'red' }}>* </span>
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              Time interval between consecutive health checks
+                              for an accessible product (Measured in minute).
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
                     </Form.Label>
                     <input
                       className="form-control"
                       required
                       type="number"
-                      id="available"
-                      name="available"
+                      id="availableCheckTimePeriod"
+                      name="availableCheckTimePeriod"
                       onChange={formik.handleChange}
-                      value={formik.values.available}
+                      value={formik.values.availableCheckTimePeriod}
                       disabled={!edit}
                     />
-                    {formik.touched.available && formik.errors.available && (
-                      <Form.Control.Feedback
-                        type="invalid"
-                        style={{ display: 'block' }}
-                      >
-                        {formik.errors.available}
-                      </Form.Control.Feedback>
-                    )}
-                  </Form.Group>
-                </Col>
-                <Col sm={6} className="mb-3">
-                  <Form.Group id="addressNumber">
-                    <Form.Label>
-                      Health Status Change Url
-                      <span style={{ color: 'red' }}>*</span>
-                    </Form.Label>
-                    <input
-                      className="form-control"
-                      required
-                      type="number"
-                      id="unavailable"
-                      name="unavailable"
-                      onChange={formik.handleChange}
-                      value={formik.values.unavailable}
-                      disabled={!edit}
-                    />
-                    {formik.touched.unavailable &&
-                      formik.errors.unavailable && (
+                    {formik.touched.availableCheckTimePeriod &&
+                      formik.errors.availableCheckTimePeriod && (
                         <Form.Control.Feedback
                           type="invalid"
                           style={{ display: 'block' }}
                         >
-                          {formik.errors.unavailable}
+                          {formik.errors.availableCheckTimePeriod}
                         </Form.Control.Feedback>
                       )}
                   </Form.Group>
@@ -169,26 +162,42 @@ const Settings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      Health Status Change Url
-                      <span style={{ color: 'red' }}>*</span>
+                      Unavailable Check Period
+                      <span style={{ color: 'red' }}>* </span>
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              Time interval between consecutive health checks
+                              for an unavailableCheckTimePeriod product
+                              (Measured in minute).
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill />
+                          </span>
+                        </OverlayTrigger>
+                      </span>{' '}
                     </Form.Label>
                     <input
                       className="form-control"
                       required
                       type="number"
-                      id="inaccessible"
-                      name="inaccessible"
+                      id="unavailableCheckTimePeriod"
+                      name="unavailableCheckTimePeriod"
                       onChange={formik.handleChange}
-                      value={formik.values.inaccessible}
+                      value={formik.values.unavailableCheckTimePeriod}
                       disabled={!edit}
                     />
-                    {formik.touched.inaccessible &&
-                      formik.errors.inaccessible && (
+                    {formik.touched.unavailableCheckTimePeriod &&
+                      formik.errors.unavailableCheckTimePeriod && (
                         <Form.Control.Feedback
                           type="invalid"
                           style={{ display: 'block' }}
                         >
-                          {formik.errors.inaccessible}
+                          {formik.errors.unavailableCheckTimePeriod}
                         </Form.Control.Feedback>
                       )}
                   </Form.Group>
@@ -196,33 +205,92 @@ const Settings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      Health Status Change Url
-                      <span style={{ color: 'red' }}>*</span>
+                      Inaccessible Check Period
+                      <span style={{ color: 'red' }}>* </span>
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              Time interval between consecutive health checks
+                              for an unavailableCheckTimePeriod product
+                              (Measured in minute).
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill />
+                          </span>
+                        </OverlayTrigger>
+                      </span>{' '}
                     </Form.Label>
                     <input
                       className="form-control"
                       required
                       type="number"
-                      id="checkDown"
-                      name="checkDown"
+                      id="inaccessibleCheckTimePeriod"
+                      name="inaccessibleCheckTimePeriod"
                       onChange={formik.handleChange}
-                      value={formik.values.checkDown}
+                      value={formik.values.inaccessibleCheckTimePeriod}
                       disabled={!edit}
                     />
-                    {formik.touched.checkDown && formik.errors.checkDown && (
-                      <Form.Control.Feedback
-                        type="invalid"
-                        style={{ display: 'block' }}
-                      >
-                        {formik.errors.checkDown}
-                      </Form.Control.Feedback>
-                    )}
+                    {formik.touched.inaccessibleCheckTimePeriod &&
+                      formik.errors.inaccessibleCheckTimePeriod && (
+                        <Form.Control.Feedback
+                          type="invalid"
+                          style={{ display: 'block' }}
+                        >
+                          {formik.errors.inaccessibleCheckTimePeriod}
+                        </Form.Control.Feedback>
+                      )}
+                  </Form.Group>
+                </Col>
+                <Col sm={6} className="mb-3">
+                  <Form.Group id="addressNumber">
+                    <Form.Label>
+                      Notification Threshold
+                      <span style={{ color: 'red' }}>* </span>
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              Number of consecutive health check failures before
+                              ROSAS informs the external system.
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill />
+                          </span>
+                        </OverlayTrigger>
+                      </span>{' '}
+                    </Form.Label>
+                    <input
+                      className="form-control"
+                      required
+                      type="number"
+                      id="timesNumberBeforeInformExternalSys"
+                      name="timesNumberBeforeInformExternalSys"
+                      onChange={formik.handleChange}
+                      value={formik.values.timesNumberBeforeInformExternalSys}
+                      disabled={!edit}
+                    />
+                    {formik.touched.timesNumberBeforeInformExternalSys &&
+                      formik.errors.timesNumberBeforeInformExternalSys && (
+                        <Form.Control.Feedback
+                          type="invalid"
+                          style={{ display: 'block' }}
+                        >
+                          {formik.errors.timesNumberBeforeInformExternalSys}
+                        </Form.Control.Feedback>
+                      )}
                   </Form.Group>
                 </Col>
               </Row>
-            </Form>
-          </Card.Body>
-        </Card>
+            </Card.Body>
+          </Card>
+        </Form>
       </Wrapper>
     </>
   )

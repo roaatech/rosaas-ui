@@ -21,6 +21,7 @@ const GlobalStyles = createGlobalStyle`
   --darkBackground:${darkBackground};
   --gray: #f9f9f9;
   --smallFont:12px;
+  --defaultFont:14px;
   --normalFont:16px;
   --largeFont:19px;
   --errorColor:red;

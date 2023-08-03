@@ -1,13 +1,13 @@
-import React from "react";
-import { useFormik } from "formik";
-import { InputText } from "primereact/inputtext";
-import * as Yup from "yup";
-import useRequest from "../../../../axios/apis/useRequest.js";
-import { Product_Client_id } from "../../../../const/index.js";
-import { Modal, Button } from "@themesberg/react-bootstrap";
-import { Form } from "@themesberg/react-bootstrap";
-import { productInfo } from "../../../../store/slices/products.js";
-import { useDispatch } from "react-redux";
+import React from 'react'
+import { useFormik } from 'formik'
+import { InputText } from 'primereact/inputtext'
+import * as Yup from 'yup'
+import useRequest from '../../../../axios/apis/useRequest.js'
+import { Product_Client_id } from '../../../../const/index.js'
+import { Modal, Button } from '@themesberg/react-bootstrap'
+import { Form } from '@themesberg/react-bootstrap'
+import { productInfo } from '../../../../store/slices/products.js'
+import { useDispatch } from 'react-redux'
 
 const ProductForm = ({
   type,
@@ -17,32 +17,40 @@ const ProductForm = ({
   update,
   setUpdate,
 }) => {
-  const { createProductRequest, editProductRequest } = useRequest();
-  const dispatch = useDispatch();
+  const { createProductRequest, editProductRequest } = useRequest()
+  const dispatch = useDispatch()
 
   const initialValues = {
-    name: productData ? productData.name : "",
-    defaultHealthCheckUrl: productData ? productData.defaultHealthCheckUrl : "",
-    healthStatusChangeUrl: productData ? productData.healthStatusChangeUrl : "",
-    creationEndpoint: productData ? productData.creationEndpoint : "",
-    activationEndpoint: productData ? productData.activationEndpoint : "",
-    deactivationEndpoint: productData ? productData.deactivationEndpoint : "",
-    deletionEndpoint: productData ? productData.deletionEndpoint : "",
-  };
+    name: productData ? productData.name : '',
+    defaultHealthCheckUrl: productData ? productData.defaultHealthCheckUrl : '',
+    healthStatusChangeUrl: productData ? productData.healthStatusChangeUrl : '',
+    creationEndpoint: productData ? productData.creationEndpoint : '',
+    activationEndpoint: productData ? productData.activationEndpoint : '',
+    deactivationEndpoint: productData ? productData.deactivationEndpoint : '',
+    deletionEndpoint: productData ? productData.deletionEndpoint : '',
+  }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Product Name is required"),
+    name: Yup.string().required('Product Name is required'),
     defaultHealthCheckUrl: Yup.string()
-      .required("Default Health Check Url is required")
-      .url("Please enter a valid Default Health Check Url"),
-  });
+      .required('Default Health Check Url is required')
+      .matches(
+        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+        'Please enter a valid Default Health Check Url'
+      ),
+    healthStatusChangeUrl: Yup.string()
+      .required('Default Health Check Url is required')
+      .matches(
+        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+        'Please enter a valid Health Status Change Url'
+      ),
+  })
 
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      if (type == "create") {
-        console.log("dddddddd");
+      if (type == 'create') {
         const createProduct = await createProductRequest({
           name: values.name,
           defaultHealthCheckUrl: values.defaultHealthCheckUrl,
@@ -52,8 +60,8 @@ const ProductForm = ({
           deactivationEndpoint: values.deactivationEndpoint,
           deletionEndpoint: values.deletionEndpoint,
           clientId: Product_Client_id,
-        });
-        setUpdate(update + 1);
+        })
+        setUpdate(update + 1)
       } else {
         const editProduct = await editProductRequest({
           data: {
@@ -67,7 +75,7 @@ const ProductForm = ({
             clientId: Product_Client_id,
           },
           id: productData.id,
-        });
+        })
 
         dispatch(
           productInfo({
@@ -79,15 +87,16 @@ const ProductForm = ({
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
             deletionEndpoint: values.deletionEndpoint,
+            editedDate: new Date().toISOString().slice(0, 19),
             clientId: { id: Product_Client_id },
           })
-        );
+        )
       }
 
-      setVisible && setVisible(false);
-      setVisible && setVisible(false);
+      setVisible && setVisible(false)
+      setVisible && setVisible(false)
     },
-  });
+  })
 
   return (
     <div>
@@ -104,7 +113,7 @@ const ProductForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                Name <span style={{ color: "red" }}>*</span>
+                Name <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -118,7 +127,8 @@ const ProductForm = ({
               {formik.touched.name && formik.errors.name && (
                 <Form.Control.Feedback
                   type="invalid"
-                  style={{ display: "block" }}>
+                  style={{ display: 'block' }}
+                >
                   {formik.errors.name}
                 </Form.Control.Feedback>
               )}
@@ -128,7 +138,7 @@ const ProductForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                Default Health Check Url <span style={{ color: "red" }}>*</span>
+                Default Health Check Url <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -143,7 +153,8 @@ const ProductForm = ({
                 formik.errors.defaultHealthCheckUrl && (
                   <Form.Control.Feedback
                     type="invalid"
-                    style={{ display: "block" }}>
+                    style={{ display: 'block' }}
+                  >
                     {formik.errors.defaultHealthCheckUrl}
                   </Form.Control.Feedback>
                 )}
@@ -152,7 +163,7 @@ const ProductForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                Health Status Change Url <span style={{ color: "red" }}>*</span>
+                Health Status Change Url <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -167,7 +178,8 @@ const ProductForm = ({
                 formik.errors.healthStatusChangeUrl && (
                   <Form.Control.Feedback
                     type="invalid"
-                    style={{ display: "block" }}>
+                    style={{ display: 'block' }}
+                  >
                     {formik.errors.healthStatusChangeUrl}
                   </Form.Control.Feedback>
                 )}
@@ -190,7 +202,8 @@ const ProductForm = ({
                 formik.errors.creationEndpoint && (
                   <Form.Control.Feedback
                     type="invalid"
-                    style={{ display: "block" }}>
+                    style={{ display: 'block' }}
+                  >
                     {formik.errors.creationEndpoint}
                   </Form.Control.Feedback>
                 )}
@@ -212,7 +225,8 @@ const ProductForm = ({
                 formik.errors.activationEndpoint && (
                   <Form.Control.Feedback
                     type="invalid"
-                    style={{ display: "block" }}>
+                    style={{ display: 'block' }}
+                  >
                     {formik.errors.activationEndpoint}
                   </Form.Control.Feedback>
                 )}
@@ -234,7 +248,8 @@ const ProductForm = ({
                 formik.errors.deactivationEndpoint && (
                   <Form.Control.Feedback
                     type="invalid"
-                    style={{ display: "block" }}>
+                    style={{ display: 'block' }}
+                  >
                     {formik.errors.deactivationEndpoint}
                   </Form.Control.Feedback>
                 )}
@@ -256,7 +271,8 @@ const ProductForm = ({
                 formik.errors.deletionEndpoint && (
                   <Form.Control.Feedback
                     type="invalid"
-                    style={{ display: "block" }}>
+                    style={{ display: 'block' }}
+                  >
                     {formik.errors.deletionEndpoint}
                   </Form.Control.Feedback>
                 )}
@@ -274,13 +290,14 @@ const ProductForm = ({
           <Button
             variant="link"
             className="text-gray ms-auto"
-            onClick={() => setVisible(false)}>
+            onClick={() => setVisible(false)}
+          >
             Close
           </Button>
         </Modal.Footer>
       </Form>
     </div>
-  );
-};
+  )
+}
 
-export default ProductForm;
+export default ProductForm
