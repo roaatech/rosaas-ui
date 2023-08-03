@@ -36,23 +36,28 @@ const Wrapper = styled.div`
   }
 
   .accordion-button {
-    background-color: var(--themeBackground);
+    background-color: var(--primary0);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
   }
   .accordion-button:focus {
     box-shadow: unset;
   }
 
   .accordion-button:hover {
-    background-color: var(--primary3);
+    background-color: var(--primary1);
   }
   .accordion-button:not(.collapsed) {
-    background-color: var(--primary2);
+    background-color: var(--themeBackground); /*var(--primary2);*/
   }
 
   .checkurl {
     word-break: break-all;
     white-space: break-spaces;
     display: inline-block;
+  }
+  .firstTd {
+    width: 165px;
   }
 `
 

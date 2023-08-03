@@ -29,6 +29,7 @@ const GlobalStyles = createGlobalStyle`
   --primary-color:#414042;
  
 
+  --primary0:#fdfdfd;
   --primary1:#ECECEC;
   --primary2:#DCDCDC;
   --primary3:#C4C4C4;

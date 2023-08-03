@@ -67,18 +67,15 @@ export default function ChildTable({
           >
             <tbody>
               <tr>
-                <td className="fw-bold">Status</td>
+                <td className="fw-bold firstTd">Status</td>
                 <td>
                   <TenantStatus statusValue={productData.status} />
                 </td>
               </tr>
               <tr>
-                <td className="fw-bold">Health Check Url </td>
-                <td className="d-flex justify-content-between">
-                  <span className="mr-2 checkurl">
-                    {productData.healthCheckUrl}
-                  </span>
-                  <span>
+                <td className="fw-bold firstTd">Health Check Url </td>
+                <td className="d-flex align-items-center">
+                  <span className="mr-2">
                     <Label
                       value={
                         productData.healthCheckUrlIsOverridden
@@ -87,20 +84,23 @@ export default function ChildTable({
                       }
                     />
                   </span>
+                  <span className="mr-2 checkurl">
+                    {productData.healthCheckUrl}
+                  </span>
                 </td>
               </tr>
               <tr>
-                <td className="fw-bold">Last Updated Date</td>
+                <td className="fw-bold firstTd">Last Updated Date</td>
                 <td>{DataTransform(productData.editedDate)}</td>
               </tr>
 
               <tr>
-                <td colSpan={2}>
+                <td className="pl-0 pr-0" colSpan={2}>
                   <MetaDataAccordion defaultKey="metaData" data={products} />
                 </td>
               </tr>
 
-              <tr>
+              {/*    <tr>
                 <td className="fw-bold">Health status: </td>
                 <td className="d-flex  justify-content-between">
                   <span className="mr-2 checkurl">
@@ -115,11 +115,11 @@ export default function ChildTable({
                         )}`}
                   </span>
                 </td>
-              </tr>
+                        </tr>  */}
 
               {(productData?.status == 4 || productData?.status == 7) && (
                 <tr>
-                  <td colSpan={2}>
+                  <td className="pl-0 pr-0" colSpan={2}>
                     <HealthCheckAccordion
                       defaultKey="HealthCheckStatus"
                       data={[productData]}

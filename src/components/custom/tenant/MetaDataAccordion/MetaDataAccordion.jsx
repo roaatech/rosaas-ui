@@ -12,7 +12,7 @@ const MetaDataAccordion = (props) => {
           variant="link"
           className="w-100 d-flex justify-content-between"
         >
-          <span className="h6 mb-0 fw-bold">{title}</span>
+          <span className=" mb-0 fw-bold">{title}</span>
         </Accordion.Button>
         <Accordion.Body>
           <Card.Body className="py-0 px-0">
