@@ -17,6 +17,7 @@ import TableDate from '../../Shared/TableDate/TableDate'
 import { Link, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { productInfo, subscribe } from '../../../../store/slices/products'
+import { setAllTenant } from '../../../../store/slices/tenants'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { DataTransform } = useGlobal()
@@ -39,6 +40,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
     ;(async () => {
       if (!list?.subscribe) {
         const listData = await getProductTenants(params)
+        dispatch(setAllTenant(listData.data.data))
         dispatch(subscribe({ id: productId, data: listData.data.data }))
       }
     })()
@@ -134,7 +136,6 @@ export const ProductTenantsList = ({ productId, productName }) => {
             </tr>
           </thead>
           <tbody>
-            {console.log(list, '8888')}
             {list?.subscribe?.length
               ? list?.subscribe?.map((t, index) => (
                   <TableRow key={`index`} {...t} />

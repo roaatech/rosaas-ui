@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import useRequest from "../../../../axios/apis/useRequest.js";
-import { Product_id } from "../../../../const/index.js";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Form } from "@themesberg/react-bootstrap";
-import { Modal, Button } from "@themesberg/react-bootstrap";
-import { tenantInfo } from "../../../../store/slices/tenants.js";
-import { setAllProduct } from "../../../../store/slices/products.js";
+import React, { useEffect, useState } from 'react'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import useRequest from '../../../../axios/apis/useRequest.js'
+import { Product_id } from '../../../../const/index.js'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { Form } from '@themesberg/react-bootstrap'
+import { Modal, Button } from '@themesberg/react-bootstrap'
+import { tenantInfo } from '../../../../store/slices/tenants.js'
+import { setAllProduct } from '../../../../store/slices/products.js'
 
 const TenantForm = ({
   type,
@@ -18,80 +18,79 @@ const TenantForm = ({
   setVisible,
   popupLabel,
 }) => {
-  const { createTenantRequest, editTenantRequest } = useRequest();
-  const [submitLoading, setSubmitLoading] = useState();
-  const navigate = useNavigate();
+  const { createTenantRequest, editTenantRequest } = useRequest()
+  const [submitLoading, setSubmitLoading] = useState()
+  const navigate = useNavigate()
 
-  const dispatch = useDispatch();
-  const { getProductList } = useRequest();
+  const dispatch = useDispatch()
+  const { getProductList } = useRequest()
 
-  const listData = useSelector((state) => state.products.products);
-  let list = Object.values(listData);
+  const listData = useSelector((state) => state.products.products)
+  let list = Object.values(listData)
   const options = list.map((item, index) => {
-    return { value: item.id, label: item.name };
-  });
+    return { value: item.id, label: item.name }
+  })
 
   useEffect(() => {
-    let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`;
+    let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
 
-    (async () => {
+    ;(async () => {
       // if (list.length == 0) {
-      const productList = await getProductList(query);
-      dispatch(setAllProduct(productList.data.data.items));
+      const productList = await getProductList(query)
+      dispatch(setAllProduct(productList.data.data.items))
       // }
-    })();
-  }, []);
+    })()
+  }, [])
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().max(100, "Must be maximum 100 digits"),
+    title: Yup.string().max(100, 'Must be maximum 100 digits'),
     product: Yup.array()
-      .required("Please select a product")
-      .min(1, "Please select a product"),
+      .required('Please select a product')
+      .min(1, 'Please select a product'),
     uniqueName: Yup.string()
-      .max(100, "Must be maximum 100 digits")
-      .required("Unique Name is required")
+      .max(100, 'Must be maximum 100 digits')
+      .required('Unique Name is required')
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        "English Characters, Numbers, and Underscores are only accepted."
+        'English Characters, Numbers, and Underscores are only accepted.'
       ),
-  });
+  })
 
   const selectedProduct = tenantData?.products?.map((product) => {
-    return product.id;
-  });
+    return product.id
+  })
 
   const initialValues = {
-    title: tenantData ? tenantData.title : "",
-    uniqueName: tenantData ? tenantData.uniqueName : "",
-    product: tenantData ? selectedProduct : "",
-  };
+    title: tenantData ? tenantData.title : '',
+    uniqueName: tenantData ? tenantData.uniqueName : '',
+    product: tenantData ? selectedProduct : '',
+  }
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       // Handle form submission
-      console.log(values, "yyyyyyyyyyyy");
-      setVisible(false);
-      if (type == "create") {
+      setVisible(false)
+      if (type == 'create') {
         const createTenant = await createTenantRequest({
           title: values.title,
           uniqueName: values.uniqueName,
           productsIds: values.product,
-        });
-        navigate(`/tenants/${createTenant.data.data.id}`);
+        })
+        navigate(`/tenants/${createTenant.data.data.id}`)
       } else {
         const editTenant = await editTenantRequest({
           title: values.title,
           uniqueName: values.uniqueName,
           id: tenantData.id,
           // product: selectedProduct,
-        });
-        updateTenant();
+        })
+        updateTenant()
       }
-      setVisible && setVisible(false);
-      setVisible && setVisible(false);
+      setVisible && setVisible(false)
+      setVisible && setVisible(false)
     },
-  });
+  })
 
   return (
     <div>
@@ -120,7 +119,8 @@ const TenantForm = ({
               {formik.touched.title && formik.errors.title && (
                 <Form.Control.Feedback
                   type="invalid"
-                  style={{ display: "block" }}>
+                  style={{ display: 'block' }}
+                >
                   {formik.errors.title}
                 </Form.Control.Feedback>
               )}
@@ -129,7 +129,7 @@ const TenantForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                Unique Name <span style={{ color: "red" }}>*</span>
+                Unique Name <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 className="form-control"
@@ -142,16 +142,17 @@ const TenantForm = ({
               {formik.touched.uniqueName && formik.errors.uniqueName && (
                 <Form.Control.Feedback
                   type="invalid"
-                  style={{ display: "block" }}>
+                  style={{ display: 'block' }}
+                >
                   {formik.errors.uniqueName}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
           </div>
-          <div style={{ display: type == "edit" ? "none" : "block" }}>
+          <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
               <Form.Label>
-                Product <span style={{ color: "red" }}>*</span>
+                Product <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
                 className="form-select"
@@ -161,7 +162,8 @@ const TenantForm = ({
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 isInvalid={formik.touched.product && formik.errors.product}
-                multiple>
+                multiple
+              >
                 {options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -171,7 +173,8 @@ const TenantForm = ({
               {formik.touched.product && formik.errors.product && (
                 <Form.Control.Feedback
                   type="invalid"
-                  style={{ display: "block" }}>
+                  style={{ display: 'block' }}
+                >
                   {formik.errors.product}
                 </Form.Control.Feedback>
               )}
@@ -185,13 +188,14 @@ const TenantForm = ({
           <Button
             variant="link"
             className="text-gray ms-auto"
-            onClick={() => setVisible(false)}>
+            onClick={() => setVisible(false)}
+          >
             Close
           </Button>
         </Modal.Footer>
       </Form>
     </div>
-  );
-};
+  )
+}
 
-export default TenantForm;
+export default TenantForm

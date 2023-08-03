@@ -147,7 +147,6 @@ export default (props = {}) => {
   )
   const archived = allTenant.filter((item) => item.status == 13)
 
-  console.log(archived, inactive, active, '555')
   const inactiveIsOpen = sidebarStatus(inactive) ? 'open' : 'close'
   const activeIsOpen = sidebarStatus(active) ? 'open' : 'close'
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'

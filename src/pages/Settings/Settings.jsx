@@ -79,7 +79,6 @@ const Settings = () => {
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log(values)
       putHeathCheckSettings(values)
       setOldData(values)
       setEdit(false)
@@ -170,8 +169,7 @@ const Settings = () => {
                           overlay={
                             <Tooltip>
                               Time interval between consecutive health checks
-                              for an unavailableCheckTimePeriod product
-                              (Measured in minute).
+                              for an unavailable product (Measured in minute).
                             </Tooltip>
                           }
                         >
@@ -213,8 +211,8 @@ const Settings = () => {
                           overlay={
                             <Tooltip>
                               Time interval between consecutive health checks
-                              for an unavailableCheckTimePeriod product
-                              (Measured in minute).
+                              for a temporarily unavailable product (Measured in
+                              minute).
                             </Tooltip>
                           }
                         >
