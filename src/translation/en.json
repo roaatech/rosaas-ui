@@ -3,5 +3,18 @@
     "otherLang": "العربية",
     "signIn": "Sign in",
     "yourEmail": "Your Email",
-    "yourPassword": "Your Password"
+    "yourPassword": "Your Password",
+    "Settings": "Settings",
+    "Edit":"Edit",
+    "Save-All":"Save All",
+    "Cancel":"Cancel",
+     "Health-Check-Settings": "Health Check Settings",
+    "Available-Check-Period": "Available Check Period",
+    "Unavailable-Check-Period": "Unavailable Check Period",
+    "Inaccessible-Check-Period": "Inaccessible Check Period",
+    "Notification-Threshold": "Notification Threshold",
+     "Available-Check-Period-description": "Time interval between consecutive health checks for an accessible product (Measured in minute).",
+    "Unavailable-Check-Period-description": "Time interval between consecutive health checks for an unavailable product (Measured in minute).",
+    "Inaccessible-Check-Period-description": "Time interval between consecutive health checks for a temporarily unavailable product (Measured in minute).",
+    "Notification-Threshold-description": "Number of consecutive health check failures before ROSAS informs the external system."
 }

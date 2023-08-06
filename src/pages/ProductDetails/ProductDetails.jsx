@@ -27,7 +27,6 @@ const ProductDetails = () => {
     ;(async () => {
       const productData = await getProduct(routeParams.id)
       dispatch(productInfo(productData.data.data))
-      console.log(productData.data.data, '555555555555555')
     })()
   }, [visible, routeParams.id])
 

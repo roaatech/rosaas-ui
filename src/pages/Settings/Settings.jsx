@@ -25,6 +25,7 @@ import * as Yup from 'yup'
 import { useEffect } from 'react'
 import useRequest from '../../axios/apis/useRequest'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
+import { FormattedMessage } from 'react-intl'
 
 const Settings = () => {
   const [edit, setEdit] = useState(false)
@@ -99,35 +100,36 @@ const Settings = () => {
                 setEdit(true)
               }}
             >
-              <AiFillEdit /> Edit
+              <AiFillEdit /> <FormattedMessage id="Edit" />
             </Button>
 
             <span className={!edit ? 'd-none' : ''}>
               <Button variant="primary" type="submit">
-                <AiFillSave /> Save All
+                <AiFillSave /> <FormattedMessage id="Save-All" />
               </Button>
               <Button type="button" className="ml-2 cancel" onClick={cancel}>
-                <BsFillBackspaceFill /> Cancel
+                <BsFillBackspaceFill /> <FormattedMessage id="Cancel" />
               </Button>
             </span>
           </UpperContent>
 
           <Card className="m-3 mt-0">
             <Card.Body>
-              <h5 className="mb-4">Health Check Settings</h5>
+              <h5 className="mb-4">
+                <FormattedMessage id="Health-Check-Settings" />
+              </h5>
               <Row>
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      Available Check Period
+                      <FormattedMessage id="Available-Check-Period" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              Time interval between consecutive health checks
-                              for an accessible product (Measured in minute).
+                              <FormattedMessage id="Available-Check-Period-description" />
                             </Tooltip>
                           }
                         >
@@ -161,15 +163,14 @@ const Settings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      Unavailable Check Period
+                      <FormattedMessage id="Unavailable-Check-Period" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              Time interval between consecutive health checks
-                              for an unavailable product (Measured in minute).
+                              <FormattedMessage id="Unavailable-Check-Period-description" />
                             </Tooltip>
                           }
                         >
@@ -177,7 +178,7 @@ const Settings = () => {
                             <BsFillQuestionCircleFill />
                           </span>
                         </OverlayTrigger>
-                      </span>{' '}
+                      </span>
                     </Form.Label>
                     <input
                       className="form-control"
@@ -203,16 +204,14 @@ const Settings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      Inaccessible Check Period
+                      <FormattedMessage id="Inaccessible-Check-Period" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              Time interval between consecutive health checks
-                              for a temporarily unavailable product (Measured in
-                              minute).
+                              <FormattedMessage id="Inaccessible-Check-Period-description" />
                             </Tooltip>
                           }
                         >
@@ -220,7 +219,7 @@ const Settings = () => {
                             <BsFillQuestionCircleFill />
                           </span>
                         </OverlayTrigger>
-                      </span>{' '}
+                      </span>
                     </Form.Label>
                     <input
                       className="form-control"
@@ -246,15 +245,14 @@ const Settings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      Notification Threshold
+                      <FormattedMessage id="Notification-Threshold" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              Number of consecutive health check failures before
-                              ROSAS informs the external system.
+                              <FormattedMessage id="Notification-Threshold-description" />
                             </Tooltip>
                           }
                         >
@@ -262,7 +260,7 @@ const Settings = () => {
                             <BsFillQuestionCircleFill />
                           </span>
                         </OverlayTrigger>
-                      </span>{' '}
+                      </span>
                     </Form.Label>
                     <input
                       className="form-control"

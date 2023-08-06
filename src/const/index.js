@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl'
+
 const Product_id = '88e67328-3b20-413e-b6e1-010b48fa7bc9'
 const Product_Client_id = '88283b02-e969-485a-a5a3-9e5d1d0d3337'
 const Client_id = 'spa_rosas_admin_panel'
@@ -117,8 +119,8 @@ const urlStyle = {
 
 const breadcrumbConst = {
   HealthCheck: {
-    title: 'Settings',
-    name: 'Health Check Settings',
+    title: <FormattedMessage id="Settings" />,
+    name: <FormattedMessage id="Health-Check-Settings" />,
     navigation: '/settings/health-check',
     active: 'Settings',
     icon: {},
