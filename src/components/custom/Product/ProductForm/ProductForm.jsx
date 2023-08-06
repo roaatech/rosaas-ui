@@ -8,6 +8,7 @@ import { Modal, Button } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { productInfo } from '../../../../store/slices/products.js'
 import { useDispatch } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 const ProductForm = ({
   type,
@@ -33,16 +34,16 @@ const ProductForm = ({
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Product Name is required'),
     defaultHealthCheckUrl: Yup.string()
-      .required('Default Health Check Url is required')
+      .required(<FormattedMessage id="This-field-is-required" />)
       .matches(
         /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-        'Please enter a valid Default Health Check Url'
+        <FormattedMessage id="Please-enter-a-valid-value" />
       ),
     healthStatusChangeUrl: Yup.string()
-      .required('Default Health Check Url is required')
+      .required(<FormattedMessage id="This-field-is-required" />)
       .matches(
         /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-        'Please enter a valid Health Status Change Url'
+        <FormattedMessage id="Please-enter-a-valid-value" />
       ),
   })
 
@@ -113,7 +114,8 @@ const ProductForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                Name <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Name" />
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -138,7 +140,8 @@ const ProductForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                Default Health Check Url <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Default-Health-Check-Url" />
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -163,7 +166,8 @@ const ProductForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                Health Status Change Url <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Health-Status-Change-Url" />
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -188,7 +192,9 @@ const ProductForm = ({
 
           <div>
             <Form.Group className="mb-3">
-              <Form.Label>Creation Url</Form.Label>
+              <Form.Label>
+                <FormattedMessage id="Creation-Url" />
+              </Form.Label>
               <input
                 type="text"
                 className="form-control"
@@ -211,7 +217,9 @@ const ProductForm = ({
           </div>
           <div>
             <Form.Group className="mb-3">
-              <Form.Label>Activation Url</Form.Label>
+              <Form.Label>
+                <FormattedMessage id="Activation-Url" />
+              </Form.Label>
               <input
                 type="text"
                 className="form-control"
@@ -234,7 +242,9 @@ const ProductForm = ({
           </div>
           <div>
             <Form.Group className="mb-3">
-              <Form.Label>Deactivation Url</Form.Label>
+              <Form.Label>
+                <FormattedMessage id="Deactivation-Url" />
+              </Form.Label>
               <input
                 type="text"
                 className="form-control"
@@ -257,7 +267,9 @@ const ProductForm = ({
           </div>
           <div>
             <Form.Group className="mb-3">
-              <Form.Label>Deletion Url</Form.Label>
+              <Form.Label>
+                <FormattedMessage id="Deletion-Url" />
+              </Form.Label>
               <input
                 type="text"
                 className="form-control"
@@ -285,14 +297,14 @@ const ProductForm = ({
             type="submit"
             // disabled={submitLoading}
           >
-            Submit
+            <FormattedMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray ms-auto"
             onClick={() => setVisible(false)}
           >
-            Close
+            <FormattedMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

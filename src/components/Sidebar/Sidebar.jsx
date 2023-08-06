@@ -34,6 +34,7 @@ import { useParams } from 'react-router-dom'
 import { setAllTenant } from '../../store/slices/tenants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import { FormattedMessage } from 'react-intl'
 
 export default (props = {}) => {
   const location = useLocation()
@@ -200,7 +201,9 @@ export default (props = {}) => {
                   />
                 </div>
                 <div className="d-block">
-                  <h6>Hi, {userInfo.email}</h6>
+                  <h6>
+                    <FormattedMessage id="Hi" />, {userInfo.email}
+                  </h6>
                   <Button
                     as={Link}
                     variant="secondary"
@@ -210,7 +213,7 @@ export default (props = {}) => {
                     className="text-dark"
                   >
                     <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
-                    Sign Out
+                    <FormattedMessage id="Sign-Out" />
                   </Button>
                 </div>
               </div>

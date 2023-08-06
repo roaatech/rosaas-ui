@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   Row,
   Col,
@@ -10,40 +10,41 @@ import {
   Container,
   ListGroup,
   InputGroup,
-} from "@themesberg/react-bootstrap";
+} from '@themesberg/react-bootstrap'
 
-import NOTIFICATIONS_DATA from "../data/notifications";
-import Profile3 from "../assets/img/team/profile-picture.png";
-import Profile1 from "../assets/img/team/profile-picture-1.png";
-import useGlobal from "../lib/hocks/global";
-import { useSelector } from "react-redux";
-import { logOut } from "../store/slices/auth";
-import { useDispatch } from "react-redux";
-import { changeMode } from "../store/slices/main";
+import NOTIFICATIONS_DATA from '../data/notifications'
+import Profile3 from '../assets/img/team/profile-picture.png'
+import Profile1 from '../assets/img/team/profile-picture-1.png'
+import useGlobal from '../lib/hocks/global'
+import { useSelector } from 'react-redux'
+import { logOut } from '../store/slices/auth'
+import { useDispatch } from 'react-redux'
+import { changeMode } from '../store/slices/main'
+import { FormattedMessage } from 'react-intl'
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (props) => {
-  const dispatch = useDispatch();
-  const { changeDirection } = useGlobal();
-  const direction = useSelector((state) => state.main.direction);
-  const userInfo = useSelector((state) => state.auth.userInfo);
-  const darkMode = useSelector((state) => state.main.darkMode);
+  const dispatch = useDispatch()
+  const { changeDirection } = useGlobal()
+  const direction = useSelector((state) => state.main.direction)
+  const userInfo = useSelector((state) => state.auth.userInfo)
+  const darkMode = useSelector((state) => state.main.darkMode)
 
-  const xDirection = direction === "rtl" ? "ltr" : "rtl";
-  const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
+  const xDirection = direction === 'rtl' ? 'ltr' : 'rtl'
+  const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA)
   const areNotificationsRead = notifications.reduce(
     (acc, notif) => acc && notif.read,
     true
-  );
+  )
 
   const markNotificationsAsRead = () => {
     setTimeout(() => {
-      setNotifications(notifications.map((n) => ({ ...n, read: true })));
-    }, 300);
-  };
+      setNotifications(notifications.map((n) => ({ ...n, read: true })))
+    }, 300)
+  }
 
   const Notification = (props) => {
-    const { link, sender, image, time, message, read = false } = props;
-    const readClassName = read ? "" : "text-danger";
+    const { link, sender, image, time, message, read = false } = props
+    const readClassName = read ? '' : 'text-danger'
 
     return (
       <ListGroup.Item action href={link} className="border-bottom border-light">
@@ -67,28 +68,26 @@ export default (props) => {
           </Col>
         </Row>
       </ListGroup.Item>
-    );
-  };
+    )
+  }
 
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">
       <Container fluid className="px-0">
         <div className="d-flex justify-content-between w-100">
-          <div className="d-flex align-items-center">
-     
-          </div>
+          <div className="d-flex align-items-center"></div>
           <Nav className="align-items-center">
             <Dropdown as={Nav.Item} onToggle={markNotificationsAsRead}>
               <Dropdown.Toggle
                 as={Nav.Link}
-                className="text-dark icon-notifications me-lg-3">
-      
-              </Dropdown.Toggle>
+                className="text-dark icon-notifications me-lg-3"
+              ></Dropdown.Toggle>
               <Dropdown.Menu className="dashboard-dropdown notifications-dropdown dropdown-menu-lg dropdown-menu-center mt-2 py-0">
                 <ListGroup className="list-group-flush">
                   <Nav.Link
                     href="#"
-                    className="text-center text-primary fw-bold border-bottom border-light py-3">
+                    className="text-center text-primary fw-bold border-bottom border-light py-3"
+                  >
                     Notifications
                   </Nav.Link>
 
@@ -118,7 +117,6 @@ export default (props) => {
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
-              
                 {/* <Dropdown.Item
                   className="fw-bold"
                   onClick={() => {
@@ -132,12 +130,13 @@ export default (props) => {
 
                 <Dropdown.Item
                   className="fw-bold"
-                  onClick={() => dispatch(logOut())}>
+                  onClick={() => dispatch(logOut())}
+                >
                   {/* <FontAwesomeIcon
                     icon={faSignOutAlt}
                     className="text-danger me-2"
                   /> */}
-                  Logout
+                  <FormattedMessage id="Logout" />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -145,5 +144,5 @@ export default (props) => {
         </div>
       </Container>
     </Navbar>
-  );
-};
+  )
+}

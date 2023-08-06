@@ -1,43 +1,44 @@
-import React, { useEffect, useState } from "react";
-import ProductUrl from "../UrlItem/UrlItem";
+import React, { useEffect, useState } from 'react'
+import ProductUrl from '../UrlItem/UrlItem'
+import { FormattedMessage } from 'react-intl'
 
 const UrlItemList = ({ data }) => {
-  const [UrlItemList, setURLS] = useState([]);
+  const [UrlItemList, setURLS] = useState([])
 
   useEffect(() => {
     setURLS([
       {
-        method: "GET",
+        method: 'GET',
         path: data.defaultHealthCheckUrl,
-        title: "Default Health Check Url",
+        title: <FormattedMessage id="Default-Health-Check-Url" />,
       },
       {
-        method: "POST",
+        method: 'POST',
         path: data.healthStatusChangeUrl,
-        title: "Health Status Change Url",
+        title: <FormattedMessage id="Health-Status-Change-Url" />,
       },
       {
-        method: "POST",
+        method: 'POST',
         path: data.creationEndpoint,
-        title: "Creation Url",
+        title: <FormattedMessage id="Creation-Url" />,
       },
       {
-        method: "PUT",
+        method: 'PUT',
         path: data.activationEndpoint,
-        title: "Activation Url",
+        title: <FormattedMessage id="Activation-Url" />,
       },
       {
-        method: "PUT",
+        method: 'PUT',
         path: data.deactivationEndpoint,
-        title: "Deactivation Url",
+        title: <FormattedMessage id="Deactivation-Url" />,
       },
       {
-        method: "DELETE",
+        method: 'DELETE',
         path: data.deletionEndpoint,
-        title: "Deletion Url",
+        title: <FormattedMessage id="Deletion-Url" />,
       },
-    ]);
-  }, [data]);
+    ])
+  }, [data])
 
   return UrlItemList.map((url) => (
     <tr>
@@ -46,7 +47,7 @@ const UrlItemList = ({ data }) => {
         <ProductUrl data={url} />
       </td>
     </tr>
-  ));
-};
+  ))
+}
 
-export default UrlItemList;
+export default UrlItemList

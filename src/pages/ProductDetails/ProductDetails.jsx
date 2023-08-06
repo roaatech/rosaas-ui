@@ -13,6 +13,7 @@ import { TabView, TabPanel } from 'primereact/tabview'
 import { useDispatch, useSelector } from 'react-redux'
 import { productInfo } from '../../store/slices/products'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
+import { FormattedMessage } from 'react-intl'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -43,14 +44,16 @@ const ProductDetails = () => {
       {productData && (
         <div className="main-container">
           <UpperContent>
-            <h4 className="m-0">Product Details : {productData.name}</h4>
+            <h4 className="m-0">
+              <FormattedMessage id="Product-Details" /> : {productData.name}
+            </h4>
           </UpperContent>
           <TabView className="card">
-            <TabPanel header="Details">
+            <TabPanel header={<FormattedMessage id="Details" />}>
               <ProductDetailsTab data={productData} />
             </TabPanel>
 
-            <TabPanel header="Subscriptions">
+            <TabPanel header={<FormattedMessage id="Subscriptions" />}>
               <ProductTenantsList
                 productId={productData.id}
                 productName={productData.name}

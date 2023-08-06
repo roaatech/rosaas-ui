@@ -1,7 +1,8 @@
-import React from "react";
-import { ConfirmDialog } from "primereact/confirmdialog";
+import React from 'react'
+import { ConfirmDialog } from 'primereact/confirmdialog'
 // import { Toast } from "primereact/toast";
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 export default function DeleteConfirmation({
   confirm,
@@ -14,23 +15,25 @@ export default function DeleteConfirmation({
   sideBar,
 }) {
   const accept = async () => {
-    await confirmFunction();
-    setConfirm(false);
+    await confirmFunction()
+    setConfirm(false)
 
     if (update) {
-      setUpdate(update + 1);
+      setUpdate(update + 1)
     }
-  };
+  }
 
   const reject = () => {
-    setConfirm(false);
-  };
+    setConfirm(false)
+  }
 
   return (
     <>
       <ConfirmDialog
         message={message}
-        header="Confirmation"
+        header={<FormattedMessage id="Confirmation" />}
+        rejectLabel={<FormattedMessage id="No" />}
+        acceptLabel={<FormattedMessage id="Yes" />}
         icon={icon}
         accept={accept}
         reject={reject}
@@ -38,5 +41,5 @@ export default function DeleteConfirmation({
         onHide={() => setConfirm(false)}
       />
     </>
-  );
+  )
 }

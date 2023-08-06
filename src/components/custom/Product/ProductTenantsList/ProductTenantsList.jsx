@@ -18,6 +18,7 @@ import { Link, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { productInfo, subscribe } from '../../../../store/slices/products'
 import { setAllTenant } from '../../../../store/slices/tenants'
+import { FormattedMessage } from 'react-intl'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { DataTransform } = useGlobal()
@@ -111,7 +112,8 @@ export const ProductTenantsList = ({ productId, productName }) => {
                   to={`/tenants/${id}#${productName}`}
                   className="w-100 d-block"
                 >
-                  <FontAwesomeIcon icon={faGear} className="me-2" /> Manage
+                  <FontAwesomeIcon icon={faGear} className="me-2" />{' '}
+                  <FormattedMessage id="Manage" />
                 </Link>
               </Dropdown.Item>
             </Dropdown.Menu>
@@ -127,12 +129,21 @@ export const ProductTenantsList = ({ productId, productName }) => {
         <Table hover className="user-table align-items-center">
           <thead>
             <tr>
-              <th className="border-bottom">Title</th>
-              <th className="border-bottom">Unique Name</th>
-              {/* <th className="border-bottom">Health Check Url Is Overridden</th> */}
-              <th className="border-bottom">Status</th>
-              <th className="border-bottom">Created Date</th>
-              <th className="border-bottom">Actions</th>
+              <th className="border-bottom">
+                <FormattedMessage id="Title" />
+              </th>
+              <th className="border-bottom">
+                <FormattedMessage id="Unique-Name" />
+              </th>
+              <th className="border-bottom">
+                <FormattedMessage id="Status" />
+              </th>
+              <th className="border-bottom">
+                <FormattedMessage id="Created-Date" />
+              </th>
+              <th className="border-bottom">
+                <FormattedMessage id="Actions" />
+              </th>
             </tr>
           </thead>
           <tbody>

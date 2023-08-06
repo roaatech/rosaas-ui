@@ -37,6 +37,7 @@ import CustomPaginator from '../../components/custom/Shared/CustomPaginator/Cust
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import { productInfo, setAllProduct } from '../../store/slices/products'
 import { useDispatch, useSelector } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 export default function Product({ children }) {
   const dispatch = useDispatch()
@@ -108,7 +109,7 @@ export default function Product({ children }) {
       <BreadcrumbComponent breadcrumbInfo={'ProductList'} icon={BsBoxSeam} />
       <div className="main-container">
         <TableHead
-          label={'Add Product'}
+          label={<FormattedMessage id="Add-Product" />}
           icon={'pi-box'}
           setSearchValue={setSearchValue}
           visibleHead={visibleHead}
@@ -116,7 +117,7 @@ export default function Product({ children }) {
           setFirst={setFirst}
         >
           <ProductForm
-            popupLabel={'Create Product'}
+            popupLabel={<FormattedMessage id="Create-Product" />}
             type={'create'}
             update={update}
             setUpdate={setUpdate}
@@ -138,7 +139,7 @@ export default function Product({ children }) {
                 field="name"
                 header={
                   <ColumnSortHeader
-                    text="Name"
+                    text={<FormattedMessage id="Name" />}
                     field="name"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -154,7 +155,7 @@ export default function Product({ children }) {
                 field="defaultHealthCheckUrl"
                 header={
                   <ColumnSortHeader
-                    text="Default Health Check Url"
+                    text={<FormattedMessage id="Default-Health-Check-Url" />}
                     field="defaultHealthCheckUrl"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -171,7 +172,7 @@ export default function Product({ children }) {
                 field={'client.name'}
                 header={
                   <ColumnSortHeader
-                    text="Client"
+                    text={<FormattedMessage id="Client" />}
                     field="client"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -195,7 +196,7 @@ export default function Product({ children }) {
                 style={{ width: '250px', maxidth: '250px' }}
                 header={
                   <ColumnSortHeader
-                    text="Date"
+                    text={<FormattedMessage id="Date" />}
                     field="editedDate"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -227,24 +228,25 @@ export default function Product({ children }) {
                       <Dropdown.Item
                         onSelect={() => navigate(`/products/${data.id}`)}
                       >
-                        <FontAwesomeIcon icon={faEye} className="me-2" /> View
-                        Details
+                        <FontAwesomeIcon icon={faEye} className="me-2" />
+                        <FormattedMessage id="View-Details" />
                       </Dropdown.Item>
                       <Dropdown.Item onSelect={() => editForm(data.id)}>
-                        <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
+                        <FontAwesomeIcon icon={faEdit} className="me-2" />
+                        <FormattedMessage id="Edit" />
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => deleteConfirm(data.id)}
                         className="text-danger"
                       >
                         <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
-                        Delete
+                        <FormattedMessage id="Delete" />
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 )}
                 style={{ width: '60px', textAlign: 'center' }}
-                header="Actions"
+                header={<FormattedMessage id="Actions" />}
               />
             </DataTable>
             <CustomPaginator
@@ -256,7 +258,7 @@ export default function Product({ children }) {
 
             <ThemeDialog visible={visible} setVisible={setVisible}>
               <ProductForm
-                popupLabel={'Edit Product'}
+                popupLabel={<FormattedMessage id="Edit-Product" />}
                 type={'edit'}
                 productData={listData[currentId]}
                 update={update}
@@ -266,7 +268,9 @@ export default function Product({ children }) {
             </ThemeDialog>
 
             <DeleteConfirmation
-              message="Do you want to delete this Product?"
+              message={
+                <FormattedMessage id="delete-product-confirmation-message" />
+              }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
               setConfirm={setConfirm}
