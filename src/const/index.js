@@ -76,20 +76,19 @@ const statusConst = {
   11: {
     string: 'Delete request is sent',
     opacity: '10',
-    color: '#ff0f5f',
+    color: '#FF6868',
     icon: 'pi-trash',
   },
   12: {
     string: 'Deleting',
-    string: 'Deleting',
     opacity: '15',
-    color: '#ff0f5f',
+    color: '#FF6868',
     icon: 'pi-trash',
   },
   13: {
     string: 'Deleted',
     opacity: '35',
-    color: '#ff0f5f',
+    color: '#FF6868',
     icon: 'pi-trash',
   },
 }
@@ -124,6 +123,10 @@ const breadcrumbConst = {
     navigation: '/settings/health-check',
     active: 'Settings',
     icon: {},
+  },
+  Dashboard: {
+    title: <FormattedMessage id="Dashboard" />,
+    navigation: '/',
   },
   ProductList: {
     title: <FormattedMessage id="Product-Management" />,

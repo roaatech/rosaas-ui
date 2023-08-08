@@ -100,24 +100,7 @@ export default function ChildTable({
                 </td>
               </tr>
 
-              {/*    <tr>
-                <td className="fw-bold">Health status: </td>
-                <td className="d-flex  justify-content-between">
-                  <span className="mr-2 checkurl">
-                    {productData.healthCheckStatus == true
-                      ? `last checked at ${DataTransform(
-                          productData.lastCheckDate
-                        )}`
-                      : ` since ${DataTransform(
-                          productData.healthCheckStatus.checkDate
-                        )} , last checked ${DataTransform(
-                          productData.healthCheckStatus.lastCheckDate
-                        )}`}
-                  </span>
-                </td>
-                        </tr>  */}
-
-              {(productData?.status == 4 || productData?.status == 7) && (
+              {productData?.healthCheckStatus.showHealthStatus == true && (
                 <tr>
                   <td className="pl-0 pr-0" colSpan={2}>
                     <HealthCheckAccordion

@@ -1,44 +1,44 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Card, Table } from "@themesberg/react-bootstrap";
+import React from 'react'
+import { useState } from 'react'
+import { useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Card, Table } from '@themesberg/react-bootstrap'
 
-import useGlobal from "../../../../lib/hocks/global";
-import { Button } from "primereact/button";
-import DeleteConfirmation from "../../global/DeleteConfirmation/DeleteConfirmation";
-import useRequest from "../../../../axios/apis/useRequest";
-import { Wrapper } from "./ProdcutDetailsTab.styled";
-import { useDispatch } from "react-redux";
+import useGlobal from '../../../../lib/hocks/global'
+import { Button } from 'primereact/button'
+import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
+import useRequest from '../../../../axios/apis/useRequest'
+import { Wrapper } from './ProdcutDetailsTab.styled'
+import { useDispatch } from 'react-redux'
 
 const ProductDetailsTab = () => {
-  const [confirm, setConfirm] = useState(false);
-  const [currentId, setCurrentId] = useState("");
-  const [productData, setProductData] = useState();
-  const [visible, setVisible] = useState(false);
+  const [confirm, setConfirm] = useState(false)
+  const [currentId, setCurrentId] = useState('')
+  const [productData, setProductData] = useState()
+  const [visible, setVisible] = useState(false)
 
-  const { getProduct, deleteProductReq } = useRequest();
-  const { DataTransform } = useGlobal();
-  const routeParams = useParams();
-  const { editProductProduct } = useRequest();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { getProduct, deleteProductReq } = useRequest()
+  const { DataTransform } = useGlobal()
+  const routeParams = useParams()
+  const { editProductProduct } = useRequest()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const deleteConfirm = (id) => {
-    setCurrentId(id);
-    setConfirm(true);
-  };
+    setCurrentId(id)
+    setConfirm(true)
+  }
   const deleteProduct = async () => {
-    await deleteProductReq({ id: currentId });
-    navigate(`/products`);
-  };
+    await deleteProductReq({ id: currentId })
+    navigate(`/products`)
+  }
 
   useEffect(() => {
-    (async () => {
-      const productDataReq = await getProduct(routeParams.id);
-      setProductData(productDataReq.data);
-    })();
-  }, [visible, routeParams.id]);
+    ;(async () => {
+      const productDataReq = await getProduct(routeParams.id)
+      setProductData(productDataReq.data)
+    })()
+  }, [visible, routeParams.id])
 
   return (
     <Wrapper>
@@ -49,7 +49,8 @@ const ProductDetailsTab = () => {
               <Card.Body className="pb-0">
                 <Table
                   responsive
-                  className="table-centered table-nowrap rounded mb-0">
+                  className="table-centered table-nowrap rounded mb-0"
+                >
                   <tbody>
                     <tr>
                       <td className="fw-bold">Name</td>
@@ -84,8 +85,8 @@ const ProductDetailsTab = () => {
                 icon="pi pi-trash"
                 onClick={() => deleteConfirm(productData.data.id)}
                 style={{
-                  backgroundColor: "var(--red)",
-                  borderColor: "var(--red)",
+                  backgroundColor: '#FF6868',
+                  borderColor: '#FF6868',
                 }}
               />
               <Button
@@ -107,6 +108,6 @@ const ProductDetailsTab = () => {
         </div>
       )}
     </Wrapper>
-  );
-};
-export default ProductDetailsTab;
+  )
+}
+export default ProductDetailsTab

@@ -33,6 +33,10 @@ const Wrapper = styled.div`
   .accordion-body {
     padding: 10px 20px 10px 20px;
     border-radius: 0;
+
+    td {
+      white-space: break-spaces;
+    }
   }
 
   .accordion-button {
@@ -58,6 +62,12 @@ const Wrapper = styled.div`
   }
   .firstTd {
     width: 165px;
+  }
+  .tableTitle {
+    margin: 1rem 0 0.5rem 1rem;
+    padding-right: 1rem;
+    display: inline-block;
+    border-bottom: 1px solid;
   }
 `
 

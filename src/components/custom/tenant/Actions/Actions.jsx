@@ -1,6 +1,6 @@
-import { Button } from "primereact/button";
-import React from "react";
-import { statusConst } from "../../../../const";
+import { Button } from 'primereact/button'
+import React from 'react'
+import { statusConst } from '../../../../const'
 
 const Actions = ({ tenantData, actions, deleteConfirm, chagneStatus }) => {
   return (
@@ -14,8 +14,8 @@ const Actions = ({ tenantData, actions, deleteConfirm, chagneStatus }) => {
               icon="pi pi-trash"
               onClick={() => deleteConfirm(tenantData.data.id)}
               style={{
-                backgroundColor: "var(--red)",
-                borderColor: "var(--red)",
+                backgroundColor: '#FF6868',
+                borderColor: '#FF6868',
               }}
             />
           )}
@@ -35,7 +35,7 @@ const Actions = ({ tenantData, actions, deleteConfirm, chagneStatus }) => {
         />
       ))}
     </>
-  );
-};
+  )
+}
 
-export default Actions;
+export default Actions

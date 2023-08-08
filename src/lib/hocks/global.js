@@ -40,8 +40,8 @@ const useGlobal = () => {
     const currentDate = new Date()
 
     // Calculate the difference in milliseconds between the current date and the target date
-    const timeDifferenceMillis = currentDate - targetDate
-
+    const timeDifferenceMillis =
+      Date.parse(currentDate) - Date.parse(DataTransform(targetDate))
     // Calculate the difference in hours and minutes
     const hoursDifference = Math.floor(timeDifferenceMillis / (1000 * 60 * 60))
     const minutesDifference = Math.floor(

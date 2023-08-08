@@ -4,6 +4,7 @@ import {
   Accordion,
   OverlayTrigger,
   Tooltip,
+  Table,
 } from '@themesberg/react-bootstrap'
 import Label from '../../Shared/label/Label'
 import useGlobal from '../../../../lib/hocks/global'
@@ -30,8 +31,11 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
     }
     const { DataTransform, timeDifferenceFromNow } = useGlobal()
 
-    const timeDifference = timeDifferenceFromNow(
+    const timeDifferenceLastCheck = timeDifferenceFromNow(
       item.healthCheckStatus.lastCheckDate
+    )
+    const timeDifferenceCheck = timeDifferenceFromNow(
+      item.healthCheckStatus.checkDate
     )
 
     return (
@@ -64,18 +68,39 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                         }
                       >
                         <span>
-                          last checked {timeDifference.hours} hours and{' '}
-                          {timeDifference.minutes} minutes ago
+                          {timeDifferenceLastCheck.hours < 24
+                            ? `last checked ${timeDifferenceLastCheck.hours} hours and 
+                          ${timeDifferenceLastCheck.minutes} minutes ago`
+                            : `last checked at ${DataTransform(
+                                item.healthCheckStatus.lastCheckDate
+                              )}`}
                         </span>
                       </OverlayTrigger>
                     </span>
                   </>
                 ) : (
-                  ` since ${DataTransform(
-                    item.healthCheckStatus.checkDate
-                  )} , last checked ${DataTransform(
-                    item.healthCheckStatus.lastCheckDate
-                  )}`
+                  <span className="fw-normal">
+                    <OverlayTrigger
+                      trigger={['hover', 'focus']}
+                      overlay={
+                        <Tooltip>
+                          {DataTransform(item.healthCheckStatus.checkDate)} :{' '}
+                          {DataTransform(item.healthCheckStatus.lastCheckDate)}
+                        </Tooltip>
+                      }
+                    >
+                      <span>
+                        {timeDifferenceCheck.hours < 24
+                          ? `since ${timeDifferenceCheck.hours} hours and ${timeDifferenceCheck.minutes} minutes,
+                           last checked  ${timeDifferenceLastCheck.hours} hours and ${timeDifferenceLastCheck.minutes} minutes`
+                          : ` since ${DataTransform(
+                              item.healthCheckStatus.checkDate
+                            )} , last checked ${DataTransform(
+                              item.healthCheckStatus.lastCheckDate
+                            )}`}
+                      </span>
+                    </OverlayTrigger>
+                  </span>
                 )}
               </span>
             </span>
@@ -84,11 +109,55 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
         <Accordion.Body>
           <Card.Body className="py-0 px-0">
             <Card.Text className="mb-0 ">
-              <span className="">
-                <span>Url: </span>
+              <Table
+                responsive
+                className="table-centered table-nowrap rounded mb-0"
+              >
+                <tbody>
+                  <tr>
+                    <td className="fw-bold firstTd">Url: </td>
+                    <td className="d-flex align-items-center">
+                      {item.healthCheckStatus.healthCheckUrl}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="fw-bold firstTd">Duration: </td>
+                    <td>{item.healthCheckStatus.duration}</td>
+                  </tr>
 
-                <span>{item.healthCheckStatus.healthCheckUrl}</span>
-              </span>
+                  {item.healthCheckStatus.isHealthy == false ? (
+                    <>
+                      <span className="tableTitle">
+                        External System Dispatch
+                      </span>
+                      <tr>
+                        <td className="fw-bold firstTd">Is Successful: </td>
+                        <td>
+                          {
+                            item.healthCheckStatus?.externalSystemDispatch
+                              ?.IsSuccessful
+                          }
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="fw-bold firstTd">Url: </td>
+                        <td>
+                          {item.healthCheckStatus?.externalSystemDispatch?.Url}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="fw-bold firstTd">Dispatch Date: </td>
+                        <td>
+                          {DataTransform(
+                            item.healthCheckStatus?.externalSystemDispatch
+                              ?.DispatchDate
+                          )}
+                        </td>
+                      </tr>
+                    </>
+                  ) : null}
+                </tbody>
+              </Table>
             </Card.Text>
           </Card.Body>
         </Accordion.Body>
