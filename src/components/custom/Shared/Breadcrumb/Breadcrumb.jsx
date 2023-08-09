@@ -1,35 +1,37 @@
-import React from "react";
+import React from 'react'
 
-import { BsFillHouseDoorFill } from "react-icons/bs";
-import { Breadcrumb } from "@themesberg/react-bootstrap";
-import { Wrapper } from "./Breadcrumb.styled";
-import { useEffect } from "react";
-import Navbar from "../../../Navbar";
-import { breadcrumbConst } from "../../../../const";
+import { BsFillHouseDoorFill } from 'react-icons/bs'
+import { Breadcrumb } from '@themesberg/react-bootstrap'
+import { Wrapper } from './Breadcrumb.styled'
+import { useEffect } from 'react'
+import Navbar from '../../../Navbar'
+import { breadcrumbConst } from '../../../../const'
+import { useIntl, FormattedMessage } from 'react-intl'
 
 const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
-  const hasInfo = breadcrumbInfo ? "yes" : null;
-  let navigation = "#";
+  const intl = useIntl()
+  const hasInfo = breadcrumbInfo ? 'yes' : null
+  let navigation = '#'
   if (breadcrumbInfo) {
     if (breadcrumbConst[breadcrumbInfo].navigation) {
-      navigation = breadcrumbConst[breadcrumbInfo].navigation;
+      navigation = breadcrumbConst[breadcrumbInfo].navigation
       if (param1) {
         navigation = breadcrumbConst[breadcrumbInfo].navigation.replace(
-          "{0}",
+          '{0}',
           param1
-        );
+        )
       }
     }
   }
   useEffect(() => {
     if (breadcrumbInfo) {
-      if (breadcrumbConst[breadcrumbInfo].name) {
-        document.title = `ROSAS - ${breadcrumbConst[breadcrumbInfo].name}`;
-      } else if (parent) {
-        document.title = `ROSAS - ${breadcrumbConst[breadcrumbInfo].name}`;
+      if (breadcrumbConst[breadcrumbInfo].name || parent) {
+        document.title = `ROSAS - ${intl.formatMessage({
+          id: breadcrumbConst[breadcrumbInfo].name,
+        })}`
       }
     }
-  });
+  })
   return (
     <>
       <Wrapper className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2">
@@ -38,8 +40,9 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
             <Breadcrumb
               className="d-none d-md-inline-block"
               listProps={{
-                className: "breadcrumb-dark breadcrumb-transparent",
-              }}>
+                className: 'breadcrumb-dark breadcrumb-transparent',
+              }}
+            >
               <Breadcrumb.Item href="/">
                 <BsFillHouseDoorFill />
               </Breadcrumb.Item>
@@ -50,7 +53,8 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
                   active={
                     breadcrumbConst[breadcrumbInfo].active ==
                     breadcrumbConst[breadcrumbInfo].title
-                  }>
+                  }
+                >
                   {breadcrumbConst[breadcrumbInfo].title}
                 </Breadcrumb.Item>
               )}
@@ -61,7 +65,8 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
                   active={
                     breadcrumbConst[breadcrumbInfo].active ==
                     breadcrumbConst[breadcrumbInfo].parent
-                  }>
+                  }
+                >
                   {breadcrumbConst[breadcrumbInfo].parent}
                 </Breadcrumb.Item>
               )}
@@ -71,9 +76,14 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
                   href={navigation}
                   active={
                     breadcrumbConst[breadcrumbInfo].active ==
-                    breadcrumbConst[breadcrumbInfo].name
-                  }>
-                  {breadcrumbConst[breadcrumbInfo].name}
+                    intl.formatMessage({
+                      id: breadcrumbConst[breadcrumbInfo].name,
+                    })
+                  }
+                >
+                  {intl.formatMessage({
+                    id: breadcrumbConst[breadcrumbInfo].name,
+                  })}
                 </Breadcrumb.Item>
               )}
 
@@ -83,7 +93,8 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
                   active={
                     breadcrumbConst[breadcrumbInfo].active ==
                     breadcrumbConst[breadcrumbInfo].child
-                  }>
+                  }
+                >
                   {breadcrumbConst[breadcrumbInfo].child}
                 </Breadcrumb.Item>
               )}
@@ -93,7 +104,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
         <Navbar />
       </Wrapper>
     </>
-  );
-};
+  )
+}
 
-export default BreadcrumbComponent;
+export default BreadcrumbComponent

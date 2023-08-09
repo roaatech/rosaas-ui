@@ -68,7 +68,7 @@ const statusConst = {
     icon: 'pi-exclamation-triangle',
   },
   10: {
-    string: 'Deactivate',
+    string: 'Inactive',
     opacity: '35',
     color: '#eda100',
     icon: 'pi-exclamation-triangle',
@@ -119,7 +119,7 @@ const urlStyle = {
 const breadcrumbConst = {
   HealthCheck: {
     title: <FormattedMessage id="Settings" />,
-    name: <FormattedMessage id="Health-Check-Settings" />,
+    name: 'Health-Check-Settings',
     navigation: '/settings/health-check',
     active: 'Settings',
     icon: {},
@@ -130,24 +130,24 @@ const breadcrumbConst = {
   },
   ProductList: {
     title: <FormattedMessage id="Product-Management" />,
-    name: <FormattedMessage id="Products" />,
-    navigation: '/product',
+    name: 'Products',
+    navigation: '/products',
     active: 'Products',
     icon: {},
   },
   ProductDetails: {
     title: <FormattedMessage id="Product-Management" />,
-    name: <FormattedMessage id="Product-Details" />,
+    name: 'Product-Details',
     active: 'Product Details',
-    navigation: '/product',
+    navigation: '/products',
     parent: <FormattedMessage id="Products" />,
-    parentNavigation: '/product',
+    parentNavigation: '/products',
     icon: {},
   },
   TenantList: {
     title: 'Tenant Management',
     name: 'Tenants',
-    navigation: '/tnant',
+    navigation: '/tenants',
     active: 'Tenants',
     icon: {},
   },

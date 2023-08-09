@@ -85,8 +85,8 @@ const ProductDetailsTab = () => {
                 icon="pi pi-trash"
                 onClick={() => deleteConfirm(productData.data.id)}
                 style={{
-                  backgroundColor: '#FF6868',
-                  borderColor: '#FF6868',
+                  backgroundColor: 'var(--red)',
+                  borderColor: 'var(--red)',
                 }}
               />
               <Button
