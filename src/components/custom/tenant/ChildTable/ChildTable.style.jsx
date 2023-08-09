@@ -73,8 +73,9 @@ const Wrapper = styled.div`
   .dispatchCont {
     .card-stats {
       word-wrap: break-word;
-      white-space: break-spaces;
-      text-align: right;
+      white-space: normal;
+      width: 100%;
+      text-align: left;
     }
     div {
       font-size: var(--defaultFont);

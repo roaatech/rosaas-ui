@@ -107,7 +107,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                               timeDifferenceCheck.minutes < 1
                                 ? 'a few seconds'
                                 : timeDifferenceCheck.minutes + ' minutes'
-                            } minutes,
+                            } ,
                            last checked  ${isHour(
                              timeDifferenceLastCheck.hours
                            )}   ${
@@ -137,13 +137,13 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
               >
                 <tbody>
                   <tr>
-                    <td className="fw-bold firstTd">Url: </td>
+                    <td className="fw-bold firstTd">Url </td>
                     <td className="d-flex align-items-center">
                       {item.healthCheckStatus.healthCheckUrl}
                     </td>
                   </tr>
                   <tr>
-                    <td className="fw-bold firstTd">Duration: </td>
+                    <td className="fw-bold firstTd">Duration </td>
                     <td>{item.healthCheckStatus.duration}</td>
                   </tr>
                 </tbody>
@@ -158,22 +158,22 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                           <h6>External System Dispatch</h6>
                         </div>
                       </div>
-                      <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3">
-                        <div className="mb-0">Is Successful:</div>
+                      <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                        <div className="mb-0 w-25">Is Successful</div>
                         <div className="small card-stats">
                           {item.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
                         </div>
                       </div>
-                      <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3">
-                        <div className="mb-0">Url:</div>
+                      <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                        <div className="mb-0 w-25">Url</div>
                         <div className="small card-stats">
                           {item.healthCheckStatus?.externalSystemDispatch?.url}
                         </div>
                       </div>
-                      <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3">
-                        <div className="mb-0">Dispatch Date:</div>
+                      <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                        <div className="mb-0 w-25">Dispatch Date</div>
                         <div className="small card-stats">
-                          {DataTransform(
+                          {time(
                             item.healthCheckStatus?.externalSystemDispatch
                               ?.dispatchDate
                           )}
