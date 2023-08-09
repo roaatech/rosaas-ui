@@ -9,14 +9,6 @@ const useGlobal = () => {
     document.documentElement.dir = direction
   }
 
-  const DataTransform = (dateTime) => {
-    const utcDateTime = new Date(dateTime + 'Z')
-    const localDateTime = utcDateTime.toLocaleString(undefined, {
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    })
-    return localDateTime
-  }
-
   const searchWait = (e, setInputValue, setSearchValue, setFirst) => {
     setInputValue(e.target.value)
     const oldText = e.target.value
@@ -30,32 +22,9 @@ const useGlobal = () => {
     }, 1000)
   }
 
-  function timeDifferenceFromNow(targetDate) {
-    // Convert the targetDate parameter to a Date object if it is not already
-    if (!(targetDate instanceof Date)) {
-      targetDate = new Date(targetDate)
-    }
-
-    // Get the current date and time
-    const currentDate = new Date()
-
-    // Calculate the difference in milliseconds between the current date and the target date
-    const timeDifferenceMillis =
-      Date.parse(currentDate) - Date.parse(DataTransform(targetDate))
-    // Calculate the difference in hours and minutes
-    const hoursDifference = Math.floor(timeDifferenceMillis / (1000 * 60 * 60))
-    const minutesDifference = Math.floor(
-      (timeDifferenceMillis % (1000 * 60 * 60)) / (1000 * 60)
-    )
-
-    return { hours: hoursDifference, minutes: minutesDifference }
-  }
-
   return {
     changeDirection,
-    DataTransform,
     searchWait,
-    timeDifferenceFromNow,
   }
 }
 

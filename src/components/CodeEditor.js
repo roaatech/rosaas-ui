@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import React, { useState } from 'react'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import {
   Col,
   Row,
@@ -7,33 +7,33 @@ import {
   Button,
   Tooltip,
   OverlayTrigger,
-} from "@themesberg/react-bootstrap";
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
+} from '@themesberg/react-bootstrap'
+import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
-import Code from "./Code";
+import Code from './Code'
 
-import themeStyle from "../assets/syntax-themes/ghcolors.json";
+import themeStyle from '../assets/syntax-themes/ghcolors.json'
 
 export default (props) => {
   const {
-    language = "jsx",
+    language = 'jsx',
     scope = {},
     imports = null,
-    maxHeight = "none",
-  } = props;
-  const [code, setCode] = useState(props.code);
-  const [copied, setCopied] = useState(false);
-  const noInline = code.includes("render(");
+    maxHeight = 'none',
+  } = props
+  const [code, setCode] = useState(props.code)
+  const [copied, setCopied] = useState(false)
+  const noInline = code.includes('render(')
 
   const handleCodeChange = (newCode) => {
-    setCode(newCode);
-  };
+    setCode(newCode)
+  }
 
   const handleCopy = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   return (
     <LiveProvider
@@ -41,7 +41,8 @@ export default (props) => {
       code={code}
       language={language}
       theme={themeStyle}
-      scope={scope}>
+      scope={scope}
+    >
       <Row>
         <Col xs={12} className="mb-4">
           <Card>
@@ -60,14 +61,15 @@ export default (props) => {
 
           <span className="fs-7 mb-2 d-block text-gray-600">
             <OverlayTrigger
-              trigger={["hover", "focus"]}
+              trigger={['hover', 'focus']}
               placement="top"
               overlay={
                 <Tooltip>
                   You can edit the code below and the changes will be seen in
                   the example above.
                 </Tooltip>
-              }>
+              }
+            >
               {/* <FontAwesomeIcon icon={faQuestionCircle} className="me-2" /> */}
             </OverlayTrigger>
             Live React Code Editor
@@ -82,14 +84,16 @@ export default (props) => {
               ) : null}
 
               <OverlayTrigger
-                trigger={["hover", "focus"]}
+                trigger={['hover', 'focus']}
                 placement="top"
-                overlay={<Tooltip>Copy to clipboard</Tooltip>}>
+                overlay={<Tooltip>Copy to clipboard</Tooltip>}
+              >
                 <CopyToClipboard text={code} onCopy={handleCopy}>
                   <Button
                     size="sm"
                     variant="primary"
-                    className="copy-code-button">
+                    className="copy-code-button"
+                  >
                     Copy
                   </Button>
                 </CopyToClipboard>
@@ -99,5 +103,5 @@ export default (props) => {
         </Col>
       </Row>
     </LiveProvider>
-  );
-};
+  )
+}

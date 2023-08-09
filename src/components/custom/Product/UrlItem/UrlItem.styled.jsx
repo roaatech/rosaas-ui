@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components'
 export const Wrapper = styled.div`
   .bar {
     padding: 5px;
@@ -17,21 +17,26 @@ export const Wrapper = styled.div`
       display: inline-block;
       margin-right: 10px;
     }
- 
+
     .url {
       font-size: 14px;
       color: var(--themeColor) !important;
-    } 
+    }
 
     span.title {
       @media (max-width: 600px) {
         width: 100%;
         margin-top: 5px;
-      } 
+      }
       font-size: 14px;
       margin-right: 10px;
       line-height: 27px;
       font-weight: bold;
     }
+
+    .copyItem {
+      font-size: var(--normalFont);
+      cursor: pointer;
+    }
   }
-`;
+`

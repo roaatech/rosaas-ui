@@ -10,11 +10,11 @@ import { FiRefreshCw } from 'react-icons/fi'
 import { useDispatch } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
 import Actions from '../Actions/Actions'
-import useGlobal from '../../../../lib/hocks/global'
 import ReactJson from 'react-json-view'
 
 import Label from '../../Shared/label/Label'
 import HealthCheckAccordion from '../HealthCheckAccordion/HealthCheckAccordion'
+import { DataTransform } from '../../../../lib/sharedFun/Time'
 
 export default function ChildTable({
   productData,
@@ -23,7 +23,6 @@ export default function ChildTable({
   updateTenant,
   productIndex,
 }) {
-  const { DataTransform } = useGlobal()
   const { editTenantStatus } = useRequest()
   const dispatch = useDispatch()
 

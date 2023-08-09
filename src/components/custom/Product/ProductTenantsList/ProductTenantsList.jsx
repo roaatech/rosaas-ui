@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import useGlobal from '../../../../lib/hocks/global'
 import TenantStatus from '../../tenant/TenantStatus/TenantStatus'
 import useRequest from '../../../../axios/apis/useRequest'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,8 +9,6 @@ import {
   Button,
   ButtonGroup,
   Dropdown,
-  Tooltip,
-  OverlayTrigger,
 } from '@themesberg/react-bootstrap'
 import TableDate from '../../Shared/TableDate/TableDate'
 import { Link, Navigate } from 'react-router-dom'
@@ -21,7 +18,6 @@ import { setAllTenant } from '../../../../store/slices/tenants'
 import { FormattedMessage } from 'react-intl'
 
 export const ProductTenantsList = ({ productId, productName }) => {
-  const { DataTransform } = useGlobal()
   const { getProductTenants } = useRequest()
   const [searchValue] = useState('')
   const [sortField] = useState('')

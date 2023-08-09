@@ -59,7 +59,7 @@ const UrlItemList = ({ data }) => {
             trigger={['hover', 'focus']}
             overlay={<Tooltip>{url.description}</Tooltip>}
           >
-            <span>
+            <span className="question">
               <BsFillQuestionCircleFill />
             </span>
           </OverlayTrigger>

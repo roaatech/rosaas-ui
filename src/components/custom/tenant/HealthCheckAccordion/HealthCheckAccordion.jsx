@@ -7,15 +7,17 @@ import {
   Table,
 } from '@themesberg/react-bootstrap'
 import Label from '../../Shared/label/Label'
-import useGlobal from '../../../../lib/hocks/global'
 import {
   BsFillCheckCircleFill,
   BsFillExclamationCircleFill,
 } from 'react-icons/bs'
+import {
+  Time,
+  DataTransform,
+  timeDifferenceFromNow,
+} from '../../../../lib/sharedFun/Time'
 
 const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
-  const isHour = (hour) => (hour.hours > 0 ? `${hour.hours} hours and` : '')
-
   const AccordionItem = (item) => {
     const HealthStatus = {
       true: {
@@ -31,27 +33,14 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
         icon: <BsFillExclamationCircleFill />,
       },
     }
-    const { DataTransform, timeDifferenceFromNow } = useGlobal()
 
-    const timeDifferenceLastCheck = timeDifferenceFromNow(
-      item.healthCheckStatus.lastCheckDate
-    )
+    // const timeDifferenceLastCheck = timeDifferenceFromNow(
+    //   item.healthCheckStatus.lastCheckDate
+    // )
+
     const timeDifferenceCheck = timeDifferenceFromNow(
       item.healthCheckStatus.checkDate
     )
-    const time = (date) => {
-      const timeDifference = timeDifferenceFromNow(date)
-
-      return timeDifference.hours < 24
-        ? `last checked ${isHour(timeDifference.hours)}
-    
-        ${
-          timeDifference.minutes < 1
-            ? 'a few seconds'
-            : timeDifference.minutes + ' minutes'
-        }  `
-        : `last checked at ${DataTransform(date)}`
-    }
 
     return (
       <Accordion.Item eventKey={'eventKey'}>
@@ -83,7 +72,10 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                         }
                       >
                         <span>
-                          {time(item.healthCheckStatus.lastCheckDate)}
+                          {Time(
+                            item.healthCheckStatus.lastCheckDate,
+                            'last checked'
+                          )}
                         </span>
                       </OverlayTrigger>
                     </span>
@@ -103,18 +95,12 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                     >
                       <span>
                         {timeDifferenceCheck.hours < 24
-                          ? `since ${isHour(timeDifferenceCheck.hours)} ${
-                              timeDifferenceCheck.minutes < 1
-                                ? 'a few seconds'
-                                : timeDifferenceCheck.minutes + ' minutes'
-                            } ,
-                           last checked  ${isHour(
-                             timeDifferenceLastCheck.hours
-                           )}   ${
-                              timeDifferenceLastCheck.minutes < 1
-                                ? 'a few seconds'
-                                : timeDifferenceLastCheck.minutes + ' minutes'
-                            } `
+                          ? ` 
+                            ${Time(item.healthCheckStatus.checkDate, 'since')}, 
+                            ${Time(
+                              item.healthCheckStatus.lastCheckDate,
+                              'last checked'
+                            )}`
                           : ` since ${DataTransform(
                               item.healthCheckStatus.checkDate
                             )} , last checked ${DataTransform(
@@ -131,23 +117,30 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
         <Accordion.Body>
           <Card.Body className="py-0 px-0">
             <Card.Text className="mb-0 ">
-              <Table
-                responsive
-                className="table-centered table-nowrap rounded mb-0"
-              >
-                <tbody>
-                  <tr>
-                    <td className="fw-bold firstTd">Url </td>
-                    <td className="d-flex align-items-center">
-                      {item.healthCheckStatus.healthCheckUrl}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="fw-bold firstTd">Duration </td>
-                    <td>{item.healthCheckStatus.duration}</td>
-                  </tr>
-                </tbody>
-              </Table>
+              <div className="dispatchCont">
+                <Card border="light" className="shadow-sm mt-3">
+                  <Card.Body>
+                    <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-3">
+                      <div>
+                        <h6>Health Check Status Info:</h6>
+                      </div>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                      <div className="mb-0 w-25">Url</div>
+                      <div className="small card-stats">
+                        {item.healthCheckStatus.healthCheckUrl}
+                      </div>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between pt-2 ml-5">
+                      <div className="mb-0 w-25">Duration</div>
+                      <div className="small card-stats">
+                        {item.healthCheckStatus.duration}
+                      </div>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </div>
+
               {item.healthCheckStatus.isHealthy == false &&
               item.healthCheckStatus?.externalSystemDispatch ? (
                 <div className="dispatchCont">
@@ -155,7 +148,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                     <Card.Body>
                       <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-3">
                         <div>
-                          <h6>External System Dispatch</h6>
+                          <h6>External System Dispatch:</h6>
                         </div>
                       </div>
                       <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
@@ -170,12 +163,13 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                           {item.healthCheckStatus?.externalSystemDispatch?.url}
                         </div>
                       </div>
-                      <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                      <div className="d-flex align-items-center justify-content-between  pt-2 ml-5">
                         <div className="mb-0 w-25">Dispatch Date</div>
                         <div className="small card-stats">
-                          {time(
+                          {Time(
                             item.healthCheckStatus?.externalSystemDispatch
-                              ?.dispatchDate
+                              ?.dispatchDate,
+                            'last checked'
                           )}
                         </div>
                       </div>

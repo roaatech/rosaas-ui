@@ -4,12 +4,12 @@ import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Card, Table } from '@themesberg/react-bootstrap'
 
-import useGlobal from '../../../../lib/hocks/global'
 import { Button } from 'primereact/button'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import useRequest from '../../../../axios/apis/useRequest'
 import { Wrapper } from './ProdcutDetailsTab.styled'
 import { useDispatch } from 'react-redux'
+import { DataTransform } from '../../../../lib/sharedFun/Time'
 
 const ProductDetailsTab = () => {
   const [confirm, setConfirm] = useState(false)
@@ -18,7 +18,6 @@ const ProductDetailsTab = () => {
   const [visible, setVisible] = useState(false)
 
   const { getProduct, deleteProductReq } = useRequest()
-  const { DataTransform } = useGlobal()
   const routeParams = useParams()
   const { editProductProduct } = useRequest()
   const dispatch = useDispatch()

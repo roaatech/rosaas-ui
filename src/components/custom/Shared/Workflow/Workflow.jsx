@@ -1,37 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { Wrapper } from "./Workflow.styled";
-import TenantStatus from "../../tenant/TenantStatus/TenantStatus";
-import useGlobal from "../../../../lib/hocks/global";
-import { Owner } from "../../../../const";
-import { useParams } from "react-router-dom";
-import useRequest from "../../../../axios/apis/useRequest";
-import { useDispatch, useSelector } from "react-redux";
-import { history } from "../../../../store/slices/tenants";
+import React, { useEffect, useState } from 'react'
+import { Wrapper } from './Workflow.styled'
+import TenantStatus from '../../tenant/TenantStatus/TenantStatus'
+import { Owner } from '../../../../const'
+import { useParams } from 'react-router-dom'
+import useRequest from '../../../../axios/apis/useRequest'
+import { useDispatch, useSelector } from 'react-redux'
+import { history } from '../../../../store/slices/tenants'
+import { DataTransform } from '../../../../lib/sharedFun/Time'
 
 const Workflow = ({ productId, updateDetails, productIndex }) => {
   // const [timeLine, setTimeLine] = useState([]);
-  const { getTimeLine } = useRequest();
-  const dispatch = useDispatch();
-  const { DataTransform } = useGlobal();
-  const routeParams = useParams();
-  const tenantsData = useSelector((state) => state.tenants.tenants);
+  const { getTimeLine } = useRequest()
+  const dispatch = useDispatch()
+  const routeParams = useParams()
+  const tenantsData = useSelector((state) => state.tenants.tenants)
 
-  const timeLine = tenantsData[routeParams.id].products[productIndex].history;
+  const timeLine = tenantsData[routeParams.id].products[productIndex].history
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       if (!tenantsData[routeParams.id].products[productIndex].history) {
-        const timeLineReq = await getTimeLine(routeParams.id, productId);
+        const timeLineReq = await getTimeLine(routeParams.id, productId)
         dispatch(
           history({
             tenantId: routeParams.id,
             productIndex,
             data: timeLineReq.data.data,
           })
-        );
+        )
       }
-    })();
-  }, [routeParams.id, updateDetails]);
+    })()
+  }, [routeParams.id, updateDetails])
 
   return (
     <Wrapper>
@@ -53,7 +52,7 @@ const Workflow = ({ productId, updateDetails, productIndex }) => {
         ))}
       </div>
     </Wrapper>
-  );
-};
+  )
+}
 
-export default Workflow;
+export default Workflow

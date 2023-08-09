@@ -7,7 +7,6 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 import { BsFillPersonLinesFill } from 'react-icons/bs'
 import { TabView, TabPanel } from 'primereact/tabview'
 import ChildTable from '../../components/custom/tenant/ChildTable/ChildTable'
-import useGlobal from '../../lib/hocks/global'
 import { Button } from 'primereact/button'
 import DeleteConfirmation from '../../components/custom/global/DeleteConfirmation/DeleteConfirmation'
 import useRequest from '../../axios/apis/useRequest'
@@ -20,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { tenantInfo } from '../../store/slices/tenants'
 import { removeTenant, setActiveIndex } from '../../store/slices/tenants'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
+import { DataTransform } from '../../lib/sharedFun/Time'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -27,7 +27,6 @@ const TenantDetails = () => {
   const [currentId, setCurrentId] = useState('')
   const [updateDetails, setUpdateDetails] = useState(0)
   const [visible, setVisible] = useState(false)
-  const { DataTransform } = useGlobal()
 
   const tenantsData = useSelector((state) => state.tenants.tenants)
   const activeIndex = useSelector((state) => state.tenants.currentTab)

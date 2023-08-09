@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components'
 export const Wrapper = styled.div`
   .bar {
     padding: 5px;
@@ -7,7 +7,6 @@ export const Wrapper = styled.div`
     border: 1px solid;
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
 
     .method {
       font-size: var(--smallFont);
@@ -17,21 +16,22 @@ export const Wrapper = styled.div`
       display: inline-block;
       margin-right: 10px;
     }
- 
+
     .url {
       font-size: 14px;
       color: var(--themeColor) !important;
-    } 
+      white-space: normal;
+    }
 
     span.title {
       @media (max-width: 600px) {
         width: 100%;
         margin-top: 5px;
-      } 
+      }
       font-size: 14px;
       margin-right: 10px;
       line-height: 27px;
       font-weight: bold;
     }
   }
-`;
+`

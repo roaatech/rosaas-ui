@@ -1,15 +1,13 @@
 import React from 'react'
 import { Wrapper } from './TableDate.styled'
-import useGlobal from '../../../../lib/hocks/global'
 import { OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
+import { DataTransform } from '../../../../lib/sharedFun/Time'
 
 const TableDate = ({
   createdDate = '10/18/200, 11:42AM',
   editedDate = '10/18/200, 11:42AM',
 }) => {
-  const { DataTransform } = useGlobal()
-
   return (
     <Wrapper>
       <OverlayTrigger

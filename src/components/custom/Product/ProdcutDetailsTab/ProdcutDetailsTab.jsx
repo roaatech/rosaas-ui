@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Card, Table } from '@themesberg/react-bootstrap'
 
-import useGlobal from '../../../../lib/hocks/global'
 import { Button } from 'primereact/button'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import useRequest from '../../../../axios/apis/useRequest'
@@ -14,6 +13,7 @@ import ProductForm from '../ProductForm/ProductForm'
 import UrlItemList from '../../../../components/custom/Product/UrlItemList/UrlItemList'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import { FormattedMessage } from 'react-intl'
+import { DataTransform } from '../../../../lib/sharedFun/Time'
 
 const ProductDetailsTab = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
@@ -22,7 +22,6 @@ const ProductDetailsTab = ({ data }) => {
   const [visible, setVisible] = useState(false)
 
   const { deleteProductReq } = useRequest()
-  const { DataTransform } = useGlobal()
   const routeParams = useParams()
   const navigate = useNavigate()
 
