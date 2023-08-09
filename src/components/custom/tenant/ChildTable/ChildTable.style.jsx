@@ -69,6 +69,17 @@ const Wrapper = styled.div`
     display: inline-block;
     border-bottom: 1px solid;
   }
+
+  .dispatchCont {
+    .card-stats {
+      word-wrap: break-word;
+      white-space: break-spaces;
+      text-align: right;
+    }
+    div {
+      font-size: var(--defaultFont);
+    }
+  }
 `
 
 export { Wrapper }

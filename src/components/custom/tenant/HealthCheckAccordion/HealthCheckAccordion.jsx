@@ -14,6 +14,8 @@ import {
 } from 'react-icons/bs'
 
 const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
+  const isHour = (hour) => (hour.hours > 0 ? `${hour.hours} hours and` : '')
+
   const AccordionItem = (item) => {
     const HealthStatus = {
       true: {
@@ -37,6 +39,19 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
     const timeDifferenceCheck = timeDifferenceFromNow(
       item.healthCheckStatus.checkDate
     )
+    const time = (date) => {
+      const timeDifference = timeDifferenceFromNow(date)
+
+      return timeDifference.hours < 24
+        ? `last checked ${isHour(timeDifference.hours)}
+    
+        ${
+          timeDifference.minutes < 1
+            ? 'a few seconds'
+            : timeDifference.minutes + ' minutes'
+        }  `
+        : `last checked at ${DataTransform(date)}`
+    }
 
     return (
       <Accordion.Item eventKey={'eventKey'}>
@@ -68,12 +83,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                         }
                       >
                         <span>
-                          {timeDifferenceLastCheck.hours < 24
-                            ? `last checked ${timeDifferenceLastCheck.hours} hours and 
-                          ${timeDifferenceLastCheck.minutes} minutes ago`
-                            : `last checked at ${DataTransform(
-                                item.healthCheckStatus.lastCheckDate
-                              )}`}
+                          {time(item.healthCheckStatus.lastCheckDate)}
                         </span>
                       </OverlayTrigger>
                     </span>
@@ -84,15 +94,27 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                       trigger={['hover', 'focus']}
                       overlay={
                         <Tooltip>
-                          {DataTransform(item.healthCheckStatus.checkDate)} :{' '}
+                          Since{' '}
+                          {DataTransform(item.healthCheckStatus.checkDate)},
+                          last checked{' '}
                           {DataTransform(item.healthCheckStatus.lastCheckDate)}
                         </Tooltip>
                       }
                     >
                       <span>
                         {timeDifferenceCheck.hours < 24
-                          ? `since ${timeDifferenceCheck.hours} hours and ${timeDifferenceCheck.minutes} minutes,
-                           last checked  ${timeDifferenceLastCheck.hours} hours and ${timeDifferenceLastCheck.minutes} minutes`
+                          ? `since ${isHour(timeDifferenceCheck.hours)} ${
+                              timeDifferenceCheck.minutes < 1
+                                ? 'a few seconds'
+                                : timeDifferenceCheck.minutes + ' minutes'
+                            } minutes,
+                           last checked  ${isHour(
+                             timeDifferenceLastCheck.hours
+                           )}   ${
+                              timeDifferenceLastCheck.minutes < 1
+                                ? 'a few seconds'
+                                : timeDifferenceLastCheck.minutes + ' minutes'
+                            } `
                           : ` since ${DataTransform(
                               item.healthCheckStatus.checkDate
                             )} , last checked ${DataTransform(
@@ -124,40 +146,43 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                     <td className="fw-bold firstTd">Duration: </td>
                     <td>{item.healthCheckStatus.duration}</td>
                   </tr>
-
-                  {item.healthCheckStatus.isHealthy == false ? (
-                    <>
-                      <span className="tableTitle">
-                        External System Dispatch
-                      </span>
-                      <tr>
-                        <td className="fw-bold firstTd">Is Successful: </td>
-                        <td>
-                          {
-                            item.healthCheckStatus?.externalSystemDispatch
-                              ?.IsSuccessful
-                          }
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="fw-bold firstTd">Url: </td>
-                        <td>
-                          {item.healthCheckStatus?.externalSystemDispatch?.Url}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="fw-bold firstTd">Dispatch Date: </td>
-                        <td>
-                          {DataTransform(
-                            item.healthCheckStatus?.externalSystemDispatch
-                              ?.DispatchDate
-                          )}
-                        </td>
-                      </tr>
-                    </>
-                  ) : null}
                 </tbody>
               </Table>
+              {item.healthCheckStatus.isHealthy == false &&
+              item.healthCheckStatus?.externalSystemDispatch ? (
+                <div className="dispatchCont">
+                  <Card border="light" className="shadow-sm mt-3">
+                    <Card.Body>
+                      <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-3">
+                        <div>
+                          <h6>External System Dispatch</h6>
+                        </div>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3">
+                        <div className="mb-0">Is Successful:</div>
+                        <div className="small card-stats">
+                          {item.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
+                        </div>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3">
+                        <div className="mb-0">Url:</div>
+                        <div className="small card-stats">
+                          {item.healthCheckStatus?.externalSystemDispatch?.url}
+                        </div>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3">
+                        <div className="mb-0">Dispatch Date:</div>
+                        <div className="small card-stats">
+                          {DataTransform(
+                            item.healthCheckStatus?.externalSystemDispatch
+                              ?.dispatchDate
+                          )}
+                        </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </div>
+              ) : null}
             </Card.Text>
           </Card.Body>
         </Accordion.Body>
