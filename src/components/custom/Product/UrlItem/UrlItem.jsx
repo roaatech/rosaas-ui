@@ -50,7 +50,7 @@ const UrlItem = ({ data }) => {
             }
           >
             <CopyToClipboard text={code} onCopy={handleCopy}>
-              <span className="copyItem">
+              <span className="copyItem ml-1">
                 <AiFillCopy />
               </span>
             </CopyToClipboard>

@@ -126,7 +126,7 @@ const TenantForm = ({
               )}
             </Form.Group>
           </div>
-          <div>
+          <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
               <Form.Label>
                 Unique Name <span style={{ color: 'red' }}>*</span>

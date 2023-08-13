@@ -1,13 +1,25 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 export const Wrapper = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  background:#41404261;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000000000;
+  .p-progressbar .p-progressbar-value {
+    border: 0 none;
+    margin: 0;
+    background: var(--primary5);
+  }
+  .p-progressbar {
+    z-index: 1000;
+  }
+
+  .loaderCont {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    background: #41404261;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000000000;
+  }
+
   .loader {
     display: inline-block;
     position: relative;
@@ -49,4 +61,4 @@ export const Wrapper = styled.div`
       transform: rotate(360deg);
     }
   }
-`;
+`

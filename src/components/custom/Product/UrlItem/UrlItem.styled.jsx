@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
     border: 1px solid;
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
 
     .method {
       font-size: var(--smallFont);

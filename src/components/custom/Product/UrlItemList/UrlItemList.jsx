@@ -30,19 +30,19 @@ const UrlItemList = ({ data }) => {
         description: <FormattedMessage id="Creation-Url-description" />,
       },
       {
-        method: 'PUT',
+        method: 'POST',
         path: data.activationEndpoint,
         title: <FormattedMessage id="Activation-Url" />,
         description: <FormattedMessage id="Activation-Url-description" />,
       },
       {
-        method: 'PUT',
+        method: 'POST',
         path: data.deactivationEndpoint,
         title: <FormattedMessage id="Deactivation-Url" />,
         description: <FormattedMessage id="Deactivation-Url-description" />,
       },
       {
-        method: 'DELETE',
+        method: 'POST',
         path: data.deletionEndpoint,
         title: <FormattedMessage id="Deletion-Url" />,
         description: <FormattedMessage id="Deletion-Url-description" />,
