@@ -41,7 +41,7 @@ const Wrapper = styled.div`
 
   .accordion-button {
     background-color: var(--primary0);
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1rem;
     font-size: 0.875rem;
   }
   .accordion-button:focus {
