@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux'
 import { logOut } from '../store/slices/auth'
 import { useDispatch } from 'react-redux'
 import { changeMode } from '../store/slices/main'
+import { useDarkreader } from 'react-darkreader'
 import { FormattedMessage } from 'react-intl'
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (props) => {
@@ -28,7 +29,7 @@ export default (props) => {
   const direction = useSelector((state) => state.main.direction)
   const userInfo = useSelector((state) => state.auth.userInfo)
   const darkMode = useSelector((state) => state.main.darkMode)
-
+  const [isDark, { toggle }] = useDarkreader(darkMode)
   const xDirection = direction === 'rtl' ? 'ltr' : 'rtl'
   const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA)
   const areNotificationsRead = notifications.reduce(
@@ -117,14 +118,15 @@ export default (props) => {
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
-                {/* <Dropdown.Item
+                <Dropdown.Item
                   className="fw-bold"
                   onClick={() => {
-                    dispatch(changeMode(!darkMode));
-                  }}>
-                   {darkMode == false ? "Dark Mode" : "Light Mode"}
-                </Dropdown.Item> 
-                */}
+                    dispatch(changeMode(!darkMode))
+                    toggle()
+                  }}
+                >
+                  {darkMode == false ? 'Dark Mode' : 'Light Mode'}
+                </Dropdown.Item>
 
                 {/* <Dropdown.Divider /> */}
 

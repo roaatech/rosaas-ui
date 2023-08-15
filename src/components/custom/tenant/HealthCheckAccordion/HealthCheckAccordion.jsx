@@ -48,9 +48,9 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
           variant="link"
           className="w-100 d-flex justify-content-between"
         >
-          <span className=" mb-0 fw-bold d-flex   w-100">
+          <span className=" mb-0 fw-bold d-flex  align-items-center  w-100">
             <span className="firstTd">Health Check Status </span>
-            <span className="mr-2">
+            <span className="mr-2 tabHolder">
               <span className="mr-2">
                 <Label
                   className="mr-2"
@@ -81,7 +81,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                     </span>
                   </>
                 ) : (
-                  <span className="fw-normal">
+                  <>
                     <OverlayTrigger
                       trigger={['hover', 'focus']}
                       overlay={
@@ -93,7 +93,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                         </Tooltip>
                       }
                     >
-                      <span>
+                      <span className="date">
                         {timeDifferenceCheck.hours < 24
                           ? ` 
                             ${Time(item.healthCheckStatus.checkDate, 'since')}, 
@@ -108,7 +108,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                             )}`}
                       </span>
                     </OverlayTrigger>
-                  </span>
+                  </>
                 )}
               </span>
             </span>

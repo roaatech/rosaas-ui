@@ -54,7 +54,8 @@ const AppWrapper = ({ children, customHistory }) => {
     <>
       <Preloader show={loaded} />
       <ToastContainer />
-      <GlobalStyles direction={direction} key={direction} darkMode={darkMode} />
+      <GlobalStyles direction={direction} key={direction} darkMode={false} />
+      {/* <GlobalStyles direction={direction} key={direction} darkMode={darkMode} /> */}
       <IntlProvider
         locale={direction === 'rtl' ? 'ar' : 'en'}
         messages={messages}

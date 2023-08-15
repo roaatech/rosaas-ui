@@ -3,6 +3,17 @@ const Wrapper = styled.div`
   thead.p-datatable-thead {
     display: none;
   }
+  .tabHolder {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    .date {
+      word-break: break-word;
+      display: inline-block;
+      white-space: break-spaces;
+      min-width: 250px;
+    }
+  }
 
   .status {
     padding: 1rem 0;
@@ -61,7 +72,8 @@ const Wrapper = styled.div`
     display: inline-block;
   }
   .firstTd {
-    width: 165px;
+    width: 145px;
+    padding-right: 0 !important;
   }
   .tableTitle {
     margin: 1rem 0 0.5rem 1rem;

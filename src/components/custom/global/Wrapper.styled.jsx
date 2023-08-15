@@ -93,6 +93,9 @@ const GlobalStyles = createGlobalStyle`
     --bs-btn-disabled-border-color: #414042;
 }
 
+.react-switch.react-switch-docusaurus{
+  display: none  !important; 
+}
 .sidebar-inner .addNew {
   width: 100%;
 }
