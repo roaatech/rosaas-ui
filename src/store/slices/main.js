@@ -1,27 +1,32 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
 export const mainSlice = createSlice({
-  name: "main",
+  name: 'main',
   initialState: {
     darkMode: false,
-    direction: "ltr",
+    direction: 'ltr',
     preloader: true,
     sidebar: 1,
+    history: [],
   },
   reducers: {
     directionFun: (state, action) => {
-      state.direction = action.payload;
+      state.direction = action.payload
     },
     changeMode: (state, action) => {
-      state.darkMode = action.payload;
-      localStorage.setItem("dark", action.payload);
+      state.darkMode = action.payload
+      localStorage.setItem('dark', action.payload)
     },
     changePreloader: (state, action) => {
-      state.preloader = action.payload;
+      state.preloader = action.payload
+    },
+    addToHistory: (state, action) => {
+      state.history = [...state.history, action.payload]
     },
   },
-});
+})
 
 // Action creators are generated for each case reducer function
-export const { directionFun, changePreloader, changeMode } = mainSlice.actions;
-export default mainSlice.reducer;
+export const { directionFun, changePreloader, changeMode, addToHistory } =
+  mainSlice.actions
+export default mainSlice.reducer

@@ -64,5 +64,6 @@
   "Copy-to-clipboard": "Copy to clipboard",
   "Actions": "Actions",
   "Sign-Out": "Sign Out",
-  "Logout": "Logout"
+  "Logout": "Logout",
+  "Api-key": "Api key"
 }

@@ -1,15 +1,20 @@
 import React from 'react'
 import { Wrapper } from './Preloader.styled'
 import { ProgressBar } from 'primereact/progressbar'
+import { useSelector } from 'react-redux'
 
-export default (props) => {
-  const { show } = props
+export default ({ show }) => {
+  let history = useSelector((state) => state.main.history)
 
   return (
     <>
       {show && (
         <Wrapper>
-          {true ? (
+          {!(
+            history[0] &&
+            history[1] &&
+            history[history.length - 2] !== '/'
+          ) ? (
             <div className="loaderCont">
               <div className="loader">
                 <div></div>

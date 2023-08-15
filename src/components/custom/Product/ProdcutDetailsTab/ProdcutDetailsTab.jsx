@@ -77,6 +77,12 @@ const ProductDetailsTab = ({ data }) => {
                       </td>
                       <td>{DataTransform(data.editedDate)}</td>
                     </tr>
+                    <tr>
+                      <td className="fw-bold">
+                        <FormattedMessage id="Api-key" />
+                      </td>
+                      <td>{data.apiKey}</td>
+                    </tr>
                     <UrlItemList data={data} />
                   </tbody>
                 </Table>

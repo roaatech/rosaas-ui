@@ -23,6 +23,7 @@ const ProductForm = ({
 
   const initialValues = {
     name: productData ? productData.name : '',
+    apiKey: productData ? productData.apiKey : '',
     defaultHealthCheckUrl: productData ? productData.defaultHealthCheckUrl : '',
     healthStatusChangeUrl: productData ? productData.healthStatusChangeUrl : '',
     creationEndpoint: productData ? productData.creationEndpoint : '',
@@ -54,6 +55,7 @@ const ProductForm = ({
       if (type == 'create') {
         const createProduct = await createProductRequest({
           name: values.name,
+          apiKey: values.apiKey,
           defaultHealthCheckUrl: values.defaultHealthCheckUrl,
           healthStatusChangeUrl: values.healthStatusChangeUrl,
           creationEndpoint: values.creationEndpoint,
@@ -67,6 +69,7 @@ const ProductForm = ({
         const editProduct = await editProductRequest({
           data: {
             name: values.name,
+            apiKey: values.apiKey,
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
             healthStatusChangeUrl: values.healthStatusChangeUrl,
             creationEndpoint: values.creationEndpoint,
@@ -82,6 +85,7 @@ const ProductForm = ({
           productInfo({
             id: productData.id,
             name: values.name,
+            apiKey: values.apiKey,
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
             healthStatusChangeUrl: values.healthStatusChangeUrl,
             creationEndpoint: values.creationEndpoint,
@@ -132,6 +136,30 @@ const ProductForm = ({
                   style={{ display: 'block' }}
                 >
                   {formik.errors.name}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Api-key" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="apiKey"
+                name="apiKey"
+                onChange={formik.handleChange}
+                value={formik.values.apiKey}
+              />
+
+              {formik.touched.apiKey && formik.errors.apiKey && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.apiKey}
                 </Form.Control.Feedback>
               )}
             </Form.Group>

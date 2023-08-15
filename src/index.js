@@ -33,12 +33,12 @@ fetch(`${process.env.PUBLIC_URL}/config.json`)
     const root = ReactDOM.createRoot(document.getElementById('root'))
     root.render(
       <Provider store={store}>
-        <AppWrapper>
-          <BrowserRouter basename={data.baseHref}>
+        <BrowserRouter basename={data.baseHref}>
+          <AppWrapper>
             <ScrollToTop />
             <HomePage />
-          </BrowserRouter>
-        </AppWrapper>
+          </AppWrapper>
+        </BrowserRouter>
       </Provider>
     )
   })
