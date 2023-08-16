@@ -232,7 +232,7 @@ const TenantDetails = () => {
 
                   <ThemeDialog visible={visible} setVisible={setVisible}>
                     <TenantForm
-                      popupLabel={'Edit Tenant'}
+                      popupLabel={<FormattedMessage id="Edit-Tenant" />}
                       type={'edit'}
                       tenantData={tenantObject}
                       setVisible={setVisible}

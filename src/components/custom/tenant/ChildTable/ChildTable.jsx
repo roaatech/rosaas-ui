@@ -137,7 +137,7 @@ export default function ChildTable({
                   }}
                   type="button"
                   icon={<FiRefreshCw className="mr-2" />}
-                  label="Refresh"
+                  label={<FormattedMessage id="Refresh" />}
                   style={{
                     backgroundColor: '#239dff',
                     borderColor: '#239dff',
@@ -149,7 +149,9 @@ export default function ChildTable({
         </div>
         <div className="content timeLine">
           <Card border="light" className="shadow-sm">
-            <Card.Header className="fs-6">History</Card.Header>
+            <Card.Header className="fs-6">
+              <FormattedMessage id="History" />
+            </Card.Header>
             <Card.Body className="pb-0">
               <Workflow
                 productId={productData.id}

@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { Modal } from '@themesberg/react-bootstrap'
 import ThemeDialog from '../ThemeDialog/ThemeDialog'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 const TableHead = ({
   label,
@@ -34,7 +35,7 @@ const TableHead = ({
 }) => {
   const { searchWait } = useGlobal()
   const [inputValue, setInputValue] = useState('')
-
+  const intl = useIntl()
   return (
     <Wrapper>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 wrapper">
@@ -54,7 +55,7 @@ const TableHead = ({
               <BsSearch />
               <InputText
                 className="form-control"
-                placeholder="Search"
+                placeholder={intl.formatMessage({ id: 'Search' })}
                 value={inputValue}
                 onChange={(e) =>
                   searchWait(e, setInputValue, setSearchValue, setFirst)

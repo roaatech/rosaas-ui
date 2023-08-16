@@ -2,7 +2,12 @@ import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Card, Table } from '@themesberg/react-bootstrap'
+import {
+  Card,
+  OverlayTrigger,
+  Table,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
 
 import { Button } from 'primereact/button'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
@@ -14,12 +19,24 @@ import UrlItemList from '../../../../components/custom/Product/UrlItemList/UrlIt
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import { FormattedMessage } from 'react-intl'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { AiFillCopy } from 'react-icons/ai'
 
 const ProductDetailsTab = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
   const [productData, setProductData] = useState(data)
   const [visible, setVisible] = useState(false)
+
+  const [code, setCode] = useState(data.apiKey)
+  const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
+
+  const handleCopy = () => {
+    setToolTipText('Copied')
+    setTimeout(() => {
+      setToolTipText('Copy-to-clipboard')
+    }, 2000)
+  }
 
   const { deleteProductReq } = useRequest()
   const routeParams = useParams()
@@ -81,7 +98,29 @@ const ProductDetailsTab = ({ data }) => {
                       <td className="fw-bold">
                         <FormattedMessage id="Api-key" />
                       </td>
-                      <td>{data.apiKey}</td>
+                      <td className="apikeyTd">
+                        <span>{data.apiKey}</span>
+                        <span className="relative">
+                          <OverlayTrigger
+                            style={{ minWidth: '150px' }}
+                            trigger={['hover', 'focus']}
+                            placement="top"
+                            overlay={
+                              <Tooltip>
+                                <div style={{ minWidth: '100px' }}>
+                                  {<FormattedMessage id={toolTipText} />}
+                                </div>
+                              </Tooltip>
+                            }
+                          >
+                            <CopyToClipboard text={code} onCopy={handleCopy}>
+                              <span className="copyItem ml-1">
+                                <AiFillCopy />
+                              </span>
+                            </CopyToClipboard>
+                          </OverlayTrigger>
+                        </span>
+                      </td>
                     </tr>
                     <UrlItemList data={data} />
                   </tbody>

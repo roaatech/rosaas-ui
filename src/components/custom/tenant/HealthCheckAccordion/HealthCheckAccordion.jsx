@@ -16,19 +16,22 @@ import {
   DataTransform,
   timeDifferenceFromNow,
 } from '../../../../lib/sharedFun/Time'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
+  const intl = useIntl()
+
   const AccordionItem = (item) => {
     const HealthStatus = {
       true: {
         background: '#eff9f6',
-        value: 'Healthy',
+        value: <FormattedMessage id="Healthy" />,
         color: '#00a675',
         icon: <BsFillCheckCircleFill />,
       },
       false: {
         background: '#f5e8e4',
-        value: 'Unhealthy',
+        value: <FormattedMessage id="Unhealthy" />,
         color: '#d26b4e',
         icon: <BsFillExclamationCircleFill />,
       },
@@ -49,7 +52,9 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
           className="w-100 d-flex justify-content-between"
         >
           <span className=" mb-0 fw-bold d-flex  align-items-center  w-100">
-            <span className="firstTd">Health Check Status </span>
+            <span className="firstTd">
+              <FormattedMessage id="Health-Check-Status" />
+            </span>
             <span className="mr-2 tabHolder">
               <span className="mr-2">
                 <Label
@@ -74,7 +79,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                         <span>
                           {Time(
                             item.healthCheckStatus.lastCheckDate,
-                            'last checked'
+                            intl.formatMessage({ id: 'last-checked' })
                           )}
                         </span>
                       </OverlayTrigger>
@@ -86,18 +91,22 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                       trigger={['hover', 'focus']}
                       overlay={
                         <Tooltip>
-                          Since{' '}
+                          <FormattedMessage id="Since" />{' '}
                           {DataTransform(item.healthCheckStatus.checkDate)},
-                          last checked{' '}
+                          <FormattedMessage id="last-checked" />{' '}
                           {DataTransform(item.healthCheckStatus.lastCheckDate)}
                         </Tooltip>
                       }
                     >
                       <span className="date">
-                        {Time(item.healthCheckStatus.checkDate, 'since')},
+                        {Time(
+                          item.healthCheckStatus.checkDate,
+                          intl.formatMessage({ id: 'Since' })
+                        )}
+                        ,{' '}
                         {Time(
                           item.healthCheckStatus.lastCheckDate,
-                          ' last checked'
+                          intl.formatMessage({ id: 'last-checked' })
                         )}
                       </span>
                     </OverlayTrigger>
@@ -115,17 +124,23 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                   <Card.Body>
                     <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-3">
                       <div>
-                        <h6>Health Check Status Info:</h6>
+                        <h6>
+                          <FormattedMessage id="Health-Check-Status-Info" />:
+                        </h6>
                       </div>
                     </div>
                     <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
-                      <div className="mb-0 w-25">Url</div>
+                      <div className="mb-0 w-25">
+                        <FormattedMessage id="Url" />
+                      </div>
                       <div className="small card-stats">
                         {item.healthCheckStatus.healthCheckUrl}
                       </div>
                     </div>
                     <div className="d-flex align-items-center justify-content-between pt-2 ml-5">
-                      <div className="mb-0 w-25">Duration</div>
+                      <div className="mb-0 w-25">
+                        <FormattedMessage id="Duration" />
+                      </div>
                       <div className="small card-stats">
                         {item.healthCheckStatus.duration}
                       </div>
@@ -141,28 +156,36 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                     <Card.Body>
                       <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-3">
                         <div>
-                          <h6>External System Dispatch:</h6>
+                          <h6>
+                            <FormattedMessage id="External-System-Dispatch" />:
+                          </h6>
                         </div>
                       </div>
                       <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
-                        <div className="mb-0 w-25">Is Successful</div>
+                        <div className="mb-0 w-25">
+                          <FormattedMessage id="Is-Successful" />
+                        </div>
                         <div className="small card-stats">
                           {item.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
                         </div>
                       </div>
                       <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
-                        <div className="mb-0 w-25">Url</div>
+                        <div className="mb-0 w-25">
+                          <FormattedMessage id="Url" />
+                        </div>
                         <div className="small card-stats">
                           {item.healthCheckStatus?.externalSystemDispatch?.url}
                         </div>
                       </div>
                       <div className="d-flex align-items-center justify-content-between  pt-2 ml-5">
-                        <div className="mb-0 w-25">Dispatch Date</div>
+                        <div className="mb-0 w-25">
+                          <FormattedMessage id="Dispatch-Date" />
+                        </div>
                         <div className="small card-stats">
                           {Time(
                             item.healthCheckStatus?.externalSystemDispatch
                               ?.dispatchDate,
-                            'last checked'
+                            intl.formatMessage({ id: 'last-checked' })
                           )}
                         </div>
                       </div>
