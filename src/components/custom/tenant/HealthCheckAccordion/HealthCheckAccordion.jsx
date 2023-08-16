@@ -94,18 +94,11 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                       }
                     >
                       <span className="date">
-                        {timeDifferenceCheck.hours < 24
-                          ? ` 
-                            ${Time(item.healthCheckStatus.checkDate, 'since')}, 
-                            ${Time(
-                              item.healthCheckStatus.lastCheckDate,
-                              'last checked'
-                            )}`
-                          : ` since ${DataTransform(
-                              item.healthCheckStatus.checkDate
-                            )} , last checked ${DataTransform(
-                              item.healthCheckStatus.lastCheckDate
-                            )}`}
+                        {Time(item.healthCheckStatus.checkDate, 'since')},
+                        {Time(
+                          item.healthCheckStatus.lastCheckDate,
+                          ' last checked'
+                        )}
                       </span>
                     </OverlayTrigger>
                   </>

@@ -15,6 +15,7 @@ import ReactJson from 'react-json-view'
 import Label from '../../Shared/label/Label'
 import HealthCheckAccordion from '../HealthCheckAccordion/HealthCheckAccordion'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
+import { FormattedMessage } from 'react-intl'
 
 export default function ChildTable({
   productData,
@@ -38,7 +39,7 @@ export default function ChildTable({
   const rowExpansionTemplate = (data) => {
     return (
       <div className="">
-        <Card border="light" className="  border-0">
+        <Card border="light" className="border-0">
           <Card.Body className="p-0">
             <ReactJson src={data} name={false} />
           </Card.Body>
@@ -50,8 +51,8 @@ export default function ChildTable({
   const metadata = productData?.metadata ? productData.metadata : null
   const [products, setProducts] = useState([
     {
-      eventKey: 'metadata0',
-      title: 'Meta Data',
+      eventKey: 'metadata',
+      title: <FormattedMessage id="Meta-Data" />,
       description: metadata ? rowExpansionTemplate(JSON.parse(metadata)) : null,
     },
   ])
@@ -66,20 +67,26 @@ export default function ChildTable({
           >
             <tbody>
               <tr>
-                <td className="fw-bold firstTd">Status</td>
+                <td className="fw-bold firstTd">
+                  <FormattedMessage id="Status" />
+                </td>
                 <td>
                   <TenantStatus statusValue={productData.status} />
                 </td>
               </tr>
               <tr>
-                <td className="fw-bold firstTd">Health Check Url </td>
+                <td className="fw-bold firstTd">
+                  <FormattedMessage id="Health-Check-Url" />
+                </td>
                 <td className="d-flex align-items-center">
                   <span className="mr-2">
                     <Label
                       value={
-                        productData.healthCheckUrlIsOverridden
-                          ? 'Overridden'
-                          : 'Default'
+                        productData.healthCheckUrlIsOverridden ? (
+                          <FormattedMessage id="Overridden" />
+                        ) : (
+                          <FormattedMessage id="Default" />
+                        )
                       }
                     />
                   </span>
@@ -89,7 +96,9 @@ export default function ChildTable({
                 </td>
               </tr>
               <tr>
-                <td className="fw-bold firstTd">Last Updated Date</td>
+                <td className="fw-bold firstTd">
+                  <FormattedMessage id="Last-Updated-Date" />
+                </td>
                 <td>{DataTransform(productData.editedDate)}</td>
               </tr>
 

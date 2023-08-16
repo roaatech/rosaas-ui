@@ -10,8 +10,9 @@ const Wrapper = styled.div`
     .date {
       word-break: break-word;
       display: inline-block;
-      white-space: break-spaces;
+      white-space: initial;
       min-width: 250px;
+      font-weight: 400;
     }
   }
 
