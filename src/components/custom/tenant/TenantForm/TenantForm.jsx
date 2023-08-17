@@ -9,6 +9,8 @@ import { Form } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import { tenantInfo } from '../../../../store/slices/tenants.js'
 import { setAllProduct } from '../../../../store/slices/products.js'
+import { MultiSelect } from 'primereact/multiselect'
+import { Wrapper } from './TenantForm.styled.jsx'
 
 const TenantForm = ({
   type,
@@ -18,6 +20,7 @@ const TenantForm = ({
   setVisible,
   popupLabel,
 }) => {
+  const [selectedCities, setSelectedCities] = useState()
   const { createTenantRequest, editTenantRequest } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
   const navigate = useNavigate()
@@ -83,7 +86,7 @@ const TenantForm = ({
           title: values.title,
           uniqueName: values.uniqueName,
           id: tenantData.id,
-          // product: selectedProduct,
+          product: selectedProduct,
         })
         updateTenant()
       }
@@ -93,7 +96,7 @@ const TenantForm = ({
   })
 
   return (
-    <div>
+    <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Header>
           <Modal.Title className="h6">{popupLabel}</Modal.Title>
@@ -149,7 +152,7 @@ const TenantForm = ({
               )}
             </Form.Group>
           </div>
-          <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
+          {/* <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
               <Form.Label>
                 Product <span style={{ color: 'red' }}>*</span>
@@ -179,6 +182,31 @@ const TenantForm = ({
                 </Form.Control.Feedback>
               )}
             </Form.Group>
+          </div> */}
+          <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                Product <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+
+              <MultiSelect
+                id="product"
+                name="product"
+                value={formik.values.product}
+                options={options}
+                onChange={(e) => formik.setFieldValue('product', e.value)}
+                className="w-100"
+              />
+
+              {formik.touched.product && formik.errors.product && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.product}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -194,7 +222,7 @@ const TenantForm = ({
           </Button>
         </Modal.Footer>
       </Form>
-    </div>
+    </Wrapper>
   )
 }
 

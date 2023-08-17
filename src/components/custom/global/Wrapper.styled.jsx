@@ -131,6 +131,9 @@ const GlobalStyles = createGlobalStyle`
     transform: translateX(40px);
 }
 
+.p-multiselect-panel{
+  z-index: 100000!important;
+}
  .error-message {
     color: var(--errorColor);
     font-size: var(--smallFont);

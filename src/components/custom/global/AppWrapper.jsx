@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import GlobalStyles from './Wrapper.styled.jsx'
 import { ToastContainer } from 'react-toastify'
 import Preloader from '../../../components/custom/global/Preloader/Preloader'
+import './themeEdit.css'
 import {
   addToHistory,
   changeMode,
