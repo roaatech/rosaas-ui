@@ -10,6 +10,7 @@ import {
   BsFillPersonFill,
   BsGearFill,
   BsFillClipboard2CheckFill,
+  BsStars,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -299,6 +300,12 @@ export default (props = {}) => {
                 link={`/products`}
                 icon={BsBoxSeam}
                 isActive={location.pathname.includes('products')}
+              />
+              <NavItem
+                title={<FormattedMessage id="Features" />}
+                link={`/features`}
+                icon={BsStars}
+                isActive={location.pathname.includes('features')}
               />
 
               <CollapsableNavItem

@@ -59,6 +59,12 @@ const ProductDetails = () => {
                 productName={productData.name}
               />
             </TabPanel>
+            <TabPanel header={<FormattedMessage id="Features" />}>
+              <ProductTenantsList
+                productId={productData.id}
+                productName={productData.name}
+              />
+            </TabPanel>
           </TabView>
         </div>
       )}

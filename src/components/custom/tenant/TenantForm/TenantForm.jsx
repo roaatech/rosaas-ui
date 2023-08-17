@@ -196,6 +196,7 @@ const TenantForm = ({
                 options={options}
                 onChange={(e) => formik.setFieldValue('product', e.value)}
                 className="w-100"
+                display="chip"
               />
 
               {formik.touched.product && formik.errors.product && (

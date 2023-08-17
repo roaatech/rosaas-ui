@@ -135,6 +135,13 @@ const breadcrumbConst = {
     active: 'Products',
     icon: {},
   },
+  FeatureList: {
+    title: 'Feature-Management',
+    name: 'Features',
+    navigation: '/features',
+    active: 'features',
+    icon: {},
+  },
   ProductDetails: {
     title: 'Product-Management',
     name: 'Product-Details',

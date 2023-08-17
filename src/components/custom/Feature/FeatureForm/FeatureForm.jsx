@@ -3,7 +3,6 @@ import { useFormik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../../axios/apis/useRequest.js'
-import { Product_Client_id } from '../../../../const/index.js'
 import {
   Modal,
   Button,
@@ -11,39 +10,39 @@ import {
   Tooltip,
 } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
-import { productInfo } from '../../../../store/slices/products.js'
+import { featureInfo } from '../../../../store/slices/features.js'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
-import { Wrapper } from './ProductForm.styled.jsx'
+import { Wrapper } from './FeatureForm.styled.jsx'
 import { generateApiKey } from '../../../../lib/sharedFun/common.js'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
 
-const ProductForm = ({
+const FeatureForm = ({
   type,
-  productData,
+  featureData,
   setVisible,
   popupLabel,
   update,
   setUpdate,
 }) => {
-  const { createProductRequest, editProductRequest } = useRequest()
+  const { createFeatureRequest, editFeatureRequest } = useRequest()
   const dispatch = useDispatch()
 
   const initialValues = {
-    name: productData ? productData.name : '',
-    apiKey: productData ? productData.apiKey : '',
-    defaultHealthCheckUrl: productData ? productData.defaultHealthCheckUrl : '',
-    healthStatusChangeUrl: productData ? productData.healthStatusChangeUrl : '',
-    creationEndpoint: productData ? productData.creationEndpoint : '',
-    activationEndpoint: productData ? productData.activationEndpoint : '',
-    deactivationEndpoint: productData ? productData.deactivationEndpoint : '',
-    deletionEndpoint: productData ? productData.deletionEndpoint : '',
+    name: featureData ? featureData.name : '',
+    apiKey: featureData ? featureData.apiKey : '',
+    defaultHealthCheckUrl: featureData ? featureData.defaultHealthCheckUrl : '',
+    healthStatusChangeUrl: featureData ? featureData.healthStatusChangeUrl : '',
+    creationEndpoint: featureData ? featureData.creationEndpoint : '',
+    activationEndpoint: featureData ? featureData.activationEndpoint : '',
+    deactivationEndpoint: featureData ? featureData.deactivationEndpoint : '',
+    deletionEndpoint: featureData ? featureData.deletionEndpoint : '',
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Product Name is required'),
+    name: Yup.string().required('Feature Name is required'),
     defaultHealthCheckUrl: Yup.string()
       .required(<FormattedMessage id="This-field-is-required" />)
       .matches(
@@ -63,7 +62,7 @@ const ProductForm = ({
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       if (type == 'create') {
-        const createProduct = await createProductRequest({
+        const createFeature = await createFeatureRequest({
           name: values.name,
           apiKey: values.apiKey,
           defaultHealthCheckUrl: values.defaultHealthCheckUrl,
@@ -72,11 +71,10 @@ const ProductForm = ({
           activationEndpoint: values.activationEndpoint,
           deactivationEndpoint: values.deactivationEndpoint,
           deletionEndpoint: values.deletionEndpoint,
-          clientId: Product_Client_id,
         })
         setUpdate(update + 1)
       } else {
-        const editProduct = await editProductRequest({
+        const editFeature = await editFeatureRequest({
           data: {
             name: values.name,
             apiKey: values.apiKey,
@@ -86,14 +84,13 @@ const ProductForm = ({
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
             deletionEndpoint: values.deletionEndpoint,
-            clientId: Product_Client_id,
           },
-          id: productData.id,
+          id: featureData.id,
         })
 
         dispatch(
-          productInfo({
-            id: productData.id,
+          featureInfo({
+            id: featureData.id,
             name: values.name,
             apiKey: values.apiKey,
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
@@ -103,7 +100,6 @@ const ProductForm = ({
             deactivationEndpoint: values.deactivationEndpoint,
             deletionEndpoint: values.deletionEndpoint,
             editedDate: new Date().toISOString().slice(0, 19),
-            clientId: { id: Product_Client_id },
           })
         )
       }
@@ -371,4 +367,4 @@ const ProductForm = ({
   )
 }
 
-export default ProductForm
+export default FeatureForm

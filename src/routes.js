@@ -52,6 +52,11 @@ export const Routes = {
     component: Product,
     roles: ['superAdmin'],
   },
+  // featuresDetails: {
+  //   path: '/features/:id',
+  //   component: FeatureDetails,
+  //   roles: ['superAdmin'],
+  // },
   Plan: {
     path: '/plan',
     component: Plan,
