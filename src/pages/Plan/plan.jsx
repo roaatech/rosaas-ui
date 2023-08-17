@@ -64,7 +64,7 @@ export default function Plan({ children }) {
     await deleteplanReq({ id: currentId })
   }
 
-  const listData = useSelector((state) => state.products.products) //*
+  const listData = useSelector((state) => state.plans.plans) //*
   let list = Object.values(listData)
 
   useEffect(() => {
