@@ -33,7 +33,7 @@ import ProductDetails from './pages/ProductDetails/ProductDetails'
 import Redirect from './components/custom/global/Redirect/Redirect'
 import Dashboard from './pages/Welcome/Welcome'
 import Product from './pages/Product/Product'
-import Plan from './pages/Plan/plan'
+import Plan from './pages/Plan/Plan'
 
 export const Routes = {
   // pages

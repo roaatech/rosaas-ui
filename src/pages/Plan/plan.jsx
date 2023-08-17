@@ -1,251 +1,287 @@
-import React, { useState, useEffect } from "react";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
+import React, { useState, useEffect } from 'react'
+import { DataTable } from 'primereact/datatable'
+import { Column } from 'primereact/column'
+import { BsBoxSeam } from 'react-icons/bs'
+import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  BsPencilSquare,
-  BsFillTrash3Fill,
-  BsFillEyeFill,
-  BsBoxSeam,
-  BsFillLayersFill,
-} from "react-icons/bs";
-import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
+  faEdit,
+  faEllipsisH,
+  faEye,
+  faTrashAlt,
+} from '@fortawesome/free-solid-svg-icons'
+import {
+  Col,
+  Row,
+  Form,
+  Card,
+  Button,
+  ButtonGroup,
+  Breadcrumb,
+  InputGroup,
+  Dropdown,
+} from '@themesberg/react-bootstrap'
+// import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 
-import ColumnSortHeader from "../../components/custom/Shared/ColumnSortHeader/ColumnSortHeader";
-import TableHead from "../../components/custom/Shared/TableHead/TableHead";
-import TableDate from "../../components/custom/Shared/TableDate/TableDate";
-import PlanForm from "../../components/custom/Plan/PlanForm/PlanForm";
-import useRequest from "../../axios/apis/useRequest";
-import { Dialog } from "primereact/dialog";
-import DeleteConfirmation from "../../components/custom/global/DeleteConfirmation/DeleteConfirmation.jsx";
-import { useNavigate } from "react-router-dom";
-import { Wrapper } from "./plan.styled";
-import CustomPaginator from "../../components/custom/Shared/CustomPaginator/CustomPaginator";
+import ColumnSortHeader from '../../components/custom/Shared/ColumnSortHeader/ColumnSortHeader'
+import TableHead from '../../components/custom/Shared/TableHead/TableHead'
+import TableDate from '../../components/custom/Shared/TableDate/TableDate'
+import useRequest from '../../axios/apis/useRequest'
+import { Dialog } from 'primereact/dialog'
+import ProductStatus from '../../components/custom/Product/ProductStatus/ProductStatus'
+import DeleteConfirmation from '../../components/custom/global/DeleteConfirmation/DeleteConfirmation.jsx'
+import { useNavigate } from 'react-router-dom'
+import { Wrapper } from './Plan.styled'
+import CustomPaginator from '../../components/custom/Shared/CustomPaginator/CustomPaginator'
+import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
+import { planInfo, setAllPlans } from '../../store/slices/plans'
+import { useDispatch, useSelector } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
+import PlanForm from '../../components/custom/Plan/PlanForm/PlanForm'
+
 export default function Plan({ children }) {
-  const { getPlan, getPlanList, deletePlanReq } = useRequest();
-  const [visible, setVisible] = useState(false);
-  const [totalCount, setTotalCount] = useState(0);
-  const [visibleHead, setVisibleHead] = useState(false);
-  const [list, setList] = useState([]);
-  const [rebase, setRebase] = useState(0);
-  const [searchValue, setSearchValue] = useState("");
-  const [sortField, setSortField] = useState("");
-  const [sortValue, setSortValue] = useState("");
-  const [first, setFirst] = useState(0);
-  const [rows, setRows] = useState(10);
-  const [confirm, setConfirm] = useState(false);
-  const [currentId, setCurrentId] = useState("");
-  const [update, setUpdate] = useState(1);
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const { getplan,  getplanList, deleteplanReq } = useRequest()
+  const [visible, setVisible] = useState(false)
+  const [totalCount, setTotalCount] = useState(0)
+  const [visibleHead, setVisibleHead] = useState(false)
+  // const [list, setList] = useState([]);
+  const [rebase, setRebase] = useState(0)
+  const [searchValue, setSearchValue] = useState('')
+  const [sortField, setSortField] = useState('')
+  const [sortValue, setSortValue] = useState('')
+  const [first, setFirst] = useState(0)
+  const [rows, setRows] = useState(10)
+  const [confirm, setConfirm] = useState(false)
+  const [currentId, setCurrentId] = useState('')
+  const [update, setUpdate] = useState(1)
+  const navigate = useNavigate()
   const deleteConfirm = (id) => {
-    setCurrentId(id);
-    setConfirm(true);
-  };
+    setCurrentId(id)
+    setConfirm(true)
+  }
   const deletePlan = async () => {
-    await deletePlanReq({ id: currentId });
-  };
+    await deleteplanReq({ id: currentId })
+  }
 
-  // useEffect(() => {
-  //   let query = `?page=${Math.ceil(
-  //     (first + 1) / rows
-  //   )}&pageSize=${rows}&filters[0].Field=SearchTerm`;
-  //   if (searchValue) query += `&filters[0].Value=${searchValue}`;
-  //   if (sortField) query += `&sort.Field=${sortField}`;
-  //   if (sortValue) query += `&sort.Direction=${sortValue}`;
+  const listData = useSelector((state) => state.products.products) //*
+  let list = Object.values(listData)
 
-  //   (async () => {
-  //     const listData = await getPlanList(query);
-  //     setTotalCount(listData.data.data.totalCount);
-  //     setList(listData.data.data.items);
-  //   })();
-  // }, [first, rows, searchValue, sortField, sortValue, update]);
+  useEffect(() => {
+    let query = `?page=${Math.ceil(
+      (first + 1) / rows
+    )}&pageSize=${rows}&filters[0].Field=SearchTerm`
+    if (searchValue) query += `&filters[0].Value=${searchValue}`
+    if (sortField) query += `&sort.Field=${sortField}`
+    if (sortValue) query += `&sort.Direction=${sortValue}`
+    ;(async () => {
+      // if (Object.values(listData).length == 0) {
+      const planList = await getplanList(query)
+      dispatch(setAllPlans(planList.data.data.items))
+      setTotalCount(planList.data.data.totalCount)
+      // }
+    })()
+  }, [first, rows, searchValue, sortField, sortValue, update])
+
+  // const statusBodyTemplate = (rowData) => {
+  //   return <ProductStatus rowData={rowData} key={rowData.id} />
+  // }
 
   /******************************* */
 
   const onPageChange = (event) => {
-    setFirst(event.first);
-    setRows(event.rows);
-  };
+    setFirst(event.first)
+    setRows(event.rows)
+  }
 
   /****************************** */
-  const [planData, setPlanData] = useState();
   const editForm = async (id) => {
-    const planData = await getPlan(id);
-
-    setPlanData(planData.data);
-    setVisible(true);
-  };
+    if (!listData[id].creationEndpoint) {
+      const planData = await getplan(id)
+      dispatch(planInfo(planData.data.data))
+    }
+    setCurrentId(id)
+    setVisible(true)
+  }
 
   return (
     <Wrapper>
-      <BreadcrumbComponent
-        title={"Plan List"}
-        parent={"Plan"}
-        icon={BsBoxSeam}
-      />
+      <BreadcrumbComponent breadcrumbInfo={'ProductList'} icon={BsBoxSeam} />
       <div className="main-container">
         <TableHead
-          label={"Add Plan"}
-          popupLabel={"Create Plan"}
-          icon={BsFillLayersFill}
+          label={<FormattedMessage id="Add-Plan" />}
+          icon={'pi-box'}
           setSearchValue={setSearchValue}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
-          setFirst={setFirst}>
+          setFirst={setFirst}
+        >
           <PlanForm
-            type={"create"}
+            popupLabel={<FormattedMessage id="Create-plan" />}
+            type={'create'}
             update={update}
             setUpdate={setUpdate}
-            visibleHead={visibleHead}
-            setVisibleHead={setVisibleHead}
+            visible={visibleHead}
+            setVisible={setVisibleHead}
           />
         </TableHead>
-        <div className="card">
-          <DataTable
-            value={list}
-            tableStyle={{ minWidth: "50rem" }}
-            size={"small"}>
-            <Column
-              field="name"
-              header={
-                <ColumnSortHeader
-                  text="Name"
-                  field="name"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
-              }></Column>
-            <Column
-              field="url"
-              header={
-                <ColumnSortHeader
-                  text="Url"
-                  field="url"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
-              }></Column>
+        <Card
+          border="light"
+          className="table-wrapper table-responsive shadow-sm"
+        >
+          <Card.Body className="pt-0">
+            <DataTable
+              value={list}
+              tableStyle={{ minWidth: '50rem' }}
+              size={'small'}
+            >
+              <Column
+                field="name"
+                header={
+                  <ColumnSortHeader
+                    text={<FormattedMessage id="Name" />}
+                    field="name"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+              ></Column>
+              <Column
+                field="Url"
+                header={
+                  <ColumnSortHeader
+                    text={<FormattedMessage id="Url" />}
+                    field="url"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+              ></Column>
 
-            <Column
-              field={"client.name"}
-              header={
-                <ColumnSortHeader
-                  text="Client"
-                  field="client"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
+              <Column
+                field={'client'}
+                header={
+                  <ColumnSortHeader
+                    text={<FormattedMessage id="Client" />}
+                    field="client"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                showFilterMenu={true}
+              />
+
+              <Column
+                body={(data, options) => (
+                  <TableDate
+                    createdDate={data.createdDate}
+                    editedDate={data.editedDate}
+                  />
+                )}
+                style={{ width: '250px', maxidth: '250px' }}
+                header={
+                  <ColumnSortHeader
+                    text={<FormattedMessage id="Date" />}
+                    field="editedDate"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+              />
+              <Column
+                body={(data, options) => (
+                  <Dropdown as={ButtonGroup}>
+                    <Dropdown.Toggle
+                      as={Button}
+                      split
+                      variant="link"
+                      className="text-dark m-0 p-0"
+                    >
+                      <span className="icon icon-sm">
+                        <FontAwesomeIcon
+                          icon={faEllipsisH}
+                          className="icon-dark"
+                        />
+                      </span>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        onSelect={() => navigate(`/plans/${data.id}`)}
+                      >
+                        <FontAwesomeIcon icon={faEye} className="me-2" />
+                        <FormattedMessage id="View-Details" />
+                      </Dropdown.Item>
+                      <Dropdown.Item onSelect={() => editForm(data.id)}>
+                        <FontAwesomeIcon icon={faEdit} className="me-2" />
+                        <FormattedMessage id="Edit" />
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => deleteConfirm(data.id)}
+                        className="text-danger"
+                      >
+                        <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+                        <FormattedMessage id="Delete" />
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                )}
+                style={{ width: '60px', textAlign: 'center' }}
+                header={<FormattedMessage id="Actions" />}
+              />
+            </DataTable>
+            <CustomPaginator
+              first={first}
+              rows={rows}
+              totalCount={totalCount}
+              onPageChange={onPageChange}
+            />
+
+            <ThemeDialog visible={visible} setVisible={setVisible}>
+              <PlanForm
+                popupLabel={<FormattedMessage id="Edit-Plan" />}
+                type={'edit'}
+                planData={listData[currentId]}
+                update={update}
+                setUpdate={setUpdate}
+                setVisible={setVisible}
+              />
+            </ThemeDialog>
+
+            <DeleteConfirmation
+              message={
+                <FormattedMessage id="delete-plan-confirmation-message" />
               }
-              showFilterMenu={false}
-            />
-            <Column
-              body={(data, options) => (
-                <TableDate
-                  createdDate={data.createdDate}
-                  editedDate={data.editedDate}
-                />
-              )}
-              style={{ width: "250px", maxidth: "250px" }}
-              header={
-                <ColumnSortHeader
-                  text="Date"
-                  field="editedDate"
-                  rebase={rebase}
-                  setRebase={setRebase}
-                  sortField={sortField}
-                  sortValue={sortValue}
-                  setSortField={setSortField}
-                  setSortValue={setSortValue}
-                  setFirst={setFirst}
-                />
-              }
-            />
-            <Column
-              style={{ width: "60px", textAlign: "center" }}
-              body={(data, options) => (
-                <>
-                  <BsFillEyeFill
-                    onClick={() => navigate(`/PlanDetails/${data.id}`)}
-                    style={{ cursor: "pointer" }}
-                  />
-                </>
-              )}
-              header="View"
-            />
-            <Column
-              style={{ width: "60px", textAlign: "center" }}
-              body={(data, options) => (
-                <>
-                  <BsPencilSquare
-                    onClick={() => editForm(data.id)}
-                    style={{ cursor: "pointer" }}
-                  />
-                </>
-              )}
-              header="Edit"
-            />
-            <Column
-              style={{ width: "60px", textAlign: "center" }}
-              body={(data, options) => (
-                <>
-                  <BsFillTrash3Fill
-                    onClick={() => deleteConfirm(data.id)}
-                    style={{ cursor: "pointer" }}
-                  />
-                </>
-              )}
-              header="Delete"
-            />
-          </DataTable>
-
-          <CustomPaginator
-            first={first}
-            rows={rows}
-            totalCount={totalCount}
-            onPageChange={onPageChange}
-          />
-
-          {/* <Dialog
-            headerClassName="pb-0"
-            className="planForm"
-            header={"Edit Plan"}
-            visible={visible}
-            style={{ width: "30vw", minWidth: "300px" }}
-            onHide={() => setVisible(false)}>
-             <PlanForm
-              type={"edit"}
-              planData={planData?.data}
+              icon="pi pi-exclamation-triangle"
+              confirm={confirm}
+              setConfirm={setConfirm}
+              confirmFunction={deletePlan}
               update={update}
               setUpdate={setUpdate}
-              setVisible={setVisible}
-            />  
-          </Dialog> */}
-        </div>
-        <DeleteConfirmation
-          message="Do you want to delete this Plan?"
-          icon="pi pi-exclamation-triangle"
-          confirm={confirm}
-          setConfirm={setConfirm}
-          confirmFunction={deletePlan}
-          update={update}
-          setUpdate={setUpdate}
-          sideBar={false}
-        />
+              sideBar={false}
+            />
+          </Card.Body>
+        </Card>
       </div>
     </Wrapper>
-  );
+  )
 }

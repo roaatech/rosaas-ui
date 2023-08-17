@@ -1,209 +1,189 @@
-import React from "react";
-import { Button } from "@themesberg/react-bootstrap";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { InputText } from "primereact/inputtext";
-import * as Yup from "yup";
-import useRequest from "../../../../axios/apis/useRequest.js";
-// import { Plan_Client_id } from "../../../../const/index.js";
+import React from 'react'
+import { useFormik } from 'formik'
+import { InputText } from 'primereact/inputtext'
+import * as Yup from 'yup'
+import useRequest from '../../../../axios/apis/useRequest.js'
+import { Product_Client_id } from '../../../../const/index.js'
+import { Modal, Button } from '@themesberg/react-bootstrap'
+import { Form } from '@themesberg/react-bootstrap'
+import { planInfo } from '../../../../store/slices/plans.js'
+import { useDispatch } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 const PlanForm = ({
   type,
-  planData,
+   planData,
+  setVisible,
+  popupLabel,
   update,
   setUpdate,
-  setVisibleHead,
-  setVisible,
 }) => {
-  const { createPlanRequest, editPlanRequest } = useRequest();
+  const { createplanRequest,  editplanRequest } = useRequest()
+  const dispatch = useDispatch()
+
   const initialValues = {
-    name: planData ? planData.name : "",
-    url: planData ? planData.url : "",
-    creationEndpoint: planData ? planData.creationEndpoint : "",
-    activationEndpoint: planData ? planData.activationEndpoint : "",
-    deactivationEndpoint: planData ? planData.deactivationEndpoint : "",
-    deletionEndpoint: planData ? planData.deletionEndpoint : "",
-  };
+    name: planData ? planData.name : '',
+    url: planData ? planData.url : '',
+    client: planData? planData.client:''
+  }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Plan Name is required"),
+    name: Yup.string().required('Plan Name is required'),
     url: Yup.string()
-      .required("Url is required")
-      .url("Please enter a valid URL"),
-  });
+      .required(<FormattedMessage id="This-field-is-required" />)
+      .matches(
+        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+        <FormattedMessage id="Please-enter-a-valid-value" />
+      ),
+    
+  })
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    if (type == "create") {
-      const createPlan = await createPlanRequest({
-        name: values.name,
-        url: values.url,
-        creationEndpoint: values.creationEndpoint,
-        activationEndpoint: values.activationEndpoint,
-        deactivationEndpoint: values.deactivationEndpoint,
-        deletionEndpoint: values.deletionEndpoint,
-        // clientId: Plan_Client_id,
-      });
-    } else {
-      const editPlan = await editPlanRequest({
-        data: {
+  const formik = useFormik({
+    initialValues,
+    validationSchema: validationSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      if (type == 'create') {
+        const createPlan = await createplanRequest({
           name: values.name,
           url: values.url,
-          creationEndpoint: values.creationEndpoint,
-          activationEndpoint: values.activationEndpoint,
-          deactivationEndpoint: values.deactivationEndpoint,
-          deletionEndpoint: values.deletionEndpoint,
-          // clientId: Plan_Client_id,
-        },
-        id: planData.id,
-      });
-    }
-    setVisible && setVisible(false);
-    setVisibleHead && setVisibleHead(false);
-  };
+          cleint: values.client,
+         
+        })
+        setUpdate(update + 1)
+      } else {
+        const editPlan = await editplanRequest({
+          data: {
+            name: values.name,
+            url: values.url,
+            cleint: values.client,
+          },
+          id: planData.id,
+        })
+
+        dispatch(
+          planInfo({
+            id: planData.id,
+            name: values.name,
+            url: values.url,
+            cleint: values.client,
+          })
+        )
+      }
+
+      setVisible && setVisible(false)
+      setVisible && setVisible(false)
+    },
+  })
 
   return (
     <div>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}>
-        {({ isSubmitting }) => (
-          <Form className="pt-4">
-            <div>
-              {/* <label htmlFor="name" className="pb-2">
-                name:
-              </label> */}
-              <div className="inputContainer mb-4">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field type="text" id="name" name="name" as={InputText} />
-                    <label htmlFor="name">
-                      Name:<span style={{ color: "red" }}>*</span>
-                    </label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="name"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              {/* <label htmlFor="url" className="pb-2">
-                Unique Name:
-              </label> */}
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field type="text" id="url" name="url" as={InputText} />
-                    <label htmlFor="url">
-                      Url:<span style={{ color: "red" }}>*</span>
-                    </label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="url"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="creationEndpoint"
-                      name="creationEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="creationEndpoint">Creation Url:</label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="creationEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="activationEndpoint"
-                      name="activationEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="activationEndpoint">Activation Url:</label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="activationEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="deactivationEndpoint"
-                      name="deactivationEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="deactivationEndpoint">
-                      Deactivation Url :
-                    </label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="deactivationEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="deletionEndpoint"
-                      name="deletionEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="deletionEndpoint">deletionEndpoint:</label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="deletionEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div className="pt-1">
-              <Button
-                variant="primary"
-                type="submit"
-                className="w-100"
-                disabled={isSubmitting}>
-                Submit
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
-  );
-};
+      <Form onSubmit={formik.handleSubmit}>
+        <Modal.Header>
+          <Modal.Title className="h6">{popupLabel}</Modal.Title>
+          <Button
+            variant="close"
+            aria-label="Close"
+            onClick={() => setVisible(false)}
+          />
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Name" />
+                <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                name="name"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+              />
 
-export default PlanForm;
+              {formik.touched.name && formik.errors.name && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.name}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Url" />
+                <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="url"
+                name="url"
+                onChange={formik.handleChange}
+                value={formik.values.url}
+              />
+
+              {formik.touched.url && formik.errors.url && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.url}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Client" />
+                
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="client"
+                name="client"
+                onChange={formik.handleChange}
+                value={formik.values.client}
+              />
+
+              {formik.touched.name && formik.errors.name && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.url}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          </Modal.Body>
+          <Modal.Footer>
+          <Button
+            variant="secondary"
+            type="submit"
+            // disabled={submitLoading}
+          >
+            <FormattedMessage id="Submit" />
+          </Button>
+          <Button
+            variant="link"
+            className="text-gray ms-auto"
+            onClick={() => setVisible(false)}
+          >
+            <FormattedMessage id="Close" />
+          </Button>
+        </Modal.Footer>
+      </Form>
+    </div>
+  )
+}
+
+export default PlanForm
