@@ -31,6 +31,9 @@ const useRequest = () => {
   const getProductTenants = async (params) => {
     return await Request.get(`management/sadmin/v1/products/${params}`)
   }
+  const getProductFeatures = async (params) => {
+    return await Request.get(`management/sadmin/v1/products/${params}`)
+  }
   const deleteTenantReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Tenants`, { data })
   }
@@ -88,6 +91,7 @@ const useRequest = () => {
     deleteProductReq,
     getHeathCheckSettings,
     putHeathCheckSettings,
+    getProductFeatures,
   }
 }
 export default useRequest

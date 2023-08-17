@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { productInfo } from '../../store/slices/products'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
+import ProductFeaturesList from '../../components/custom/Product/ProductFeaturesList/ProductFeaturesList'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -60,7 +61,7 @@ const ProductDetails = () => {
               />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Features" />}>
-              <ProductTenantsList
+              <ProductFeaturesList
                 productId={productData.id}
                 productName={productData.name}
               />

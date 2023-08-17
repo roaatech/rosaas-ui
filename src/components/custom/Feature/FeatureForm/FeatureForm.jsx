@@ -32,29 +32,26 @@ const FeatureForm = ({
 
   const initialValues = {
     name: featureData ? featureData.name : '',
-    apiKey: featureData ? featureData.apiKey : '',
-    defaultHealthCheckUrl: featureData ? featureData.defaultHealthCheckUrl : '',
-    healthStatusChangeUrl: featureData ? featureData.healthStatusChangeUrl : '',
-    creationEndpoint: featureData ? featureData.creationEndpoint : '',
-    activationEndpoint: featureData ? featureData.activationEndpoint : '',
-    deactivationEndpoint: featureData ? featureData.deactivationEndpoint : '',
-    deletionEndpoint: featureData ? featureData.deletionEndpoint : '',
+    description: featureData ? featureData.description : '',
+    type: featureData ? featureData.type : '',
+    unit: featureData ? featureData.unit : '',
+    reset: featureData ? featureData.reset : '',
   }
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Feature Name is required'),
-    defaultHealthCheckUrl: Yup.string()
-      .required(<FormattedMessage id="This-field-is-required" />)
-      .matches(
-        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-        <FormattedMessage id="Please-enter-a-valid-value" />
-      ),
-    healthStatusChangeUrl: Yup.string()
-      .required(<FormattedMessage id="This-field-is-required" />)
-      .matches(
-        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-        <FormattedMessage id="Please-enter-a-valid-value" />
-      ),
+    // defaultHealthCheckUrl: Yup.string()
+    //   .required(<FormattedMessage id="This-field-is-required" />)
+    //   .matches(
+    //     /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+    //     <FormattedMessage id="Please-enter-a-valid-value" />
+    //   ),
+    // healthStatusChangeUrl: Yup.string()
+    //   .required(<FormattedMessage id="This-field-is-required" />)
+    //   .matches(
+    //     /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+    //     <FormattedMessage id="Please-enter-a-valid-value" />
+    //   ),
   })
 
   const formik = useFormik({
@@ -64,26 +61,20 @@ const FeatureForm = ({
       if (type == 'create') {
         const createFeature = await createFeatureRequest({
           name: values.name,
-          apiKey: values.apiKey,
-          defaultHealthCheckUrl: values.defaultHealthCheckUrl,
-          healthStatusChangeUrl: values.healthStatusChangeUrl,
-          creationEndpoint: values.creationEndpoint,
-          activationEndpoint: values.activationEndpoint,
-          deactivationEndpoint: values.deactivationEndpoint,
-          deletionEndpoint: values.deletionEndpoint,
+          description: values.description,
+          type: values.type,
+          unit: values.unit,
+          reset: values.reset,
         })
         setUpdate(update + 1)
       } else {
         const editFeature = await editFeatureRequest({
           data: {
             name: values.name,
-            apiKey: values.apiKey,
-            defaultHealthCheckUrl: values.defaultHealthCheckUrl,
-            healthStatusChangeUrl: values.healthStatusChangeUrl,
-            creationEndpoint: values.creationEndpoint,
-            activationEndpoint: values.activationEndpoint,
-            deactivationEndpoint: values.deactivationEndpoint,
-            deletionEndpoint: values.deletionEndpoint,
+            description: values.description,
+            type: values.type,
+            unit: values.unit,
+            reset: values.reset,
           },
           id: featureData.id,
         })
@@ -92,13 +83,10 @@ const FeatureForm = ({
           featureInfo({
             id: featureData.id,
             name: values.name,
-            apiKey: values.apiKey,
-            defaultHealthCheckUrl: values.defaultHealthCheckUrl,
-            healthStatusChangeUrl: values.healthStatusChangeUrl,
-            creationEndpoint: values.creationEndpoint,
-            activationEndpoint: values.activationEndpoint,
-            deactivationEndpoint: values.deactivationEndpoint,
-            deletionEndpoint: values.deletionEndpoint,
+            description: values.description,
+            type: values.type,
+            unit: values.unit,
+            reset: values.reset,
             editedDate: new Date().toISOString().slice(0, 19),
           })
         )
@@ -127,7 +115,6 @@ const FeatureForm = ({
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Name" />
-                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -151,101 +138,100 @@ const FeatureForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Api-key" />
+                <FormattedMessage id="Description" />
               </Form.Label>
-              <div className="inputIcon">
-                <span className="buttonCont">
-                  <OverlayTrigger
-                    style={{ minWidth: '150px' }}
-                    trigger={['hover', 'focus']}
-                    placement="top"
-                    overlay={
-                      <Tooltip>
-                        <FormattedMessage id="Random-api-key" />
-                      </Tooltip>
-                    }
-                  >
-                    <button type="button" onClick={RandomApiKey}>
-                      <GiPerspectiveDiceSixFacesRandom />
-                    </button>
-                  </OverlayTrigger>
-                </span>
+              <input
+                type="text"
+                className="form-control"
+                id="description"
+                name="description"
+                onChange={formik.handleChange}
+                value={formik.values.description}
+              />
 
-                <input
-                  type="text"
-                  className="form-control"
-                  id="apiKey"
-                  name="apiKey"
-                  onChange={formik.handleChange}
-                  value={formik.values.apiKey}
-                />
-              </div>
-
-              {formik.touched.apiKey && formik.errors.apiKey && (
+              {formik.touched.description && formik.errors.description && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.apiKey}
+                  {formik.errors.description}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
           </div>
-
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Default-Health-Check-Url" />
-                <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Type" />
               </Form.Label>
               <input
                 type="text"
                 className="form-control"
-                id="defaultHealthCheckUrl"
-                name="defaultHealthCheckUrl"
+                id="type"
+                name="type"
                 onChange={formik.handleChange}
-                value={formik.values.defaultHealthCheckUrl}
+                value={formik.values.type}
               />
 
-              {formik.touched.defaultHealthCheckUrl &&
-                formik.errors.defaultHealthCheckUrl && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.defaultHealthCheckUrl}
-                  </Form.Control.Feedback>
-                )}
+              {formik.touched.type && formik.errors.type && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.type}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
           </div>
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Health-Status-Change-Url" />
-                <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Unit" />
               </Form.Label>
               <input
                 type="text"
                 className="form-control"
-                id="healthStatusChangeUrl"
-                name="healthStatusChangeUrl"
+                id="unit"
+                name="unit"
                 onChange={formik.handleChange}
-                value={formik.values.healthStatusChangeUrl}
+                value={formik.values.unit}
               />
 
-              {formik.touched.healthStatusChangeUrl &&
-                formik.errors.healthStatusChangeUrl && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.healthStatusChangeUrl}
-                  </Form.Control.Feedback>
-                )}
+              {formik.touched.unit && formik.errors.unit && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.unit}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
           </div>
-
           <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Reset" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="reset"
+                name="reset"
+                onChange={formik.handleChange}
+                value={formik.values.reset}
+              />
+
+              {formik.touched.reset && formik.errors.reset && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.reset}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          {/* <div>
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Creation-Url" />
@@ -253,98 +239,23 @@ const FeatureForm = ({
               <input
                 type="text"
                 className="form-control"
-                id="creationEndpoint"
-                name="creationEndpoint"
+                id="reset"
+                name="reset"
                 onChange={formik.handleChange}
-                value={formik.values.creationEndpoint}
+                value={formik.values.reset}
               />
 
-              {formik.touched.creationEndpoint &&
-                formik.errors.creationEndpoint && (
+              {formik.touched.reset &&
+                formik.errors.reset && (
                   <Form.Control.Feedback
                     type="invalid"
                     style={{ display: 'block' }}
                   >
-                    {formik.errors.creationEndpoint}
+                    {formik.errors.reset}
                   </Form.Control.Feedback>
                 )}
             </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Activation-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="activationEndpoint"
-                name="activationEndpoint"
-                onChange={formik.handleChange}
-                value={formik.values.activationEndpoint}
-              />
-
-              {formik.touched.activationEndpoint &&
-                formik.errors.activationEndpoint && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.activationEndpoint}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Deactivation-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="deactivationEndpoint"
-                name="deactivationEndpoint"
-                onChange={formik.handleChange}
-                value={formik.values.deactivationEndpoint}
-              />
-
-              {formik.touched.deactivationEndpoint &&
-                formik.errors.deactivationEndpoint && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.deactivationEndpoint}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Deletion-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="deletionEndpoint"
-                name="deletionEndpoint"
-                onChange={formik.handleChange}
-                value={formik.values.deletionEndpoint}
-              />
-
-              {formik.touched.deletionEndpoint &&
-                formik.errors.deletionEndpoint && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.deletionEndpoint}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
-          </div>
+          </div> */}
         </Modal.Body>
         <Modal.Footer>
           <Button

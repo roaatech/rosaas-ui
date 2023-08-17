@@ -54,6 +54,43 @@ export const productsSlice = createSlice({
       currentProducts[action.payload.id] = mergedObject
       state.products = currentProducts
     },
+    features: (state, action) => {
+      const currentProducts = { ...current(state.products) }
+      const product = { ...currentProducts[action.payload.id] }
+      product.features = action.payload.data
+      const mergedObject = _.mergeWith(
+        {},
+        currentProducts[action.payload.id],
+        product,
+        (objValue, srcValue) => {
+          if (_.isObject(objValue)) {
+            return _.merge({}, objValue, srcValue)
+          }
+        }
+      )
+
+      currentProducts[action.payload.id] = mergedObject
+      state.products = currentProducts
+    },
+
+    FeatureInfo: (state, action) => {
+      const currentProducts = { ...current(state.products) }
+
+      const mergedObject = _.mergeWith(
+        {},
+        currentProducts[action.payload.id],
+        action.payload,
+        (objValue, srcValue) => {
+          if (_.isObject(objValue)) {
+            return _.merge({}, objValue, srcValue)
+          }
+        }
+      )
+
+      currentProducts[action.payload.id] = mergedObject
+      state.products = currentProducts
+    },
+
     removeProduct: (state, action) => {
       const currentProducts = { ...current(state.products) }
       delete currentProducts[action.payload]
@@ -63,6 +100,12 @@ export const productsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setAllProduct, subscribe, productInfo, removeProduct } =
-  productsSlice.actions
+export const {
+  setAllProduct,
+  subscribe,
+  productInfo,
+  removeProduct,
+  features,
+  FeatureInfo,
+} = productsSlice.actions
 export default productsSlice.reducer
