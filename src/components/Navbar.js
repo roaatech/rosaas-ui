@@ -118,7 +118,7 @@ export default (props) => {
                 </div>
               </Dropdown.Toggle>
               <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
-                <Dropdown.Item
+                {/* <Dropdown.Item
                   className="fw-bold"
                   onClick={() => {
                     dispatch(changeMode(!darkMode))
@@ -126,7 +126,7 @@ export default (props) => {
                   }}
                 >
                   {darkMode == false ? 'Dark Mode' : 'Light Mode'}
-                </Dropdown.Item>
+                </Dropdown.Item> */}
 
                 {/* <Dropdown.Divider /> */}
 

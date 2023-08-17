@@ -79,7 +79,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                         <span>
                           {Time(
                             item.healthCheckStatus.lastCheckDate,
-                            intl.formatMessage({ id: 'last-checked' })
+                            intl.formatMessage({ id: 'Last-checked' })
                           )}
                         </span>
                       </OverlayTrigger>
@@ -125,7 +125,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                     <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-3">
                       <div>
                         <h6>
-                          <FormattedMessage id="Health-Check-Status-Info" />:
+                          <FormattedMessage id="Health-Check-Status-Info" />
                         </h6>
                       </div>
                     </div>
@@ -157,7 +157,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                       <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-3">
                         <div>
                           <h6>
-                            <FormattedMessage id="External-System-Dispatch" />:
+                            <FormattedMessage id="External-System-Dispatch" />
                           </h6>
                         </div>
                       </div>
@@ -165,7 +165,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                         <div className="mb-0 w-25">
                           <FormattedMessage id="Is-Successful" />
                         </div>
-                        <div className="small card-stats">
+                        <div className="small card-stats uppercase">
                           {item.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
                         </div>
                       </div>
@@ -185,7 +185,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                           {Time(
                             item.healthCheckStatus?.externalSystemDispatch
                               ?.dispatchDate,
-                            intl.formatMessage({ id: 'last-checked' })
+                            intl.formatMessage({ id: 'Last-checked' })
                           )}
                         </div>
                       </div>
