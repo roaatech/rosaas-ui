@@ -1,48 +1,48 @@
-import React, { useState, useEffect } from "react";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
+import React, { useState, useEffect } from 'react'
+import { DataTable } from 'primereact/datatable'
+import { Column } from 'primereact/column'
 import {
   BsPencilSquare,
   BsFillTrash3Fill,
   BsFillEyeFill,
   BsBoxSeam,
   BsFillLayersFill,
-} from "react-icons/bs";
-import BreadcrumbComponent from "../../components/custom/Shared/Breadcrumb/Breadcrumb";
+} from 'react-icons/bs'
+import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 
-import ColumnSortHeader from "../../components/custom/Shared/ColumnSortHeader/ColumnSortHeader";
-import TableHead from "../../components/custom/Shared/TableHead/TableHead";
-import TableDate from "../../components/custom/Shared/TableDate/TableDate";
-import PlanForm from "../../components/custom/Plan/PlanForm/PlanForm";
-import useRequest from "../../axios/apis/useRequest";
-import { Dialog } from "primereact/dialog";
-import DeleteConfirmation from "../../components/custom/global/DeleteConfirmation/DeleteConfirmation.jsx";
-import { useNavigate } from "react-router-dom";
-import { Wrapper } from "./plan.styled";
-import CustomPaginator from "../../components/custom/Shared/CustomPaginator/CustomPaginator";
+import ColumnSortHeader from '../../components/custom/Shared/ColumnSortHeader/ColumnSortHeader'
+import TableHead from '../../components/custom/Shared/TableHead/TableHead'
+import TableDate from '../../components/custom/Shared/TableDate/TableDate'
+import PlanForm from '../../components/custom/Plan/PlanForm/PlanForm'
+import useRequest from '../../axios/apis/useRequest'
+import { Dialog } from 'primereact/dialog'
+import DeleteConfirmation from '../../components/custom/global/DeleteConfirmation/DeleteConfirmation.jsx'
+import { useNavigate } from 'react-router-dom'
+import { Wrapper } from './Plan.styled'
+import CustomPaginator from '../../components/custom/Shared/CustomPaginator/CustomPaginator'
 export default function Plan({ children }) {
-  const { getPlan, getPlanList, deletePlanReq } = useRequest();
-  const [visible, setVisible] = useState(false);
-  const [totalCount, setTotalCount] = useState(0);
-  const [visibleHead, setVisibleHead] = useState(false);
-  const [list, setList] = useState([]);
-  const [rebase, setRebase] = useState(0);
-  const [searchValue, setSearchValue] = useState("");
-  const [sortField, setSortField] = useState("");
-  const [sortValue, setSortValue] = useState("");
-  const [first, setFirst] = useState(0);
-  const [rows, setRows] = useState(10);
-  const [confirm, setConfirm] = useState(false);
-  const [currentId, setCurrentId] = useState("");
-  const [update, setUpdate] = useState(1);
-  const navigate = useNavigate();
+  const { getPlan, getPlanList, deletePlanReq } = useRequest()
+  const [visible, setVisible] = useState(false)
+  const [totalCount, setTotalCount] = useState(0)
+  const [visibleHead, setVisibleHead] = useState(false)
+  const [list, setList] = useState([])
+  const [rebase, setRebase] = useState(0)
+  const [searchValue, setSearchValue] = useState('')
+  const [sortField, setSortField] = useState('')
+  const [sortValue, setSortValue] = useState('')
+  const [first, setFirst] = useState(0)
+  const [rows, setRows] = useState(10)
+  const [confirm, setConfirm] = useState(false)
+  const [currentId, setCurrentId] = useState('')
+  const [update, setUpdate] = useState(1)
+  const navigate = useNavigate()
   const deleteConfirm = (id) => {
-    setCurrentId(id);
-    setConfirm(true);
-  };
+    setCurrentId(id)
+    setConfirm(true)
+  }
   const deletePlan = async () => {
-    await deletePlanReq({ id: currentId });
-  };
+    await deletePlanReq({ id: currentId })
+  }
 
   // useEffect(() => {
   //   let query = `?page=${Math.ceil(
@@ -62,37 +62,38 @@ export default function Plan({ children }) {
   /******************************* */
 
   const onPageChange = (event) => {
-    setFirst(event.first);
-    setRows(event.rows);
-  };
+    setFirst(event.first)
+    setRows(event.rows)
+  }
 
   /****************************** */
-  const [planData, setPlanData] = useState();
+  const [planData, setPlanData] = useState()
   const editForm = async (id) => {
-    const planData = await getPlan(id);
+    const planData = await getPlan(id)
 
-    setPlanData(planData.data);
-    setVisible(true);
-  };
+    setPlanData(planData.data)
+    setVisible(true)
+  }
 
   return (
     <Wrapper>
       <BreadcrumbComponent
-        title={"Plan List"}
-        parent={"Plan"}
+        title={'Plan List'}
+        parent={'Plan'}
         icon={BsBoxSeam}
       />
       <div className="main-container">
         <TableHead
-          label={"Add Plan"}
-          popupLabel={"Create Plan"}
+          label={'Add Plan'}
+          popupLabel={'Create Plan'}
           icon={BsFillLayersFill}
           setSearchValue={setSearchValue}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
-          setFirst={setFirst}>
+          setFirst={setFirst}
+        >
           <PlanForm
-            type={"create"}
+            type={'create'}
             update={update}
             setUpdate={setUpdate}
             visibleHead={visibleHead}
@@ -102,8 +103,9 @@ export default function Plan({ children }) {
         <div className="card">
           <DataTable
             value={list}
-            tableStyle={{ minWidth: "50rem" }}
-            size={"small"}>
+            tableStyle={{ minWidth: '50rem' }}
+            size={'small'}
+          >
             <Column
               field="name"
               header={
@@ -118,7 +120,8 @@ export default function Plan({ children }) {
                   setSortValue={setSortValue}
                   setFirst={setFirst}
                 />
-              }></Column>
+              }
+            ></Column>
             <Column
               field="url"
               header={
@@ -133,10 +136,11 @@ export default function Plan({ children }) {
                   setSortValue={setSortValue}
                   setFirst={setFirst}
                 />
-              }></Column>
+              }
+            ></Column>
 
             <Column
-              field={"client.name"}
+              field={'client.name'}
               header={
                 <ColumnSortHeader
                   text="Client"
@@ -159,7 +163,7 @@ export default function Plan({ children }) {
                   editedDate={data.editedDate}
                 />
               )}
-              style={{ width: "250px", maxidth: "250px" }}
+              style={{ width: '250px', maxidth: '250px' }}
               header={
                 <ColumnSortHeader
                   text="Date"
@@ -175,36 +179,36 @@ export default function Plan({ children }) {
               }
             />
             <Column
-              style={{ width: "60px", textAlign: "center" }}
+              style={{ width: '60px', textAlign: 'center' }}
               body={(data, options) => (
                 <>
                   <BsFillEyeFill
                     onClick={() => navigate(`/PlanDetails/${data.id}`)}
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: 'pointer' }}
                   />
                 </>
               )}
               header="View"
             />
             <Column
-              style={{ width: "60px", textAlign: "center" }}
+              style={{ width: '60px', textAlign: 'center' }}
               body={(data, options) => (
                 <>
                   <BsPencilSquare
                     onClick={() => editForm(data.id)}
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: 'pointer' }}
                   />
                 </>
               )}
               header="Edit"
             />
             <Column
-              style={{ width: "60px", textAlign: "center" }}
+              style={{ width: '60px', textAlign: 'center' }}
               body={(data, options) => (
                 <>
                   <BsFillTrash3Fill
                     onClick={() => deleteConfirm(data.id)}
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: 'pointer' }}
                   />
                 </>
               )}
@@ -247,5 +251,5 @@ export default function Plan({ children }) {
         />
       </div>
     </Wrapper>
-  );
+  )
 }
