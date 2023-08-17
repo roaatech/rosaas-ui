@@ -53,7 +53,7 @@ export const Routes = {
     roles: ['superAdmin'],
   },
   Plan: {
-    path: '/plan',
+    path: '/plans',
     component: Plan,
     roles: ['superAdmin'],
   },
