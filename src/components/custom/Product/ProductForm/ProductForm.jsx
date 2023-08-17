@@ -1,14 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../../axios/apis/useRequest.js'
 import { Product_Client_id } from '../../../../const/index.js'
-import { Modal, Button } from '@themesberg/react-bootstrap'
+import {
+  Modal,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { productInfo } from '../../../../store/slices/products.js'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
+import { Wrapper } from './ProductForm.styled.jsx'
+import { generateApiKey } from '../../../../lib/sharedFun/common.js'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { AiFillCopy } from 'react-icons/ai'
 
 const ProductForm = ({
   type,
@@ -102,9 +112,11 @@ const ProductForm = ({
       setVisible && setVisible(false)
     },
   })
-
+  const RandomApiKey = () => {
+    formik.setFieldValue('apiKey', generateApiKey())
+  }
   return (
-    <div>
+    <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Header>
           <Modal.Title className="h6">{popupLabel}</Modal.Title>
@@ -145,14 +157,33 @@ const ProductForm = ({
               <Form.Label>
                 <FormattedMessage id="Api-key" />
               </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="apiKey"
-                name="apiKey"
-                onChange={formik.handleChange}
-                value={formik.values.apiKey}
-              />
+              <div className="inputIcon">
+                <span className="buttonCont">
+                  <OverlayTrigger
+                    style={{ minWidth: '150px' }}
+                    trigger={['hover', 'focus']}
+                    placement="top"
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Random-api-key" />
+                      </Tooltip>
+                    }
+                  >
+                    <button type="button" onClick={RandomApiKey}>
+                      <GiPerspectiveDiceSixFacesRandom />
+                    </button>
+                  </OverlayTrigger>
+                </span>
+
+                <input
+                  type="text"
+                  className="form-control"
+                  id="apiKey"
+                  name="apiKey"
+                  onChange={formik.handleChange}
+                  value={formik.values.apiKey}
+                />
+              </div>
 
               {formik.touched.apiKey && formik.errors.apiKey && (
                 <Form.Control.Feedback
@@ -336,7 +367,7 @@ const ProductForm = ({
           </Button>
         </Modal.Footer>
       </Form>
-    </div>
+    </Wrapper>
   )
 }
 

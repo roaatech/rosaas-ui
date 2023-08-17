@@ -231,7 +231,7 @@ export default (props = {}) => {
               <img src={logo} alt="logo" className="my-3 logo" />
 
               <TableHead
-                label={'Add Tenant'}
+                label={<FormattedMessage id="Add-Tenant" />}
                 icon={'pi-plus'}
                 setSearchValue={setSearchValue}
                 visibleHead={visibleHead}
@@ -240,7 +240,7 @@ export default (props = {}) => {
                 setFirst={setFirst}
               >
                 <TenantForm
-                  popupLabel={'Create Tenant'}
+                  popupLabel={<FormattedMessage id="Create-Tenant" />}
                   type={'create'}
                   update={update}
                   setUpdate={setUpdate}
@@ -252,7 +252,7 @@ export default (props = {}) => {
               {active.length ? (
                 <CollapsableNavItem
                   eventKey={activeIsOpen}
-                  title="Active Tenant"
+                  title={<FormattedMessage id="Active-Tenant" />}
                   icon={BsFillPersonLinesFill}
                 >
                   {active.map((item, index) => (
@@ -268,7 +268,7 @@ export default (props = {}) => {
               {inactive.length ? (
                 <CollapsableNavItem
                   eventKey={inactiveIsOpen}
-                  title="Tenants"
+                  title={<FormattedMessage id="Tenants" />}
                   icon={<BsFillPersonLinesFill />}
                 >
                   {inactive.map((item, index) => (
@@ -298,7 +298,7 @@ export default (props = {}) => {
               ) : null}
 
               <NavItem
-                title="Products"
+                title={<FormattedMessage id="Products" />}
                 link={`/products`}
                 icon={BsBoxSeam}
                 isActive={location.pathname.includes('products')}
@@ -313,11 +313,11 @@ export default (props = {}) => {
 
               <CollapsableNavItem
                 eventKey={settingIsOpen}
-                title="Settings"
+                title={<FormattedMessage id="Settings" />}
                 icon={<BsGearFill />}
               >
                 <NavItem
-                  title="Health Check"
+                  title={<FormattedMessage id="Health-Check" />}
                   link={`/settings/health-check`}
                   icon={BsFillClipboard2CheckFill}
                 />

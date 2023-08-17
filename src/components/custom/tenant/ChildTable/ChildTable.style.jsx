@@ -3,6 +3,18 @@ const Wrapper = styled.div`
   thead.p-datatable-thead {
     display: none;
   }
+  .tabHolder {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    .date {
+      word-break: break-word;
+      display: inline-block;
+      white-space: initial;
+      min-width: 250px;
+      font-weight: 400;
+    }
+  }
 
   .status {
     padding: 1rem 0;
@@ -41,7 +53,7 @@ const Wrapper = styled.div`
 
   .accordion-button {
     background-color: var(--primary0);
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1rem;
     font-size: 0.875rem;
   }
   .accordion-button:focus {
@@ -61,7 +73,8 @@ const Wrapper = styled.div`
     display: inline-block;
   }
   .firstTd {
-    width: 165px;
+    width: 145px;
+    padding-right: 0 !important;
   }
   .tableTitle {
     margin: 1rem 0 0.5rem 1rem;

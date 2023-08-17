@@ -122,7 +122,7 @@ const Settings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="Available-Check-Period" />
+                      <FormattedMessage id="Available-Check-Period-minutes" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
@@ -163,7 +163,7 @@ const Settings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="Unavailable-Check-Period" />
+                      <FormattedMessage id="Unavailable-Check-Period-minutes" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
@@ -204,7 +204,7 @@ const Settings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="Inaccessible-Check-Period" />
+                      <FormattedMessage id="Inaccessible-Check-Period-minutes" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
@@ -245,7 +245,7 @@ const Settings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="Notification-Threshold" />
+                      <FormattedMessage id="Notification-Threshold-times" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger

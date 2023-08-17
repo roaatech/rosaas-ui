@@ -14,13 +14,13 @@ const urlIsOverridden = {
 }
 const statusConst = {
   1: {
-    string: 'Rosas resource created',
+    string: 'Rosas-resource-created',
     opacity: '35',
     color: '#155dd7',
     icon: 'pi-user-plus',
   },
   2: {
-    string: 'Create request is sent',
+    string: 'Create-request-is-sent',
     opacity: '10',
     color: '#155dd7',
     icon: 'pi-user-plus',
@@ -32,13 +32,13 @@ const statusConst = {
     icon: 'pi-user-plus',
   },
   4: {
-    string: 'Created As Active',
+    string: 'Created-As-Active',
     opacity: '35',
     color: '#00a675',
     icon: 'pi-check-circle',
   },
   5: {
-    string: 'Active request is sent',
+    string: 'Active-request-is-sent',
     opacity: '10',
     color: '#00a675',
     icon: 'pi-check-circle',
@@ -56,7 +56,7 @@ const statusConst = {
     icon: 'pi-check-circle',
   },
   8: {
-    string: 'Deactivate request is sent',
+    string: 'Deactivate-request-is-sent',
     opacity: '10',
     color: '#eda100',
     icon: 'pi-exclamation-triangle',
@@ -74,7 +74,7 @@ const statusConst = {
     icon: 'pi-exclamation-triangle',
   },
   11: {
-    string: 'Delete request is sent',
+    string: 'Delete-request-is-sent',
     opacity: '10',
     color: '#FF6868',
     icon: 'pi-trash',
@@ -118,18 +118,18 @@ const urlStyle = {
 
 const breadcrumbConst = {
   HealthCheck: {
-    title: <FormattedMessage id="Settings" />,
+    title: 'Settings',
     name: 'Health-Check-Settings',
     navigation: '/settings/health-check',
     active: 'Settings',
     icon: {},
   },
   Dashboard: {
-    title: <FormattedMessage id="Dashboard" />,
+    title: 'Dashboard',
     navigation: '/',
   },
   ProductList: {
-    title: <FormattedMessage id="Product-Management" />,
+    title: 'Product-Management',
     name: 'Products',
     navigation: '/products',
     active: 'Products',
@@ -144,25 +144,25 @@ const breadcrumbConst = {
     icon: {},
   },
   ProductDetails: {
-    title: <FormattedMessage id="Product-Management" />,
+    title: 'Product-Management',
     name: 'Product-Details',
     active: 'Product Details',
     navigation: '/products',
-    parent: <FormattedMessage id="Products" />,
+    parent: 'Products',
     parentNavigation: '/products',
     icon: {},
   },
   TenantList: {
-    title: 'Tenant Management',
+    title: 'Tenant-Management',
     name: 'Tenants',
     navigation: '/tenants',
     active: 'Tenants',
     icon: {},
   },
   TenantDetails: {
-    title: 'Tenant Management',
-    name: 'Tenant Details',
-    active: 'Tenant Details',
+    title: 'Tenant-Management',
+    name: 'Tenant-Details',
+    active: 'Tenant-Details',
     navigation: '/tenant',
     parent: 'Tenants',
     parentNavigation: '/tenant',

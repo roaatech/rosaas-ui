@@ -20,6 +20,7 @@ import { tenantInfo } from '../../store/slices/tenants'
 import { removeTenant, setActiveIndex } from '../../store/slices/tenants'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { DataTransform } from '../../lib/sharedFun/Time'
+import { FormattedMessage } from 'react-intl'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -102,7 +103,10 @@ const TenantDetails = () => {
       <div className="main-container">
         {tenantObject && (
           <UpperContent>
-            <h4 className="m-0">Tenant Details : {tenantObject.uniqueName}</h4>
+            <h4 className="m-0">
+              <FormattedMessage id="Tenant-Details" />:{' '}
+              {tenantObject.uniqueName}
+            </h4>
           </UpperContent>
         )}
 
@@ -118,7 +122,7 @@ const TenantDetails = () => {
                       dispatch(setActiveIndex(e.index))
                     }}
                   >
-                    <TabPanel header="Details">
+                    <TabPanel header={<FormattedMessage id="Details" />}>
                       <Card border="light" className="shadow-sm border-0">
                         <Card.Body className="p-0">
                           <Table
@@ -127,15 +131,21 @@ const TenantDetails = () => {
                           >
                             <tbody>
                               <tr>
-                                <td className="fw-bold">Title</td>
+                                <td className="fw-bold">
+                                  <FormattedMessage id="Title" />
+                                </td>
                                 <td>{tenantObject.title}</td>
                               </tr>
                               <tr>
-                                <td className="fw-bold">Unique Name</td>
+                                <td className="fw-bold">
+                                  <FormattedMessage id="Unique-Name" />
+                                </td>
                                 <td>{tenantObject.uniqueName}</td>
                               </tr>
                               <tr>
-                                <td className="fw-bold">Products</td>
+                                <td className="fw-bold">
+                                  <FormattedMessage id="Products" />
+                                </td>
                                 <td>
                                   {tenantObject.products.map(
                                     (product, index) => (
@@ -151,13 +161,17 @@ const TenantDetails = () => {
                               </tr>
 
                               <tr>
-                                <td className="fw-bold">Created Date</td>
+                                <td className="fw-bold">
+                                  <FormattedMessage id="Created-Date" />
+                                </td>
                                 <td>
                                   {DataTransform(tenantObject.createdDate)}
                                 </td>
                               </tr>
                               <tr>
-                                <td className="fw-bold">Last Updated Date</td>
+                                <td className="fw-bold">
+                                  <FormattedMessage id="Last-Updated-Date" />
+                                </td>
                                 <td>
                                   {DataTransform(tenantObject.editedDate)}
                                 </td>
@@ -171,7 +185,7 @@ const TenantDetails = () => {
                           {tenantStatus && tenantStatus[0]?.status != 13 ? (
                             <Button
                               className="mr-3"
-                              label="Edit"
+                              label={<FormattedMessage id="Edit" />}
                               icon="pi pi-pencil"
                               onClick={() => setVisible(true)}
                               style={{
@@ -218,7 +232,7 @@ const TenantDetails = () => {
 
                   <ThemeDialog visible={visible} setVisible={setVisible}>
                     <TenantForm
-                      popupLabel={'Edit Tenant'}
+                      popupLabel={<FormattedMessage id="Edit-Tenant" />}
                       type={'edit'}
                       tenantData={tenantObject}
                       setVisible={setVisible}

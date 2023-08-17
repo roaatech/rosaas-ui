@@ -6,7 +6,12 @@ export const Wrapper = styled.div`
     background: var(--primary5);
   }
   .p-progressbar {
-    z-index: 1000;
+    height: 3px !important;
+    position: fixed;
+    top: 0;
+    z-index: 0;
+    background: var(--primary3);
+    width: 100vw;
   }
 
   .loaderCont {

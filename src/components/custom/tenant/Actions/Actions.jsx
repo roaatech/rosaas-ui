@@ -1,6 +1,7 @@
 import { Button } from 'primereact/button'
 import React from 'react'
 import { statusConst } from '../../../../const'
+import { FormattedMessage } from 'react-intl'
 
 const Actions = ({ tenantData, actions, deleteConfirm, chagneStatus }) => {
   return (
@@ -10,7 +11,7 @@ const Actions = ({ tenantData, actions, deleteConfirm, chagneStatus }) => {
           {tenantData && (
             <Button
               className="mr-3"
-              label="Delete"
+              label={<FormattedMessage id="Delete" />}
               icon="pi pi-trash"
               onClick={() => deleteConfirm(tenantData.data.id)}
               style={{
@@ -25,7 +26,7 @@ const Actions = ({ tenantData, actions, deleteConfirm, chagneStatus }) => {
         <Button
           key={index}
           className="mr-3"
-          label={item.name}
+          label={<FormattedMessage id={item.name} />}
           icon={`pi ${statusConst[item.status].icon}`}
           style={{
             backgroundColor: statusConst[item.status].color,

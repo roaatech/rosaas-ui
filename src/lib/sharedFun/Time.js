@@ -1,4 +1,6 @@
-const isHour = (hour) => (hour.hours > 0 ? `${hour.hours} hours and` : '')
+const isHour = (hour) => {
+  return hour > 0 ? `${hour} hours and` : ''
+}
 
 export const DataTransform = (dateTime) => {
   const utcDateTime = new Date(dateTime + 'Z')
@@ -28,12 +30,11 @@ export const timeDifferenceFromNow = (targetDate) => {
 
   return { hours: hoursDifference, minutes: minutesDifference }
 }
-
+//console.log(Time(new Date('2023-08-16T09:27:01')), 'dateTest')
 export const Time = (date, before) => {
   const timeDifference = timeDifferenceFromNow(date)
-
   return timeDifference.hours < 24
-    ? `${before} ${isHour(timeDifference.hours)}
+    ? `${before} ${isHour(timeDifference.hours)} 
 
     ${
       timeDifference.minutes < 1

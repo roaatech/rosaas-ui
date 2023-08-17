@@ -9,7 +9,6 @@ import { history } from '../../../../store/slices/tenants'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 
 const Workflow = ({ productId, updateDetails, productIndex }) => {
-  // const [timeLine, setTimeLine] = useState([]);
   const { getTimeLine } = useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
@@ -43,7 +42,6 @@ const Workflow = ({ productId, updateDetails, productIndex }) => {
                 <div className="action">
                   <TenantStatus statusValue={item.status} />
                 </div>
-                {/* <div className="action">{statusArray[item.status]}</div> */}
                 <div className="time">{DataTransform(item.created)}</div>
               </div>
               <div className="message">{item.message}</div>

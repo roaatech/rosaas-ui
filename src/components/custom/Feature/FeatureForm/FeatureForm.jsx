@@ -1,186 +1,374 @@
-import React from "react";
-import { Button } from "@themesberg/react-bootstrap";
-import { useFormik } from "formik";
-import { InputText } from "primereact/inputtext";
-import * as Yup from "yup";
-import { Dropdown } from "primereact/dropdown";
-import { InputTextarea } from "primereact/inputtextarea";
+import React, { useState } from 'react'
+import { useFormik } from 'formik'
+import { InputText } from 'primereact/inputtext'
+import * as Yup from 'yup'
+import useRequest from '../../../../axios/apis/useRequest.js'
+import { Product_Client_id } from '../../../../const/index.js'
+import {
+  Modal,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
+import { Form } from '@themesberg/react-bootstrap'
+import { productInfo } from '../../../../store/slices/products.js'
+import { useDispatch } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
+import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
+import { Wrapper } from './ProductForm.styled.jsx'
+import { generateApiKey } from '../../../../lib/sharedFun/common.js'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { AiFillCopy } from 'react-icons/ai'
 
-const FeatureForm = ({
+const ProductForm = ({
   type,
-  featureData,
+  productData,
+  setVisible,
+  popupLabel,
   update,
   setUpdate,
-  setVisibleHead,
-  setVisible,
 }) => {
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    type: Yup.string().required("Type is required"),
-    unit: Yup.string(),
-    reset: Yup.string().required("Reset is required"),
-    description: Yup.string(),
-  });
+  const { createProductRequest, editProductRequest } = useRequest()
+  const dispatch = useDispatch()
+
   const initialValues = {
-    name: featureData ? featureData.name : "",
-    type: featureData ? featureData.type : "number",
-    unit: featureData ? featureData.unit : "",
-    reset: featureData ? featureData.reset : "never",
-    description: featureData ? featureData.description : "",
-  };
+    name: productData ? productData.name : '',
+    apiKey: productData ? productData.apiKey : '',
+    defaultHealthCheckUrl: productData ? productData.defaultHealthCheckUrl : '',
+    healthStatusChangeUrl: productData ? productData.healthStatusChangeUrl : '',
+    creationEndpoint: productData ? productData.creationEndpoint : '',
+    activationEndpoint: productData ? productData.activationEndpoint : '',
+    deactivationEndpoint: productData ? productData.deactivationEndpoint : '',
+    deletionEndpoint: productData ? productData.deletionEndpoint : '',
+  }
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Product Name is required'),
+    defaultHealthCheckUrl: Yup.string()
+      .required(<FormattedMessage id="This-field-is-required" />)
+      .matches(
+        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+        <FormattedMessage id="Please-enter-a-valid-value" />
+      ),
+    healthStatusChangeUrl: Yup.string()
+      .required(<FormattedMessage id="This-field-is-required" />)
+      .matches(
+        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+        <FormattedMessage id="Please-enter-a-valid-value" />
+      ),
+  })
 
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
-      if (type == "create") {
-        if (update) {
-          setUpdate(update + 1);
-        }
+    onSubmit: async (values, { setSubmitting }) => {
+      if (type == 'create') {
+        const createProduct = await createProductRequest({
+          name: values.name,
+          apiKey: values.apiKey,
+          defaultHealthCheckUrl: values.defaultHealthCheckUrl,
+          healthStatusChangeUrl: values.healthStatusChangeUrl,
+          creationEndpoint: values.creationEndpoint,
+          activationEndpoint: values.activationEndpoint,
+          deactivationEndpoint: values.deactivationEndpoint,
+          deletionEndpoint: values.deletionEndpoint,
+          clientId: Product_Client_id,
+        })
+        setUpdate(update + 1)
       } else {
-        if (update) {
-          setUpdate(update + 1);
-        }
+        const editProduct = await editProductRequest({
+          data: {
+            name: values.name,
+            apiKey: values.apiKey,
+            defaultHealthCheckUrl: values.defaultHealthCheckUrl,
+            healthStatusChangeUrl: values.healthStatusChangeUrl,
+            creationEndpoint: values.creationEndpoint,
+            activationEndpoint: values.activationEndpoint,
+            deactivationEndpoint: values.deactivationEndpoint,
+            deletionEndpoint: values.deletionEndpoint,
+            clientId: Product_Client_id,
+          },
+          id: productData.id,
+        })
+
+        dispatch(
+          productInfo({
+            id: productData.id,
+            name: values.name,
+            apiKey: values.apiKey,
+            defaultHealthCheckUrl: values.defaultHealthCheckUrl,
+            healthStatusChangeUrl: values.healthStatusChangeUrl,
+            creationEndpoint: values.creationEndpoint,
+            activationEndpoint: values.activationEndpoint,
+            deactivationEndpoint: values.deactivationEndpoint,
+            deletionEndpoint: values.deletionEndpoint,
+            editedDate: new Date().toISOString().slice(0, 19),
+            clientId: { id: Product_Client_id },
+          })
+        )
       }
-      setVisible && setVisible(false);
-      setVisibleHead && setVisibleHead(false);
+
+      setVisible && setVisible(false)
+      setVisible && setVisible(false)
     },
-  });
-
-  const TypeOptions = [
-    { label: "Number", value: "number" },
-    { label: "Yes/No", value: "yes/no" },
-  ];
-  const UnitOptions = [
-    { label: " ", value: "" },
-    { label: "K", value: "K" },
-    { label: "MB", value: "MB" },
-    { label: "GB", value: "GB" },
-  ];
-  const ResetOptions = [
-    { label: "Never", value: "never" },
-    { label: "Weekly", value: "weekly" },
-    { label: "Monthly", value: "monthly" },
-    { label: "Annual", value: "annual" },
-  ];
-
+  })
+  const RandomApiKey = () => {
+    formik.setFieldValue('apiKey', generateApiKey())
+  }
   return (
-    <div>
-      <form className="pt-4" onSubmit={formik.handleSubmit}>
-        <div>
-          <div className="inputContainer mb-4">
-            <div className="inputContainerWithIcon">
-              <span className="p-float-label">
-                <InputText
-                  id="name"
-                  name="name"
-                  onChange={formik.handleChange}
-                  value={formik.values.name}
-                />
-                <label htmlFor="name">
-                  Name: <span style={{ color: "red" }}>*</span>
-                </label>
-              </span>
-            </div>
-            {formik.touched.name && formik.errors.name && (
-              <div className="error-message">{formik.errors.name}</div>
-            )}
-          </div>
-        </div>
-        <div>
-          <div className="inputContainer mb-4">
-            <div className="inputContainerWithIcon">
-              <span className="p-float-label">
-                <Dropdown
-                  id="type"
-                  options={TypeOptions}
-                  value={formik.values.type}
-                  onChange={(e) => formik.setFieldValue("type", e.value)}
-                  // placeholder="Type"
-                  name="type"
-                />
-                <label htmlFor="type">
-                  Type: <span style={{ color: "red" }}>*</span>
-                </label>
-              </span>
-            </div>
-            {formik.touched.type && formik.errors.type && (
-              <div className="error">{formik.errors.type}</div>
-            )}
-          </div>
-        </div>
-        <div>
-          <div className="inputContainer mb-4">
-            <div className="inputContainerWithIcon">
-              <span className="p-float-label">
-                <Dropdown
-                  id="unit"
-                  options={UnitOptions}
-                  value={formik.values.unit}
-                  onChange={(e) => formik.setFieldValue("unit", e.value)}
-                  name="unit"
-                />
-                <label htmlFor="unit">Unit:</label>
-              </span>
-            </div>
-            {formik.touched.unit && formik.errors.unit && (
-              <div className="error">{formik.errors.unit}</div>
-            )}
-          </div>
-        </div>
-        <div>
-          <div className="inputContainer mb-4">
-            <div className="inputContainerWithIcon">
-              <span className="p-float-label">
-                <Dropdown
-                  id="reset"
-                  options={ResetOptions}
-                  value={formik.values.reset}
-                  onChange={(e) => formik.setFieldValue("reset", e.value)}
-                  name="reset"
-                />
-                <label htmlFor="reset">
-                  Reset: <span style={{ color: "red" }}>*</span>
-                </label>
-              </span>
-            </div>
-            {formik.touched.reset && formik.errors.reset && (
-              <div className="error">{formik.errors.reset}</div>
-            )}
-          </div>
-        </div>
-        <div>
-          <div className="inputContainer mb-4">
-            <div className="inputContainerWithIcon">
-              <span className="p-float-label">
-                <InputTextarea
-                  id="description"
-                  name="description"
-                  onChange={formik.handleChange}
-                  value={formik.values.description}
-                />
-                <label htmlFor="description">Description:</label>
-              </span>
-            </div>
-            {formik.touched.description && formik.errors.description && (
-              <div className="error-message">{formik.errors.description}</div>
-            )}
-          </div>
-        </div>
-
-        <div className="pt-1">
+    <Wrapper>
+      <Form onSubmit={formik.handleSubmit}>
+        <Modal.Header>
+          <Modal.Title className="h6">{popupLabel}</Modal.Title>
           <Button
-            variant="primary"
+            variant="close"
+            aria-label="Close"
+            onClick={() => setVisible(false)}
+          />
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Name" />
+                <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                name="name"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+              />
+
+              {formik.touched.name && formik.errors.name && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.name}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Api-key" />
+              </Form.Label>
+              <div className="inputIcon">
+                <span className="buttonCont">
+                  <OverlayTrigger
+                    style={{ minWidth: '150px' }}
+                    trigger={['hover', 'focus']}
+                    placement="top"
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Random-api-key" />
+                      </Tooltip>
+                    }
+                  >
+                    <button type="button" onClick={RandomApiKey}>
+                      <GiPerspectiveDiceSixFacesRandom />
+                    </button>
+                  </OverlayTrigger>
+                </span>
+
+                <input
+                  type="text"
+                  className="form-control"
+                  id="apiKey"
+                  name="apiKey"
+                  onChange={formik.handleChange}
+                  value={formik.values.apiKey}
+                />
+              </div>
+
+              {formik.touched.apiKey && formik.errors.apiKey && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.apiKey}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Default-Health-Check-Url" />
+                <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="defaultHealthCheckUrl"
+                name="defaultHealthCheckUrl"
+                onChange={formik.handleChange}
+                value={formik.values.defaultHealthCheckUrl}
+              />
+
+              {formik.touched.defaultHealthCheckUrl &&
+                formik.errors.defaultHealthCheckUrl && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.defaultHealthCheckUrl}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Health-Status-Change-Url" />
+                <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="healthStatusChangeUrl"
+                name="healthStatusChangeUrl"
+                onChange={formik.handleChange}
+                value={formik.values.healthStatusChangeUrl}
+              />
+
+              {formik.touched.healthStatusChangeUrl &&
+                formik.errors.healthStatusChangeUrl && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.healthStatusChangeUrl}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Creation-Url" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="creationEndpoint"
+                name="creationEndpoint"
+                onChange={formik.handleChange}
+                value={formik.values.creationEndpoint}
+              />
+
+              {formik.touched.creationEndpoint &&
+                formik.errors.creationEndpoint && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.creationEndpoint}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Activation-Url" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="activationEndpoint"
+                name="activationEndpoint"
+                onChange={formik.handleChange}
+                value={formik.values.activationEndpoint}
+              />
+
+              {formik.touched.activationEndpoint &&
+                formik.errors.activationEndpoint && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.activationEndpoint}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Deactivation-Url" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="deactivationEndpoint"
+                name="deactivationEndpoint"
+                onChange={formik.handleChange}
+                value={formik.values.deactivationEndpoint}
+              />
+
+              {formik.touched.deactivationEndpoint &&
+                formik.errors.deactivationEndpoint && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.deactivationEndpoint}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Deletion-Url" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="deletionEndpoint"
+                name="deletionEndpoint"
+                onChange={formik.handleChange}
+                value={formik.values.deletionEndpoint}
+              />
+
+              {formik.touched.deletionEndpoint &&
+                formik.errors.deletionEndpoint && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.deletionEndpoint}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
             type="submit"
-            className="w-100"
             // disabled={submitLoading}
           >
-            Submit
+            <FormattedMessage id="Submit" />
           </Button>
-        </div>
-      </form>
-    </div>
-  );
-};
+          <Button
+            variant="link"
+            className="text-gray ms-auto"
+            onClick={() => setVisible(false)}
+          >
+            <FormattedMessage id="Close" />
+          </Button>
+        </Modal.Footer>
+      </Form>
+    </Wrapper>
+  )
+}
 
-export default FeatureForm;
+export default ProductForm

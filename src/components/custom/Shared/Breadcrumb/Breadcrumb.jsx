@@ -55,7 +55,9 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
                     breadcrumbConst[breadcrumbInfo].title
                   }
                 >
-                  {breadcrumbConst[breadcrumbInfo].title}
+                  {intl.formatMessage({
+                    id: breadcrumbConst[breadcrumbInfo].title,
+                  })}
                 </Breadcrumb.Item>
               )}
 

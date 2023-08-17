@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import GlobalStyles from './Wrapper.styled.jsx'
 import { ToastContainer } from 'react-toastify'
 import Preloader from '../../../components/custom/global/Preloader/Preloader'
+import './themeEdit.css'
 import {
   addToHistory,
   changeMode,
@@ -54,7 +55,8 @@ const AppWrapper = ({ children, customHistory }) => {
     <>
       <Preloader show={loaded} />
       <ToastContainer />
-      <GlobalStyles direction={direction} key={direction} darkMode={darkMode} />
+      <GlobalStyles direction={direction} key={direction} darkMode={false} />
+      {/* <GlobalStyles direction={direction} key={direction} darkMode={darkMode} /> */}
       <IntlProvider
         locale={direction === 'rtl' ? 'ar' : 'en'}
         messages={messages}

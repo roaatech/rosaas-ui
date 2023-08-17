@@ -32,4 +32,13 @@ export const Wrapper = styled.div`
     font-size: 0.7rem;
     margin-bottom: 0.2rem;
   }
+
+  .apikeyTd {
+    display: flex;
+    justify-content: space-between;
+    margin-right: 5px;
+    span.copyItem {
+      font-size: var(--normalFont);
+    }
+  }
 `
