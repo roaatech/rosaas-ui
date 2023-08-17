@@ -106,7 +106,7 @@ export default function Plan({ children }) {
 
   return (
     <Wrapper>
-      <BreadcrumbComponent breadcrumbInfo={'ProductList'} icon={BsBoxSeam} />
+      <BreadcrumbComponent breadcrumbInfo={'PlanList'} icon={BsBoxSeam} />
       <div className="main-container">
         <TableHead
           label={<FormattedMessage id="Add-Plan" />}

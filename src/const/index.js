@@ -135,6 +135,14 @@ const breadcrumbConst = {
     active: 'Products',
     icon: {},
   },
+  PlanList: {
+    title: <FormattedMessage id="Plan-Management" />,
+    name: 'Plans',
+    navigation: '/plans',
+    active: 'Plans',
+
+    icon: {},
+  },
   ProductDetails: {
     title: <FormattedMessage id="Product-Management" />,
     name: 'Product-Details',
