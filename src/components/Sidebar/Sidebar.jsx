@@ -301,12 +301,6 @@ export default (props = {}) => {
                 icon={BsBoxSeam}
                 isActive={location.pathname.includes('products')}
               />
-              <NavItem
-                title={<FormattedMessage id="Features" />}
-                link={`/features`}
-                icon={BsStars}
-                isActive={location.pathname.includes('features')}
-              />
 
               <CollapsableNavItem
                 eventKey={settingIsOpen}

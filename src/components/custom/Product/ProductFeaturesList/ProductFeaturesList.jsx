@@ -29,6 +29,7 @@ import {
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import FeatureForm from '../../Feature/FeatureForm/FeatureForm'
 import { Dialog } from 'primereact/dialog'
+import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 
 export const ProductFeaturesList = ({ productId, productName }) => {
   const navigate = useNavigate()
@@ -166,15 +167,26 @@ export const ProductFeaturesList = ({ productId, productName }) => {
           </Table>
         </Card.Body>
       </Card>
-      <Dialog
+      {/* <Dialog
         headerClassName="pb-0"
         className="tenantForm"
         header={'Edit Tenant'}
         visible={visible}
         style={{ width: '30vw', minWidth: '300px' }}
         onHide={() => setVisible(false)}
-      >
+      > */}
+      {/* <FeatureForm
+          type={'create'}
+          tenantData={list}
+          update={update}
+          setUpdate={setUpdate}
+          setVisible={setVisible}
+          sideBar={false}
+        /> */}
+
+      <ThemeDialog visible={visible} setVisible={setVisible}>
         <FeatureForm
+          popupLabel={<FormattedMessage id="Edit-Product" />}
           type={'create'}
           tenantData={list}
           update={update}
@@ -182,7 +194,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
           setVisible={setVisible}
           sideBar={false}
         />
-      </Dialog>
+      </ThemeDialog>
 
       <button onClick={() => setVisible(true)}>Add Feature</button>
     </>
