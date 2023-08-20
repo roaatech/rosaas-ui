@@ -128,6 +128,22 @@ const ProductDetailsTab = ({ data }) => {
               </Card.Body>
             </Card>
 
+{
+  const x = {
+    buttons:[
+      {className:[
+        "mr-3"
+      ],
+      label:{<FormattedMessage id="Delete" />},
+      click:{() => deleteConfirm(data.id)},
+      style:{{
+        backgroundColor: 'var(--red)',
+        borderColor: 'var(--red)',
+      }}}
+    ]
+  }
+}
+
             <div className="action">
               <Button
                 className="mr-3"
