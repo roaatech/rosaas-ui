@@ -12,7 +12,7 @@ import { FormattedMessage } from 'react-intl'
 
 const PlanForm = ({
   type,
-   planData,
+  planData,
   setVisible,
   popupLabel,
   update,
@@ -23,18 +23,16 @@ const PlanForm = ({
 
   const initialValues = {
     name: planData ? planData.name : '',
-    url: planData ? planData.url : '',
-    client: planData? planData.client:''
+    description: planData ? planData.description : '',
+    displayOrder:planData ? planData.displayOrder:'0',
+    
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Plan Name is required'),
-    url: Yup.string()
-      .required(<FormattedMessage id="This-field-is-required" />)
-      .matches(
-        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-        <FormattedMessage id="Please-enter-a-valid-value" />
-      ),
+    name: Yup.string().required('Plan Name is required').max(15, 'Name must be at most 15 characters'),
+    description: Yup.string().max(250, 'Description must be at most 250 characters'),
+    displayOrder: Yup.number().typeError('Display Order must be a number').default(0),
+      
     
   })
 
@@ -42,11 +40,15 @@ const PlanForm = ({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
+      if (!values.displayOrder) {
+        values.displayOrder = 0;
+      }
       if (type == 'create') {
         const createPlan = await createplanRequest({
           name: values.name,
-          url: values.url,
-          cleint: values.client,
+          
+          description:values.description,
+          displayOrder:values.displayOrder
          
         })
         setUpdate(update + 1)
@@ -54,8 +56,8 @@ const PlanForm = ({
         const editPlan = await editplanRequest({
           data: {
             name: values.name,
-            url: values.url,
-            cleint: values.client,
+            description:values.description,
+            displayOrder:values.displayOrder
           },
           id: planData.id,
         })
@@ -64,8 +66,8 @@ const PlanForm = ({
           planInfo({
             id: planData.id,
             name: values.name,
-            url: values.url,
-            cleint: values.client,
+            description:values.description,
+            displayOrder:values.displayOrder
           })
         )
       }
@@ -113,57 +115,61 @@ const PlanForm = ({
             </Form.Group>
           </div>
           
+          
+          <div>
+  <Form.Group className="mb-3">
+    <Form.Label>
+      <FormattedMessage id="Description" />
+    </Form.Label>
+
+    <textarea
+      
+      className="form-control"
+      id="description"
+      name="description"
+      onChange={formik.handleChange}
+      value={formik.values.description}
+      rows={3} // Set the number of rows you want to show initially
+      style={{ resize: 'vertical' }} // Allow vertical resizing
+    />
+
+    {formik.touched.description && formik.errors.description && (
+      <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+        {formik.errors.description}
+      </Form.Control.Feedback>
+    )}
+  </Form.Group>
+</div>
+
+
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Url" />
-                <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Display-Order" />
               </Form.Label>
               <input
                 type="text"
                 className="form-control"
-                id="url"
-                name="url"
+                id="displayOrder"
+                name="displayOrder"
                 onChange={formik.handleChange}
-                value={formik.values.url}
+                value={formik.values.displayOrder}
               />
 
-              {formik.touched.url && formik.errors.url && (
+              {formik.touched.displayOrder && formik.errors.displayOrder && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.url}
+                  {formik.errors.displayOrder}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
           </div>
           
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Client" />
-                
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="client"
-                name="client"
-                onChange={formik.handleChange}
-                value={formik.values.client}
-              />
-
-              {formik.touched.name && formik.errors.name && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.url}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
+          
+          
+          
           </Modal.Body>
           <Modal.Footer>
           <Button

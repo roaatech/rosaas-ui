@@ -38,6 +38,7 @@ import { planInfo, setAllPlans } from '../../store/slices/plans'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import PlanForm from '../../components/custom/Plan/PlanForm/PlanForm'
+import DescriptionCell from '../../components/custom/Shared/DescriptionCell/DescriptionCell'
 
 export default function Plan({ children }) {
   const dispatch = useDispatch()
@@ -75,11 +76,25 @@ export default function Plan({ children }) {
     if (sortField) query += `&sort.Field=${sortField}`
     if (sortValue) query += `&sort.Direction=${sortValue}`
     ;(async () => {
-      // if (Object.values(listData).length == 0) {
-      const planList = await getplanList(query)
-      dispatch(setAllPlans(planList.data.data.items))
-      setTotalCount(planList.data.data.totalCount)
-      // }
+      const planList = await getplanList(query);
+  
+      let sortedPlans = [...planList.data.data.items];
+  
+      if (sortField === 'displayOrder') {
+        sortedPlans.sort((a, b) => {
+          const displayOrderA = parseInt(a.displayOrder);
+          const displayOrderB = parseInt(b.displayOrder);
+  
+          if (sortValue === 1) {
+            return displayOrderA - displayOrderB; 
+          } else {
+            return displayOrderB - displayOrderA; 
+          }
+        });
+      }
+  
+      dispatch(setAllPlans(sortedPlans));
+      setTotalCount(planList.data.data.totalCount);
     })()
   }, [first, rows, searchValue, sortField, sortValue, update])
 
@@ -103,6 +118,19 @@ export default function Plan({ children }) {
     setCurrentId(id)
     setVisible(true)
   }
+
+  /********************************/
+  const [expandedRows, setExpandedRows] = useState([]);
+
+  const toggleRow = (rowData) => {
+    const isRowExpanded = expandedRows.includes(rowData.id);
+    if (isRowExpanded) {
+      setExpandedRows(expandedRows.filter((id) => id !== rowData.id));
+    } else {
+      setExpandedRows([...expandedRows, rowData.id]);
+    }
+  };
+  /****************************** */
 
   return (
     <Wrapper>
@@ -137,6 +165,7 @@ export default function Plan({ children }) {
             >
               <Column
                 field="name"
+                style={{ width: '160px', maxidth: '160px' }}
                 header={
                   <ColumnSortHeader
                     text={<FormattedMessage id="Name" />}
@@ -148,15 +177,18 @@ export default function Plan({ children }) {
                     setSortField={setSortField}
                     setSortValue={setSortValue}
                     setFirst={setFirst}
+                    
                   />
                 }
               ></Column>
-              <Column
-                field="Url"
+              
+
+                {/* <Column
+                field={'description'}
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Url" />}
-                    field="url"
+                    text={<FormattedMessage id="Description" />}
+                    field="description"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -166,14 +198,42 @@ export default function Plan({ children }) {
                     setFirst={setFirst}
                   />
                 }
-              ></Column>
-
+                showFilterMenu={true}
+              /> */}
               <Column
-                field={'client'}
+                field={'description'}
+
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Client" />}
-                    field="client"
+                    text={<FormattedMessage id="Description" />}
+                    field="description"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                showFilterMenu={true}
+                body={(data) => (
+                  <DescriptionCell
+                    data={data}
+                    expandedRows={expandedRows}
+                    toggleRow={toggleRow}
+                  />
+                )}
+              />
+
+              <Column
+                field={'displayOrder'}
+                style={{ width: '170px', maxidth: '170px' }}
+
+                header={
+                  <ColumnSortHeader
+                    text={<FormattedMessage id="Display-Order" />}
+                    field="displayOrder"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}

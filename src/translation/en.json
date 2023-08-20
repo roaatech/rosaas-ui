@@ -69,17 +69,13 @@
   "Sign-Out": "Sign Out",
   "Logout": "Logout",
   "Api-key": "Api key",
-<<<<<<< HEAD
-  "plan-Management": "plan Management",
+  "Plan-Management": "Plan Management",
   "delete-plan-confirmation-message": "Do you want to delete this plan?",
-  "Edit-plan": "Edit plan",
+  "Edit-Plan": "Edit Plan",
   "Plans": "Plans",
-  "Add-Plan": "Add plan",
-  "Create-plan": "Create plan",
+  "Add-Plan": "Add Plan",
+  "Create-Plan": "Create Plan",
 
-  "plan-Details": "plan Details",
-  "Url": "Url"
-=======
   "Deactivate": "Deactivate",
   "Active": "Active",
   "Meta-Data": "Meta Data",
@@ -117,6 +113,10 @@
   "Edit-Tenant": "Edit Tenant",
   "Health-Check": "Health Check",
   "Tenant-Management": "Tenant Management",
-  "History": "History"
->>>>>>> 289f12bebfb49176f40b783267b1bddc61788c8a
+  "History": "History",
+  "Description": "Description",
+  "Display-Order": "Display Order",
+  "Create-Date": "Create Date",
+  "Plan-Details": "Plan Details",
+  "Dashboard": "Dashboard"
 }

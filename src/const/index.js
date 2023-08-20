@@ -136,7 +136,7 @@ const breadcrumbConst = {
     icon: {},
   },
   PlanList: {
-    title: <FormattedMessage id="Plan-Management" />,
+    title: 'Plan-Management',
     name: 'Plans',
     navigation: '/plans',
     active: 'Plans',
@@ -150,6 +150,15 @@ const breadcrumbConst = {
     navigation: '/products',
     parent: 'Products',
     parentNavigation: '/products',
+    icon: {},
+  },
+  PlanDetails: {
+    title: 'Plan-Management',
+    name: 'Plan-Details',
+    active: 'Plan Details',
+    navigation: '/plans',
+    parent: 'Plans',
+    parentNavigation: '/plans',
     icon: {},
   },
   TenantList: {
