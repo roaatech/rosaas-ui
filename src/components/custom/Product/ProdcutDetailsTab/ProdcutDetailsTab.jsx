@@ -127,7 +127,7 @@ const ProductDetailsTab = ({ data }) => {
                 </Table>
               </Card.Body>
             </Card>
-
+            {/*
             <div className="action">
               <Button
                 className="mr-3"
@@ -150,7 +150,7 @@ const ProductDetailsTab = ({ data }) => {
                 }}
               />
             </div>
-            <DeleteConfirmation
+             <DeleteConfirmation
               message={
                 <FormattedMessage id="delete-product-confirmation-message" />
               }
@@ -169,7 +169,7 @@ const ProductDetailsTab = ({ data }) => {
                 setVisible={setVisible}
                 popupLabel={<FormattedMessage id="Edit-Product" />}
               />
-            </ThemeDialog>
+            </ThemeDialog> */}
           </div>
         </div>
       )}

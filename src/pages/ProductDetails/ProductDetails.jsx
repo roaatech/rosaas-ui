@@ -55,8 +55,19 @@ const ProductDetails = () => {
                   confirmationMessage: 'delete-product-confirmation-message',
                   id: routeParams.id,
                   navAfterDelete: '/products',
-                  label: 'Delete-product',
+                  label: 'Delete-Product',
                   request: 'deleteProductReq',
+                },
+                {
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Edit-Product',
+                  component: 'editProduct',
+                },
+                {
+                  type: 'form',
+                  label: 'Add-Tenant',
+                  component: 'addTenant',
                 },
               ]}
             />

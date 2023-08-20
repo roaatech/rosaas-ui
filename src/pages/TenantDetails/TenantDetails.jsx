@@ -21,6 +21,7 @@ import { removeTenant, setActiveIndex } from '../../store/slices/tenants'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { DataTransform } from '../../lib/sharedFun/Time'
 import { FormattedMessage } from 'react-intl'
+import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -62,7 +63,7 @@ const TenantDetails = () => {
 
   let tenantObject = tenantsData[routeParams.id]
 
-  let tenantStatus = tenantObject?.products[0].actions
+  let tenantStatus = tenantObject?.products[0]?.actions
     ? tenantObject?.products
         ?.flatMap((item) => item?.actions?.map((action) => action))
         .filter(
@@ -107,6 +108,21 @@ const TenantDetails = () => {
               <FormattedMessage id="Tenant-Details" />:{' '}
               {tenantObject.uniqueName}
             </h4>
+            <DynamicButtons
+              buttons={
+                tenantStatus && tenantStatus[0]?.status != 13
+                  ? [
+                      {
+                        type: 'form',
+                        id: routeParams.id,
+                        label: 'Edit-Tenant',
+                        component: 'editTenant',
+                        updateTenant: updateTenant,
+                      },
+                    ]
+                  : []
+              }
+            />
           </UpperContent>
         )}
 
@@ -182,7 +198,7 @@ const TenantDetails = () => {
                       </Card>
                       <div className="buttons">
                         <div className="action">
-                          {tenantStatus && tenantStatus[0]?.status != 13 ? (
+                          {/* {tenantStatus && tenantStatus[0]?.status != 13 ? (
                             <Button
                               className="mr-3"
                               label={<FormattedMessage id="Edit" />}
@@ -193,7 +209,7 @@ const TenantDetails = () => {
                                 borderColor: 'var(--primary-color)',
                               }}
                             />
-                          ) : null}
+                          ) : null} */}
 
                           <Actions
                             tenantData={tenantObject}

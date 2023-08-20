@@ -7,10 +7,12 @@ import ProductForm from '../../Product/ProductForm/ProductForm'
 import useRequest from '../../../../axios/apis/useRequest'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import TenantForm from '../../tenant/TenantForm/TenantForm'
 
 const DynamicButtons = ({ buttons }) => {
   const navigate = useNavigate()
   const productsData = useSelector((state) => state.products.products)
+  const tenantsData = useSelector((state) => state.tenants.tenants)
 
   const [confirm, setConfirm] = useState(false)
   const [currentButtonIndex, setCurrentButtonIndex] = useState()
@@ -25,17 +27,39 @@ const DynamicButtons = ({ buttons }) => {
 
   const [visible, setVisible] = useState(false)
 
-  // const forms = {
-  //   editProduct: () => (
-  //     <ProductForm
-  //       type={'edit'}
-  //       visible={visible}
-  //       productData={productsData[buttons[currentButtonIndex].id]}
-  //       setVisible={setVisible}
-  //       popupLabel={<FormattedMessage id="Edit-Product" />}
-  //     />
-  //   ),
-  // }
+  const forms = {
+    editProduct: () => (
+      <ProductForm
+        type={'edit'}
+        visible={visible}
+        productData={productsData[buttons[currentButtonIndex].id]}
+        setVisible={setVisible}
+        popupLabel={<FormattedMessage id="Edit-Product" />}
+      />
+    ),
+    addTenant: () => (
+      <TenantForm
+        popupLabel={<FormattedMessage id="Create-Tenant" />}
+        type={'create'}
+        visible={visible}
+        setVisible={setVisible}
+        sideBar={true}
+      />
+    ),
+    editTenant: () => (
+      <>
+        <TenantForm
+          popupLabel={<FormattedMessage id="Edit-Tenant" />}
+          type={'edit'}
+          tenantData={tenantsData[buttons[currentButtonIndex].id]}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+          updateTenant={buttons[currentButtonIndex].updateTenant}
+        />
+      </>
+    ),
+  }
 
   return (
     <div>
@@ -44,6 +68,7 @@ const DynamicButtons = ({ buttons }) => {
           if (button.type == 'delete') {
             return (
               <Button
+                key={index}
                 label={<FormattedMessage id={button.label} />}
                 onClick={() => {
                   setConfirm(true)
@@ -51,16 +76,16 @@ const DynamicButtons = ({ buttons }) => {
                 }}
               />
             )
-          } else if (button.type == 'edit') {
+          } else if (button.type == 'form') {
             return (
               <Button
+                key={index}
                 label={<FormattedMessage id={button.label} />}
                 onClick={() => {
                   setVisible(true)
                   setCurrentButtonIndex(index)
                 }}
               />
-              // <></>
             )
           }
         })}
@@ -79,9 +104,12 @@ const DynamicButtons = ({ buttons }) => {
       />
 
       <ThemeDialog visible={visible} setVisible={setVisible}>
-        {/* {currentButtonIndex && buttons[currentButtonIndex].type == 'form'
-          ? forms[buttons[currentButtonIndex].component]
-          : null} */}
+        {currentButtonIndex !== undefined &&
+        buttons[currentButtonIndex].type == 'form' ? (
+          forms[buttons[currentButtonIndex].component]()
+        ) : (
+          <></>
+        )}
       </ThemeDialog>
     </div>
   )
