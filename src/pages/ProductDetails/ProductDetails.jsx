@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { productInfo } from '../../store/slices/products'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
+import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -47,6 +48,18 @@ const ProductDetails = () => {
             <h4 className="m-0">
               <FormattedMessage id="Product-Details" /> : {productData.name}
             </h4>
+            <DynamicButtons
+              buttons={[
+                {
+                  type: 'delete',
+                  confirmationMessage: 'delete-product-confirmation-message',
+                  id: routeParams.id,
+                  navAfterDelete: '/products',
+                  label: 'Delete-product',
+                  request: 'deleteProductReq',
+                },
+              ]}
+            />
           </UpperContent>
           <TabView className="card">
             <TabPanel header={<FormattedMessage id="Details" />}>
