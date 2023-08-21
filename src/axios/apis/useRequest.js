@@ -55,9 +55,9 @@ const useRequest = () => {
   const deleteProductReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Products/${data.id}`)
   }
-  const createFeatureRequest = async (data, productId) => {
+  const createFeatureRequest = async (data) => {
     return await Request.post(
-      `management/sadmin/v1/Products/${productId}/Features`,
+      `management/sadmin/v1/Products/${data.id}/Features`,
       data
     )
   }

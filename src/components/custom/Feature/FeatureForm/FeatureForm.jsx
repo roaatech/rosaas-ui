@@ -37,7 +37,7 @@ const FeatureForm = ({
     type: featureData ? featureData.type : '',
     unit: featureData ? featureData.unit : '',
     reset: featureData ? featureData.reset : '',
-  };
+  }
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Feature Name is required'),
@@ -49,7 +49,7 @@ const FeatureForm = ({
     }),
     reset: Yup.string().required('Feature Reset is required'),
   });
-  const { productId } = useParams()
+  
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
@@ -61,6 +61,7 @@ const FeatureForm = ({
           type: values.type,
           unit: values.unit,
           reset: values.reset,
+          
         });
         setUpdate(update + 1);
       } else {
