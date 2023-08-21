@@ -22,7 +22,7 @@ import {
 } from '@themesberg/react-bootstrap'
 import { Link } from 'react-router-dom'
 import { Routes } from '../../routes'
-import logo from '../../assets/img/brand/rosas.png'
+import logo from '../../assets/img/brand/rosas.svg'
 import ProfilePicture from '../../assets/img/team/profile-picture-1.png'
 import { logOut } from '../../store/slices/auth'
 import { useDispatch, useSelector } from 'react-redux'
@@ -226,7 +226,6 @@ export default (props = {}) => {
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
               <img src={logo} alt="logo" className="my-3 logo" />
-
               <TableHead
                 label={<FormattedMessage id="Add-Tenant" />}
                 icon={'pi-plus'}
@@ -246,6 +245,12 @@ export default (props = {}) => {
                   sideBar={true}
                 />
               </TableHead>
+              <NavItem
+                title={<FormattedMessage id="Products" />}
+                link={`/products`}
+                icon={BsBoxSeam}
+                isActive={location.pathname.includes('products')}
+              />
               {active.length ? (
                 <CollapsableNavItem
                   eventKey={activeIsOpen}
@@ -293,14 +298,6 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
-
-              <NavItem
-                title={<FormattedMessage id="Products" />}
-                link={`/products`}
-                icon={BsBoxSeam}
-                isActive={location.pathname.includes('products')}
-              />
-
               <CollapsableNavItem
                 eventKey={settingIsOpen}
                 title={<FormattedMessage id="Settings" />}
