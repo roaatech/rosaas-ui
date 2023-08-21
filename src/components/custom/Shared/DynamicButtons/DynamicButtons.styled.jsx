@@ -20,4 +20,9 @@ export const Wrapper = styled.div`
   .redColor {
     color: var(--red);
   }
+
+  .dropdown-item svg {
+    position: relative;
+    top: -2px;
+  }
 `
