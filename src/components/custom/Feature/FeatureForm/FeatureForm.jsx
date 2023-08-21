@@ -18,6 +18,7 @@ import { Wrapper } from './FeatureForm.styled.jsx';
 import { generateApiKey } from '../../../../lib/sharedFun/common.js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { AiFillCopy } from 'react-icons/ai';
+import { useParams } from 'react-router-dom';
 
 const FeatureForm = ({
   type,
@@ -48,7 +49,7 @@ const FeatureForm = ({
     }),
     reset: Yup.string().required('Feature Reset is required'),
   });
-
+  const { productId } = useParams()
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,

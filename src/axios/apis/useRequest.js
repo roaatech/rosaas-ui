@@ -1,7 +1,6 @@
 import useApi from '../useApi'
 import { useDispatch } from 'react-redux'
 import { logOut as logOutRequest } from '../../store/slices/auth'
-import { useParams } from 'react-router-dom'
 const useRequest = () => {
   const dispatch = useDispatch()
   const Request = useApi()
@@ -99,8 +98,6 @@ const useRequest = () => {
   const putHeathCheckSettings = async (data) => {
     return await Request.put(`management/sadmin/v1/Settings/HealthCheck`, data)
   }
-
-  const { productId } = useParams()
 
   return {
     signIn,
