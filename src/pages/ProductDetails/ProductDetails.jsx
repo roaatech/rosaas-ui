@@ -51,23 +51,28 @@ const ProductDetails = () => {
             <DynamicButtons
               buttons={[
                 {
-                  type: 'delete',
-                  confirmationMessage: 'delete-product-confirmation-message',
-                  id: routeParams.id,
-                  navAfterDelete: '/products',
-                  label: 'Delete-Product',
-                  request: 'deleteProductReq',
-                },
-                {
+                  order: 2,
+
                   type: 'form',
                   id: routeParams.id,
                   label: 'Edit-Product',
                   component: 'editProduct',
                 },
                 {
+                  order: 4,
+
                   type: 'form',
                   label: 'Add-Tenant',
                   component: 'addTenant',
+                },
+                {
+                  order: 5,
+                  type: 'delete',
+                  confirmationMessage: 'delete-product-confirmation-message',
+                  id: routeParams.id,
+                  navAfterDelete: '/products',
+                  label: 'Delete-Product',
+                  request: 'deleteProductReq',
                 },
               ]}
             />

@@ -113,6 +113,7 @@ const TenantDetails = () => {
                 tenantStatus && tenantStatus[0]?.status != 13
                   ? [
                       {
+                        order: 1,
                         type: 'form',
                         id: routeParams.id,
                         label: 'Edit-Tenant',
