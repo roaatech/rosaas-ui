@@ -1,15 +1,15 @@
 import React, { useState, useRef } from 'react'
-import { DescriptionCellWrapper } from './DescriptionCell.styled';
+import { DescriptionCellWrapper } from './DescriptionCell.styled'
 
 const DescriptionCell = ({ data }) => {
-  const [showMore, setShowMore] = useState(false);
-  const contentRef = useRef(null);
+  const [showMore, setShowMore] = useState(false)
+  const contentRef = useRef(null)
 
   const toggleShowMore = () => {
-    setShowMore(!showMore);
-  };
+    setShowMore(!showMore)
+  }
 
-  const isLongDescription = data.description.length > 50;
+  const isLongDescription = data.description.length > 50
 
   const maxHeight = showMore
     ? contentRef.current
@@ -17,13 +17,13 @@ const DescriptionCell = ({ data }) => {
       : '1000px'
     : isLongDescription
     ? '25px'
-    : 'auto'; // For short descriptions
+    : 'auto' // For short descriptions
 
   return (
     <DescriptionCellWrapper maxheight={maxHeight}>
       <div className="description-cell">
         {isLongDescription ? (
-          <div>
+          <div className="d-flex flex-start flex-wrap">
             <div
               ref={contentRef}
               className={`description-text ${showMore ? 'expanded' : ''}`}
@@ -39,8 +39,7 @@ const DescriptionCell = ({ data }) => {
         )}
       </div>
     </DescriptionCellWrapper>
-  );
-};
-
+  )
+}
 
 export default DescriptionCell
