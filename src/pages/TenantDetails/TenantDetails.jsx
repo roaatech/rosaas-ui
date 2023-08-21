@@ -22,6 +22,7 @@ import UpperContent from '../../components/custom/Shared/UpperContent/UpperConte
 import { DataTransform } from '../../lib/sharedFun/Time'
 import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
+import { AiFillEdit } from 'react-icons/ai'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -119,6 +120,7 @@ const TenantDetails = () => {
                         label: 'Edit-Tenant',
                         component: 'editTenant',
                         updateTenant: updateTenant,
+                        icon: <AiFillEdit />,
                       },
                     ]
                   : []

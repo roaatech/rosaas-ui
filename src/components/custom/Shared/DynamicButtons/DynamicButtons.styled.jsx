@@ -1,5 +1,9 @@
 import styled from 'styled-components'
 export const Wrapper = styled.div`
+  button {
+    padding: 0.4rem 1rem;
+  }
+
   .action {
     border-radius: 8px;
     overflow: hidden;
@@ -7,10 +11,13 @@ export const Wrapper = styled.div`
 
   .action button {
     border-radius: 0;
-    border-left: 1px solid;
+    border-left: 1px solid var(--primary3);
     margin: 0;
     &:first-child {
-      border-left: 0px;
+      /* border-left: 0px; */
     }
+  }
+  .redColor {
+    color: var(--red);
   }
 `
