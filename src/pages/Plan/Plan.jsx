@@ -145,7 +145,7 @@ export default function Plan({ children }) {
           setFirst={setFirst}
         >
           <PlanForm
-            popupLabel={<FormattedMessage id="Create-plan" />}
+            popupLabel={<FormattedMessage id="Create-Plan" />}
             type={'create'}
             update={update}
             setUpdate={setUpdate}
@@ -165,7 +165,7 @@ export default function Plan({ children }) {
             >
               <Column
                 field="name"
-                style={{ width: '160px', maxidth: '160px' }}
+                style={{ width: '140px', maxidth: '140px' }}
                 header={
                   <ColumnSortHeader
                     text={<FormattedMessage id="Name" />}
@@ -202,7 +202,8 @@ export default function Plan({ children }) {
               /> */}
               <Column
                 field={'description'}
-
+                
+                style={{ width: '520px', maxidth: '520px' }}
                 header={
                   <ColumnSortHeader
                     text={<FormattedMessage id="Description" />}

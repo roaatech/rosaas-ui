@@ -31,7 +31,8 @@ const PlanForm = ({
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Plan Name is required').max(15, 'Name must be at most 15 characters'),
     description: Yup.string().max(250, 'Description must be at most 250 characters'),
-    displayOrder: Yup.number().typeError('Display Order must be a number').default(0),
+    displayOrder: Yup.number().typeError('Display Order must be a number').integer('Display Order must be an integer')
+    .min(0, 'Display Order must be a positive number').default(0),
       
     
   })

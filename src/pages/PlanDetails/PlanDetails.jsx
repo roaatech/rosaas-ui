@@ -48,18 +48,18 @@ const PlanDetails = () => {
               <FormattedMessage id="Plan-Details" /> : {planData.name}
             </h4>
           </UpperContent>
-          {/* <TabView className="card"> */}
+          <TabView className="card">
+            <TabPanel header={<FormattedMessage id="Details" />}>
               <PlanDetailsTab data={planData} />
-            {/* <TabPanel header={<FormattedMessage id="Details" />}> */}
-            {/* </TabPanel> */}
-{/* 
+            </TabPanel>
+          {/* 
             <TabPanel header={<FormattedMessage id="Subscriptions" />}>
               <ProductTenantsList
                 productId={productData.id}
                 productName={productData.name}
               />
             </TabPanel> */}
-          {/* </TabView> */}
+          </TabView>
         </div>
       )}
     </Wrapper>

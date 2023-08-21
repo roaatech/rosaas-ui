@@ -10,8 +10,10 @@ export const DescriptionCellWrapper = styled.div`
 
 .show-more-link {
   cursor: pointer;
-  color: #ffab03;
+  color: var(--second-color);
   transition: color 0.3s ease, transform 0.3s ease;
+  font-size:var(--smallFont);
+  line-height: 5px;
 }
 
 .expanded .description-text {
