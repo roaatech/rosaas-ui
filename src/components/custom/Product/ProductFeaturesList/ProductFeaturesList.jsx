@@ -17,7 +17,6 @@ import {
   features,
   FeatureInfo,
 } from '../../../../store/slices/products'
-import { featureInfo, setAllFeature } from '../../../../store/slices/features'
 import { FormattedMessage } from 'react-intl'
 import {
   faEdit,
@@ -65,11 +64,11 @@ export const ProductFeaturesList = ({ productId, productName }) => {
     let params = `${productId}/Features`
 
     ;(async () => {
-      if (!list?.features) {
-        const listData = await getProductFeatures(params)
-        dispatch(setAllFeature(listData.data.data))
-        dispatch(features({ id: productId, data: listData.data.data }))
-      }
+      // if (!list?.features) {
+      const listData = await getProductFeatures(params)
+      dispatch(features({ id: productId, data: listData.data.data }))
+      console.log(list.features, 'list')
+      // }
     })()
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
 
@@ -81,9 +80,8 @@ export const ProductFeaturesList = ({ productId, productName }) => {
         <td>
           <span className="fw-normal">{name}</span>
         </td>
-        <td >
+        <td>
           <span className="fw-normal">{description}</span>
-          
         </td>
 
         <td>
@@ -144,9 +142,8 @@ export const ProductFeaturesList = ({ productId, productName }) => {
                 </th>
                 <th className="border-bottom">
                   <FormattedMessage id="Description" />
-
                 </th>
-                
+
                 <th className="border-bottom">
                   <FormattedMessage id="Type" />
                 </th>
@@ -162,10 +159,12 @@ export const ProductFeaturesList = ({ productId, productName }) => {
               </tr>
             </thead>
             <tbody>
-              {list?.features?.length
-                ? list?.features?.map((t, index) => (
-                    <TableRow key={`index`} {...t} />
-                  ))
+              {console.log('product', list.features)}
+              {list?.features && Object.values(list?.features).length
+                ? Object.values(list?.features).map((t, index) => {
+                    // console.log({t})
+                    return <TableRow key={`index`} {...t} />
+                  })
                 : null}
             </tbody>
           </Table>

@@ -19,6 +19,7 @@ export const productsSlice = createSlice({
       })
       state.products = allProduct
     },
+
     productInfo: (state, action) => {
       const currentProducts = { ...current(state.products) }
 
@@ -57,19 +58,14 @@ export const productsSlice = createSlice({
     features: (state, action) => {
       const currentProducts = { ...current(state.products) }
       const product = { ...currentProducts[action.payload.id] }
-      product.features = action.payload.data
-      const mergedObject = _.mergeWith(
-        {},
-        currentProducts[action.payload.id],
-        product,
-        (objValue, srcValue) => {
-          if (_.isObject(objValue)) {
-            return _.merge({}, objValue, srcValue)
-          }
-        }
-      )
 
-      currentProducts[action.payload.id] = mergedObject
+      const allFeatures = {}
+      action.payload.data.map((item) => {
+        allFeatures[item.id] = item
+      })
+
+      product.features = allFeatures
+      currentProducts[action.payload.id] = product
       state.products = currentProducts
     },
 
