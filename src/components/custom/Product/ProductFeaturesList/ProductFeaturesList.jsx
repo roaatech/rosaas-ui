@@ -190,6 +190,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
 
       <ThemeDialog visible={visible} setVisible={setVisible}>
         <FeatureForm
+          productId={productId}
           popupLabel={<FormattedMessage id="Edit-Product" />}
           type={'create'}
           tenantData={list}

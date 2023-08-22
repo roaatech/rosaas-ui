@@ -27,6 +27,7 @@ const FeatureForm = ({
   popupLabel,
   update,
   setUpdate,
+  productId,
 }) => {
   const { createFeatureRequest, editFeatureRequest } = useRequest();
   const dispatch = useDispatch();
@@ -41,13 +42,13 @@ const FeatureForm = ({
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Feature Name is required'),
-    description: Yup.string().required('Description is required'),
-    type: Yup.string().required('Feature Type is required'),
-    unit: Yup.string().when('type', {
-      is: 'Number',
-      then: Yup.string().required('Feature Unit is required'),
-    }),
-    reset: Yup.string().required('Feature Reset is required'),
+    // description: Yup.string().required('Description is required'),
+    // type: Yup.string().required('Feature Type is required'),
+    // unit: Yup.string().when('type', {
+    //   is: 'Number',
+    //   then: Yup.string().required('Feature Unit is required'),
+    // }),
+    // reset: Yup.string().required('Feature Reset is required'),
   });
   
   const formik = useFormik({
@@ -55,12 +56,13 @@ const FeatureForm = ({
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       if (type === 'create') {
-        const createFeature = await createFeatureRequest({
+        const createFeature = await createFeatureRequest(productId,{
+          
           name: values.name,
           description: values.description,
-          type: values.type,
-          unit: values.unit,
-          reset: values.reset,
+          type: featureTypeMap[values.type],
+      unit: featureUnitMap[values.unit], 
+      reset: featureResetMap[values.reset],
           
         });
         setUpdate(update + 1);
@@ -93,6 +95,24 @@ const FeatureForm = ({
       setSubmitting(false);
     },
   });
+  const featureTypeMap = {
+    Number: 1,
+    Boolean: 2,
+  };
+
+  const featureUnitMap = {
+    K: 1,
+    MB: 2,
+    GB: 3,
+  };
+
+  const featureResetMap = {
+    Never: 1,
+    Weekly: 2,
+    Monthly: 3,
+    Annual: 4,
+  };
+
 
   return (
     <Wrapper>
@@ -105,7 +125,7 @@ const FeatureForm = ({
             onClick={() => setVisible(false)}
           />
         </Modal.Header>
-        <Modal.Body>
+        {/* <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label>
               <FormattedMessage id="Name" />
@@ -202,6 +222,149 @@ const FeatureForm = ({
               <div className="invalid-feedback">{formik.errors.reset}</div>
             )}
           </Form.Group>
+        </Modal.Body> */}
+
+<Modal.Body>
+          <div>
+            {/* Name */}
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Name" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                name="name"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+              />
+              {/* Display validation error */}
+              {formik.touched.name && formik.errors.name && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.name}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          <Form.Group className="mb-3">
+            <Form.Label>
+              <FormattedMessage id="Description" />
+            </Form.Label>
+            <InputText
+              type="text"
+              id="description"
+              name="description"
+              onChange={formik.handleChange}
+              value={formik.values.description}
+              className={
+                formik.touched.description && formik.errors.description
+                  ? 'is-invalid'
+                  : ''
+              }
+            />
+            {formik.touched.description && formik.errors.description && (
+              <div className="invalid-feedback">{formik.errors.description}</div>
+            )}
+          </Form.Group>
+
+          {/* Repeat similar code blocks for other fields */}
+          <div>
+            {/* Type */}
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Type" />
+              </Form.Label>
+              <select
+                className="form-control"
+                id="type"
+                name="type"
+                onChange={formik.handleChange}
+                value={formik.values.type}
+              >
+                <option value="">Select Type</option>
+                {Object.keys(featureTypeMap).map((key) => (
+                  <option key={key} value={key}>
+                    <FormattedMessage id={key} />
+                  </option>
+                ))}
+              </select>
+              {/* Display validation error */}
+              {formik.touched.type && formik.errors.type && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.type}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          <div>
+            {/* Unit */}
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Unit" />
+              </Form.Label>
+              <select
+                className="form-control"
+                id="unit"
+                name="unit"
+                onChange={formik.handleChange}
+                value={formik.values.unit}
+              >
+                <option value="">Select Unit</option>
+                {Object.keys(featureUnitMap).map((key) => (
+                  <option key={key} value={key}>
+                    <FormattedMessage id={key} />
+                  </option>
+                ))}
+              </select>
+              {/* Display validation error */}
+              {formik.touched.unit && formik.errors.unit && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.unit}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          <div>
+            {/* Reset */}
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Reset" />
+              </Form.Label>
+              <select
+                className="form-control"
+                id="reset"
+                name="reset"
+                onChange={formik.handleChange}
+                value={formik.values.reset}
+              >
+                <option value="">Select Reset</option>
+                {Object.keys(featureResetMap).map((key) => (
+                  <option key={key} value={key}>
+                    <FormattedMessage id={key} />
+                  </option>
+                ))}
+              </select>
+              {/* Display validation error */}
+              {formik.touched.reset && formik.errors.reset && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.reset}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
