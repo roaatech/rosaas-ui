@@ -69,6 +69,24 @@ const useRequest = () => {
     return await Request.put(`management/sadmin/v1/Settings/HealthCheck`, data)
   }
 
+  //plan
+
+  const createplanRequest = async (data) => {
+    return await Request.post('management/sadmin/v1/Plans', data)
+  }
+  const editplanRequest = async (data) => {
+    return await Request.put(`management/sadmin/v1/Plans/${data.id}`, data.data)
+  }
+  const getplan = async (id) => {
+    return await Request.get(`management/sadmin/v1/Plans/${id}`)
+  }
+  const getplanList = async (params) => {
+    return await Request.get(`management/sadmin/v1/Plans${params}`)
+  }
+  const deleteplanReq = async (data) => {
+    return await Request.delete(`management/sadmin/v1/Plans/${data.id}`)
+  }
+
   return {
     signIn,
     userData,
@@ -88,6 +106,11 @@ const useRequest = () => {
     deleteProductReq,
     getHeathCheckSettings,
     putHeathCheckSettings,
+    createplanRequest,
+    editplanRequest,
+    getplan,
+    getplanList,
+    deleteplanReq,
   }
 }
 export default useRequest

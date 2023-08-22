@@ -1,209 +1,196 @@
-import React from "react";
-import { Button } from "@themesberg/react-bootstrap";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { InputText } from "primereact/inputtext";
-import * as Yup from "yup";
-import useRequest from "../../../../axios/apis/useRequest.js";
-// import { Plan_Client_id } from "../../../../const/index.js";
+import React from 'react'
+import { useFormik } from 'formik'
+import { InputText } from 'primereact/inputtext'
+import * as Yup from 'yup'
+import useRequest from '../../../../axios/apis/useRequest.js'
+import { Product_Client_id } from '../../../../const/index.js'
+import { Modal, Button } from '@themesberg/react-bootstrap'
+import { Form } from '@themesberg/react-bootstrap'
+import { planInfo } from '../../../../store/slices/plans.js'
+import { useDispatch } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 const PlanForm = ({
   type,
   planData,
+  setVisible,
+  popupLabel,
   update,
   setUpdate,
-  setVisibleHead,
-  setVisible,
 }) => {
-  const { createPlanRequest, editPlanRequest } = useRequest();
+  const { createplanRequest,  editplanRequest } = useRequest()
+  const dispatch = useDispatch()
+
   const initialValues = {
-    name: planData ? planData.name : "",
-    url: planData ? planData.url : "",
-    creationEndpoint: planData ? planData.creationEndpoint : "",
-    activationEndpoint: planData ? planData.activationEndpoint : "",
-    deactivationEndpoint: planData ? planData.deactivationEndpoint : "",
-    deletionEndpoint: planData ? planData.deletionEndpoint : "",
-  };
+    name: planData ? planData.name : '',
+    description: planData ? planData.description : '',
+    displayOrder:planData ? planData.displayOrder:'0',
+    
+  }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Plan Name is required"),
-    url: Yup.string()
-      .required("Url is required")
-      .url("Please enter a valid URL"),
-  });
+    name: Yup.string().required('Plan Name is required').max(15, 'Name must be at most 15 characters'),
+    description: Yup.string().max(250, 'Description must be at most 250 characters'),
+    displayOrder: Yup.number().typeError('Display Order must be a number').integer('Display Order must be an integer')
+    .min(0, 'Display Order must be a positive number').default(0),
+      
+    
+  })
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    if (type == "create") {
-      const createPlan = await createPlanRequest({
-        name: values.name,
-        url: values.url,
-        creationEndpoint: values.creationEndpoint,
-        activationEndpoint: values.activationEndpoint,
-        deactivationEndpoint: values.deactivationEndpoint,
-        deletionEndpoint: values.deletionEndpoint,
-        // clientId: Plan_Client_id,
-      });
-    } else {
-      const editPlan = await editPlanRequest({
-        data: {
+  const formik = useFormik({
+    initialValues,
+    validationSchema: validationSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      if (!values.displayOrder) {
+        values.displayOrder = 0;
+      }
+      if (type == 'create') {
+        const createPlan = await createplanRequest({
           name: values.name,
-          url: values.url,
-          creationEndpoint: values.creationEndpoint,
-          activationEndpoint: values.activationEndpoint,
-          deactivationEndpoint: values.deactivationEndpoint,
-          deletionEndpoint: values.deletionEndpoint,
-          // clientId: Plan_Client_id,
-        },
-        id: planData.id,
-      });
-    }
-    setVisible && setVisible(false);
-    setVisibleHead && setVisibleHead(false);
-  };
+          
+          description:values.description,
+          displayOrder:values.displayOrder
+         
+        })
+        setUpdate(update + 1)
+      } else {
+        const editPlan = await editplanRequest({
+          data: {
+            name: values.name,
+            description:values.description,
+            displayOrder:values.displayOrder
+          },
+          id: planData.id,
+        })
+
+        dispatch(
+          planInfo({
+            id: planData.id,
+            name: values.name,
+            description:values.description,
+            displayOrder:values.displayOrder
+          })
+        )
+      }
+
+      setVisible && setVisible(false)
+      setVisible && setVisible(false)
+    },
+  })
 
   return (
     <div>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}>
-        {({ isSubmitting }) => (
-          <Form className="pt-4">
-            <div>
-              {/* <label htmlFor="name" className="pb-2">
-                name:
-              </label> */}
-              <div className="inputContainer mb-4">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field type="text" id="name" name="name" as={InputText} />
-                    <label htmlFor="name">
-                      Name:<span style={{ color: "red" }}>*</span>
-                    </label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="name"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              {/* <label htmlFor="url" className="pb-2">
-                Unique Name:
-              </label> */}
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field type="text" id="url" name="url" as={InputText} />
-                    <label htmlFor="url">
-                      Url:<span style={{ color: "red" }}>*</span>
-                    </label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="url"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="creationEndpoint"
-                      name="creationEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="creationEndpoint">Creation Url:</label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="creationEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="activationEndpoint"
-                      name="activationEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="activationEndpoint">Activation Url:</label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="activationEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="deactivationEndpoint"
-                      name="deactivationEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="deactivationEndpoint">
-                      Deactivation Url :
-                    </label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="deactivationEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div>
-              <div className="inputContainer mb-3">
-                <div className="inputContainerWithIcon">
-                  <span className="p-float-label">
-                    <Field
-                      type="text"
-                      id="deletionEndpoint"
-                      name="deletionEndpoint"
-                      as={InputText}
-                    />
-                    <label htmlFor="deletionEndpoint">deletionEndpoint:</label>
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="deletionEndpoint"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
-            <div className="pt-1">
-              <Button
-                variant="primary"
-                type="submit"
-                className="w-100"
-                disabled={isSubmitting}>
-                Submit
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
-  );
-};
+      <Form onSubmit={formik.handleSubmit}>
+        <Modal.Header>
+          <Modal.Title className="h6">{popupLabel}</Modal.Title>
+          <Button
+            variant="close"
+            aria-label="Close"
+            onClick={() => setVisible(false)}
+          />
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Name" />
+                <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                name="name"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+              />
 
-export default PlanForm;
+              {formik.touched.name && formik.errors.name && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.name}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          
+          
+          <div>
+  <Form.Group className="mb-3">
+    <Form.Label>
+      <FormattedMessage id="Description" />
+    </Form.Label>
+
+    <textarea
+      
+      className="form-control"
+      id="description"
+      name="description"
+      onChange={formik.handleChange}
+      value={formik.values.description}
+      rows={3} // Set the number of rows you want to show initially
+      style={{ resize: 'vertical' }} // Allow vertical resizing
+    />
+
+    {formik.touched.description && formik.errors.description && (
+      <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+        {formik.errors.description}
+      </Form.Control.Feedback>
+    )}
+  </Form.Group>
+</div>
+
+
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Display-Order" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="displayOrder"
+                name="displayOrder"
+                onChange={formik.handleChange}
+                value={formik.values.displayOrder}
+              />
+
+              {formik.touched.displayOrder && formik.errors.displayOrder && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.displayOrder}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          
+          
+          
+          
+          </Modal.Body>
+          <Modal.Footer>
+          <Button
+            variant="secondary"
+            type="submit"
+            // disabled={submitLoading}
+          >
+            <FormattedMessage id="Submit" />
+          </Button>
+          <Button
+            variant="link"
+            className="text-gray ms-auto"
+            onClick={() => setVisible(false)}
+          >
+            <FormattedMessage id="Close" />
+          </Button>
+        </Modal.Footer>
+      </Form>
+    </div>
+  )
+}
+
+export default PlanForm
