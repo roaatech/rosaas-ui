@@ -81,9 +81,11 @@ export const ProductFeaturesList = ({ productId, productName }) => {
         <td>
           <span className="fw-normal">{name}</span>
         </td>
-        <td>
+        <td >
           <span className="fw-normal">{description}</span>
+          
         </td>
+
         <td>
           <span className={`fw-normal`}>
             <TableDate createdDate={type} editedDate={type} />
@@ -142,7 +144,9 @@ export const ProductFeaturesList = ({ productId, productName }) => {
                 </th>
                 <th className="border-bottom">
                   <FormattedMessage id="Description" />
+
                 </th>
+                
                 <th className="border-bottom">
                   <FormattedMessage id="Type" />
                 </th>
