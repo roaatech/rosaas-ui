@@ -28,6 +28,7 @@ const FeatureForm = ({
   setUpdate,
   productId,
 }) => {
+  console.log('iiiiiiiiiiiiiiiiiiii', featureData)
   const { createFeatureRequest, editFeatureRequest } = useRequest()
   const dispatch = useDispatch()
 

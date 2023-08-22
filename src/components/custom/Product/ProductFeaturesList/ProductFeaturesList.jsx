@@ -46,15 +46,19 @@ export const ProductFeaturesList = ({ productId, productName }) => {
   const [currentId, setCurrentId] = useState('')
   const [confirm, setConfirm] = useState(false)
   const [visible, setVisible] = useState(false)
+  const [type, setType] = useState('')
+  const [popUpLable, setPopUpLable] = useState('')
 
   const deleteConfirm = (id) => {
     setCurrentId(id)
     setConfirm(true)
   }
   const editForm = async (id) => {
-    //! if (!listData[id].creationEndpoint) {
-    const featureData = await getFeature(id)
-    dispatch(FeatureInfo(featureData.data.data))
+    //  if (!listData[id].creationEndpoint) {
+    // const featureData = await getFeature(id, productId)
+    // dispatch(FeatureInfo(featureData.data.data))
+    setPopUpLable('Edit-Feature')
+    setType('edit')
     // }
     setCurrentId(id)
     setVisible(true)
@@ -190,17 +194,26 @@ export const ProductFeaturesList = ({ productId, productName }) => {
       <ThemeDialog visible={visible} setVisible={setVisible}>
         <FeatureForm
           productId={productId}
-          popupLabel={<FormattedMessage id="Create-Product" />}
-          type={'create'}
+          popupLabel={<FormattedMessage id={popUpLable} />}
+          type={type}
           tenantData={list}
           update={update}
           setUpdate={setUpdate}
           setVisible={setVisible}
           sideBar={false}
+          featureData={type == 'edit' ? list?.features[currentId] : {}}
         />
       </ThemeDialog>
 
-      <button onClick={() => setVisible(true)}>Add Feature</button>
+      <button
+        onClick={() => {
+          setVisible(true)
+          setPopUpLable('Add-Feature')
+          setType('create')
+        }}
+      >
+        Add Feature
+      </button>
     </>
   )
 }
