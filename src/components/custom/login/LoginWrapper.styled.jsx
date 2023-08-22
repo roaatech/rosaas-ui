@@ -1,16 +1,18 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 const LoginWrapper = styled.div`
+  color: var(--primary4);
   .inputContainer {
     margin-bottom: 1.5rem;
   }
   .inputContainerWithIcon {
+    /* border: 2px solid var(--primary4); */
     border-radius: 7px;
-    border: 2px solid var(--primary4);
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    background: white;
   }
   .error-message {
     position: absolute;
@@ -20,19 +22,18 @@ const LoginWrapper = styled.div`
   }
 
   input {
-    background: white;
+    background: transparent;
+    /* background: white; */
     border: 0 !important;
     border-radius: 0;
-    border-left: 2px solid var(--primary4) !important;
+    /* border-left: 2px solid var(--primary4) !important; */
   }
-
 
   .p-inputtext:enabled:focus {
     outline: 0 none;
     outline-offset: 0;
     box-shadow: none;
   }
+`
 
-`;
-
-export default LoginWrapper;
+export default LoginWrapper

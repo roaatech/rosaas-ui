@@ -25,4 +25,10 @@ export const Wrapper = styled.main`
   .cardCont {
     background-color: var(--primary1);
   }
+
+  .logo {
+    width: 250px;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
 `
