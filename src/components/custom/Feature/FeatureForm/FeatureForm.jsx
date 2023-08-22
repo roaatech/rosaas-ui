@@ -61,13 +61,14 @@ const FeatureForm = ({
           name: values.name,
           description: values.description,
           type: featureTypeMap[values.type],
-      unit: featureUnitMap[values.unit], 
-      reset: featureResetMap[values.reset],
+          unit: featureUnitMap[values.unit], 
+          reset: featureResetMap[values.reset],
           
         });
         setUpdate(update + 1);
       } else {
-        const editFeature = await editFeatureRequest({
+        console.log(productId);
+        const editFeature = await editFeatureRequest(productId,{
           data: {
             name: values.name,
             description: values.description,
@@ -76,6 +77,7 @@ const FeatureForm = ({
             reset: values.reset,
           },
           id: featureData.id,
+          
         });
 
         dispatch(
