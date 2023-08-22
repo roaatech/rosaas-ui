@@ -34,6 +34,7 @@
   "Notification-Threshold-description": "Number of consecutive health check failures before ROSAS informs the external system.",
   "Product-Management": "Product Management",
   "delete-product-confirmation-message": "Do you want to delete this Product?",
+  "Delete-Product": "Delete Product",
   "Edit-Product": "Edit Product",
   "Products": "Products",
   "Manage": "Manage",
