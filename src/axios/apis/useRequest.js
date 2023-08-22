@@ -61,7 +61,7 @@ const useRequest = () => {
       data
     )
   }
-  const editFeatureRequest = async (data, productId) => {
+  const editFeatureRequest = async (productId, data) => {
     return await Request.put(
       `management/sadmin/v1/Products/${productId}/Features/${data.id}`,
       data.data
