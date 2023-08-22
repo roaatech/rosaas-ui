@@ -17,12 +17,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { Wrapper } from './DynamicButtons.styled'
+import PlanForm from '../../Plan/PlanForm/PlanForm'
 
 const DynamicButtons = ({ buttons }) => {
   const navigate = useNavigate()
   const productsData = useSelector((state) => state.products.products)
   const tenantsData = useSelector((state) => state.tenants.tenants)
-
+  const plansData = useSelector((state) => state.plans.plans)
   const [confirm, setConfirm] = useState(false)
   const [currentButtonIndex, setCurrentButtonIndex] = useState()
   const [more, setMore] = useState(false)
@@ -66,6 +67,18 @@ const DynamicButtons = ({ buttons }) => {
           setVisible={setVisible}
           sideBar={false}
           updateTenant={buttons[currentButtonIndex].updateTenant}
+        />
+      </>
+    ),
+    editPlan: () => (
+      <>
+        <PlanForm
+          popupLabel={<FormattedMessage id="Edit-Plan" />}
+          type={'edit'}
+          planData={plansData[buttons[currentButtonIndex].id]}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
         />
       </>
     ),

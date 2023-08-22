@@ -18,23 +18,28 @@ const PlanForm = ({
   update,
   setUpdate,
 }) => {
-  const { createplanRequest,  editplanRequest } = useRequest()
+  const { createplanRequest, editplanRequest } = useRequest()
   const dispatch = useDispatch()
 
   const initialValues = {
     name: planData ? planData.name : '',
     description: planData ? planData.description : '',
-    displayOrder:planData ? planData.displayOrder:'0',
-    
+    displayOrder: planData ? planData.displayOrder : '0',
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Plan Name is required').max(15, 'Name must be at most 15 characters'),
-    description: Yup.string().max(250, 'Description must be at most 250 characters'),
-    displayOrder: Yup.number().typeError('Display Order must be a number').integer('Display Order must be an integer')
-    .min(0, 'Display Order must be a positive number').default(0),
-      
-    
+    name: Yup.string()
+      .required('Plan Name is required')
+      .max(15, 'Name must be at most 15 characters'),
+    description: Yup.string().max(
+      250,
+      'Description must be at most 250 characters'
+    ),
+    displayOrder: Yup.number()
+      .typeError('Display Order must be a number')
+      .integer('Display Order must be an integer')
+      .min(0, 'Display Order must be a positive number')
+      .default(0),
   })
 
   const formik = useFormik({
@@ -42,23 +47,22 @@ const PlanForm = ({
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       if (!values.displayOrder) {
-        values.displayOrder = 0;
+        values.displayOrder = 0
       }
       if (type == 'create') {
         const createPlan = await createplanRequest({
           name: values.name,
-          
-          description:values.description,
-          displayOrder:values.displayOrder
-         
+
+          description: values.description,
+          displayOrder: values.displayOrder,
         })
         setUpdate(update + 1)
       } else {
         const editPlan = await editplanRequest({
           data: {
             name: values.name,
-            description:values.description,
-            displayOrder:values.displayOrder
+            description: values.description,
+            displayOrder: values.displayOrder,
           },
           id: planData.id,
         })
@@ -67,8 +71,8 @@ const PlanForm = ({
           planInfo({
             id: planData.id,
             name: values.name,
-            description:values.description,
-            displayOrder:values.displayOrder
+            description: values.description,
+            displayOrder: values.displayOrder,
           })
         )
       }
@@ -115,33 +119,33 @@ const PlanForm = ({
               )}
             </Form.Group>
           </div>
-          
-          
+
           <div>
-  <Form.Group className="mb-3">
-    <Form.Label>
-      <FormattedMessage id="Description" />
-    </Form.Label>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Description" />
+              </Form.Label>
 
-    <textarea
-      
-      className="form-control"
-      id="description"
-      name="description"
-      onChange={formik.handleChange}
-      value={formik.values.description}
-      rows={3} // Set the number of rows you want to show initially
-      style={{ resize: 'vertical' }} // Allow vertical resizing
-    />
+              <textarea
+                className="form-control"
+                id="description"
+                name="description"
+                onChange={formik.handleChange}
+                value={formik.values.description}
+                rows={3} // Set the number of rows you want to show initially
+                style={{ resize: 'vertical' }} // Allow vertical resizing
+              />
 
-    {formik.touched.description && formik.errors.description && (
-      <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
-        {formik.errors.description}
-      </Form.Control.Feedback>
-    )}
-  </Form.Group>
-</div>
-
+              {formik.touched.description && formik.errors.description && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.description}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
 
           <div>
             <Form.Group className="mb-3">
@@ -167,12 +171,8 @@ const PlanForm = ({
               )}
             </Form.Group>
           </div>
-          
-          
-          
-          
-          </Modal.Body>
-          <Modal.Footer>
+        </Modal.Body>
+        <Modal.Footer>
           <Button
             variant="secondary"
             type="submit"

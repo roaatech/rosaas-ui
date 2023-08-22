@@ -4,7 +4,6 @@ import DashboardOverview from './pages/dashboard/DashboardOverview'
 import Transactions from './pages/Transactions'
 import Settings from './pages/Settings/Settings'
 import BootstrapTables from './pages/tables/BootstrapTables'
-import Signin from './pages/examples/Signin'
 import Signup from './pages/examples/Signup'
 import ForgotPassword from './pages/examples/ForgotPassword'
 import ResetPassword from './pages/examples/ResetPassword'
@@ -35,6 +34,7 @@ import Dashboard from './pages/Welcome/Welcome'
 import Product from './pages/Product/Product'
 import Plan from './pages/Plan/Plan'
 import PlanDetails from './pages/PlanDetails/PlanDetails'
+import signIn from './pages/signIn/signIn'
 
 export const Routes = {
   // pages
@@ -96,7 +96,7 @@ export const Routes = {
   },
   Signin: {
     path: '/',
-    component: Signin,
+    component: signIn,
     roles: ['notAuth'],
     type: 'noSidebar',
   },

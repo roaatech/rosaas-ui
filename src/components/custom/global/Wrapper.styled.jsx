@@ -24,6 +24,7 @@ const GlobalStyles = createGlobalStyle`
   --defaultFont:14px;
   --normalFont:16px;
   --largeFont:19px;
+  --hugeFont:35px;
   --errorColor:red;
   --green:#3bc76f;
   --red:#ff6868;

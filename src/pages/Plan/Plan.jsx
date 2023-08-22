@@ -42,7 +42,7 @@ import DescriptionCell from '../../components/custom/Shared/DescriptionCell/Desc
 
 export default function Plan({ children }) {
   const dispatch = useDispatch()
-  const { getplan,  getplanList, deleteplanReq } = useRequest()
+  const { getplan, getplanList, deletePlanReq } = useRequest()
   const [visible, setVisible] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)
@@ -62,7 +62,7 @@ export default function Plan({ children }) {
     setConfirm(true)
   }
   const deletePlan = async () => {
-    await deleteplanReq({ id: currentId })
+    await deletePlanReq({ id: currentId })
   }
 
   const listData = useSelector((state) => state.plans.plans) //*
@@ -76,25 +76,25 @@ export default function Plan({ children }) {
     if (sortField) query += `&sort.Field=${sortField}`
     if (sortValue) query += `&sort.Direction=${sortValue}`
     ;(async () => {
-      const planList = await getplanList(query);
-  
-      let sortedPlans = [...planList.data.data.items];
-  
+      const planList = await getplanList(query)
+
+      let sortedPlans = [...planList.data.data.items]
+
       if (sortField === 'displayOrder') {
         sortedPlans.sort((a, b) => {
-          const displayOrderA = parseInt(a.displayOrder);
-          const displayOrderB = parseInt(b.displayOrder);
-  
+          const displayOrderA = parseInt(a.displayOrder)
+          const displayOrderB = parseInt(b.displayOrder)
+
           if (sortValue === 1) {
-            return displayOrderA - displayOrderB; 
+            return displayOrderA - displayOrderB
           } else {
-            return displayOrderB - displayOrderA; 
+            return displayOrderB - displayOrderA
           }
-        });
+        })
       }
-  
-      dispatch(setAllPlans(sortedPlans));
-      setTotalCount(planList.data.data.totalCount);
+
+      dispatch(setAllPlans(sortedPlans))
+      setTotalCount(planList.data.data.totalCount)
     })()
   }, [first, rows, searchValue, sortField, sortValue, update])
 
@@ -120,16 +120,16 @@ export default function Plan({ children }) {
   }
 
   /********************************/
-  const [expandedRows, setExpandedRows] = useState([]);
+  const [expandedRows, setExpandedRows] = useState([])
 
   const toggleRow = (rowData) => {
-    const isRowExpanded = expandedRows.includes(rowData.id);
+    const isRowExpanded = expandedRows.includes(rowData.id)
     if (isRowExpanded) {
-      setExpandedRows(expandedRows.filter((id) => id !== rowData.id));
+      setExpandedRows(expandedRows.filter((id) => id !== rowData.id))
     } else {
-      setExpandedRows([...expandedRows, rowData.id]);
+      setExpandedRows([...expandedRows, rowData.id])
     }
-  };
+  }
   /****************************** */
 
   return (
@@ -177,13 +177,11 @@ export default function Plan({ children }) {
                     setSortField={setSortField}
                     setSortValue={setSortValue}
                     setFirst={setFirst}
-                    
                   />
                 }
               ></Column>
-              
 
-                {/* <Column
+              {/* <Column
                 field={'description'}
                 header={
                   <ColumnSortHeader
@@ -202,7 +200,6 @@ export default function Plan({ children }) {
               /> */}
               <Column
                 field={'description'}
-                
                 style={{ width: '520px', maxidth: '520px' }}
                 header={
                   <ColumnSortHeader
@@ -230,7 +227,6 @@ export default function Plan({ children }) {
               <Column
                 field={'displayOrder'}
                 style={{ width: '170px', maxidth: '170px' }}
-
                 header={
                   <ColumnSortHeader
                     text={<FormattedMessage id="Display-Order" />}

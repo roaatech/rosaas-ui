@@ -83,7 +83,7 @@ const useRequest = () => {
   const getplanList = async (params) => {
     return await Request.get(`management/sadmin/v1/Plans${params}`)
   }
-  const deleteplanReq = async (data) => {
+  const deletePlanReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Plans/${data.id}`)
   }
 
@@ -110,7 +110,7 @@ const useRequest = () => {
     editplanRequest,
     getplan,
     getplanList,
-    deleteplanReq,
+    deletePlanReq,
   }
 }
 export default useRequest
