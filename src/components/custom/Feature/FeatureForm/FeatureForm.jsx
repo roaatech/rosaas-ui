@@ -1,24 +1,23 @@
-import React, { useState } from 'react';
-import { useFormik } from 'formik';
-import { InputText } from 'primereact/inputtext';
-import * as Yup from 'yup';
-import useRequest from '../../../../axios/apis/useRequest.js';
+import React, { useState } from 'react'
+import { useFormik } from 'formik'
+import { InputText } from 'primereact/inputtext'
+import * as Yup from 'yup'
+import useRequest from '../../../../axios/apis/useRequest.js'
 import {
   Modal,
   Button,
   OverlayTrigger,
   Tooltip,
-} from '@themesberg/react-bootstrap';
-import { Form } from '@themesberg/react-bootstrap';
-import { featureInfo } from '../../../../store/slices/features.js';
-import { useDispatch } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
-import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
-import { Wrapper } from './FeatureForm.styled.jsx';
-import { generateApiKey } from '../../../../lib/sharedFun/common.js';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { AiFillCopy } from 'react-icons/ai';
-import { useParams } from 'react-router-dom';
+} from '@themesberg/react-bootstrap'
+import { Form } from '@themesberg/react-bootstrap'
+import { useDispatch } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
+import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
+import { Wrapper } from './FeatureForm.styled.jsx'
+import { generateApiKey } from '../../../../lib/sharedFun/common.js'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { AiFillCopy } from 'react-icons/ai'
+import { useParams } from 'react-router-dom'
 
 const FeatureForm = ({
   type,
@@ -29,8 +28,8 @@ const FeatureForm = ({
   setUpdate,
   productId,
 }) => {
-  const { createFeatureRequest, editFeatureRequest } = useRequest();
-  const dispatch = useDispatch();
+  const { createFeatureRequest, editFeatureRequest } = useRequest()
+  const dispatch = useDispatch()
 
   const initialValues = {
     name: featureData ? featureData.name : '',
@@ -49,26 +48,24 @@ const FeatureForm = ({
     //   then: Yup.string().required('Feature Unit is required'),
     // }),
     // reset: Yup.string().required('Feature Reset is required'),
-  });
-  
+  })
+
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       if (type === 'create') {
-        const createFeature = await createFeatureRequest(productId,{
-          
+        const createFeature = await createFeatureRequest(productId, {
           name: values.name,
           description: values.description,
           type: featureTypeMap[values.type],
-          unit: featureUnitMap[values.unit], 
+          unit: featureUnitMap[values.unit],
           reset: featureResetMap[values.reset],
-          
-        });
-        setUpdate(update + 1);
+        })
+        setUpdate(update + 1)
       } else {
-        console.log(productId);
-        const editFeature = await editFeatureRequest(productId,{
+        console.log(productId)
+        const editFeature = await editFeatureRequest(productId, {
           data: {
             name: values.name,
             description: values.description,
@@ -77,44 +74,41 @@ const FeatureForm = ({
             reset: values.reset,
           },
           id: featureData.id,
-          
-        });
+        })
 
-        dispatch(
-          featureInfo({
-            id: featureData.id,
-            name: values.name,
-            description: values.description,
-            type: values.type,
-            unit: values.unit,
-            reset: values.reset,
-            editedDate: new Date().toISOString().slice(0, 19),
-          })
-        );
+        dispatch()
+        // featureInfo({
+        //   id: featureData.id,
+        //   name: values.name,
+        //   description: values.description,
+        //   type: values.type,
+        //   unit: values.unit,
+        //   reset: values.reset,
+        //   editedDate: new Date().toISOString().slice(0, 19),
+        // })
       }
 
-      setVisible && setVisible(false);
-      setSubmitting(false);
+      setVisible && setVisible(false)
+      setSubmitting(false)
     },
-  });
+  })
   const featureTypeMap = {
     Number: 1,
     Boolean: 2,
-  };
+  }
 
   const featureUnitMap = {
     K: 1,
     MB: 2,
     GB: 3,
-  };
+  }
 
   const featureResetMap = {
     Never: 1,
     Weekly: 2,
     Monthly: 3,
     Annual: 4,
-  };
-
+  }
 
   return (
     <Wrapper>
@@ -226,7 +220,7 @@ const FeatureForm = ({
           </Form.Group>
         </Modal.Body> */}
 
-<Modal.Body>
+        <Modal.Body>
           <div>
             {/* Name */}
             <Form.Group className="mb-3">
@@ -269,7 +263,9 @@ const FeatureForm = ({
               }
             />
             {formik.touched.description && formik.errors.description && (
-              <div className="invalid-feedback">{formik.errors.description}</div>
+              <div className="invalid-feedback">
+                {formik.errors.description}
+              </div>
             )}
           </Form.Group>
 
@@ -382,7 +378,7 @@ const FeatureForm = ({
         </Modal.Footer>
       </Form>
     </Wrapper>
-  );
-};
+  )
+}
 
-export default FeatureForm;
+export default FeatureForm
