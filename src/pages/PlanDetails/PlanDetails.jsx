@@ -22,7 +22,7 @@ const PlanDetails = () => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
 
-  const { getplan,  deleteplanReq } = useRequest()
+  const { getplan, deleteplanReq } = useRequest()
 
   useEffect(() => {
     ;(async () => {
@@ -47,18 +47,34 @@ const PlanDetails = () => {
             <h4 className="m-0">
               <FormattedMessage id="Plan-Details" /> : {planData.name}
             </h4>
+            {/* <DynamicButtons
+              buttons={[
+                {
+                  order: 2,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Edit-Plan',
+                  component: 'editPlan',
+                  icon: <AiFillEdit />,
+                },
+
+                {
+                  order: 5,
+                  type: 'delete',
+                  confirmationMessage: 'delete-product-confirmation-message',
+                  id: routeParams.id,
+                  navAfterDelete: '/products',
+                  label: 'Delete-Plan',
+                  request: 'deletePlanReq',
+                  icon: <BsFillTrash3Fill />,
+                },
+              ]}
+            /> */}
           </UpperContent>
           <TabView className="card">
             <TabPanel header={<FormattedMessage id="Details" />}>
               <PlanDetailsTab data={planData} />
             </TabPanel>
-          {/* 
-            <TabPanel header={<FormattedMessage id="Subscriptions" />}>
-              <ProductTenantsList
-                productId={productData.id}
-                productName={productData.name}
-              />
-            </TabPanel> */}
           </TabView>
         </div>
       )}

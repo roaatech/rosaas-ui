@@ -17,7 +17,7 @@ import DynamicButtons from '../../components/custom/Shared/DynamicButtons/Dynami
 import {
   BsFillPersonLinesFill,
   BsBoxSeam,
-  BsFillPersonFill,
+  BsFillPersonPlusFill,
   BsGearFill,
   BsFillClipboard2CheckFill,
   BsFillTrash3Fill,
@@ -31,7 +31,7 @@ const ProductDetails = () => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
 
-  const { getPlan: getProduct, deleteProductReq } = useRequest()
+  const { getProduct, deleteProductReq } = useRequest()
 
   useEffect(() => {
     ;(async () => {
@@ -71,7 +71,7 @@ const ProductDetails = () => {
                   type: 'form',
                   label: 'Add-Tenant',
                   component: 'addTenant',
-                  icon: <BsFillPersonFill />,
+                  icon: <BsFillPersonPlusFill />,
                 },
                 {
                   order: 5,

@@ -2,12 +2,30 @@ const isHour = (hour) => {
   return hour > 0 ? `${hour} hours and` : ''
 }
 
+// export const DataTransform = (dateTime) => {
+//   const utcDateTime = new Date(dateTime + 'Z')
+//   const localDateTime = utcDateTime.toLocaleString(undefined, {
+//     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+//   })
+//   return localDateTime
+// }
+
 export const DataTransform = (dateTime) => {
   const utcDateTime = new Date(dateTime + 'Z')
-  const localDateTime = utcDateTime.toLocaleString(undefined, {
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-  })
-  return localDateTime
+  const localDateTime = new Date(
+    utcDateTime.toLocaleString(undefined, {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    })
+  )
+
+  const year = localDateTime.getFullYear()
+  const month = String(localDateTime.getMonth() + 1).padStart(2, '0')
+  const day = String(localDateTime.getDate()).padStart(2, '0')
+  const hours = String(localDateTime.getHours()).padStart(2, '0')
+  const minutes = String(localDateTime.getMinutes()).padStart(2, '0')
+  const seconds = String(localDateTime.getSeconds()).padStart(2, '0')
+
+  return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`
 }
 
 export const timeDifferenceFromNow = (targetDate) => {
