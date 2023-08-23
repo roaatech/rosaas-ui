@@ -87,8 +87,18 @@ export const productsSlice = createSlice({
 
       // currentProducts[action.payload.id] = mergedObject
       // state.products = currentProducts
+      const { productId, featureId, data } = action.payload
+      const currentProducts = { ...current(state.products) }
+      currentProducts[productId].features[featureId] = data
+      // const currentProduct = { ...currentProducts[productId] }
+      // const currentFeatures = { ...currentProduct.features }
 
-      console.log(action.payload, 'ddddd')
+      // console.log(currentProducts, '****')
+      // if (currentFeatures[featureId]) {
+      //   currentFeatures[featureId] = action.payload
+
+      state.products = currentProducts
+      // }
     },
 
     removeProduct: (state, action) => {

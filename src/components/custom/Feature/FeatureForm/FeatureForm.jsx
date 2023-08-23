@@ -18,6 +18,7 @@ import { generateApiKey } from '../../../../lib/sharedFun/common.js'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
+import { FeatureInfo } from '../../../../store/slices/products.js'
 
 const FeatureForm = ({
   type,
@@ -77,16 +78,17 @@ const FeatureForm = ({
           id: featureData.id,
         })
 
-        dispatch()
-        // featureInfo({
-        //   id: featureData.id,
-        //   name: values.name,
-        //   description: values.description,
-        //   type: values.type,
-        //   unit: values.unit,
-        //   reset: values.reset,
-        //   editedDate: new Date().toISOString().slice(0, 19),
-        // })
+        dispatch(
+        FeatureInfo({
+          featureId: featureData.id,
+          productId:productId,
+          data:{name: values.name,
+            description: values.description,
+            type: values.type,
+            unit: values.unit,
+            reset: values.reset,
+            editedDate: new Date().toISOString().slice(0, 19),}
+        }))
       }
 
       setVisible && setVisible(false)
