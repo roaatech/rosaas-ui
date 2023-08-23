@@ -34,6 +34,7 @@ import Redirect from './components/custom/global/Redirect/Redirect'
 import Dashboard from './pages/Welcome/Welcome'
 import Product from './pages/Product/Product'
 import Plan from './pages/Plan/Plan'
+import PlanDetails from './pages/PlanDetails/PlanDetails'
 
 export const Routes = {
   // pages
@@ -58,7 +59,7 @@ export const Routes = {
   //   roles: ['superAdmin'],
   // },
   Plan: {
-    path: '/plan',
+    path: '/plans',
     component: Plan,
     roles: ['superAdmin'],
   },
@@ -75,6 +76,11 @@ export const Routes = {
   ProductDetails: {
     path: '/products/:id',
     component: ProductDetails,
+    roles: ['superAdmin'],
+  },
+  PlanDetails: {
+    path: '/plans/:id',
+    component: PlanDetails,
     roles: ['superAdmin'],
   },
   Transactions: {

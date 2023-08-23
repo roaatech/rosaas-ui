@@ -41,7 +41,7 @@ import { FormattedMessage } from 'react-intl'
 
 export default function Product({ children }) {
   const dispatch = useDispatch()
-  const { getProduct, getProductList, deleteProductReq } = useRequest()
+  const { getPlan: getProduct, getProductList, deleteProductReq } = useRequest()
   const [visible, setVisible] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)

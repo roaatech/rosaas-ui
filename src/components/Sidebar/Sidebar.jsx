@@ -11,6 +11,9 @@ import {
   BsGearFill,
   BsFillClipboard2CheckFill,
   BsStars,
+ 
+  BsPencilSquare,
+  BsPencil,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -299,6 +302,21 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
+
+              <NavItem
+                title={<FormattedMessage id="Products" />}
+                link={`/products`}
+                icon={BsBoxSeam}
+                isActive={location.pathname.includes('products')}
+              />
+              <NavItem
+                title="Plans"
+                link={`/plans`}
+                icon={BsPencilSquare}
+                // icon={BsPencil}
+                isActive={location.pathname.includes('plans')}
+              />
+
               <CollapsableNavItem
                 eventKey={settingIsOpen}
                 title={<FormattedMessage id="Settings" />}

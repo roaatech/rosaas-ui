@@ -6,70 +6,63 @@ import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import { BsBoxSeam } from 'react-icons/bs'
 import useRequest from '../../axios/apis/useRequest'
-import { Wrapper } from './ProductDetails.styled'
-import ProductDetailsTab from '../../components/custom/Product/ProdcutDetailsTab/ProdcutDetailsTab'
-import ProductTenantsList from '../../components/custom/Product/ProductTenantsList/ProductTenantsList'
+import { Wrapper } from './PlanDetails.styled'
 import { TabView, TabPanel } from 'primereact/tabview'
 import { useDispatch, useSelector } from 'react-redux'
-import { productInfo } from '../../store/slices/products'
+
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
-import ProductFeaturesList from '../../components/custom/Product/ProductFeaturesList/ProductFeaturesList'
+import { planInfo } from '../../store/slices/plans'
+import PlanDetailsTab from '../../components/custom/Plan/PlanDetailsTab/PlanDetailsTab'
 
-const ProductDetails = () => {
+const PlanDetails = () => {
   const routeParams = useParams()
-  const listData = useSelector((state) => state.products.products)
-  let productData = listData[routeParams.id]
+  const listData = useSelector((state) => state.plans.plans)
+  let planData = listData[routeParams.id]
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
 
-  const { getPlan: getProduct, deleteProductReq } = useRequest()
+  const { getplan,  deleteplanReq } = useRequest()
 
   useEffect(() => {
     ;(async () => {
-      const productData = await getProduct(routeParams.id)
-      dispatch(productInfo(productData.data.data))
+      const planData = await getplan(routeParams.id)
+      dispatch(planInfo(planData.data.data))
     })()
   }, [visible, routeParams.id])
 
   return (
     <Wrapper>
-      {productData && (
+      {planData && (
         <BreadcrumbComponent
-          breadcrumbInfo={'ProductDetails'}
-          param1={productData.id}
+          breadcrumbInfo={'PlanDetails'}
+          param1={planData.id}
           icon={BsBoxSeam}
         />
       )}
 
-      {productData && (
+      {planData && (
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Product-Details" /> : {productData.name}
+              <FormattedMessage id="Plan-Details" /> : {planData.name}
             </h4>
           </UpperContent>
           <TabView className="card">
             <TabPanel header={<FormattedMessage id="Details" />}>
-              <ProductDetailsTab data={productData} />
+              <PlanDetailsTab data={planData} />
             </TabPanel>
-
+          {/* 
             <TabPanel header={<FormattedMessage id="Subscriptions" />}>
               <ProductTenantsList
                 productId={productData.id}
                 productName={productData.name}
               />
-            </TabPanel>
-            <TabPanel header={<FormattedMessage id="Features" />}>
-              <ProductFeaturesList
-                productId={productData.id}
-                productName={productData.name}
-              />
-            </TabPanel>
+            </TabPanel> */}
           </TabView>
         </div>
       )}
     </Wrapper>
   )
 }
-export default ProductDetails
+export default PlanDetails

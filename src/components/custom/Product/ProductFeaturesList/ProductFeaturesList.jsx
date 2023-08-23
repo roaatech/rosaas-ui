@@ -29,6 +29,7 @@ import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmati
 import FeatureForm from '../../Feature/FeatureForm/FeatureForm'
 import { Dialog } from 'primereact/dialog'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
+import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 
 export const ProductFeaturesList = ({ productId, productName }) => {
   const navigate = useNavigate()
@@ -78,15 +79,37 @@ export const ProductFeaturesList = ({ productId, productName }) => {
 
   const TableRow = (props) => {
     const { name, description, type, unit, reset, id } = props
+ /********************************/
+  const [expandedRows, setExpandedRows] = useState([]);
 
+  const toggleRow = (rowData) => {
+    const isRowExpanded = expandedRows.includes(rowData.id);
+    if (isRowExpanded) {
+      setExpandedRows(expandedRows.filter((id) => id !== rowData.id));
+    } else {
+      setExpandedRows([...expandedRows, rowData.id]);
+    }
+  };
+  /****************************** */
     return (
       <tr>
         <td>
           <span className="fw-normal">{name}</span>
         </td>
-        <td>
-          <span className="fw-normal">{description}</span>
-        </td>
+        <td 
+         className="fw-normal"
+         
+         style={{ width: '520px', maxWidth: '520px' }}
+         body={(data) => (
+           <DescriptionCell
+           data={data}
+           expandedRows={expandedRows}
+           toggleRow={toggleRow}
+           />
+           )}>
+                  {description}
+      </td>
+      
 
         <td>
           <span className={`fw-normal`}>

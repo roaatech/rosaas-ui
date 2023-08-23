@@ -135,11 +135,12 @@ const breadcrumbConst = {
     active: 'Products',
     icon: {},
   },
-  FeatureList: {
-    title: 'Feature-Management',
-    name: 'Features',
-    navigation: '/features',
-    active: 'features',
+  PlanList: {
+    title: 'Plan-Management',
+    name: 'Plans',
+    navigation: '/plans',
+    active: 'Plans',
+
     icon: {},
   },
   ProductDetails: {
@@ -149,6 +150,15 @@ const breadcrumbConst = {
     navigation: '/products',
     parent: 'Products',
     parentNavigation: '/products',
+    icon: {},
+  },
+  PlanDetails: {
+    title: 'Plan-Management',
+    name: 'Plan-Details',
+    active: 'Plan Details',
+    navigation: '/plans',
+    parent: 'Plans',
+    parentNavigation: '/plans',
     icon: {},
   },
   TenantList: {

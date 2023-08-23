@@ -3,6 +3,7 @@ import mainReducer from './slices/main'
 import authReducer from './slices/auth'
 import tenantsReducer from './slices/tenants'
 import productsReducer from './slices/products'
+import plansReducer from './slices/plans'
 
 export default configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export default configureStore({
     auth: authReducer,
     products: productsReducer,
     tenants: tenantsReducer,
+    plans: plansReducer,
   },
 })
