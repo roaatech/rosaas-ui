@@ -88,7 +88,9 @@ export const productsSlice = createSlice({
       // currentProducts[action.payload.id] = mergedObject
       // state.products = currentProducts
       const { productId, featureId, data } = action.payload
-      const currentProducts = { ...current(state.products) }
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
       currentProducts[productId].features[featureId] = data
       // const currentProduct = { ...currentProducts[productId] }
       // const currentFeatures = { ...currentProduct.features }
