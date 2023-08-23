@@ -28,6 +28,7 @@ import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import ColumnSortHeader from '../../Shared/ColumnSortHeader/ColumnSortHeader'
 import CustomPaginator from '../../Shared/CustomPaginator/CustomPaginator'
+import { setAllFeaturePlan } from '../../../../store/slices/products'
 // import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 
 export default function ProductFeaturePlan({ children }) {
@@ -57,22 +58,22 @@ export default function ProductFeaturePlan({ children }) {
     await deleteProductReq({ id: currentId })
   }
 
-  const listData = useSelector((state) => state.products.products)
-  let list = Object.values(listData)
+  const listData = useSelector(
+    (state) => state.products.products[routeParams.id]?.featurePlan
+  )
+  let list = listData && Object.values(listData)
 
   useEffect(() => {
     ;(async () => {
       const FeaturePlanData = await getFeaturePlanList(routeParams.id)
-      dispatch(planInfo(planData.data.data))
+      dispatch(
+        setAllFeaturePlan({
+          productId: routeParams.id,
+          data: FeaturePlanData.data.data,
+        })
+      )
     })()
   }, [])
-
-  /******************************* */
-
-  const onPageChange = (event) => {
-    setFirst(event.first)
-    setRows(event.rows)
-  }
 
   /****************************** */
   const editForm = async (id) => {
@@ -85,15 +86,7 @@ export default function ProductFeaturePlan({ children }) {
   }
 
   const TableRow = (props) => {
-    const {
-      title,
-      uniqueName,
-      status,
-      createdDate,
-      editedDate,
-      id,
-      healthCheckUrlIsOverridden,
-    } = props
+    const { title, uniqueName, createdDate, editedDate, id } = props
 
     return (
       <tr>
