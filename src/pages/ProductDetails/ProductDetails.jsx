@@ -107,12 +107,12 @@ const ProductDetails = () => {
                 productName={productData.name}
               />
             </TabPanel>
-            <TabPanel header={<FormattedMessage id="Feature-Plan" />}>
+            {/* <TabPanel header={<FormattedMessage id="Feature-Plan" />}>
               <ProductFeaturePlan
                 productId={productData.id}
                 productName={productData.name}
               />
-            </TabPanel>
+            </TabPanel> */}
           </TabView>
         </div>
       )}
