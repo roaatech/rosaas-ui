@@ -16,6 +16,7 @@ import {
   productInfo,
   features,
   FeatureInfo,
+  deleteFeature
 } from '../../../../store/slices/products'
 import { FormattedMessage } from 'react-intl'
 import {
@@ -67,14 +68,15 @@ export const ProductFeaturesList = ({ productId, productName }) => {
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
 
+  
   const deleteConfirm = (id) => {
     setCurrentId(id)
     setConfirm(true)
   }
   const editForm = async (id) => {
     //  if (!listData[id].creationEndpoint) {
-    // const featureData = await getFeature(id, productId)
-    // dispatch(FeatureInfo(featureData.data.data))
+    //  const featureData = await getFeature(id, productId)
+    //  dispatch(FeatureInfo(featureData.data.data))
     setPopUpLable('Edit-Feature')
     setType('edit')
     // }
@@ -112,12 +114,21 @@ export const ProductFeaturesList = ({ productId, productName }) => {
     }
   };
   /****************************** */
+  const handleDeleteFeature = async (productId,featureId) => {
+    try {
+      await deleteFeatureReq(productId, { id: featureId });
+      dispatch(deleteFeature({ productId, featureId }));
+      setUpdate(update++)
+    } catch (error) {
+      console.error('Error deleting feature:', error);
+    }
+  };
     return (
       <tr>
         <td>
           <span className="fw-normal">{name}</span>
         </td>
-        <td style={{ width: '620px', maxWidth: '620px',whiteSpace: 'normal'}}>
+        <td style={{ width: '520px', maxWidth: '520px',whiteSpace: 'normal'}}>
         <DescriptionCell data={{ description }} />
         </td>
       
@@ -153,7 +164,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
                 <FormattedMessage id="Edit" />
               </Dropdown.Item>
               <Dropdown.Item
-                onClick={() => deleteConfirm(id)}
+                onClick={() => handleDeleteFeature(productId,id)}
                 className="text-danger"
               >
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
@@ -233,6 +244,8 @@ export const ProductFeaturesList = ({ productId, productName }) => {
           setUpdate={setUpdate}
           setVisible={setVisible}
           sideBar={false}
+          dispatch={dispatch}
+          FeatureInfo={FeatureInfo}
           featureData={type == 'edit' ? list?.features[currentId] : {}}
         />
       </ThemeDialog>
@@ -249,5 +262,6 @@ export const ProductFeaturesList = ({ productId, productName }) => {
     </>
   )
 }
+
 
 export default ProductFeaturesList

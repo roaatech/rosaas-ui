@@ -19,6 +19,40 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
 import { FeatureInfo } from '../../../../store/slices/products.js'
+const featureTypeMap = {
+  Number: 1,
+  Boolean: 2,
+}
+
+const featureUnitMap = {
+  KB: 1,
+  MB: 2,
+  GB: 3,
+}
+
+const featureResetMap = {
+  Never: 1,
+  Weekly: 2,
+  Monthly: 3,
+  Annual: 4,
+}
+const featureTypeMap_ = {
+  1: "Number",
+  2:"Boolean",
+};
+
+const featureUnitMap_ = {
+  1:"KB",
+  2:"MB",
+  3:"GB",
+};
+
+const featureResetMap_ = {
+  1:"Never",
+  2:"Weekly",
+  3:"Monthly",
+  4:"Annual",
+};
 
 const FeatureForm = ({
   type,
@@ -29,16 +63,16 @@ const FeatureForm = ({
   setUpdate,
   productId,
 }) => {
-  console.log('iiiiiiiiiiiiiiiiiiii', featureData)
+  // console.log('iiiiiiiiiiiiiiiiiiii', featureData)
   const { createFeatureRequest, editFeatureRequest } = useRequest()
   const dispatch = useDispatch()
 
   const initialValues = {
     name: featureData ? featureData.name : '',
     description: featureData ? featureData.description : '',
-    type: featureData ? featureData.type : '',
-    unit: featureData ? featureData.unit : '',
-    reset: featureData ? featureData.reset : '',
+    type: featureData ? featureTypeMap_[featureData.type] : '',
+    unit: featureData ? featureUnitMap_[featureData.unit] : '',
+    reset: featureData ? featureResetMap_[featureData.reset] : '',
   }
 
   const validationSchema = Yup.object().shape({
@@ -71,9 +105,9 @@ const FeatureForm = ({
           data: {
             name: values.name,
             description: values.description,
-            type: values.type,
-            unit: values.unit,
-            reset: values.reset,
+            type: featureTypeMap[values.type],
+          unit: featureUnitMap[values.unit],
+          reset: featureResetMap[values.reset],
           },
           id: featureData.id,
         })
@@ -84,9 +118,9 @@ const FeatureForm = ({
           productId:productId,
           data:{name: values.name,
             description: values.description,
-            type: values.type,
-            unit: values.unit,
-            reset: values.reset,
+            type: featureTypeMap[values.type],
+          unit: featureUnitMap[values.unit],
+          reset: featureResetMap[values.reset],
             editedDate: new Date().toISOString().slice(0, 19),}
         }))
       }
@@ -95,24 +129,9 @@ const FeatureForm = ({
       setSubmitting(false)
     },
   })
-  const featureTypeMap = {
-    Number: 1,
-    Boolean: 2,
-  }
-
-  const featureUnitMap = {
-    K: 1,
-    MB: 2,
-    GB: 3,
-  }
-
-  const featureResetMap = {
-    Never: 1,
-    Weekly: 2,
-    Monthly: 3,
-    Annual: 4,
-  }
-
+  
+  console.log(formik.values.type,"********444");
+  console.log(featureData.type,"**********3333");
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
@@ -284,7 +303,7 @@ const FeatureForm = ({
                 id="type"
                 name="type"
                 onChange={formik.handleChange}
-                value={formik.values.type}
+                value={[formik.values.type]}
               >
                 <option value="">Select Type</option>
                 {Object.keys(featureTypeMap).map((key) => (
