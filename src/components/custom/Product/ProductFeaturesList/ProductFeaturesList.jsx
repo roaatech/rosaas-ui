@@ -30,6 +30,23 @@ import FeatureForm from '../../Feature/FeatureForm/FeatureForm'
 import { Dialog } from 'primereact/dialog'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
+const featureTypeMap = {
+  1: "Number",
+  2:"Boolean",
+};
+
+const featureUnitMap = {
+  1:"KB",
+  2:"MB",
+  3:"GB",
+};
+
+const featureResetMap = {
+  1:"Never",
+  2:"Weekly",
+  3:"Monthly",
+  4:"Annual",
+};
 
 export const ProductFeaturesList = ({ productId, productName }) => {
   const navigate = useNavigate()
@@ -78,7 +95,11 @@ export const ProductFeaturesList = ({ productId, productName }) => {
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
 
   const TableRow = (props) => {
-    const { name, description, type, unit, reset, id } = props
+    const { name, description, type, unit, reset, id } = props;
+
+    const mappedType = featureTypeMap[type] ;
+    const mappedUnit = featureUnitMap[unit] ;
+    const mappedReset = featureResetMap[reset] ;
  /********************************/
   const [expandedRows, setExpandedRows] = useState([]);
 
@@ -96,31 +117,19 @@ export const ProductFeaturesList = ({ productId, productName }) => {
         <td>
           <span className="fw-normal">{name}</span>
         </td>
-        <td 
-         className="fw-normal"
-         
-         style={{ width: '520px', maxWidth: '520px' }}
-         body={(data) => (
-           <DescriptionCell
-           data={data}
-           expandedRows={expandedRows}
-           toggleRow={toggleRow}
-           />
-           )}>
-                  {description}
-      </td>
+        <td style={{ width: '620px', maxWidth: '620px',whiteSpace: 'normal'}}>
+        <DescriptionCell data={{ description }} />
+        </td>
       
 
         <td>
-          <span className={`fw-normal`}>
-            <TableDate createdDate={type} editedDate={type} />
-          </span>
+          <span className={`fw-normal`}>{mappedType}</span>
         </td>
         <td>
-          <span className="fw-normal">{unit}</span>
+          <span className="fw-normal">{mappedUnit}</span>
         </td>
         <td>
-          <span className="fw-normal">{reset}</span>
+          <span className="fw-normal">{mappedReset}</span>
         </td>
         <td>
           <Dropdown as={ButtonGroup}>

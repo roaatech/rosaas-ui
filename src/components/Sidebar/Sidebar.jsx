@@ -249,12 +249,7 @@ export default (props = {}) => {
                   sideBar={true}
                 />
               </TableHead>
-              <NavItem
-                title={<FormattedMessage id="Products" />}
-                link={`/products`}
-                icon={BsBoxSeam}
-                isActive={location.pathname.includes('products')}
-              />
+            
               {active.length ? (
                 <CollapsableNavItem
                   eventKey={activeIsOpen}
