@@ -21,8 +21,10 @@ import {
   BsGearFill,
   BsFillClipboard2CheckFill,
   BsFillTrash3Fill,
+  BsPencilSquare,
 } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
+import ProductFeaturePlan from '../../components/custom/Product/ProductFeaturePlan/ProductFeaturePlan'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -59,6 +61,14 @@ const ProductDetails = () => {
             <DynamicButtons
               buttons={[
                 {
+                  order: 4,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Add-Plan',
+                  component: 'addPlan',
+                  icon: <BsPencilSquare />,
+                },
+                {
                   order: 2,
                   type: 'form',
                   id: routeParams.id,
@@ -93,6 +103,12 @@ const ProductDetails = () => {
 
             <TabPanel header={<FormattedMessage id="Subscriptions" />}>
               <ProductTenantsList
+                productId={productData.id}
+                productName={productData.name}
+              />
+            </TabPanel>
+            <TabPanel header={<FormattedMessage id="Feature-Plan" />}>
+              <ProductFeaturePlan
                 productId={productData.id}
                 productName={productData.name}
               />

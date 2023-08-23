@@ -82,6 +82,18 @@ const DynamicButtons = ({ buttons }) => {
         />
       </>
     ),
+    addPlan: () => (
+      <>
+        <PlanForm
+          popupLabel={<FormattedMessage id="Add-Plan" />}
+          type={'create'}
+          planData={plansData[buttons[currentButtonIndex].id]}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+        />
+      </>
+    ),
   }
 
   return (

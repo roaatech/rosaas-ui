@@ -9,6 +9,7 @@ import { Form } from '@themesberg/react-bootstrap'
 import { planInfo } from '../../../../store/slices/plans.js'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import { useNavigate } from 'react-router-dom'
 
 const PlanForm = ({
   type,
@@ -20,6 +21,7 @@ const PlanForm = ({
 }) => {
   const { createplanRequest, editplanRequest } = useRequest()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const initialValues = {
     name: planData ? planData.name : '',
@@ -57,6 +59,9 @@ const PlanForm = ({
           displayOrder: values.displayOrder,
         })
         setUpdate(update + 1)
+        console.log(createPlan, 'editPlan')
+
+        // navigate(`/plans`)
       } else {
         const editPlan = await editplanRequest({
           data: {
@@ -77,7 +82,6 @@ const PlanForm = ({
         )
       }
 
-      setVisible && setVisible(false)
       setVisible && setVisible(false)
     },
   })
