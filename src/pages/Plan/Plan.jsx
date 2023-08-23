@@ -42,7 +42,7 @@ import DescriptionCell from '../../components/custom/Shared/DescriptionCell/Desc
 
 export default function Plan({ children }) {
   const dispatch = useDispatch()
-  const { getplan, getplanList, deletePlanReq } = useRequest()
+  const { getPlan, getPlanList, deletePlanReq } = useRequest()
   const [visible, setVisible] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)
@@ -76,7 +76,7 @@ export default function Plan({ children }) {
     if (sortField) query += `&sort.Field=${sortField}`
     if (sortValue) query += `&sort.Direction=${sortValue}`
     ;(async () => {
-      const planList = await getplanList(query)
+      const planList = await getPlanList(query)
 
       let sortedPlans = [...planList.data.data.items]
 
@@ -112,7 +112,7 @@ export default function Plan({ children }) {
   /****************************** */
   const editForm = async (id) => {
     if (!listData[id].creationEndpoint) {
-      const planData = await getplan(id)
+      const planData = await getPlan(id)
       dispatch(planInfo(planData.data.data))
     }
     setCurrentId(id)

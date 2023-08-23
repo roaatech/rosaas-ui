@@ -18,7 +18,7 @@ import {
 } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import BreadcrumbComponent from '../../Shared/Breadcrumb/Breadcrumb'
 import TableHead from '../../Shared/TableHead/TableHead'
 import { FormattedMessage } from 'react-intl'
@@ -32,7 +32,7 @@ import CustomPaginator from '../../Shared/CustomPaginator/CustomPaginator'
 
 export default function ProductFeaturePlan({ children }) {
   const dispatch = useDispatch()
-  const { getProduct, getProductList, deleteProductReq } = useRequest()
+  const { getFeaturePlanList, deleteProductReq } = useRequest()
   const [visible, setVisible] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)
@@ -47,6 +47,8 @@ export default function ProductFeaturePlan({ children }) {
   const [currentId, setCurrentId] = useState('')
   const [update, setUpdate] = useState(1)
   const navigate = useNavigate()
+  const routeParams = useParams()
+
   const deleteConfirm = (id) => {
     setCurrentId(id)
     setConfirm(true)
@@ -59,20 +61,11 @@ export default function ProductFeaturePlan({ children }) {
   let list = Object.values(listData)
 
   useEffect(() => {
-    let query = `?page=${Math.ceil(
-      (first + 1) / rows
-    )}&pageSize=${rows}&filters[0].Field=SearchTerm`
-    if (searchValue) query += `&filters[0].Value=${searchValue}`
-    if (sortField) query += `&sort.Field=${sortField}`
-    if (sortValue) query += `&sort.Direction=${sortValue}`
     ;(async () => {
-      if (Object.values(listData).length == 0) {
-        const productList = await getProductList(query)
-        // dispatch(setAllProduct(productList.data.data.items))
-        setTotalCount(productList.data.data.totalCount)
-      }
+      const FeaturePlanData = await getFeaturePlanList(routeParams.id)
+      dispatch(planInfo(planData.data.data))
     })()
-  }, [first, rows, searchValue, sortField, sortValue, update])
+  }, [])
 
   /******************************* */
 
