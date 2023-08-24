@@ -23,7 +23,7 @@ const ProductDetails = () => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
 
-  const { getPlan: getProduct, deleteProductReq } = useRequest()
+  const {  getProduct, deleteProductReq } = useRequest()
 
   useEffect(() => {
     ;(async () => {

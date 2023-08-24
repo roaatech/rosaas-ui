@@ -130,8 +130,7 @@ const FeatureForm = ({
     },
   })
   
-  console.log(formik.values.type,"********444");
-  console.log(featureData.type,"**********3333");
+  
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>

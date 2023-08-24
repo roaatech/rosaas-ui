@@ -16,7 +16,7 @@ import {
   productInfo,
   features,
   FeatureInfo,
-  deleteFeature
+  storeFeatureDelete
 } from '../../../../store/slices/products'
 import { FormattedMessage } from 'react-intl'
 import {
@@ -69,10 +69,10 @@ export const ProductFeaturesList = ({ productId, productName }) => {
   const [popUpLable, setPopUpLable] = useState('')
 
   
-  const deleteConfirm = (id) => {
-    setCurrentId(id)
-    setConfirm(true)
-  }
+  // const deleteConfirm = (id) => {
+  //   setCurrentId(id)
+  //   setConfirm(true)
+  // }
   const editForm = async (id) => {
     //  if (!listData[id].creationEndpoint) {
     //  const featureData = await getFeature(id, productId)
@@ -117,8 +117,8 @@ export const ProductFeaturesList = ({ productId, productName }) => {
   const handleDeleteFeature = async (productId,featureId) => {
     try {
       await deleteFeatureReq(productId, { id: featureId });
-      dispatch(deleteFeature({ productId, featureId }));
-      setUpdate(update++)
+      dispatch( storeFeatureDelete({ productId, featureId }));
+      
     } catch (error) {
       console.error('Error deleting feature:', error);
     }
@@ -155,7 +155,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item onSelect={() => navigate(`/features/${id}`)}>
+              <Dropdown.Item onSelect={() => navigate(`/products/${productId}/features/${id}`)}>
                 <FontAwesomeIcon icon={faEye} className="me-2" />
                 <FormattedMessage id="View-Details" />
               </Dropdown.Item>

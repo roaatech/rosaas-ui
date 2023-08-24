@@ -69,21 +69,6 @@ export const productsSlice = createSlice({
       state.products = currentProducts
     },
 
-    deleteFeature: (state, action) => {
-      const currentProducts = { ...current(state.products) }
-      const productId = action.payload.productId
-      const featureIdToDelete = action.payload.featureId
-
-      if (currentProducts[productId] && currentProducts[productId].features) {
-        currentProducts[productId].features = {
-          ...currentProducts[productId].features,
-        }
-
-        delete currentProducts[productId].features[featureIdToDelete]
-      }
-
-      state.products = currentProducts
-    },
     // FeatureInfo: (state, action) => {
     //   const { productId, featureId, data } = action.payload
 
@@ -104,6 +89,22 @@ export const productsSlice = createSlice({
     //     products: updatedProducts,
     //   }
     // },
+    storeFeatureDelete: (state, action) => {
+      const { productId, featureId, data } = action.payload
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
+      const currentFeature = currentProducts[productId].features[featureId]
+      delete currentFeature[action.payload]
+      state.products = currentProducts
+      // if (currentProducts[productId] && currentProducts[productId].features) {
+      //   currentProducts[productId].features = {
+      //     ...currentProducts[productId].features,
+      //   }
+
+      //   delete currentProducts[productId].features[featureIdToDelete]
+      // }
+    },
     FeatureInfo: (state, action) => {
       const { productId, featureId, data } = action.payload
       const currentProducts = JSON.parse(
