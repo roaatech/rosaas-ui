@@ -31,25 +31,10 @@ import FeatureForm from '../../Feature/FeatureForm/FeatureForm'
 import { Dialog } from 'primereact/dialog'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
+import { featureResetMap, featureTypeMap, featureUnitMap } from '../../../../const'
 
 
-const featureTypeMap = {
-  1: "Number",
-  2:"Boolean",
-};
 
-const featureUnitMap = {
-  1:"KB",
-  2:"MB",
-  3:"GB",
-};
-
-const featureResetMap = {
-  1:"Never",
-  2:"Weekly",
-  3:"Monthly",
-  4:"Annual",
-};
 
 export const ProductFeaturesList = ({ productId, productName }) => {
   const navigate = useNavigate()

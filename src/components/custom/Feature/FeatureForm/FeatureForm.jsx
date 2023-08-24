@@ -41,9 +41,9 @@ const FeatureForm = ({
   const initialValues = {
     name: featureData ? featureData.name : '',
     description: featureData ? featureData.description : '',
-    type: featureData ? featureData.type : '',
-    unit: featureData ? featureData.unit : '',
-    reset: featureData ? featureData.reset : '',
+    type: featureData ? featureData.type : 0,
+    unit: featureData ? featureData.unit : undefined,
+    reset: featureData ? featureData.reset : 0,
   }
 
   const validationSchema = Yup.object().shape({
@@ -65,9 +65,9 @@ const FeatureForm = ({
         const createFeature = await createFeatureRequest(productId, {
           name: values.name,
           description: values.description,
-          type: featureTypeMap[values.type],
-          unit: featureUnitMap[values.unit],
-          reset: featureResetMap[values.reset],
+          type:parseInt(values.type),
+          unit: parseInt(values.unit),
+          reset:parseInt(values.reset),
         })
         setUpdate(update + 1)
       } else {
@@ -76,9 +76,9 @@ const FeatureForm = ({
           data: {
             name: values.name,
             description: values.description,
-            type: featureTypeMap[values.type],
-          unit: featureUnitMap[values.unit],
-          reset: featureResetMap[values.reset],
+            type:parseInt(values.type),
+          unit: parseInt(values.unit),
+          reset:parseInt(values.reset),
           },
           id: featureData.id,
         })
@@ -90,12 +90,13 @@ const FeatureForm = ({
           data:{
             name: values.name,
             description: values.description,
-            type: featureTypeMap[values.type],
-          unit: featureUnitMap[values.unit],
-          reset: featureResetMap[values.reset],
+            type: values.type,
+          unit: values.unit,
+          reset: values.reset,
             editedDate: new Date().toISOString().slice(0, 19),}
         }))
       }
+      
 
       setVisible && setVisible(false)
       setSubmitting(false)
