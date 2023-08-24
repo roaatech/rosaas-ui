@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
-import useRequest from '../../../../axios/apis/useRequest.js'
-import { FeaturePlan_Client_id } from '../../../../const/index.js'
+import useRequest from '../../../../../axios/apis/useRequest.js'
 import {
   Modal,
   Button,
@@ -11,14 +10,14 @@ import {
   Tooltip,
 } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
-import { FeaturePlanInfo } from '../../../../store/slices/FeaturePlans.js'
+// import { FeaturePlanInfo } from '../../../../store/slices/FeaturePlans.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './FeaturePlanForm.styled.jsx'
-import { generateApiKey } from '../../../../lib/sharedFun/common.js'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
+import { features } from 'process'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const FeaturePlanForm = ({
   type,
@@ -28,7 +27,9 @@ const FeaturePlanForm = ({
   update,
   setUpdate,
 }) => {
-  const { createFeaturePlanRequest, editFeaturePlanRequest } = useRequest()
+  const routeParams = useParams()
+  const productId = routeParams.id
+  const { getFeaturePlanList, getFeatureList } = useRequest()
   const dispatch = useDispatch()
 
   const initialValues = {
@@ -36,7 +37,7 @@ const FeaturePlanForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('FeaturePlan Name is required'),
+    // name: Yup.string().required('FeaturePlan Name is required'),
     // defaultHealthCheckUrl: Yup.string()
     //   .required(<FormattedMessage id="This-field-is-required" />)
     //   .matches(
@@ -51,18 +52,23 @@ const FeaturePlanForm = ({
     //   ),
   })
 
-  const listFeatureData = useSelector((state) => state.products.products)
-  let allFeature = Object.values(listFeatureData)
-  const options = allFeature.map((item, index) => {
-    return { value: item.id, label: item.name }
-  })
+  const allProducts = useSelector((state) => state.products.products)
+  const listFeatureData = allProducts[productId].features
+  let allFeature = listFeatureData && Object.values(listFeatureData)
+  console.log(allProducts[productId], 'listFeatureData')
+  // const options = allFeature.map((item, index) => {
+  //   return { value: item.id, label: item.name }
+  // })
 
   useEffect(() => {
     ;(async () => {
-      // if (list.length == 0) {
-      //   const featureReq = await getProductList(query)
-      //   dispatch(setAllProduct(featureReq.data.data.items))
-      // }
+      if (!listFeatureData) {
+        const FeaturePlanReq = await getFeaturePlanList(productId)
+
+        const featureReq = await getFeatureList(productId)
+        console.log(featureReq, 'featureReq')
+        // dispatch(features(featureReq.data.data.items))
+      }
     })()
   }, [])
 
@@ -70,27 +76,25 @@ const FeaturePlanForm = ({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      if (type == 'create') {
-        const createFeaturePlan = await createFeaturePlanRequest({
-          name: values.name,
-        })
-        setUpdate(update + 1)
-      } else {
-        const editFeaturePlan = await editFeaturePlanRequest({
-          data: {
-            name: values.name,
-          },
-        })
-
-        dispatch(
-          FeaturePlanInfo({
-            id: FeaturePlanData.id,
-            name: values.name,
-          })
-        )
-      }
-
-      setVisible && setVisible(false)
+      // if (type == 'create') {
+      //   const createFeaturePlan = await createFeaturePlanRequest({
+      //     name: values.name,
+      //   })
+      //   setUpdate(update + 1)
+      // } else {
+      //   const editFeaturePlan = await editFeaturePlanRequest({
+      //     data: {
+      //       name: values.name,
+      //     },
+      //   })
+      //   dispatch(
+      //     FeaturePlanInfo({
+      //       id: FeaturePlanData.id,
+      //       name: values.name,
+      //     })
+      //   )
+      // }
+      // setVisible && setVisible(false)
     },
   })
   //   const RandomApiKey = () => {
@@ -149,11 +153,11 @@ const FeaturePlanForm = ({
                 isInvalid={formik.touched.product && formik.errors.product}
                 multiple
               >
-                {options.map((option) => (
+                {/* {options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
-                ))}
+                ))} */}
               </select>
               {formik.touched.product && formik.errors.product && (
                 <Form.Control.Feedback

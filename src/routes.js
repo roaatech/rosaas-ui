@@ -35,6 +35,7 @@ import Product from './pages/Product/Product'
 import Plan from './pages/Plan/Plan'
 import PlanDetails from './pages/PlanDetails/PlanDetails'
 import signIn from './pages/signIn/signIn'
+import FeatureDetails from './pages/FeatureDetails/FeatureDetails'
 
 export const Routes = {
   // pages
@@ -53,6 +54,11 @@ export const Routes = {
     component: Product,
     roles: ['superAdmin'],
   },
+  // featuresDetails: {
+  //   path: '/features/:id',
+  //   component: FeatureDetails,
+  //   roles: ['superAdmin'],
+  // },
   Plan: {
     path: '/plans',
     component: Plan,
@@ -76,6 +82,11 @@ export const Routes = {
   PlanDetails: {
     path: '/plans/:id',
     component: PlanDetails,
+    roles: ['superAdmin'],
+  },
+  FeatureDetails: {
+    path: '/products/:productId/features/:id',
+    component: FeatureDetails,
     roles: ['superAdmin'],
   },
   Transactions: {

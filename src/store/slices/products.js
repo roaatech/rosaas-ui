@@ -19,6 +19,7 @@ export const productsSlice = createSlice({
       })
       state.products = allProduct
     },
+
     productInfo: (state, action) => {
       const currentProducts = { ...current(state.products) }
 
@@ -54,6 +55,89 @@ export const productsSlice = createSlice({
       currentProducts[action.payload.id] = mergedObject
       state.products = currentProducts
     },
+    features: (state, action) => {
+      const currentProducts = { ...current(state.products) }
+      const product = { ...currentProducts[action.payload.id] }
+
+      const allFeatures = {}
+      action.payload.data.map((item) => {
+        allFeatures[item.id] = item
+      })
+
+      product.features = allFeatures
+      currentProducts[action.payload.id] = product
+      state.products = currentProducts
+    },
+
+    // FeatureInfo: (state, action) => {
+    //   const { productId, featureId, data } = action.payload
+
+    //   // Create a new copy of the products object to avoid direct mutation
+    //   const updatedProducts = {
+    //     ...state.products,
+    //     [productId]: {
+    //       ...state.products[productId],
+    //       features: {
+    //         ...state.products[productId].features,
+    //         [featureId]: data,
+    //       },
+    //     },
+    //   }
+
+    //   return {
+    //     ...state,
+    //     products: updatedProducts,
+    //   }
+    // },
+    storeFeatureDelete: (state, action) => {
+      const { productId, featureId } = action.payload
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
+      delete currentProducts[productId].features[featureId]
+      state.products = currentProducts
+      // if (currentProducts[productId] && currentProducts[productId].features) {
+      //   currentProducts[productId].features = {
+      //     ...currentProducts[productId].features,
+      //   }
+
+      //   delete currentProducts[productId].features[featureIdToDelete]
+      // }
+    },
+    FeatureInfo: (state, action) => {
+      const { productId, featureId, data } = action.payload
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
+      currentProducts[productId].features[featureId] = data
+      state.products = currentProducts
+    },
+    // const currentProducts = { ...current(state.products) }
+    // const product = { ...currentProducts[action.payload.id] }
+    // product.features = action.payload.data
+
+    // const mergedObject = _.mergeWith(
+    //   {},
+    //   currentProducts[action.payload.id],
+    //   action.payload.data,
+    //   (objValue, srcValue) => {
+    //     if (_.isObject(objValue)) {
+    //       return _.merge({}, objValue, srcValue)
+    //     }
+    //   }
+    // )
+
+    // currentProducts[action.payload.id] = mergedObject
+    // state.products = currentProducts
+    // const currentProduct = { ...currentProducts[productId] }
+    // const currentFeatures = { ...currentProduct.features }
+
+    // console.log(currentProducts, '****')
+    // if (currentFeatures[featureId]) {
+    //   currentFeatures[featureId] = action.payload
+
+    // }
+
     removeProduct: (state, action) => {
       const currentProducts = { ...current(state.products) }
       delete currentProducts[action.payload]
@@ -83,5 +167,8 @@ export const {
   productInfo,
   removeProduct,
   setAllFeaturePlan,
+  features,
+  FeatureInfo,
+  storeFeatureDelete,
 } = productsSlice.actions
 export default productsSlice.reducer

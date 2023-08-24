@@ -31,6 +31,9 @@ const useRequest = () => {
   const getProductTenants = async (params) => {
     return await Request.get(`management/sadmin/v1/products/${params}`)
   }
+  const getProductFeatures = async (params) => {
+    return await Request.get(`management/sadmin/v1/products/${params}`)
+  }
   const deleteTenantReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Tenants`, { data })
   }
@@ -51,6 +54,33 @@ const useRequest = () => {
   }
   const deleteProductReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Products/${data.id}`)
+  }
+  const createFeatureRequest = async (productId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/Products/${productId}/Features`,
+      data
+    )
+  }
+  const editFeatureRequest = async (productId, data) => {
+    return await Request.put(
+      `management/sadmin/v1/Products/${productId}/Features/${data.id}`,
+      data.data
+    )
+  }
+  const getFeature = async (id, productId) => {
+    return await Request.get(
+      `management/sadmin/v1/Products/${productId}/Features/${id}`
+    )
+  }
+  const getFeatureList = async (productId) => {
+    return await Request.get(
+      `management/sadmin/v1/Products/${productId}/Features`
+    )
+  }
+  const deleteFeatureReq = async (productId, data) => {
+    return await Request.delete(
+      `management/sadmin/v1/Products/${productId}/Features/${data.id}`
+    )
   }
   const editTenantStatus = async (data) => {
     return await Request.put('management/sadmin/v1/Tenants/status', data)
@@ -90,27 +120,27 @@ const useRequest = () => {
   // --------------------------------------
 
   const getFeaturePlanList = async (id) => {
-    return await Request.get(`management/sadmin/v1/Products/${id}/Plans`)
+    return await Request.get(`management/sadmin/v1/Products/${id}/PlanFeatures`)
   }
   const createFeaturePlanRequest = async (data) => {
     return await Request.post(
-      `management/sadmin/v1/Products/${data.id}/Plans`,
+      `management/sadmin/v1/Products/${data.id}/PlanFeatures`,
       data.data
     )
   }
   const editFeaturePlanRequest = async (data) => {
     return await Request.put(
-      `management/sadmin/v1/Products/${data.id}/Plans`,
+      `management/sadmin/v1/Products/${data.id}/PlanFeatures`,
       data.data
     )
   }
   const getFeaturePlan = async (id) => {
-    return await Request.get(`management/sadmin/v1/Products/${id}/Plans`)
+    return await Request.get(`management/sadmin/v1/Products/${id}/PlanFeatures`)
   }
 
   const deleteFeaturePlanReq = async (data) => {
     return await Request.delete(
-      `management/sadmin/v1/Products/${data.productId}/Plans/${data.PlanFeatureId}`
+      `management/sadmin/v1/Products/${data.productId}/PlanFeatures/${data.PlanFeatureId}`
     )
   }
 
@@ -143,6 +173,12 @@ const useRequest = () => {
     editFeaturePlanRequest,
     getFeaturePlan,
     deleteFeaturePlanReq,
+    getProductFeatures,
+    createFeatureRequest,
+    editFeatureRequest,
+    getFeature,
+    getFeatureList,
+    deleteFeatureReq,
   }
 }
 export default useRequest

@@ -29,6 +29,7 @@ import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmati
 import ColumnSortHeader from '../../Shared/ColumnSortHeader/ColumnSortHeader'
 import CustomPaginator from '../../Shared/CustomPaginator/CustomPaginator'
 import { setAllFeaturePlan } from '../../../../store/slices/products'
+import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 // import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 
 export default function ProductFeaturePlan({ children }) {
@@ -49,6 +50,8 @@ export default function ProductFeaturePlan({ children }) {
   const [update, setUpdate] = useState(1)
   const navigate = useNavigate()
   const routeParams = useParams()
+  const [type, setType] = useState('')
+  const [popUpLable, setPopUpLable] = useState('')
 
   const deleteConfirm = (id) => {
     setCurrentId(id)
@@ -62,6 +65,17 @@ export default function ProductFeaturePlan({ children }) {
     (state) => state.products.products[routeParams.id]?.featurePlan
   )
   let list = listData && Object.values(listData)
+
+  const editForm = async (id) => {
+    //  if (!listData[id].creationEndpoint) {
+    //  const featureData = await getFeature(id, productId)
+    //  dispatch(FeatureInfo(featureData.data.data))
+    setPopUpLable('Edit-Feature')
+    setType('edit')
+    // }
+    setCurrentId(id)
+    setVisible(true)
+  }
 
   useEffect(() => {
     ;(async () => {
@@ -77,14 +91,6 @@ export default function ProductFeaturePlan({ children }) {
   }, [])
 
   /****************************** */
-  const editForm = async (id) => {
-    // if (!listData[id].creationEndpoint) {
-    //   const productData = await getProduct(id)
-    //   dispatch(productInfo(productData.data.data))
-    // }
-    // setCurrentId(id)
-    // setVisible(true)
-  }
 
   const TableRow = (props) => {
     const { title, uniqueName, createdDate, editedDate, id } = props
@@ -170,6 +176,29 @@ export default function ProductFeaturePlan({ children }) {
           </Card.Body>
         </Card>
       </div>
+
+      <ThemeDialog visible={visible} setVisible={setVisible}>
+        <FeaturePlanForm
+          popupLabel={<FormattedMessage id={popUpLable} />}
+          type={type}
+          tenantData={list}
+          update={update}
+          setUpdate={setUpdate}
+          setVisible={setVisible}
+          sideBar={false}
+          dispatch={dispatch}
+          // featureData={type == 'edit' ? list?.features[currentId] : {}}
+        />
+      </ThemeDialog>
+      <button
+        onClick={() => {
+          setVisible(true)
+          setPopUpLable('Add-Feature')
+          setType('create')
+        }}
+      >
+        add feature plan
+      </button>
     </>
   )
 }
