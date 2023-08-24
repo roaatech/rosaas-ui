@@ -64,10 +64,9 @@ const FeaturePlanForm = ({
     ;(async () => {
       if (!listFeatureData) {
         const FeaturePlanReq = await getFeaturePlanList(productId)
-
         const featureReq = await getFeatureList(productId)
         console.log(featureReq, 'featureReq')
-        // dispatch(features(featureReq.data.data.items))
+        dispatch(features(featureReq.data.data))
       }
     })()
   }, [])
