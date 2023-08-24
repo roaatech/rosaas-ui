@@ -19,10 +19,11 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
 import { FeatureInfo } from '../../../../store/slices/products.js'
-import { featureResetMap, featureTypeMap, featureUnitMap } from '../../../../const/index.js'
-
-
-
+import {
+  featureResetMap,
+  featureTypeMap,
+  featureUnitMap,
+} from '../../../../const/index.js'
 
 const FeatureForm = ({
   type,
@@ -33,11 +34,9 @@ const FeatureForm = ({
   setUpdate,
   productId,
 }) => {
-  // console.log('iiiiiiiiiiiiiiiiiiii', featureData)
   const { createFeatureRequest, editFeatureRequest } = useRequest()
   const dispatch = useDispatch()
 
-  
   const initialValues = {
     name: featureData ? featureData.name : '',
     description: featureData ? featureData.description : '',
@@ -65,45 +64,45 @@ const FeatureForm = ({
         const createFeature = await createFeatureRequest(productId, {
           name: values.name,
           description: values.description,
-          type:parseInt(values.type),
+          type: parseInt(values.type),
           unit: parseInt(values.unit),
-          reset:parseInt(values.reset),
+          reset: parseInt(values.reset),
         })
         setUpdate(update + 1)
       } else {
-        console.log(productId)
         const editFeature = await editFeatureRequest(productId, {
           data: {
             name: values.name,
             description: values.description,
-            type:parseInt(values.type),
-          unit: parseInt(values.unit),
-          reset:parseInt(values.reset),
+            type: parseInt(values.type),
+            unit: parseInt(values.unit),
+            reset: parseInt(values.reset),
           },
           id: featureData.id,
         })
 
         dispatch(
-        FeatureInfo({
-          featureId: featureData.id,
-          productId:productId,
-          data:{
-            name: values.name,
-            description: values.description,
-            type: values.type,
-          unit: values.unit,
-          reset: values.reset,
-            editedDate: new Date().toISOString().slice(0, 19),}
-        }))
+          FeatureInfo({
+            featureId: featureData.id,
+            productId: productId,
+            data: {
+              name: values.name,
+              description: values.description,
+              type: values.type,
+              unit: values.unit,
+              reset: values.reset,
+              id: featureData.id,
+              editedDate: new Date().toISOString().slice(0, 19),
+            },
+          })
+        )
       }
-      
 
       setVisible && setVisible(false)
       setSubmitting(false)
     },
   })
-  
-  
+
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
@@ -279,9 +278,9 @@ const FeatureForm = ({
               >
                 <option value="">Select Type</option>
                 {Object.entries(featureTypeMap).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option> 
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
                 ))}
               </select>
               {/* Display validation error */}
@@ -310,11 +309,10 @@ const FeatureForm = ({
               >
                 <option value="">Select Unit</option>
                 {Object.entries(featureUnitMap).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option> 
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
                 ))}
-                
               </select>
               {/* Display validation error */}
               {formik.touched.unit && formik.errors.unit && (
@@ -342,11 +340,10 @@ const FeatureForm = ({
               >
                 <option value="">Select Reset</option>
                 {Object.entries(featureResetMap).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option> 
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
                 ))}
-                
               </select>
               {/* Display validation error */}
               {formik.touched.reset && formik.errors.reset && (

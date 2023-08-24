@@ -39,7 +39,7 @@ const FeatureDetailsTab = ({ data }) => {
     }, 2000)
   }
 
-  const {  deleteplanReq } = useRequest()
+  const { deleteplanReq } = useRequest()
   const routeParams = useParams()
   const navigate = useNavigate()
 
@@ -54,7 +54,7 @@ const FeatureDetailsTab = ({ data }) => {
 
   useEffect(() => {
     ;(async () => {
-       setPlanData(data);
+      setPlanData(data)
     })()
   }, [visible, routeParams.id])
 
@@ -85,7 +85,6 @@ const FeatureDetailsTab = ({ data }) => {
                     </tr> */}
                     {console.log(data)}
                     <tr>
-
                       <td className="fw-bold">
                         <FormattedMessage id="Date" />
                       </td>
@@ -94,7 +93,7 @@ const FeatureDetailsTab = ({ data }) => {
                           createdDate={data.createdDate}
                           editedDate={data.editedDate}
                         />
-                  </td>
+                      </td>
                     </tr>
                     <tr>
                       <td className="fw-bold">
@@ -110,8 +109,7 @@ const FeatureDetailsTab = ({ data }) => {
                         <textarea
                           className="description-textarea"
                           readOnly
-                          rows={Math.ceil(data.description.length/60 )} 
-
+                          rows={Math.ceil(data.description.length / 60)}
                           value={data.description}
                         />
                       </td>
@@ -145,7 +143,6 @@ const FeatureDetailsTab = ({ data }) => {
                         </span>
                       </td>
                     </tr> */}
-                    
                   </tbody>
                 </Table>
               </Card.Body>
