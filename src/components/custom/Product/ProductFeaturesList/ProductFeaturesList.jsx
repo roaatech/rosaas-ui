@@ -31,6 +31,8 @@ import FeatureForm from '../../Feature/FeatureForm/FeatureForm'
 import { Dialog } from 'primereact/dialog'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
+
+
 const featureTypeMap = {
   1: "Number",
   2:"Boolean",

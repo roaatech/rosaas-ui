@@ -54,6 +54,11 @@ const featureResetMap_ = {
   4:"Annual",
 };
 
+
+const options = featureTypeMap_.map((item, index) => {
+  return { value: item.id, label: item.name }
+})
+console.log(options);
 const FeatureForm = ({
   type,
   featureData,
@@ -67,6 +72,7 @@ const FeatureForm = ({
   const { createFeatureRequest, editFeatureRequest } = useRequest()
   const dispatch = useDispatch()
 
+  
   const initialValues = {
     name: featureData ? featureData.name : '',
     description: featureData ? featureData.description : '',
