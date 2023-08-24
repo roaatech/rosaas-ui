@@ -22,8 +22,10 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
 import TableDate from '../../Shared/TableDate/TableDate'
 import FeatureForm from '../FeatureForm/FeatureForm'
+import { storeFeatureDelete } from '../../../../store/slices/products'
+import { useDispatch } from 'react-redux'
 
-const FeatureDetailsTab = ({ data }) => {
+export const FeatureDetailsTab = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
   const [planData, setPlanData] = useState(data)
@@ -38,26 +40,34 @@ const FeatureDetailsTab = ({ data }) => {
       setToolTipText('Copy-to-clipboard')
     }, 2000)
   }
+  const dispatch = useDispatch()
+   const {  deleteFeatureReq } = useRequest()
+   const routeParams = useParams()
+   const navigate = useNavigate()
 
-  const {  deleteplanReq } = useRequest()
-  const routeParams = useParams()
-  const navigate = useNavigate()
-
-  const deleteConfirm = (id) => {
-    setCurrentId(id)
-    setConfirm(true)
+  // const deleteConfirm = (id) => {
+  //   setCurrentId(id)
+  //   setConfirm(true)
+  // }
+  // const deleteFeature = async () => {
+  //   await deleteFeature({ id: currentId })
+  //   navigate(`/products`)
+  // }
+  const handleDeleteFeature = async (productId,featureId) => {
+    try {
+      await deleteFeatureReq(productId, { id: featureId });
+      navigate(`/products/${productId}`)
+      dispatch( storeFeatureDelete({ productId, featureId }));
+      
+    } catch (error) {
+      console.error('Error deleting feature:', error);
+    }
   }
-  const deleteFeature = async () => {
-    await deleteFeature({ id: currentId })
-    navigate(`/products`)
-  }
-
   useEffect(() => {
     ;(async () => {
        setPlanData(data);
     })()
   }, [visible, routeParams.id])
-
   return (
     <Wrapper>
       {data && (
@@ -156,7 +166,7 @@ const FeatureDetailsTab = ({ data }) => {
                 className="mr-3"
                 label={<FormattedMessage id="Delete" />}
                 icon="pi pi-trash"
-                onClick={() => deleteConfirm(data.id)}
+                onClick={() => handleDeleteFeature(routeParams.productId,routeParams.id)}
                 style={{
                   backgroundColor: 'var(--red)',
                   borderColor: 'var(--red)',
@@ -180,7 +190,7 @@ const FeatureDetailsTab = ({ data }) => {
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
               setConfirm={setConfirm}
-              confirmFunction={deleteFeature}
+              confirmFunction={handleDeleteFeature}
               sideBar={false}
             />
 
@@ -190,7 +200,7 @@ const FeatureDetailsTab = ({ data }) => {
                 visible={visible}
                 planData={data}
                 setVisible={setVisible}
-                popupLabel={<FormattedMessage id="Edit Plan" />}
+                popupLabel={<FormattedMessage id="Edit-Feature" />}
               />
             </ThemeDialog>
           </div>
@@ -199,4 +209,5 @@ const FeatureDetailsTab = ({ data }) => {
     </Wrapper>
   )
 }
+
 export default FeatureDetailsTab
