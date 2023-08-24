@@ -19,46 +19,11 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
 import { FeatureInfo } from '../../../../store/slices/products.js'
-const featureTypeMap = {
-  Number: 1,
-  Boolean: 2,
-}
-
-const featureUnitMap = {
-  KB: 1,
-  MB: 2,
-  GB: 3,
-}
-
-const featureResetMap = {
-  Never: 1,
-  Weekly: 2,
-  Monthly: 3,
-  Annual: 4,
-}
-const featureTypeMap_ = {
-  1: "Number",
-  2:"Boolean",
-};
-
-const featureUnitMap_ = {
-  1:"KB",
-  2:"MB",
-  3:"GB",
-};
-
-const featureResetMap_ = {
-  1:"Never",
-  2:"Weekly",
-  3:"Monthly",
-  4:"Annual",
-};
+import { featureResetMap, featureTypeMap, featureUnitMap } from '../../../../const/index.js'
 
 
-const options = featureTypeMap_.map((item, index) => {
-  return { value: item.id, label: item.name }
-})
-console.log(options);
+
+
 const FeatureForm = ({
   type,
   featureData,
@@ -76,9 +41,9 @@ const FeatureForm = ({
   const initialValues = {
     name: featureData ? featureData.name : '',
     description: featureData ? featureData.description : '',
-    type: featureData ? featureTypeMap_[featureData.type] : '',
-    unit: featureData ? featureUnitMap_[featureData.unit] : '',
-    reset: featureData ? featureResetMap_[featureData.reset] : '',
+    type: featureData ? featureData.type : '',
+    unit: featureData ? featureData.unit : '',
+    reset: featureData ? featureData.reset : '',
   }
 
   const validationSchema = Yup.object().shape({
@@ -122,7 +87,8 @@ const FeatureForm = ({
         FeatureInfo({
           featureId: featureData.id,
           productId:productId,
-          data:{name: values.name,
+          data:{
+            name: values.name,
             description: values.description,
             type: featureTypeMap[values.type],
           unit: featureUnitMap[values.unit],
@@ -308,13 +274,13 @@ const FeatureForm = ({
                 id="type"
                 name="type"
                 onChange={formik.handleChange}
-                value={[formik.values.type]}
+                value={formik.values.type}
               >
                 <option value="">Select Type</option>
-                {Object.keys(featureTypeMap).map((key) => (
-                  <option key={key} value={key}>
-                    <FormattedMessage id={key} />
-                  </option>
+                {Object.entries(featureTypeMap).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option> 
                 ))}
               </select>
               {/* Display validation error */}
@@ -342,11 +308,12 @@ const FeatureForm = ({
                 value={formik.values.unit}
               >
                 <option value="">Select Unit</option>
-                {Object.keys(featureUnitMap).map((key) => (
-                  <option key={key} value={key}>
-                    <FormattedMessage id={key} />
-                  </option>
+                {Object.entries(featureUnitMap).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option> 
                 ))}
+                
               </select>
               {/* Display validation error */}
               {formik.touched.unit && formik.errors.unit && (
@@ -373,11 +340,12 @@ const FeatureForm = ({
                 value={formik.values.reset}
               >
                 <option value="">Select Reset</option>
-                {Object.keys(featureResetMap).map((key) => (
-                  <option key={key} value={key}>
-                    <FormattedMessage id={key} />
-                  </option>
+                {Object.entries(featureResetMap).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option> 
                 ))}
+                
               </select>
               {/* Display validation error */}
               {formik.touched.reset && formik.errors.reset && (

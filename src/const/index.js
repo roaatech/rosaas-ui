@@ -12,6 +12,24 @@ const urlIsOverridden = {
   true: { background: '#eee5ff', value: 'Yes' },
   false: { background: '#e1f0ff', value: 'No' },
 }
+const featureTypeMap = {
+  1: "Number",
+  2:"Boolean",
+};
+
+const featureUnitMap = {
+  1:"KB",
+  2:"MB",
+  3:"GB",
+};
+
+const featureResetMap = {
+  1:"Never",
+  2:"Weekly",
+  3:"Monthly",
+  4:"Annual",
+};
+
 const statusConst = {
   1: {
     string: 'Rosas-resource-created',
@@ -187,4 +205,7 @@ export {
   Product_Client_id,
   breadcrumbConst,
   urlIsOverridden,
+  featureTypeMap ,
+  featureUnitMap,
+  featureResetMap,
 }
