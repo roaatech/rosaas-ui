@@ -124,7 +124,7 @@ const useRequest = () => {
   }
   const createFeaturePlanRequest = async (data) => {
     return await Request.post(
-      `management/sadmin/v1/Products/${data.id}/PlanFeatures`,
+      `management/sadmin/v1/Products/${data.productId}/PlanFeatures`,
       data.data
     )
   }

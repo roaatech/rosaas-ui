@@ -17,7 +17,10 @@ import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './FeaturePlanForm.styled.jsx'
 import { AiFillCopy } from 'react-icons/ai'
 import { useNavigate, useParams } from 'react-router-dom'
-import { features } from '../../../../../store/slices/products.js'
+import {
+  featurePlanInfo,
+  features,
+} from '../../../../../store/slices/products.js'
 import { setAllPlans } from '../../../../../store/slices/plans.js'
 
 const FeaturePlanForm = ({
@@ -30,7 +33,13 @@ const FeaturePlanForm = ({
 }) => {
   const routeParams = useParams()
   const productId = routeParams.id
-  const { getFeatureList, getPlanList } = useRequest()
+
+  const {
+    getFeatureList,
+    getPlanList,
+    createFeaturePlanRequest,
+    editFeaturePlanRequest,
+  } = useRequest()
   const dispatch = useDispatch()
 
   const allProducts = useSelector((state) => state.products.products)
@@ -67,50 +76,80 @@ const FeaturePlanForm = ({
   const initialValues = {
     feature: FeaturePlanData ? FeaturePlanData?.feature.id : '',
     plan: FeaturePlanData ? FeaturePlanData?.plans.id : '',
+    limit: FeaturePlanData ? FeaturePlanData?.limit : 1,
+    description: FeaturePlanData ? FeaturePlanData?.description : '',
   }
 
   const validationSchema = Yup.object().shape({
     feature: Yup.string().required('Please select a feature'),
     plan: Yup.string().required('Please select a plan'),
-    // name: Yup.string().required('FeaturePlan Name is required'),
-    // defaultHealthCheckUrl: Yup.string()
-    //   .required(<FormattedMessage id="This-field-is-required" />)
-    //   .matches(
-    //     /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-    //     <FormattedMessage id="Please-enter-a-valid-value" />
-    //   ),
-    // healthStatusChangeUrl: Yup.string()
-    //   .required(<FormattedMessage id="This-field-is-required" />)
-    //   .matches(
-    //     /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-    //     <FormattedMessage id="Please-enter-a-valid-value" />
-    //   ),
+    limit: Yup.number()
+      .required('This field is required')
+      .typeError('Limit must be a number')
+      .integer('Limit must be an integer')
+      .min(1, 'Limit must be a more than 0'),
+    // .default(1),
   })
+
+  const currentDateInUTC = () => {
+    const now = new Date()
+
+    const year = now.getUTCFullYear()
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0')
+    const day = String(now.getUTCDate()).padStart(2, '0')
+    const hours = String(now.getUTCHours()).padStart(2, '0')
+    const minutes = String(now.getUTCMinutes()).padStart(2, '0')
+    const seconds = String(now.getUTCSeconds()).padStart(2, '0')
+
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+
+    return formattedDate
+  }
 
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      console.log(values, '88888888888')
-      // if (type == 'create') {
-      //   const createFeaturePlan = await createFeaturePlanRequest({
-      //     name: values.name,
-      //   })
-      //   setUpdate(update + 1)
-      // } else {
-      //   const editFeaturePlan = await editFeaturePlanRequest({
-      //     data: {
-      //       name: values.name,
-      //     },
-      //   })
-      //   dispatch(
-      //     FeaturePlanInfo({
-      //       id: FeaturePlanData.id,
-      //       name: values.name,
-      //     })
-      //   )
-      // }
-      // setVisible && setVisible(false)
+    onSubmit: async (values) => {
+      const info = {
+        productId: productId,
+        data: {
+          description: values.description,
+          limit: values.limit,
+          feature: {
+            id: values.feature,
+            name: featureOptions.find((item) => item.value === values.feature)
+              .label,
+          },
+          plan: {
+            id: values.plan,
+            name: planOptions.find((item) => item.value === values.plan).label,
+          },
+
+          editedDate: currentDateInUTC(),
+          createdDate: FeaturePlanData
+            ? FeaturePlanData.createdDate
+            : currentDateInUTC(),
+        },
+      }
+
+      if (type == 'create') {
+        const createFeaturePlan = await createFeaturePlanRequest({
+          productId: productId,
+          data: {
+            description: values.description,
+            limit: values.limit,
+            featureId: values.feature,
+            planId: values.plan,
+          },
+        })
+        info.data.id = createFeaturePlan.data.data.id
+        dispatch(featurePlanInfo(info)) // setUpdate(update + 1)
+        console.log({ info })
+      } else {
+        const editFeaturePlan = await editFeaturePlanRequest(info)
+        // dispatch(featurePlanInfo(info))
+      }
+      setVisible && setVisible(false)
     },
   })
 
@@ -126,32 +165,55 @@ const FeaturePlanForm = ({
           />
         </Modal.Header>
         <Modal.Body>
-          {/* <div>
+          <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Name" />
-                <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Description" />
+              </Form.Label>
+              <InputText
+                type="text"
+                id="description"
+                name="description"
+                onChange={formik.handleChange}
+                value={formik.values.description}
+                className={
+                  formik.touched.description && formik.errors.description
+                    ? 'is-invalid'
+                    : ''
+                }
+              />
+              {formik.touched.description && formik.errors.description && (
+                <div className="invalid-feedback">
+                  {formik.errors.description}
+                </div>
+              )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Limit" />
+                <span style={{ color: 'red' }}> *</span>
               </Form.Label>
               <input
                 type="text"
                 className="form-control"
-                id="name"
-                name="name"
+                id="limit"
+                name="limit"
                 onChange={formik.handleChange}
-                value={formik.values.name}
+                value={formik.values.limit}
               />
 
-              {formik.touched.name && formik.errors.name && (
+              {formik.touched.limit && formik.errors.limit && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.name}
+                  {formik.errors.limit}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
-          </div> */}
-
+          </div>
           <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
               <Form.Label>

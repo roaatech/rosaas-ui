@@ -28,13 +28,17 @@ import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import ColumnSortHeader from '../../Shared/ColumnSortHeader/ColumnSortHeader'
 import CustomPaginator from '../../Shared/CustomPaginator/CustomPaginator'
-import { setAllFeaturePlan } from '../../../../store/slices/products'
+import {
+  deleteFeaturePlan,
+  setAllFeaturePlan,
+} from '../../../../store/slices/products'
 import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 // import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 
 export default function ProductFeaturePlan({ children }) {
   const dispatch = useDispatch()
-  const { getFeaturePlanList, deleteProductReq } = useRequest()
+  const { getFeaturePlanList, deleteProductReq, deleteFeaturePlanReq } =
+    useRequest()
   const [visible, setVisible] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)
@@ -53,6 +57,7 @@ export default function ProductFeaturePlan({ children }) {
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
 
+  const productId = routeParams.id
   const deleteConfirm = (id) => {
     setCurrentId(id)
     setConfirm(true)
@@ -61,8 +66,17 @@ export default function ProductFeaturePlan({ children }) {
     await deleteProductReq({ id: currentId })
   }
 
+  const handleDeleteFeaturePlan = async (id) => {
+    try {
+      await deleteFeaturePlanReq({ productId, PlanFeatureId: id })
+      dispatch(deleteFeaturePlan({ productId, PlanFeatureId: id }))
+    } catch (error) {
+      console.error('Error deleting feature:', error)
+    }
+  }
+
   const listData = useSelector(
-    (state) => state.products.products[routeParams.id]?.featurePlan
+    (state) => state.products.products[productId]?.featurePlan
   )
   let list = listData && Object.values(listData)
 
@@ -79,11 +93,11 @@ export default function ProductFeaturePlan({ children }) {
 
   useEffect(() => {
     ;(async () => {
-      const FeaturePlanData = await getFeaturePlanList(routeParams.id)
+      const FeaturePlanData = await getFeaturePlanList(productId)
       console.log(FeaturePlanData, 'ooooooooooo')
       dispatch(
         setAllFeaturePlan({
-          productId: routeParams.id,
+          productId: productId,
           data: FeaturePlanData.data.data,
         })
       )
@@ -93,15 +107,22 @@ export default function ProductFeaturePlan({ children }) {
   /****************************** */
 
   const TableRow = (props) => {
-    const { title, uniqueName, createdDate, editedDate, id } = props
+    const { limit, description, feature, plan, createdDate, editedDate, id } =
+      props
 
     return (
       <tr>
         <td>
-          <span className="fw-normal">{title}</span>
+          <span className="fw-normal">{description}</span>
         </td>
         <td>
-          <span className="fw-normal">{uniqueName}</span>
+          <span className="fw-normal">{limit}</span>
+        </td>
+        <td>
+          <span className="fw-normal">{feature.name}</span>
+        </td>
+        <td>
+          <span className="fw-normal">{plan.name}</span>
         </td>
         <td>
           <span className={`fw-normal`}>
@@ -121,14 +142,20 @@ export default function ProductFeaturePlan({ children }) {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>
-                <Link
-                  to={`/tenants/${id}#${'productName'}`}
-                  className="w-100 d-block"
-                >
-                  <FontAwesomeIcon icon={'faGear'} className="me-2" />{' '}
-                  <FormattedMessage id="Manage" />
-                </Link>
+              {/* <Dropdown.Item onSelect={() => navigate(`/products/${productId}/features/${id}`)}>
+                <FontAwesomeIcon icon={faEye} className="me-2" />
+                <FormattedMessage id="View-Details" />
+              </Dropdown.Item> */}
+              <Dropdown.Item onSelect={() => editForm(id)}>
+                <FontAwesomeIcon icon={faEdit} className="me-2" />
+                <FormattedMessage id="Edit" />
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => handleDeleteFeaturePlan(id)}
+                className="text-danger"
+              >
+                <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+                <FormattedMessage id="Delete" />
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -139,7 +166,7 @@ export default function ProductFeaturePlan({ children }) {
 
   return (
     <>
-      <div className="main-container">
+      <div>
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -149,13 +176,16 @@ export default function ProductFeaturePlan({ children }) {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Title" />
+                    <FormattedMessage id="Description" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Unique-Name" />
+                    <FormattedMessage id="Limit" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Status" />
+                    <FormattedMessage id="Feature" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Plan" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Created-Date" />
@@ -166,10 +196,11 @@ export default function ProductFeaturePlan({ children }) {
                 </tr>
               </thead>
               <tbody>
-                {list?.subscribe?.length
-                  ? list?.subscribe?.map((t, index) => (
-                      <TableRow key={`index`} {...t} />
-                    ))
+                {list
+                  ? list?.map((t, index) => {
+                      console.log({ t })
+                      return <TableRow key={`index`} {...t} />
+                    })
                   : null}
               </tbody>
             </Table>
@@ -187,7 +218,6 @@ export default function ProductFeaturePlan({ children }) {
           setVisible={setVisible}
           sideBar={false}
           dispatch={dispatch}
-          // featureData={type == 'edit' ? list?.features[currentId] : {}}
         />
       </ThemeDialog>
       <button
