@@ -66,6 +66,7 @@ export default function ProductFeaturePlan({ children }) {
   useEffect(() => {
     ;(async () => {
       const FeaturePlanData = await getFeaturePlanList(routeParams.id)
+      console.log(FeaturePlanData, 'ooooooooooo')
       dispatch(
         setAllFeaturePlan({
           productId: routeParams.id,
