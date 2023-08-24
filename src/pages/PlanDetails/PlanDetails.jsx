@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
-import { BsBoxSeam } from 'react-icons/bs'
 import useRequest from '../../axios/apis/useRequest'
 import { Wrapper } from './PlanDetails.styled'
 import { TabView, TabPanel } from 'primereact/tabview'
@@ -14,6 +13,9 @@ import UpperContent from '../../components/custom/Shared/UpperContent/UpperConte
 import { FormattedMessage } from 'react-intl'
 import { planInfo } from '../../store/slices/plans'
 import PlanDetailsTab from '../../components/custom/Plan/PlanDetailsTab/PlanDetailsTab'
+import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
+import { BsBoxSeam, BsFillTrash3Fill } from 'react-icons/bs'
+import { AiFillEdit } from 'react-icons/ai'
 
 const PlanDetails = () => {
   const routeParams = useParams()
@@ -22,11 +24,11 @@ const PlanDetails = () => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
 
-  const { getplan,  deleteplanReq } = useRequest()
+  const { getPlan, deletePlanReq } = useRequest()
 
   useEffect(() => {
     ;(async () => {
-      const planData = await getplan(routeParams.id)
+      const planData = await getPlan(routeParams.id)
       dispatch(planInfo(planData.data.data))
     })()
   }, [visible, routeParams.id])
@@ -47,18 +49,34 @@ const PlanDetails = () => {
             <h4 className="m-0">
               <FormattedMessage id="Plan-Details" /> : {planData.name}
             </h4>
+            <DynamicButtons
+              buttons={[
+                {
+                  order: 2,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Edit-Plan',
+                  component: 'editPlan',
+                  icon: <AiFillEdit />,
+                },
+
+                {
+                  order: 1,
+                  type: 'delete',
+                  confirmationMessage: 'delete-plan-confirmation-message',
+                  id: routeParams.id,
+                  navAfterDelete: '/plans',
+                  label: 'Delete-Plan',
+                  request: 'deletePlanReq',
+                  icon: <BsFillTrash3Fill />,
+                },
+              ]}
+            />
           </UpperContent>
           <TabView className="card">
             <TabPanel header={<FormattedMessage id="Details" />}>
               <PlanDetailsTab data={planData} />
             </TabPanel>
-          {/* 
-            <TabPanel header={<FormattedMessage id="Subscriptions" />}>
-              <ProductTenantsList
-                productId={productData.id}
-                productName={productData.name}
-              />
-            </TabPanel> */}
           </TabView>
         </div>
       )}

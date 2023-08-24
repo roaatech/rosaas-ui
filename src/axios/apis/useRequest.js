@@ -101,20 +101,47 @@ const useRequest = () => {
 
   //plan
 
-  const createplanRequest = async (data) => {
+  const createPlanRequest = async (data) => {
     return await Request.post('management/sadmin/v1/Plans', data)
   }
-  const editplanRequest = async (data) => {
+  const editPlanRequest = async (data) => {
     return await Request.put(`management/sadmin/v1/Plans/${data.id}`, data.data)
   }
-  const getplan = async (id) => {
+  const getPlan = async (id) => {
     return await Request.get(`management/sadmin/v1/Plans/${id}`)
   }
-  const getplanList = async (params) => {
+  const getPlanList = async (params) => {
     return await Request.get(`management/sadmin/v1/Plans${params}`)
   }
-  const deleteplanReq = async (data) => {
+  const deletePlanReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Plans/${data.id}`)
+  }
+
+  // --------------------------------------
+
+  const getFeaturePlanList = async (id) => {
+    return await Request.get(`management/sadmin/v1/Products/${id}/PlanFeatures`)
+  }
+  const createFeaturePlanRequest = async (data) => {
+    return await Request.post(
+      `management/sadmin/v1/Products/${data.id}/PlanFeatures`,
+      data.data
+    )
+  }
+  const editFeaturePlanRequest = async (data) => {
+    return await Request.put(
+      `management/sadmin/v1/Products/${data.id}/PlanFeatures`,
+      data.data
+    )
+  }
+  const getFeaturePlan = async (id) => {
+    return await Request.get(`management/sadmin/v1/Products/${id}/PlanFeatures`)
+  }
+
+  const deleteFeaturePlanReq = async (data) => {
+    return await Request.delete(
+      `management/sadmin/v1/Products/${data.productId}/PlanFeatures/${data.PlanFeatureId}`
+    )
   }
 
   return {
@@ -136,17 +163,22 @@ const useRequest = () => {
     deleteProductReq,
     getHeathCheckSettings,
     putHeathCheckSettings,
+    createPlanRequest,
+    editPlanRequest,
+    getPlan,
+    getPlanList,
+    deletePlanReq,
+    getFeaturePlanList,
+    createFeaturePlanRequest,
+    editFeaturePlanRequest,
+    getFeaturePlan,
+    deleteFeaturePlanReq,
     getProductFeatures,
     createFeatureRequest,
     editFeatureRequest,
     getFeature,
     getFeatureList,
     deleteFeatureReq,
-    createplanRequest,
-    editplanRequest,
-    getplan,
-    getplanList,
-    deleteplanReq,
   }
 }
 export default useRequest

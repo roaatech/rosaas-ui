@@ -89,6 +89,14 @@ const TenantForm = ({
           product: selectedProduct,
         })
         updateTenant()
+        // dispatch(
+        //   tenantInfo({
+        //     title: values.title,
+        //     uniqueName: values.uniqueName,
+        //     id: tenantData.id,
+        //     product: selectedProduct,
+        //   })
+        // )
       }
       setVisible && setVisible(false)
       setVisible && setVisible(false)

@@ -15,7 +15,7 @@ const TableDate = ({
         overlay={
           <Tooltip>
             <div>
-              <FormattedMessage id="Last-Update-At" />
+              <FormattedMessage id="Last-Update-At" />{' '}
               {DataTransform(editedDate)}
             </div>
             <div>

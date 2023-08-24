@@ -39,7 +39,7 @@ const PlanDetailsTab = ({ data }) => {
     }, 2000)
   }
 
-  const {  deleteplanReq } = useRequest()
+  const { deletePlanReq } = useRequest()
   const routeParams = useParams()
   const navigate = useNavigate()
 
@@ -48,13 +48,13 @@ const PlanDetailsTab = ({ data }) => {
     setConfirm(true)
   }
   const deletePlan = async () => {
-    await deleteplanReq({ id: currentId })
+    await deletePlanReq({ id: currentId })
     navigate(`/plans`)
   }
 
   useEffect(() => {
     ;(async () => {
-       setPlanData(data);
+      setPlanData(data)
     })()
   }, [visible, routeParams.id])
 
@@ -85,7 +85,6 @@ const PlanDetailsTab = ({ data }) => {
                     </tr> */}
                     {console.log(data)}
                     <tr>
-
                       <td className="fw-bold">
                         <FormattedMessage id="Date" />
                       </td>
@@ -94,7 +93,7 @@ const PlanDetailsTab = ({ data }) => {
                           createdDate={data.createdDate}
                           editedDate={data.editedDate}
                         />
-                  </td>
+                      </td>
                     </tr>
                     <tr>
                       <td className="fw-bold">
@@ -110,8 +109,7 @@ const PlanDetailsTab = ({ data }) => {
                         <textarea
                           className="description-textarea"
                           readOnly
-                          rows={Math.ceil(data.description.length/60 )} 
-
+                          rows={Math.ceil(data.description.length / 60)}
                           value={data.description}
                         />
                       </td>
@@ -145,13 +143,12 @@ const PlanDetailsTab = ({ data }) => {
                         </span>
                       </td>
                     </tr> */}
-                    
                   </tbody>
                 </Table>
               </Card.Body>
             </Card>
 
-            <div className="action">
+            {/* <div className="action">
               <Button
                 className="mr-3"
                 label={<FormattedMessage id="Delete" />}
@@ -192,7 +189,7 @@ const PlanDetailsTab = ({ data }) => {
                 setVisible={setVisible}
                 popupLabel={<FormattedMessage id="Edit Plan" />}
               />
-            </ThemeDialog>
+            </ThemeDialog> */}
           </div>
         </div>
       )}

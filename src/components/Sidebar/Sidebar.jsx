@@ -11,7 +11,6 @@ import {
   BsGearFill,
   BsFillClipboard2CheckFill,
   BsStars,
- 
   BsPencilSquare,
   BsPencil,
 } from 'react-icons/bs'
@@ -249,7 +248,7 @@ export default (props = {}) => {
                   sideBar={true}
                 />
               </TableHead>
-            
+
               {active.length ? (
                 <CollapsableNavItem
                   eventKey={activeIsOpen}

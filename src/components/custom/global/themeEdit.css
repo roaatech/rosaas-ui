@@ -18,3 +18,8 @@
       background: var(--second-color);
     }
   }
+
+
+  .dropdown-menu .dropdown-item{
+    color:var(--primary5)
+  }

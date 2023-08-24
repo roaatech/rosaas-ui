@@ -143,6 +143,20 @@ export const productsSlice = createSlice({
       delete currentProducts[action.payload]
       state.products = currentProducts
     },
+
+    // featurePlan
+
+    setAllFeaturePlan: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+
+      const featurePlan = {}
+      action.payload.data.map((item) => {
+        featurePlan[item.id] = item
+      })
+
+      allProduct[action.payload.productId].featurePlan = featurePlan
+      state.products = allProduct
+    },
   },
 })
 
@@ -152,6 +166,7 @@ export const {
   subscribe,
   productInfo,
   removeProduct,
+  setAllFeaturePlan,
   features,
   FeatureInfo,
   storeFeatureDelete,
