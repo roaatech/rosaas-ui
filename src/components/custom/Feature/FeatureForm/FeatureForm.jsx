@@ -37,28 +37,27 @@ const featureResetMap = {
   Annual: 4,
 }
 const featureTypeMap_ = {
-  1: "Number",
-  2:"Boolean",
-};
+  1: 'Number',
+  2: 'Boolean',
+}
 
 const featureUnitMap_ = {
-  1:"KB",
-  2:"MB",
-  3:"GB",
-};
+  1: 'KB',
+  2: 'MB',
+  3: 'GB',
+}
 
 const featureResetMap_ = {
-  1:"Never",
-  2:"Weekly",
-  3:"Monthly",
-  4:"Annual",
-};
+  1: 'Never',
+  2: 'Weekly',
+  3: 'Monthly',
+  4: 'Annual',
+}
 
-
-const options = featureTypeMap_.map((item, index) => {
-  return { value: item.id, label: item.name }
-})
-console.log(options);
+// const options = featureTypeMap_.map((item, index) => {
+//   return { value: item.id, label: item.name }
+// })
+// console.log(options);
 const FeatureForm = ({
   type,
   featureData,
@@ -72,7 +71,6 @@ const FeatureForm = ({
   const { createFeatureRequest, editFeatureRequest } = useRequest()
   const dispatch = useDispatch()
 
-  
   const initialValues = {
     name: featureData ? featureData.name : '',
     description: featureData ? featureData.description : '',
@@ -112,31 +110,33 @@ const FeatureForm = ({
             name: values.name,
             description: values.description,
             type: featureTypeMap[values.type],
-          unit: featureUnitMap[values.unit],
-          reset: featureResetMap[values.reset],
+            unit: featureUnitMap[values.unit],
+            reset: featureResetMap[values.reset],
           },
           id: featureData.id,
         })
 
         dispatch(
-        FeatureInfo({
-          featureId: featureData.id,
-          productId:productId,
-          data:{name: values.name,
-            description: values.description,
-            type: featureTypeMap[values.type],
-          unit: featureUnitMap[values.unit],
-          reset: featureResetMap[values.reset],
-            editedDate: new Date().toISOString().slice(0, 19),}
-        }))
+          FeatureInfo({
+            featureId: featureData.id,
+            productId: productId,
+            data: {
+              name: values.name,
+              description: values.description,
+              type: featureTypeMap[values.type],
+              unit: featureUnitMap[values.unit],
+              reset: featureResetMap[values.reset],
+              editedDate: new Date().toISOString().slice(0, 19),
+            },
+          })
+        )
       }
 
       setVisible && setVisible(false)
       setSubmitting(false)
     },
   })
-  
-  
+
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>

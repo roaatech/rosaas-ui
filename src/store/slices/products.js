@@ -63,7 +63,7 @@ export const productsSlice = createSlice({
       action.payload.data.map((item) => {
         allFeatures[item.id] = item
       })
-
+      console.log(allFeatures, '99999999999999999999999999')
       product.features = allFeatures
       currentProducts[action.payload.id] = product
       state.products = currentProducts
