@@ -90,12 +90,11 @@ export const productsSlice = createSlice({
     //   }
     // },
     storeFeatureDelete: (state, action) => {
-      const { productId, featureId, data } = action.payload
+      const { productId, featureId } = action.payload
       const currentProducts = JSON.parse(
         JSON.stringify(current(state.products))
       )
-      const currentFeature = currentProducts[productId].features[featureId]
-      delete currentFeature[action.payload]
+      delete currentProducts[productId].features[featureId]
       state.products = currentProducts
       // if (currentProducts[productId] && currentProducts[productId].features) {
       //   currentProducts[productId].features = {
@@ -155,6 +154,6 @@ export const {
   removeProduct,
   features,
   FeatureInfo,
-  deleteFeature,
+  storeFeatureDelete,
 } = productsSlice.actions
 export default productsSlice.reducer
