@@ -16,7 +16,7 @@ import {
   productInfo,
   features,
   FeatureInfo,
-  storeFeatureDelete
+  storeFeatureDelete,
 } from '../../../../store/slices/products'
 import { FormattedMessage } from 'react-intl'
 import {
@@ -31,10 +31,11 @@ import FeatureForm from '../../Feature/FeatureForm/FeatureForm'
 import { Dialog } from 'primereact/dialog'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
-import { featureResetMap, featureTypeMap, featureUnitMap } from '../../../../const'
-
-
-
+import {
+  featureResetMap,
+  featureTypeMap,
+  featureUnitMap,
+} from '../../../../const'
 
 export const ProductFeaturesList = ({ productId, productName }) => {
   const navigate = useNavigate()
@@ -55,7 +56,6 @@ export const ProductFeaturesList = ({ productId, productName }) => {
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
 
-  
   // const deleteConfirm = (id) => {
   //   setCurrentId(id)
   //   setConfirm(true)
@@ -78,38 +78,37 @@ export const ProductFeaturesList = ({ productId, productName }) => {
       // if (!list?.features) {
       const listData = await getProductFeatures(params)
       dispatch(features({ id: productId, data: listData.data.data }))
-      console.log(list.features, 'list')
       // }
     })()
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
 
   const TableRow = (props) => {
-    const { name, description, type, unit, reset, id } = props;
+    const { name, description, type, unit, reset, id } = props
 
-    const mappedType = featureTypeMap[type] ;
-    const mappedUnit = featureUnitMap[unit] ;
-    const mappedReset = featureResetMap[reset] ;
- /********************************/
-  const [expandedRows, setExpandedRows] = useState([]);
+    const mappedType = featureTypeMap[type]
+    const mappedUnit = featureUnitMap[unit]
+    const mappedReset = featureResetMap[reset]
+    /********************************/
+    const [expandedRows, setExpandedRows] = useState([])
 
-  const toggleRow = (rowData) => {
-    const isRowExpanded = expandedRows.includes(rowData.id);
-    if (isRowExpanded) {
-      setExpandedRows(expandedRows.filter((id) => id !== rowData.id));
-    } else {
-      setExpandedRows([...expandedRows, rowData.id]);
+    const toggleRow = (rowData) => {
+      const isRowExpanded = expandedRows.includes(rowData.id)
+      if (isRowExpanded) {
+        setExpandedRows(expandedRows.filter((id) => id !== rowData.id))
+      } else {
+        setExpandedRows([...expandedRows, rowData.id])
+      }
     }
-  };
-  /****************************** */
-  const handleDeleteFeature = async (productId,featureId) => {
-    try {
-      await deleteFeatureReq(productId, { id: featureId });
-      dispatch( storeFeatureDelete({ productId, featureId }));
-      
-    } catch (error) {
-      console.error('Error deleting feature:', error);
+    /****************************** */
+    const handleDeleteFeature = async (productId, featureId) => {
+      try {
+        await deleteFeatureReq(productId, { id: featureId })
+        dispatch(storeFeatureDelete({ productId, featureId }))
+      } catch (error) {
+        console.error('Error deleting feature:', error)
+      }
     }
-  };
+
     return (
       <tr>
         <td>
@@ -118,7 +117,6 @@ export const ProductFeaturesList = ({ productId, productName }) => {
         <td style={{ minWidth: '520px', maxWidth: '520px',whiteSpace: 'normal'}}>
         <DescriptionCell data={{ description }} />
         </td>
-      
 
         <td>
           <span className={`fw-normal`}>{mappedType}</span>
@@ -142,16 +140,24 @@ export const ProductFeaturesList = ({ productId, productName }) => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item onSelect={() => navigate(`/products/${productId}/features/${id}`)}>
+              <Dropdown.Item
+                onSelect={() =>
+                  navigate(`/products/${productId}/features/${id}`)
+                }
+              >
                 <FontAwesomeIcon icon={faEye} className="me-2" />
                 <FormattedMessage id="View-Details" />
               </Dropdown.Item>
-              <Dropdown.Item onSelect={() => editForm(id)}>
+              <Dropdown.Item
+                onSelect={() => {
+                  editForm(id)
+                }}
+              >
                 <FontAwesomeIcon icon={faEdit} className="me-2" />
                 <FormattedMessage id="Edit" />
               </Dropdown.Item>
               <Dropdown.Item
-                onClick={() => handleDeleteFeature(productId,id)}
+                onClick={() => handleDeleteFeature(productId, id)}
                 className="text-danger"
               >
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
@@ -193,10 +199,8 @@ export const ProductFeaturesList = ({ productId, productName }) => {
               </tr>
             </thead>
             <tbody>
-              {console.log('product', list.features)}
               {list?.features && Object.values(list?.features).length
                 ? Object.values(list?.features).map((t, index) => {
-                    // console.log({t})
                     return <TableRow key={`index`} {...t} />
                   })
                 : null}
@@ -222,19 +226,21 @@ export const ProductFeaturesList = ({ productId, productName }) => {
         /> */}
 
       <ThemeDialog visible={visible} setVisible={setVisible}>
-        <FeatureForm
-          productId={productId}
-          popupLabel={<FormattedMessage id={popUpLable} />}
-          type={type}
-          tenantData={list}
-          update={update}
-          setUpdate={setUpdate}
-          setVisible={setVisible}
-          sideBar={false}
-          dispatch={dispatch}
-          FeatureInfo={FeatureInfo}
-          featureData={type == 'edit' ? list?.features[currentId] : {}}
-        />
+        <>
+          <FeatureForm
+            productId={productId}
+            popupLabel={<FormattedMessage id={popUpLable} />}
+            type={type}
+            tenantData={list}
+            update={update}
+            setUpdate={setUpdate}
+            setVisible={setVisible}
+            sideBar={false}
+            dispatch={dispatch}
+            FeatureInfo={FeatureInfo}
+            featureData={type == 'edit' ? list?.features[currentId] : {}}
+          />
+        </>
       </ThemeDialog>
 
       <button
@@ -249,6 +255,5 @@ export const ProductFeaturesList = ({ productId, productName }) => {
     </>
   )
 }
-
 
 export default ProductFeaturesList

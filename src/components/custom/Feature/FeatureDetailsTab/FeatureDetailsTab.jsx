@@ -24,6 +24,7 @@ import TableDate from '../../Shared/TableDate/TableDate'
 import FeatureForm from '../FeatureForm/FeatureForm'
 import { storeFeatureDelete } from '../../../../store/slices/products'
 import { useDispatch } from 'react-redux'
+import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter'
 
 export const FeatureDetailsTab = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
@@ -41,9 +42,17 @@ export const FeatureDetailsTab = ({ data }) => {
     }, 2000)
   }
   const dispatch = useDispatch()
-   const {  deleteFeatureReq } = useRequest()
-   const routeParams = useParams()
-   const navigate = useNavigate()
+  const {  deleteFeatureReq } = useRequest()
+  const routeParams = useParams()
+  const navigate = useNavigate()
+  //****************** */
+  const maxLength = 250;
+  const [updatedDescription, setUpdatedDescription] = useState(data.description);
+
+  const handleDescriptionChange = (newValue) => {
+    setUpdatedDescription(newValue);
+  };
+//******************** */
 
   // const deleteConfirm = (id) => {
   //   setCurrentId(id)
@@ -65,7 +74,7 @@ export const FeatureDetailsTab = ({ data }) => {
   }
   useEffect(() => {
     ;(async () => {
-       setPlanData(data);
+      setPlanData(data)
     })()
   }, [visible, routeParams.id])
   return (
@@ -95,7 +104,6 @@ export const FeatureDetailsTab = ({ data }) => {
                     </tr> */}
                     {console.log(data)}
                     <tr>
-
                       <td className="fw-bold">
                         <FormattedMessage id="Date" />
                       </td>
@@ -104,7 +112,7 @@ export const FeatureDetailsTab = ({ data }) => {
                           createdDate={data.createdDate}
                           editedDate={data.editedDate}
                         />
-                  </td>
+                      </td>
                     </tr>
                     <tr>
                       <td className="fw-bold">
@@ -117,13 +125,12 @@ export const FeatureDetailsTab = ({ data }) => {
                         <FormattedMessage id="Description" />
                       </td>
                       <td>
-                        <textarea
-                          className="description-textarea"
-                          readOnly
-                          rows={Math.ceil(data.description.length/60 )} 
-
-                          value={data.description}
-                        />
+                      <TextareaAndCounter
+                        value={updatedDescription}
+                        onValueChange={handleDescriptionChange}
+                        maxLength={maxLength}
+                        showCharCount
+                      />
                       </td>
                     </tr>
 
@@ -155,7 +162,6 @@ export const FeatureDetailsTab = ({ data }) => {
                         </span>
                       </td>
                     </tr> */}
-                    
                   </tbody>
                 </Table>
               </Card.Body>
