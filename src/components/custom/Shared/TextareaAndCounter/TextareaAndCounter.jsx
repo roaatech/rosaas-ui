@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextareaCounterWrapper } from './TextareaAndCounter.styled';
 
-const TextareaAndCounter = ({ value, onValueChange, maxLength, showCharCount }) => {
+const TextareaAndCounter = ({ value, onValueChange, maxLength, showCharCount, label }) => {
   const [characterCount, setCharacterCount] = useState(value.length);
 
   const handleTextareaChange = (e) => {
@@ -14,21 +14,22 @@ const TextareaAndCounter = ({ value, onValueChange, maxLength, showCharCount }) 
 
   return (
     <TextareaCounterWrapper>
-    <div>
-      <textarea
-        className="description-textarea"
-        rows={Math.ceil(value.length / 60)}
-        value={value}
-        onChange={handleTextareaChange}
-        maxLength={maxLength}
-      />
-      {showCharCount && (
-        <div className="char-counter">
-          {characterCount}/{maxLength}
-        </div>
-      )}
-    </div>
-    </TextareaCounterWrapper>
+  <div className="textarea-container">
+    <textarea
+      className="description-textarea"
+      rows={Math.ceil(value.length / 60)}
+      value={value}
+      onChange={handleTextareaChange}
+      maxLength={maxLength}
+    />
+    {showCharCount && (
+      <div className="char-counter">
+        {characterCount}/{maxLength}
+      </div>
+    )}
+  </div>
+</TextareaCounterWrapper>
+
   );
 };
 

@@ -41,22 +41,16 @@ const FeatureForm = ({
   const initialValues = {
     name: featureData ? featureData.name : '',
     description: featureData ? featureData.description : '',
-    type: featureData ? featureData.type : 0,
+    type: featureData ? featureData.type : '',
     unit: featureData ? featureData.unit : undefined,
-    reset: featureData ? featureData.reset : 0,
+    reset: featureData ? featureData.reset : '',
   }
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Feature Name is required'),
-    // description: Yup.string().required('Description is required'),
-    // type: Yup.string().required('Feature Type is required'),
-    // unit: Yup.string().when('type', {
-    //   is: 'Number',
-    //   then: Yup.string().required('Feature Unit is required'),
-    // }),
-    // reset: Yup.string().required('Feature Reset is required'),
+    description: Yup.string().required('Description is required'),
+   
   })
-
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
@@ -106,12 +100,20 @@ const FeatureForm = ({
  
     //****************** */
     const maxLength = 250;
-    const [updatedDescription, setUpdatedDescription] = useState( formik.values.description);
-  
+    let value;
+    if(formik.values.description){
+      value=formik.values.description
+    }else{
+      value= ""
+    }
+    const [updatedDescription, setUpdatedDescription] = useState( value);
+
     const handleDescriptionChange = (newValue) => {
       setUpdatedDescription(newValue);
     };
     formik.values.description=updatedDescription
+  //******************** */
+  
   //******************** */
   
   return (
@@ -323,6 +325,7 @@ const FeatureForm = ({
                 name="unit"
                 onChange={formik.handleChange}
                 value={formik.values.unit}
+                disabled={formik.values.type === "2"}
               >
                 <option value="">Select Unit</option>
                 {Object.entries(featureUnitMap).map(([value, label]) => (
