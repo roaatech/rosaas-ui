@@ -23,14 +23,7 @@ import {
 } from '../../../../../store/slices/products.js'
 import { setAllPlans } from '../../../../../store/slices/plans.js'
 
-const FeaturePlanForm = ({
-  type,
-  FeaturePlanData,
-  setVisible,
-  popupLabel,
-  update,
-  setUpdate,
-}) => {
+const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
   const routeParams = useParams()
   const productId = routeParams.id
 

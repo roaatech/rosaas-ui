@@ -209,15 +209,27 @@ export default function ProductFeaturePlan({ children }) {
       </div>
 
       <ThemeDialog visible={visible} setVisible={setVisible}>
+        {/* {listData && currentId && (
+        
+             */}
+        {/* {listData &&
+          currentId &&
+          console.log(
+            listData,
+            '88888888888888888'
+            // currentId,
+            // '888888888888'
+            // listData?[currentId]
+          )}
+         */}
+
         <FeaturePlanForm
           popupLabel={<FormattedMessage id={popUpLable} />}
           type={type}
-          tenantData={list}
-          update={update}
-          setUpdate={setUpdate}
+          // FeaturePlanData={listData[currentId]}
+          // update={update}
+          // setUpdate={setUpdate}
           setVisible={setVisible}
-          sideBar={false}
-          dispatch={dispatch}
         />
       </ThemeDialog>
       <button
