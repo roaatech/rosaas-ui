@@ -83,7 +83,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
 
   const TableRow = (props) => {
-    const { name, description, type, unit, reset, id } = props
+    const { name, description, type, unit, reset, id, createdDate,editedDate } = props
 
     const mappedType = featureTypeMap[type]
     const mappedUnit = featureUnitMap[unit]
@@ -127,6 +127,17 @@ export const ProductFeaturesList = ({ productId, productName }) => {
         <td>
           <span className="fw-normal">{mappedReset}</span>
         </td>
+        <td >
+        <span className="fw-normal">
+        <TableDate
+                    createdDate={createdDate}
+                    editedDate={editedDate}
+                  />
+          
+          
+          </span>
+
+        </td>
         <td>
           <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle
@@ -140,14 +151,14 @@ export const ProductFeaturesList = ({ productId, productName }) => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item
+              {/* <Dropdown.Item
                 onSelect={() =>
                   navigate(`/products/${productId}/features/${id}`)
                 }
               >
                 <FontAwesomeIcon icon={faEye} className="me-2" />
                 <FormattedMessage id="View-Details" />
-              </Dropdown.Item>
+              </Dropdown.Item> */}
               <Dropdown.Item
                 onSelect={() => {
                   editForm(id)
@@ -192,6 +203,9 @@ export const ProductFeaturesList = ({ productId, productName }) => {
                 </th>
                 <th className="border-bottom">
                   <FormattedMessage id="Reset" />
+                </th>
+                <th className="border-bottom">
+                  <FormattedMessage id="Date" />
                 </th>
                 <th className="border-bottom">
                   <FormattedMessage id="Actions" />
