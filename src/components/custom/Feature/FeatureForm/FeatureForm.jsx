@@ -262,18 +262,7 @@ const FeatureForm = ({
               maxLength={maxLength}
               showCharCount
             />
-            {/* <InputText
-              type="text"
-              id="description"
-              name="description"
-              onChange={formik.handleChange}
-              value={formik.values.description}
-              className={
-                formik.touched.description && formik.errors.description
-                  ? 'is-invalid'
-                  : ''
-              }
-            /> */}
+           
             {formik.touched.description && formik.errors.description && (
               <div className="invalid-feedback">
                 {formik.errors.description}
@@ -292,7 +281,12 @@ const FeatureForm = ({
                 className="form-control"
                 id="type"
                 name="type"
-                onChange={formik.handleChange}
+                onChange={(e) => {
+                  formik.handleChange(e);
+                  if (e.target.value === "2") { 
+                    formik.setFieldValue("unit", ""); 
+                  }
+                }}
                 value={formik.values.type}
               >
                 <option value="">Select Type</option>

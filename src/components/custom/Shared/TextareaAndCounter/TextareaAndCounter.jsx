@@ -16,12 +16,14 @@ const TextareaAndCounter = ({ value, onValueChange, maxLength, showCharCount, la
     <TextareaCounterWrapper>
   <div className="textarea-container">
     <textarea
-      className="description-textarea"
-      rows={Math.ceil(value.length / 60)}
+      className="form-control"
+      rows={(Math.ceil(value.length / 60+1))||3}
       value={value}
       onChange={handleTextareaChange}
       maxLength={maxLength}
+
     />
+    
     {showCharCount && (
       <div className="char-counter">
         {characterCount}/{maxLength}

@@ -122,5 +122,11 @@
   "Create-Date": "Create Date",
   "Plan-Details": "Plan Details",
   "Dashboard": "Dashboard",
-  "Feature-Plan": "Feature Plan"
+  "Feature-Plan": "Feature Plan",
+  "Feature-Details":"Feature Details",
+  "Reset":"Reset",
+  "Unit":"Unit",
+  "Type":"Type",
+  "Add-Feature":"Add Feature",
+  "Edit-Feature":"Edit Feature"
 }

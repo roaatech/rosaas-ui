@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FeatureInfo } from '../../store/slices/products';
 import useRequest from '../../axios/apis/useRequest';
 import { Wrapper } from './FeatureDetails.styled';
-import { BsBoxSeam } from 'react-icons/bs';
+import { BsBoxSeam, BsFillTrash3Fill } from 'react-icons/bs';
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb';
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent';
 import { FormattedMessage } from 'react-intl';
 import FeatureDetailsTab from '../../components/custom/Feature/FeatureDetailsTab/FeatureDetailsTab';
 import { TabView, TabPanel } from 'primereact/tabview';
+import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons';
+import { AiFillEdit } from 'react-icons/ai';
 
 const FeatureDetails = (props) => {
   const routeParams = useParams();
@@ -44,7 +46,7 @@ const FeatureDetails = (props) => {
   return (
     <Wrapper>
       {featureData && (
-        <BreadcrumbComponent breadcrumbInfo={'ProductDetails'} param1={featureData.id} icon={BsBoxSeam} />
+        <BreadcrumbComponent breadcrumbInfo={'FeatureDetails'} param1={featureData.id} icon={BsBoxSeam} />
       )}
 
       {featureData && (
@@ -53,6 +55,29 @@ const FeatureDetails = (props) => {
             <h4 className="m-0">
               <FormattedMessage id="Feature-Details" /> : {featureData.name}
             </h4>
+            {/* <DynamicButtons
+              buttons={[
+                {
+                  order: 2,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Edit-Feature',
+                  component: 'editFeature',
+                  icon: <AiFillEdit />,
+                },
+
+                {
+                  order: 1,
+                  type: 'delete',
+                  confirmationMessage: 'delete-plan-confirmation-message',
+                  id: routeParams.id,
+                  navAfterDelete: '/plans',
+                  label: 'Delete-Plan',
+                  request: 'deletePlanReq',
+                  icon: <BsFillTrash3Fill />,
+                },
+              ]}
+            /> */}
           </UpperContent>
           <TabView className="card">
             <TabPanel header={<FormattedMessage id="Details" />}>

@@ -170,6 +170,15 @@ const breadcrumbConst = {
     parentNavigation: '/products',
     icon: {},
   },
+  FeatureDetails: {
+    title: 'Product-Management',
+    name: 'Feature-Details',
+    active: 'Product Details',
+    navigation: '/products',
+    parent: 'Products',
+    parentNavigation: '/products',
+    icon: {},
+  },
   PlanDetails: {
     title: 'Plan-Management',
     name: 'Plan-Details',

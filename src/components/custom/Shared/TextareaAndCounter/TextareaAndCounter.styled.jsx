@@ -4,7 +4,7 @@ export const TextareaCounterWrapper = styled.div`
   .textarea-container {
     position: relative;
     width: 100%;
-    padding-bottom: 10px;
+    padding-bottom: 17px;
     
   }
 
@@ -14,7 +14,7 @@ export const TextareaCounterWrapper = styled.div`
     position: absolute;
     bottom: 0;
     right: 0;
-    padding-right: 4px;
+    padding-right: 6px;
   }
 
   .description-textarea {

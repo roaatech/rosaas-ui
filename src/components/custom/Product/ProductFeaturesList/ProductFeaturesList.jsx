@@ -114,7 +114,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
         <td>
           <span className="fw-normal">{name}</span>
         </td>
-        <td style={{ minWidth: '520px', maxWidth: '520px',whiteSpace: 'normal'}}>
+        <td style={{ minWidth: '410px', maxWidth: '410px',whiteSpace: 'normal'}}>
         <DescriptionCell data={{ description }} />
         </td>
 
@@ -231,7 +231,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
             productId={productId}
             popupLabel={<FormattedMessage id={popUpLable} />}
             type={type}
-            tenantData={list}
+            FeatureData={list}
             update={update}
             setUpdate={setUpdate}
             setVisible={setVisible}

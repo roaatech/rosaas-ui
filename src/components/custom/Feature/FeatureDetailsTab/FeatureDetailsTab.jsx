@@ -22,16 +22,17 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
 import TableDate from '../../Shared/TableDate/TableDate'
 import FeatureForm from '../FeatureForm/FeatureForm'
-import { storeFeatureDelete } from '../../../../store/slices/products'
-import { useDispatch } from 'react-redux'
+import { FeatureInfo, storeFeatureDelete } from '../../../../store/slices/products'
+import { useDispatch, useSelector } from 'react-redux'
 import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter'
+import { featureResetMap, featureTypeMap, featureUnitMap } from '../../../../const'
 
 export const FeatureDetailsTab = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
   const [planData, setPlanData] = useState(data)
   const [visible, setVisible] = useState(false)
-
+  const [update, setUpdate] = useState(1)
   const [code, setCode] = useState(data.apiKey)
   const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
 
@@ -48,6 +49,7 @@ export const FeatureDetailsTab = ({ data }) => {
   //****************** */
   const maxLength = 250;
   const [updatedDescription, setUpdatedDescription] = useState(data.description);
+  const list = useSelector((state) => state.products.products[routeParams.productId])
 
   const handleDescriptionChange = (newValue) => {
     setUpdatedDescription(newValue);
@@ -116,9 +118,21 @@ export const FeatureDetailsTab = ({ data }) => {
                     </tr>
                     <tr>
                       <td className="fw-bold">
-                        <FormattedMessage id="Display-Order" />
+                        <FormattedMessage id="Type" />
                       </td>
-                      <td>{data.displayOrder}</td>
+                      <td>{featureTypeMap[data.type]}</td>
+                    </tr>
+                    <tr>
+                      <td className="fw-bold">
+                        <FormattedMessage id="Unit" />
+                      </td>
+                      <td>{featureUnitMap[data.unit]}</td>
+                    </tr>
+                    <tr>
+                      <td className="fw-bold">
+                        <FormattedMessage id="Reset" />
+                      </td>
+                      <td>{featureResetMap[data.reset]}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">
@@ -129,7 +143,7 @@ export const FeatureDetailsTab = ({ data }) => {
                         value={updatedDescription}
                         onValueChange={handleDescriptionChange}
                         maxLength={maxLength}
-                        showCharCount
+                        // showCharCount
                       />
                       </td>
                     </tr>
@@ -177,7 +191,18 @@ export const FeatureDetailsTab = ({ data }) => {
                   backgroundColor: 'var(--red)',
                   borderColor: 'var(--red)',
                 }}
+                
               />
+              <DeleteConfirmation
+              message={
+                <FormattedMessage id="delete-plan-confirmation-message" />
+              }
+              icon="pi pi-exclamation-triangle"
+              confirm={confirm}
+              setConfirm={setConfirm}
+              confirmFunction={ handleDeleteFeature}
+              sideBar={false}
+            />
               <Button
                 className="mr-3"
                 label={<FormattedMessage id="Edit" />}
@@ -188,20 +213,18 @@ export const FeatureDetailsTab = ({ data }) => {
                   borderColor: 'var(--themeColor)',
                 }}
               />
+           
             </div>
-            <DeleteConfirmation
-              message={
-                <FormattedMessage id="delete-plan-confirmation-message" />
-              }
-              icon="pi pi-exclamation-triangle"
-              confirm={confirm}
-              setConfirm={setConfirm}
-              confirmFunction={handleDeleteFeature}
-              sideBar={false}
-            />
 
             <ThemeDialog visible={visible} setVisible={setVisible}>
               <FeatureForm
+                productId={routeParams.productId}
+                FeatureData={list}
+                 setUpdate={setUpdate}
+                dispatch={dispatch}
+                 FeatureInfo={FeatureInfo}
+
+                featureData={list?.features[routeParams.id]}
                 type={'edit'}
                 visible={visible}
                 planData={data}
