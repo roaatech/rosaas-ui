@@ -55,11 +55,16 @@ const useRequest = () => {
   const editTenantStatus = async (data) => {
     return await Request.put('management/sadmin/v1/Tenants/status', data)
   }
-  const getTimeLine = async (id, productId) => {
+  const getTimeLine = async (id, productId, queries) => {
     return await Request.get(
-      `management/sadmin/v1/Tenants/${id}/products/${productId}/processes`
+      `management/sadmin/v1/Tenants/${id}/products/${productId}/processes${queries}`
     )
   }
+  // const getTimeLine = async (id, productId) => {
+  //   return await Request.get(
+  //     `management/sadmin/v1/Tenants/${id}/products/${productId}/processes`
+  //   )
+  // }
 
   // settings
   const getHeathCheckSettings = async () => {

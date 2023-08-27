@@ -4,7 +4,8 @@ import { Card, Table } from '@themesberg/react-bootstrap'
 import { Wrapper } from './ChildTable.style'
 import TenantStatus from '../TenantStatus/TenantStatus'
 import MetaDataAccordion from '../MetaDataAccordion/MetaDataAccordion'
-import Workflow from '../../../../components/custom/Shared/Workflow/Workflow'
+
+import Workflow from '../../Shared/Workflow/Workflow'
 import { Button } from 'primereact/button'
 import { FiRefreshCw } from 'react-icons/fi'
 import { useDispatch } from 'react-redux'
@@ -128,29 +129,28 @@ export default function ChildTable({
                 chagneStatus={chagneStatus}
               />
             </div>
-
-            {productData?.status != 13 ? (
-              <div className="refresh">
-                <Button
-                  onClick={() => {
-                    updateTenant()
-                  }}
-                  type="button"
-                  icon={<FiRefreshCw className="mr-2" />}
-                  label={<FormattedMessage id="Refresh" />}
-                  style={{
-                    backgroundColor: '#239dff',
-                    borderColor: '#239dff',
-                  }}
-                />
-              </div>
-            ) : null}
           </div>
         </div>
         <div className="content timeLine">
           <Card border="light" className="shadow-sm">
             <Card.Header className="fs-6">
               <FormattedMessage id="History" />
+              {productData?.status != 13 ? (
+                <div className="refresh">
+                  <Button
+                    onClick={() => {
+                      updateTenant()
+                    }}
+                    type="button"
+                    // icon={}
+                    label={<FiRefreshCw />}
+                    style={{
+                      backgroundColor: '#239dff',
+                      borderColor: '#239dff',
+                    }}
+                  />
+                </div>
+              ) : null}
             </Card.Header>
             <Card.Body className="pb-0">
               <Workflow

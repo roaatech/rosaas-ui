@@ -94,6 +94,15 @@ const Wrapper = styled.div`
       font-size: var(--defaultFont);
     }
   }
+
+  .timeLine .card .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .refresh button {
+      padding: 3px 7px !important;
+    }
+  }
 `
 
 export { Wrapper }

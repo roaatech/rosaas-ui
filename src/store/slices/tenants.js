@@ -42,18 +42,32 @@ export const tenantsSlice = createSlice({
       currentTenants[action.payload.id] = action.payload
       state.tenants = currentTenants
     },
+
     history: (state, action) => {
       const currentTenants = { ...current(state.tenants) }
       const tenant = JSON.parse(
         JSON.stringify(currentTenants[action.payload.tenantId])
       )
 
-      tenant.products[parseInt(action.payload.productIndex)].history =
-        action.payload.data
+      const data = current(state.tenants)[action.payload.tenantId].products[
+        action.payload.productIndex
+      ].history?.items
+
+      const listObject = data ? { ...data } : {}
+
+      action.payload.data.items.map((item, index) => {
+        listObject[index + action.payload.from] = item
+      })
+
+      tenant.products[parseInt(action.payload.productIndex)].history = {
+        items: listObject,
+        totalCount: action.payload.data.totalCount,
+      }
 
       currentTenants[action.payload.tenantId] = tenant
       state.tenants = currentTenants
     },
+
     removeTenant: (state, action) => {
       const currentTenants = { ...current(state.tenants) }
       delete currentTenants[action.payload]
