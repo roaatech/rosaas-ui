@@ -3,10 +3,12 @@ import { Paginator } from "primereact/paginator";
 import { Wrapper } from "./CustomPaginator.styled";
 
 const CustomPaginator = ({ first, rows, totalCount, onPageChange }) => {
+  const lastItemIndex = first + rows;
+  const displayLastIndex = lastItemIndex > totalCount ? totalCount : lastItemIndex;
   return (
     <Wrapper>
       <span>
-        {first + 1}-{rows} of {totalCount}
+      {`${first + 1}-${displayLastIndex} of ${totalCount}`}
       </span>
       <Paginator
         size={"small"}
