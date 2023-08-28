@@ -1,38 +1,41 @@
-import React, { useState } from 'react';
-import { TextareaCounterWrapper } from './TextareaAndCounter.styled';
+import React, { useState } from 'react'
+import { TextareaCounterWrapper } from './TextareaAndCounter.styled'
 
-const TextareaAndCounter = ({ value, onValueChange, maxLength, showCharCount, label }) => {
-  const [characterCount, setCharacterCount] = useState(value.length);
+const TextareaAndCounter = ({
+  value,
+  onValueChange,
+  maxLength,
+  showCharCount,
+}) => {
+  const [characterCount, setCharacterCount] = useState(value.length)
 
   const handleTextareaChange = (e) => {
-    const inputValue = e.target.value;
+    const inputValue = e.target.value
     if (inputValue.length <= maxLength) {
-      setCharacterCount(inputValue.length);
-      onValueChange(inputValue);
+      setCharacterCount(inputValue.length)
+      onValueChange(inputValue)
     }
-  };
+  }
 
   return (
     <TextareaCounterWrapper>
-  <div className="textarea-container">
-    <textarea
-      className="form-control"
-      rows={Math.ceil((value.length / 60+1))}
-      value={value}
-      onChange={handleTextareaChange}
-      maxLength={maxLength}
+      <div className="textarea-container">
+        <textarea
+          className="form-control"
+          rows={Math.ceil(value.length / 60 + 1)}
+          value={value}
+          onChange={handleTextareaChange}
+          maxLength={maxLength}
+        />
 
-    />
-    
-    {showCharCount && (
-      <div className="char-counter">
-        {characterCount}/{maxLength}
+        {showCharCount && (
+          <div className="char-counter">
+            {characterCount}/{maxLength}
+          </div>
+        )}
       </div>
-    )}
-  </div>
-</TextareaCounterWrapper>
+    </TextareaCounterWrapper>
+  )
+}
 
-  );
-};
-
-export default TextareaAndCounter;
+export default TextareaAndCounter

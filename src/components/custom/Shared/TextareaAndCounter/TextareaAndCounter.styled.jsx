@@ -1,18 +1,17 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const TextareaCounterWrapper = styled.div`
   .textarea-container {
     position: relative;
     width: 100%;
-    padding-bottom: 17px;
-    
+    padding-bottom: 0;
   }
 
   .char-counter {
     color: var(--second-color);
     font-size: var(--smallFont);
     position: absolute;
-    bottom: 0;
+    bottom: -17px;
     right: 0;
     padding-right: 6px;
   }
@@ -21,4 +20,4 @@ export const TextareaCounterWrapper = styled.div`
     resize: vertical;
     width: 100%;
   }
-`;
+`
