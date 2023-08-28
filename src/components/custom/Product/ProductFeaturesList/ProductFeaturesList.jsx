@@ -76,7 +76,6 @@ export const ProductFeaturesList = ({ productId, productName }) => {
         if (update>1) {
       const listData = await getProductFeatures(params)
       dispatch(features({  productId, data: listData.data.data }))
-      console.log("111111111",update);
         }
     })()
   }, [ update])
@@ -97,14 +96,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
     const mappedUnit = featureUnitMap[unit]
     const mappedReset = featureResetMap[reset]
 
-    const handleDeleteFeature = async (productId, featureId) => {
-      try {
-        await deleteFeatureReq(productId, { id: featureId })
-        dispatch(storeFeatureDelete({ productId, featureId }))
-      } catch (error) {
-        console.error('Error deleting feature:', error)
-      }
-    }
+    
 
     return (
       
@@ -156,7 +148,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
                 <FormattedMessage id="Edit" />
               </Dropdown.Item>
               <Dropdown.Item
-                onClick={() => deleteConfirm(productId, id)}
+                onClick={() => deleteConfirm(id)}
                 className="text-danger"
               >
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
@@ -166,22 +158,20 @@ export const ProductFeaturesList = ({ productId, productName }) => {
           </Dropdown>
         </td>
       </tr>
-      <DeleteConfirmation
-              message={
-                <FormattedMessage id="delete-plan-confirmation-message" />
-              }
-              icon="pi pi-exclamation-triangle"
-              confirm={confirm}
-              setConfirm={setConfirm}
-              confirmFunction={handleDeleteFeature}
-              update={update}
-              setUpdate={setUpdate}
-              sideBar={false}
-            />
+      
       </>
       
      
     )
+  }
+  const handleDeleteFeature = async () => {
+    // try {
+      console.log(currentId);
+      await deleteFeatureReq(productId,{id: currentId})
+      // dispatch(storeFeatureDelete({ productId, featureId }))
+    // } catch (error) {
+    //   console.error('Error deleting feature:', error)
+    // }
   }
 
   return (
@@ -224,6 +214,19 @@ export const ProductFeaturesList = ({ productId, productName }) => {
                 : null}
             </tbody>
           </Table>
+          <DeleteConfirmation
+          
+              message={
+                <FormattedMessage id="delete-plan-confirmation-message" />
+              }
+              icon="pi pi-exclamation-triangle"
+              confirm={confirm}
+              setConfirm={setConfirm}
+              confirmFunction={handleDeleteFeature}
+              update={update}
+              setUpdate={setUpdate}
+              sideBar={false}
+            />
         </Card.Body>
       </Card>
 
