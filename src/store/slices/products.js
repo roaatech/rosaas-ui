@@ -57,7 +57,7 @@ export const productsSlice = createSlice({
     },
     features: (state, action) => {
       const currentProducts = { ...current(state.products) }
-      const product = { ...currentProducts[action.payload.id] }
+      const product = { ...currentProducts[action.payload.productId] }
 
       const allFeatures = {}
       action.payload.data.map((item) => {
@@ -65,7 +65,7 @@ export const productsSlice = createSlice({
       })
 
       product.features = allFeatures
-      currentProducts[action.payload.id] = product
+      currentProducts[action.payload.productId] = product
       state.products = currentProducts
     },
 

@@ -28,6 +28,7 @@ import {
   featureTypeMap,
   featureUnitMap,
 } from '../../../../const'
+import { Wrapper } from './ProductFeaturesList.styled'
 
 export const ProductFeaturesList = ({ productId, productName }) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
@@ -37,7 +38,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
   const [first] = useState(0)
   const [rows] = useState(10)
   const [update, setUpdate] = useState(1)
-  const [selectedProduct] = useState()
+  
   const dispatch = useDispatch()
   const list = useSelector((state) => state.products.products[productId])
   const [currentId, setCurrentId] = useState('')
@@ -46,10 +47,10 @@ export const ProductFeaturesList = ({ productId, productName }) => {
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
 
-  // const deleteConfirm = (id) => {
-  //   setCurrentId(id)
-  //   setConfirm(true)
-  // }
+  const deleteConfirm = (id) => {
+    setCurrentId(id)
+    setConfirm(true)
+  }
   const editForm = async (id) => {
     setPopUpLable('Edit-Feature')
     setType('edit')
@@ -61,12 +62,24 @@ export const ProductFeaturesList = ({ productId, productName }) => {
     let params = `${productId}/Features`
 
     ;(async () => {
-      // if (!list?.features) {
+        if (!list?.features) {
       const listData = await getProductFeatures(params)
-      dispatch(features({ id: productId, data: listData.data.data }))
-      // }
+      dispatch(features({  productId, data: listData.data.data }))
+        }
     })()
-  }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
+  },[])
+
+  useEffect(() => {
+    let params = `${productId}/Features`
+
+    ;(async () => {
+        if (update>1) {
+      const listData = await getProductFeatures(params)
+      dispatch(features({  productId, data: listData.data.data }))
+      console.log("111111111",update);
+        }
+    })()
+  }, [ update])
 
   const TableRow = (props) => {
     const {
@@ -94,6 +107,9 @@ export const ProductFeaturesList = ({ productId, productName }) => {
     }
 
     return (
+      
+     
+     <>
       <tr>
         <td>
           <span className="fw-normal">{name}</span>
@@ -140,7 +156,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
                 <FormattedMessage id="Edit" />
               </Dropdown.Item>
               <Dropdown.Item
-                onClick={() => handleDeleteFeature(productId, id)}
+                onClick={() => deleteConfirm(productId, id)}
                 className="text-danger"
               >
                 <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
@@ -150,10 +166,26 @@ export const ProductFeaturesList = ({ productId, productName }) => {
           </Dropdown>
         </td>
       </tr>
+      <DeleteConfirmation
+              message={
+                <FormattedMessage id="delete-plan-confirmation-message" />
+              }
+              icon="pi pi-exclamation-triangle"
+              confirm={confirm}
+              setConfirm={setConfirm}
+              confirmFunction={handleDeleteFeature}
+              update={update}
+              setUpdate={setUpdate}
+              sideBar={false}
+            />
+      </>
+      
+     
     )
   }
 
   return (
+    <Wrapper>
     <>
       <Card border="light" className="table-wrapper table-responsive shadow-sm">
         <Card.Body className="pt-0">
@@ -220,6 +252,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
         Add Feature
       </button>
     </>
+    </Wrapper>
   )
 }
 
