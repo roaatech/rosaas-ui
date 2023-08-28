@@ -9,6 +9,10 @@ import {
 import Label from '../../Shared/label/Label'
 import { HealthStatus } from '../../../../const'
 import {
+  BsFillCheckCircleFill,
+  BsFillExclamationCircleFill,
+} from 'react-icons/bs'
+import {
   Time,
   DataTransform,
   timeDifferenceFromNow,
@@ -111,13 +115,35 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                         </h6>
                       </div>
                     </div>
-                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                    <div className="checksCount d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
                       <div className="mb-0 w-25">
                         <FormattedMessage id="Checks-Count" />
                       </div>
                       <div className="small card-stats">
-                        {item.healthCheckStatus.healthyCount}/
-                        {item.healthCheckStatus.unhealthyCount}
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              <FormattedMessage id={'Health-Checks-Count'} />{' '}
+                              {item.healthCheckStatus.healthyCount} <br />
+                              <FormattedMessage
+                                id={'Unavailable-Checks-Count'}
+                              />{' '}
+                              {item.healthCheckStatus.unhealthyCount}
+                            </Tooltip>
+                          }
+                        >
+                          <span className="">
+                            {item.healthCheckStatus.healthyCount}{' '}
+                            <BsFillCheckCircleFill
+                              style={{ color: '#00a675' }}
+                            />{' '}
+                            / {item.healthCheckStatus.unhealthyCount}{' '}
+                            <BsFillExclamationCircleFill
+                              style={{ color: '#d26b4e' }}
+                            />
+                          </span>
+                        </OverlayTrigger>
                       </div>
                     </div>
                     <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">

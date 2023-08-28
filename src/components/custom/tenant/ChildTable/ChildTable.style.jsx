@@ -103,6 +103,10 @@ const Wrapper = styled.div`
       padding: 3px 7px !important;
     }
   }
+
+  .checksCount svg {
+    margin-top: -3px;
+  }
 `
 
 export { Wrapper }

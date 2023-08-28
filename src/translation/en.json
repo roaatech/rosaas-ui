@@ -127,6 +127,8 @@
   "Product-Owner": "Product Owner",
   "Rosas-System": "Rosas System",
   "Checks-Count": "Checks Count",
+  "Health-Checks-Count": "Health Checks Count",
+  "Unavailable-Checks-Count": "Unavailable Checks Count",
   "External-System": "External System",
   "Record-Created": "Record Created",
   "Data-Updated": "Data Updated",

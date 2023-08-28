@@ -12,7 +12,8 @@ import { Card } from '@themesberg/react-bootstrap'
 import ReactJson from 'react-json-view'
 import { FormattedMessage } from 'react-intl'
 import CustomPaginator from '../CustomPaginator/CustomPaginator'
-
+import { HealthStatus } from '../../../../const'
+import Label from '../label/Label'
 const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
   const { getTimeLine } = useRequest()
   const dispatch = useDispatch()
@@ -75,10 +76,25 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
           <div className="time-line-item-container" key={index}>
             <div className="timeLineItemCont" key={index}>
               <div className="flex justify-content-between">
-                <div className="processType mb-1">
-                  <FormattedMessage id={processType[item.processType]} />
-                </div>
+                {/* || processType[item.processType] == "unhealthy"  */}
 
+                <div className="  mb-2">
+                  {processType[item.processType] == 'Healthy' ? (
+                    <>
+                      <Label {...HealthStatus['true']} />
+                      {' (' + item.updatesCount + ')'}
+                    </>
+                  ) : processType[item.processType] == 'Unhealthy' ? (
+                    <>
+                      <Label {...HealthStatus['false']} />
+                      {' (' + item.updatesCount + ')'}
+                    </>
+                  ) : (
+                    <div className="processType">
+                      <FormattedMessage id={processType[item.processType]} />
+                    </div>
+                  )}
+                </div>
                 <div className="author">
                   <FormattedMessage id={Owner[item?.ownerType]} />
                 </div>
