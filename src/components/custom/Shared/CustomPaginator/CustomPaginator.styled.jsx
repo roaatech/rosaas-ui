@@ -16,6 +16,7 @@ export const Wrapper = styled.div`
 
   .p-paginator.p-component {
     flex-wrap: nowrap;
+    padding: 0;
     /* @media (max-width: 768px) {
       flex-wrap: wrap;
       display: inline-block;
@@ -30,6 +31,12 @@ export const Wrapper = styled.div`
   span {
     font-size: var(--normalFont);
   }
+
+  .p-paginator-next,
+  .p-paginator-prev {
+    display: none;
+  }
+
   /* 
   @media (max-width: 450px) {
   } */

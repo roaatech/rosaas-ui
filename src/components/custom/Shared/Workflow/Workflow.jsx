@@ -20,7 +20,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
   const routeParams = useParams()
   const tenantsData = useSelector((state) => state.tenants.tenants)
   const [first, setFirst] = useState(0)
-  const [rows, setRows] = useState(1)
+  const [rows, setRows] = useState(3)
 
   const timeLine = tenantsData[routeParams.id].products[productIndex].history
 
@@ -130,7 +130,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
           rows={rows}
           totalCount={timeLine?.totalCount}
           onPageChange={onPageChange}
-          rowsPerPageOptions={[1, 2, 9]}
+          rowsPerPageOptions={[3, 6, 9]}
         />
       </div>
     </Wrapper>
