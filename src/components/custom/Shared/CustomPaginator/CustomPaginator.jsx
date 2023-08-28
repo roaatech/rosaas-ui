@@ -22,8 +22,6 @@ const CustomPaginator = ({
         totalRecords={totalCount}
         rowsPerPageOptions={rowsPerPageOptions}
         onPageChange={onPageChange}
-
-        // rowsPerPageOptions = ,
       />
     </Wrapper>
   )
