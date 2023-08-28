@@ -20,7 +20,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
   const routeParams = useParams()
   const tenantsData = useSelector((state) => state.tenants.tenants)
   const [first, setFirst] = useState(0)
-  const [rows, setRows] = useState(5)
+  const [rows, setRows] = useState(1)
 
   const timeLine = tenantsData[routeParams.id].products[productIndex].history
 
@@ -75,10 +75,10 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
         {allItems().map((item, index) => (
           <div className="time-line-item-container" key={index}>
             <div className="timeLineItemCont" key={index}>
-              <div className="flex justify-content-between">
+              <div className="flex justify-content-between flex-wrap">
                 {/* || processType[item.processType] == "unhealthy"  */}
 
-                <div className="  mb-2">
+                <div className="mb-2">
                   {processType[item.processType] == 'Healthy' ? (
                     <>
                       <Label {...HealthStatus['true']} />
@@ -95,15 +95,17 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
                     </div>
                   )}
                 </div>
-                <div className="author">
+                <div className="author mb-2">
                   <FormattedMessage id={Owner[item?.ownerType]} />
                 </div>
               </div>
-              <div className="flex justify-content-between my-1">
-                <div className="action">
+              <div className="flex justify-content-between flex-wrap">
+                <div className="action mb-2">
                   <TenantStatus statusValue={item.status} />
                 </div>
-                <div className="time">{DataTransform(item.processDate)}</div>
+                <div className="time mb-2">
+                  {DataTransform(item.processDate)}
+                </div>
               </div>
               {/* <div className="my-1">
                 <MetaDataAccordion
@@ -128,7 +130,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
           rows={rows}
           totalCount={timeLine?.totalCount}
           onPageChange={onPageChange}
-          rowsPerPageOptions={[5, 10, 15]}
+          rowsPerPageOptions={[1, 2, 9]}
         />
       </div>
     </Wrapper>
