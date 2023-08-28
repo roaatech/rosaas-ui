@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
       &::after {
         content: '';
         position: absolute;
-        top: 31px;
+        top: 8px;
         left: 8px;
         width: 10px;
         height: 10px;
@@ -36,8 +36,11 @@ export const Wrapper = styled.div`
         padding: 10px;
         border-radius: 5px;
         .processType {
-          font-weight: bold;
-          font-size: 14px;
+          font-size: var(--smallFont);
+          border: 1px solid;
+          padding: 0.05rem 0.5rem;
+          border-radius: 7px;
+          border-color: var(--surface-400);
         }
         .action {
           margin: 2px 0;
@@ -49,10 +52,8 @@ export const Wrapper = styled.div`
           }
         }
         .info {
-          display: flex;
-          justify-content: space-between;
           .time {
-            font-size: 10px;
+            font-size: var(--smallFont);
           }
         }
       }

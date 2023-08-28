@@ -74,16 +74,22 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
         {allItems().map((item, index) => (
           <div className="time-line-item-container" key={index}>
             <div className="timeLineItemCont" key={index}>
-              <div className="processType mb-1">
-                <FormattedMessage id={processType[item.processType]} />
+              <div className="flex justify-content-between">
+                <div className="processType mb-1">
+                  <FormattedMessage id={processType[item.processType]} />
+                </div>
+
+                <div className="author">
+                  <FormattedMessage id={Owner[item?.ownerType]} />
+                </div>
               </div>
-              <div className="info">
+              <div className="flex justify-content-between my-1">
                 <div className="action">
                   <TenantStatus statusValue={item.status} />
                 </div>
                 <div className="time">{DataTransform(item.processDate)}</div>
               </div>
-              <div className="my-1">
+              {/* <div className="my-1">
                 <MetaDataAccordion
                   defaultKey="metaData"
                   data={[
@@ -96,11 +102,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
                     },
                   ]}
                 />
-              </div>
-
-              <div className="author">
-                <FormattedMessage id={Owner[item?.ownerType]} />
-              </div>
+              </div> */}
             </div>
           </div>
         ))}

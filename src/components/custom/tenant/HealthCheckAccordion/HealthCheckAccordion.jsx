@@ -7,10 +7,7 @@ import {
   Table,
 } from '@themesberg/react-bootstrap'
 import Label from '../../Shared/label/Label'
-import {
-  BsFillCheckCircleFill,
-  BsFillExclamationCircleFill,
-} from 'react-icons/bs'
+import { HealthStatus } from '../../../../const'
 import {
   Time,
   DataTransform,
@@ -22,21 +19,6 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
   const intl = useIntl()
 
   const AccordionItem = (item) => {
-    const HealthStatus = {
-      true: {
-        background: '#eff9f6',
-        value: <FormattedMessage id="Healthy" />,
-        color: '#00a675',
-        icon: <BsFillCheckCircleFill />,
-      },
-      false: {
-        background: '#f5e8e4',
-        value: <FormattedMessage id="Unhealthy" />,
-        color: '#d26b4e',
-        icon: <BsFillExclamationCircleFill />,
-      },
-    }
-
     // const timeDifferenceLastCheck = timeDifferenceFromNow(
     //   item.healthCheckStatus.lastCheckDate
     // )
@@ -127,6 +109,15 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                         <h6>
                           <FormattedMessage id="Health-Check-Status-Info" />
                         </h6>
+                      </div>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                      <div className="mb-0 w-25">
+                        <FormattedMessage id="Checks-Count" />
+                      </div>
+                      <div className="small card-stats">
+                        {item.healthCheckStatus.healthyCount}/
+                        {item.healthCheckStatus.unhealthyCount}
                       </div>
                     </div>
                     <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">

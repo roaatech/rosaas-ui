@@ -142,11 +142,10 @@ export default function ChildTable({
                       updateTenant()
                     }}
                     type="button"
-                    // icon={}
                     label={<FiRefreshCw />}
                     style={{
-                      backgroundColor: '#239dff',
-                      borderColor: '#239dff',
+                      backgroundColor: 'var(--primary5)',
+                      borderColor: 'var(--primary5)',
                     }}
                   />
                 </div>
