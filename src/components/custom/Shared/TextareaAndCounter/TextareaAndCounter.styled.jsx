@@ -11,7 +11,7 @@ export const TextareaCounterWrapper = styled.div`
     color: var(--second-color);
     font-size: var(--smallFont);
     position: absolute;
-    bottom: -17px;
+    bottom: -20px;
     right: 0;
     padding-right: 6px;
   }

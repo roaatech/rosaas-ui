@@ -10,25 +10,17 @@ import {
   Dropdown,
 } from '@themesberg/react-bootstrap'
 import TableDate from '../../Shared/TableDate/TableDate'
-import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  productInfo,
-  features,
-  FeatureInfo,
-  storeFeatureDelete,
-} from '../../../../store/slices/products'
+import { features, storeFeatureDelete } from '../../../../store/slices/products'
 import { FormattedMessage } from 'react-intl'
 import {
   faEdit,
   faEllipsisH,
-  faEye,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons'
 
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import FeatureForm from '../../Feature/FeatureForm/FeatureForm'
-import { Dialog } from 'primereact/dialog'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import {
@@ -38,9 +30,7 @@ import {
 } from '../../../../const'
 
 export const ProductFeaturesList = ({ productId, productName }) => {
-  const navigate = useNavigate()
-  const { getProductFeatures, getFeature, getFeatureList, deleteFeatureReq } =
-    useRequest()
+  const { getProductFeatures, deleteFeatureReq } = useRequest()
   const [searchValue] = useState('')
   const [sortField] = useState('')
   const [sortValue] = useState('')
@@ -61,12 +51,8 @@ export const ProductFeaturesList = ({ productId, productName }) => {
   //   setConfirm(true)
   // }
   const editForm = async (id) => {
-    //  if (!listData[id].creationEndpoint) {
-    //  const featureData = await getFeature(id, productId)
-    //  dispatch(FeatureInfo(featureData.data.data))
     setPopUpLable('Edit-Feature')
     setType('edit')
-    // }
     setCurrentId(id)
     setVisible(true)
   }
@@ -83,23 +69,21 @@ export const ProductFeaturesList = ({ productId, productName }) => {
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
 
   const TableRow = (props) => {
-    const { name, description, type, unit, reset, id, createdDate,editedDate } = props
+    const {
+      name,
+      description,
+      type,
+      unit,
+      reset,
+      id,
+      createdDate,
+      editedDate,
+    } = props
 
     const mappedType = featureTypeMap[type]
     const mappedUnit = featureUnitMap[unit]
     const mappedReset = featureResetMap[reset]
-    /********************************/
-    const [expandedRows, setExpandedRows] = useState([])
 
-    const toggleRow = (rowData) => {
-      const isRowExpanded = expandedRows.includes(rowData.id)
-      if (isRowExpanded) {
-        setExpandedRows(expandedRows.filter((id) => id !== rowData.id))
-      } else {
-        setExpandedRows([...expandedRows, rowData.id])
-      }
-    }
-    /****************************** */
     const handleDeleteFeature = async (productId, featureId) => {
       try {
         await deleteFeatureReq(productId, { id: featureId })
@@ -114,8 +98,10 @@ export const ProductFeaturesList = ({ productId, productName }) => {
         <td>
           <span className="fw-normal">{name}</span>
         </td>
-        <td style={{ minWidth: '410px', maxWidth: '410px',whiteSpace: 'normal'}}>
-        <DescriptionCell data={{ description }} />
+        <td
+          style={{ minWidth: '410px', maxWidth: '410px', whiteSpace: 'normal' }}
+        >
+          <DescriptionCell data={{ description }} />
         </td>
 
         <td>
@@ -127,16 +113,10 @@ export const ProductFeaturesList = ({ productId, productName }) => {
         <td>
           <span className="fw-normal">{mappedReset}</span>
         </td>
-        <td >
-        <span className="fw-normal">
-        <TableDate
-                    createdDate={createdDate}
-                    editedDate={editedDate}
-                  />
-          
-          
+        <td>
+          <span className="fw-normal">
+            <TableDate createdDate={createdDate} editedDate={editedDate} />
           </span>
-
         </td>
         <td>
           <Dropdown as={ButtonGroup}>
@@ -151,14 +131,6 @@ export const ProductFeaturesList = ({ productId, productName }) => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              {/* <Dropdown.Item
-                onSelect={() =>
-                  navigate(`/products/${productId}/features/${id}`)
-                }
-              >
-                <FontAwesomeIcon icon={faEye} className="me-2" />
-                <FormattedMessage id="View-Details" />
-              </Dropdown.Item> */}
               <Dropdown.Item
                 onSelect={() => {
                   editForm(id)
@@ -222,22 +194,6 @@ export const ProductFeaturesList = ({ productId, productName }) => {
           </Table>
         </Card.Body>
       </Card>
-      {/* <Dialog
-        headerClassName="pb-0"
-        className="tenantForm"
-        header={'Edit Tenant'}
-        visible={visible}
-        style={{ width: '30vw', minWidth: '300px' }}
-        onHide={() => setVisible(false)}
-      > */}
-      {/* <FeatureForm
-          type={'create'}
-          tenantData={list}
-          update={update}
-          setUpdate={setUpdate}
-          setVisible={setVisible}
-          sideBar={false}
-        /> */}
 
       <ThemeDialog visible={visible} setVisible={setVisible}>
         <>
@@ -245,13 +201,10 @@ export const ProductFeaturesList = ({ productId, productName }) => {
             productId={productId}
             popupLabel={<FormattedMessage id={popUpLable} />}
             type={type}
-            FeatureData={list}
             update={update}
             setUpdate={setUpdate}
             setVisible={setVisible}
             sideBar={false}
-            dispatch={dispatch}
-            FeatureInfo={FeatureInfo}
             featureData={type == 'edit' ? list?.features[currentId] : {}}
           />
         </>

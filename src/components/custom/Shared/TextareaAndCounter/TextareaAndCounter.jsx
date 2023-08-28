@@ -22,7 +22,7 @@ const TextareaAndCounter = ({
       <div className="textarea-container">
         <textarea
           className="form-control"
-          rows={Math.ceil(value.length / 60 + 1)}
+          rows={Math.ceil(value.length / 60)}
           value={value}
           onChange={handleTextareaChange}
           maxLength={maxLength}

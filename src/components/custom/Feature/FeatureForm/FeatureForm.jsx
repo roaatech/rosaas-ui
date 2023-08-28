@@ -1,23 +1,12 @@
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
-import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../../axios/apis/useRequest.js'
-import {
-  Modal,
-  Button,
-  OverlayTrigger,
-  Tooltip,
-} from '@themesberg/react-bootstrap'
+import { Modal, Button } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './FeatureForm.styled.jsx'
-import { generateApiKey } from '../../../../lib/sharedFun/common.js'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { AiFillCopy } from 'react-icons/ai'
-import { useParams } from 'react-router-dom'
 import { FeatureInfo } from '../../../../store/slices/products.js'
 import {
   featureResetMap,
@@ -50,15 +39,17 @@ const FeatureForm = ({
     name: Yup.string().required('Feature Name is required'),
     description: Yup.string().required('Description is required'),
     type: Yup.string().required('Type is required'),
-    unit: Yup.string().test('unit-validation', 'Unit is required when Type is Number', function (value) {
-      const type = this.resolve(Yup.ref('type'));
-      if (type === '1') {
-        return value !== undefined && value !== '';
+    unit: Yup.string().test(
+      'unit-validation',
+      'Unit is required when Type is Number',
+      function (value) {
+        const type = this.resolve(Yup.ref('type'))
+        if (type === '1') {
+          return value !== undefined && value !== ''
+        }
+        return true
       }
-      return true;
-    }),
-    
-   
+    ),
   })
   const formik = useFormik({
     initialValues,
@@ -70,7 +61,7 @@ const FeatureForm = ({
           description: values.description,
           type: parseInt(values.type),
           unit: parseInt(values.unit),
-          reset: parseInt(values.reset)||1,
+          reset: parseInt(values.reset) || 1,
         })
         setUpdate(update + 1)
       } else {
@@ -80,7 +71,7 @@ const FeatureForm = ({
             description: values.description,
             type: parseInt(values.type),
             unit: parseInt(values.unit),
-            reset: parseInt(values.reset)||1,
+            reset: parseInt(values.reset) || 1,
           },
           id: featureData.id,
         })
@@ -94,7 +85,7 @@ const FeatureForm = ({
               description: values.description,
               type: values.type,
               unit: values.unit,
-              reset: values.reset||1,
+              reset: values.reset || 1,
               id: featureData.id,
               editedDate: new Date().toISOString().slice(0, 19),
             },
@@ -106,25 +97,24 @@ const FeatureForm = ({
       setSubmitting(false)
     },
   })
- 
-    //****************** */
-    const maxLength = 250;
-    let value;
-    if(formik.values.description){
-      value=formik.values.description
-    }else{
-      value= ""
-    }
-    const [updatedDescription, setUpdatedDescription] = useState( value);
 
-    const handleDescriptionChange = (newValue) => {
-      setUpdatedDescription(newValue);
-    };
-    formik.values.description=updatedDescription
+  //****************** */
+  const maxLength = 250
+  let value
+  if (formik.values.description) {
+    value = formik.values.description
+  } else {
+    value = ''
+  }
+  const [updatedDescription, setUpdatedDescription] = useState(value)
+
+  const handleDescriptionChange = (newValue) => {
+    setUpdatedDescription(newValue)
+  }
+  formik.values.description = updatedDescription
+
   //******************** */
-  
-  //******************** */
-  
+
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
@@ -136,104 +126,6 @@ const FeatureForm = ({
             onClick={() => setVisible(false)}
           />
         </Modal.Header>
-        {/* <Modal.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Name" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="name"
-              name="name"
-              onChange={formik.handleChange}
-              value={formik.values.name}
-              className={
-                formik.touched.name && formik.errors.name ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.name && formik.errors.name && (
-              <div className="invalid-feedback">{formik.errors.name}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Description" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="description"
-              name="description"
-              onChange={formik.handleChange}
-              value={formik.values.description}
-              className={
-                formik.touched.description && formik.errors.description
-                  ? 'is-invalid'
-                  : ''
-              }
-            />
-            {formik.touched.description && formik.errors.description && (
-              <div className="invalid-feedback">{formik.errors.description}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Type" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="type"
-              name="type"
-              onChange={formik.handleChange}
-              value={formik.values.type}
-              className={
-                formik.touched.type && formik.errors.type ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.type && formik.errors.type && (
-              <div className="invalid-feedback">{formik.errors.type}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Unit" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="unit"
-              name="unit"
-              onChange={formik.handleChange}
-              value={formik.values.unit}
-              className={
-                formik.touched.unit && formik.errors.unit ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.unit && formik.errors.unit && (
-              <div className="invalid-feedback">{formik.errors.unit}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Reset" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="reset"
-              name="reset"
-              onChange={formik.handleChange}
-              value={formik.values.reset}
-              className={
-                formik.touched.reset && formik.errors.reset ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.reset && formik.errors.reset && (
-              <div className="invalid-feedback">{formik.errors.reset}</div>
-            )}
-          </Form.Group>
-        </Modal.Body> */}
 
         <Modal.Body>
           <div>
@@ -271,15 +163,15 @@ const FeatureForm = ({
               maxLength={maxLength}
               showCharCount
             />
-           
-             {formik.touched.description && formik.errors.description && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.description}
-                </Form.Control.Feedback>
-              )}
+
+            {formik.touched.description && formik.errors.description && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.description}
+              </Form.Control.Feedback>
+            )}
           </Form.Group>
 
           {/* Repeat similar code blocks for other fields */}
@@ -294,9 +186,9 @@ const FeatureForm = ({
                 id="type"
                 name="type"
                 onChange={(e) => {
-                  formik.handleChange(e);
-                  if (e.target.value === "2") { 
-                    formik.setFieldValue("unit", ""); 
+                  formik.handleChange(e)
+                  if (e.target.value === '2') {
+                    formik.setFieldValue('unit', '')
                   }
                 }}
                 value={formik.values.type}
@@ -320,41 +212,44 @@ const FeatureForm = ({
             </Form.Group>
           </div>
           <div>
-           {/* Unit */}
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Unit" />
-            </Form.Label>
-            <select
-              className="form-control"
-              id="unit"
-              name="unit"
-              onChange={formik.handleChange}
-              value={formik.values.unit}
-              disabled={formik.values.type === "2"}
-            >
-              <option value="">Select Unit</option>
-              {Object.entries(featureUnitMap).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-            {/* Display validation error */}
-            {formik.touched.unit && formik.errors.unit && (
-              <Form.Control.Feedback
-                type="invalid"
-                style={{ display: 'block' }}
+            {/* Unit */}
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Unit" />
+              </Form.Label>
+              <select
+                className="form-control"
+                id="unit"
+                name="unit"
+                onChange={formik.handleChange}
+                value={formik.values.unit}
+                disabled={formik.values.type === '2'}
               >
-                {formik.errors.unit}
-              </Form.Control.Feedback>
-            )}
-            {/* Show error message for conditional validation */}
-            {formik.values.type === "1" && formik.touched.unit && !formik.values.unit && (
-              <div className="invalid-feedback">Unit is required when Type is Number</div>
-            )}
-          </Form.Group>
-
+                <option value="">Select Unit</option>
+                {Object.entries(featureUnitMap).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              {/* Display validation error */}
+              {formik.touched.unit && formik.errors.unit && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.unit}
+                </Form.Control.Feedback>
+              )}
+              {/* Show error message for conditional validation */}
+              {formik.values.type === '1' &&
+                formik.touched.unit &&
+                !formik.values.unit && (
+                  <div className="invalid-feedback">
+                    Unit is required when Type is Number
+                  </div>
+                )}
+            </Form.Group>
           </div>
           <div>
             {/* Reset */}
