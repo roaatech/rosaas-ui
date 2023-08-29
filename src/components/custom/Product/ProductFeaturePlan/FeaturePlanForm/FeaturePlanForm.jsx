@@ -84,21 +84,6 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
     // .default(1),
   })
 
-  const currentDateInUTC = () => {
-    const now = new Date()
-
-    const year = now.getUTCFullYear()
-    const month = String(now.getUTCMonth() + 1).padStart(2, '0')
-    const day = String(now.getUTCDate()).padStart(2, '0')
-    const hours = String(now.getUTCHours()).padStart(2, '0')
-    const minutes = String(now.getUTCMinutes()).padStart(2, '0')
-    const seconds = String(now.getUTCSeconds()).padStart(2, '0')
-
-    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
-
-    return formattedDate
-  }
-
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
@@ -118,10 +103,10 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
             name: planOptions.find((item) => item.value === values.plan).label,
           },
 
-          editedDate: currentDateInUTC(),
+          editedDate: new Date().toISOString().slice(0, 19),
           createdDate: FeaturePlanData
             ? FeaturePlanData.createdDate
-            : currentDateInUTC(),
+            : new Date().toISOString().slice(0, 19),
         },
       }
 
