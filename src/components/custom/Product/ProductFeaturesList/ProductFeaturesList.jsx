@@ -232,16 +232,6 @@ export const ProductFeaturesList = ({ productId }) => {
             />
           </>
         </ThemeDialog>
-
-        <button
-          onClick={() => {
-            setVisible(true)
-            setPopUpLable('Add-Feature')
-            setType('create')
-          }}
-        >
-          Add Feature
-        </button>
       </>
     </Wrapper>
   )
