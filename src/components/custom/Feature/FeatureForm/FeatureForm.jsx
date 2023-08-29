@@ -26,6 +26,14 @@ import {
 } from '../../../../const/index.js'
 import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
+function convertToLocaleISOString(utcISOString) {
+  const utcDateTime = new Date(utcISOString)
+  const localDateTime = new Date(
+    utcDateTime.getTime() + utcDateTime.getTimezoneOffset() * 60000
+  ) // Convert to local time
+  return localDateTime.toISOString().slice(0, 19)
+}
+
 const FeatureForm = ({
   type,
   featureData,
@@ -74,7 +82,30 @@ const FeatureForm = ({
           unit: parseInt(values.unit),
           reset: parseInt(values.reset) || 1,
         })
-        setUpdate(update + 1)
+        // setUpdate(update + 1)
+        dispatch(
+          FeatureInfo({
+            featureId: createFeature.data.data.id,
+            productId: productId,
+            data: {
+              name: values.name,
+              description: values.description,
+              type: values.type,
+              unit: values.unit,
+              reset: values.reset || 1,
+              id: createFeature.data.data.id,
+              editedDate: new Date().toISOString().slice(0, 19),
+              createdDate: new Date().toISOString().slice(0, 19),
+
+              // editedDate: convertToLocaleISOString(
+              //   new Date().toISOString().slice(0, 19)
+              // ),
+              // createdDate: convertToLocaleISOString(
+              //   new Date().toISOString().slice(0, 19)
+              // ),
+            },
+          })
+        )
       } else {
         const editFeature = await editFeatureRequest(productId, {
           data: {

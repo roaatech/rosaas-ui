@@ -19,6 +19,7 @@ import {
   BsFillPersonPlusFill,
   BsFillTrash3Fill,
   BsPencilSquare,
+  BsStars,
 } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
 import ProductFeaturePlan from '../../components/custom/Product/ProductFeaturePlan/ProductFeaturePlan'
@@ -58,6 +59,14 @@ const ProductDetails = () => {
             </h4>
             <DynamicButtons
               buttons={[
+                {
+                  order: 4,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Add-Feature',
+                  component: 'addFeature',
+                  icon: <BsStars />,
+                },
                 {
                   order: 4,
                   type: 'form',
