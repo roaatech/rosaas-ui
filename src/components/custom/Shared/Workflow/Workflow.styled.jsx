@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   .timeLineCont {
-    max-height: calc(100vh - 220px);
+    max-height: 350px;
     overflow-y: auto;
     margin-bottom: 10px;
     .time-line-item-container {
@@ -58,6 +58,11 @@ export const Wrapper = styled.div`
         }
       }
     }
+  }
+
+  .HealthStatus .label {
+    padding: 4px 10px;
+    display: inline-block;
   }
 
   .accordion-button::after {

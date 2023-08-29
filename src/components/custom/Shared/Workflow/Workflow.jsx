@@ -20,7 +20,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
   const routeParams = useParams()
   const tenantsData = useSelector((state) => state.tenants.tenants)
   const [first, setFirst] = useState(0)
-  const [rows, setRows] = useState(3)
+  const [rows, setRows] = useState(10)
 
   const timeLine = tenantsData[routeParams.id].products[productIndex].history
 
@@ -76,19 +76,21 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
           <div className="time-line-item-container" key={index}>
             <div className="timeLineItemCont" key={index}>
               <div className="flex justify-content-between flex-wrap">
-                {/* || processType[item.processType] == "unhealthy"  */}
-
                 <div className="mb-2">
                   {processType[item.processType] == 'Healthy' ? (
-                    <>
+                    <div className="HealthStatus">
                       <Label {...HealthStatus['true']} />
-                      {' (' + item.updatesCount + ')'}
-                    </>
+                      {item.updatesCount > 1
+                        ? ' (' + item.updatesCount + ')'
+                        : ''}
+                    </div>
                   ) : processType[item.processType] == 'Unhealthy' ? (
-                    <>
+                    <div className="HealthStatus">
                       <Label {...HealthStatus['false']} />
-                      {' (' + item.updatesCount + ')'}
-                    </>
+                      {item.updatesCount > 1
+                        ? ' (' + item.updatesCount + ')'
+                        : ''}
+                    </div>
                   ) : (
                     <div className="processType">
                       <FormattedMessage id={processType[item.processType]} />
@@ -130,7 +132,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
           rows={rows}
           totalCount={timeLine?.totalCount}
           onPageChange={onPageChange}
-          rowsPerPageOptions={[3, 6, 9]}
+          rowsPerPageOptions={[10, 20, 9]}
         />
       </div>
     </Wrapper>

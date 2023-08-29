@@ -124,24 +124,37 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id={'Health-Checks-Count'} />{' '}
-                              {item.healthCheckStatus.healthyCount} <br />
+                              <FormattedMessage id={'Health-Checks-Count'} /> (
+                              {item.healthCheckStatus.healthyCount}) <br />
                               <FormattedMessage
                                 id={'Unavailable-Checks-Count'}
                               />{' '}
-                              {item.healthCheckStatus.unhealthyCount}
+                              ({item.healthCheckStatus.unhealthyCount})
                             </Tooltip>
                           }
                         >
                           <span className="">
-                            {item.healthCheckStatus.healthyCount}{' '}
-                            <BsFillCheckCircleFill
-                              style={{ color: '#00a675' }}
-                            />{' '}
-                            / {item.healthCheckStatus.unhealthyCount}{' '}
-                            <BsFillExclamationCircleFill
-                              style={{ color: '#d26b4e' }}
-                            />
+                            {!item.healthCheckStatus.isHealthy &&
+                            item.healthCheckStatus.healthyCount == 0 ? null : (
+                              <Label
+                                className="mr-2"
+                                background="#eff9f6"
+                                value={item.healthCheckStatus.healthyCount}
+                                color="#00a675"
+                                icon={<BsFillCheckCircleFill />}
+                              />
+                            )}{' '}
+                            {item.healthCheckStatus.isHealthy &&
+                            item.healthCheckStatus.unhealthyCount ==
+                              0 ? null : (
+                              <Label
+                                className="mr-2"
+                                background="#f5e8e4"
+                                value={item.healthCheckStatus.unhealthyCount}
+                                color="#d26b4e"
+                                icon={<BsFillExclamationCircleFill />}
+                              />
+                            )}
                           </span>
                         </OverlayTrigger>
                       </div>
