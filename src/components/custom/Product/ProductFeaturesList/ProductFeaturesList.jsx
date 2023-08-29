@@ -213,7 +213,7 @@ export const ProductFeaturesList = ({ productId, productName }) => {
           <DeleteConfirmation
           
               message={
-                <FormattedMessage id="delete-plan-confirmation-message" />
+                <FormattedMessage id="delete-feature-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
