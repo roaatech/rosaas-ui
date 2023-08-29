@@ -19,45 +19,21 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
 import { FeatureInfo } from '../../../../store/slices/products.js'
-const featureTypeMap = {
-  Number: 1,
-  Boolean: 2,
+import {
+  featureResetMap,
+  featureTypeMap,
+  featureUnitMap,
+} from '../../../../const/index.js'
+import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+
+function convertToLocaleISOString(utcISOString) {
+  const utcDateTime = new Date(utcISOString)
+  const localDateTime = new Date(
+    utcDateTime.getTime() + utcDateTime.getTimezoneOffset() * 60000
+  ) // Convert to local time
+  return localDateTime.toISOString().slice(0, 19)
 }
 
-const featureUnitMap = {
-  KB: 1,
-  MB: 2,
-  GB: 3,
-}
-
-const featureResetMap = {
-  Never: 1,
-  Weekly: 2,
-  Monthly: 3,
-  Annual: 4,
-}
-const featureTypeMap_ = {
-  1: 'Number',
-  2: 'Boolean',
-}
-
-const featureUnitMap_ = {
-  1: 'KB',
-  2: 'MB',
-  3: 'GB',
-}
-
-const featureResetMap_ = {
-  1: 'Never',
-  2: 'Weekly',
-  3: 'Monthly',
-  4: 'Annual',
-}
-
-// const options = featureTypeMap_.map((item, index) => {
-//   return { value: item.id, label: item.name }
-// })
-// console.log(options);
 const FeatureForm = ({
   type,
   featureData,
@@ -67,29 +43,33 @@ const FeatureForm = ({
   setUpdate,
   productId,
 }) => {
-  // console.log('iiiiiiiiiiiiiiiiiiii', featureData)
   const { createFeatureRequest, editFeatureRequest } = useRequest()
   const dispatch = useDispatch()
 
   const initialValues = {
     name: featureData ? featureData.name : '',
     description: featureData ? featureData.description : '',
-    type: featureData ? featureTypeMap_[featureData.type] : '',
-    unit: featureData ? featureUnitMap_[featureData.unit] : '',
-    reset: featureData ? featureResetMap_[featureData.reset] : '',
+    type: featureData ? featureData.type : '',
+    unit: featureData ? featureData.unit : undefined,
+    reset: featureData ? featureData.reset : '',
   }
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Feature Name is required'),
-    // description: Yup.string().required('Description is required'),
-    // type: Yup.string().required('Feature Type is required'),
-    // unit: Yup.string().when('type', {
-    //   is: 'Number',
-    //   then: Yup.string().required('Feature Unit is required'),
-    // }),
-    // reset: Yup.string().required('Feature Reset is required'),
+    description: Yup.string().required('Description is required'),
+    type: Yup.string().required('Type is required'),
+    unit: Yup.string().test(
+      'unit-validation',
+      'Unit is required when Type is Number',
+      function (value) {
+        const type = this.resolve(Yup.ref('type'))
+        if (type === '1') {
+          return value !== undefined && value !== ''
+        }
+        return true
+      }
+    ),
   })
-
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
@@ -98,20 +78,42 @@ const FeatureForm = ({
         const createFeature = await createFeatureRequest(productId, {
           name: values.name,
           description: values.description,
-          type: featureTypeMap[values.type],
-          unit: featureUnitMap[values.unit],
-          reset: featureResetMap[values.reset],
+          type: parseInt(values.type),
+          unit: parseInt(values.unit),
+          reset: parseInt(values.reset) || 1,
         })
-        setUpdate(update + 1)
+        // setUpdate(update + 1)
+        dispatch(
+          FeatureInfo({
+            featureId: createFeature.data.data.id,
+            productId: productId,
+            data: {
+              name: values.name,
+              description: values.description,
+              type: values.type,
+              unit: values.unit,
+              reset: values.reset || 1,
+              id: createFeature.data.data.id,
+              editedDate: new Date().toISOString().slice(0, 19),
+              createdDate: new Date().toISOString().slice(0, 19),
+
+              // editedDate: convertToLocaleISOString(
+              //   new Date().toISOString().slice(0, 19)
+              // ),
+              // createdDate: convertToLocaleISOString(
+              //   new Date().toISOString().slice(0, 19)
+              // ),
+            },
+          })
+        )
       } else {
-        console.log(productId)
         const editFeature = await editFeatureRequest(productId, {
           data: {
             name: values.name,
             description: values.description,
-            type: featureTypeMap[values.type],
-            unit: featureUnitMap[values.unit],
-            reset: featureResetMap[values.reset],
+            type: parseInt(values.type),
+            unit: parseInt(values.unit),
+            reset: parseInt(values.reset) || 1,
           },
           id: featureData.id,
         })
@@ -123,10 +125,12 @@ const FeatureForm = ({
             data: {
               name: values.name,
               description: values.description,
-              type: featureTypeMap[values.type],
-              unit: featureUnitMap[values.unit],
-              reset: featureResetMap[values.reset],
+              type: values.type,
+              unit: values.unit,
+              reset: values.reset || 1,
+              id: featureData.id,
               editedDate: new Date().toISOString().slice(0, 19),
+              createdDate: featureData.createdDate,
             },
           })
         )
@@ -136,6 +140,23 @@ const FeatureForm = ({
       setSubmitting(false)
     },
   })
+
+  //********  maxLength  ********* */
+  const maxLength = 250
+  let value
+  if (formik.values.description) {
+    value = formik.values.description
+  } else {
+    value = ''
+  }
+  const [updatedDescription, setUpdatedDescription] = useState(value)
+
+  const handleDescriptionChange = (newValue) => {
+    setUpdatedDescription(newValue)
+  }
+  formik.values.description = updatedDescription
+
+  //****************************** */
 
   return (
     <Wrapper>
@@ -148,111 +169,14 @@ const FeatureForm = ({
             onClick={() => setVisible(false)}
           />
         </Modal.Header>
-        {/* <Modal.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Name" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="name"
-              name="name"
-              onChange={formik.handleChange}
-              value={formik.values.name}
-              className={
-                formik.touched.name && formik.errors.name ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.name && formik.errors.name && (
-              <div className="invalid-feedback">{formik.errors.name}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Description" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="description"
-              name="description"
-              onChange={formik.handleChange}
-              value={formik.values.description}
-              className={
-                formik.touched.description && formik.errors.description
-                  ? 'is-invalid'
-                  : ''
-              }
-            />
-            {formik.touched.description && formik.errors.description && (
-              <div className="invalid-feedback">{formik.errors.description}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Type" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="type"
-              name="type"
-              onChange={formik.handleChange}
-              value={formik.values.type}
-              className={
-                formik.touched.type && formik.errors.type ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.type && formik.errors.type && (
-              <div className="invalid-feedback">{formik.errors.type}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Unit" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="unit"
-              name="unit"
-              onChange={formik.handleChange}
-              value={formik.values.unit}
-              className={
-                formik.touched.unit && formik.errors.unit ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.unit && formik.errors.unit && (
-              <div className="invalid-feedback">{formik.errors.unit}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Reset" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="reset"
-              name="reset"
-              onChange={formik.handleChange}
-              value={formik.values.reset}
-              className={
-                formik.touched.reset && formik.errors.reset ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.reset && formik.errors.reset && (
-              <div className="invalid-feedback">{formik.errors.reset}</div>
-            )}
-          </Form.Group>
-        </Modal.Body> */}
 
         <Modal.Body>
           <div>
             {/* Name */}
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Name" />
+                <FormattedMessage id="Name" />{' '}
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -275,24 +199,23 @@ const FeatureForm = ({
           </div>
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Description" />
+              <FormattedMessage id="Description" />{' '}
+              <span style={{ color: 'red' }}>*</span>
             </Form.Label>
-            <InputText
-              type="text"
-              id="description"
-              name="description"
-              onChange={formik.handleChange}
-              value={formik.values.description}
-              className={
-                formik.touched.description && formik.errors.description
-                  ? 'is-invalid'
-                  : ''
-              }
+            <TextareaAndCounter
+              value={updatedDescription}
+              onValueChange={handleDescriptionChange}
+              maxLength={maxLength}
+              showCharCount
             />
+
             {formik.touched.description && formik.errors.description && (
-              <div className="invalid-feedback">
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
                 {formik.errors.description}
-              </div>
+              </Form.Control.Feedback>
             )}
           </Form.Group>
 
@@ -301,19 +224,25 @@ const FeatureForm = ({
             {/* Type */}
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Type" />
+                <FormattedMessage id="Type" />{' '}
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
                 className="form-control"
                 id="type"
                 name="type"
-                onChange={formik.handleChange}
-                value={[formik.values.type]}
+                onChange={(e) => {
+                  formik.handleChange(e)
+                  if (e.target.value === '2') {
+                    formik.setFieldValue('unit', '')
+                  }
+                }}
+                value={formik.values.type}
               >
                 <option value="">Select Type</option>
-                {Object.keys(featureTypeMap).map((key) => (
-                  <option key={key} value={key}>
-                    <FormattedMessage id={key} />
+                {Object.entries(featureTypeMap).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
                   </option>
                 ))}
               </select>
@@ -340,11 +269,12 @@ const FeatureForm = ({
                 name="unit"
                 onChange={formik.handleChange}
                 value={formik.values.unit}
+                disabled={formik.values.type === '2'}
               >
                 <option value="">Select Unit</option>
-                {Object.keys(featureUnitMap).map((key) => (
-                  <option key={key} value={key}>
-                    <FormattedMessage id={key} />
+                {Object.entries(featureUnitMap).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
                   </option>
                 ))}
               </select>
@@ -357,6 +287,14 @@ const FeatureForm = ({
                   {formik.errors.unit}
                 </Form.Control.Feedback>
               )}
+              {/* Show error message for conditional validation */}
+              {formik.values.type === '1' &&
+                formik.touched.unit &&
+                !formik.values.unit && (
+                  <div className="invalid-feedback">
+                    Unit is required when Type is Number
+                  </div>
+                )}
             </Form.Group>
           </div>
           <div>
@@ -373,9 +311,9 @@ const FeatureForm = ({
                 value={formik.values.reset}
               >
                 <option value="">Select Reset</option>
-                {Object.keys(featureResetMap).map((key) => (
-                  <option key={key} value={key}>
-                    <FormattedMessage id={key} />
+                {Object.entries(featureResetMap).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
                   </option>
                 ))}
               </select>

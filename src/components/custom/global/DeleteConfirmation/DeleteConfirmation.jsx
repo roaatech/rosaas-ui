@@ -1,7 +1,5 @@
 import React from 'react'
 import { ConfirmDialog } from 'primereact/confirmdialog'
-// import { Toast } from "primereact/toast";
-import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
 export default function DeleteConfirmation({
@@ -12,7 +10,6 @@ export default function DeleteConfirmation({
   confirmFunction,
   message,
   icon,
-  sideBar,
 }) {
   const accept = async () => {
     await confirmFunction()

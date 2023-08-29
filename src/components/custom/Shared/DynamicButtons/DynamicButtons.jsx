@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { Wrapper } from './DynamicButtons.styled'
 import PlanForm from '../../Plan/PlanForm/PlanForm'
+import FeatureForm from '../../Feature/FeatureForm/FeatureForm'
 
 const DynamicButtons = ({ buttons }) => {
   const navigate = useNavigate()
@@ -92,6 +93,25 @@ const DynamicButtons = ({ buttons }) => {
           setVisible={setVisible}
           sideBar={false}
         />
+      </>
+    ),
+    addFeature: () => (
+      <>
+        <FeatureForm
+          productId={buttons[currentButtonIndex].id}
+          popupLabel={<FormattedMessage id="Add-Feature" />}
+          type={'create'}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+        />
+
+        {/* <FeatureForm
+             
+               update={update}
+              setUpdate={setUpdate}
+              //  featureData={type == 'edit' ? list?.features[currentId] : {}}
+            /> */}
       </>
     ),
   }
