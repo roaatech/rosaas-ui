@@ -27,6 +27,24 @@ const urlIsOverridden = {
   true: { background: '#eee5ff', value: 'Yes' },
   false: { background: '#e1f0ff', value: 'No' },
 }
+const featureTypeMap = {
+  1: 'Number',
+  2: 'Boolean',
+}
+
+const featureUnitMap = {
+  1: 'KB',
+  2: 'MB',
+  3: 'GB',
+}
+
+const featureResetMap = {
+  1: 'Never',
+  2: 'Weekly',
+  3: 'Monthly',
+  4: 'Annual',
+}
+
 const statusConst = {
   1: {
     string: 'Rosas-resource-created',
@@ -167,6 +185,15 @@ const breadcrumbConst = {
     parentNavigation: '/products',
     icon: {},
   },
+  // FeatureDetails: {
+  //   title: 'Product-Management',
+  //   name: 'Feature-Details',
+  //   active: 'Product Details',
+  //   navigation: '/products',
+  //   parent: 'Products',
+  //   parentNavigation: '/products',
+  //   icon: {},
+  // },
   PlanDetails: {
     title: 'Plan-Management',
     name: 'Plan-Details',
@@ -225,4 +252,7 @@ export {
   urlIsOverridden,
   processType,
   HealthStatus,
+  featureTypeMap,
+  featureUnitMap,
+  featureResetMap,
 }

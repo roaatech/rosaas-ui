@@ -19,6 +19,7 @@ export const productsSlice = createSlice({
       })
       state.products = allProduct
     },
+
     productInfo: (state, action) => {
       const currentProducts = { ...current(state.products) }
 
@@ -36,6 +37,15 @@ export const productsSlice = createSlice({
       currentProducts[action.payload.id] = mergedObject
       state.products = currentProducts
     },
+
+    removeProduct: (state, action) => {
+      const currentProducts = { ...current(state.products) }
+      delete currentProducts[action.payload]
+      state.products = currentProducts
+    },
+
+    // subscribe
+
     subscribe: (state, action) => {
       const currentProducts = { ...current(state.products) }
       const product = { ...currentProducts[action.payload.id] }
@@ -54,15 +64,56 @@ export const productsSlice = createSlice({
       currentProducts[action.payload.id] = mergedObject
       state.products = currentProducts
     },
-    removeProduct: (state, action) => {
+
+    // feature
+
+    features: (state, action) => {
       const currentProducts = { ...current(state.products) }
-      delete currentProducts[action.payload]
+      const product = { ...currentProducts[action.payload.productId] }
+
+      const allFeatures = {}
+      action.payload.data.map((item) => {
+        allFeatures[item.id] = item
+      })
+
+      product.features = allFeatures
+      currentProducts[action.payload.productId] = product
       state.products = currentProducts
+    },
+    FeatureInfo: (state, action) => {
+      const { productId, featureId, data } = action.payload
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
+      currentProducts[productId].features[featureId] = data
+      state.products = currentProducts
+    },
+
+    // featurePlan
+
+    setAllFeaturePlan: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+
+      const featurePlan = {}
+      action.payload.data.map((item) => {
+        featurePlan[item.id] = item
+      })
+
+      allProduct[action.payload.productId].featurePlan = featurePlan
+      state.products = allProduct
     },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setAllProduct, subscribe, productInfo, removeProduct } =
-  productsSlice.actions
+export const {
+  setAllProduct,
+  subscribe,
+  productInfo,
+  removeProduct,
+  setAllFeaturePlan,
+  features,
+  FeatureInfo,
+  storeFeatureDelete,
+} = productsSlice.actions
 export default productsSlice.reducer

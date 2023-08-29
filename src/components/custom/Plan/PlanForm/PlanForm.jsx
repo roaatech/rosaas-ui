@@ -19,7 +19,7 @@ const PlanForm = ({
   update,
   setUpdate,
 }) => {
-  const { createplanRequest, editplanRequest } = useRequest()
+  const { createPlanRequest, editPlanRequest } = useRequest()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -53,7 +53,7 @@ const PlanForm = ({
         values.displayOrder = 0
       }
       if (type == 'create') {
-        const createPlan = await createplanRequest({
+        const createPlan = await createPlanRequest({
           name: values.name,
 
           description: values.description,
@@ -63,7 +63,7 @@ const PlanForm = ({
         console.log(createPlan, 'editPlan')
         setUpdate(update + 1)
       } else {
-        const editPlan = await editplanRequest({
+        const editPlan = await editPlanRequest({
           data: {
             name: values.name,
             description: values.description,

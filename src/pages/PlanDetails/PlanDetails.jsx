@@ -24,11 +24,11 @@ const PlanDetails = () => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
 
-  const { getplan, deletePlanReq } = useRequest()
+  const { getPlan, deletePlanReq } = useRequest()
 
   useEffect(() => {
     ;(async () => {
-      const planData = await getplan(routeParams.id)
+      const planData = await getPlan(routeParams.id)
       dispatch(planInfo(planData.data.data))
     })()
   }, [visible, routeParams.id])

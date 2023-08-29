@@ -15,16 +15,14 @@ import UpperContent from '../../components/custom/Shared/UpperContent/UpperConte
 import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
 import {
-  BsFillPersonLinesFill,
   BsBoxSeam,
   BsFillPersonPlusFill,
-  BsGearFill,
-  BsFillClipboard2CheckFill,
   BsFillTrash3Fill,
   BsPencilSquare,
 } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
 import ProductFeaturePlan from '../../components/custom/Product/ProductFeaturePlan/ProductFeaturePlan'
+import ProductFeaturesList from '../../components/custom/Product/ProductFeaturesList/ProductFeaturesList'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -108,11 +106,14 @@ const ProductDetails = () => {
               />
             </TabPanel>
             {/* <TabPanel header={<FormattedMessage id="Feature-Plan" />}>
-              <ProductFeaturePlan
+              <ProductFeaturePlan />
+            </TabPanel> */}
+            <TabPanel header={<FormattedMessage id="Features" />}>
+              <ProductFeaturesList
                 productId={productData.id}
                 productName={productData.name}
               />
-            </TabPanel> */}
+            </TabPanel>
           </TabView>
         </div>
       )}

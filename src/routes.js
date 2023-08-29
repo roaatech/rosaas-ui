@@ -53,6 +53,7 @@ export const Routes = {
     component: Product,
     roles: ['superAdmin'],
   },
+
   Plan: {
     path: '/plans',
     component: Plan,
@@ -78,6 +79,7 @@ export const Routes = {
     component: PlanDetails,
     roles: ['superAdmin'],
   },
+
   Transactions: {
     path: '/transactions',
     component: Transactions,

@@ -18,7 +18,7 @@ import {
 } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import BreadcrumbComponent from '../../Shared/Breadcrumb/Breadcrumb'
 import TableHead from '../../Shared/TableHead/TableHead'
 import { FormattedMessage } from 'react-intl'
@@ -28,11 +28,13 @@ import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import ColumnSortHeader from '../../Shared/ColumnSortHeader/ColumnSortHeader'
 import CustomPaginator from '../../Shared/CustomPaginator/CustomPaginator'
+import { setAllFeaturePlan } from '../../../../store/slices/products'
+import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 // import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 
 export default function ProductFeaturePlan({ children }) {
   const dispatch = useDispatch()
-  const { getProduct, getProductList, deleteProductReq } = useRequest()
+  const { getFeaturePlanList, deleteProductReq } = useRequest()
   const [visible, setVisible] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)
@@ -47,6 +49,10 @@ export default function ProductFeaturePlan({ children }) {
   const [currentId, setCurrentId] = useState('')
   const [update, setUpdate] = useState(1)
   const navigate = useNavigate()
+  const routeParams = useParams()
+  const [type, setType] = useState('')
+  const [popUpLable, setPopUpLable] = useState('')
+
   const deleteConfirm = (id) => {
     setCurrentId(id)
     setConfirm(true)
@@ -55,52 +61,39 @@ export default function ProductFeaturePlan({ children }) {
     await deleteProductReq({ id: currentId })
   }
 
-  const listData = useSelector((state) => state.products.products)
-  let list = Object.values(listData)
+  const listData = useSelector(
+    (state) => state.products.products[routeParams.id]?.featurePlan
+  )
+  let list = listData && Object.values(listData)
+
+  const editForm = async (id) => {
+    //  if (!listData[id].creationEndpoint) {
+    //  const featureData = await getFeature(id, productId)
+    //  dispatch(FeatureInfo(featureData.data.data))
+    setPopUpLable('Edit-Feature')
+    setType('edit')
+    // }
+    setCurrentId(id)
+    setVisible(true)
+  }
 
   useEffect(() => {
-    let query = `?page=${Math.ceil(
-      (first + 1) / rows
-    )}&pageSize=${rows}&filters[0].Field=SearchTerm`
-    if (searchValue) query += `&filters[0].Value=${searchValue}`
-    if (sortField) query += `&sort.Field=${sortField}`
-    if (sortValue) query += `&sort.Direction=${sortValue}`
     ;(async () => {
-      if (Object.values(listData).length == 0) {
-        const productList = await getProductList(query)
-        // dispatch(setAllProduct(productList.data.data.items))
-        setTotalCount(productList.data.data.totalCount)
-      }
+      const FeaturePlanData = await getFeaturePlanList(routeParams.id)
+      console.log(FeaturePlanData, 'ooooooooooo')
+      dispatch(
+        setAllFeaturePlan({
+          productId: routeParams.id,
+          data: FeaturePlanData.data.data,
+        })
+      )
     })()
-  }, [first, rows, searchValue, sortField, sortValue, update])
-
-  /******************************* */
-
-  const onPageChange = (event) => {
-    setFirst(event.first)
-    setRows(event.rows)
-  }
+  }, [])
 
   /****************************** */
-  const editForm = async (id) => {
-    // if (!listData[id].creationEndpoint) {
-    //   const productData = await getProduct(id)
-    //   dispatch(productInfo(productData.data.data))
-    // }
-    // setCurrentId(id)
-    // setVisible(true)
-  }
 
   const TableRow = (props) => {
-    const {
-      title,
-      uniqueName,
-      status,
-      createdDate,
-      editedDate,
-      id,
-      healthCheckUrlIsOverridden,
-    } = props
+    const { title, uniqueName, createdDate, editedDate, id } = props
 
     return (
       <tr>
@@ -183,6 +176,29 @@ export default function ProductFeaturePlan({ children }) {
           </Card.Body>
         </Card>
       </div>
+
+      <ThemeDialog visible={visible} setVisible={setVisible}>
+        <FeaturePlanForm
+          popupLabel={<FormattedMessage id={popUpLable} />}
+          type={type}
+          tenantData={list}
+          update={update}
+          setUpdate={setUpdate}
+          setVisible={setVisible}
+          sideBar={false}
+          dispatch={dispatch}
+          // featureData={type == 'edit' ? list?.features[currentId] : {}}
+        />
+      </ThemeDialog>
+      <button
+        onClick={() => {
+          setVisible(true)
+          setPopUpLable('Add-Feature')
+          setType('create')
+        }}
+      >
+        add feature plan
+      </button>
     </>
   )
 }

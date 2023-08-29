@@ -1,0 +1,194 @@
+import React, { useEffect, useState } from 'react'
+import { useFormik } from 'formik'
+import { InputText } from 'primereact/inputtext'
+import * as Yup from 'yup'
+import useRequest from '../../../../../axios/apis/useRequest.js'
+import {
+  Modal,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
+import { Form } from '@themesberg/react-bootstrap'
+// import { FeaturePlanInfo } from '../../../../store/slices/FeaturePlans.js'
+import { useDispatch, useSelector } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
+import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
+import { Wrapper } from './FeaturePlanForm.styled.jsx'
+import { AiFillCopy } from 'react-icons/ai'
+import { features } from 'process'
+import { useNavigate, useParams } from 'react-router-dom'
+
+const FeaturePlanForm = ({
+  type,
+  FeaturePlanData,
+  setVisible,
+  popupLabel,
+  update,
+  setUpdate,
+}) => {
+  const routeParams = useParams()
+  const productId = routeParams.id
+  const { getFeaturePlanList, getFeatureList } = useRequest()
+  const dispatch = useDispatch()
+
+  const initialValues = {
+    name: FeaturePlanData ? FeaturePlanData.name : '',
+  }
+
+  const validationSchema = Yup.object().shape({
+    // name: Yup.string().required('FeaturePlan Name is required'),
+    // defaultHealthCheckUrl: Yup.string()
+    //   .required(<FormattedMessage id="This-field-is-required" />)
+    //   .matches(
+    //     /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+    //     <FormattedMessage id="Please-enter-a-valid-value" />
+    //   ),
+    // healthStatusChangeUrl: Yup.string()
+    //   .required(<FormattedMessage id="This-field-is-required" />)
+    //   .matches(
+    //     /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+    //     <FormattedMessage id="Please-enter-a-valid-value" />
+    //   ),
+  })
+
+  const allProducts = useSelector((state) => state.products.products)
+  const listFeatureData = allProducts[productId].features
+  let allFeature = listFeatureData && Object.values(listFeatureData)
+  console.log(allProducts[productId], 'listFeatureData')
+  // const options = allFeature.map((item, index) => {
+  //   return { value: item.id, label: item.name }
+  // })
+
+  useEffect(() => {
+    ;(async () => {
+      if (!listFeatureData) {
+        const FeaturePlanReq = await getFeaturePlanList(productId)
+
+        const featureReq = await getFeatureList(productId)
+        console.log(featureReq, 'featureReq')
+        // dispatch(features(featureReq.data.data.items))
+      }
+    })()
+  }, [])
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema: validationSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      // if (type == 'create') {
+      //   const createFeaturePlan = await createFeaturePlanRequest({
+      //     name: values.name,
+      //   })
+      //   setUpdate(update + 1)
+      // } else {
+      //   const editFeaturePlan = await editFeaturePlanRequest({
+      //     data: {
+      //       name: values.name,
+      //     },
+      //   })
+      //   dispatch(
+      //     FeaturePlanInfo({
+      //       id: FeaturePlanData.id,
+      //       name: values.name,
+      //     })
+      //   )
+      // }
+      // setVisible && setVisible(false)
+    },
+  })
+  //   const RandomApiKey = () => {
+  //     formik.setFieldValue('apiKey', generateApiKey())
+  //   }
+  return (
+    <Wrapper>
+      <Form onSubmit={formik.handleSubmit}>
+        <Modal.Header>
+          <Modal.Title className="h6">{popupLabel}</Modal.Title>
+          <Button
+            variant="close"
+            aria-label="Close"
+            onClick={() => setVisible(false)}
+          />
+        </Modal.Header>
+        <Modal.Body>
+          {/* <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Name" />
+                <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                name="name"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+              />
+
+              {formik.touched.name && formik.errors.name && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.name}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div> */}
+
+          <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                Product <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <select
+                className="form-select"
+                name="product"
+                id="product"
+                value={formik.values.product}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.product && formik.errors.product}
+                multiple
+              >
+                {/* {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))} */}
+              </select>
+              {formik.touched.product && formik.errors.product && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.product}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            type="submit"
+            // disabled={submitLoading}
+          >
+            <FormattedMessage id="Submit" />
+          </Button>
+          <Button
+            variant="link"
+            className="text-gray ms-auto"
+            onClick={() => setVisible(false)}
+          >
+            <FormattedMessage id="Close" />
+          </Button>
+        </Modal.Footer>
+      </Form>
+    </Wrapper>
+  )
+}
+
+export default FeaturePlanForm
