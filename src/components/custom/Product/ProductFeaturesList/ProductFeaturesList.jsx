@@ -30,15 +30,9 @@ import {
 } from '../../../../const'
 import { Wrapper } from './ProductFeaturesList.styled'
 
-export const ProductFeaturesList = ({ productId, productName }) => {
+export const ProductFeaturesList = ({ productId }) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
-  const [searchValue] = useState('')
-  const [sortField] = useState('')
-  const [sortValue] = useState('')
-  const [first] = useState(0)
-  const [rows] = useState(10)
   const [update, setUpdate] = useState(1)
-  
   const dispatch = useDispatch()
   const list = useSelector((state) => state.products.products[productId])
   const [currentId, setCurrentId] = useState('')
@@ -62,23 +56,23 @@ export const ProductFeaturesList = ({ productId, productName }) => {
     let params = `${productId}/Features`
 
     ;(async () => {
-        if (!list?.features) {
-      const listData = await getProductFeatures(params)
-      dispatch(features({  productId, data: listData.data.data }))
-        }
+      if (!list?.features) {
+        const listData = await getProductFeatures(params)
+        dispatch(features({ productId, data: listData.data.data }))
+      }
     })()
-  },[])
+  }, [])
 
   useEffect(() => {
     let params = `${productId}/Features`
 
     ;(async () => {
-        if (update>1) {
-      const listData = await getProductFeatures(params)
-      dispatch(features({  productId, data: listData.data.data }))
-        }
+      if (update > 1) {
+        const listData = await getProductFeatures(params)
+        dispatch(features({ productId, data: listData.data.data }))
+      }
     })()
-  }, [ update])
+  }, [update])
 
   const TableRow = (props) => {
     const {
@@ -96,122 +90,120 @@ export const ProductFeaturesList = ({ productId, productName }) => {
     const mappedUnit = featureUnitMap[unit]
     const mappedReset = featureResetMap[reset]
 
-    
-
     return (
-      
-     
-     <>
-      <tr>
-        <td>
-          <span className="fw-normal">{name}</span>
-        </td>
-        <td
-          style={{ minWidth: '410px', maxWidth: '410px', whiteSpace: 'normal' }}
-        >
-          <DescriptionCell data={{ description }} />
-        </td>
+      <>
+        <tr>
+          <td>
+            <span className="fw-normal">{name}</span>
+          </td>
+          <td
+            style={{
+              minWidth: '410px',
+              maxWidth: '410px',
+              whiteSpace: 'normal',
+            }}
+          >
+            <DescriptionCell data={{ description }} />
+          </td>
 
-        <td>
-          <span className={`fw-normal`}>{mappedType}</span>
-        </td>
-        <td>
-          <span className="fw-normal">{mappedUnit}</span>
-        </td>
-        <td>
-          <span className="fw-normal">{mappedReset}</span>
-        </td>
-        <td>
-          <span className="fw-normal">
-            <TableDate createdDate={createdDate} editedDate={editedDate} />
-          </span>
-        </td>
-        <td>
-          <Dropdown as={ButtonGroup}>
-            <Dropdown.Toggle
-              as={Button}
-              split
-              variant="link"
-              className="text-dark m-0 p-0"
-            >
-              <span className="icon icon-sm">
-                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
-              </span>
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item
-                onSelect={() => {
-                  editForm(id)
-                }}
+          <td>
+            <span className={`fw-normal`}>{mappedType}</span>
+          </td>
+          <td>
+            <span className="fw-normal">{mappedUnit}</span>
+          </td>
+          <td>
+            <span className="fw-normal">{mappedReset}</span>
+          </td>
+          <td>
+            <span className="fw-normal">
+              <TableDate createdDate={createdDate} editedDate={editedDate} />
+            </span>
+          </td>
+          <td>
+            <Dropdown as={ButtonGroup}>
+              <Dropdown.Toggle
+                as={Button}
+                split
+                variant="link"
+                className="text-dark m-0 p-0"
               >
-                <FontAwesomeIcon icon={faEdit} className="me-2" />
-                <FormattedMessage id="Edit" />
-              </Dropdown.Item>
-              <Dropdown.Item
-                onClick={() => deleteConfirm(id)}
-                className="text-danger"
-              >
-                <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
-                <FormattedMessage id="Delete" />
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </td>
-      </tr>
-      
+                <span className="icon icon-sm">
+                  <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                </span>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onSelect={() => {
+                    editForm(id)
+                  }}
+                >
+                  <FontAwesomeIcon icon={faEdit} className="me-2" />
+                  <FormattedMessage id="Edit" />
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => deleteConfirm(id)}
+                  className="text-danger"
+                >
+                  <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+                  <FormattedMessage id="Delete" />
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </td>
+        </tr>
       </>
-      
-     
     )
   }
   const handleDeleteFeature = async () => {
-      console.log(currentId);
-      await deleteFeatureReq(productId,{id: currentId})
-      
+    console.log(currentId)
+    await deleteFeatureReq(productId, { id: currentId })
   }
 
   return (
     <Wrapper>
-    <>
-      <Card border="light" className="table-wrapper table-responsive shadow-sm">
-        <Card.Body className="pt-0">
-          <Table hover className="user-table align-items-center">
-            <thead>
-              <tr>
-                <th className="border-bottom">
-                  <FormattedMessage id="Name" />
-                </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Description" />
-                </th>
+      <>
+        <Card
+          border="light"
+          className="table-wrapper table-responsive shadow-sm"
+        >
+          <Card.Body className="pt-0">
+            <Table hover className="user-table align-items-center">
+              <thead>
+                <tr>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Name" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Description" />
+                  </th>
 
-                <th className="border-bottom">
-                  <FormattedMessage id="Type" />
-                </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Unit" />
-                </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Reset" />
-                </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Date" />
-                </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Actions" />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {list?.features && Object.values(list?.features).length
-                ? Object.values(list?.features).map((t, index) => {
-                    return <TableRow key={`index`} {...t} />
-                  })
-                : null}
-            </tbody>
-          </Table>
-          <DeleteConfirmation
-          
+                  <th className="border-bottom">
+                    <FormattedMessage id="Type" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Unit" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Reset" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Date" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Actions" />
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {list?.features && Object.values(list?.features).length
+                  ? Object.values(list?.features).map((t, index) => {
+                      return <TableRow key={`index`} {...t} />
+                    })
+                  : null}
+              </tbody>
+            </Table>
+            <DeleteConfirmation
               message={
                 <FormattedMessage id="delete-feature-confirmation-message" />
               }
@@ -223,34 +215,34 @@ export const ProductFeaturesList = ({ productId, productName }) => {
               setUpdate={setUpdate}
               sideBar={false}
             />
-        </Card.Body>
-      </Card>
+          </Card.Body>
+        </Card>
 
-      <ThemeDialog visible={visible} setVisible={setVisible}>
-        <>
-          <FeatureForm
-            productId={productId}
-            popupLabel={<FormattedMessage id={popUpLable} />}
-            type={type}
-            update={update}
-            setUpdate={setUpdate}
-            setVisible={setVisible}
-            sideBar={false}
-            featureData={type == 'edit' ? list?.features[currentId] : {}}
-          />
-        </>
-      </ThemeDialog>
+        <ThemeDialog visible={visible} setVisible={setVisible}>
+          <>
+            <FeatureForm
+              productId={productId}
+              popupLabel={<FormattedMessage id={popUpLable} />}
+              type={type}
+              update={update}
+              setUpdate={setUpdate}
+              setVisible={setVisible}
+              sideBar={false}
+              featureData={type == 'edit' ? list?.features[currentId] : {}}
+            />
+          </>
+        </ThemeDialog>
 
-      <button
-        onClick={() => {
-          setVisible(true)
-          setPopUpLable('Add-Feature')
-          setType('create')
-        }}
-      >
-        Add Feature
-      </button>
-    </>
+        <button
+          onClick={() => {
+            setVisible(true)
+            setPopUpLable('Add-Feature')
+            setType('create')
+          }}
+        >
+          Add Feature
+        </button>
+      </>
     </Wrapper>
   )
 }
