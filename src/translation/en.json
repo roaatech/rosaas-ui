@@ -100,6 +100,7 @@
   "last-checked": "last checked",
   "Last-checked": "Last checked",
   "Unhealthy": "Unhealthy",
+  "Unavailable": "Unavailable",
   "Healthy": "Healthy",
   "Refresh": "Refresh",
   "Is-Successful": "Is Successful",
@@ -122,5 +123,18 @@
   "Create-Date": "Create Date",
   "Plan-Details": "Plan Details",
   "Dashboard": "Dashboard",
-  "Feature-Plan": "Feature Plan"
+  "Feature-Plan": "Feature Plan",
+  "Super-Admin": "Super Admin",
+  "Product-Owner": "Product Owner",
+  "Rosas-System": "Rosas System",
+  "Checks-Count": "Checks Count",
+  "Health-Checks-Count": "Health Checks Count",
+  "Unavailable-Checks-Count": "Unavailable Checks Count",
+  "External-System": "External System",
+  "Record-Created": "Record Created",
+  "Data-Updated": "Data Updated",
+  "Metadata-Updated": "Metadata Updated",
+  "Status-Changed": "Status Changed",
+  "External-System-Successfully-Informed": "External System Successfully Informed",
+  "Failed-To-Inform-External-System": "Failed To Inform External System"
 }

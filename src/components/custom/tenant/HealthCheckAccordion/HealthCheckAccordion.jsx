@@ -7,6 +7,7 @@ import {
   Table,
 } from '@themesberg/react-bootstrap'
 import Label from '../../Shared/label/Label'
+import { HealthStatus } from '../../../../const'
 import {
   BsFillCheckCircleFill,
   BsFillExclamationCircleFill,
@@ -22,21 +23,6 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
   const intl = useIntl()
 
   const AccordionItem = (item) => {
-    const HealthStatus = {
-      true: {
-        background: '#eff9f6',
-        value: <FormattedMessage id="Healthy" />,
-        color: '#00a675',
-        icon: <BsFillCheckCircleFill />,
-      },
-      false: {
-        background: '#f5e8e4',
-        value: <FormattedMessage id="Unhealthy" />,
-        color: '#d26b4e',
-        icon: <BsFillExclamationCircleFill />,
-      },
-    }
-
     // const timeDifferenceLastCheck = timeDifferenceFromNow(
     //   item.healthCheckStatus.lastCheckDate
     // )
@@ -127,6 +113,50 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                         <h6>
                           <FormattedMessage id="Health-Check-Status-Info" />
                         </h6>
+                      </div>
+                    </div>
+                    <div className="checksCount d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                      <div className="mb-0 w-25">
+                        <FormattedMessage id="Checks-Count" />
+                      </div>
+                      <div className="small card-stats">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              <FormattedMessage id={'Health-Checks-Count'} /> (
+                              {item.healthCheckStatus.healthyCount}) <br />
+                              <FormattedMessage
+                                id={'Unavailable-Checks-Count'}
+                              />{' '}
+                              ({item.healthCheckStatus.unhealthyCount})
+                            </Tooltip>
+                          }
+                        >
+                          <span className="">
+                            {!item.healthCheckStatus.isHealthy &&
+                            item.healthCheckStatus.healthyCount == 0 ? null : (
+                              <Label
+                                className="mr-2"
+                                background="#eff9f6"
+                                value={item.healthCheckStatus.healthyCount}
+                                color="#00a675"
+                                icon={<BsFillCheckCircleFill />}
+                              />
+                            )}{' '}
+                            {item.healthCheckStatus.isHealthy &&
+                            item.healthCheckStatus.unhealthyCount ==
+                              0 ? null : (
+                              <Label
+                                className="mr-2"
+                                background="#f5e8e4"
+                                value={item.healthCheckStatus.unhealthyCount}
+                                color="#d26b4e"
+                                icon={<BsFillExclamationCircleFill />}
+                              />
+                            )}
+                          </span>
+                        </OverlayTrigger>
                       </div>
                     </div>
                     <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">

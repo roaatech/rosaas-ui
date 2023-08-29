@@ -10,7 +10,7 @@ const MetaDataAccordion = (props) => {
       <Accordion.Item eventKey={eventKey}>
         <Accordion.Button
           variant="link"
-          className="w-100 d-flex justify-content-between"
+          className="w-100 d-flex justify-content-between accordionButton"
         >
           <span className=" mb-0 fw-bold">{title}</span>
         </Accordion.Button>
@@ -24,11 +24,15 @@ const MetaDataAccordion = (props) => {
   }
 
   return (
-    <Accordion className={className} defaultActiveKey={defaultKey}>
-      {data.map((d) => (
-        <AccordionItem key={`accordion-${d.id}`} {...d} />
-      ))}
-    </Accordion>
+    <>
+      {data && (
+        <Accordion className={className} defaultActiveKey={defaultKey}>
+          {data?.map((d, index) => (
+            <AccordionItem key={`accordion-${index}`} {...d} />
+          ))}
+        </Accordion>
+      )}
+    </>
   )
 }
 

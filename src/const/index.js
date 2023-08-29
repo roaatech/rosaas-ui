@@ -1,11 +1,26 @@
 import { FormattedMessage } from 'react-intl'
+import {
+  BsFillCheckCircleFill,
+  BsFillExclamationCircleFill,
+} from 'react-icons/bs'
 
 const Product_id = '88e67328-3b20-413e-b6e1-010b48fa7bc9'
 const Product_Client_id = '88283b02-e969-485a-a5a3-9e5d1d0d3337'
 const Client_id = 'spa_rosas_admin_panel'
-const Owner = {
-  1: 'Super Admin',
-  101: 'External System',
+
+const HealthStatus = {
+  true: {
+    background: '#eff9f6',
+    value: <FormattedMessage id="Healthy" />,
+    color: '#00a675',
+    icon: <BsFillCheckCircleFill />,
+  },
+  false: {
+    background: '#f5e8e4',
+    value: <FormattedMessage id="Unavailable" />,
+    color: '#d26b4e',
+    icon: <BsFillExclamationCircleFill />,
+  },
 }
 
 const urlIsOverridden = {
@@ -178,6 +193,27 @@ const breadcrumbConst = {
     icon: {},
   },
 }
+
+/******* PROCESS || WORKFLOW ******* */
+
+const Owner = {
+  1: 'Super-Admin',
+  2: 'Product-Owner',
+  100: 'Rosas-System',
+  101: 'External-System',
+}
+
+const processType = {
+  1: 'Record-Created',
+  2: 'Data-Updated',
+  3: 'Metadata-Updated',
+  4: 'Status-Changed',
+  5: 'Healthy',
+  6: 'Unhealthy',
+  7: 'External-System-Successfully-Informed',
+  8: 'Failed-To-Inform-External-System',
+}
+
 export {
   Product_id,
   Client_id,
@@ -187,4 +223,6 @@ export {
   Product_Client_id,
   breadcrumbConst,
   urlIsOverridden,
+  processType,
+  HealthStatus,
 }

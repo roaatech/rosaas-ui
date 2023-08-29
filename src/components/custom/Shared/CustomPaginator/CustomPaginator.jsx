@@ -1,23 +1,30 @@
-import React from "react";
-import { Paginator } from "primereact/paginator";
-import { Wrapper } from "./CustomPaginator.styled";
+import React from 'react'
+import { Paginator } from 'primereact/paginator'
+import { Wrapper } from './CustomPaginator.styled'
 
-const CustomPaginator = ({ first, rows, totalCount, onPageChange }) => {
+const CustomPaginator = ({
+  first,
+  rows,
+  totalCount,
+  onPageChange,
+  rowsPerPageOptions = [10, 20, 30],
+}) => {
+  const lastItemIndex = first + rows
+  const displayLastIndex =
+    lastItemIndex > totalCount ? totalCount : lastItemIndex
   return (
     <Wrapper>
-      <span>
-        {first + 1}-{rows} of {totalCount}
-      </span>
+      <span>{`${first + 1}-${displayLastIndex} of ${totalCount}`}</span>
       <Paginator
-        size={"small"}
+        size={'small'}
         first={first}
         rows={rows}
         totalRecords={totalCount}
-        rowsPerPageOptions={[10, 20, 30]}
+        rowsPerPageOptions={rowsPerPageOptions}
         onPageChange={onPageChange}
       />
     </Wrapper>
-  );
-};
+  )
+}
 
-export default CustomPaginator;
+export default CustomPaginator
