@@ -165,13 +165,9 @@ export const ProductFeaturesList = ({ productId, productName }) => {
     )
   }
   const handleDeleteFeature = async () => {
-    // try {
       console.log(currentId);
       await deleteFeatureReq(productId,{id: currentId})
-      // dispatch(storeFeatureDelete({ productId, featureId }))
-    // } catch (error) {
-    //   console.error('Error deleting feature:', error)
-    // }
+      
   }
 
   return (
