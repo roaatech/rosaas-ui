@@ -1,3 +1,5 @@
+import { format, utcToZonedTime } from 'date-fns-tz'
+
 const isHour = (hour) => {
   return hour > 0 ? `${hour} hours and` : ''
 }
@@ -10,22 +12,34 @@ const isHour = (hour) => {
 //   return localDateTime
 // }
 
+// export const DataTransform = (dateTime) => {
+//   const utcDateTime = new Date(dateTime + 'Z')
+//   const localDateTime = new Date(
+//     utcDateTime.toLocaleString(undefined, {
+//       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+//     })
+//   )
+
+//   const year = localDateTime.getFullYear()
+//   const month = String(localDateTime.getMonth() + 1).padStart(2, '0')
+//   const day = String(localDateTime.getDate()).padStart(2, '0')
+//   const hours = String(localDateTime.getHours()).padStart(2, '0')
+//   const minutes = String(localDateTime.getMinutes()).padStart(2, '0')
+//   const seconds = String(localDateTime.getSeconds()).padStart(2, '0')
+
+//   return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`
+// }
+
 export const DataTransform = (dateTime) => {
   const utcDateTime = new Date(dateTime + 'Z')
-  const localDateTime = new Date(
-    utcDateTime.toLocaleString(undefined, {
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    })
-  )
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const localDateTime = utcToZonedTime(utcDateTime, timeZone)
 
-  const year = localDateTime.getFullYear()
-  const month = String(localDateTime.getMonth() + 1).padStart(2, '0')
-  const day = String(localDateTime.getDate()).padStart(2, '0')
-  const hours = String(localDateTime.getHours()).padStart(2, '0')
-  const minutes = String(localDateTime.getMinutes()).padStart(2, '0')
-  const seconds = String(localDateTime.getSeconds()).padStart(2, '0')
+  const formattedDateTime = format(localDateTime, 'MM/dd/yyyy HH:mm:ss', {
+    timeZone,
+  })
 
-  return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`
+  return formattedDateTime
 }
 
 export const timeDifferenceFromNow = (targetDate) => {
