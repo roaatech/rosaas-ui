@@ -3,30 +3,23 @@ import { useFormik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
-import {
-  Modal,
-  Button,
-  OverlayTrigger,
-  Tooltip,
-} from '@themesberg/react-bootstrap'
+import { Modal, Button } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './FeaturePlanForm.styled.jsx'
-import { AiFillCopy } from 'react-icons/ai'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   featurePlanInfo,
   features,
 } from '../../../../../store/slices/products.js'
 import { setAllPlans } from '../../../../../store/slices/plans.js'
+import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
 const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
   const routeParams = useParams()
   const productId = routeParams.id
-
   const {
     getFeatureList,
     getPlanList,
@@ -56,8 +49,7 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
     ;(async () => {
       if (!listFeatureData) {
         const featureReq = await getFeatureList(productId)
-        console.log(featureReq.data.data, 'featureReq')
-        dispatch(features({ id: productId, data: featureReq.data.data }))
+        dispatch(features({ productId: productId, data: featureReq.data.data }))
       }
       if (allPlansArray.length === 0) {
         const featureReq = await getPlanList(productId)
@@ -67,8 +59,8 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
   }, [])
 
   const initialValues = {
-    feature: FeaturePlanData ? FeaturePlanData?.feature.id : '',
-    plan: FeaturePlanData ? FeaturePlanData?.plans.id : '',
+    feature: FeaturePlanData ? FeaturePlanData?.feature?.id : '',
+    plan: FeaturePlanData ? FeaturePlanData?.plan?.id : '',
     limit: FeaturePlanData ? FeaturePlanData?.limit : 1,
     description: FeaturePlanData ? FeaturePlanData?.description : '',
   }
@@ -88,29 +80,27 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      const info = {
-        productId: productId,
-        data: {
-          description: values.description,
-          limit: values.limit,
-          feature: {
-            id: values.feature,
-            name: featureOptions.find((item) => item.value === values.feature)
-              .label,
-          },
-          plan: {
-            id: values.plan,
-            name: planOptions.find((item) => item.value === values.plan).label,
-          },
-
-          editedDate: new Date().toISOString().slice(0, 19),
-          createdDate: FeaturePlanData
-            ? FeaturePlanData.createdDate
-            : new Date().toISOString().slice(0, 19),
-        },
-      }
-
       if (type == 'create') {
+        const info = {
+          productId: productId,
+          data: {
+            description: values.description,
+            limit: values.limit,
+            feature: {
+              id: values.feature,
+              name: featureOptions.find((item) => item.value === values.feature)
+                .label,
+            },
+            plan: {
+              id: values.plan,
+              name: planOptions.find((item) => item.value === values.plan)
+                .label,
+            },
+
+            editedDate: new Date().toISOString().slice(0, 19),
+            createdDate: new Date().toISOString().slice(0, 19),
+          },
+        }
         const createFeaturePlan = await createFeaturePlanRequest({
           productId: productId,
           data: {
@@ -121,11 +111,22 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
           },
         })
         info.data.id = createFeaturePlan.data.data.id
-        dispatch(featurePlanInfo(info)) // setUpdate(update + 1)
-        console.log({ info })
+        dispatch(featurePlanInfo(info))
       } else {
-        const editFeaturePlan = await editFeaturePlanRequest(info)
-        // dispatch(featurePlanInfo(info))
+        const editFeaturePlan = await editFeaturePlanRequest({
+          productId: productId,
+          featurePlanId: FeaturePlanData.id,
+          data: {
+            description: values.description,
+            limit: values.limit,
+          },
+        })
+
+        const newData = JSON.parse(JSON.stringify(FeaturePlanData))
+        newData.description = values.description
+        newData.limit = values.limit
+
+        dispatch(featurePlanInfo({ productId, data: newData }))
       }
       setVisible && setVisible(false)
     },
@@ -143,55 +144,6 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
           />
         </Modal.Header>
         <Modal.Body>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Description" />
-              </Form.Label>
-              <InputText
-                type="text"
-                id="description"
-                name="description"
-                onChange={formik.handleChange}
-                value={formik.values.description}
-                className={
-                  formik.touched.description && formik.errors.description
-                    ? 'is-invalid'
-                    : ''
-                }
-              />
-              {formik.touched.description && formik.errors.description && (
-                <div className="invalid-feedback">
-                  {formik.errors.description}
-                </div>
-              )}
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Limit" />
-                <span style={{ color: 'red' }}> *</span>
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="limit"
-                name="limit"
-                onChange={formik.handleChange}
-                value={formik.values.limit}
-              />
-
-              {formik.touched.limit && formik.errors.limit && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.limit}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
           <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
               <Form.Label>
@@ -254,13 +206,54 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
               )}
             </Form.Group>
           </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Description" />
+              </Form.Label>
+
+              <TextareaAndCounter
+                addTextarea={formik.setFieldValue}
+                maxLength={250}
+                showCharCount
+                inputValue={formik?.values?.description}
+              />
+
+              {formik.touched.description && formik.errors.description && (
+                <div className="invalid-feedback">
+                  {formik.errors.description}
+                </div>
+              )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Limit" />
+                <span style={{ color: 'red' }}> *</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="limit"
+                name="limit"
+                onChange={formik.handleChange}
+                value={formik.values.limit}
+              />
+
+              {formik.touched.limit && formik.errors.limit && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.limit}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="secondary"
-            type="submit"
-            // disabled={submitLoading}
-          >
+          <Button variant="secondary" type="submit">
             <FormattedMessage id="Submit" />
           </Button>
           <Button

@@ -20,6 +20,7 @@ import {
   BsFillTrash3Fill,
   BsPencilSquare,
   BsStars,
+  BsUiChecks,
 } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
 import ProductFeaturePlan from '../../components/custom/Product/ProductFeaturePlan/ProductFeaturePlan'
@@ -71,6 +72,14 @@ const ProductDetails = () => {
                   order: 4,
                   type: 'form',
                   id: routeParams.id,
+                  label: 'Add-Feature-Plan',
+                  component: 'addFeaturePlan',
+                  icon: <BsUiChecks />,
+                },
+                {
+                  order: 4,
+                  type: 'form',
+                  id: routeParams.id,
                   label: 'Add-Plan',
                   component: 'addPlan',
                   icon: <BsPencilSquare />,
@@ -115,7 +124,7 @@ const ProductDetails = () => {
               />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Feature-Plan" />}>
-              <ProductFeaturePlan />
+              <ProductFeaturePlan productId={productData.id} />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Features" />}>
               <ProductFeaturesList

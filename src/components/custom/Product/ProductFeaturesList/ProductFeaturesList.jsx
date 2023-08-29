@@ -96,13 +96,7 @@ export const ProductFeaturesList = ({ productId }) => {
           <td>
             <span className="fw-normal">{name}</span>
           </td>
-          <td
-            style={{
-              minWidth: '410px',
-              maxWidth: '410px',
-              whiteSpace: 'normal',
-            }}
-          >
+          <td className="description">
             <DescriptionCell data={{ description }} />
           </td>
 

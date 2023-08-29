@@ -135,7 +135,7 @@ const useRequest = () => {
   }
   const editFeaturePlanRequest = async (data) => {
     return await Request.put(
-      `management/sadmin/v1/Products/${data.id}/PlanFeatures`,
+      `management/sadmin/v1/Products/${data.productId}/PlanFeatures/${data.featurePlanId}`,
       data.data
     )
   }

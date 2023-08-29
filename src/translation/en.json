@@ -73,6 +73,7 @@
   "Plan-Management": "Plan Management",
   "delete-plan-confirmation-message": "Do you want to delete this plan?",
   "delete-feature-confirmation-message": "Do you want to delete this feature?",
+  "delete-feature-plan-confirmation-message": "Do you want to delete this feature plan?",
   "Delete-Plan": "Delete Plan",
   "Edit-Plan": "Edit Plan",
   "Plans": "Plans",
@@ -143,5 +144,7 @@
   "Unit": "Unit",
   "Type": "Type",
   "Add-Feature": "Add Feature",
+  "Add-Feature-Plan": "Add Feature Plan",
+  "Edit-Feature-Plan": "Edit Feature Plan",
   "Edit-Feature": "Edit Feature"
 }

@@ -19,6 +19,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { Wrapper } from './DynamicButtons.styled'
 import PlanForm from '../../Plan/PlanForm/PlanForm'
 import FeatureForm from '../../Feature/FeatureForm/FeatureForm'
+import FeaturePlanForm from '../../Product/ProductFeaturePlan/FeaturePlanForm/FeaturePlanForm'
 
 const DynamicButtons = ({ buttons }) => {
   const navigate = useNavigate()
@@ -77,6 +78,17 @@ const DynamicButtons = ({ buttons }) => {
           popupLabel={<FormattedMessage id="Edit-Plan" />}
           type={'edit'}
           planData={plansData[buttons[currentButtonIndex].id]}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+        />
+      </>
+    ),
+    addFeaturePlan: () => (
+      <>
+        <FeaturePlanForm
+          popupLabel={<FormattedMessage id="Add-Feature-Plan" />}
+          type={'create'}
           visible={visible}
           setVisible={setVisible}
           sideBar={false}

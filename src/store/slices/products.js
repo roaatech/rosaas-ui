@@ -75,7 +75,7 @@ export const productsSlice = createSlice({
       action.payload.data.map((item) => {
         allFeatures[item.id] = item
       })
-      console.log(allFeatures, '99999999999999999999999999')
+
       product.features = allFeatures
       currentProducts[action.payload.productId] = product
       state.products = currentProducts
@@ -104,7 +104,6 @@ export const productsSlice = createSlice({
     },
     featurePlanInfo: (state, action) => {
       const allProduct = JSON.parse(JSON.stringify(current(state.products)))
-      console.log(action.payload.data, 'kkkkkkkkkkkkkkkkkkkkk')
       allProduct[action.payload.productId].featurePlan[action.payload.data.id] =
         action.payload.data
       state.products = allProduct

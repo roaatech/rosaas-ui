@@ -96,13 +96,6 @@ const FeatureForm = ({
               id: createFeature.data.data.id,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: new Date().toISOString().slice(0, 19),
-
-              // editedDate: convertToLocaleISOString(
-              //   new Date().toISOString().slice(0, 19)
-              // ),
-              // createdDate: convertToLocaleISOString(
-              //   new Date().toISOString().slice(0, 19)
-              // ),
             },
           })
         )
@@ -140,23 +133,6 @@ const FeatureForm = ({
       setSubmitting(false)
     },
   })
-
-  //********  maxLength  ********* */
-  const maxLength = 250
-  let value
-  if (formik.values.description) {
-    value = formik.values.description
-  } else {
-    value = ''
-  }
-  const [updatedDescription, setUpdatedDescription] = useState(value)
-
-  const handleDescriptionChange = (newValue) => {
-    setUpdatedDescription(newValue)
-  }
-  formik.values.description = updatedDescription
-
-  //****************************** */
 
   return (
     <Wrapper>
@@ -202,11 +178,12 @@ const FeatureForm = ({
               <FormattedMessage id="Description" />{' '}
               <span style={{ color: 'red' }}>*</span>
             </Form.Label>
+
             <TextareaAndCounter
-              value={updatedDescription}
-              onValueChange={handleDescriptionChange}
-              maxLength={maxLength}
+              addTextarea={formik.setFieldValue}
+              maxLength={250}
               showCharCount
+              inputValue={formik?.values?.description}
             />
 
             {formik.touched.description && formik.errors.description && (
