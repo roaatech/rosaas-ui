@@ -99,6 +99,7 @@ const FeatureForm = ({
               reset: values.reset || 1,
               id: featureData.id,
               editedDate: new Date().toISOString().slice(0, 19),
+              createdDate: featureData.createdDate,
             },
           })
         )
@@ -109,7 +110,7 @@ const FeatureForm = ({
     },
   })
 
-  //****************** */
+  //********  maxLength  ********* */
   const maxLength = 250
   let value
   if (formik.values.description) {
@@ -124,7 +125,7 @@ const FeatureForm = ({
   }
   formik.values.description = updatedDescription
 
-  //******************** */
+  //****************************** */
 
   return (
     <Wrapper>
@@ -137,111 +138,14 @@ const FeatureForm = ({
             onClick={() => setVisible(false)}
           />
         </Modal.Header>
-        {/* <Modal.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Name" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="name"
-              name="name"
-              onChange={formik.handleChange}
-              value={formik.values.name}
-              className={
-                formik.touched.name && formik.errors.name ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.name && formik.errors.name && (
-              <div className="invalid-feedback">{formik.errors.name}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Description" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="description"
-              name="description"
-              onChange={formik.handleChange}
-              value={formik.values.description}
-              className={
-                formik.touched.description && formik.errors.description
-                  ? 'is-invalid'
-                  : ''
-              }
-            />
-            {formik.touched.description && formik.errors.description && (
-              <div className="invalid-feedback">{formik.errors.description}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Type" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="type"
-              name="type"
-              onChange={formik.handleChange}
-              value={formik.values.type}
-              className={
-                formik.touched.type && formik.errors.type ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.type && formik.errors.type && (
-              <div className="invalid-feedback">{formik.errors.type}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Unit" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="unit"
-              name="unit"
-              onChange={formik.handleChange}
-              value={formik.values.unit}
-              className={
-                formik.touched.unit && formik.errors.unit ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.unit && formik.errors.unit && (
-              <div className="invalid-feedback">{formik.errors.unit}</div>
-            )}
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Reset" />
-            </Form.Label>
-            <InputText
-              type="text"
-              id="reset"
-              name="reset"
-              onChange={formik.handleChange}
-              value={formik.values.reset}
-              className={
-                formik.touched.reset && formik.errors.reset ? 'is-invalid' : ''
-              }
-            />
-            {formik.touched.reset && formik.errors.reset && (
-              <div className="invalid-feedback">{formik.errors.reset}</div>
-            )}
-          </Form.Group>
-        </Modal.Body> */}
 
         <Modal.Body>
           <div>
             {/* Name */}
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Name" />
+                <FormattedMessage id="Name" />{' '}
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -264,7 +168,8 @@ const FeatureForm = ({
           </div>
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Description" />
+              <FormattedMessage id="Description" />{' '}
+              <span style={{ color: 'red' }}>*</span>
             </Form.Label>
             <TextareaAndCounter
               value={updatedDescription}
@@ -288,7 +193,8 @@ const FeatureForm = ({
             {/* Type */}
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Type" />
+                <FormattedMessage id="Type" />{' '}
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
                 className="form-control"

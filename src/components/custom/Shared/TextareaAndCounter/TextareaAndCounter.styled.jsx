@@ -16,8 +16,7 @@ export const TextareaCounterWrapper = styled.div`
     padding-right: 6px;
   }
 
-  .description-textarea {
-    resize: vertical;
-    width: 100%;
+  .textarea-container textarea {
+    min-height: 70px !important;
   }
 `
