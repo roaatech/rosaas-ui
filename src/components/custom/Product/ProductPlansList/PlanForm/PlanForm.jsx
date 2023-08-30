@@ -5,16 +5,16 @@ import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './PlanForm.styled.jsx'
 import { useParams } from 'react-router-dom'
-import { PlanInfo } from '../../../../../store/slices/products.js'
+import { PlanInfo, setAllPlans } from '../../../../../store/slices/products.js'
 
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
 const PlanForm = ({ type, planData, setVisible, popupLabel }) => {
-  const { createPlanRequest, editPlanRequest } = useRequest()
+  const { createPlanRequest, editPlanRequest, getProductPlans } = useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
   const productId = routeParams.id
@@ -23,6 +23,7 @@ const PlanForm = ({ type, planData, setVisible, popupLabel }) => {
     description: planData ? planData.description : '',
     displayOrder: planData ? planData.displayOrder : '0',
   }
+  const allProducts = useSelector((state) => state.products.products)
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -48,6 +49,15 @@ const PlanForm = ({ type, planData, setVisible, popupLabel }) => {
           displayOrder: values.displayOrder || 0,
         })
 
+        if (!allProducts[productId].plan) {
+          const plan = await getProductPlans(productId)
+          dispatch(
+            setAllPlans({
+              productId: productId,
+              data: plan.data.data,
+            })
+          )
+        }
         dispatch(
           PlanInfo({
             planId: createPlan.data.data.id,

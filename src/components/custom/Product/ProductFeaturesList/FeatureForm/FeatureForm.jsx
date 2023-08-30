@@ -4,10 +4,13 @@ import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './FeatureForm.styled.jsx'
-import { FeatureInfo } from '../../../../../store/slices/products.js'
+import {
+  FeatureInfo,
+  setAllFeatures,
+} from '../../../../../store/slices/products.js'
 import { useParams } from 'react-router-dom'
 
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
@@ -18,10 +21,12 @@ import {
   featureUnitMap,
 } from '../../../../../const/index.js'
 const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
-  const { createFeatureRequest, editFeatureRequest } = useRequest()
+  const { createFeatureRequest, editFeatureRequest, getProductFeatures } =
+    useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
   const productId = routeParams.id
+  const allProducts = useSelector((state) => state.products.products)
 
   const initialValues = {
     name: featureData ? featureData.name : '',
@@ -59,6 +64,16 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
           unit: parseInt(values.unit),
           reset: parseInt(values.reset) || 1,
         })
+
+        if (!allProducts[productId].feature) {
+          const feature = await getProductFeatures(productId)
+          dispatch(
+            setAllFeatures({
+              productId: productId,
+              data: feature.data.data,
+            })
+          )
+        }
 
         dispatch(
           FeatureInfo({

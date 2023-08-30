@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
-import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
 import { Modal, Button } from '@themesberg/react-bootstrap'
@@ -22,7 +21,7 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
   const productId = routeParams.id
   const {
     getProductFeatures,
-    getPlanList,
+    getProductPlans,
     createFeaturePlanRequest,
     editFeaturePlanRequest,
     getFeaturePlanList,
@@ -65,7 +64,7 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
         )
       }
       if (!allPlans) {
-        const planReq = await getPlanList(productId)
+        const planReq = await getProductPlans(productId)
         dispatch(setAllPlans({ productId: productId, data: planReq.data.data }))
       }
     })()
@@ -81,10 +80,9 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
   const validationSchema = Yup.object().shape({
     feature: Yup.string().required('Please select a feature'),
     plan: Yup.string().required('Please select a plan'),
-    limit: Yup.string().test(
-      'unit-validation',
-      'Limit must be number more than 0',
-      function (value) {
+    limit: Yup.number()
+      .nullable()
+      .test('', 'Limit must be number more than 0', function (value) {
         const feature = this.resolve(Yup.ref('feature'))
         if (isFeatureBoolean(feature)) {
           return true
@@ -92,15 +90,14 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
           const regex = /^[1-9]\d*$/
           return regex.test(value)
         }
-      }
-    ),
+      }),
   })
 
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      if (type == 'create') {
+      if (type === 'create') {
         const dataDetails = {
           description: values.description,
           featureId: values.feature,
@@ -145,13 +142,14 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
           })
         )
       } else {
+        const dataDetails = {
+          description: values.description,
+        }
+        if (values.limit) dataDetails.limit = values.limit
         const editFeaturePlan = await editFeaturePlanRequest({
           productId: productId,
           featurePlanId: FeaturePlanData.id,
-          data: {
-            description: values.description,
-            limit: values.limit,
-          },
+          data: dataDetails,
         })
 
         const newData = JSON.parse(JSON.stringify(FeaturePlanData))
