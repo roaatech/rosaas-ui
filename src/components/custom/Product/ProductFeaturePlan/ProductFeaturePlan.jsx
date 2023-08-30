@@ -86,17 +86,17 @@ export default function ProductFeaturePlan({ children }) {
 
     return (
       <tr>
-        <td className="description">
-          <DescriptionCell data={{ description }} />
-        </td>
-        <td>
-          <span className="fw-normal">{limit}</span>
-        </td>
         <td>
           <span className="fw-normal">{feature.name}</span>
         </td>
         <td>
           <span className="fw-normal">{plan.name}</span>
+        </td>
+        <td className="description">
+          <DescriptionCell data={{ description }} />
+        </td>
+        <td>
+          <span className="fw-normal">{limit}</span>
         </td>
         <td>
           <span className={`fw-normal`}>
@@ -146,16 +146,16 @@ export default function ProductFeaturePlan({ children }) {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Description" />
-                  </th>
-                  <th className="border-bottom">
-                    <FormattedMessage id="Limit" />
-                  </th>
-                  <th className="border-bottom">
                     <FormattedMessage id="Feature" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Plan" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Description" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Limit" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Created-Date" />
