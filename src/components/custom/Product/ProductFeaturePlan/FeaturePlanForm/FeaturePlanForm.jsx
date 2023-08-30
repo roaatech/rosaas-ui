@@ -18,7 +18,6 @@ import { setAllPlans } from '../../../../../store/slices/plans.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
 const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
-  const [currentType, setCurrentType] = useState()
   const routeParams = useParams()
   const productId = routeParams.id
   const {
@@ -78,6 +77,21 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
       .typeError('Limit must be a number')
       .integer('Limit must be an integer')
       .min(1, 'Limit must be a more than 0'),
+
+    // limit: Yup.string().test(
+    //   'limit-validation',
+    //   'limit is required when Type is Number',
+    //   function (value) {
+    //     const feature = this.resolve(Yup.ref('feature'))
+    //     if (
+    //       featureOptions.find((obj) => obj.value === feature)?.type == 'Boolean'
+    //     ) {
+    //       return value !== undefined && value !== ''
+    //     }
+    //     return true
+    //   }
+    // ),
+
     // .default(1),
   })
 
@@ -256,13 +270,7 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
                   )?.type == 'Boolean'
                 }
               />
-              {console.log(
-                currentType,
-                'oooooooooooooo',
-                featureOptions.find(
-                  (obj) => obj.value === formik.values.feature
-                )?.type == 'Boolean'
-              )}
+
               {formik.touched.limit && formik.errors.limit && (
                 <Form.Control.Feedback
                   type="invalid"
