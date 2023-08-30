@@ -18,6 +18,7 @@ import { setAllPlans } from '../../../../../store/slices/plans.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
 const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
+  const [currentType, setCurrentType] = useState()
   const routeParams = useParams()
   const productId = routeParams.id
   const {
@@ -36,7 +37,11 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
 
   const featureOptions = listFeatureData
     ? allFeatureArray.map((item, index) => {
-        return { value: item.id, label: item.name }
+        return {
+          value: item.id,
+          label: item.name,
+          type: item.type == 1 ? 'Number' : 'Boolean',
+        }
       })
     : []
   const planOptions = allPlans
@@ -161,7 +166,7 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
                 <option value={''}>{'select'}</option>
                 {featureOptions.map((option) => (
                   <option key={option.value} value={option.value}>
-                    {option.label}
+                    {`${option.label} (${option.type})`}
                   </option>
                 ))}
               </select>
@@ -238,9 +243,26 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
                 id="limit"
                 name="limit"
                 onChange={formik.handleChange}
-                value={formik.values.limit}
+                value={
+                  featureOptions.find(
+                    (obj) => obj.value === formik.values.feature
+                  )?.type == 'Boolean'
+                    ? ''
+                    : formik.values.limit
+                }
+                disabled={
+                  featureOptions.find(
+                    (obj) => obj.value === formik.values.feature
+                  )?.type == 'Boolean'
+                }
               />
-
+              {console.log(
+                currentType,
+                'oooooooooooooo',
+                featureOptions.find(
+                  (obj) => obj.value === formik.values.feature
+                )?.type == 'Boolean'
+              )}
               {formik.touched.limit && formik.errors.limit && (
                 <Form.Control.Feedback
                   type="invalid"

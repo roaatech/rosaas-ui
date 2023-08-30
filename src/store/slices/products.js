@@ -85,7 +85,14 @@ export const productsSlice = createSlice({
       const currentProducts = JSON.parse(
         JSON.stringify(current(state.products))
       )
-      currentProducts[productId].features[featureId] = data
+      if (currentProducts[productId].features[featureId]) {
+        currentProducts[productId].features[featureId] = data
+      } else {
+        currentProducts[productId].features = {
+          [featureId]: data,
+          ...currentProducts[productId].features,
+        }
+      }
       state.products = currentProducts
     },
 
@@ -104,8 +111,20 @@ export const productsSlice = createSlice({
     },
     featurePlanInfo: (state, action) => {
       const allProduct = JSON.parse(JSON.stringify(current(state.products)))
-      allProduct[action.payload.productId].featurePlan[action.payload.data.id] =
-        action.payload.data
+
+      if (
+        allProduct[action.payload.productId].featurePlan[action.payload.data.id]
+      ) {
+        allProduct[action.payload.productId].featurePlan[
+          action.payload.data.id
+        ] = action.payload.data
+      } else {
+        allProduct[action.payload.productId].featurePlan = {
+          [action.payload.data.id]: action.payload.data,
+          ...allProduct[action.payload.productId].featurePlan,
+        }
+      }
+
       state.products = allProduct
     },
     deleteFeaturePlan: (state, action) => {
