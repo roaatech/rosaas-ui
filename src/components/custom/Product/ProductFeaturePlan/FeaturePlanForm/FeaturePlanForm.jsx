@@ -31,7 +31,9 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
   const allProducts = useSelector((state) => state.products.products)
   const listFeatureData = allProducts[productId]?.features
   let allFeatureArray = listFeatureData && Object.values(listFeatureData)
-  const allPlans = useSelector((state) => state.plans.plans)
+  const allPlans = useSelector(
+    (state) => state.products.products[productId]?.plans
+  )
   let allPlansArray = allPlans && Object.values(allPlans)
 
   const featureOptions = listFeatureData
@@ -55,11 +57,12 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
         const featureReq = await getFeatureList(productId)
         dispatch(features({ productId: productId, data: featureReq.data.data }))
       }
-      if (allPlansArray.length === 0) {
-        const planReq = await getPlanList(productId)
-        console.log(planReq, 'ppppppppppppppppp')
-        dispatch(setAllPlans({ productId: productId, data: planReq.data.data }))
-      }
+      // if (allPlansArray?.length === 0) {
+      console.log('ppppppppppppppppp1')
+      const planReq = await getPlanList(productId)
+      console.log(planReq, 'ppppppppppppppppp')
+      dispatch(setAllPlans({ productId: productId, data: planReq.data.data }))
+      // }
     })()
   }, [])
 

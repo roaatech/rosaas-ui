@@ -135,7 +135,7 @@ export const productsSlice = createSlice({
       state.products = allProduct
     },
 
-    setAllPlan: (state, action) => {
+    setAllPlans: (state, action) => {
       const allProduct = JSON.parse(JSON.stringify(current(state.products)))
 
       const plans = {}
@@ -161,6 +161,6 @@ export const {
   storeFeatureDelete,
   featurePlanInfo,
   deleteFeaturePlan,
-  setAllPlan,
+  setAllPlans,
 } = productsSlice.actions
 export default productsSlice.reducer
