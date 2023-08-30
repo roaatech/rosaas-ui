@@ -14,18 +14,16 @@ import {
   Tooltip,
 } from '@themesberg/react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { Wrapper } from './DynamicButtons.styled'
-import PlanForm from '../../Plan/PlanForm/PlanForm'
-import FeatureForm from '../../Feature/FeatureForm/FeatureForm'
+import FeatureForm from '../../Product/ProductFeaturesList/FeatureForm/FeatureForm'
 import FeaturePlanForm from '../../Product/ProductFeaturePlan/FeaturePlanForm/FeaturePlanForm'
+import PlanForm from '../../Product/ProductPlansList/PlanForm/PlanForm'
 
 const DynamicButtons = ({ buttons }) => {
   const navigate = useNavigate()
   const productsData = useSelector((state) => state.products.products)
   const tenantsData = useSelector((state) => state.tenants.tenants)
-  const plansData = useSelector((state) => state.plans.plans)
   const [confirm, setConfirm] = useState(false)
   const [currentButtonIndex, setCurrentButtonIndex] = useState()
   const [more, setMore] = useState(false)
@@ -72,18 +70,7 @@ const DynamicButtons = ({ buttons }) => {
         />
       </>
     ),
-    editPlan: () => (
-      <>
-        <PlanForm
-          popupLabel={<FormattedMessage id="Edit-Plan" />}
-          type={'edit'}
-          planData={plansData[buttons[currentButtonIndex].id]}
-          visible={visible}
-          setVisible={setVisible}
-          sideBar={false}
-        />
-      </>
-    ),
+
     addFeaturePlan: () => (
       <>
         <FeaturePlanForm
@@ -100,7 +87,6 @@ const DynamicButtons = ({ buttons }) => {
         <PlanForm
           popupLabel={<FormattedMessage id="Add-Plan" />}
           type={'create'}
-          planData={plansData[buttons[currentButtonIndex].id]}
           visible={visible}
           setVisible={setVisible}
           sideBar={false}
@@ -110,20 +96,12 @@ const DynamicButtons = ({ buttons }) => {
     addFeature: () => (
       <>
         <FeatureForm
-          productId={buttons[currentButtonIndex].id}
           popupLabel={<FormattedMessage id="Add-Feature" />}
           type={'create'}
           visible={visible}
           setVisible={setVisible}
           sideBar={false}
         />
-
-        {/* <FeatureForm
-             
-               update={update}
-              setUpdate={setUpdate}
-              //  featureData={type == 'edit' ? list?.features[currentId] : {}}
-            /> */}
       </>
     ),
   }

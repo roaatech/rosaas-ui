@@ -30,8 +30,7 @@ import { Wrapper } from './ProductFeaturePlan.styled'
 
 export default function ProductFeaturePlan({ children }) {
   const dispatch = useDispatch()
-  const { getFeaturePlanList, deleteProductReq, deleteFeaturePlanReq } =
-    useRequest()
+  const { getFeaturePlanList, deleteFeaturePlanReq } = useRequest()
   const [visible, setVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
@@ -40,10 +39,10 @@ export default function ProductFeaturePlan({ children }) {
   const [popUpLable, setPopUpLable] = useState('')
 
   const productId = routeParams.id
-  const deleteConfirm = (id) => {
-    setCurrentId(id)
-    setConfirm(true)
-  }
+  const listData = useSelector(
+    (state) => state.products.products[productId]?.featurePlan
+  )
+  let list = listData && Object.values(listData)
 
   const handleDeleteFeaturePlan = async () => {
     try {
@@ -54,10 +53,10 @@ export default function ProductFeaturePlan({ children }) {
     }
   }
 
-  const listData = useSelector(
-    (state) => state.products.products[productId]?.featurePlan
-  )
-  let list = listData && Object.values(listData)
+  const deleteConfirm = (id) => {
+    setCurrentId(id)
+    setConfirm(true)
+  }
 
   const editForm = async (id) => {
     setPopUpLable('Edit-Feature-Plan')
@@ -68,17 +67,17 @@ export default function ProductFeaturePlan({ children }) {
 
   useEffect(() => {
     ;(async () => {
-      const FeaturePlanData = await getFeaturePlanList(productId)
-      dispatch(
-        setAllFeaturePlan({
-          productId: productId,
-          data: FeaturePlanData.data.data,
-        })
-      )
+      if (!list) {
+        const FeaturePlanData = await getFeaturePlanList(productId)
+        dispatch(
+          setAllFeaturePlan({
+            productId: productId,
+            data: FeaturePlanData.data.data,
+          })
+        )
+      }
     })()
   }, [])
-
-  /****************************** */
 
   const TableRow = (props) => {
     const { limit, description, feature, plan, createdDate, editedDate, id } =

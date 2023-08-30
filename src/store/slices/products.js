@@ -67,24 +67,24 @@ export const productsSlice = createSlice({
 
     // feature
 
-    features: (state, action) => {
-      const currentProducts = { ...current(state.products) }
-      const product = { ...currentProducts[action.payload.productId] }
-
+    setAllFeatures: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
       const allFeatures = {}
       action.payload.data.map((item) => {
         allFeatures[item.id] = item
       })
-
-      product.features = allFeatures
-      currentProducts[action.payload.productId] = product
-      state.products = currentProducts
+      allProduct[action.payload.productId].features = allFeatures
+      state.products = allProduct
     },
     FeatureInfo: (state, action) => {
       const { productId, featureId, data } = action.payload
       const currentProducts = JSON.parse(
         JSON.stringify(current(state.products))
       )
+
+      if (!currentProducts[productId].features) {
+        currentProducts[productId].features = {}
+      }
       if (currentProducts[productId].features[featureId]) {
         currentProducts[productId].features[featureId] = data
       } else {
@@ -94,6 +94,51 @@ export const productsSlice = createSlice({
         }
       }
       state.products = currentProducts
+    },
+
+    deleteFeature: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+      delete allProduct[action.payload.productId].features[
+        action.payload.FeatureId
+      ]
+      state.products = allProduct
+    },
+
+    // plan
+
+    setAllPlans: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+      const allPlans = {}
+      action.payload.data.map((item) => {
+        allPlans[item.id] = item
+      })
+      allProduct[action.payload.productId].plans = allPlans
+      state.products = allProduct
+    },
+    PlanInfo: (state, action) => {
+      const { productId, planId, data } = action.payload
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
+
+      if (!currentProducts[productId].plans) {
+        currentProducts[productId].plans = {}
+      }
+      if (currentProducts[productId].plans[planId]) {
+        currentProducts[productId].plans[planId] = data
+      } else {
+        currentProducts[productId].plans = {
+          [planId]: data,
+          ...currentProducts[productId].plans,
+        }
+      }
+      state.products = currentProducts
+    },
+
+    deletePlan: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+      delete allProduct[action.payload.productId].plans[action.payload.PlanId]
+      state.products = allProduct
     },
 
     // featurePlan
@@ -111,17 +156,17 @@ export const productsSlice = createSlice({
     },
     featurePlanInfo: (state, action) => {
       const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+      const { productId, data } = action.payload
 
-      if (
-        allProduct[action.payload.productId].featurePlan[action.payload.data.id]
-      ) {
-        allProduct[action.payload.productId].featurePlan[
-          action.payload.data.id
-        ] = action.payload.data
+      if (!allProduct[productId].featurePlan) {
+        allProduct[productId].featurePlan = {}
+      }
+      if (allProduct[productId]?.featurePlan[data.id]) {
+        allProduct[productId].featurePlan[data.id] = data
       } else {
-        allProduct[action.payload.productId].featurePlan = {
-          [action.payload.data.id]: action.payload.data,
-          ...allProduct[action.payload.productId].featurePlan,
+        allProduct[productId].featurePlan = {
+          [data.id]: data,
+          ...allProduct[productId].featurePlan,
         }
       }
 
@@ -134,18 +179,6 @@ export const productsSlice = createSlice({
       ]
       state.products = allProduct
     },
-
-    setAllPlans: (state, action) => {
-      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
-
-      const plans = {}
-      action.payload.data.map((item) => {
-        plans[item.id] = item
-      })
-
-      allProduct[action.payload.productId].plans = plans
-      state.products = allProduct
-    },
   },
 })
 
@@ -156,11 +189,13 @@ export const {
   productInfo,
   removeProduct,
   setAllFeaturePlan,
-  features,
   FeatureInfo,
-  storeFeatureDelete,
   featurePlanInfo,
   deleteFeaturePlan,
   setAllPlans,
+  deleteFeature,
+  setAllFeatures,
+  PlanInfo,
+  deletePlan,
 } = productsSlice.actions
 export default productsSlice.reducer

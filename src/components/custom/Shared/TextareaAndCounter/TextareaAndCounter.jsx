@@ -9,7 +9,6 @@ const TextareaAndCounter = ({
 }) => {
   const [characterCount, setCharacterCount] = useState(0)
   const [value, setValue] = useState(inputValue)
-  console.log({ inputValue })
   const handleTextareaChange = (e) => {
     const inputValue = e.target.value
     if (inputValue.length <= maxLength) {

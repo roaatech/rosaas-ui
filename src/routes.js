@@ -32,8 +32,8 @@ import ProductDetails from './pages/ProductDetails/ProductDetails'
 import Redirect from './components/custom/global/Redirect/Redirect'
 import Dashboard from './pages/Welcome/Welcome'
 import Product from './pages/Product/Product'
-import Plan from './pages/Plan/Plan'
-import PlanDetails from './pages/PlanDetails/PlanDetails'
+import Plan from './pages/PlanOLD/Plan'
+import PlanDetails from './pages/PlanDetailsOLD/PlanDetails'
 import signIn from './pages/signIn/signIn'
 
 export const Routes = {

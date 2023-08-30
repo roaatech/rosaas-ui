@@ -1,50 +1,27 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useFormik } from 'formik'
-import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
-import useRequest from '../../../../axios/apis/useRequest.js'
-import {
-  Modal,
-  Button,
-  OverlayTrigger,
-  Tooltip,
-} from '@themesberg/react-bootstrap'
+import useRequest from '../../../../../axios/apis/useRequest.js'
+import { Modal, Button } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './FeatureForm.styled.jsx'
-import { generateApiKey } from '../../../../lib/sharedFun/common.js'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { AiFillCopy } from 'react-icons/ai'
+import { FeatureInfo } from '../../../../../store/slices/products.js'
 import { useParams } from 'react-router-dom'
-import { FeatureInfo } from '../../../../store/slices/products.js'
+
+import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+
 import {
   featureResetMap,
   featureTypeMap,
   featureUnitMap,
-} from '../../../../const/index.js'
-import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
-
-function convertToLocaleISOString(utcISOString) {
-  const utcDateTime = new Date(utcISOString)
-  const localDateTime = new Date(
-    utcDateTime.getTime() + utcDateTime.getTimezoneOffset() * 60000
-  ) // Convert to local time
-  return localDateTime.toISOString().slice(0, 19)
-}
-
-const FeatureForm = ({
-  type,
-  featureData,
-  setVisible,
-  popupLabel,
-  update,
-  setUpdate,
-  productId,
-}) => {
+} from '../../../../../const/index.js'
+const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
   const { createFeatureRequest, editFeatureRequest } = useRequest()
   const dispatch = useDispatch()
+  const routeParams = useParams()
+  const productId = routeParams.id
 
   const initialValues = {
     name: featureData ? featureData.name : '',
@@ -82,7 +59,7 @@ const FeatureForm = ({
           unit: parseInt(values.unit),
           reset: parseInt(values.reset) || 1,
         })
-        // setUpdate(update + 1)
+
         dispatch(
           FeatureInfo({
             featureId: createFeature.data.data.id,

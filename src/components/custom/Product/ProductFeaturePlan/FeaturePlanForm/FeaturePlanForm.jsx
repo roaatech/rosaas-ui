@@ -5,14 +5,14 @@ import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
-
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './FeaturePlanForm.styled.jsx'
 import { useParams } from 'react-router-dom'
 import {
   featurePlanInfo,
-  features,
+  setAllFeaturePlan,
+  setAllFeatures,
 } from '../../../../../store/slices/products.js'
 import { setAllPlans } from '../../../../../store/slices/products.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
@@ -21,12 +21,17 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
   const routeParams = useParams()
   const productId = routeParams.id
   const {
-    getFeatureList,
+    getProductFeatures,
     getPlanList,
     createFeaturePlanRequest,
     editFeaturePlanRequest,
+    getFeaturePlanList,
   } = useRequest()
   const dispatch = useDispatch()
+
+  const isFeatureBoolean = (value) => {
+    return featureOptions.find((obj) => obj.value === value)?.type == 'Boolean'
+  }
 
   const allProducts = useSelector((state) => state.products.products)
   const listFeatureData = allProducts[productId]?.features
@@ -54,49 +59,41 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
   useEffect(() => {
     ;(async () => {
       if (!listFeatureData) {
-        const featureReq = await getFeatureList(productId)
-        dispatch(features({ productId: productId, data: featureReq.data.data }))
+        const featureReq = await getProductFeatures(productId)
+        dispatch(
+          setAllFeatures({ productId: productId, data: featureReq.data.data })
+        )
       }
-      // if (allPlansArray?.length === 0) {
-      console.log('ppppppppppppppppp1')
-      const planReq = await getPlanList(productId)
-      console.log(planReq, 'ppppppppppppppppp')
-      dispatch(setAllPlans({ productId: productId, data: planReq.data.data }))
-      // }
+      if (!allPlans) {
+        const planReq = await getPlanList(productId)
+        dispatch(setAllPlans({ productId: productId, data: planReq.data.data }))
+      }
     })()
   }, [])
 
   const initialValues = {
     feature: FeaturePlanData ? FeaturePlanData?.feature?.id : '',
     plan: FeaturePlanData ? FeaturePlanData?.plan?.id : '',
-    limit: FeaturePlanData ? FeaturePlanData?.limit : 1,
+    limit: FeaturePlanData ? FeaturePlanData?.limit : '',
     description: FeaturePlanData ? FeaturePlanData?.description : '',
   }
 
   const validationSchema = Yup.object().shape({
     feature: Yup.string().required('Please select a feature'),
     plan: Yup.string().required('Please select a plan'),
-    limit: Yup.number()
-      .required('This field is required')
-      .typeError('Limit must be a number')
-      .integer('Limit must be an integer')
-      .min(1, 'Limit must be a more than 0'),
-
-    // limit: Yup.string().test(
-    //   'limit-validation',
-    //   'limit is required when Type is Number',
-    //   function (value) {
-    //     const feature = this.resolve(Yup.ref('feature'))
-    //     if (
-    //       featureOptions.find((obj) => obj.value === feature)?.type == 'Boolean'
-    //     ) {
-    //       return value !== undefined && value !== ''
-    //     }
-    //     return true
-    //   }
-    // ),
-
-    // .default(1),
+    limit: Yup.string().test(
+      'unit-validation',
+      'Limit must be number more than 0',
+      function (value) {
+        const feature = this.resolve(Yup.ref('feature'))
+        if (isFeatureBoolean(feature)) {
+          return true
+        } else {
+          const regex = /^[1-9]\d*$/
+          return regex.test(value)
+        }
+      }
+    ),
   })
 
   const formik = useFormik({
@@ -104,37 +101,49 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       if (type == 'create') {
-        const info = {
-          productId: productId,
-          data: {
-            description: values.description,
-            limit: values.limit,
-            feature: {
-              id: values.feature,
-              name: featureOptions.find((item) => item.value === values.feature)
-                .label,
-            },
-            plan: {
-              id: values.plan,
-              name: planOptions.find((item) => item.value === values.plan)
-                .label,
-            },
-
-            editedDate: new Date().toISOString().slice(0, 19),
-            createdDate: new Date().toISOString().slice(0, 19),
-          },
+        const dataDetails = {
+          description: values.description,
+          featureId: values.feature,
+          planId: values.plan,
         }
+        if (values.limit) dataDetails.limit = values.limit
         const createFeaturePlan = await createFeaturePlanRequest({
           productId: productId,
-          data: {
-            description: values.description,
-            limit: values.limit,
-            featureId: values.feature,
-            planId: values.plan,
-          },
+          data: dataDetails,
         })
-        info.data.id = createFeaturePlan.data.data.id
-        dispatch(featurePlanInfo(info))
+
+        if (!allProducts[productId].featurePlan) {
+          const featurePlan = await getFeaturePlanList(productId)
+          dispatch(
+            setAllFeaturePlan({
+              productId: productId,
+              data: featurePlan.data.data,
+            })
+          )
+        }
+        dispatch(
+          featurePlanInfo({
+            productId: productId,
+            data: {
+              description: values.description,
+              limit: values.limit,
+              feature: {
+                id: values.feature,
+                name: featureOptions.find(
+                  (item) => item.value === values.feature
+                ).label,
+              },
+              plan: {
+                id: values.plan,
+                name: planOptions.find((item) => item.value === values.plan)
+                  .label,
+              },
+              id: createFeaturePlan.data.data.id,
+              editedDate: new Date().toISOString().slice(0, 19),
+              createdDate: new Date().toISOString().slice(0, 19),
+            },
+          })
+        )
       } else {
         const editFeaturePlan = await editFeaturePlanRequest({
           productId: productId,
@@ -249,7 +258,13 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
               )}
             </Form.Group>
           </div>
-          <div>
+          <div
+            style={{
+              display: isFeatureBoolean(formik.values.feature)
+                ? 'none'
+                : 'block',
+            }}
+          >
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Limit" />
@@ -262,17 +277,11 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
                 name="limit"
                 onChange={formik.handleChange}
                 value={
-                  featureOptions.find(
-                    (obj) => obj.value === formik.values.feature
-                  )?.type == 'Boolean'
+                  isFeatureBoolean(formik.values.feature)
                     ? ''
                     : formik.values.limit
                 }
-                disabled={
-                  featureOptions.find(
-                    (obj) => obj.value === formik.values.feature
-                  )?.type == 'Boolean'
-                }
+                disabled={isFeatureBoolean(formik.values.feature)}
               />
 
               {formik.touched.limit && formik.errors.limit && (

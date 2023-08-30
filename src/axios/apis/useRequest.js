@@ -31,12 +31,20 @@ const useRequest = () => {
   const getProductTenants = async (params) => {
     return await Request.get(`management/sadmin/v1/products/${params}`)
   }
-  const getProductFeatures = async (params) => {
-    return await Request.get(`management/sadmin/v1/products/${params}`)
-  }
+
   const deleteTenantReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Tenants`, { data })
   }
+
+  const editTenantStatus = async (data) => {
+    return await Request.put('management/sadmin/v1/Tenants/status', data)
+  }
+  const getTimeLine = async (id, productId, queries) => {
+    return await Request.get(
+      `management/sadmin/v1/Tenants/${id}/products/${productId}/processes${queries}`
+    )
+  }
+
   const createProductRequest = async (data) => {
     return await Request.post('management/sadmin/v1/Products', data)
   }
@@ -55,6 +63,15 @@ const useRequest = () => {
   const deleteProductReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Products/${data.id}`)
   }
+
+  // Features
+
+  const getProductFeatures = async (productId) => {
+    return await Request.get(
+      `management/sadmin/v1/Products/${productId}/Features`
+    )
+  }
+
   const createFeatureRequest = async (productId, data) => {
     return await Request.post(
       `management/sadmin/v1/Products/${productId}/Features`,
@@ -67,34 +84,37 @@ const useRequest = () => {
       data.data
     )
   }
-  const getFeature = async (id, productId) => {
-    return await Request.get(
-      `management/sadmin/v1/Products/${productId}/Features/${id}`
-    )
-  }
-  const getFeatureList = async (productId) => {
-    return await Request.get(
-      `management/sadmin/v1/Products/${productId}/Features`
-    )
-  }
+
   const deleteFeatureReq = async (productId, data) => {
     return await Request.delete(
       `management/sadmin/v1/Products/${productId}/Features/${data.id}`
     )
   }
-  const editTenantStatus = async (data) => {
-    return await Request.put('management/sadmin/v1/Tenants/status', data)
+
+  // Plans
+
+  const getProductPlans = async (productId) => {
+    return await Request.get(`management/sadmin/v1/Products/${productId}/Plans`)
   }
-  const getTimeLine = async (id, productId, queries) => {
-    return await Request.get(
-      `management/sadmin/v1/Tenants/${id}/products/${productId}/processes${queries}`
+
+  const createPlanRequest = async (productId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/Products/${productId}/Plans`,
+      data
     )
   }
-  // const getTimeLine = async (id, productId) => {
-  //   return await Request.get(
-  //     `management/sadmin/v1/Tenants/${id}/products/${productId}/processes`
-  //   )
-  // }
+  const editPlanRequest = async (productId, data) => {
+    return await Request.put(
+      `management/sadmin/v1/Products/${productId}/Plans/${data.id}`,
+      data.data
+    )
+  }
+
+  const deletePlanReq = async (productId, data) => {
+    return await Request.delete(
+      `management/sadmin/v1/Products/${productId}/Plans/${data.id}`
+    )
+  }
 
   // settings
   const getHeathCheckSettings = async () => {
@@ -102,24 +122,6 @@ const useRequest = () => {
   }
   const putHeathCheckSettings = async (data) => {
     return await Request.put(`management/sadmin/v1/Settings/HealthCheck`, data)
-  }
-
-  //plan
-
-  const createPlanRequest = async (data) => {
-    return await Request.post('management/sadmin/v1/Plans', data)
-  }
-  const editPlanRequest = async (data) => {
-    return await Request.put(`management/sadmin/v1/Plans/${data.id}`, data.data)
-  }
-  const getPlan = async (id) => {
-    return await Request.get(`management/sadmin/v1/Plans/${id}`)
-  }
-  const getPlanList = async (productId) => {
-    return await Request.get(`management/sadmin/v1/products/${productId}/Plans`)
-  }
-  const deletePlanReq = async (data) => {
-    return await Request.delete(`management/sadmin/v1/Plans/${data.id}`)
   }
 
   // --------------------------------------
@@ -170,8 +172,7 @@ const useRequest = () => {
     putHeathCheckSettings,
     createPlanRequest,
     editPlanRequest,
-    getPlan,
-    getPlanList,
+    getProductPlans,
     deletePlanReq,
     getFeaturePlanList,
     createFeaturePlanRequest,
@@ -181,8 +182,6 @@ const useRequest = () => {
     getProductFeatures,
     createFeatureRequest,
     editFeatureRequest,
-    getFeature,
-    getFeatureList,
     deleteFeatureReq,
   }
 }

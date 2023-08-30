@@ -11,10 +11,7 @@ import {
 } from '@themesberg/react-bootstrap'
 import TableDate from '../../Shared/TableDate/TableDate'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  deleteFeature,
-  setAllFeatures,
-} from '../../../../store/slices/products'
+import { deletePlan, setAllPlans } from '../../../../store/slices/products'
 import { FormattedMessage } from 'react-intl'
 import {
   faEdit,
@@ -23,18 +20,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
-import FeatureForm from './FeatureForm/FeatureForm'
+import PlanForm from './PlanForm/PlanForm'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
-import {
-  featureResetMap,
-  featureTypeMap,
-  featureUnitMap,
-} from '../../../../const'
-import { Wrapper } from './ProductFeaturesList.styled'
+import { Wrapper } from './ProductPlansList.styled'
 
-export const ProductFeaturesList = ({ productId }) => {
-  const { getProductFeatures, deleteFeatureReq } = useRequest()
+export const ProductPlansList = ({ productId }) => {
+  const { getProductPlans, deletePlanReq } = useRequest()
   const [update, setUpdate] = useState(1)
   const dispatch = useDispatch()
   const list = useSelector((state) => state.products.products[productId])
@@ -44,9 +36,9 @@ export const ProductFeaturesList = ({ productId }) => {
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
 
-  const handleDeleteFeature = async () => {
-    await deleteFeatureReq(productId, { id: currentId })
-    dispatch(deleteFeature({ productId, FeatureId: currentId }))
+  const handleDeletePlan = async () => {
+    await deletePlanReq(productId, { id: currentId })
+    dispatch(deletePlan({ productId, PlanId: currentId }))
   }
 
   const deleteConfirm = (id) => {
@@ -55,7 +47,7 @@ export const ProductFeaturesList = ({ productId }) => {
   }
 
   const editForm = async (id) => {
-    setPopUpLable('Edit-Feature')
+    setPopUpLable('Edit-Plan')
     setType('edit')
     setCurrentId(id)
     setVisible(true)
@@ -63,28 +55,16 @@ export const ProductFeaturesList = ({ productId }) => {
 
   useEffect(() => {
     ;(async () => {
-      if (!list?.features) {
-        const listData = await getProductFeatures(productId)
-        dispatch(setAllFeatures({ productId, data: listData.data.data }))
+      if (!list?.plans) {
+        const listData = await getProductPlans(productId)
+        dispatch(setAllPlans({ productId, data: listData.data.data }))
       }
     })()
   }, [])
 
   const TableRow = (props) => {
-    const {
-      name,
-      description,
-      type,
-      unit,
-      reset,
-      id,
-      createdDate,
-      editedDate,
-    } = props
-
-    const mappedType = featureTypeMap[type]
-    const mappedUnit = featureUnitMap[unit]
-    const mappedReset = featureResetMap[reset]
+    const { name, description, id, displayOrder, createdDate, editedDate } =
+      props
 
     return (
       <>
@@ -97,14 +77,9 @@ export const ProductFeaturesList = ({ productId }) => {
           </td>
 
           <td>
-            <span className={`fw-normal`}>{mappedType}</span>
+            <span className={`fw-normal`}>{displayOrder}</span>
           </td>
-          <td>
-            <span className="fw-normal">{mappedUnit}</span>
-          </td>
-          <td>
-            <span className="fw-normal">{mappedReset}</span>
-          </td>
+
           <td>
             <span className="fw-normal">
               <TableDate createdDate={createdDate} editedDate={editedDate} />
@@ -165,25 +140,20 @@ export const ProductFeaturesList = ({ productId }) => {
                   </th>
 
                   <th className="border-bottom">
-                    <FormattedMessage id="Type" />
-                  </th>
-                  <th className="border-bottom">
-                    <FormattedMessage id="Unit" />
-                  </th>
-                  <th className="border-bottom">
-                    <FormattedMessage id="Reset" />
+                    <FormattedMessage id="Display-Order" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Date" />
                   </th>
+
                   <th className="border-bottom">
                     <FormattedMessage id="Actions" />
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {list?.features && Object.values(list?.features).length
-                  ? Object.values(list?.features).map((t, index) => {
+                {list?.plans && Object.values(list?.plans).length
+                  ? Object.values(list?.plans).map((t, index) => {
                       return <TableRow key={`index`} {...t} />
                     })
                   : null}
@@ -191,12 +161,12 @@ export const ProductFeaturesList = ({ productId }) => {
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-feature-confirmation-message" />
+                <FormattedMessage id="delete-plan-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
               setConfirm={setConfirm}
-              confirmFunction={handleDeleteFeature}
+              confirmFunction={handleDeletePlan}
               sideBar={false}
             />
           </Card.Body>
@@ -204,15 +174,12 @@ export const ProductFeaturesList = ({ productId }) => {
 
         <ThemeDialog visible={visible} setVisible={setVisible}>
           <>
-            <FeatureForm
-              productId={productId}
+            <PlanForm
               popupLabel={<FormattedMessage id={popUpLable} />}
               type={type}
-              update={update}
-              setUpdate={setUpdate}
               setVisible={setVisible}
               sideBar={false}
-              featureData={type == 'edit' ? list?.features[currentId] : {}}
+              planData={type == 'edit' ? list?.plans[currentId] : {}}
             />
           </>
         </ThemeDialog>
@@ -221,4 +188,4 @@ export const ProductFeaturesList = ({ productId }) => {
   )
 }
 
-export default ProductFeaturesList
+export default ProductPlansList
