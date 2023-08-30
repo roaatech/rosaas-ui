@@ -303,13 +303,13 @@ export default (props = {}) => {
                 icon={BsBoxSeam}
                 isActive={location.pathname.includes('products')}
               />
-              <NavItem
+              {/* <NavItem
                 title="Plans"
                 link={`/plans`}
                 icon={BsPencilSquare}
                 // icon={BsPencil}
                 isActive={location.pathname.includes('plans')}
-              />
+              /> */}
 
               <CollapsableNavItem
                 eventKey={settingIsOpen}

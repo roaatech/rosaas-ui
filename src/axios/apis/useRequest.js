@@ -115,8 +115,8 @@ const useRequest = () => {
   const getPlan = async (id) => {
     return await Request.get(`management/sadmin/v1/Plans/${id}`)
   }
-  const getPlanList = async (params) => {
-    return await Request.get(`management/sadmin/v1/Plans`)
+  const getPlanList = async (productId) => {
+    return await Request.get(`management/sadmin/v1/products/${productId}/Plans`)
   }
   const deletePlanReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Plans/${data.id}`)

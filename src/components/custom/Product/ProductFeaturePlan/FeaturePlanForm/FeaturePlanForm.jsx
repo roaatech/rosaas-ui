@@ -14,7 +14,7 @@ import {
   featurePlanInfo,
   features,
 } from '../../../../../store/slices/products.js'
-import { setAllPlans } from '../../../../../store/slices/plans.js'
+import { setAllPlans } from '../../../../../store/slices/products.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
 const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
@@ -56,8 +56,9 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
         dispatch(features({ productId: productId, data: featureReq.data.data }))
       }
       if (allPlansArray.length === 0) {
-        const featureReq = await getPlanList(productId)
-        dispatch(setAllPlans(featureReq.data.data.items))
+        const planReq = await getPlanList(productId)
+        console.log(planReq, 'ppppppppppppppppp')
+        dispatch(setAllPlans({ productId: productId, data: planReq.data.data }))
       }
     })()
   }, [])
