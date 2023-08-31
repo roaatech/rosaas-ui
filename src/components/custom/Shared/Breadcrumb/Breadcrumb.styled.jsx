@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 export const Wrapper = styled.div`
   background: var(--themeSecColor);
   padding: 10px 25px;
-  margin: 0; 
+  margin: 0;
   display: flex;
 
   h4 {
@@ -28,4 +28,4 @@ export const Wrapper = styled.div`
   nav.ps-0.pe-2.pb-0.navbar.navbar-expand.navbar-dark {
     padding: 0;
   }
-`;
+`

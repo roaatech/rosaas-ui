@@ -42,10 +42,10 @@ export const Wrapper = styled.div`
     }
   }
 
-  .description-textarea{
+  .description-textarea {
     width: 100%;
-    height:auto;
-    resize:vertical;
+    height: auto;
+    resize: vertical;
     border: none;
     background-color: transparent;
     font-size: 14px;

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {
 //   faAngleDoubleLeft,
@@ -10,9 +10,9 @@ import {
   Card,
   Container,
   Pagination,
-} from "@themesberg/react-bootstrap";
+} from '@themesberg/react-bootstrap'
 
-import Documentation from "../../components/Documentation";
+import Documentation from '../../components/Documentation'
 
 export default () => {
   return (
@@ -37,7 +37,7 @@ export default () => {
                 to use when you have data that can be potentially so numerous
                 that you need to paginate it. We've created two main handles
                 that you can use when the previous or next item button has been
-                click, called <code>onPrevItem</code> and{" "}
+                click, called <code>onPrevItem</code> and{' '}
                 <code>onNextItem</code>.
               </p>
               <p>
@@ -47,7 +47,7 @@ export default () => {
                 pagination element.
               </p>
               <p>
-                Also you can use a function as{" "}
+                Also you can use a function as{' '}
                 <code>handlePaginationChange</code> to add some custome logic
                 when user goes to another page (e.g fetch new data).
               </p>
@@ -193,7 +193,7 @@ render(
           title="Sizing"
           description={
             <p>
-              As throughout the whole app, you can use either the{" "}
+              As throughout the whole app, you can use either the{' '}
               <code>sm</code>, default or <code>lg</code> size modifiers by
               updating the <code>size</code> attribute.
             </p>
@@ -265,5 +265,5 @@ render(
         />
       </Container>
     </article>
-  );
-};
+  )
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import {
 //   faAngleDown,
@@ -23,17 +23,17 @@ import {
   ProgressBar,
   Pagination,
   ButtonGroup,
-} from "@themesberg/react-bootstrap";
-import { Link } from "react-router-dom";
+} from '@themesberg/react-bootstrap'
+import { Link } from 'react-router-dom'
 
-import { Routes } from "../routes";
-import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
-import transactions from "../data/transactions";
-import commands from "../data/commands";
+import { Routes } from '../routes'
+import { pageVisits, pageTraffic, pageRanking } from '../data/tables'
+import transactions from '../data/transactions'
+import commands from '../data/commands'
 
 const ValueChange = ({ value, suffix }) => {
   // const valueIcon = value < 0 ? faAngleDown : faAngleUp;
-  const valueTxtColor = value < 0 ? "text-danger" : "text-success";
+  const valueTxtColor = value < 0 ? 'text-danger' : 'text-success'
 
   return value ? (
     <span className={valueTxtColor}>
@@ -44,15 +44,15 @@ const ValueChange = ({ value, suffix }) => {
       </span>
     </span>
   ) : (
-    "--"
-  );
-};
+    '--'
+  )
+}
 
 export const PageVisitsTable = () => {
   const TableRow = (props) => {
-    const { pageName, views, returnValue, bounceRate } = props;
+    const { pageName, views, returnValue, bounceRate } = props
     // const bounceIcon = bounceRate < 0 ? faArrowDown : faArrowUp;
-    const bounceTxtColor = bounceRate < 0 ? "text-danger" : "text-success";
+    const bounceTxtColor = bounceRate < 0 ? 'text-danger' : 'text-success'
 
     return (
       <tr>
@@ -67,8 +67,8 @@ export const PageVisitsTable = () => {
           {Math.abs(bounceRate)}%
         </td>
       </tr>
-    );
-  };
+    )
+  }
 
   return (
     <Card border="light" className="shadow-sm">
@@ -100,8 +100,8 @@ export const PageVisitsTable = () => {
         </tbody>
       </Table>
     </Card>
-  );
-};
+  )
+}
 
 export const PageTrafficTable = () => {
   const TableRow = (props) => {
@@ -115,7 +115,7 @@ export const PageTrafficTable = () => {
       rank,
       trafficShare,
       change,
-    } = props;
+    } = props
 
     return (
       <tr>
@@ -132,8 +132,8 @@ export const PageTrafficTable = () => {
           {source}
         </td>
         <td>{sourceType}</td>
-        <td>{category ? category : "--"}</td>
-        <td>{rank ? rank : "--"}</td>
+        <td>{category ? category : '--'}</td>
+        <td>{rank ? rank : '--'}</td>
         <td>
           <Row className="d-flex align-items-center">
             <Col xs={12} xl={2} className="px-0">
@@ -154,8 +154,8 @@ export const PageTrafficTable = () => {
           <ValueChange value={change} suffix="%" />
         </td>
       </tr>
-    );
-  };
+    )
+  }
 
   return (
     <Card border="light" className="shadow-sm mb-4">
@@ -180,8 +180,8 @@ export const PageTrafficTable = () => {
         </Table>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
 
 export const RankingTable = () => {
   const TableRow = (props) => {
@@ -194,7 +194,7 @@ export const RankingTable = () => {
       travelRankChange,
       widgetsRank,
       widgetsRankChange,
-    } = props;
+    } = props
 
     return (
       <tr>
@@ -209,21 +209,21 @@ export const RankingTable = () => {
             </div>
           </Card.Link>
         </td>
-        <td className="fw-bold border-0">{overallRank ? overallRank : "-"}</td>
+        <td className="fw-bold border-0">{overallRank ? overallRank : '-'}</td>
         <td className="border-0">
           <ValueChange value={overallRankChange} />
         </td>
-        <td className="fw-bold border-0">{travelRank ? travelRank : "-"}</td>
+        <td className="fw-bold border-0">{travelRank ? travelRank : '-'}</td>
         <td className="border-0">
           <ValueChange value={travelRankChange} />
         </td>
-        <td className="fw-bold border-0">{widgetsRank ? widgetsRank : "-"}</td>
+        <td className="fw-bold border-0">{widgetsRank ? widgetsRank : '-'}</td>
         <td className="border-0">
           <ValueChange value={widgetsRankChange} />
         </td>
       </tr>
-    );
-  };
+    )
+  }
 
   return (
     <Card border="light" className="shadow-sm">
@@ -248,23 +248,23 @@ export const RankingTable = () => {
         </Table>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
 
 export const TransactionsTable = () => {
-  const totalTransactions = transactions.length;
+  const totalTransactions = transactions.length
 
   const TableRow = (props) => {
     const { invoiceNumber, subscription, price, issueDate, dueDate, status } =
-      props;
+      props
     const statusVariant =
-      status === "Paid"
-        ? "success"
-        : status === "Due"
-        ? "warning"
-        : status === "Canceled"
-        ? "danger"
-        : "primary";
+      status === 'Paid'
+        ? 'success'
+        : status === 'Due'
+        ? 'warning'
+        : status === 'Canceled'
+        ? 'danger'
+        : 'primary'
 
     return (
       <tr>
@@ -294,7 +294,8 @@ export const TransactionsTable = () => {
               as={Button}
               split
               variant="link"
-              className="text-dark m-0 p-0">
+              className="text-dark m-0 p-0"
+            >
               <span className="icon icon-sm">
                 {/* <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" /> */}
               </span>
@@ -313,8 +314,8 @@ export const TransactionsTable = () => {
           </Dropdown>
         </td>
       </tr>
-    );
-  };
+    )
+  }
 
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm">
@@ -355,19 +356,19 @@ export const TransactionsTable = () => {
         </Card.Footer>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
 
 export const CommandsTable = () => {
   const TableRow = (props) => {
-    const { name, usage = [], description, link } = props;
+    const { name, usage = [], description, link } = props
 
     return (
       <tr>
-        <td className="border-0" style={{ width: "5%" }}>
+        <td className="border-0" style={{ width: '5%' }}>
           <code>{name}</code>
         </td>
-        <td className="fw-bold border-0" style={{ width: "5%" }}>
+        <td className="fw-bold border-0" style={{ width: '5%' }}>
           <ul className="ps-0">
             {usage.map((u) => (
               <ol key={u} className="ps-0">
@@ -376,20 +377,20 @@ export const CommandsTable = () => {
             ))}
           </ul>
         </td>
-        <td className="border-0" style={{ width: "50%" }}>
+        <td className="border-0" style={{ width: '50%' }}>
           <pre className="m-0 p-0">{description}</pre>
         </td>
-        <td className="border-0" style={{ width: "40%" }}>
+        <td className="border-0" style={{ width: '40%' }}>
           <pre>
             <Card.Link href={link} target="_blank">
-              Read More{" "}
+              Read More{' '}
               {/* <FontAwesomeIcon icon={faExternalLinkAlt} className="ms-1" /> */}
             </Card.Link>
           </pre>
         </td>
       </tr>
-    );
-  };
+    )
+  }
 
   return (
     <Card border="light" className="shadow-sm">
@@ -397,19 +398,20 @@ export const CommandsTable = () => {
         <Table
           responsive
           className="table-centered rounded"
-          style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+          style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}
+        >
           <thead className="thead-light">
             <tr>
-              <th className="border-0" style={{ width: "5%" }}>
+              <th className="border-0" style={{ width: '5%' }}>
                 Name
               </th>
-              <th className="border-0" style={{ width: "5%" }}>
+              <th className="border-0" style={{ width: '5%' }}>
                 Usage
               </th>
-              <th className="border-0" style={{ width: "50%" }}>
+              <th className="border-0" style={{ width: '50%' }}>
                 Description
               </th>
-              <th className="border-0" style={{ width: "40%" }}>
+              <th className="border-0" style={{ width: '40%' }}>
                 Extra
               </th>
             </tr>
@@ -422,5 +424,5 @@ export const CommandsTable = () => {
         </Table>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
