@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
-import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
 import { Modal, Button } from '@themesberg/react-bootstrap'
