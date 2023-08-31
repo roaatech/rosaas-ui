@@ -2,18 +2,19 @@ import React, { useState } from 'react'
 import { TextareaCounterWrapper } from './TextareaAndCounter.styled'
 
 const TextareaAndCounter = ({
-  value,
-  onValueChange,
+  addTextarea,
   maxLength,
   showCharCount,
+  inputValue,
 }) => {
-  const [characterCount, setCharacterCount] = useState(value.length)
-
+  const [characterCount, setCharacterCount] = useState(inputValue?.length || 0)
+  const [value, setValue] = useState(inputValue)
   const handleTextareaChange = (e) => {
     const inputValue = e.target.value
     if (inputValue.length <= maxLength) {
       setCharacterCount(inputValue.length)
-      onValueChange(inputValue)
+      setValue(inputValue)
+      addTextarea('description', inputValue)
     }
   }
 

@@ -1,50 +1,32 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useFormik } from 'formik'
-import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
-import useRequest from '../../../../axios/apis/useRequest.js'
-import {
-  Modal,
-  Button,
-  OverlayTrigger,
-  Tooltip,
-} from '@themesberg/react-bootstrap'
+import useRequest from '../../../../../axios/apis/useRequest.js'
+import { Modal, Button } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './FeatureForm.styled.jsx'
-import { generateApiKey } from '../../../../lib/sharedFun/common.js'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { AiFillCopy } from 'react-icons/ai'
+import {
+  FeatureInfo,
+  setAllFeatures,
+} from '../../../../../store/slices/products.js'
 import { useParams } from 'react-router-dom'
-import { FeatureInfo } from '../../../../store/slices/products.js'
+
+import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+
 import {
   featureResetMap,
   featureTypeMap,
   featureUnitMap,
-} from '../../../../const/index.js'
-import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
-
-function convertToLocaleISOString(utcISOString) {
-  const utcDateTime = new Date(utcISOString)
-  const localDateTime = new Date(
-    utcDateTime.getTime() + utcDateTime.getTimezoneOffset() * 60000
-  ) // Convert to local time
-  return localDateTime.toISOString().slice(0, 19)
-}
-
-const FeatureForm = ({
-  type,
-  featureData,
-  setVisible,
-  popupLabel,
-  update,
-  setUpdate,
-  productId,
-}) => {
-  const { createFeatureRequest, editFeatureRequest } = useRequest()
+} from '../../../../../const/index.js'
+const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
+  const { createFeatureRequest, editFeatureRequest, getProductFeatures } =
+    useRequest()
   const dispatch = useDispatch()
+  const routeParams = useParams()
+  const productId = routeParams.id
+  const allProducts = useSelector((state) => state.products.products)
 
   const initialValues = {
     name: featureData ? featureData.name : '',
@@ -82,7 +64,17 @@ const FeatureForm = ({
           unit: parseInt(values.unit),
           reset: parseInt(values.reset) || 1,
         })
-        // setUpdate(update + 1)
+
+        if (!allProducts[productId].feature) {
+          const feature = await getProductFeatures(productId)
+          dispatch(
+            setAllFeatures({
+              productId: productId,
+              data: feature.data.data,
+            })
+          )
+        }
+
         dispatch(
           FeatureInfo({
             featureId: createFeature.data.data.id,
@@ -96,13 +88,6 @@ const FeatureForm = ({
               id: createFeature.data.data.id,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: new Date().toISOString().slice(0, 19),
-
-              // editedDate: convertToLocaleISOString(
-              //   new Date().toISOString().slice(0, 19)
-              // ),
-              // createdDate: convertToLocaleISOString(
-              //   new Date().toISOString().slice(0, 19)
-              // ),
             },
           })
         )
@@ -140,23 +125,6 @@ const FeatureForm = ({
       setSubmitting(false)
     },
   })
-
-  //********  maxLength  ********* */
-  const maxLength = 250
-  let value
-  if (formik.values.description) {
-    value = formik.values.description
-  } else {
-    value = ''
-  }
-  const [updatedDescription, setUpdatedDescription] = useState(value)
-
-  const handleDescriptionChange = (newValue) => {
-    setUpdatedDescription(newValue)
-  }
-  formik.values.description = updatedDescription
-
-  //****************************** */
 
   return (
     <Wrapper>
@@ -202,11 +170,12 @@ const FeatureForm = ({
               <FormattedMessage id="Description" />{' '}
               <span style={{ color: 'red' }}>*</span>
             </Form.Label>
+
             <TextareaAndCounter
-              value={updatedDescription}
-              onValueChange={handleDescriptionChange}
-              maxLength={maxLength}
+              addTextarea={formik.setFieldValue}
+              maxLength={250}
               showCharCount
+              inputValue={formik?.values?.description}
             />
 
             {formik.touched.description && formik.errors.description && (

@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { DataTable } from 'primereact/datatable'
-import { Column } from 'primereact/column'
-import { BsBoxSeam } from 'react-icons/bs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faEdit,
   faEllipsisH,
-  faEye,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import {
@@ -18,90 +14,88 @@ import {
 } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import BreadcrumbComponent from '../../Shared/Breadcrumb/Breadcrumb'
-import TableHead from '../../Shared/TableHead/TableHead'
+import { useParams } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
-import ProductForm from '../ProductForm/ProductForm'
 import TableDate from '../../Shared/TableDate/TableDate'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
-import ColumnSortHeader from '../../Shared/ColumnSortHeader/ColumnSortHeader'
-import CustomPaginator from '../../Shared/CustomPaginator/CustomPaginator'
-import { setAllFeaturePlan } from '../../../../store/slices/products'
+
+import {
+  deleteFeaturePlan,
+  setAllFeaturePlan,
+} from '../../../../store/slices/products'
 import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
-// import { faUserTie } from "@fortawesome/free-solid-svg-icons";
+import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
+import { Wrapper } from './ProductFeaturePlan.styled'
 
 export default function ProductFeaturePlan({ children }) {
   const dispatch = useDispatch()
-  const { getFeaturePlanList, deleteProductReq } = useRequest()
+  const { getFeaturePlanList, deleteFeaturePlanReq } = useRequest()
   const [visible, setVisible] = useState(false)
-  const [totalCount, setTotalCount] = useState(0)
-  const [visibleHead, setVisibleHead] = useState(false)
-  // const [list, setList] = useState([]);
-  const [rebase, setRebase] = useState(0)
-  const [searchValue, setSearchValue] = useState('')
-  const [sortField, setSortField] = useState('')
-  const [sortValue, setSortValue] = useState('')
-  const [first, setFirst] = useState(0)
-  const [rows, setRows] = useState(10)
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
-  const [update, setUpdate] = useState(1)
-  const navigate = useNavigate()
   const routeParams = useParams()
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
+
+  const productId = routeParams.id
+  const listData = useSelector(
+    (state) => state.products.products[productId]?.featurePlan
+  )
+  let list = listData && Object.values(listData)
+
+  const handleDeleteFeaturePlan = async () => {
+    try {
+      await deleteFeaturePlanReq({ productId, PlanFeatureId: currentId })
+      dispatch(deleteFeaturePlan({ productId, PlanFeatureId: currentId }))
+    } catch (error) {
+      console.error('Error deleting feature:', error)
+    }
+  }
 
   const deleteConfirm = (id) => {
     setCurrentId(id)
     setConfirm(true)
   }
-  const deleteProduct = async () => {
-    await deleteProductReq({ id: currentId })
-  }
-
-  const listData = useSelector(
-    (state) => state.products.products[routeParams.id]?.featurePlan
-  )
-  let list = listData && Object.values(listData)
 
   const editForm = async (id) => {
-    //  if (!listData[id].creationEndpoint) {
-    //  const featureData = await getFeature(id, productId)
-    //  dispatch(FeatureInfo(featureData.data.data))
-    setPopUpLable('Edit-Feature')
+    setPopUpLable('Edit-Feature-Plan')
     setType('edit')
-    // }
     setCurrentId(id)
     setVisible(true)
   }
 
   useEffect(() => {
     ;(async () => {
-      const FeaturePlanData = await getFeaturePlanList(routeParams.id)
-      console.log(FeaturePlanData, 'ooooooooooo')
-      dispatch(
-        setAllFeaturePlan({
-          productId: routeParams.id,
-          data: FeaturePlanData.data.data,
-        })
-      )
+      if (!list) {
+        const FeaturePlanData = await getFeaturePlanList(productId)
+        dispatch(
+          setAllFeaturePlan({
+            productId: productId,
+            data: FeaturePlanData.data.data,
+          })
+        )
+      }
     })()
   }, [])
 
-  /****************************** */
-
   const TableRow = (props) => {
-    const { title, uniqueName, createdDate, editedDate, id } = props
+    const { limit, description, feature, plan, createdDate, editedDate, id } =
+      props
 
     return (
       <tr>
         <td>
-          <span className="fw-normal">{title}</span>
+          <span className="fw-normal">{feature.name}</span>
         </td>
         <td>
-          <span className="fw-normal">{uniqueName}</span>
+          <span className="fw-normal">{plan.name}</span>
+        </td>
+        <td className="description">
+          <DescriptionCell data={{ description }} />
+        </td>
+        <td>
+          <span className="fw-normal">{limit}</span>
         </td>
         <td>
           <span className={`fw-normal`}>
@@ -121,14 +115,16 @@ export default function ProductFeaturePlan({ children }) {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>
-                <Link
-                  to={`/tenants/${id}#${'productName'}`}
-                  className="w-100 d-block"
-                >
-                  <FontAwesomeIcon icon={'faGear'} className="me-2" />{' '}
-                  <FormattedMessage id="Manage" />
-                </Link>
+              <Dropdown.Item onSelect={() => editForm(id)}>
+                <FontAwesomeIcon icon={faEdit} className="me-2" />
+                <FormattedMessage id="Edit" />
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => deleteConfirm(id)}
+                className="text-danger"
+              >
+                <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+                <FormattedMessage id="Delete" />
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -138,8 +134,8 @@ export default function ProductFeaturePlan({ children }) {
   }
 
   return (
-    <>
-      <div className="main-container">
+    <Wrapper>
+      <div>
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -149,16 +145,19 @@ export default function ProductFeaturePlan({ children }) {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Title" />
+                    <FormattedMessage id="Feature" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Unique-Name" />
+                    <FormattedMessage id="Plan" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Status" />
+                    <FormattedMessage id="Description" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Created-Date" />
+                    <FormattedMessage id="Limit" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Date" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Actions" />
@@ -166,13 +165,24 @@ export default function ProductFeaturePlan({ children }) {
                 </tr>
               </thead>
               <tbody>
-                {list?.subscribe?.length
-                  ? list?.subscribe?.map((t, index) => (
-                      <TableRow key={`index`} {...t} />
-                    ))
+                {list
+                  ? list?.map((t, index) => {
+                      console.log({ t })
+                      return <TableRow key={`index`} {...t} />
+                    })
                   : null}
               </tbody>
             </Table>
+            <DeleteConfirmation
+              message={
+                <FormattedMessage id="delete-feature-plan-confirmation-message" />
+              }
+              icon="pi pi-exclamation-triangle"
+              confirm={confirm}
+              setConfirm={setConfirm}
+              confirmFunction={handleDeleteFeaturePlan}
+              sideBar={false}
+            />
           </Card.Body>
         </Card>
       </div>
@@ -181,24 +191,10 @@ export default function ProductFeaturePlan({ children }) {
         <FeaturePlanForm
           popupLabel={<FormattedMessage id={popUpLable} />}
           type={type}
-          tenantData={list}
-          update={update}
-          setUpdate={setUpdate}
+          FeaturePlanData={type == 'edit' ? listData[currentId] : {}}
           setVisible={setVisible}
-          sideBar={false}
-          dispatch={dispatch}
-          // featureData={type == 'edit' ? list?.features[currentId] : {}}
         />
       </ThemeDialog>
-      <button
-        onClick={() => {
-          setVisible(true)
-          setPopUpLable('Add-Feature')
-          setType('create')
-        }}
-      >
-        add feature plan
-      </button>
-    </>
+    </Wrapper>
   )
 }

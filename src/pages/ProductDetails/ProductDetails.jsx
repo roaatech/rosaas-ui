@@ -20,10 +20,12 @@ import {
   BsFillTrash3Fill,
   BsPencilSquare,
   BsStars,
+  BsUiChecks,
 } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
 import ProductFeaturePlan from '../../components/custom/Product/ProductFeaturePlan/ProductFeaturePlan'
 import ProductFeaturesList from '../../components/custom/Product/ProductFeaturesList/ProductFeaturesList'
+import ProductPlansList from '../../components/custom/Product/ProductPlansList/ProductPlansList'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -66,6 +68,14 @@ const ProductDetails = () => {
                   label: 'Add-Feature',
                   component: 'addFeature',
                   icon: <BsStars />,
+                },
+                {
+                  order: 4,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Add-Feature-Plan',
+                  component: 'addFeaturePlan',
+                  icon: <BsUiChecks />,
                 },
                 {
                   order: 4,
@@ -114,11 +124,17 @@ const ProductDetails = () => {
                 productName={productData.name}
               />
             </TabPanel>
-            {/* <TabPanel header={<FormattedMessage id="Feature-Plan" />}>
-              <ProductFeaturePlan />
-            </TabPanel> */}
+            <TabPanel header={<FormattedMessage id="Feature-Plan" />}>
+              <ProductFeaturePlan productId={productData.id} />
+            </TabPanel>
             <TabPanel header={<FormattedMessage id="Features" />}>
               <ProductFeaturesList
+                productId={productData.id}
+                productName={productData.name}
+              />
+            </TabPanel>
+            <TabPanel header={<FormattedMessage id="Plans" />}>
+              <ProductPlansList
                 productId={productData.id}
                 productName={productData.name}
               />

@@ -1,93 +1,109 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useFormik } from 'formik'
-import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
-import useRequest from '../../../../axios/apis/useRequest.js'
-import { Product_Client_id } from '../../../../const/index.js'
+import useRequest from '../../../../../axios/apis/useRequest.js'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
-import { planInfo } from '../../../../store/slices/plans.js'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { useNavigate } from 'react-router-dom'
+import { Wrapper } from './PlanForm.styled.jsx'
+import { useParams } from 'react-router-dom'
+import { PlanInfo, setAllPlans } from '../../../../../store/slices/products.js'
 
-const PlanForm = ({
-  type,
-  planData,
-  setVisible,
-  popupLabel,
-  update,
-  setUpdate,
-}) => {
-  const { createPlanRequest, editPlanRequest } = useRequest()
+import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+
+const PlanForm = ({ type, planData, setVisible, popupLabel }) => {
+  const { createPlanRequest, editPlanRequest, getProductPlans } = useRequest()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
-
+  const routeParams = useParams()
+  const productId = routeParams.id
   const initialValues = {
     name: planData ? planData.name : '',
     description: planData ? planData.description : '',
     displayOrder: planData ? planData.displayOrder : '0',
   }
+  const allProducts = useSelector((state) => state.products.products)
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required('Plan Name is required')
       .max(15, 'Name must be at most 15 characters'),
-    description: Yup.string().max(
-      250,
-      'Description must be at most 250 characters'
-    ),
+
+    description: Yup.string().required('Description is required'),
     displayOrder: Yup.number()
       .typeError('Display Order must be a number')
       .integer('Display Order must be an integer')
       .min(0, 'Display Order must be a positive number')
       .default(0),
   })
-
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      console.log('submit000000')
-      if (!values.displayOrder) {
-        values.displayOrder = 0
-      }
-      if (type == 'create') {
-        const createPlan = await createPlanRequest({
+      if (type === 'create') {
+        const createPlan = await createPlanRequest(productId, {
           name: values.name,
-
+          productId: productId,
           description: values.description,
-          displayOrder: values.displayOrder,
+          displayOrder: values.displayOrder || 0,
         })
-        navigate(`/plans/${createPlan.data.data.id}`)
-        console.log(createPlan, 'editPlan')
-        setUpdate(update + 1)
+
+        if (!allProducts[productId].plan) {
+          const plan = await getProductPlans(productId)
+          dispatch(
+            setAllPlans({
+              productId: productId,
+              data: plan.data.data,
+            })
+          )
+        }
+        dispatch(
+          PlanInfo({
+            planId: createPlan.data.data.id,
+            productId: productId,
+            data: {
+              name: values.name,
+              description: values.description,
+              displayOrder: values.displayOrder || 0,
+              editedDate: new Date().toISOString().slice(0, 19),
+              createdDate: new Date().toISOString().slice(0, 19),
+              id: createPlan.data.data.id,
+            },
+          })
+        )
       } else {
-        const editPlan = await editPlanRequest({
+        const editPlan = await editPlanRequest(productId, {
           data: {
             name: values.name,
             description: values.description,
-            displayOrder: values.displayOrder,
+            displayOrder: values.displayOrder || 0,
           },
           id: planData.id,
         })
 
         dispatch(
-          planInfo({
-            id: planData.id,
-            name: values.name,
-            description: values.description,
-            displayOrder: values.displayOrder,
+          PlanInfo({
+            planId: planData.id,
+            productId: productId,
+            data: {
+              name: values.name,
+              description: values.description,
+              displayOrder: values.displayOrder || 0,
+              editedDate: new Date().toISOString().slice(0, 19),
+              createdDate: planData.createdDate,
+              id: planData.id,
+            },
           })
         )
       }
 
       setVisible && setVisible(false)
+      setSubmitting(false)
     },
   })
 
   return (
-    <div>
+    <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Header>
           <Modal.Title className="h6">{popupLabel}</Modal.Title>
@@ -97,11 +113,12 @@ const PlanForm = ({
             onClick={() => setVisible(false)}
           />
         </Modal.Header>
+
         <Modal.Body>
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Name" />
+                <FormattedMessage id="Name" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
@@ -112,7 +129,7 @@ const PlanForm = ({
                 onChange={formik.handleChange}
                 value={formik.values.name}
               />
-
+              {/* Display validation error */}
               {formik.touched.name && formik.errors.name && (
                 <Form.Control.Feedback
                   type="invalid"
@@ -123,21 +140,18 @@ const PlanForm = ({
               )}
             </Form.Group>
           </div>
-
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Description" />
+                <FormattedMessage id="Description" />{' '}
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
 
-              <textarea
-                className="form-control"
-                id="description"
-                name="description"
-                onChange={formik.handleChange}
-                value={formik.values.description}
-                rows={3} // Set the number of rows you want to show initially
-                style={{ resize: 'vertical' }} // Allow vertical resizing
+              <TextareaAndCounter
+                addTextarea={formik.setFieldValue}
+                maxLength={250}
+                showCharCount
+                inputValue={formik?.values?.description}
               />
 
               {formik.touched.description && formik.errors.description && (
@@ -150,7 +164,6 @@ const PlanForm = ({
               )}
             </Form.Group>
           </div>
-
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
@@ -177,11 +190,7 @@ const PlanForm = ({
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="secondary"
-            type="submit"
-            // disabled={submitLoading}
-          >
+          <Button variant="secondary" type="submit">
             <FormattedMessage id="Submit" />
           </Button>
           <Button
@@ -193,7 +202,7 @@ const PlanForm = ({
           </Button>
         </Modal.Footer>
       </Form>
-    </div>
+    </Wrapper>
   )
 }
 
