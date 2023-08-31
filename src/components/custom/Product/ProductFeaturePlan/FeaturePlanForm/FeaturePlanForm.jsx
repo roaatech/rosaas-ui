@@ -16,7 +16,13 @@ import {
 import { setAllPlans } from '../../../../../store/slices/products.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
-const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
+const FeaturePlanForm = ({
+  type,
+  FeaturePlanData,
+  setVisible,
+  popupLabel,
+  setActiveIndex,
+}) => {
   const routeParams = useParams()
   const productId = routeParams.id
   const {
@@ -141,6 +147,10 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
             },
           })
         )
+
+        if (setActiveIndex) {
+          setActiveIndex(4)
+        }
       } else {
         const dataDetails = {
           description: values.description,
