@@ -5,7 +5,7 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 
 const Dashboard = () => {
   useEffect(() => {
-    document.title = 'ROSAS-Dashboard'
+    document.title = 'RoSaaS-Dashboard'
   }, [])
 
   return (

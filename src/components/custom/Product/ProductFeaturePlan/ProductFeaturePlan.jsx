@@ -67,7 +67,7 @@ export default function ProductFeaturePlan({ children }) {
 
   useEffect(() => {
     ;(async () => {
-      if (!list) {
+      if (!list||!list.allProduct) {
         const FeaturePlanData = await getFeaturePlanList(productId)
         dispatch(
           setAllFeaturePlan({
@@ -150,7 +150,7 @@ export default function ProductFeaturePlan({ children }) {
                   <th className="border-bottom">
                     <FormattedMessage id="Plan" />
                   </th>
-                  <th className="border-bottom">
+                  <th className="border-bottom description">
                     <FormattedMessage id="Description" />
                   </th>
                   <th className="border-bottom">
