@@ -87,6 +87,7 @@ export const productsSlice = createSlice({
       }
       if (currentProducts[productId].features[featureId]) {
         currentProducts[productId].features[featureId] = data
+        delete currentProducts[productId].featurePlan
       } else {
         currentProducts[productId].features = {
           [featureId]: data,
@@ -126,6 +127,7 @@ export const productsSlice = createSlice({
       }
       if (currentProducts[productId].plans[planId]) {
         currentProducts[productId].plans[planId] = data
+        delete currentProducts[productId].featurePlan
       } else {
         currentProducts[productId].plans = {
           [planId]: data,
