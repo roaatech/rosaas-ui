@@ -2,9 +2,13 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   .timeLineCont {
-    max-height: 350px;
+    max-height: calc(100vh - 390px);
     overflow-y: auto;
     margin-bottom: 10px;
+
+    @media (max-height: 600px) {
+      max-height: 350px;
+    }
     .time-line-item-container {
       position: relative;
       padding: 0px 15px 9px 15px;
