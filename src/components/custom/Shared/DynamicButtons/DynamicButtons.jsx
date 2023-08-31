@@ -79,6 +79,7 @@ const DynamicButtons = ({ buttons }) => {
           visible={visible}
           setVisible={setVisible}
           sideBar={false}
+          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
         />
       </>
     ),
@@ -90,6 +91,7 @@ const DynamicButtons = ({ buttons }) => {
           visible={visible}
           setVisible={setVisible}
           sideBar={false}
+          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
         />
       </>
     ),
@@ -101,6 +103,7 @@ const DynamicButtons = ({ buttons }) => {
           visible={visible}
           setVisible={setVisible}
           sideBar={false}
+          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
         />
       </>
     ),

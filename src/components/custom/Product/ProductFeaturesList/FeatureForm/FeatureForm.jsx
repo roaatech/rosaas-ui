@@ -20,7 +20,13 @@ import {
   featureTypeMap,
   featureUnitMap,
 } from '../../../../../const/index.js'
-const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
+const FeatureForm = ({
+  type,
+  featureData,
+  setVisible,
+  popupLabel,
+  setActiveIndex,
+}) => {
   const { createFeatureRequest, editFeatureRequest, getProductFeatures } =
     useRequest()
   const dispatch = useDispatch()
@@ -91,6 +97,10 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
             },
           })
         )
+
+        if (setActiveIndex) {
+          setActiveIndex(3)
+        }
       } else {
         const editFeature = await editFeatureRequest(productId, {
           data: {
