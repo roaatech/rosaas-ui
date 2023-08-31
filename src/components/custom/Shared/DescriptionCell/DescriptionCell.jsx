@@ -2,16 +2,15 @@ import React, { useState, useRef } from 'react'
 import { DescriptionCellWrapper } from './DescriptionCell.styled'
 
 const DescriptionCell = ({ data, maxWidth = 410 }) => {
-  const [showMore, setShowMore] = useState(false);
-  const contentRef = useRef(null);
+  const [showMore, setShowMore] = useState(false)
+  const contentRef = useRef(null)
 
   const toggleShowMore = () => {
-    setShowMore(!showMore);
-  };
+    setShowMore(!showMore)
+  }
 
-  const maxChar =0.15609756097560975609756097560976 * maxWidth;
-  const isLongDescription = data.description.length > maxChar;
-
+  const maxChar = 0.15609756097560975609756097560976 * maxWidth
+  const isLongDescription = data.description.length > maxChar
 
   const maxHeight = showMore
     ? contentRef.current
@@ -45,5 +44,3 @@ const DescriptionCell = ({ data, maxWidth = 410 }) => {
 }
 
 export default DescriptionCell
-
-

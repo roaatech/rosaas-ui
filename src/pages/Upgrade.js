@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {
 //   faExternalLinkAlt,
@@ -7,8 +7,8 @@ import React from "react";
 //   faRocket,
 //   faTimesCircle,
 // } from "@fortawesome/free-solid-svg-icons";
-import { Col, Row, Button } from "@themesberg/react-bootstrap";
-import { Table } from "@themesberg/react-bootstrap";
+import { Col, Row, Button } from '@themesberg/react-bootstrap'
+import { Table } from '@themesberg/react-bootstrap'
 
 export default () => {
   return (
@@ -88,7 +88,8 @@ export default () => {
                     href="https://themesberg.com/product/dashboard/volt-react"
                     target="_blank"
                     variant="primary"
-                    className="m-0 mt-3 mb-3">
+                    className="m-0 mt-3 mb-3"
+                  >
                     {/* <FontAwesomeIcon icon={faDownload} className="me-1" /> */}
                     Download
                   </Button>
@@ -98,7 +99,8 @@ export default () => {
                     href="https://demo.themesberg.com/volt-pro-react/#/"
                     target="_blank"
                     variant="secondary"
-                    className="m-0 mt-3">
+                    className="m-0 mt-3"
+                  >
                     Demo Volt React Pro
                     {/* <FontAwesomeIcon icon={faExternalLinkAlt} className="ms-1" /> */}
                   </Button>
@@ -109,5 +111,5 @@ export default () => {
         </Col>
       </Row>
     </>
-  );
-};
+  )
+}

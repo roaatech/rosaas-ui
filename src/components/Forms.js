@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import moment from "moment-timezone";
-import Datetime from "react-datetime";
+import React, { useState } from 'react'
+import moment from 'moment-timezone'
+import Datetime from 'react-datetime'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -10,10 +10,10 @@ import {
   Form,
   Button,
   InputGroup,
-} from "@themesberg/react-bootstrap";
+} from '@themesberg/react-bootstrap'
 
 export const GeneralInfoForm = () => {
-  const [birthday, setBirthday] = useState("");
+  const [birthday, setBirthday] = useState('')
 
   return (
     <Card border="light" className="bg-white shadow-sm mb-4">
@@ -58,7 +58,7 @@ export const GeneralInfoForm = () => {
                         required
                         type="text"
                         value={
-                          birthday ? moment(birthday).format("MM/DD/YYYY") : ""
+                          birthday ? moment(birthday).format('MM/DD/YYYY') : ''
                         }
                         placeholder="mm/dd/yyyy"
                         onFocus={openCalendar}
@@ -203,5 +203,5 @@ export const GeneralInfoForm = () => {
         </Form>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}

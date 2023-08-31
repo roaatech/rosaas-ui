@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -8,12 +8,12 @@ import {
   Image,
   Button,
   Container,
-} from "@themesberg/react-bootstrap";
+} from '@themesberg/react-bootstrap'
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 
-import { Routes } from "../../routes";
-import NotFoundImage from "../../assets/img/illustrations/404.svg";
+import { Routes } from '../../routes'
+import NotFoundImage from '../../assets/img/illustrations/404.svg'
 
 export default () => {
   return (
@@ -23,7 +23,8 @@ export default () => {
           <Row>
             <Col
               xs={12}
-              className="text-center d-flex align-items-center justify-content-center">
+              className="text-center d-flex align-items-center justify-content-center"
+            >
               <div>
                 <Card.Link as={Link} to={Routes.DashboardOverview.path}>
                   <Image src={NotFoundImage} className="img-fluid w-75" />
@@ -39,7 +40,8 @@ export default () => {
                   as={Link}
                   variant="primary"
                   className="animate-hover"
-                  to={Routes.DashboardOverview.path}>
+                  to={Routes.DashboardOverview.path}
+                >
                   {/* <FontAwesomeIcon icon={faChevronLeft} className="animate-left-3 me-3 ms-2" /> */}
                   Go back home
                 </Button>
@@ -49,5 +51,5 @@ export default () => {
         </Container>
       </section>
     </main>
-  );
-};
+  )
+}

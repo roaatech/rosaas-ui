@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faBootstrap } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -8,18 +8,18 @@ import {
   Toast,
   Button,
   Container,
-} from "@themesberg/react-bootstrap";
+} from '@themesberg/react-bootstrap'
 
-import Documentation from "../../components/Documentation";
+import Documentation from '../../components/Documentation'
 
 export default () => {
-  const [showDefault, setShowDefault] = useState(true);
-  const [showPrimary, setShowPrimary] = useState(true);
-  const [showTertiary, setShowTertiary] = useState(true);
+  const [showDefault, setShowDefault] = useState(true)
+  const [showPrimary, setShowPrimary] = useState(true)
+  const [showTertiary, setShowTertiary] = useState(true)
 
-  const handleCloseDefault = () => setShowDefault(false);
-  const handleClosePrimary = () => setShowPrimary(false);
-  const handleCloseTertiary = () => setShowTertiary(false);
+  const handleCloseDefault = () => setShowDefault(false)
+  const handleClosePrimary = () => setShowPrimary(false)
+  const handleCloseTertiary = () => setShowTertiary(false)
 
   return (
     <article>
@@ -38,8 +38,8 @@ export default () => {
               <p>
                 Use the <code>&#x3C;Toast&#x3E;</code> component to show
                 messages and notifications to the user. The component is split
-                into two main subcomponents:{" "}
-                <code>&#x3C;Toast.Header&#x3E;</code> and{" "}
+                into two main subcomponents:{' '}
+                <code>&#x3C;Toast.Header&#x3E;</code> and{' '}
                 <code>&#x3C;Toast.Body&#x3E;</code> where you can add the text
                 that you want.
               </p>
@@ -82,10 +82,10 @@ const toggleDefaultToast = () => setShowDefault(!showDefault);`}
           title="Colors"
           description={
             <p>
-              If you'd like to customize the appearance of the{" "}
+              If you'd like to customize the appearance of the{' '}
               <code>&#x3C;Toast&#x3E;</code> component, you can easily do so by
               adding a <code>bg-primary</code>, <code>bg-secondary</code>, and
-              any other <code>bg-*</code> modifier class to the main{" "}
+              any other <code>bg-*</code> modifier class to the main{' '}
               <code>&#x3C;Toast&#x3E;</code> component.
             </p>
           }
@@ -138,5 +138,5 @@ const handleCloseTertiary = () => setShowTertiary(false);`}
         />
       </Container>
     </article>
-  );
-};
+  )
+}

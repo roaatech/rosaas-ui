@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {
 //   faCheck,
@@ -15,9 +15,9 @@ import {
   Breadcrumb,
   InputGroup,
   Dropdown,
-} from "@themesberg/react-bootstrap";
+} from '@themesberg/react-bootstrap'
 
-import { TransactionsTable } from "../components/Tables";
+import { TransactionsTable } from '../components/Tables'
 
 export default () => {
   return (
@@ -26,7 +26,8 @@ export default () => {
         <div className="d-block mb-4 mb-md-0">
           <Breadcrumb
             className="d-none d-md-inline-block"
-            listProps={{ className: "breadcrumb-dark breadcrumb-transparent" }}>
+            listProps={{ className: 'breadcrumb-dark breadcrumb-transparent' }}
+          >
             <Breadcrumb.Item>
               {/* <FontAwesomeIcon icon={faHome} /> */}
             </Breadcrumb.Item>
@@ -64,7 +65,8 @@ export default () => {
                 split
                 as={Button}
                 variant="link"
-                className="text-dark m-0 p-0">
+                className="text-dark m-0 p-0"
+              >
                 <span className="icon icon-sm icon-gray">
                   {/* <FontAwesomeIcon icon={faCog} /> */}
                 </span>
@@ -74,7 +76,7 @@ export default () => {
                   Show
                 </Dropdown.Item>
                 <Dropdown.Item className="d-flex fw-bold">
-                  10{" "}
+                  10{' '}
                   <span className="icon icon-small ms-auto">
                     {/* <FontAwesomeIcon icon={faCheck} /> */}
                   </span>
@@ -89,5 +91,5 @@ export default () => {
 
       <TransactionsTable />
     </>
-  );
-};
+  )
+}

@@ -1,30 +1,30 @@
-import React, { useState } from "react";
-import { urlStyle } from "../../../../const";
-import { Wrapper } from "./Urls.styled";
+import React, { useState } from 'react'
+import { urlStyle } from '../../../../const'
+import { Wrapper } from './Urls.styled'
 
 const Urls = (data) => {
   const [URLS, setURLS] = useState([
     {
-      method: "POST",
+      method: 'POST',
       path: data.data.creationEndpoint,
-      title: "Creation Url",
+      title: 'Creation Url',
     },
     {
-      method: "PUT",
+      method: 'PUT',
       path: data.data.activationEndpoint,
-      title: "Activation Url",
+      title: 'Activation Url',
     },
     {
-      method: "PUT",
+      method: 'PUT',
       path: data.data.deactivationEndpoint,
-      title: "Deactivation Url",
+      title: 'Deactivation Url',
     },
     {
-      method: "DELETE",
+      method: 'DELETE',
       path: data.data.deletionEndpoint,
-      title: "Deletion Url",
+      title: 'Deletion Url',
     },
-  ]);
+  ])
 
   return (
     <Wrapper>
@@ -34,11 +34,13 @@ const Urls = (data) => {
           style={{
             background: urlStyle[url.method].lightColor,
             borderColor: urlStyle[url.method].darkColor,
-          }}>
+          }}
+        >
           <span className="info">
             <span
               className="method"
-              style={{ background: urlStyle[url.method].darkColor }}>
+              style={{ background: urlStyle[url.method].darkColor }}
+            >
               {url.method}
             </span>
             <span className="url">{url.path}</span>
@@ -47,7 +49,7 @@ const Urls = (data) => {
         </div>
       ))}
     </Wrapper>
-  );
-};
+  )
+}
 
-export default Urls;
+export default Urls

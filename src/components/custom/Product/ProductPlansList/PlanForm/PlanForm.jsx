@@ -12,7 +12,13 @@ import { PlanInfo, setAllPlans } from '../../../../../store/slices/products.js'
 
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
-const PlanForm = ({ type, planData, setVisible, popupLabel }) => {
+const PlanForm = ({
+  type,
+  planData,
+  setVisible,
+  popupLabel,
+  setActiveIndex,
+}) => {
   const { createPlanRequest, editPlanRequest, getProductPlans } = useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
@@ -71,6 +77,10 @@ const PlanForm = ({ type, planData, setVisible, popupLabel }) => {
             },
           })
         )
+
+        if (setActiveIndex) {
+          setActiveIndex(2)
+        }
       } else {
         const editPlan = await editPlanRequest(productId, {
           data: {

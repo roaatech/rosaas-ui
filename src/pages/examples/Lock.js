@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faAngleLeft, faEye, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -10,21 +10,21 @@ import {
   Button,
   Container,
   InputGroup,
-} from "@themesberg/react-bootstrap";
-import { Link } from "react-router-dom";
+} from '@themesberg/react-bootstrap'
+import { Link } from 'react-router-dom'
 
-import { Routes } from "../../routes";
-import BgImage from "../../assets/img/illustrations/signin.svg";
-import Profile3 from "../../assets/img/team/profile-picture-3.jpg";
+import { Routes } from '../../routes'
+import BgImage from '../../assets/img/illustrations/signin.svg'
+import Profile3 from '../../assets/img/team/profile-picture-3.jpg'
 
 export default () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const passwordInputType = showPassword ? "text" : "password";
-  const passwordIconColor = showPassword ? "#262B40" : "";
+  const [showPassword, setShowPassword] = useState(false)
+  const passwordInputType = showPassword ? 'text' : 'password'
+  const passwordIconColor = showPassword ? '#262B40' : ''
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+    setShowPassword(!showPassword)
+  }
 
   return (
     <main>
@@ -34,17 +34,20 @@ export default () => {
             <Card.Link
               as={Link}
               to={Routes.DashboardOverview.path}
-              className="text-gray-700">
+              className="text-gray-700"
+            >
               {/* <FontAwesomeIcon icon={faAngleLeft} className="me-2" /> */}
               Back to homepage
             </Card.Link>
           </p>
           <Row
             className="justify-content-center form-bg-image"
-            style={{ backgroundImage: `url(${BgImage})` }}>
+            style={{ backgroundImage: `url(${BgImage})` }}
+          >
             <Col
               xs={12}
-              className="d-flex align-items-center justify-content-center">
+              className="d-flex align-items-center justify-content-center"
+            >
               <div className="bg-white shadow-soft border border-light rounded p-4 p-lg-5 w-100 fmxw-500">
                 <div className="text-center text-md-center mb-4 mt-md-0">
                   <div className="user-avatar large-avatar mx-auto mb-3 border-dark p-2">
@@ -80,5 +83,5 @@ export default () => {
         </Container>
       </section>
     </main>
-  );
-};
+  )
+}

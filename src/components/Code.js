@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import React, { useState } from 'react'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import {
   Card,
   Button,
   Tooltip,
   OverlayTrigger,
-} from "@themesberg/react-bootstrap";
-import { Prism } from "prism-react-renderer";
+} from '@themesberg/react-bootstrap'
+import { Prism } from 'prism-react-renderer'
 
-import themeStyle from "../assets/syntax-themes/ghcolors.json";
+import themeStyle from '../assets/syntax-themes/ghcolors.json'
 
 export default (props) => {
-  const { code = "", language = "jsx" } = props;
-  const [copied, setCopied] = useState(false);
+  const { code = '', language = 'jsx' } = props
+  const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const CodeStyling = ({
     className,
@@ -43,9 +43,10 @@ export default (props) => {
         ) : null}
 
         <OverlayTrigger
-          trigger={["hover", "focus"]}
+          trigger={['hover', 'focus']}
           placement="top"
-          overlay={<Tooltip>Copy to clipboard</Tooltip>}>
+          overlay={<Tooltip>Copy to clipboard</Tooltip>}
+        >
           <CopyToClipboard text={code} onCopy={handleCopy}>
             <Button size="sm" variant="primary" className="copy-code-button">
               Copy
@@ -54,11 +55,11 @@ export default (props) => {
         </OverlayTrigger>
       </Card.Body>
     </Card>
-  );
+  )
 
   return (
     <Prism Prism={Prism} code={code} language={language} theme={themeStyle}>
       {CodeStyling}
     </Prism>
-  );
-};
+  )
+}

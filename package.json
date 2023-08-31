@@ -22,6 +22,8 @@
     "date-fns-tz": "^2.0.0",
     "dotenv": "^16.3.1",
     "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.2",
     "font-awesome": "^4.7.0",
     "formik": "^2.4.1",
@@ -63,7 +65,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint 'src/**/*.{js,jsx}'",
+    "lint:fix": "eslint --fix src/**/*.{js,jsx}",
+    "lintFile:fix": "eslint --fix .eslintrc.js"
   },
   "eslintConfig": {
     "extends": [
@@ -85,6 +90,6 @@
   },
   "devDependencies": {
     "eslint-config-react-app": "^7.0.1",
-    "prettier": "^3.0.2"
+    "prettier": "^3.0.3"
   }
 }

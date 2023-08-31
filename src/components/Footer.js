@@ -1,5 +1,5 @@
-import React from "react";
-import moment from "moment-timezone";
+import React from 'react'
+import moment from 'moment-timezone'
 import {
   Row,
   Col,
@@ -8,25 +8,25 @@ import {
   Tooltip,
   Image,
   Button,
-} from "@themesberg/react-bootstrap";
+} from '@themesberg/react-bootstrap'
 // // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import {
 //   faCogs,
 //   faDownload,
 //   faRocket,
 // } from "@fortawesome/free-solid-svg-icons";
-import BS5Logo from "../assets/img/technologies/bootstrap-5-logo.svg";
-import ReactLogo from "../assets/img/technologies/react-logo.svg";
-import LaravelLogo from "../assets/img/technologies/laravel-logo.svg";
-import GitHubButton from "react-github-btn";
+import BS5Logo from '../assets/img/technologies/bootstrap-5-logo.svg'
+import ReactLogo from '../assets/img/technologies/react-logo.svg'
+import LaravelLogo from '../assets/img/technologies/laravel-logo.svg'
+import GitHubButton from 'react-github-btn'
 
 export default (props) => {
-  const currentYear = moment().get("year");
-  const showSettings = props.showSettings;
+  const currentYear = moment().get('year')
+  const showSettings = props.showSettings
 
   const toggleSettings = (toggle) => {
-    props.toggleSettings(toggle);
-  };
+    props.toggleSettings(toggle)
+  }
 
   return (
     <div>
@@ -39,12 +39,12 @@ export default (props) => {
               size="sm"
               aria-label="Close"
               onClick={() => {
-                toggleSettings(false);
+                toggleSettings(false)
               }}
             />
             <div className="d-flex justify-content-between align-items-center mb-3">
               <p className="m-0 mb-1 me-3 fs-7">
-                Made with open source{" "}
+                Made with open source{' '}
                 <span role="img" aria-label="gratitude">
                   💙
                 </span>
@@ -54,7 +54,8 @@ export default (props) => {
               href="https://themesberg.com/product/dashboard/volt-react"
               target="_blank"
               variant="primary"
-              className="mb-3 w-100">
+              className="mb-3 w-100"
+            >
               {/* <FontAwesomeIcon icon={faDownload} className="me-1" /> Download */}
             </Button>
             <p className="fs-7 text-gray-700 text-center">
@@ -63,46 +64,52 @@ export default (props) => {
             <div className="d-flex justify-content-center">
               <Card.Link
                 href="https://themesberg.com/product/admin-dashboard/volt-bootstrap-5-dashboard"
-                target="_blank">
+                target="_blank"
+              >
                 <OverlayTrigger
                   placement="top"
-                  trigger={["hover", "focus"]}
+                  trigger={['hover', 'focus']}
                   overlay={
                     <Tooltip>
                       Bootstrap 5 · The most popular HTML, CSS, and JS library
                       in the world.
                     </Tooltip>
-                  }>
+                  }
+                >
                   <Image src={BS5Logo} className="image image-xs" />
                 </OverlayTrigger>
               </Card.Link>
 
               <Card.Link
                 href="https://themesberg.com/product/dashboard/volt-react"
-                target="_blank">
+                target="_blank"
+              >
                 <OverlayTrigger
                   placement="top"
-                  trigger={["hover", "focus"]}
+                  trigger={['hover', 'focus']}
                   overlay={
                     <Tooltip>
                       React · A JavaScript library for building user interfaces.
                     </Tooltip>
-                  }>
+                  }
+                >
                   <Image src={ReactLogo} className="image image-xs" />
                 </OverlayTrigger>
               </Card.Link>
 
               <Card.Link
                 href="https://themesberg.com/product/laravel/volt-admin-dashboard-template"
-                target="_blank">
+                target="_blank"
+              >
                 <OverlayTrigger
                   placement="top"
-                  trigger={["hover", "focus"]}
+                  trigger={['hover', 'focus']}
                   overlay={
                     <Tooltip>
                       Laravel · Most popular PHP framework in the world.
                     </Tooltip>
-                  }>
+                  }
+                >
                   <Image src={LaravelLogo} className="image image-xs" />
                 </OverlayTrigger>
               </Card.Link>
@@ -113,8 +120,9 @@ export default (props) => {
         <Card
           className="theme-settings theme-settings-expand"
           onClick={() => {
-            toggleSettings(true);
-          }}>
+            toggleSettings(true)
+          }}
+        >
           <Card.Body className="p-3 py-2">
             <span className="fw-bold h6">
               {/* <FontAwesomeIcon icon={faCogs} className="me-1 fs-7" /> Settings */}
@@ -130,7 +138,8 @@ export default (props) => {
               <Card.Link
                 href="https://themesberg.com"
                 target="_blank"
-                className="text-blue text-decoration-none fw-normal">
+                className="text-blue text-decoration-none fw-normal"
+              >
                 Themesberg
               </Card.Link>
             </p>
@@ -155,7 +164,8 @@ export default (props) => {
               <li className="list-inline-item px-0 px-sm-2">
                 <Card.Link
                   href="https://themesberg.com/contact"
-                  target="_blank">
+                  target="_blank"
+                >
                   Contact
                 </Card.Link>
               </li>
@@ -164,5 +174,5 @@ export default (props) => {
         </Row>
       </footer>
     </div>
-  );
-};
+  )
+}
