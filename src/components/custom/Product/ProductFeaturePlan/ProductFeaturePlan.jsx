@@ -67,7 +67,7 @@ export default function ProductFeaturePlan({ children }) {
 
   useEffect(() => {
     ;(async () => {
-      if (!list||!list.allProduct) {
+      if (!list) {
         const FeaturePlanData = await getFeaturePlanList(productId)
         dispatch(
           setAllFeaturePlan({
