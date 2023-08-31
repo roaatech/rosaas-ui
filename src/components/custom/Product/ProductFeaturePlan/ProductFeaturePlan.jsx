@@ -157,7 +157,7 @@ export default function ProductFeaturePlan({ children }) {
                     <FormattedMessage id="Limit" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Created-Date" />
+                    <FormattedMessage id="Date" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Actions" />
