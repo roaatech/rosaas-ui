@@ -167,7 +167,6 @@ export default function ProductFeaturePlan({ children }) {
               <tbody>
                 {list
                   ? list?.map((t, index) => {
-                      console.log({ t })
                       return <TableRow key={`index`} {...t} />
                     })
                   : null}
