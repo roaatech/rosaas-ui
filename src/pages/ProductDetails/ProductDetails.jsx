@@ -124,8 +124,12 @@ const ProductDetails = () => {
                 productName={productData.name}
               />
             </TabPanel>
-            <TabPanel header={<FormattedMessage id="Feature-Plan" />}>
-              <ProductFeaturePlan productId={productData.id} />
+
+            <TabPanel header={<FormattedMessage id="Plans" />}>
+              <ProductPlansList
+                productId={productData.id}
+                productName={productData.name}
+              />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Features" />}>
               <ProductFeaturesList
@@ -133,11 +137,8 @@ const ProductDetails = () => {
                 productName={productData.name}
               />
             </TabPanel>
-            <TabPanel header={<FormattedMessage id="Plans" />}>
-              <ProductPlansList
-                productId={productData.id}
-                productName={productData.name}
-              />
+            <TabPanel header={<FormattedMessage id="Plan's-Features" />}>
+              <ProductFeaturePlan productId={productData.id} />
             </TabPanel>
           </TabView>
         </div>
