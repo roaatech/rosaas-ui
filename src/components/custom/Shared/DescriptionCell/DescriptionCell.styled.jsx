@@ -15,6 +15,7 @@ export const DescriptionCellWrapper = styled.div`
       transform 0.3s ease;
     font-size: var(--smallFont);
     line-height: 15px;
+    width: 100%;
   }
 
   .expanded .description-text {
