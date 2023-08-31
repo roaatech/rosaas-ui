@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faTachometerAlt } from "@fortawesome/free-solid-svg-icons";
 // import {
@@ -6,9 +6,9 @@ import React from "react";
 //   faSun,
 //   faUserCircle,
 // } from "@fortawesome/free-regular-svg-icons";
-import { Nav, Row, Col, Container } from "@themesberg/react-bootstrap";
+import { Nav, Row, Col, Container } from '@themesberg/react-bootstrap'
 
-import Documentation from "../../components/Documentation";
+import Documentation from '../../components/Documentation'
 
 export default () => (
   <article>
@@ -66,8 +66,8 @@ export default () => (
         title="Rounded navs"
         description={
           <p>
-            If you want the nav style to be rounded, just add the{" "}
-            <code>rounded</code> class name to the main{" "}
+            If you want the nav style to be rounded, just add the{' '}
+            <code>rounded</code> class name to the main{' '}
             <code>&#x3C;Nav.Link&#x3E;</code> component.
           </p>
         }
@@ -106,7 +106,7 @@ export default () => (
         description={
           <p>
             If you want to add other content to a navigation item, such as an
-            icon, you can do that by{" "}
+            icon, you can do that by{' '}
           </p>
         }
         scope={{
@@ -150,4 +150,4 @@ import { faComments, faSun, faUserCircle } from '@fortawesome/free-regular-svg-i
       />
     </Container>
   </article>
-);
+)

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faAngleLeft, faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -9,10 +9,10 @@ import {
   Button,
   Container,
   InputGroup,
-} from "@themesberg/react-bootstrap";
-import { Link } from "react-router-dom";
+} from '@themesberg/react-bootstrap'
+import { Link } from 'react-router-dom'
 
-import { Routes } from "../../routes";
+import { Routes } from '../../routes'
 
 export default () => {
   return (
@@ -24,14 +24,16 @@ export default () => {
               <Card.Link
                 as={Link}
                 to={Routes.Signin.path}
-                className="text-gray-700">
+                className="text-gray-700"
+              >
                 {/* <FontAwesomeIcon icon={faAngleLeft} className="me-2" /> */}
                 Back to sign in
               </Card.Link>
             </p>
             <Col
               xs={12}
-              className="d-flex align-items-center justify-content-center">
+              className="d-flex align-items-center justify-content-center"
+            >
               <div className="bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
                 <h3 className="mb-4">Reset password</h3>
                 <Form>
@@ -85,5 +87,5 @@ export default () => {
         </Container>
       </section>
     </main>
-  );
-};
+  )
+}

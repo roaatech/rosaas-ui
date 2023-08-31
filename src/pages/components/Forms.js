@@ -1,6 +1,6 @@
-import React from "react";
-import moment from "moment-timezone";
-import Datetime from "react-datetime";
+import React from 'react'
+import moment from 'moment-timezone'
+import Datetime from 'react-datetime'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faSearch, faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -10,9 +10,9 @@ import {
   Form,
   Container,
   InputGroup,
-} from "@themesberg/react-bootstrap";
+} from '@themesberg/react-bootstrap'
 
-import Documentation from "../../components/Documentation";
+import Documentation from '../../components/Documentation'
 
 export default () => {
   return (
@@ -60,7 +60,7 @@ export default () => {
               You can also add icons to the left or right side of the input
               field by using the <code>&#x3C;InputGroup&#x3E;</code> component
               and using the <code>&#x3C;InputGroup.Text&#x3E;</code> element
-              with an icon element inside it, either after or before the{" "}
+              with an icon element inside it, either after or before the{' '}
               <code>&#x3C;Form.Control&#x3E;</code> element.
             </p>
           }
@@ -90,8 +90,8 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";`}
           description={
             <p>
               You can easily update the styles of a valid or invalid styles
-              input field by using the <code>isValid</code> or{" "}
-              <code>isInvalid</code> attributes. Additionally, you can use the{" "}
+              input field by using the <code>isValid</code> or{' '}
+              <code>isInvalid</code> attributes. Additionally, you can use the{' '}
               <code>&#x3C;Form.Control.Feedback&#x3E;</code> component to write
               the message regarding the success or error message.
             </p>
@@ -117,7 +117,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";`}
           description={
             <p>
               The <code>&#x3C;Form.Select&#x3E;</code> component can be used for
-              option selection from the user. You can use the{" "}
+              option selection from the user. You can use the{' '}
               <code>&#x3C;option&#x3E;</code> elements to add multiple options
               and use the <code>defaultValue</code> attribute to set the default
               value of the select field.
@@ -160,8 +160,8 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";`}
           title="Textarea"
           description={
             <p>
-              You can create a textarea input field by adding the{" "}
-              <code>as="textarea"</code> modifier attribute to the{" "}
+              You can create a textarea input field by adding the{' '}
+              <code>as="textarea"</code> modifier attribute to the{' '}
               <code>&#x3C;Form.Control&#x3E;</code> component.
             </p>
           }
@@ -180,7 +180,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";`}
           description={
             <p>
               If you want to use an input field to upload files, you need to add
-              the <code>type="file"</code> attribute to the{" "}
+              the <code>type="file"</code> attribute to the{' '}
               <code>&#x3C;Form.Control&#x3E;</code> component.
             </p>
           }
@@ -201,7 +201,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";`}
                 the <code>disabled</code> attribute.
               </p>
               <p>
-                Make sure the is a <code>{'id="*"'}</code> and{" "}
+                Make sure the is a <code>{'id="*"'}</code> and{' '}
                 <code>{'htmlFor="*"'}</code> attribute for each element so that
                 clicking on the text will also toggle the element.
               </p>
@@ -220,13 +220,13 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";`}
           description={
             <>
               <p>
-                If you want to use radio buttons, you need to use the{" "}
-                <code>&#x3C;Form.Check&#x3E;</code> component with the{" "}
+                If you want to use radio buttons, you need to use the{' '}
+                <code>&#x3C;Form.Check&#x3E;</code> component with the{' '}
                 <code>type="radio"</code> modifier. You can disable the element
                 by using the <code>disabled</code> attribute.
               </p>
               <p>
-                Make sure the is a <code>{'id="*"'}</code> and{" "}
+                Make sure the is a <code>{'id="*"'}</code> and{' '}
                 <code>{'htmlFor="*"'}</code> attribute for each element so that
                 clicking on the text will also toggle the element.
               </p>
@@ -274,12 +274,13 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";`}
             <p>
               Use the <code>&#x3C;Datetime&#x3E;</code> component to use a
               datepicker as an input field. You can read more about the options
-              that you can use for this component by reading the{" "}
+              that you can use for this component by reading the{' '}
               <Card.Link
                 href="https://www.npmjs.com/package/react-datetime"
-                target="_blank">
+                target="_blank"
+              >
                 react-datetime
-              </Card.Link>{" "}
+              </Card.Link>{' '}
               documentation.
             </p>
           }
@@ -328,5 +329,5 @@ render( <Datepicker /> )`}
         />
       </Container>
     </article>
-  );
-};
+  )
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {
 //   faHeart,
@@ -15,9 +15,9 @@ import {
   Container,
   Dropdown,
   ButtonGroup,
-} from "@themesberg/react-bootstrap";
+} from '@themesberg/react-bootstrap'
 
-import Documentation from "../../components/Documentation";
+import Documentation from '../../components/Documentation'
 
 export default () => {
   return (
@@ -85,8 +85,8 @@ export default () => {
             <p>
               Instead of a fully colored background, you can also choose to
               style the <code>&#x3C;Button&#x3E;</code> component to only have
-              an outline border by using the <code>outline-primary</code>,{" "}
-              <code>outline-secondary</code> modifier classes inside the{" "}
+              an outline border by using the <code>outline-primary</code>,{' '}
+              <code>outline-secondary</code> modifier classes inside the{' '}
               <code>variant</code> attribute.
             </p>
           }
@@ -109,7 +109,7 @@ export default () => {
           description={
             <p>
               If you want to use the <code>&#x3C;Button&#x3E;</code> component,
-              but without the appearance of a button, just use the{" "}
+              but without the appearance of a button, just use the{' '}
               <code>bsPrefix="text"</code> attribute to create link styled
               buttons.
             </p>
@@ -132,7 +132,7 @@ export default () => {
           title="Buttons with icon"
           description={
             <p>
-              You may want to use icons inside the{" "}
+              You may want to use icons inside the{' '}
               <code>&#x3C;Button&#x3E;</code> component, which can be done by
               simply adding a <code>&#x3C;FontAwesomeIcon&#x3E;</code> component
               inside the button element.
@@ -156,7 +156,7 @@ import { faHeart, faThumbsUp } from "@fortawesome/free-solid-svg-icons";`}
           description={
             <p>
               Block level buttons are great if you want the button to take up
-              100% of the width of the parent element. You need to add the{" "}
+              100% of the width of the parent element. You need to add the{' '}
               <code>w-100</code> class to the component.
             </p>
           }
@@ -169,8 +169,8 @@ import { faHeart, faThumbsUp } from "@fortawesome/free-solid-svg-icons";`}
           title="Disabled state"
           description={
             <p>
-              You may want to disable the <code>&#x3C;Button&#x3E;</code>{" "}
-              component for various reasons, so you need to add the{" "}
+              You may want to disable the <code>&#x3C;Button&#x3E;</code>{' '}
+              component for various reasons, so you need to add the{' '}
               <code>disabled</code> attribute in order to achieve that.
             </p>
           }
@@ -193,16 +193,16 @@ import { faHeart, faThumbsUp } from "@fortawesome/free-solid-svg-icons";`}
               <p>
                 Use the <code>&#x3C;Dropdown&#x3E;</code> component coupled with
                 the <code>&#x3C;Button&#x3E;</code> component in order to create
-                dropdown items when clicking on a button. The{" "}
+                dropdown items when clicking on a button. The{' '}
                 <code> &#x3C;Dropdown.Toggle&#x3E;</code> is the component that
-                will trigger the dropdown menu, while the{" "}
+                will trigger the dropdown menu, while the{' '}
                 <code>&#x3C;Dropdown.Menu&#x3E;</code> is the actual menu where
                 you can add the dropdown items.
               </p>
               <p>
                 The <code>&#x3C;Button&#x3E;</code> component is used either
                 before or after the toggle component, but all of this is wrapped
-                around with the main <code>&#x3C;Dropdown&#x3E;</code>{" "}
+                around with the main <code>&#x3C;Dropdown&#x3E;</code>{' '}
                 component.
               </p>
             </>
@@ -252,10 +252,10 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";`}
           title="Dropdown sizing"
           description={
             <p>
-              You may want to use one of the three main sizing options for the{" "}
+              You may want to use one of the three main sizing options for the{' '}
               <code>&#x3C;Dropdown&#x3E;</code> component, so in order to do
-              that you only need to use the <code>size="md"</code> or{" "}
-              <code>size="lg"</code> attributes for the{" "}
+              that you only need to use the <code>size="md"</code> or{' '}
+              <code>size="lg"</code> attributes for the{' '}
               <code>&#x3C;Button&#x3E;</code> component inside the dropdown
               component.
             </p>
@@ -325,10 +325,10 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";`}
           title="Dropdown direction"
           description={
             <p>
-              If you want to change the direction of the{" "}
+              If you want to change the direction of the{' '}
               <code>&#x3C;Dropdown&#x3E;</code> component, you can do that by
-              using the <code>direction="*"</code> attribute where you can use{" "}
-              <code>up</code>, <code>right</code>, <code>down</code>, or{" "}
+              using the <code>direction="*"</code> attribute where you can use{' '}
+              <code>up</code>, <code>right</code>, <code>down</code>, or{' '}
               <code>left</code> as attribute values.
             </p>
           }
@@ -412,5 +412,5 @@ import { faAngleDown, faAngleUp, faAngleLeft, faAngleRight } from "@fortawesome/
         />
       </Container>
     </article>
-  );
-};
+  )
+}

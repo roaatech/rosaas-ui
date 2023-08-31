@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faLaptopCode, faPalette } from "@fortawesome/free-solid-svg-icons";
 // import { faUser } from "@fortawesome/free-regular-svg-icons";
@@ -9,9 +9,9 @@ import {
   Tab,
   Card,
   Container,
-} from "@themesberg/react-bootstrap";
+} from '@themesberg/react-bootstrap'
 
-import Documentation from "../../components/Documentation";
+import Documentation from '../../components/Documentation'
 
 export default () => {
   return (
@@ -34,23 +34,23 @@ export default () => {
               <p>
                 The <code>&#x3C;Tab&#x3E;</code> component is great if you want
                 to show multiple resources of content with an easy partitioning
-                using nav tabs. First you need to use the{" "}
+                using nav tabs. First you need to use the{' '}
                 <code>&#x3C;Tab.Container&#x3E;</code> component to wrap around
                 the content.
               </p>
               <p>
-                The first part of the component will be the{" "}
-                <code>&#x3C;Nav&#x3E;</code> component where you can add as many{" "}
-                <code>&#x3C;NavItem&#x3E;</code> components as you'd like. The{" "}
+                The first part of the component will be the{' '}
+                <code>&#x3C;Nav&#x3E;</code> component where you can add as many{' '}
+                <code>&#x3C;NavItem&#x3E;</code> components as you'd like. The{' '}
                 <code>&#x3C;Nav.Link&#x3E;</code> component can then be used to
                 set the tab panel that it should open up when clicking on it.
               </p>
               <p>
                 The <code>&#x3C;Tab.Content&#x3E;</code> component and its
-                subcomponents are the content that will be shown based on which{" "}
-                <code>&#x3C;Nav.Link&#x3E;</code> is being clicked on. The{" "}
-                <code>eventKey="*"</code> attribute should be used for both the{" "}
-                <code>&#x3C;Nav.Link&#x3E;</code> and{" "}
+                subcomponents are the content that will be shown based on which{' '}
+                <code>&#x3C;Nav.Link&#x3E;</code> is being clicked on. The{' '}
+                <code>eventKey="*"</code> attribute should be used for both the{' '}
+                <code>&#x3C;Nav.Link&#x3E;</code> and{' '}
                 <code>&#x3C;Tab.Content&#x3E;</code> to link the two together.
               </p>
             </>
@@ -108,7 +108,7 @@ export default () => {
           title="Example with icons"
           description={
             <p>
-              The following example shows how you can add an icon using the{" "}
+              The following example shows how you can add an icon using the{' '}
               <code>&#x3C;FontAwesomeIcon&#x3E;</code> component inside the
               navigation item component.
             </p>
@@ -228,5 +228,5 @@ import { faUser } from "@fortawesome/free-regular-svg-icons";`}
         />
       </Container>
     </article>
-  );
-};
+  )
+}

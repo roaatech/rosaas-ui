@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { BsSortUpAlt, BsSortDown, BsArrowsExpand } from "react-icons/bs";
-import { Wrapper } from "./ColumnSortHeader.styled";
+import React, { useState, useEffect } from 'react'
+import { BsSortUpAlt, BsSortDown, BsArrowsExpand } from 'react-icons/bs'
+import { Wrapper } from './ColumnSortHeader.styled'
 
 const ColumnSortHeader = ({
   text,
@@ -11,42 +11,42 @@ const ColumnSortHeader = ({
   field,
   setFirst,
 }) => {
-  const columnIcon = [<BsArrowsExpand />, <BsSortDown />, <BsSortUpAlt />];
-  const [CurrentSort, setCurrentSort] = useState(0);
-  const [hasAction, setHasAction] = useState(false);
+  const columnIcon = [<BsArrowsExpand />, <BsSortDown />, <BsSortUpAlt />]
+  const [CurrentSort, setCurrentSort] = useState(0)
+  const [hasAction, setHasAction] = useState(false)
 
   useEffect(() => {
     if (hasAction === false) {
-      setCurrentSort(0);
+      setCurrentSort(0)
     } else {
-      setHasAction(false);
+      setHasAction(false)
     }
-  }, [rebase]);
+  }, [rebase])
 
   const currentColumn = (x) => {
-    return columnIcon[x];
-  };
+    return columnIcon[x]
+  }
 
   const toggleSort = () => {
-    setHasAction(true);
-    setSortField(field);
-    setFirst(0);
+    setHasAction(true)
+    setSortField(field)
+    setFirst(0)
     if (CurrentSort !== 2) {
-      setCurrentSort(2);
-      setSortValue(2);
+      setCurrentSort(2)
+      setSortValue(2)
     } else {
-      setCurrentSort(1);
-      setSortValue(1);
+      setCurrentSort(1)
+      setSortValue(1)
     }
 
-    setRebase(rebase + 1);
-  };
+    setRebase(rebase + 1)
+  }
 
   return (
     <Wrapper onClick={toggleSort}>
       {text} {currentColumn(CurrentSort)}
     </Wrapper>
-  );
-};
+  )
+}
 
-export default ColumnSortHeader;
+export default ColumnSortHeader

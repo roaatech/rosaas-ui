@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {
 //   faCashRegister,
@@ -15,7 +15,7 @@ import {
   Button,
   Dropdown,
   ButtonGroup,
-} from "@themesberg/react-bootstrap";
+} from '@themesberg/react-bootstrap'
 
 import {
   CounterWidget,
@@ -27,9 +27,9 @@ import {
   SalesValueWidget,
   SalesValueWidgetPhone,
   AcquisitionWidget,
-} from "../../components/Widgets";
-import { PageVisitsTable } from "../../components/Tables";
-import { trafficShares, totalOrders } from "../../data/charts";
+} from '../../components/Widgets'
+import { PageVisitsTable } from '../../components/Tables'
+import { trafficShares, totalOrders } from '../../data/charts'
 
 export default () => {
   return (
@@ -40,7 +40,8 @@ export default () => {
             as={Button}
             variant="primary"
             size="sm"
-            className="me-2">
+            className="me-2"
+          >
             {/* <FontAwesomeIcon icon={faPlus} className="me-2" />New Task */}
           </Dropdown.Toggle>
           <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-2">
@@ -161,5 +162,5 @@ export default () => {
         </Col>
       </Row>
     </>
-  );
-};
+  )
+}

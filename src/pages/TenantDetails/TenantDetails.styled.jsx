@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components'
 export const Wrapper = styled.div`
   tr:last-child {
     border-bottom: 0 !important;
@@ -57,7 +57,6 @@ export const Wrapper = styled.div`
     align-items: flex-start;
     flex-wrap: wrap;
 
-  
     .refresh {
       button.p-button.p-component.p-button-icon-only {
         padding: 0.3rem !important;
@@ -74,16 +73,13 @@ export const Wrapper = styled.div`
         }
       }
     }
-
-    
   }
   .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-   border-color: var(--second-color);
-  color: var(--second-color);
-}
+    border-color: var(--second-color);
+    color: var(--second-color);
+  }
 
-.p-tabview .p-tabview-nav .p-tabview-ink-bar{
-background-color: var(--second-color);
-
-}
-`;
+  .p-tabview .p-tabview-nav .p-tabview-ink-bar {
+    background-color: var(--second-color);
+  }
+`
