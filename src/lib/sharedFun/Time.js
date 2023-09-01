@@ -62,7 +62,6 @@ export const timeDifferenceFromNow = (targetDate) => {
 
   return { hours: hoursDifference, minutes: minutesDifference }
 }
-//console.log(Time(new Date('2023-08-16T09:27:01')), 'dateTest')
 export const Time = (date, before) => {
   const timeDifference = timeDifferenceFromNow(date)
   return timeDifference.hours < 24
