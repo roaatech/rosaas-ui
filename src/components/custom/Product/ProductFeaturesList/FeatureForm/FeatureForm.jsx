@@ -249,7 +249,7 @@ const FeatureForm = ({
                 onChange={formik.handleChange}
                 value={formik.values.unit}
                 disabled={
-                  formik.values.type === '2' || formik.values.type === 2
+                  formik.values.type !== '1' && formik.values.type !== 1
                 }
               >
                 <option value="">Select Unit</option>
