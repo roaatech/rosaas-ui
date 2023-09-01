@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { TextareaCounterWrapper } from './TextareaAndCounter.styled'
 
 const TextareaAndCounter = ({
@@ -9,6 +9,16 @@ const TextareaAndCounter = ({
 }) => {
   const [characterCount, setCharacterCount] = useState(inputValue?.length || 0)
   const [value, setValue] = useState(inputValue)
+  const [numRows, setNumRows] = useState(1)
+  const textareaRef = useRef(null)
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      const newNumRows = Math.ceil(textareaRef.current.scrollHeight / 25)
+      setNumRows(newNumRows)
+    }
+  }, [value])
+
   const handleTextareaChange = (e) => {
     const inputValue = e.target.value
     if (inputValue.length <= maxLength) {
@@ -18,15 +28,20 @@ const TextareaAndCounter = ({
     }
   }
 
+  const textareaStyle = {
+    height: `${numRows * 25}px`,
+  }
+
   return (
     <TextareaCounterWrapper>
       <div className="textarea-container">
         <textarea
           className="form-control"
-          rows={Math.ceil(value.length / 63)}
+          style={textareaStyle}
           value={value}
           onChange={handleTextareaChange}
           maxLength={maxLength}
+          ref={textareaRef}
         />
 
         {showCharCount && (
