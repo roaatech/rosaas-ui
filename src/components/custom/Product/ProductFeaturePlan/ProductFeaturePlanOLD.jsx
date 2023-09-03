@@ -4,7 +4,6 @@ import {
   faEdit,
   faEllipsisH,
   faTrashAlt,
-  faNewspaper,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   Card,
@@ -20,7 +19,6 @@ import { FormattedMessage } from 'react-intl'
 import TableDate from '../../Shared/TableDate/TableDate'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
-import { BsCardHeading } from 'react-icons/bs'
 
 import {
   deleteFeaturePlan,
@@ -29,13 +27,11 @@ import {
 import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { Wrapper } from './ProductFeaturePlan.styled'
-import InfoPopUp from '../../Shared/InfoPopUp/InfoPopUp'
 
 export default function ProductFeaturePlan({ children }) {
   const dispatch = useDispatch()
   const { getFeaturePlanList, deleteFeaturePlanReq } = useRequest()
   const [visible, setVisible] = useState(false)
-  const [InfoVisible, setInfoVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
   const routeParams = useParams()
@@ -69,11 +65,6 @@ export default function ProductFeaturePlan({ children }) {
     setVisible(true)
   }
 
-  const descriptionPop = async (id) => {
-    setCurrentId(id)
-    setInfoVisible(true)
-  }
-
   useEffect(() => {
     ;(async () => {
       if (!list) {
@@ -91,14 +82,14 @@ export default function ProductFeaturePlan({ children }) {
   const plansObj = {}
   const featuresObj = {}
   const tableData = {}
-  const generateTableData = list?.map((item) => {
+  const x = list?.map((item) => {
     if (!plansObj[item.plan.id]) {
       plansObj[item.plan.id] = {
         name: item.plan.name,
         index: Object.keys(plansObj).length,
       }
     }
-    if (!featuresObj[item.feature.id]) {
+    if (!plansObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         name: item.feature.name,
         index: Object.keys(featuresObj).length,
@@ -109,81 +100,59 @@ export default function ProductFeaturePlan({ children }) {
     ] = item.id
   })
 
-  const TableRow = () => {
+  console.log(tableData, 'xxxxxxxxxxxxxx')
+
+  const TableRow = (props) => {
+    const { limit, description, feature, plan, createdDate, editedDate, id } =
+      props
+
     return (
-      <>
-        {Object.values(featuresObj).map((item, featureIndex) => (
-          <tr>
-            <td>
-              <span className="fw-normal">{item.name}</span>
-            </td>
-
-            {Object.keys(plansObj).map((item, planIndex) => (
-              <td>
-                <span className="fw-normal">
-                  {tableData[planIndex + ',' + featureIndex] ? (
-                    <Dropdown as={ButtonGroup}>
-                      <Dropdown.Toggle
-                        as={Button}
-                        split
-                        variant="link"
-                        className="text-dark m-0 p-0"
-                      >
-                        {/* <span className="icon icon-sm">
-                        <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
-                      </span> */}
-                        {listData[tableData[planIndex + ',' + featureIndex]]
-                          .limit
-                          ? listData[tableData[planIndex + ',' + featureIndex]]
-                              .limit
-                          : 'FALSE'}
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <Dropdown.Item
-                          onSelect={() =>
-                            descriptionPop(
-                              tableData[planIndex + ',' + featureIndex]
-                            )
-                          }
-                        >
-                          <FontAwesomeIcon
-                            icon={faNewspaper}
-                            className="me-2"
-                          />
-
-                          <FormattedMessage id="Description" />
-                        </Dropdown.Item>
-
-                        <Dropdown.Item
-                          onSelect={() =>
-                            editForm(tableData[planIndex + ',' + featureIndex])
-                          }
-                        >
-                          <FontAwesomeIcon icon={faEdit} className="me-2" />
-                          <FormattedMessage id="Edit" />
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() =>
-                            deleteConfirm(
-                              tableData[planIndex + ',' + featureIndex]
-                            )
-                          }
-                          className="text-danger"
-                        >
-                          <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
-                          <FormattedMessage id="Delete" />
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  ) : (
-                    ''
-                  )}
-                </span>
-              </td>
-            ))}
-          </tr>
-        ))}
-      </>
+      <tr>
+        <td>
+          <span className="fw-normal">{feature.name}</span>
+        </td>
+        <td>
+          <span className="fw-normal">{plan.name}</span>
+        </td>
+        <td className="description">
+          <DescriptionCell data={{ description }} />
+        </td>
+        <td>
+          <span className="fw-normal">{limit}</span>
+        </td>
+        <td>
+          <span className={`fw-normal`}>
+            <TableDate createdDate={createdDate} editedDate={editedDate} />
+          </span>
+        </td>
+        <td>
+          <Dropdown as={ButtonGroup}>
+            <Dropdown.Toggle
+              as={Button}
+              split
+              variant="link"
+              className="text-dark m-0 p-0"
+            >
+              <span className="icon icon-sm">
+                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+              </span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onSelect={() => editForm(id)}>
+                <FontAwesomeIcon icon={faEdit} className="me-2" />
+                <FormattedMessage id="Edit" />
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => deleteConfirm(id)}
+                className="text-danger"
+              >
+                <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+                <FormattedMessage id="Delete" />
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </td>
+      </tr>
     )
   }
 
@@ -198,14 +167,32 @@ export default function ProductFeaturePlan({ children }) {
             <Table hover className="user-table align-items-center">
               <thead>
                 <tr>
-                  <th className="border-bottom"></th>
-                  {Object.values(plansObj).map((item, index) => (
-                    <th className="border-bottom">{item.name}</th>
-                  ))}
+                  <th className="border-bottom">
+                    <FormattedMessage id="Feature" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Plan" />
+                  </th>
+                  <th className="border-bottom description">
+                    <FormattedMessage id="Description" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Limit" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Date" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Actions" />
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                <TableRow />
+                {list
+                  ? list?.map((t, index) => {
+                      return <TableRow key={`index`} {...t} />
+                    })
+                  : null}
               </tbody>
             </Table>
             <DeleteConfirmation
@@ -228,20 +215,6 @@ export default function ProductFeaturePlan({ children }) {
           type={type}
           FeaturePlanData={type == 'edit' ? listData[currentId] : {}}
           setVisible={setVisible}
-        />
-      </ThemeDialog>
-      <ThemeDialog visible={InfoVisible} setVisible={setInfoVisible}>
-        <InfoPopUp
-          setVisible={setInfoVisible}
-          popupLabel={<FormattedMessage id={'Description'} />}
-          info={
-            listData
-              ? [currentId]
-                ? listData[currentId]?.description
-                : ''
-              : ''
-          }
-          // info={listData[currentId] ? listData[currentId].description : ''}
         />
       </ThemeDialog>
     </Wrapper>
