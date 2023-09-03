@@ -98,4 +98,22 @@ export const Wrapper = styled.div`
     transition: box-shadow 0.2s;
     border-radius: 50%;
   }
+
+  .timeLineCont .time-line-item-container .timeLineItemCont {
+    background-color: unset;
+    padding-bottom: 3px !important;
+  }
+  .accordion .accordion-item {
+    background-color: var(--themeBackground) !important;
+    .accordion-button {
+      padding: 0;
+      & > span {
+        width: 100%;
+      }
+    }
+  }
+
+  .accordionButton span {
+    font-weight: 300 !important;
+  }
 `
