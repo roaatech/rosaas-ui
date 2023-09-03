@@ -93,7 +93,7 @@ export const ProductFeaturesList = ({ productId }) => {
             <span className="fw-normal">{name}</span>
           </td>
           <td className="description">
-            <DescriptionCell data={{ description }} maxWidth={410} />
+            <DescriptionCell data={{ description }} />
           </td>
 
           <td>
@@ -157,7 +157,7 @@ export const ProductFeaturesList = ({ productId }) => {
             <Table hover className="user-table align-items-center">
               <thead>
                 <tr>
-                  <th className="border-bottom name">
+                  <th className="border-bottom">
                     <FormattedMessage id="Name" />
                   </th>
                   <th className="border-bottom description">

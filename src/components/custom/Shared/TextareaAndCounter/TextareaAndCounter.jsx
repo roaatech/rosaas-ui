@@ -9,13 +9,12 @@ const TextareaAndCounter = ({
 }) => {
   const [characterCount, setCharacterCount] = useState(inputValue?.length || 0)
   const [value, setValue] = useState(inputValue)
-  const [numRows, setNumRows] = useState(1)
   const textareaRef = useRef(null)
 
   useEffect(() => {
     if (textareaRef.current) {
-      const newNumRows = Math.ceil(textareaRef.current.scrollHeight / 25)
-      setNumRows(newNumRows)
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
     }
   }, [value])
 
@@ -28,16 +27,11 @@ const TextareaAndCounter = ({
     }
   }
 
-  const textareaStyle = {
-    height: `${numRows * 25}px`,
-  }
-
   return (
     <TextareaCounterWrapper>
       <div className="textarea-container">
         <textarea
           className="form-control"
-          style={textareaStyle}
           value={value}
           onChange={handleTextareaChange}
           maxLength={maxLength}

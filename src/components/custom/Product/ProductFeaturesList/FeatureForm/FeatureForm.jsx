@@ -248,9 +248,7 @@ const FeatureForm = ({
                 name="unit"
                 onChange={formik.handleChange}
                 value={formik.values.unit}
-                disabled={
-                  formik.values.type !== '1' && formik.values.type !== 1
-                }
+                disabled={formik.values.type != '1'}
               >
                 <option value="">Select Unit</option>
                 {Object.entries(featureUnitMap).map(([value, label]) => (
