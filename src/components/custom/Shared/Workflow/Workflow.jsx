@@ -73,60 +73,62 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
     <Wrapper>
       <div className="timeLineCont">
         {allItems().map((item, index) => (
-          <div className="time-line-item-container" key={index}>
-            <div className="timeLineItemCont" key={index}>
-              <div className="flex justify-content-between flex-wrap">
-                <div className="mb-2">
-                  {processType[item.processType] == 'Healthy' ? (
-                    <div className="HealthStatus">
-                      <Label {...HealthStatus['true']} />
-                      {item.updatesCount > 1
-                        ? ' (' + item.updatesCount + ')'
-                        : ''}
-                    </div>
-                  ) : processType[item.processType] == 'Unhealthy' ? (
-                    <div className="HealthStatus">
-                      <Label {...HealthStatus['false']} />
-                      {item.updatesCount > 1
-                        ? ' (' + item.updatesCount + ')'
-                        : ''}
-                    </div>
-                  ) : (
-                    <div className="processType">
-                      <FormattedMessage id={processType[item.processType]} />
-                    </div>
-                  )}
-                </div>
-                <div className="author mb-2">
-                  <FormattedMessage id={Owner[item?.ownerType]} />
-                </div>
-              </div>
-              <div className="flex justify-content-between flex-wrap">
-                <div className="action mb-2">
-                  <TenantStatus statusValue={item.status} />
-                </div>
-                <div className="time mb-2">
-                  {DataTransform(item.processDate)}
-                </div>
-              </div>
-              {/* <div className="my-1">
-                <MetaDataAccordion
-                  defaultKey="metaData"
-                  data={[
-                    {
-                      eventKey: 'metadata',
-                      title: <FormattedMessage id="Data" />,
-                      description: item?.data
-                        ? rowExpansionTemplate(JSON.parse(item?.data))
-                        : null,
-                    },
-                  ]}
-                />
-              </div> */}
+          <div className="">
+            <div className="time-line-item-container" key={index}>
+              <MetaDataAccordion
+                defaultKey="metaData"
+                data={[
+                  {
+                    eventKey: 'metadata',
+                    title: (
+                      <div className="timeLineItemCont" key={index}>
+                        <div className="flex justify-content-between flex-wrap">
+                          <div className="mb-2">
+                            {processType[item.processType] == 'Healthy' ? (
+                              <div className="HealthStatus">
+                                <Label {...HealthStatus['true']} />
+                                {item.updatesCount > 1
+                                  ? ' (' + item.updatesCount + ')'
+                                  : ''}
+                              </div>
+                            ) : processType[item.processType] == 'Unhealthy' ? (
+                              <div className="HealthStatus">
+                                <Label {...HealthStatus['false']} />
+                                {item.updatesCount > 1
+                                  ? ' (' + item.updatesCount + ')'
+                                  : ''}
+                              </div>
+                            ) : (
+                              <div className="processType">
+                                <FormattedMessage
+                                  id={processType[item.processType]}
+                                />
+                              </div>
+                            )}
+                          </div>
+                          <div className="author mb-2">
+                            <FormattedMessage id={Owner[item?.ownerType]} />
+                          </div>
+                        </div>
+                        <div className="flex justify-content-between flex-wrap">
+                          <div className="action mb-2">
+                            <TenantStatus statusValue={item.status} />
+                          </div>
+                          <div className="time mb-2">
+                            {DataTransform(item.processDate)}
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                    description: item?.data
+                      ? rowExpansionTemplate(JSON.parse(item?.data))
+                      : null,
+                  },
+                ]}
+              />
             </div>
           </div>
         ))}
-
         <CustomPaginator
           first={first}
           rows={rows}

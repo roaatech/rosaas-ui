@@ -34,6 +34,7 @@ const DynamicButtons = ({ buttons }) => {
     })
     navigate(buttons[currentButtonIndex].navAfterDelete)
   }
+
   /****************************************** */
 
   const [visible, setVisible] = useState(false)
