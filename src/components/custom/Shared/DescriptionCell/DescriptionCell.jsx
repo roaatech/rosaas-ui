@@ -1,41 +1,37 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { DescriptionCellWrapper } from './DescriptionCell.styled'
 
 const DescriptionCell = ({ data }) => {
   const [showMore, setShowMore] = useState(false)
   const contentRef = useRef(null)
+  const [maxHeight, setMaxHeight] = useState('auto')
 
   const toggleShowMore = () => {
     setShowMore(!showMore)
   }
 
-  const isLongDescription = data.description.length > 50
-
-  const maxHeight = showMore
-    ? contentRef.current
-      ? `${contentRef.current.scrollHeight}px`
-      : '1000px'
-    : isLongDescription
-    ? '25px'
-    : 'auto' // For short descriptions
+  useEffect(() => {
+    if (contentRef.current) {
+      const textHeight = contentRef.current.scrollHeight
+      setMaxHeight(
+        showMore ? `${textHeight}px` : textHeight > 25 ? '25px' : 'auto'
+      )
+    }
+  }, [showMore])
 
   return (
     <DescriptionCellWrapper maxheight={maxHeight}>
       <div className="description-cell">
-        {isLongDescription ? (
-          <div className="d-flex flex-start flex-wrap">
-            <div
-              ref={contentRef}
-              className={`description-text ${showMore ? 'expanded' : ''}`}
-            >
-              {data.description}
-            </div>
-            <span className="show-more-link" onClick={toggleShowMore}>
-              {showMore ? 'Show Less' : 'Show More'}
-            </span>
-          </div>
-        ) : (
-          data.description
+        <div
+          className={`description-text ${showMore ? 'expanded' : ''}`}
+          ref={contentRef}
+        >
+          {data.description}
+        </div>
+        {maxHeight !== 'auto' && (
+          <span className="show-more-link" onClick={toggleShowMore}>
+            {showMore ? 'Show Less' : 'Show More'}
+          </span>
         )}
       </div>
     </DescriptionCellWrapper>

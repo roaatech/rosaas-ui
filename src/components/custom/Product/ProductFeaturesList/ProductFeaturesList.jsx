@@ -160,7 +160,7 @@ export const ProductFeaturesList = ({ productId }) => {
                   <th className="border-bottom">
                     <FormattedMessage id="Name" />
                   </th>
-                  <th className="border-bottom">
+                  <th className="border-bottom description">
                     <FormattedMessage id="Description" />
                   </th>
 

@@ -26,7 +26,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
   useEffect(() => {
     if (breadcrumbInfo) {
       if (breadcrumbConst[breadcrumbInfo].name || parent) {
-        document.title = `ROSAS - ${intl.formatMessage({
+        document.title = `RoSaaS - ${intl.formatMessage({
           id: breadcrumbConst[breadcrumbInfo].name,
         })}`
       }
