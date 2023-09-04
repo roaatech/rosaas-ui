@@ -103,7 +103,6 @@ const QuickAction = ({
                 type={'create'}
                 visible={visibleTenant}
                 setVisible={setVisibleTenant}
-                sideBar={true}
               />
             </ThemeDialog>
           )}
