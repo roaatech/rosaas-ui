@@ -37,6 +37,7 @@ const TenantDetails = () => {
   const routeParams = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [actionList, setActionList] = useState([])
 
   const updateTenant = async () => {
     await dispatch(removeTenant(routeParams.id))
@@ -143,6 +144,26 @@ const TenantDetails = () => {
                   >
                     <TabPanel header={<FormattedMessage id="Details" />}>
                       <Card border="light" className="shadow-sm border-0">
+                        {console.log({ actionList })}
+                        <DynamicButtons
+                          buttons={
+                            tenantStatus && tenantStatus[0]?.status != 13
+                              ? [
+                                  {
+                                    order: 1,
+                                    type: 'form',
+                                    id: routeParams.id,
+                                    label: 'Edit',
+                                    component: 'editTenant',
+                                    updateTenant: updateTenant,
+                                    icon: <AiFillEdit />,
+                                  },
+                                  ...actionList,
+                                ]
+                              : actionList
+                          }
+                        />
+
                         <Card.Body className="p-0">
                           <Table
                             responsive
@@ -201,24 +222,13 @@ const TenantDetails = () => {
                       </Card>
                       <div className="buttons">
                         <div className="action">
-                          {/* {tenantStatus && tenantStatus[0]?.status != 13 ? (
-                            <Button
-                              className="mr-3"
-                              label={<FormattedMessage id="Edit" />}
-                              icon="pi pi-pencil"
-                              onClick={() => setVisible(true)}
-                              style={{
-                                backgroundColor: 'var(--primary-color)',
-                                borderColor: 'var(--primary-color)',
-                              }}
-                            />
-                          ) : null} */}
-
                           <Actions
                             tenantData={tenantObject}
                             actions={tenantStatus}
                             deleteConfirm={deleteConfirm}
                             chagneStatus={chagneStatus}
+                            actionList={actionList}
+                            setActionList={setActionList}
                           />
                         </div>
                       </div>

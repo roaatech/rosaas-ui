@@ -36,7 +36,6 @@ const DynamicButtons = ({ buttons }) => {
   }
 
   /****************************************** */
-
   const [visible, setVisible] = useState(false)
 
   const forms = {
@@ -112,54 +111,52 @@ const DynamicButtons = ({ buttons }) => {
 
   return (
     <Wrapper className="d-flex">
-      <div className="action">
+      <div className="dynamicAction">
         {buttons.map((button, index) => {
+          button.variant
+            ? (button.variant = button.variant)
+            : (button.variant = 'secondary')
           if (button.order <= 3) {
-            if (button.type == 'delete') {
+            if (button.type == 'action') {
               return (
-                <OverlayTrigger
-                  trigger={['hover']}
-                  overlay={
-                    <Tooltip>
-                      <FormattedMessage id={button.label} />
-                    </Tooltip>
-                  }
-                >
-                  <span>
-                    <Button
-                      key={index}
-                      onClick={() => {
-                        setConfirm(true)
-                        setCurrentButtonIndex(index)
-                      }}
-                    >
-                      {button.icon}
-                    </Button>
-                  </span>
-                </OverlayTrigger>
+                <span>
+                  <Button
+                    variant={button.variant}
+                    key={index}
+                    onClick={button.func}
+                  >
+                    {button.icon} <FormattedMessage id={button.label} />
+                  </Button>
+                </span>
+              )
+            } else if (button.type == 'delete') {
+              return (
+                <span>
+                  <Button
+                    key={index}
+                    onClick={() => {
+                      setConfirm(true)
+                      setCurrentButtonIndex(index)
+                    }}
+                  >
+                    {button.icon} <FormattedMessage id={button.label} />
+                  </Button>
+                </span>
               )
             } else if (button.type == 'form') {
               return (
-                <OverlayTrigger
-                  trigger={['hover']}
-                  overlay={
-                    <Tooltip>
-                      <FormattedMessage id={button.label} />
-                    </Tooltip>
-                  }
-                >
-                  <span>
-                    <Button
-                      key={index}
-                      onClick={() => {
-                        setVisible(true)
-                        setCurrentButtonIndex(index)
-                      }}
-                    >
-                      {button.icon}
-                    </Button>
-                  </span>
-                </OverlayTrigger>
+                <span>
+                  <Button
+                    variant={button.variant}
+                    key={index}
+                    onClick={() => {
+                      setVisible(true)
+                      setCurrentButtonIndex(index)
+                    }}
+                  >
+                    {button.icon} <FormattedMessage id={button.label} />
+                  </Button>
+                </span>
               )
             }
           } else {
@@ -170,11 +167,10 @@ const DynamicButtons = ({ buttons }) => {
       </div>
 
       {more && (
-        <div className="dropdown ml-2">
+        <div className="dropdown">
           <Dropdown>
-            <Dropdown.Toggle as={Button} variant="primary">
-              More
-              <span className="icon icon-small ms-1">
+            <Dropdown.Toggle as={Button}>
+              <span className="icon icon-small">
                 <FontAwesomeIcon icon={faChevronDown} />
               </span>
             </Dropdown.Toggle>
@@ -209,6 +205,18 @@ const DynamicButtons = ({ buttons }) => {
                         >
                           {button.icon} <FormattedMessage id={button.label} />
                         </Dropdown.Item>
+                      </>
+                    )
+                  } else if (button.type == 'action') {
+                    console.log(button, '0000000000000000000')
+                    return (
+                      <>
+                        <Dropdown.Item key={index}>
+                          5555555555555555555
+                        </Dropdown.Item>
+                        {/* <Dropdown.Item key={index} onClick={button.func}>
+                          {button.icon} <FormattedMessage id={button.label} />
+                        </Dropdown.Item>*/}
                       </>
                     )
                   }

@@ -93,7 +93,7 @@ const ProductDetails = () => {
                   order: 2,
                   type: 'form',
                   id: routeParams.id,
-                  label: 'Edit-Product',
+                  label: 'Edit',
                   component: 'editProduct',
                   icon: <AiFillEdit />,
                 },
