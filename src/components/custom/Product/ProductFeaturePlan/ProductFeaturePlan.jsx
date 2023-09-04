@@ -40,6 +40,7 @@ export default function ProductFeaturePlan({ children }) {
   const [currentId, setCurrentId] = useState('')
   const routeParams = useParams()
   const [type, setType] = useState('')
+  const [show, setShow] = useState(false)
   const [popUpLable, setPopUpLable] = useState('')
 
   const productId = routeParams.id
@@ -70,8 +71,9 @@ export default function ProductFeaturePlan({ children }) {
   }
 
   const descriptionPop = async (id) => {
-    setCurrentId(id)
-    setInfoVisible(true)
+    setShow(true)
+    editForm(id)
+    setPopUpLable('View-Details')
   }
 
   useEffect(() => {
@@ -101,6 +103,7 @@ export default function ProductFeaturePlan({ children }) {
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         name: item.feature.name,
+        type: item.feature.type,
         index: Object.keys(featuresObj).length,
       }
     }
@@ -118,7 +121,7 @@ export default function ProductFeaturePlan({ children }) {
               <span className="fw-normal">{item.name}</span>
             </td>
 
-            {Object.keys(plansObj).map((item, planIndex) => (
+            {Object.keys(plansObj).map((planItem, planIndex) => (
               <td>
                 <span className="fw-normal">
                   {tableData[planIndex + ',' + featureIndex] ? (
@@ -133,10 +136,15 @@ export default function ProductFeaturePlan({ children }) {
                         <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
                       </span> */}
                         {listData[tableData[planIndex + ',' + featureIndex]]
-                          .limit
-                          ? listData[tableData[planIndex + ',' + featureIndex]]
-                              .limit
-                          : 'FALSE'}
+                          .limit ? (
+                          listData[tableData[planIndex + ',' + featureIndex]]
+                            .limit +
+                          ' ' +
+                          listData[tableData[planIndex + ',' + featureIndex]]
+                            .unit
+                        ) : (
+                          <FormattedMessage id="Yes" />
+                        )}
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <Dropdown.Item
@@ -151,7 +159,7 @@ export default function ProductFeaturePlan({ children }) {
                             className="me-2"
                           />
 
-                          <FormattedMessage id="Description" />
+                          <FormattedMessage id="View-Details" />
                         </Dropdown.Item>
 
                         <Dropdown.Item
@@ -175,8 +183,10 @@ export default function ProductFeaturePlan({ children }) {
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
+                  ) : item.type ? (
+                    <FormattedMessage id="No" />
                   ) : (
-                    ''
+                    'ــــ'
                   )}
                 </span>
               </td>
@@ -228,9 +238,11 @@ export default function ProductFeaturePlan({ children }) {
           type={type}
           FeaturePlanData={type == 'edit' ? listData[currentId] : {}}
           setVisible={setVisible}
+          show={show}
+          setShow={setShow}
         />
       </ThemeDialog>
-      <ThemeDialog visible={InfoVisible} setVisible={setInfoVisible}>
+      {/* <ThemeDialog visible={InfoVisible} setVisible={setInfoVisible}>
         <InfoPopUp
           setVisible={setInfoVisible}
           popupLabel={<FormattedMessage id={'Description'} />}
@@ -243,7 +255,7 @@ export default function ProductFeaturePlan({ children }) {
           }
           // info={listData[currentId] ? listData[currentId].description : ''}
         />
-      </ThemeDialog>
+      </ThemeDialog> */}
     </Wrapper>
   )
 }

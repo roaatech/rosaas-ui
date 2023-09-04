@@ -22,6 +22,8 @@ const FeaturePlanForm = ({
   setVisible,
   popupLabel,
   setActiveIndex,
+  show,
+  setShow,
 }) => {
   const routeParams = useParams()
   const productId = routeParams.id
@@ -257,6 +259,7 @@ const FeaturePlanForm = ({
                 maxLength={250}
                 showCharCount
                 inputValue={formik?.values?.description}
+                disabled={show}
               />
 
               {formik.touched.description && formik.errors.description && (
@@ -289,7 +292,7 @@ const FeaturePlanForm = ({
                     ? ''
                     : formik.values.limit
                 }
-                disabled={isFeatureBoolean(formik.values.feature)}
+                disabled={isFeatureBoolean(formik.values.feature) || show}
               />
 
               {formik.touched.limit && formik.errors.limit && (
@@ -303,7 +306,7 @@ const FeaturePlanForm = ({
             </Form.Group>
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ display: show ? 'none' : 'block' }}>
           <Button variant="secondary" type="submit">
             <FormattedMessage id="Submit" />
           </Button>
