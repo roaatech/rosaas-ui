@@ -19,6 +19,7 @@ import { Wrapper } from './DynamicButtons.styled'
 import FeatureForm from '../../Product/ProductFeaturesList/FeatureForm/FeatureForm'
 import FeaturePlanForm from '../../Product/ProductFeaturePlan/FeaturePlanForm/FeaturePlanForm'
 import PlanForm from '../../Product/ProductPlansList/PlanForm/PlanForm'
+import { useEffect } from 'react'
 
 const DynamicButtons = ({ buttons }) => {
   const navigate = useNavigate()
@@ -34,6 +35,21 @@ const DynamicButtons = ({ buttons }) => {
     })
     navigate(buttons[currentButtonIndex].navAfterDelete)
   }
+
+  useEffect(() => {
+    ;(() => {
+      const checkMoreArray = buttons.map((button) => {
+        return button.order > 3
+      })
+      if (checkMoreArray.includes(true)) {
+        setMore(true)
+      } else {
+        setMore(false)
+      }
+
+      console.log(checkMoreArray)
+    })()
+  }, [buttons])
 
   /****************************************** */
   const [visible, setVisible] = useState(false)
@@ -111,7 +127,11 @@ const DynamicButtons = ({ buttons }) => {
 
   return (
     <Wrapper className="d-flex">
-      <div className="dynamicAction">
+      <div
+        className="dynamicAction"
+        style={{ borderRadius: more == true ? '8px 0 0 8px' : '8px' }}
+      >
+        {/* {more.toString()} */}
         {buttons.map((button, index) => {
           button.variant
             ? (button.variant = button.variant)
@@ -160,7 +180,7 @@ const DynamicButtons = ({ buttons }) => {
               )
             }
           } else {
-            if (!more) setMore(true)
+            // if (!more) setMore(true)
             return <></>
           }
         })}
@@ -169,7 +189,7 @@ const DynamicButtons = ({ buttons }) => {
       {more && (
         <div className="dropdown">
           <Dropdown>
-            <Dropdown.Toggle as={Button}>
+            <Dropdown.Toggle as={Button} className="buttonMore">
               <span className="icon icon-small">
                 <FontAwesomeIcon icon={faChevronDown} />
               </span>
@@ -208,17 +228,28 @@ const DynamicButtons = ({ buttons }) => {
                       </>
                     )
                   } else if (button.type == 'action') {
-                    console.log(button, '0000000000000000000')
-                    return (
-                      <>
-                        <Dropdown.Item key={index}>
-                          5555555555555555555
-                        </Dropdown.Item>
-                        {/* <Dropdown.Item key={index} onClick={button.func}>
-                          {button.icon} <FormattedMessage id={button.label} />
-                        </Dropdown.Item>*/}
-                      </>
-                    )
+                    if (button.label != 'Delete') {
+                      return (
+                        <>
+                          <Dropdown.Item key={index} onClick={button.func}>
+                            {button.icon} <FormattedMessage id={button.label} />
+                          </Dropdown.Item>
+                        </>
+                      )
+                    } else {
+                      return (
+                        <>
+                          <Dropdown.Divider />
+                          <Dropdown.Item
+                            key={index}
+                            onClick={button.func}
+                            className="redColor"
+                          >
+                            {button.icon} <FormattedMessage id={button.label} />
+                          </Dropdown.Item>
+                        </>
+                      )
+                    }
                   }
               })}
             </Dropdown.Menu>

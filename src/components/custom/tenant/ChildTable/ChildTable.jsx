@@ -17,6 +17,9 @@ import Label from '../../Shared/label/Label'
 import HealthCheckAccordion from '../HealthCheckAccordion/HealthCheckAccordion'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 import { FormattedMessage } from 'react-intl'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import { AiFillEdit } from 'react-icons/ai'
+import { useParams } from 'react-router-dom'
 
 export default function ChildTable({
   productData,
@@ -24,9 +27,11 @@ export default function ChildTable({
   updateDetails,
   updateTenant,
   productIndex,
+  tenantStatus,
 }) {
   const { editTenantStatus } = useRequest()
   const dispatch = useDispatch()
+  const [actionList, setActionList] = useState([])
 
   const chagneStatus = async (actionStatus) => {
     await editTenantStatus({
@@ -48,7 +53,7 @@ export default function ChildTable({
       </div>
     )
   }
-
+  const routeParams = useParams()
   const metadata = productData?.metadata ? productData.metadata : null
   const [products, setProducts] = useState([
     {
@@ -60,6 +65,26 @@ export default function ChildTable({
 
   return (
     <Wrapper>
+      <div className="dynamicButtons">
+        <DynamicButtons
+          buttons={
+            tenantStatus && tenantStatus[0]?.status != 13
+              ? [
+                  {
+                    order: 1,
+                    type: 'form',
+                    id: routeParams.id,
+                    label: 'Edit',
+                    component: 'editTenant',
+                    updateTenant: updateTenant,
+                    icon: <AiFillEdit />,
+                  },
+                  ...actionList,
+                ]
+              : actionList
+          }
+        />
+      </div>
       <div className="content-container">
         <div className="content-details">
           <Table
@@ -124,10 +149,11 @@ export default function ChildTable({
 
           <div className="buttons">
             <div className="action">
-              <Actions
+              {/* <Actions
                 actions={productData.actions}
                 chagneStatus={chagneStatus}
-              />
+                setActionList={setActionList}
+              /> */}
             </div>
           </div>
         </div>

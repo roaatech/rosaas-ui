@@ -12,7 +12,6 @@ import DeleteConfirmation from '../../components/custom/global/DeleteConfirmatio
 import useRequest from '../../axios/apis/useRequest'
 import TenantForm from '../../components/custom/tenant/TenantForm/TenantForm'
 import { Wrapper } from './TenantDetails.styled'
-import Actions from '../../components/custom/tenant/Actions/Actions'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,6 +22,7 @@ import { DataTransform } from '../../lib/sharedFun/Time'
 import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
+import useActions from '../../components/custom/tenant/Actions/Actions'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -37,8 +37,8 @@ const TenantDetails = () => {
   const routeParams = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [actionList, setActionList] = useState([])
 
+  const { renderActions } = useActions()
   const updateTenant = async () => {
     await dispatch(removeTenant(routeParams.id))
     setUpdateDetails(updateDetails + 1)
@@ -110,23 +110,6 @@ const TenantDetails = () => {
               <FormattedMessage id="Tenant-Details" />:{' '}
               {tenantObject.uniqueName}
             </h4>
-            <DynamicButtons
-              buttons={
-                tenantStatus && tenantStatus[0]?.status != 13
-                  ? [
-                      {
-                        order: 1,
-                        type: 'form',
-                        id: routeParams.id,
-                        label: 'Edit-Tenant',
-                        component: 'editTenant',
-                        updateTenant: updateTenant,
-                        icon: <AiFillEdit />,
-                      },
-                    ]
-                  : []
-              }
-            />
           </UpperContent>
         )}
 
@@ -144,25 +127,36 @@ const TenantDetails = () => {
                   >
                     <TabPanel header={<FormattedMessage id="Details" />}>
                       <Card border="light" className="shadow-sm border-0">
-                        {console.log({ actionList })}
-                        <DynamicButtons
-                          buttons={
-                            tenantStatus && tenantStatus[0]?.status != 13
-                              ? [
-                                  {
-                                    order: 1,
-                                    type: 'form',
-                                    id: routeParams.id,
-                                    label: 'Edit',
-                                    component: 'editTenant',
-                                    updateTenant: updateTenant,
-                                    icon: <AiFillEdit />,
-                                  },
-                                  ...actionList,
-                                ]
-                              : actionList
-                          }
-                        />
+                        <div className="dynamicButtons">
+                          <DynamicButtons
+                            buttons={
+                              tenantStatus && tenantStatus[0]?.status != 13
+                                ? [
+                                    {
+                                      order: 1,
+                                      type: 'form',
+                                      id: routeParams.id,
+                                      label: 'Edit',
+                                      component: 'editTenant',
+                                      updateTenant: updateTenant,
+                                      icon: <AiFillEdit />,
+                                    },
+                                    ...renderActions(
+                                      tenantObject,
+                                      tenantStatus,
+                                      deleteConfirm,
+                                      chagneStatus
+                                    ),
+                                  ]
+                                : renderActions(
+                                    tenantObject,
+                                    tenantStatus,
+                                    deleteConfirm,
+                                    chagneStatus
+                                  )
+                            }
+                          />
+                        </div>
 
                         <Card.Body className="p-0">
                           <Table
@@ -222,14 +216,13 @@ const TenantDetails = () => {
                       </Card>
                       <div className="buttons">
                         <div className="action">
-                          <Actions
+                          {/* <Actions
                             tenantData={tenantObject}
                             actions={tenantStatus}
                             deleteConfirm={deleteConfirm}
                             chagneStatus={chagneStatus}
-                            actionList={actionList}
                             setActionList={setActionList}
-                          />
+                          /> */}
                         </div>
                       </div>
                     </TabPanel>
@@ -245,6 +238,7 @@ const TenantDetails = () => {
                           updateDetails={updateDetails}
                           updateTenant={updateTenant}
                           productIndex={index}
+                          tenantStatus={tenantStatus}
                         />
                       </TabPanel>
                     ))}
