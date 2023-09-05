@@ -45,17 +45,17 @@ const QuickAction = ({
   const intl = useIntl()
   const [visibleTenant, setVisibleTenant] = useState(false)
   const [visibleProduct, setVisibleProduct] = useState(false)
-
+  const inputHeight = '56px'
   return (
     <Wrapper>
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4 wrapper">
-        <div className="d-flex align-items-center">
+      <div className="d-flex  py-4 wrapper">
+        <div className=" d-flex align-items-center quick-actions">
           {/* <ButtonGroup className={fullWidth && 'w-100'}>
           <Button variant="secondary" onClick={() => setVisibleHead(true)}>
             <FontAwesomeIcon icon={faPlus} className="me-2" />
             {label}
           </Button>
-        </ButtonGroup> */}
+          </ButtonGroup> */}
           <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle
               as={Button}
@@ -121,19 +121,19 @@ const QuickAction = ({
             </ThemeDialog>
           )}
 
-          <div className={'ms-2'}>
+          <div className={'search-input ms-2 '}>
             {/* {children.length > 1 ? (
             <div className="p-input-icon-left mt-2 mr-2">{children[1]}</div>
           ) : null} */}
             {search && (
               <div
-                className={`${
-                  fullWidth && 'w-100'
-                } p-input-icon-left mt-2 d-flex align-items-center`}
+                className={`input-text-container ${
+                  fullWidth ? 'w-100' : ''
+                } p-input-icon-left mt-2 `}
               >
-                <BsSearch />
+                <BsSearch className="search-icon" />
                 <InputText
-                  className="form-control"
+                  className="form-control border-0"
                   placeholder={intl.formatMessage({ id: 'Search' })}
                   value={inputValue}
                   onChange={(e) =>

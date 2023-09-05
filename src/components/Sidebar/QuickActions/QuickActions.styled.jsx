@@ -2,20 +2,36 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   .wrapper {
-    min-height: 95px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
   }
-  input.p-inputtext.p-component {
-    background: var(--themeSecColor);
-    color: var(--themeColor);
+  .quick-actions {
+    height: 56px;
+    width: 100%;
   }
 
-  .p-button.p-button-sm {
-    width: 100%;
-    background: var(--unThemeBackground);
-    color: var(--unThemeColor);
+  .icon-dark {
+    color: #000; /* Change this to your desired color */
   }
-  .p-button.p-button-sm:hover {
-    background: var(--themeBackground) !important;
-    color: var(--themeColor);
+
+  .dropdown-toggle {
+    height: 40px;
+  }
+
+  .search-input {
+    height: 56px;
+    width: 100%;
+  }
+
+  .input-text-container {
+    width: 100%;
+    position: relative;
+
+    .form-control {
+      border: none;
+      width: 100%;
+    }
   }
 `
