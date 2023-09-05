@@ -32,7 +32,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
   const list = useSelector((state) => state.products.products[productId])
 
   useEffect(() => {
-    let params = `${productId}/Tenants`
+    let params = `${productId}/subscriptions`
 
     ;(async () => {
       if (!list?.subscribe) {
