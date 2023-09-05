@@ -151,8 +151,9 @@ export default (props = {}) => {
     (item) => !(item.status == 4 || item.status == 7 || item.status == 13)
   )
   const archived = allTenant.filter((item) => item.status == 13)
+  const isSearchPerformed = searchValue !== ''
 
-  const inactiveIsOpen = sidebarStatus(inactive) ? 'open' : 'close'
+  const inactiveIsOpen = isSearchPerformed ? 'open' : 'close'
   const activeIsOpen = sidebarStatus(active) ? 'open' : 'close'
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
   const settingIsOpen = sidebarStatus([{ id: 'setting' }]) ? 'open' : 'close'
@@ -249,7 +250,7 @@ export default (props = {}) => {
                   sideBar={true}
                 />
               </TableHead> */}
-              <QuickActions />
+              <QuickActions setSearchValue={setSearchValue} />
               {active.length ? (
                 <CollapsableNavItem
                   eventKey={activeIsOpen}

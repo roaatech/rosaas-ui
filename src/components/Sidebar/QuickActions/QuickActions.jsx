@@ -12,7 +12,12 @@ import {
   Dropdown,
 } from '@themesberg/react-bootstrap'
 import { InputText } from 'primereact/inputtext'
-import { BsBoxSeam, BsFillPersonFill, BsSearch } from 'react-icons/bs'
+import {
+  BsBoxSeam,
+  BsFillPersonFill,
+  BsFillPersonPlusFill,
+  BsSearch,
+} from 'react-icons/bs'
 import { Dialog } from 'primereact/dialog'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -66,13 +71,14 @@ const QuickAction = ({
                 <FontAwesomeIcon icon={faPlus} className="icon-dark" />
               </span>
             </Dropdown.Toggle>
-            <Dropdown.Menu>
+            <Dropdown.Menu className="dropdown-menu">
               <Dropdown.Item
                 onSelect={() => setVisibleTenant(true)}
                 className="text-dark"
               >
                 <span className="me-2 ">
-                  <BsFillPersonFill />{' '}
+                  <BsFillPersonPlusFill />
+                  {/* <FontAwesomeIcon icon={faPlus} className="plus icon-dark" /> */}
                 </span>
                 <FormattedMessage id="Add-Tenant" />
               </Dropdown.Item>
@@ -80,10 +86,10 @@ const QuickAction = ({
                 onSelect={() => setVisibleProduct(true)}
                 className="text-dark"
               >
-                <span className="me-2 ">
-                  <BsBoxSeam />{' '}
+                <span className=" me-2 ">
+                  <BsBoxSeam className="product-icon" />
+                  <FontAwesomeIcon icon={faPlus} className="plus icon-dark" />
                 </span>
-                {/* <FontAwesomeIcon icon={BsBoxSeam} className="me-2" /> */}
                 <FormattedMessage id="Add-Product" />
               </Dropdown.Item>
 

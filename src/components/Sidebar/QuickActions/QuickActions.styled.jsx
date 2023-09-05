@@ -11,6 +11,18 @@ export const Wrapper = styled.div`
     height: 56px;
     width: 100%;
   }
+  .dropdown-menu {
+    margin-top: 4px;
+  }
+  .product-icon {
+    height: 13px;
+    width: 13px;
+  }
+  .plus {
+    height: 7px;
+    width: 7px;
+    padding-bottom: 4px;
+  }
 
   .icon-dark {
     color: #000; /* Change this to your desired color */
