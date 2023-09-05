@@ -25,9 +25,11 @@ const useRequest = () => {
   const getTenant = async (id) => {
     return await Request.get(`management/sadmin/v1/Tenants/${id}`)
   }
+
   const getTenantList = async (params) => {
     return await Request.get(`management/sadmin/v1/Tenants${params}`)
   }
+
   const getProductTenants = async (params) => {
     return await Request.get(`management/sadmin/v1/products/${params}`)
   }
