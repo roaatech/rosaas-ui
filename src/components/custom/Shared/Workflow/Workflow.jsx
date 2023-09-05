@@ -22,7 +22,8 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
   const [first, setFirst] = useState(0)
   const [rows, setRows] = useState(10)
 
-  const timeLine = tenantsData[routeParams.id].products[productIndex].history
+  const timeLine =
+    tenantsData[routeParams.id].subscriptions[productIndex].history
 
   const allItems = () => {
     let items = []
@@ -52,7 +53,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
     let query = `?page=${Math.ceil((first + 1) / rows)}&pageSize=${rows}`
     ;(async () => {
       if (
-        !tenantsData[routeParams.id].products[productIndex].history?.items[
+        !tenantsData[routeParams.id].subscriptions[productIndex].history?.items[
           first
         ]
       ) {

@@ -64,8 +64,8 @@ const TenantDetails = () => {
 
   let tenantObject = tenantsData[routeParams.id]
 
-  let tenantStatus = tenantObject?.products[0]?.actions
-    ? tenantObject?.products
+  let tenantStatus = tenantObject?.subscriptions[0]?.actions
+    ? tenantObject?.subscriptions
         ?.flatMap((item) => item?.actions?.map((action) => action))
         .filter(
           (obj, index, self) =>
@@ -73,7 +73,7 @@ const TenantDetails = () => {
         )
     : null
 
-  tenantObject?.products.map((item, index) => {
+  tenantObject?.subscriptions.map((item, index) => {
     if (firstLoad == 0 && item?.name == window.location.href.split('#')[1]) {
       dispatch(setActiveIndex(index + 1))
       firstLoad++
@@ -82,7 +82,7 @@ const TenantDetails = () => {
 
   useEffect(() => {
     ;(async () => {
-      if (!tenantsData[routeParams.id]?.products[0]?.status) {
+      if (!tenantsData[routeParams.id]?.subscriptions[0]?.status) {
         const tenantData = await getTenant(routeParams.id)
         dispatch(tenantInfo(tenantData.data.data))
       }
@@ -128,7 +128,11 @@ const TenantDetails = () => {
             />
           </UpperContent>
         )}
-
+        {console.log(
+          tenantObject,
+          tenantStatus,
+          'tenantObject && tenantStatus'
+        )}
         {tenantObject && tenantStatus && (
           <div className="pageWrapper">
             <div className="tableSec">
@@ -166,13 +170,13 @@ const TenantDetails = () => {
                                   <FormattedMessage id="Products" />
                                 </td>
                                 <td>
-                                  {tenantObject.products.map(
-                                    (product, index) => (
+                                  {tenantObject.subscriptions.map(
+                                    (subscription, index) => (
                                       <span
                                         key={index}
                                         className="p-1 border-round border-1 border-400 me-2"
                                       >
-                                        {product?.name}
+                                        {subscription?.name}
                                       </span>
                                     )
                                   )}
@@ -223,7 +227,7 @@ const TenantDetails = () => {
                         </div>
                       </div>
                     </TabPanel>
-                    {tenantObject.products.map((product, index) => (
+                    {tenantObject.subscriptions.map((product, index) => (
                       <TabPanel
                         header={product?.name.toUpperCase()}
                         key={index}
