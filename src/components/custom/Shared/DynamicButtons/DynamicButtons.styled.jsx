@@ -1,15 +1,14 @@
 import styled from 'styled-components'
 export const Wrapper = styled.div`
+  width: fit-content;
+
   button {
     padding: 0.4rem 1rem;
   }
-
-  .action {
-    border-radius: 8px;
+  .dynamicAction {
     overflow: hidden;
   }
-
-  .action button {
+  .dynamicAction button {
     border-radius: 0;
     border-left: 1px solid var(--primary3);
     margin: 0;
@@ -24,5 +23,9 @@ export const Wrapper = styled.div`
   .dropdown-item svg {
     position: relative;
     top: -2px;
+  }
+
+  .dropdown > button {
+    border-radius: 0 8px 8px 0;
   }
 `

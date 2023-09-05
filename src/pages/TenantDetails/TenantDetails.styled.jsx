@@ -1,5 +1,11 @@
 import { styled } from 'styled-components'
 export const Wrapper = styled.div`
+  .dynamicButtons {
+    margin-left: auto;
+    width: fit-content;
+    margin-bottom: 0.5rem;
+  }
+
   tr:last-child {
     border-bottom: 0 !important;
   }
