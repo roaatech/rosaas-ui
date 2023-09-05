@@ -125,7 +125,6 @@ const ProductDetails = () => {
             <TabPanel header={<FormattedMessage id="Details" />}>
               <ProductDetailsTab data={productData} />
             </TabPanel>
-
             <TabPanel header={<FormattedMessage id="Subscriptions" />}>
               <ProductTenantsList
                 productId={productData.id}

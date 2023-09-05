@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { productInfo, subscribe } from '../../../../store/slices/products'
 import { setAllTenant } from '../../../../store/slices/tenants'
 import { FormattedMessage } from 'react-intl'
+import { DataTransform } from '../../../../lib/sharedFun/Time'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { getProductTenants } = useRequest()
@@ -50,8 +51,10 @@ export const ProductTenantsList = ({ productId, productName }) => {
       status,
       createdDate,
       editedDate,
-      id,
-      healthCheckUrlIsOverridden,
+      tenantId,
+      plan,
+      startDate,
+      endDate,
     } = props
 
     return (
@@ -81,6 +84,9 @@ export const ProductTenantsList = ({ productId, productName }) => {
           </span>
         </td> */}
         <td>
+          <span className={`fw-normal`}>{plan.name}</span>
+        </td>
+        <td>
           <span className="fw-normal">
             {status && <TenantStatus statusValue={status} />}
           </span>
@@ -88,6 +94,14 @@ export const ProductTenantsList = ({ productId, productName }) => {
         <td>
           <span className={`fw-normal`}>
             <TableDate createdDate={createdDate} editedDate={editedDate} />
+          </span>
+        </td>
+        <td>
+          <span className={`fw-normal`}>{DataTransform(startDate)}</span>
+        </td>
+        <td>
+          <span className={`fw-normal`}>
+            <span className={`fw-normal`}>{DataTransform(endDate)}</span>
           </span>
         </td>
         <td>
@@ -105,7 +119,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
             <Dropdown.Menu>
               <Dropdown.Item>
                 <Link
-                  to={`/tenants/${id}#${productName}`}
+                  to={`/tenants/${tenantId}#${productName}`}
                   className="w-100 d-block"
                 >
                   <FontAwesomeIcon icon={faGear} className="me-2" />{' '}
@@ -132,10 +146,19 @@ export const ProductTenantsList = ({ productId, productName }) => {
                 <FormattedMessage id="Unique-Name" />
               </th>
               <th className="border-bottom">
+                <FormattedMessage id="Plan" />
+              </th>
+              <th className="border-bottom">
                 <FormattedMessage id="Status" />
               </th>
               <th className="border-bottom">
                 <FormattedMessage id="Created-Date" />
+              </th>
+              <th className="border-bottom">
+                <FormattedMessage id="Start-Date" />
+              </th>
+              <th className="border-bottom">
+                <FormattedMessage id="End-Date" />
               </th>
               <th className="border-bottom">
                 <FormattedMessage id="Actions" />
