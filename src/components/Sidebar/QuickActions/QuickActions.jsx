@@ -55,6 +55,28 @@ const QuickAction = ({
     <Wrapper>
       <div className="d-flex  py-4 wrapper">
         <div className=" d-flex align-items-center quick-actions">
+          <div className={'search-input ms-2 '}>
+            {/* {children.length > 1 ? (
+            <div className="p-input-icon-left mt-2 mr-2">{children[1]}</div>
+          ) : null} */}
+            {search && (
+              <div
+                className={`input-text-container ${
+                  fullWidth ? 'w-100' : ''
+                } p-input-icon-left mt-2 `}
+              >
+                <BsSearch className="search-icon" />
+                <InputText
+                  className="form-control border-0"
+                  placeholder={intl.formatMessage({ id: 'Search' })}
+                  value={inputValue}
+                  onChange={(e) =>
+                    searchWait(e, setInputValue, setSearchValue, setFirst)
+                  }
+                />
+              </div>
+            )}
+          </div>
           {/* <ButtonGroup className={fullWidth && 'w-100'}>
           <Button variant="secondary" onClick={() => setVisibleHead(true)}>
             <FontAwesomeIcon icon={faPlus} className="me-2" />
@@ -68,7 +90,10 @@ const QuickAction = ({
               className={fullWidth && 'text-dark m-0 p-0'}
             >
               <span className="icon icon-sm">
-                <FontAwesomeIcon icon={faPlus} className="icon-dark" />
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  className="icon-dark main-icon"
+                />
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu className="dropdown-menu">
@@ -77,7 +102,7 @@ const QuickAction = ({
                 className="text-dark"
               >
                 <span className="me-2 ">
-                  <BsFillPersonPlusFill />
+                  <BsFillPersonPlusFill className="product-icon" />
                   {/* <FontAwesomeIcon icon={faPlus} className="plus icon-dark" /> */}
                 </span>
                 <FormattedMessage id="Add-Tenant" />
@@ -126,29 +151,6 @@ const QuickAction = ({
               />
             </ThemeDialog>
           )}
-
-          <div className={'search-input ms-2 '}>
-            {/* {children.length > 1 ? (
-            <div className="p-input-icon-left mt-2 mr-2">{children[1]}</div>
-          ) : null} */}
-            {search && (
-              <div
-                className={`input-text-container ${
-                  fullWidth ? 'w-100' : ''
-                } p-input-icon-left mt-2 `}
-              >
-                <BsSearch className="search-icon" />
-                <InputText
-                  className="form-control border-0"
-                  placeholder={intl.formatMessage({ id: 'Search' })}
-                  value={inputValue}
-                  onChange={(e) =>
-                    searchWait(e, setInputValue, setSearchValue, setFirst)
-                  }
-                />
-              </div>
-            )}
-          </div>
         </div>
       </div>
 

@@ -14,14 +14,20 @@ export const Wrapper = styled.div`
   .dropdown-menu {
     margin-top: 4px;
   }
+  .main-icon {
+    height: 18px;
+    width: 18px;
+    margin-top: 1px;
+  }
   .product-icon {
     height: 13px;
     width: 13px;
+    margin-bottom: 4px;
   }
   .plus {
     height: 7px;
     width: 7px;
-    padding-bottom: 4px;
+    padding-bottom: 7px;
   }
 
   .icon-dark {
@@ -35,6 +41,7 @@ export const Wrapper = styled.div`
   .search-input {
     height: 56px;
     width: 100%;
+    padding-right: 4px;
   }
 
   .input-text-container {
