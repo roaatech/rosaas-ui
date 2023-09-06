@@ -168,6 +168,7 @@ export default (props = {}) => {
   const activeIsOpen = sidebarStatus(active) ? 'open' : 'close'
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
   const settingIsOpen = sidebarStatus([{ id: 'setting' }]) ? 'open' : 'close'
+  const [searchResults, setSearchResults] = useState([])
 
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=SearchTerm`
@@ -183,12 +184,14 @@ export default (props = {}) => {
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
-    ;(async () => {
-      const listData = await getProductList(query)
-      dispatch(setAllProduct(listData.data.data.items))
-      console.log('ListData:', listData)
-    })()
-    console.log('query:', query)
+    if (searchValue || allProducts.length === 0) {
+      ;(async () => {
+        const listData = await getProductList(query)
+        setSearchResults(listData.data.data.items)
+      })()
+    } else {
+      setSearchResults(allProducts)
+    }
   }, [searchValue])
 
   const setSearchValues = (searchValue) => {
@@ -307,7 +310,7 @@ export default (props = {}) => {
                 </CollapsableNavItem>
               ) : null}
 
-              {Array.isArray(allProducts) && allProducts.length > 0 ? (
+              {Array.isArray(searchResults) && searchResults.length > 0 ? (
                 <CollapsableNavItem
                   eventKey={inactiveIsOpen}
                   title={
@@ -337,7 +340,7 @@ export default (props = {}) => {
                   icon={BsBoxSeam}
                   style={{}}
                 >
-                  {allProducts.map((product, index) => (
+                  {searchResults.map((product, index) => (
                     <NavItem
                       key={index}
                       title={product.name}
@@ -350,7 +353,6 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
-
               <CollapsableNavItem
                 eventKey={settingIsOpen}
                 title={<FormattedMessage id="Settings" />}
