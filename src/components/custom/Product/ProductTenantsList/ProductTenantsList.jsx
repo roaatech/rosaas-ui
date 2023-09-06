@@ -87,6 +87,15 @@ export const ProductTenantsList = ({ productId, productName }) => {
           <span className={`fw-normal`}>{plan.name}</span>
         </td>
         <td>
+          <span className={`fw-normal`}>{DataTransform(startDate)}</span>
+        </td>
+        <td>
+          <span className={`fw-normal`}>
+            <span className={`fw-normal`}>{DataTransform(endDate)}</span>
+          </span>
+        </td>
+
+        <td>
           <span className="fw-normal">
             {status && <TenantStatus statusValue={status} />}
           </span>
@@ -96,14 +105,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
             <TableDate createdDate={createdDate} editedDate={editedDate} />
           </span>
         </td>
-        <td>
-          <span className={`fw-normal`}>{DataTransform(startDate)}</span>
-        </td>
-        <td>
-          <span className={`fw-normal`}>
-            <span className={`fw-normal`}>{DataTransform(endDate)}</span>
-          </span>
-        </td>
+
         <td>
           <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle
@@ -149,17 +151,18 @@ export const ProductTenantsList = ({ productId, productName }) => {
                 <FormattedMessage id="Plan" />
               </th>
               <th className="border-bottom">
-                <FormattedMessage id="Status" />
-              </th>
-              <th className="border-bottom">
-                <FormattedMessage id="Created-Date" />
-              </th>
-              <th className="border-bottom">
                 <FormattedMessage id="Start-Date" />
               </th>
               <th className="border-bottom">
                 <FormattedMessage id="End-Date" />
               </th>
+              <th className="border-bottom">
+                <FormattedMessage id="Status" />
+              </th>
+              <th className="border-bottom">
+                <FormattedMessage id="Created-Date" />
+              </th>
+
               <th className="border-bottom">
                 <FormattedMessage id="Actions" />
               </th>
