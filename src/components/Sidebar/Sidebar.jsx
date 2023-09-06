@@ -162,7 +162,7 @@ export default (props = {}) => {
     ;(async () => {
       // if (Object.keys(tenantsData).length == 0) {
       const listData = await getTenantList(query)
-      // dispatch(setAllTenant(listData.data.data.items))
+      dispatch(setAllTenant(listData.data.data.items))
       console.log(listData.data.data.items, 'listData.data.data.items')
       // }
     })()

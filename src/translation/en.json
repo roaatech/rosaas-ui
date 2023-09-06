@@ -108,6 +108,8 @@
   "Refresh": "Refresh",
   "Is-Successful": "Is Successful",
   "Dispatch-Date": "Dispatch Date",
+  "End-Date": "End Date",
+  "Start-Date": "Start Date",
   "Health-Check-Status": "Health Check Status",
   "External-System-Dispatch": "External System Dispatch",
   "Health-Check-Status-Info": "Health Check Status Info",
