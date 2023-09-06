@@ -13,6 +13,7 @@ import {
   BsStars,
   BsPencilSquare,
   BsPencil,
+  BsBoxes,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -35,6 +36,7 @@ import TenantForm from '../custom/tenant/TenantForm/TenantForm'
 import useRequest from '../../axios/apis/useRequest'
 import { useParams } from 'react-router-dom'
 import { setAllTenant } from '../../store/slices/tenants'
+import { setAllProduct } from '../../store/slices/products'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
@@ -48,10 +50,12 @@ export default (props = {}) => {
   const dispatch = useDispatch()
   const userInfo = useSelector((state) => state.auth.userInfo)
   const tenantsData = useSelector((state) => state.tenants.tenants)
+  const productsData = useSelector((state) => state.products.products)
   const [searchValue, setSearchValue] = useState('')
+
   const [visibleHead, setVisibleHead] = useState(false)
   const [first, setFirst] = useState(0)
-  const { getTenantList } = useRequest()
+  const { getTenantList, getProductList } = useRequest()
   const [update, setUpdate] = useState(1)
 
   const onCollapse = () => setShow(!show)
@@ -59,6 +63,11 @@ export default (props = {}) => {
   const CollapsableNavItem = (props) => {
     const { eventKey, title, icon, children = null } = props
     const defaultKey = pathname.indexOf(eventKey) !== -1 ? eventKey : ''
+    const [productsAccordionOpen, setProductsAccordionOpen] = useState(true)
+
+    const toggleProductsAccordion = () => {
+      setProductsAccordionOpen(!productsAccordionOpen)
+    }
 
     return (
       <Wrapper>
@@ -67,6 +76,7 @@ export default (props = {}) => {
             <Accordion.Button
               as={Nav.Link}
               className="d-flex justify-content-between align-items-center"
+              onClick={toggleProductsAccordion}
             >
               <span>
                 <span className="sidebar-icon">{icon}</span>
@@ -143,6 +153,7 @@ export default (props = {}) => {
   const paramsID = useParams().id
 
   let allTenant = Object.values(tenantsData)
+  let allProducts = Object.values(productsData)
 
   const active = allTenant.filter(
     (item) => item.status == 4 || item.status == 7
@@ -168,6 +179,21 @@ export default (props = {}) => {
       // }
     })()
   }, [first, searchValue, update, paramsID])
+
+  useEffect(() => {
+    let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
+    if (searchValue) query += `&filters[0].Value=${searchValue}`
+    ;(async () => {
+      const listData = await getProductList(query)
+      dispatch(setAllProduct(listData.data.data.items))
+      console.log('ListData:', listData)
+    })()
+    console.log('query:', query)
+  }, [searchValue])
+
+  const setSearchValues = (searchValue) => {
+    setSearchValue(searchValue)
+  }
 
   return (
     <SidebarWrapper>
@@ -231,26 +257,8 @@ export default (props = {}) => {
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
               <img src={logo} alt="logo" className="my-3 logo" />
-              {/* <TableHead
-                label={<FormattedMessage id="Add-Tenant" />}
-                icon={'pi-plus'}
-                setSearchValue={setSearchValue}
-                visibleHead={visibleHead}
-                setVisibleHead={setVisibleHead}
-                fullWidth={true}
-                setFirst={setFirst}
-              >
-                <TenantForm
-                  popupLabel={<FormattedMessage id="Create-Tenant" />}
-                  type={'create'}
-                  update={update}
-                  setUpdate={setUpdate}
-                  visible={visibleHead}
-                  setVisible={setVisibleHead}
-                  sideBar={true}
-                />
-              </TableHead> */}
-              <QuickActions setSearchValue={setSearchValue} />
+
+              <QuickActions setSearchValue={setSearchValues} />
               {active.length ? (
                 <CollapsableNavItem
                   eventKey={activeIsOpen}
@@ -299,19 +307,49 @@ export default (props = {}) => {
                 </CollapsableNavItem>
               ) : null}
 
-              <NavItem
-                title={<FormattedMessage id="Products" />}
-                link={`/products`}
-                icon={BsBoxSeam}
-                isActive={location.pathname.includes('products')}
-              />
-              {/* <NavItem
-                title="Plans"
-                link={`/plans`}
-                icon={BsPencilSquare}
-                // icon={BsPencil}
-                isActive={location.pathname.includes('plans')}
-              /> */}
+              {Array.isArray(allProducts) && allProducts.length > 0 ? (
+                <CollapsableNavItem
+                  eventKey={inactiveIsOpen}
+                  title={
+                    <Link
+                      style={{
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        paddingRight: '70px',
+                        marginTop: '-33px',
+                        marginleft: '-80px',
+                        marginBottom: '0px',
+                        height: '35px',
+                        backgroundColor: 'transparent',
+                      }}
+                      className=" products-nav nav-link  "
+                      to="/products"
+                    >
+                      <BsBoxes
+                        style={{
+                          marginLeft: '-10px',
+                        }}
+                      />{' '}
+                      {'  '}
+                      <FormattedMessage id="Products" />
+                    </Link>
+                  }
+                  icon={BsBoxSeam}
+                  style={{}}
+                >
+                  {allProducts.map((product, index) => (
+                    <NavItem
+                      key={index}
+                      title={product.name}
+                      link={`/products/${product.id}`}
+                      icon={BsBoxSeam}
+                      isActive={location.pathname.includes(
+                        `/products/${product.id}`
+                      )}
+                    />
+                  ))}
+                </CollapsableNavItem>
+              ) : null}
 
               <CollapsableNavItem
                 eventKey={settingIsOpen}
