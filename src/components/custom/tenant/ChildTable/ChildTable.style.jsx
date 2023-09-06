@@ -3,7 +3,7 @@ const Wrapper = styled.div`
   .dynamicButtons {
     margin-left: auto;
     width: fit-content;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.25rem;
   }
 
   thead.p-datatable-thead {

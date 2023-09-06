@@ -130,38 +130,37 @@ const TenantDetails = () => {
                     }}
                   >
                     <TabPanel header={<FormattedMessage id="Details" />}>
-                      <Card border="light" className="shadow-sm border-0">
-                        <div className="dynamicButtons">
-                          <DynamicButtons
-                            buttons={
-                              tenantStatus && tenantStatus[0]?.status != 13
-                                ? [
-                                    {
-                                      order: 1,
-                                      type: 'form',
-                                      id: routeParams.id,
-                                      label: 'Edit',
-                                      component: 'editTenant',
-                                      updateTenant: updateTenant,
-                                      icon: <AiFillEdit />,
-                                    },
-                                    ...renderActions(
-                                      tenantObject,
-                                      tenantStatus,
-                                      deleteConfirm,
-                                      chagneStatus
-                                    ),
-                                  ]
-                                : renderActions(
+                      <div className="dynamicButtons">
+                        <DynamicButtons
+                          buttons={
+                            tenantStatus && tenantStatus[0]?.status != 13
+                              ? [
+                                  {
+                                    order: 1,
+                                    type: 'form',
+                                    id: routeParams.id,
+                                    label: 'Edit',
+                                    component: 'editTenant',
+                                    updateTenant: updateTenant,
+                                    icon: <AiFillEdit />,
+                                  },
+                                  ...renderActions(
                                     tenantObject,
                                     tenantStatus,
                                     deleteConfirm,
                                     chagneStatus
-                                  )
-                            }
-                          />
-                        </div>
-
+                                  ),
+                                ]
+                              : renderActions(
+                                  tenantObject,
+                                  tenantStatus,
+                                  deleteConfirm,
+                                  chagneStatus
+                                )
+                          }
+                        />
+                      </div>
+                      <Card border="light" className="shadow-sm border-0">
                         <Card.Body className="p-0">
                           <Table
                             responsive

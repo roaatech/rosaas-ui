@@ -34,7 +34,6 @@ const ProductDetails = () => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
   const [activeIndex, setActiveIndex] = useState(0)
-
   const { getProduct, deleteProductReq } = useRequest()
 
   useEffect(() => {
@@ -125,12 +124,6 @@ const ProductDetails = () => {
             <TabPanel header={<FormattedMessage id="Details" />}>
               <ProductDetailsTab data={productData} />
             </TabPanel>
-            <TabPanel header={<FormattedMessage id="Subscriptions" />}>
-              <ProductTenantsList
-                productId={productData.id}
-                productName={productData.name}
-              />
-            </TabPanel>
 
             <TabPanel header={<FormattedMessage id="Plans" />}>
               <ProductPlansList
@@ -146,6 +139,13 @@ const ProductDetails = () => {
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Plan's-Features" />}>
               <ProductFeaturePlan productId={productData.id} />
+            </TabPanel>
+
+            <TabPanel header={<FormattedMessage id="Subscriptions" />}>
+              <ProductTenantsList
+                productId={productData.id}
+                productName={productData.name}
+              />
             </TabPanel>
           </TabView>
         </div>
