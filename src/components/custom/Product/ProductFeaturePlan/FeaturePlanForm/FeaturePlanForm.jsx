@@ -128,7 +128,7 @@ const FeaturePlanForm = ({
           planId: values.plan,
         }
         if (values.limit) dataDetails.limit = values.limit
-        if (values.unit) dataDetails.unit = values.unit
+        if (values.unit) dataDetails.unit = parseInt(values.unit)
         const createFeaturePlan = await createFeaturePlanRequest({
           productId: productId,
           data: dataDetails,
@@ -176,7 +176,7 @@ const FeaturePlanForm = ({
           description: values.description,
         }
         if (values.limit) dataDetails.limit = values.limit
-        if (values.unit) dataDetails.unit = values.unit
+        if (values.unit) dataDetails.unit = parseInt(values.unit)
         const editFeaturePlan = await editFeaturePlanRequest({
           productId: productId,
           featurePlanId: FeaturePlanData.id,

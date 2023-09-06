@@ -30,6 +30,7 @@ import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { Wrapper } from './ProductFeaturePlan.styled'
 import InfoPopUp from '../../Shared/InfoPopUp/InfoPopUp'
+import { featureUnitMap } from '../../../../const'
 
 export default function ProductFeaturePlan({ children }) {
   const dispatch = useDispatch()
@@ -140,8 +141,10 @@ export default function ProductFeaturePlan({ children }) {
                           listData[tableData[planIndex + ',' + featureIndex]]
                             .limit +
                           ' ' +
-                          listData[tableData[planIndex + ',' + featureIndex]]
-                            .unit
+                          featureUnitMap[
+                            listData[tableData[planIndex + ',' + featureIndex]]
+                              .unit
+                          ]
                         ) : (
                           <FormattedMessage id="Yes" />
                         )}
@@ -182,8 +185,9 @@ export default function ProductFeaturePlan({ children }) {
                           <FormattedMessage id="Delete" />
                         </Dropdown.Item>
                       </Dropdown.Menu>
+                      {console.log(item)}
                     </Dropdown>
-                  ) : item.type ? (
+                  ) : item.type == 2 ? (
                     <FormattedMessage id="No" />
                   ) : (
                     'ــــ'
