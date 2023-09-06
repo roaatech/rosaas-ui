@@ -38,6 +38,7 @@ import { setAllTenant } from '../../store/slices/tenants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
+import QuickActions from './QuickActions/QuickActions'
 
 export default (props = {}) => {
   const location = useLocation()
@@ -150,8 +151,9 @@ export default (props = {}) => {
     (item) => !(item.status == 4 || item.status == 7 || item.status == 13)
   )
   const archived = allTenant.filter((item) => item.status == 13)
+  const isSearchPerformed = searchValue !== ''
 
-  const inactiveIsOpen = sidebarStatus(inactive) ? 'open' : 'close'
+  const inactiveIsOpen = isSearchPerformed ? 'open' : 'close'
   const activeIsOpen = sidebarStatus(active) ? 'open' : 'close'
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
   const settingIsOpen = sidebarStatus([{ id: 'setting' }]) ? 'open' : 'close'
@@ -230,7 +232,7 @@ export default (props = {}) => {
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
               <img src={logo} alt="logo" className="my-3 logo" />
-              <TableHead
+              {/* <TableHead
                 label={<FormattedMessage id="Add-Tenant" />}
                 icon={'pi-plus'}
                 setSearchValue={setSearchValue}
@@ -248,8 +250,8 @@ export default (props = {}) => {
                   setVisible={setVisibleHead}
                   sideBar={true}
                 />
-              </TableHead>
-
+              </TableHead> */}
+              <QuickActions setSearchValue={setSearchValue} />
               {active.length ? (
                 <CollapsableNavItem
                   eventKey={activeIsOpen}
