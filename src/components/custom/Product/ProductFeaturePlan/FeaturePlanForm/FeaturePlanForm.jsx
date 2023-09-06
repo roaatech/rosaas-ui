@@ -169,7 +169,7 @@ const FeaturePlanForm = ({
         )
 
         if (setActiveIndex) {
-          setActiveIndex(4)
+          setActiveIndex(3)
         }
       } else {
         const dataDetails = {

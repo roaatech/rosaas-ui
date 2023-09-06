@@ -99,7 +99,7 @@ const FeatureForm = ({
         )
 
         if (setActiveIndex) {
-          setActiveIndex(3)
+          setActiveIndex(2)
         }
       } else {
         const editFeature = await editFeatureRequest(productId, {
