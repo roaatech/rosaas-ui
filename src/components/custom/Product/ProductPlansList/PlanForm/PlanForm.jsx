@@ -79,7 +79,7 @@ const PlanForm = ({
         )
 
         if (setActiveIndex) {
-          setActiveIndex(2)
+          setActiveIndex(1)
         }
       } else {
         const editPlan = await editPlanRequest(productId, {

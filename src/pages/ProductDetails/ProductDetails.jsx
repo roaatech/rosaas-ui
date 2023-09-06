@@ -60,7 +60,16 @@ const ProductDetails = () => {
               <FormattedMessage id="Product-Details" /> : {productData.name}
             </h4>
             <DynamicButtons
-              buttons={[
+              buttons={[ 
+                {
+                  order: 4,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Add-Plan',
+                  component: 'addPlan',
+                  icon: <BsPencilSquare />,
+                  setActiveIndex: setActiveIndex,
+                },
                 {
                   order: 4,
                   type: 'form',
@@ -77,15 +86,6 @@ const ProductDetails = () => {
                   label: 'Add-Feature-Plan',
                   component: 'addFeaturePlan',
                   icon: <BsUiChecks />,
-                  setActiveIndex: setActiveIndex,
-                },
-                {
-                  order: 4,
-                  type: 'form',
-                  id: routeParams.id,
-                  label: 'Add-Plan',
-                  component: 'addPlan',
-                  icon: <BsPencilSquare />,
                   setActiveIndex: setActiveIndex,
                 },
                 {
