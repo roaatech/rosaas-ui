@@ -184,15 +184,23 @@ export default (props = {}) => {
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
-    if (searchValue || allProducts.length === 0) {
-      ;(async () => {
-        const listData = await getProductList(query)
-        setSearchResults(listData.data.data.items)
-      })()
-    } else {
-      setSearchResults(allProducts)
-    }
+    ;(async () => {
+      const listData = await getProductList(query)
+      setSearchResults(listData.data.data.items)
+    })()
   }, [searchValue])
+
+  // useEffect(() => {
+  //   let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
+  //   if (searchValue)
+  //     query += `&filters[0].Value=${searchValue}`
+
+  //     // Always dispatch to the store to refresh product data
+  //   ;(async () => {
+  //     const listData = await getProductList(query)
+  //     dispatch(setAllProduct(listData.data.data.items))
+  //   })()
+  // }, [searchValue, dispatch])
 
   const setSearchValues = (searchValue) => {
     setSearchValue(searchValue)
