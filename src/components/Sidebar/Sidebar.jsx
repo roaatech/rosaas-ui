@@ -162,9 +162,18 @@ export default (props = {}) => {
   )
   const archived = allTenant.filter((item) => item.status == 13)
   const isSearchPerformed = searchValue !== ''
+  // const activeIsOpen = pathname.includes('products') ? 'open' : pathname.includes('tenants') ? 'open' : 'close';
 
-  const inactiveIsOpen = isSearchPerformed ? 'open' : 'close'
-  const activeIsOpen = sidebarStatus(active) ? 'open' : 'close'
+  const inactiveIsOpen = isSearchPerformed
+    ? 'open'
+    : sidebarStatus(inactive)
+    ? 'open'
+    : 'close'
+  const activeIsOpen = isSearchPerformed
+    ? 'open'
+    : sidebarStatus(active)
+    ? 'open'
+    : 'close'
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
   const settingIsOpen = sidebarStatus([{ id: 'setting' }]) ? 'open' : 'close'
   const [searchResults, setSearchResults] = useState([])
@@ -198,22 +207,11 @@ export default (props = {}) => {
     })()
   }, [searchValue, allProducts])
 
-  // useEffect(() => {
-  //   let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
-  //   if (searchValue)
-  //     query += `&filters[0].Value=${searchValue}`
-
-  //     // Always dispatch to the store to refresh product data
-  //   ;(async () => {
-  //     const listData = await getProductList(query)
-  //     dispatch(setAllProduct(listData.data.data.items))
-  //   })()
-  // }, [searchValue, dispatch])
-
   const setSearchValues = (searchValue) => {
     setSearchValue(searchValue)
   }
 
+  const productsIsOpen = pathname.includes('products') ? 'open' : 'close'
   return (
     <SidebarWrapper>
       <Navbar
@@ -328,7 +326,7 @@ export default (props = {}) => {
 
               {Array.isArray(searchResults) && searchResults.length > 0 ? (
                 <CollapsableNavItem
-                  eventKey={inactiveIsOpen}
+                  eventKey={productsIsOpen}
                   title={
                     <Link
                       style={{
@@ -369,6 +367,7 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
+
               <CollapsableNavItem
                 eventKey={settingIsOpen}
                 title={<FormattedMessage id="Settings" />}
