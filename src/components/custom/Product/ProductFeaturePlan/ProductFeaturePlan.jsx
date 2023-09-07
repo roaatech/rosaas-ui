@@ -45,9 +45,14 @@ export default function ProductFeaturePlan({ children }) {
   const [popUpLable, setPopUpLable] = useState('')
 
   const productId = routeParams.id
-  const listData = useSelector(
+  const listDataStore = useSelector(
     (state) => state.products.products[productId]?.featurePlan
   )
+  console.log({ listDataStore })
+  // delete default key from list
+  const listData = { ...listDataStore }
+  listData['00000000-0000-0000-0000-000000000000'] &&
+    delete listData['00000000-0000-0000-0000-000000000000']
   let list = listData && Object.values(listData)
 
   const handleDeleteFeaturePlan = async () => {
@@ -81,8 +86,10 @@ export default function ProductFeaturePlan({ children }) {
 
   useEffect(() => {
     ;(async () => {
-      if (!list) {
+      console.log({ list })
+      if (!list || list.length == 0) {
         const FeaturePlanData = await getFeaturePlanList(productId)
+        console.log({ FeaturePlanData })
         dispatch(
           setAllFeaturePlan({
             productId: productId,
@@ -119,13 +126,13 @@ export default function ProductFeaturePlan({ children }) {
     return (
       <>
         {Object.values(featuresObj).map((item, featureIndex) => (
-          <tr>
+          <tr key={featureIndex}>
             <td>
               <span className="fw-bolder">{item.name}</span>
             </td>
 
             {Object.keys(plansObj).map((planItem, planIndex) => (
-              <td>
+              <td key={planIndex}>
                 <span className="fw-normal">
                   {tableData[planIndex + ',' + featureIndex] ? (
                     <Dropdown as={ButtonGroup}>
@@ -187,7 +194,6 @@ export default function ProductFeaturePlan({ children }) {
                           <FormattedMessage id="Delete" />
                         </Dropdown.Item>
                       </Dropdown.Menu>
-                      {console.log(item)}
                     </Dropdown>
                   ) : item.type == 2 ? (
                     <FormattedMessage id="No" />
@@ -216,7 +222,9 @@ export default function ProductFeaturePlan({ children }) {
                 <tr>
                   <th className="border-bottom"></th>
                   {Object.values(plansObj).map((item, index) => (
-                    <th className="border-bottom">{item.name}</th>
+                    <th key={index} className="border-bottom">
+                      {item.name}
+                    </th>
                   ))}
                 </tr>
               </thead>

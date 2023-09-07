@@ -112,11 +112,7 @@ const TenantDetails = () => {
             </h4>
           </UpperContent>
         )}
-        {console.log(
-          tenantObject,
-          tenantStatus,
-          'tenantObject && tenantStatus'
-        )}
+
         {tenantObject && tenantStatus && (
           <div className="pageWrapper">
             <div className="tableSec">

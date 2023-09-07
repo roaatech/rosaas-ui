@@ -60,7 +60,7 @@ const ProductDetails = () => {
               <FormattedMessage id="Product-Details" /> : {productData.name}
             </h4>
             <DynamicButtons
-              buttons={[ 
+              buttons={[
                 {
                   order: 4,
                   type: 'form',

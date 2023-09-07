@@ -184,7 +184,7 @@ export const ProductFeaturesList = ({ productId }) => {
               <tbody>
                 {list?.features && Object.values(list?.features).length
                   ? Object.values(list?.features).map((t, index) => {
-                      return <TableRow key={`index`} {...t} />
+                      return <TableRow key={index} {...t} />
                     })
                   : null}
               </tbody>

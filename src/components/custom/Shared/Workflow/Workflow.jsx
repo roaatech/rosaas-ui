@@ -74,7 +74,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
     <Wrapper>
       <div className="timeLineCont">
         {allItems().map((item, index) => (
-          <div className="">
+          <div key={index}>
             <div className="time-line-item-container" key={index}>
               <MetaDataAccordion
                 defaultKey="metaData"

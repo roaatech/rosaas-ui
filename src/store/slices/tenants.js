@@ -18,7 +18,6 @@ export const tenantsSlice = createSlice({
           allTenant[item.id] = { ...current(state.tenants) }[item.id]
         }
       })
-      console.log(action.payload, ' action.payload')
       state.tenants = allTenant
     },
     tenantInfo: (state, action) => {

@@ -28,8 +28,9 @@ const Urls = (data) => {
 
   return (
     <Wrapper>
-      {URLS.map((url) => (
+      {URLS.map((url, index) => (
         <div
+          key={index}
           className="bar"
           style={{
             background: urlStyle[url.method].lightColor,

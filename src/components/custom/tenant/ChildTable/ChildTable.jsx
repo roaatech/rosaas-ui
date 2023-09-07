@@ -31,7 +31,6 @@ export default function ChildTable({
   const { editTenantStatus } = useRequest()
 
   const chagneStatus = async (actionStatus) => {
-    console.log({ actionStatus })
     await editTenantStatus({
       TenantId: tenantId,
       status: actionStatus,

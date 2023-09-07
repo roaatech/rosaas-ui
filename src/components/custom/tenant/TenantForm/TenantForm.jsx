@@ -127,7 +127,7 @@ const TenantForm = ({
     planOptions = []
   }
 
-  const options = list.map((item, index) => {
+  const options = list.map((item) => {
     return { value: item.id, label: item.name }
   })
 
@@ -136,7 +136,6 @@ const TenantForm = ({
       formik.setFieldValue('plan', '')
       formik.setFieldValue('price', '')
       if (listData[formik.values.product]) {
-        console.log(listData[formik.values.product], 'formik.values.product')
         if (!listData[formik.values.product].plans) {
           const planData = await getProductPlans(formik.values.product)
           dispatch(
@@ -317,7 +316,6 @@ const TenantForm = ({
                       {option.label}
                     </option>
                   ))}
-                  {console.log(priceList, 'priceList')}
                 </select>
                 {formik.touched.price && formik.errors.price && (
                   <Form.Control.Feedback

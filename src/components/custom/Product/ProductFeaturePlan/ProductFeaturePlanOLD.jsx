@@ -100,8 +100,6 @@ export default function ProductFeaturePlan({ children }) {
     ] = item.id
   })
 
-  console.log(tableData, 'xxxxxxxxxxxxxx')
-
   const TableRow = (props) => {
     const { limit, description, feature, plan, createdDate, editedDate, id } =
       props
@@ -190,7 +188,7 @@ export default function ProductFeaturePlan({ children }) {
               <tbody>
                 {list
                   ? list?.map((t, index) => {
-                      return <TableRow key={`index`} {...t} />
+                      return <TableRow key={index} {...t} />
                     })
                   : null}
               </tbody>
