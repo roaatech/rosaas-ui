@@ -79,6 +79,7 @@ export default function ProductFeaturePlan({ children }) {
 
   const descriptionPop = async (id) => {
     setShow(true)
+    setType('edit')
     setCurrentId(id)
     setVisible(true)
     setPopUpLable('View-Details')
