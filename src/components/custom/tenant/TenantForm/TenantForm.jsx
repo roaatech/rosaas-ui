@@ -8,7 +8,10 @@ import { useNavigate } from 'react-router-dom'
 import { Form } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import { tenantInfo } from '../../../../store/slices/tenants.js'
-import { setAllProduct } from '../../../../store/slices/products.js'
+import {
+  setAllPlans,
+  setAllProduct,
+} from '../../../../store/slices/products.js'
 import { MultiSelect } from 'primereact/multiselect'
 import { Wrapper } from './TenantForm.styled.jsx'
 
@@ -21,8 +24,14 @@ const TenantForm = ({
   popupLabel,
 }) => {
   const [selectedCities, setSelectedCities] = useState()
-  const { createTenantRequest, editTenantRequest } = useRequest()
+  const {
+    createTenantRequest,
+    editTenantRequest,
+    getProductPlans,
+    getProductPlanPrice,
+  } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
+  const [priceList, setPriceList] = useState([])
   const navigate = useNavigate()
 
   const dispatch = useDispatch()
@@ -30,9 +39,6 @@ const TenantForm = ({
 
   const listData = useSelector((state) => state.products.products)
   let list = Object.values(listData)
-  const options = list.map((item, index) => {
-    return { value: item.id, label: item.name }
-  })
 
   useEffect(() => {
     let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
@@ -45,11 +51,12 @@ const TenantForm = ({
     })()
   }, [])
 
-  const validationSchema = Yup.object().shape({
+  const createValidation = {
     title: Yup.string().max(100, 'Must be maximum 100 digits'),
-    product: Yup.array()
-      .required('Please select a product')
-      .min(1, 'Please select a product'),
+    product: Yup.string().required('Please select a product'),
+    plan: Yup.string().required('Please select a plan'),
+    price: Yup.string().required('Please select a price'),
+
     uniqueName: Yup.string()
       .max(100, 'Must be maximum 100 digits')
       .required('Unique Name is required')
@@ -57,7 +64,13 @@ const TenantForm = ({
         /^[a-zA-Z0-9_-]+$/,
         'English Characters, Numbers, and Underscores are only accepted.'
       ),
-  })
+  }
+  const editValidation = {
+    title: Yup.string().max(100, 'Must be maximum 100 digits'),
+  }
+  const validationSchema = Yup.object().shape(
+    type === 'create' ? createValidation : editValidation
+  )
 
   const selectedProduct = tenantData?.products?.map((product) => {
     return product.id
@@ -66,19 +79,27 @@ const TenantForm = ({
   const initialValues = {
     title: tenantData ? tenantData.title : '',
     uniqueName: tenantData ? tenantData.uniqueName : '',
+    plan: tenantData ? tenantData.plan : '',
+    price: tenantData ? tenantData.price : '',
     product: tenantData ? selectedProduct : '',
   }
+
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      // Handle form submission
       setVisible(false)
       if (type == 'create') {
         const createTenant = await createTenantRequest({
-          title: values.title,
+          subscriptions: [
+            {
+              productId: values.product,
+              planId: values.plan,
+              planPriceId: values.price,
+            },
+          ],
           uniqueName: values.uniqueName,
-          productsIds: values.product,
+          title: values.title,
         })
         navigate(`/tenants/${createTenant.data.data.id}`)
       } else {
@@ -89,19 +110,64 @@ const TenantForm = ({
           product: selectedProduct,
         })
         updateTenant()
-        // dispatch(
-        //   tenantInfo({
-        //     title: values.title,
-        //     uniqueName: values.uniqueName,
-        //     id: tenantData.id,
-        //     product: selectedProduct,
-        //   })
-        // )
       }
       setVisible && setVisible(false)
       setVisible && setVisible(false)
     },
   })
+
+  let planOptions
+  if (listData[formik.values.product]?.plans) {
+    planOptions = Object.values(listData[formik.values.product].plans).map(
+      (item, index) => {
+        return { value: item.id, label: item.name }
+      }
+    )
+  } else {
+    planOptions = []
+  }
+
+  const options = list.map((item, index) => {
+    return { value: item.id, label: item.name }
+  })
+
+  useEffect(() => {
+    ;(async () => {
+      formik.setFieldValue('plan', '')
+      formik.setFieldValue('price', '')
+      if (listData[formik.values.product]) {
+        console.log(listData[formik.values.product], 'formik.values.product')
+        if (!listData[formik.values.product].plans) {
+          const planData = await getProductPlans(formik.values.product)
+          dispatch(
+            setAllPlans({
+              productId: formik.values.product,
+              data: planData.data.data,
+            })
+          )
+        }
+      }
+    })()
+  }, [formik.values.product])
+
+  useEffect(() => {
+    ;(async () => {
+      formik.setFieldValue('price', '')
+
+      if (formik.values.plan) {
+        const planDataRes = await getProductPlanPrice(formik.values.product)
+        const planData = planDataRes.data.data
+          .filter((item) => item.plan.id === formik.values.plan)
+          .map((item) => ({
+            value: item.id,
+            label: `${item.cycle} (${item.price})`,
+          }))
+        setPriceList(planData)
+      } else {
+        setPriceList([])
+      }
+    })()
+  }, [formik.values.plan, formik.values.product])
 
   return (
     <Wrapper>
@@ -137,61 +203,134 @@ const TenantForm = ({
               )}
             </Form.Group>
           </div>
-          <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                Unique Name <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <input
-                className="form-control"
-                type="text"
-                id="uniqueName"
-                name="uniqueName"
-                onChange={formik.handleChange}
-                value={formik.values.uniqueName}
-              />
-              {formik.touched.uniqueName && formik.errors.uniqueName && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
+          {type === 'create' && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  Unique Name <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="uniqueName"
+                  name="uniqueName"
+                  onChange={formik.handleChange}
+                  value={formik.values.uniqueName}
+                />
+                {formik.touched.uniqueName && formik.errors.uniqueName && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.uniqueName}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          )}
+          {type === 'create' && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  Product <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <select
+                  className="form-select"
+                  name="product"
+                  id="product"
+                  value={formik.values.product}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.product && formik.errors.product}
                 >
-                  {formik.errors.uniqueName}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
-          {/* <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                Product <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <select
-                className="form-select"
-                name="product"
-                id="product"
-                value={formik.values.product}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                isInvalid={formik.touched.product && formik.errors.product}
-                multiple
-              >
-                {options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.product && formik.errors.product && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
+                  <option value="">Select Option</option>
+                  {options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.product && formik.errors.product && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.product}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          )}
+          {type === 'create' && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  Plan <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <select
+                  className="form-select"
+                  name="plan"
+                  id="plan"
+                  value={formik.values.plan}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.plan && formik.errors.plan}
+                  disabled={!formik.values.product}
                 >
-                  {formik.errors.product}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div> */}
-          <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
+                  <option value="">Select Option</option>
+                  {planOptions?.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.plan && formik.errors.plan && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.plan}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          )}
+          {type === 'create' && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  Price <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <select
+                  className="form-select"
+                  name="price"
+                  id="price"
+                  value={formik.values.price}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.price && formik.errors.price}
+                  disabled={!formik.values.plan || !formik.values.product}
+                >
+                  <option value="">Select Option </option>
+                  {priceList.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                  {console.log(priceList, 'priceList')}
+                </select>
+                {formik.touched.price && formik.errors.price && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.price}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          )}
+          {/* <div>
             <Form.Group className="mb-3">
               <Form.Label>
                 Product <span style={{ color: 'red' }}>*</span>
@@ -216,7 +355,7 @@ const TenantForm = ({
                 </Form.Control.Feedback>
               )}
             </Form.Group>
-          </div>
+          </div> */}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>

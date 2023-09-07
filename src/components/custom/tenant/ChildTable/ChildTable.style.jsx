@@ -1,5 +1,11 @@
 import styled from 'styled-components'
 const Wrapper = styled.div`
+  .dynamicButtons {
+    margin-left: auto;
+    width: fit-content;
+    margin-bottom: 1.25rem;
+  }
+
   thead.p-datatable-thead {
     display: none;
   }

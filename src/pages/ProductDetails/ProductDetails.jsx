@@ -34,7 +34,6 @@ const ProductDetails = () => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
   const [activeIndex, setActiveIndex] = useState(0)
-
   const { getProduct, deleteProductReq } = useRequest()
 
   useEffect(() => {
@@ -61,7 +60,16 @@ const ProductDetails = () => {
               <FormattedMessage id="Product-Details" /> : {productData.name}
             </h4>
             <DynamicButtons
-              buttons={[
+              buttons={[ 
+                {
+                  order: 4,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Add-Plan',
+                  component: 'addPlan',
+                  icon: <BsPencilSquare />,
+                  setActiveIndex: setActiveIndex,
+                },
                 {
                   order: 4,
                   type: 'form',
@@ -81,19 +89,10 @@ const ProductDetails = () => {
                   setActiveIndex: setActiveIndex,
                 },
                 {
-                  order: 4,
-                  type: 'form',
-                  id: routeParams.id,
-                  label: 'Add-Plan',
-                  component: 'addPlan',
-                  icon: <BsPencilSquare />,
-                  setActiveIndex: setActiveIndex,
-                },
-                {
                   order: 2,
                   type: 'form',
                   id: routeParams.id,
-                  label: 'Edit-Product',
+                  label: 'Edit',
                   component: 'editProduct',
                   icon: <AiFillEdit />,
                 },
@@ -126,13 +125,6 @@ const ProductDetails = () => {
               <ProductDetailsTab data={productData} />
             </TabPanel>
 
-            <TabPanel header={<FormattedMessage id="Subscriptions" />}>
-              <ProductTenantsList
-                productId={productData.id}
-                productName={productData.name}
-              />
-            </TabPanel>
-
             <TabPanel header={<FormattedMessage id="Plans" />}>
               <ProductPlansList
                 productId={productData.id}
@@ -147,6 +139,13 @@ const ProductDetails = () => {
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Plan's-Features" />}>
               <ProductFeaturePlan productId={productData.id} />
+            </TabPanel>
+
+            <TabPanel header={<FormattedMessage id="Subscriptions" />}>
+              <ProductTenantsList
+                productId={productData.id}
+                productName={productData.name}
+              />
             </TabPanel>
           </TabView>
         </div>

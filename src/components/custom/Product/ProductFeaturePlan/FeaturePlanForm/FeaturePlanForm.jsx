@@ -15,6 +15,7 @@ import {
 } from '../../../../../store/slices/products.js'
 import { setAllPlans } from '../../../../../store/slices/products.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+import { featureUnitMap } from '../../../../../const/index.js'
 
 const FeaturePlanForm = ({
   type,
@@ -22,6 +23,8 @@ const FeaturePlanForm = ({
   setVisible,
   popupLabel,
   setActiveIndex,
+  show,
+  setShow,
 }) => {
   const routeParams = useParams()
   const productId = routeParams.id
@@ -80,9 +83,10 @@ const FeaturePlanForm = ({
     feature: FeaturePlanData ? FeaturePlanData?.feature?.id : '',
     plan: FeaturePlanData ? FeaturePlanData?.plan?.id : '',
     limit: FeaturePlanData ? FeaturePlanData?.limit : '',
+    unit: FeaturePlanData ? FeaturePlanData?.unit : '',
     description: FeaturePlanData ? FeaturePlanData?.description : '',
   }
-
+  console.log(FeaturePlanData, 'FeaturePlanData')
   const validationSchema = Yup.object().shape({
     feature: Yup.string().required('Please select a feature'),
     plan: Yup.string().required('Please select a plan'),
@@ -95,6 +99,20 @@ const FeaturePlanForm = ({
         } else {
           const regex = /^[1-9]\d*$/
           return regex.test(value)
+        }
+      }),
+    unit: Yup.number()
+      .nullable()
+      .test('', 'This field is required', function (value) {
+        const feature = this.resolve(Yup.ref('feature'))
+        if (isFeatureBoolean(feature)) {
+          return true
+        } else {
+          if (value) {
+            return true
+          } else {
+            return false
+          }
         }
       }),
   })
@@ -110,6 +128,7 @@ const FeaturePlanForm = ({
           planId: values.plan,
         }
         if (values.limit) dataDetails.limit = values.limit
+        if (values.unit) dataDetails.unit = parseInt(values.unit)
         const createFeaturePlan = await createFeaturePlanRequest({
           productId: productId,
           data: dataDetails,
@@ -130,6 +149,7 @@ const FeaturePlanForm = ({
             data: {
               description: values.description,
               limit: values.limit,
+              unit: values.unit,
               feature: {
                 id: values.feature,
                 name: featureOptions.find(
@@ -149,13 +169,14 @@ const FeaturePlanForm = ({
         )
 
         if (setActiveIndex) {
-          setActiveIndex(4)
+          setActiveIndex(3)
         }
       } else {
         const dataDetails = {
           description: values.description,
         }
         if (values.limit) dataDetails.limit = values.limit
+        if (values.unit) dataDetails.unit = parseInt(values.unit)
         const editFeaturePlan = await editFeaturePlanRequest({
           productId: productId,
           featurePlanId: FeaturePlanData.id,
@@ -165,6 +186,7 @@ const FeaturePlanForm = ({
         const newData = JSON.parse(JSON.stringify(FeaturePlanData))
         newData.description = values.description
         newData.limit = values.limit
+        newData.unit = values.unit
 
         dispatch(featurePlanInfo({ productId, data: newData }))
       }
@@ -257,12 +279,54 @@ const FeaturePlanForm = ({
                 maxLength={250}
                 showCharCount
                 inputValue={formik?.values?.description}
+                disabled={show}
               />
 
               {formik.touched.description && formik.errors.description && (
                 <div className="invalid-feedback">
                   {formik.errors.description}
                 </div>
+              )}
+            </Form.Group>
+          </div>
+          <div
+            style={{
+              display: isFeatureBoolean(formik.values.feature)
+                ? 'none'
+                : 'block',
+            }}
+          >
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Unit" />
+                <span style={{ color: 'red' }}> *</span>
+              </Form.Label>
+              <select
+                className="form-control"
+                id="unit"
+                name="unit"
+                onChange={formik.handleChange}
+                value={
+                  isFeatureBoolean(formik.values.feature)
+                    ? ''
+                    : formik.values.unit
+                }
+                disabled={isFeatureBoolean(formik.values.feature)}
+              >
+                <option value="">Select Unit</option>
+                {Object.entries(featureUnitMap).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.unit && formik.errors.unit && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.unit}
+                </Form.Control.Feedback>
               )}
             </Form.Group>
           </div>
@@ -289,7 +353,7 @@ const FeaturePlanForm = ({
                     ? ''
                     : formik.values.limit
                 }
-                disabled={isFeatureBoolean(formik.values.feature)}
+                disabled={isFeatureBoolean(formik.values.feature) || show}
               />
 
               {formik.touched.limit && formik.errors.limit && (
@@ -303,7 +367,7 @@ const FeaturePlanForm = ({
             </Form.Group>
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ display: show ? 'none' : 'block' }}>
           <Button variant="secondary" type="submit">
             <FormattedMessage id="Submit" />
           </Button>

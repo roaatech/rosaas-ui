@@ -177,6 +177,7 @@ export default (props = {}) => {
       // if (Object.keys(tenantsData).length == 0) {
       const listData = await getTenantList(query)
       dispatch(setAllTenant(listData.data.data.items))
+      console.log(listData.data.data.items, 'listData.data.data.items')
       // }
     })()
   }, [first, searchValue, update, paramsID])

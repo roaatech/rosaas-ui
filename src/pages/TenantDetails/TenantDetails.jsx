@@ -12,7 +12,6 @@ import DeleteConfirmation from '../../components/custom/global/DeleteConfirmatio
 import useRequest from '../../axios/apis/useRequest'
 import TenantForm from '../../components/custom/tenant/TenantForm/TenantForm'
 import { Wrapper } from './TenantDetails.styled'
-import Actions from '../../components/custom/tenant/Actions/Actions'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,6 +22,7 @@ import { DataTransform } from '../../lib/sharedFun/Time'
 import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
+import useActions from '../../components/custom/tenant/Actions/Actions'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -38,6 +38,7 @@ const TenantDetails = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
+  const { renderActions } = useActions()
   const updateTenant = async () => {
     await dispatch(removeTenant(routeParams.id))
     setUpdateDetails(updateDetails + 1)
@@ -64,8 +65,8 @@ const TenantDetails = () => {
 
   let tenantObject = tenantsData[routeParams.id]
 
-  let tenantStatus = tenantObject?.products[0]?.actions
-    ? tenantObject?.products
+  let tenantStatus = tenantObject?.subscriptions[0]?.actions
+    ? tenantObject?.subscriptions
         ?.flatMap((item) => item?.actions?.map((action) => action))
         .filter(
           (obj, index, self) =>
@@ -73,7 +74,7 @@ const TenantDetails = () => {
         )
     : null
 
-  tenantObject?.products.map((item, index) => {
+  tenantObject?.subscriptions.map((item, index) => {
     if (firstLoad == 0 && item?.name == window.location.href.split('#')[1]) {
       dispatch(setActiveIndex(index + 1))
       firstLoad++
@@ -82,7 +83,7 @@ const TenantDetails = () => {
 
   useEffect(() => {
     ;(async () => {
-      if (!tenantsData[routeParams.id]?.products[0]?.status) {
+      if (!tenantsData[routeParams.id]?.subscriptions[0]?.status) {
         const tenantData = await getTenant(routeParams.id)
         dispatch(tenantInfo(tenantData.data.data))
       }
@@ -109,26 +110,13 @@ const TenantDetails = () => {
               <FormattedMessage id="Tenant-Details" />:{' '}
               {tenantObject.uniqueName}
             </h4>
-            <DynamicButtons
-              buttons={
-                tenantStatus && tenantStatus[0]?.status != 13
-                  ? [
-                      {
-                        order: 1,
-                        type: 'form',
-                        id: routeParams.id,
-                        label: 'Edit-Tenant',
-                        component: 'editTenant',
-                        updateTenant: updateTenant,
-                        icon: <AiFillEdit />,
-                      },
-                    ]
-                  : []
-              }
-            />
           </UpperContent>
         )}
-
+        {console.log(
+          tenantObject,
+          tenantStatus,
+          'tenantObject && tenantStatus'
+        )}
         {tenantObject && tenantStatus && (
           <div className="pageWrapper">
             <div className="tableSec">
@@ -142,6 +130,36 @@ const TenantDetails = () => {
                     }}
                   >
                     <TabPanel header={<FormattedMessage id="Details" />}>
+                      <div className="dynamicButtons">
+                        <DynamicButtons
+                          buttons={
+                            tenantStatus && tenantStatus[0]?.status != 13
+                              ? [
+                                  {
+                                    order: 1,
+                                    type: 'form',
+                                    id: routeParams.id,
+                                    label: 'Edit',
+                                    component: 'editTenant',
+                                    updateTenant: updateTenant,
+                                    icon: <AiFillEdit />,
+                                  },
+                                  ...renderActions(
+                                    tenantObject,
+                                    tenantStatus,
+                                    deleteConfirm,
+                                    chagneStatus
+                                  ),
+                                ]
+                              : renderActions(
+                                  tenantObject,
+                                  tenantStatus,
+                                  deleteConfirm,
+                                  chagneStatus
+                                )
+                          }
+                        />
+                      </div>
                       <Card border="light" className="shadow-sm border-0">
                         <Card.Body className="p-0">
                           <Table
@@ -166,13 +184,13 @@ const TenantDetails = () => {
                                   <FormattedMessage id="Products" />
                                 </td>
                                 <td>
-                                  {tenantObject.products.map(
-                                    (product, index) => (
+                                  {tenantObject.subscriptions.map(
+                                    (subscription, index) => (
                                       <span
                                         key={index}
                                         className="p-1 border-round border-1 border-400 me-2"
                                       >
-                                        {product?.name}
+                                        {subscription?.name}
                                       </span>
                                     )
                                   )}
@@ -201,29 +219,17 @@ const TenantDetails = () => {
                       </Card>
                       <div className="buttons">
                         <div className="action">
-                          {/* {tenantStatus && tenantStatus[0]?.status != 13 ? (
-                            <Button
-                              className="mr-3"
-                              label={<FormattedMessage id="Edit" />}
-                              icon="pi pi-pencil"
-                              onClick={() => setVisible(true)}
-                              style={{
-                                backgroundColor: 'var(--primary-color)',
-                                borderColor: 'var(--primary-color)',
-                              }}
-                            />
-                          ) : null} */}
-
-                          <Actions
+                          {/* <Actions
                             tenantData={tenantObject}
                             actions={tenantStatus}
                             deleteConfirm={deleteConfirm}
                             chagneStatus={chagneStatus}
-                          />
+                            setActionList={setActionList}
+                          /> */}
                         </div>
                       </div>
                     </TabPanel>
-                    {tenantObject.products.map((product, index) => (
+                    {tenantObject.subscriptions.map((product, index) => (
                       <TabPanel
                         header={product?.name.toUpperCase()}
                         key={index}
@@ -235,6 +241,7 @@ const TenantDetails = () => {
                           updateDetails={updateDetails}
                           updateTenant={updateTenant}
                           productIndex={index}
+                          tenantStatus={tenantStatus}
                         />
                       </TabPanel>
                     ))}

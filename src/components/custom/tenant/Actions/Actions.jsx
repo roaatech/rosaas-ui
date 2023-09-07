@@ -1,42 +1,42 @@
 import { Button } from 'primereact/button'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { statusConst } from '../../../../const'
 import { FormattedMessage } from 'react-intl'
+import { BsFillTrash3Fill } from 'react-icons/bs'
 
-const Actions = ({ tenantData, actions, deleteConfirm, chagneStatus }) => {
-  return (
-    <>
-      {actions && Actions[0]?.status == 13 ? (
-        <>
-          {tenantData && (
-            <Button
-              className="mr-3"
-              label={<FormattedMessage id="Delete" />}
-              icon="pi pi-trash"
-              onClick={() => deleteConfirm(tenantData.data.id)}
-              style={{
-                backgroundColor: 'var(--red)',
-                borderColor: 'var(--red)',
-              }}
-            />
-          )}
-        </>
-      ) : null}
-      {actions?.map((item, index) => (
-        <Button
-          key={index}
-          className="mr-3"
-          label={<FormattedMessage id={item.name} />}
-          icon={`pi ${statusConst[item.status].icon}`}
-          style={{
-            backgroundColor: statusConst[item.status].color,
-            borderColor: statusConst[item.status].color,
-          }}
-          onClick={() => chagneStatus(item.status)}
-        />
-      ))}
-    </>
-  )
+const useActions = () => {
+  const renderActions = (tenantData, actions, deleteConfirm, chagneStatus) => {
+    console.log({ actions })
+    let actionArray = []
+    if (actions) {
+      if (actions && actions[0]?.status == 13 && tenantData) {
+        actionArray = [
+          ...actionArray,
+          {
+            order: 1,
+            type: 'action',
+            label: 'Delete',
+            func: () => deleteConfirm(tenantData.data.id),
+            icon: <BsFillTrash3Fill />,
+          },
+        ]
+      }
+      actions?.map((item, index) => {
+        let button = {
+          type: 'action',
+          func: () => chagneStatus(item.status),
+          label: item.name,
+          icon: <i className={'pi ' + statusConst[item.status].icon}></i>,
+          order: 4,
+        }
+        actionArray = [...actionArray, button]
+      })
+      return actionArray
+    } else {
+      return []
+    }
+  }
+
+  return { renderActions }
 }
-
-export default Actions
+export default useActions

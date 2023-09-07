@@ -115,6 +115,7 @@ export default function Product({ children }) {
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
           setFirst={setFirst}
+          title={<FormattedMessage id="Product-List" />}
         >
           <ProductForm
             popupLabel={<FormattedMessage id="Create-Product" />}

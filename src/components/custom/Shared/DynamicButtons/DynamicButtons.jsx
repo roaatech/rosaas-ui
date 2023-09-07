@@ -19,6 +19,7 @@ import { Wrapper } from './DynamicButtons.styled'
 import FeatureForm from '../../Product/ProductFeaturesList/FeatureForm/FeatureForm'
 import FeaturePlanForm from '../../Product/ProductFeaturePlan/FeaturePlanForm/FeaturePlanForm'
 import PlanForm from '../../Product/ProductPlansList/PlanForm/PlanForm'
+import { useEffect } from 'react'
 
 const DynamicButtons = ({ buttons }) => {
   const navigate = useNavigate()
@@ -35,8 +36,22 @@ const DynamicButtons = ({ buttons }) => {
     navigate(buttons[currentButtonIndex].navAfterDelete)
   }
 
-  /****************************************** */
+  useEffect(() => {
+    ;(() => {
+      const checkMoreArray = buttons.map((button) => {
+        return button.order > 3
+      })
+      if (checkMoreArray.includes(true)) {
+        setMore(true)
+      } else {
+        setMore(false)
+      }
 
+      console.log(checkMoreArray)
+    })()
+  }, [buttons])
+
+  /****************************************** */
   const [visible, setVisible] = useState(false)
 
   const forms = {
@@ -112,69 +127,70 @@ const DynamicButtons = ({ buttons }) => {
 
   return (
     <Wrapper className="d-flex">
-      <div className="action">
+      <div
+        className="dynamicAction"
+        style={{ borderRadius: more == true ? '8px 0 0 8px' : '8px' }}
+      >
+        {/* {more.toString()} */}
         {buttons.map((button, index) => {
+          button.variant
+            ? (button.variant = button.variant)
+            : (button.variant = 'secondary')
           if (button.order <= 3) {
-            if (button.type == 'delete') {
+            if (button.type == 'action') {
               return (
-                <OverlayTrigger
-                  trigger={['hover']}
-                  overlay={
-                    <Tooltip>
-                      <FormattedMessage id={button.label} />
-                    </Tooltip>
-                  }
-                >
-                  <span>
-                    <Button
-                      key={index}
-                      onClick={() => {
-                        setConfirm(true)
-                        setCurrentButtonIndex(index)
-                      }}
-                    >
-                      {button.icon}
-                    </Button>
-                  </span>
-                </OverlayTrigger>
+                <span>
+                  <Button
+                    variant={button.variant}
+                    key={index}
+                    onClick={button.func}
+                  >
+                    {button.icon} <FormattedMessage id={button.label} />
+                  </Button>
+                </span>
+              )
+            } else if (button.type == 'delete') {
+              return (
+                <span>
+                  <Button
+                    key={index}
+                    onClick={() => {
+                      setConfirm(true)
+                      setCurrentButtonIndex(index)
+                    }}
+                  >
+                    {button.icon} <FormattedMessage id={button.label} />
+                  </Button>
+                </span>
               )
             } else if (button.type == 'form') {
               return (
-                <OverlayTrigger
-                  trigger={['hover']}
-                  overlay={
-                    <Tooltip>
-                      <FormattedMessage id={button.label} />
-                    </Tooltip>
-                  }
-                >
-                  <span>
-                    <Button
-                      key={index}
-                      onClick={() => {
-                        setVisible(true)
-                        setCurrentButtonIndex(index)
-                      }}
-                    >
-                      {button.icon}
-                    </Button>
-                  </span>
-                </OverlayTrigger>
+                <span>
+                  <Button
+                    variant={button.variant}
+                    key={index}
+                    onClick={() => {
+                      setVisible(true)
+                      setCurrentButtonIndex(index)
+                    }}
+                  >
+                    {button.icon} <FormattedMessage id={button.label} />
+                  </Button>
+                </span>
               )
             }
           } else {
-            if (!more) setMore(true)
+            // if (!more) setMore(true)
             return <></>
           }
         })}
       </div>
 
       {more && (
-        <div className="dropdown ml-2">
+        <div className="dropdown">
           <Dropdown>
-            <Dropdown.Toggle as={Button} variant="primary">
-              More
-              <span className="icon icon-small ms-1">
+            <Dropdown.Toggle as={Button} className="buttonMore">
+              <span className="icon icon-small">
                 <FontAwesomeIcon icon={faChevronDown} />
               </span>
             </Dropdown.Toggle>
@@ -211,6 +227,29 @@ const DynamicButtons = ({ buttons }) => {
                         </Dropdown.Item>
                       </>
                     )
+                  } else if (button.type == 'action') {
+                    if (button.label != 'Delete') {
+                      return (
+                        <>
+                          <Dropdown.Item key={index} onClick={button.func}>
+                            {button.icon} <FormattedMessage id={button.label} />
+                          </Dropdown.Item>
+                        </>
+                      )
+                    } else {
+                      return (
+                        <>
+                          <Dropdown.Divider />
+                          <Dropdown.Item
+                            key={index}
+                            onClick={button.func}
+                            className="redColor"
+                          >
+                            {button.icon} <FormattedMessage id={button.label} />
+                          </Dropdown.Item>
+                        </>
+                      )
+                    }
                   }
               })}
             </Dropdown.Menu>

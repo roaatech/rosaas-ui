@@ -25,9 +25,11 @@ const useRequest = () => {
   const getTenant = async (id) => {
     return await Request.get(`management/sadmin/v1/Tenants/${id}`)
   }
+
   const getTenantList = async (params) => {
     return await Request.get(`management/sadmin/v1/Tenants${params}`)
   }
+
   const getProductTenants = async (params) => {
     return await Request.get(`management/sadmin/v1/products/${params}`)
   }
@@ -116,6 +118,12 @@ const useRequest = () => {
     )
   }
 
+  const getProductPlanPrice = async (productId) => {
+    return await Request.get(
+      `management/sadmin/v1/Products/${productId}/PlanPrices`
+    )
+  }
+
   // settings
   const getHeathCheckSettings = async () => {
     return await Request.get(`management/sadmin/v1/Settings/HealthCheck`)
@@ -183,6 +191,7 @@ const useRequest = () => {
     createFeatureRequest,
     editFeatureRequest,
     deleteFeatureReq,
+    getProductPlanPrice,
   }
 }
 export default useRequest

@@ -26,6 +26,7 @@ import { useEffect } from 'react'
 import useRequest from '../../axios/apis/useRequest'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
+import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
 
 const Settings = () => {
   const [edit, setEdit] = useState(false)
@@ -86,31 +87,82 @@ const Settings = () => {
     },
   })
 
+  const handleSubmit = () => {
+    // Manually trigger the form submission
+    formik.handleSubmit()
+  }
   return (
     <>
       <BreadcrumbComponent breadcrumbInfo={'HealthCheck'} icon={BsGearFill} />
       <Wrapper>
         <Form onSubmit={formik.handleSubmit}>
           <UpperContent>
-            <Button
-              className={edit ? 'd-none' : ''}
-              variant="primary"
-              type="button"
-              onClick={() => {
-                setEdit(true)
-              }}
-            >
-              <AiFillEdit /> <FormattedMessage id="Edit" />
-            </Button>
+            <h4 className="m-0">
+              <FormattedMessage id="Settings" />
+            </h4>
+            {/* <div>
+              <Button
+                className={edit ? 'd-none' : ''}
+                variant="primary"
+                type="button"
+                onClick={() => {
+                  setEdit(true)
+                }}
+              >
+                <AiFillEdit /> <FormattedMessage id="Edit" />
+              </Button>
 
-            <span className={!edit ? 'd-none' : ''}>
-              <Button variant="primary" type="submit">
-                <AiFillSave /> <FormattedMessage id="Save-All" />
-              </Button>
-              <Button type="button" className="ml-2 cancel" onClick={cancel}>
-                <BsFillBackspaceFill /> <FormattedMessage id="Cancel" />
-              </Button>
-            </span>
+              <span className={!edit ? 'd-none' : ''}>
+                <Button
+                  variant="primary"
+                  type="button"
+                  onClick={formik.handleSubmit}
+                >
+                  <AiFillSave /> <FormattedMessage id="Save-All" />
+                </Button>
+                <Button type="button" className="ml-2 cancel" onClick={cancel}>
+                  <BsFillBackspaceFill /> <FormattedMessage id="Cancel" />
+                </Button>
+              </span>
+            </div> */}
+
+            <DynamicButtons
+              buttons={
+                edit
+                  ? [
+                      {
+                        order: 1,
+                        type: 'action',
+                        label: 'Save-All',
+                        func: formik.handleSubmit,
+                        variant: 'secondary',
+                        icon: <AiFillSave />,
+                      },
+                      {
+                        order: 1,
+                        type: 'action',
+                        label: 'Cancel',
+                        variant: 'primary',
+                        func: () => {
+                          cancel(true)
+                        },
+                        icon: <BsFillBackspaceFill />,
+                      },
+                    ]
+                  : [
+                      {
+                        order: 1,
+                        type: 'action',
+                        label: 'Edit',
+                        variant: 'secondary',
+                        func: () => {
+                          setEdit(true)
+                        },
+                        icon: <AiFillEdit />,
+                      },
+                    ]
+              }
+            />
           </UpperContent>
 
           <Card className="m-3 mt-0">

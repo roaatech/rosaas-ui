@@ -75,7 +75,7 @@ export const ProductFeaturesList = ({ productId }) => {
       name,
       description,
       type,
-      unit,
+      // unit,
       reset,
       id,
       createdDate,
@@ -83,7 +83,7 @@ export const ProductFeaturesList = ({ productId }) => {
     } = props
 
     const mappedType = featureTypeMap[type]
-    const mappedUnit = featureUnitMap[unit]
+    // const mappedUnit = featureUnitMap[unit]
     const mappedReset = featureResetMap[reset]
 
     return (
@@ -99,9 +99,9 @@ export const ProductFeaturesList = ({ productId }) => {
           <td>
             <span className={`fw-normal`}>{mappedType}</span>
           </td>
-          <td>
+          {/* <td>
             <span className="fw-normal">{mappedUnit}</span>
-          </td>
+          </td> */}
           <td>
             <span className="fw-normal">{mappedReset}</span>
           </td>
@@ -167,9 +167,9 @@ export const ProductFeaturesList = ({ productId }) => {
                   <th className="border-bottom">
                     <FormattedMessage id="Type" />
                   </th>
-                  <th className="border-bottom">
+                  {/* <th className="border-bottom">
                     <FormattedMessage id="Unit" />
-                  </th>
+                  </th> */}
                   <th className="border-bottom">
                     <FormattedMessage id="Reset" />
                   </th>

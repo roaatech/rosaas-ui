@@ -18,26 +18,10 @@ export const tenantsSlice = createSlice({
           allTenant[item.id] = { ...current(state.tenants) }[item.id]
         }
       })
-
+      console.log(action.payload, ' action.payload')
       state.tenants = allTenant
     },
     tenantInfo: (state, action) => {
-      // const currentTenants = { ...current(state.tenants) }
-
-      // const mergedObject = _.mergeWith(
-      //   {},
-      //   currentTenants[action.payload.id],
-      //   action.payload,
-      //   (objValue, srcValue) => {
-      //     if (_.isObject(objValue)) {
-      //       return _.merge({}, objValue, srcValue)
-      //     }
-      //   }
-      // )
-
-      // currentTenants[action.payload.id] = mergedObject
-      // state.tenants = currentTenants
-
       const currentTenants = { ...current(state.tenants) }
       currentTenants[action.payload.id] = action.payload
       state.tenants = currentTenants
@@ -49,9 +33,8 @@ export const tenantsSlice = createSlice({
         JSON.stringify(currentTenants[action.payload.tenantId])
       )
 
-      const data = current(state.tenants)[action.payload.tenantId].products[
-        action.payload.productIndex
-      ].history?.items
+      const data = current(state.tenants)[action.payload.tenantId]
+        .subscriptions[action.payload.productIndex].history?.items
 
       const listObject = data ? { ...data } : {}
 
@@ -59,7 +42,7 @@ export const tenantsSlice = createSlice({
         listObject[index + action.payload.from] = item
       })
 
-      tenant.products[parseInt(action.payload.productIndex)].history = {
+      tenant.subscriptions[parseInt(action.payload.productIndex)].history = {
         items: listObject,
         totalCount: action.payload.data.totalCount,
       }
