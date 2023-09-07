@@ -311,7 +311,7 @@ const FeaturePlanForm = ({
                     ? ''
                     : formik.values.unit
                 }
-                disabled={isFeatureBoolean(formik.values.feature)}
+                disabled={isFeatureBoolean(formik.values.feature) || show}
               >
                 <option value="">Select Unit</option>
                 {Object.entries(featureUnitMap).map(([value, label]) => (

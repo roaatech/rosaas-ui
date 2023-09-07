@@ -4,4 +4,7 @@ export const Wrapper = styled.div`
     max-width: 410px;
     white-space: normal;
   }
+  .planFeatureButton {
+    font-size: var(--defaultFont);
+  }
 `
