@@ -65,6 +65,7 @@ export default function ProductFeaturePlan({ children }) {
   }
 
   const editForm = async (id) => {
+    setShow(false)
     setPopUpLable('Edit-Feature-Plan')
     setType('edit')
     setCurrentId(id)
@@ -73,7 +74,8 @@ export default function ProductFeaturePlan({ children }) {
 
   const descriptionPop = async (id) => {
     setShow(true)
-    editForm(id)
+    setCurrentId(id)
+    setVisible(true)
     setPopUpLable('View-Details')
   }
 
@@ -119,7 +121,7 @@ export default function ProductFeaturePlan({ children }) {
         {Object.values(featuresObj).map((item, featureIndex) => (
           <tr>
             <td>
-              <span className="fw-normal">{item.name}</span>
+              <span className="fw-bolder">{item.name}</span>
             </td>
 
             {Object.keys(plansObj).map((planItem, planIndex) => (
@@ -131,7 +133,7 @@ export default function ProductFeaturePlan({ children }) {
                         as={Button}
                         split
                         variant="link"
-                        className="text-dark m-0 p-0"
+                        className="text-dark m-0 p-0 planFeatureButton"
                       >
                         {/* <span className="icon icon-sm">
                         <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
