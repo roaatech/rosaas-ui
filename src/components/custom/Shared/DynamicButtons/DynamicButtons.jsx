@@ -46,8 +46,6 @@ const DynamicButtons = ({ buttons }) => {
       } else {
         setMore(false)
       }
-
-      console.log(checkMoreArray)
     })()
   }, [buttons])
 
@@ -139,7 +137,7 @@ const DynamicButtons = ({ buttons }) => {
           if (button.order <= 3) {
             if (button.type == 'action') {
               return (
-                <span>
+                <span key={index}>
                   <Button
                     variant={button.variant}
                     key={index}
@@ -199,7 +197,7 @@ const DynamicButtons = ({ buttons }) => {
                 if (button.order > 3)
                   if (button.type == 'delete') {
                     return (
-                      <>
+                      <span key={index}>
                         <Dropdown.Divider />
                         <Dropdown.Item
                           className="redColor"
@@ -211,7 +209,7 @@ const DynamicButtons = ({ buttons }) => {
                         >
                           {button.icon} <FormattedMessage id={button.label} />
                         </Dropdown.Item>
-                      </>
+                      </span>
                     )
                   } else if (button.type == 'form') {
                     return (

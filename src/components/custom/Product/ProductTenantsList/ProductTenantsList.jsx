@@ -171,7 +171,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
           <tbody>
             {list?.subscribe?.length
               ? list?.subscribe?.map((t, index) => (
-                  <TableRow key={`index`} {...t} />
+                  <TableRow key={index} {...t} />
                 ))
               : null}
           </tbody>

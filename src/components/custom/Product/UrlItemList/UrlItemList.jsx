@@ -50,8 +50,8 @@ const UrlItemList = ({ data }) => {
     ])
   }, [data])
 
-  return UrlItemList.map((url) => (
-    <tr>
+  return UrlItemList.map((url, index) => (
+    <tr key={index}>
       <td className="fw-bold">
         {url.title}{' '}
         <span className="fw-normal">

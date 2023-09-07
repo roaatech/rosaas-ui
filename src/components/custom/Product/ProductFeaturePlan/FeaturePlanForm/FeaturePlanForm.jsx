@@ -50,7 +50,7 @@ const FeaturePlanForm = ({
   let allPlansArray = allPlans && Object.values(allPlans)
 
   const featureOptions = listFeatureData
-    ? allFeatureArray.map((item, index) => {
+    ? allFeatureArray.map((item) => {
         return {
           value: item.id,
           label: item.name,
@@ -59,7 +59,7 @@ const FeaturePlanForm = ({
       })
     : []
   const planOptions = allPlans
-    ? allPlansArray.map((item, index) => {
+    ? allPlansArray.map((item) => {
         return { value: item.id, label: item.name }
       })
     : []
@@ -86,7 +86,6 @@ const FeaturePlanForm = ({
     unit: FeaturePlanData ? FeaturePlanData?.unit : '',
     description: FeaturePlanData ? FeaturePlanData?.description : '',
   }
-  console.log(FeaturePlanData, 'FeaturePlanData')
   const validationSchema = Yup.object().shape({
     feature: Yup.string().required('Please select a feature'),
     plan: Yup.string().required('Please select a plan'),
