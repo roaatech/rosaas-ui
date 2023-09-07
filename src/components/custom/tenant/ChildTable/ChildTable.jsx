@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import { Card, Table } from '@themesberg/react-bootstrap'
 import { Wrapper } from './ChildTable.style'
@@ -8,9 +8,7 @@ import MetaDataAccordion from '../MetaDataAccordion/MetaDataAccordion'
 import Workflow from '../../Shared/Workflow/Workflow'
 import { Button } from 'primereact/button'
 import { FiRefreshCw } from 'react-icons/fi'
-import { useDispatch } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
-import Actions from '../Actions/Actions'
 import ReactJson from 'react-json-view'
 
 import Label from '../../Shared/label/Label'
@@ -20,20 +18,20 @@ import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
-
+import useActions from '../Actions/Actions'
 export default function ChildTable({
   productData,
   tenantId,
   updateDetails,
   updateTenant,
   productIndex,
-  tenantStatus,
+  tenantObject,
 }) {
+  const { renderActions } = useActions()
   const { editTenantStatus } = useRequest()
-  const dispatch = useDispatch()
-  const [actionList, setActionList] = useState([])
 
   const chagneStatus = async (actionStatus) => {
+    console.log({ actionStatus })
     await editTenantStatus({
       TenantId: tenantId,
       status: actionStatus,
@@ -68,7 +66,7 @@ export default function ChildTable({
       <div className="dynamicButtons">
         <DynamicButtons
           buttons={
-            tenantStatus && tenantStatus[0]?.status != 13
+            productData.actions && productData.actions[0]?.status != 13
               ? [
                   {
                     order: 1,
@@ -79,9 +77,13 @@ export default function ChildTable({
                     updateTenant: updateTenant,
                     icon: <AiFillEdit />,
                   },
-                  ...actionList,
+                  ...renderActions(
+                    tenantObject,
+                    productData.actions,
+                    chagneStatus
+                  ),
                 ]
-              : actionList
+              : renderActions(tenantObject, productData.actions, chagneStatus)
           }
         />
       </div>
@@ -146,16 +148,6 @@ export default function ChildTable({
               )}
             </tbody>
           </Table>
-
-          <div className="buttons">
-            <div className="action">
-              {/* <Actions
-                actions={productData.actions}
-                chagneStatus={chagneStatus}
-                setActionList={setActionList}
-              /> */}
-            </div>
-          </div>
         </div>
         <div className="content timeLine">
           <Card border="light" className="shadow-sm">
