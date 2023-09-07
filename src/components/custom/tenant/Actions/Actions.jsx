@@ -5,8 +5,9 @@ import { FormattedMessage } from 'react-intl'
 import { BsFillTrash3Fill } from 'react-icons/bs'
 
 const useActions = () => {
-  const renderActions = (tenantData, actions, deleteConfirm, chagneStatus) => {
-    console.log({ actions })
+  const renderActions = (tenantData, actions, chagneStatus, deleteConfirm) => {
+    console.log({ chagneStatus })
+    // console.log({ actions })
     let actionArray = []
     if (actions) {
       if (actions && actions[0]?.status == 13 && tenantData) {

@@ -147,15 +147,15 @@ const TenantDetails = () => {
                                   ...renderActions(
                                     tenantObject,
                                     tenantStatus,
-                                    deleteConfirm,
-                                    chagneStatus
+                                    chagneStatus,
+                                    deleteConfirm
                                   ),
                                 ]
                               : renderActions(
                                   tenantObject,
                                   tenantStatus,
-                                  deleteConfirm,
-                                  chagneStatus
+                                  chagneStatus,
+                                  deleteConfirm
                                 )
                           }
                         />
@@ -241,7 +241,6 @@ const TenantDetails = () => {
                           updateDetails={updateDetails}
                           updateTenant={updateTenant}
                           productIndex={index}
-                          tenantStatus={tenantStatus}
                         />
                       </TabPanel>
                     ))}
