@@ -153,7 +153,6 @@ export default (props = {}) => {
   const paramsID = useParams().id
 
   let allTenant = Object.values(tenantsData)
-  let allProducts = Object.values(productsData)
 
   const active = allTenant.filter(
     (item) => item.status == 4 || item.status == 7
@@ -169,7 +168,12 @@ export default (props = {}) => {
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
   const settingIsOpen = sidebarStatus([{ id: 'setting' }]) ? 'open' : 'close'
   const [searchResults, setSearchResults] = useState([])
+  const [allProducts, setAllProducts] = useState([])
 
+  useEffect(() => {
+    const productsArray = Object.values(productsData)
+    setAllProducts(productsArray)
+  }, [productsData])
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=SearchTerm`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
@@ -177,7 +181,6 @@ export default (props = {}) => {
       // if (Object.keys(tenantsData).length == 0) {
       const listData = await getTenantList(query)
       dispatch(setAllTenant(listData.data.data.items))
-      console.log(listData.data.data.items, 'listData.data.data.items')
       // }
     })()
   }, [first, searchValue, update, paramsID])
@@ -186,10 +189,14 @@ export default (props = {}) => {
     let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     ;(async () => {
-      const listData = await getProductList(query)
-      setSearchResults(listData.data.data.items)
+      if (searchValue === '' && allProducts.length > 0) {
+        setSearchResults(allProducts)
+      } else {
+        const listData = await getProductList(query)
+        setSearchResults(listData.data.data.items)
+      }
     })()
-  }, [searchValue])
+  }, [searchValue, allProducts])
 
   // useEffect(() => {
   //   let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
