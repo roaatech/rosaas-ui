@@ -148,7 +148,9 @@
   "Unit": "Unit",
   "Type": "Type",
   "Add-Feature": "Add Feature",
-  "Add-Feature-Plan": "Add Feature Plan",
+  "Plans-Prices": "Plans Prices",
+  "Add-Plan-Price": "Add Plan Price",
+  "Add-Plan-Feature": "Add Plan Feature ",
   "Edit-Feature-Plan": "Edit Feature Plan",
   "Edit-Feature": "Edit Feature"
 }

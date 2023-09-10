@@ -20,6 +20,7 @@ import FeatureForm from '../../Product/ProductFeaturesList/FeatureForm/FeatureFo
 import FeaturePlanForm from '../../Product/ProductFeaturePlan/FeaturePlanForm/FeaturePlanForm'
 import PlanForm from '../../Product/ProductPlansList/PlanForm/PlanForm'
 import { useEffect } from 'react'
+import PlanPriceForm from '../../Product/ProductPlansPrice/PlanPriceForm/PlanPriceForm'
 
 const DynamicButtons = ({ buttons }) => {
   const navigate = useNavigate()
@@ -88,7 +89,7 @@ const DynamicButtons = ({ buttons }) => {
     addFeaturePlan: () => (
       <>
         <FeaturePlanForm
-          popupLabel={<FormattedMessage id="Add-Feature-Plan" />}
+          popupLabel={<FormattedMessage id="Add-Plan-Feature" />}
           type={'create'}
           visible={visible}
           setVisible={setVisible}
@@ -101,6 +102,18 @@ const DynamicButtons = ({ buttons }) => {
       <>
         <PlanForm
           popupLabel={<FormattedMessage id="Add-Plan" />}
+          type={'create'}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+        />
+      </>
+    ),
+    addPlanPrice: () => (
+      <>
+        <PlanPriceForm
+          popupLabel={<FormattedMessage id="Add-Plan-Price" />}
           type={'create'}
           visible={visible}
           setVisible={setVisible}

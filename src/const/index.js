@@ -23,6 +23,12 @@ const HealthStatus = {
   },
 }
 
+const cycle = {
+  2: 'Week',
+  3: 'Month',
+  4: 'Year',
+}
+
 const urlIsOverridden = {
   true: { background: '#eee5ff', value: 'Yes' },
   false: { background: '#e1f0ff', value: 'No' },
@@ -255,4 +261,5 @@ export {
   featureTypeMap,
   featureUnitMap,
   featureResetMap,
+  cycle,
 }
