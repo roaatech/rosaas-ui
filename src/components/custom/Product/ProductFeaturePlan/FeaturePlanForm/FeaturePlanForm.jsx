@@ -14,7 +14,7 @@ import {
   setAllFeatures,
 } from '../../../../../store/slices/products.js'
 import { setAllPlans } from '../../../../../store/slices/products.js'
-import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx' // Import the missing component
 import { featureUnitMap } from '../../../../../const/index.js'
 
 const FeaturePlanForm = ({
@@ -25,6 +25,8 @@ const FeaturePlanForm = ({
   setActiveIndex,
   show,
   setShow,
+  plan,
+  feature,
 }) => {
   const routeParams = useParams()
   const productId = routeParams.id
@@ -80,12 +82,13 @@ const FeaturePlanForm = ({
   }, [])
 
   const initialValues = {
-    feature: FeaturePlanData ? FeaturePlanData?.feature?.id : '',
-    plan: FeaturePlanData ? FeaturePlanData?.plan?.id : '',
+    feature: feature || (FeaturePlanData ? FeaturePlanData?.feature?.id : ''),
+    plan: plan || (FeaturePlanData ? FeaturePlanData?.plan?.id : ''),
     limit: FeaturePlanData ? FeaturePlanData?.limit : '',
     unit: FeaturePlanData ? FeaturePlanData?.unit : '',
     description: FeaturePlanData ? FeaturePlanData?.description : '',
   }
+
   const validationSchema = Yup.object().shape({
     feature: Yup.string().required('Please select a feature'),
     plan: Yup.string().required('Please select a plan'),

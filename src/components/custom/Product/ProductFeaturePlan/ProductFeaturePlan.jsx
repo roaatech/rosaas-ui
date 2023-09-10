@@ -33,6 +33,8 @@ import InfoPopUp from '../../Shared/InfoPopUp/InfoPopUp'
 import { featureUnitMap } from '../../../../const'
 
 export default function ProductFeaturePlan({ children }) {
+  const [currentPlanId, setCurrentPlanId] = useState('')
+  const [currentFeatureId, setCurrentFeatureId] = useState('')
   const dispatch = useDispatch()
   const { getFeaturePlanList, deleteFeaturePlanReq } = useRequest()
   const [visible, setVisible] = useState(false)
@@ -107,12 +109,14 @@ export default function ProductFeaturePlan({ children }) {
   const generateTableData = list?.map((item) => {
     if (!plansObj[item.plan.id]) {
       plansObj[item.plan.id] = {
+        planId: item.plan.id,
         name: item.plan.name,
         index: Object.keys(plansObj).length,
       }
     }
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
+        featureId: item.feature.id,
         name: item.feature.name,
         type: item.feature.type,
         index: Object.keys(featuresObj).length,
@@ -197,9 +201,33 @@ export default function ProductFeaturePlan({ children }) {
                       </Dropdown.Menu>
                     </Dropdown>
                   ) : item.type == 2 ? (
-                    <FormattedMessage id="No" />
+                    <span
+                      className="clickable-text"
+                      onClick={() =>
+                        handleCreateFeaturePlan(
+                          item.featureId,
+                          plansObj[planItem].planId,
+                          item.name,
+                          plansObj[planItem].name
+                        )
+                      }
+                    >
+                      No
+                    </span>
                   ) : (
-                    'ــــ'
+                    <span
+                      className="clickable-text"
+                      onClick={() =>
+                        handleCreateFeaturePlan(
+                          item.featureId,
+                          plansObj[planItem].planId,
+                          item.name,
+                          plansObj[planItem].name
+                        )
+                      }
+                    >
+                      ــــ
+                    </span>
                   )}
                 </span>
               </td>
@@ -208,6 +236,19 @@ export default function ProductFeaturePlan({ children }) {
         ))}
       </>
     )
+  }
+
+  const handleCreateFeaturePlan = (
+    featureId,
+    planId,
+    featureName,
+    planName
+  ) => {
+    setCurrentPlanId(planId)
+    setCurrentFeatureId(featureId)
+    setVisible(true)
+    setPopUpLable('Add-Feature-Plan')
+    setType('create')
   }
 
   return (
@@ -223,7 +264,7 @@ export default function ProductFeaturePlan({ children }) {
                 <tr>
                   <th className="border-bottom"></th>
                   {Object.values(plansObj).map((item, index) => (
-                    <th key={index} className="border-bottom">
+                    <th className="border-bottom" key={index}>
                       {item.name}
                     </th>
                   ))}
@@ -255,6 +296,8 @@ export default function ProductFeaturePlan({ children }) {
           setVisible={setVisible}
           show={show}
           setShow={setShow}
+          plan={currentPlanId}
+          feature={currentFeatureId}
         />
       </ThemeDialog>
       {/* <ThemeDialog visible={InfoVisible} setVisible={setInfoVisible}>
