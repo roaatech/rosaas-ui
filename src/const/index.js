@@ -22,6 +22,20 @@ const HealthStatus = {
     icon: <BsFillExclamationCircleFill />,
   },
 }
+const PublishStatus = {
+  true: {
+    background: '#eff9f6',
+    value: <FormattedMessage id="Published" />,
+    color: '#00a675',
+    icon: <BsFillCheckCircleFill />,
+  },
+  false: {
+    background: '#f5e8e4',
+    value: <FormattedMessage id="Unpublished" />,
+    color: '#d26b4e',
+    icon: <BsFillExclamationCircleFill />,
+  },
+}
 
 const urlIsOverridden = {
   true: { background: '#eee5ff', value: 'Yes' },
@@ -255,4 +269,5 @@ export {
   featureTypeMap,
   featureUnitMap,
   featureResetMap,
+  PublishStatus,
 }
