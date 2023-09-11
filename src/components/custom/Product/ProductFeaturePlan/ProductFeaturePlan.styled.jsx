@@ -7,4 +7,7 @@ export const Wrapper = styled.div`
   .planFeatureButton {
     font-size: var(--defaultFont);
   }
+  .clickable-text {
+    cursor: pointer;
+  }
 `

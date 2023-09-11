@@ -105,6 +105,12 @@ const useRequest = () => {
       data
     )
   }
+  const publishPlan = async (productId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/Products/${productId}/Plans/${data.id}/publish`,
+      data
+    )
+  }
   const editPlanRequest = async (productId, data) => {
     return await Request.put(
       `management/sadmin/v1/Products/${productId}/Plans/${data.id}`,
@@ -223,6 +229,7 @@ const useRequest = () => {
     createPlanPriceRequest,
     editPlanPriceRequest,
     deletePlanPriceReq,
+    publishPlan,
   }
 }
 export default useRequest

@@ -5,6 +5,10 @@ import {
   faEllipsisH,
   faTrashAlt,
   faNewspaper,
+  faCheckCircle,
+  faTimesCircle,
+  faCheck,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   Card,
@@ -23,8 +27,11 @@ import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmati
 import { BsCardHeading } from 'react-icons/bs'
 
 import {
+  PlanInfo,
   deleteFeaturePlan,
+  featurePlanInfo,
   setAllFeaturePlan,
+  setAllPlans,
 } from '../../../../store/slices/products'
 import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
@@ -36,7 +43,7 @@ export default function ProductFeaturePlan({ children }) {
   const [currentPlanId, setCurrentPlanId] = useState('')
   const [currentFeatureId, setCurrentFeatureId] = useState('')
   const dispatch = useDispatch()
-  const { getFeaturePlanList, deleteFeaturePlanReq } = useRequest()
+  const { getFeaturePlanList, deleteFeaturePlanReq, publishPlan } = useRequest()
   const [visible, setVisible] = useState(false)
   const [InfoVisible, setInfoVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
@@ -106,11 +113,14 @@ export default function ProductFeaturePlan({ children }) {
   const plansObj = {}
   const featuresObj = {}
   const tableData = {}
+
   const generateTableData = list?.map((item) => {
     if (!plansObj[item.plan.id]) {
       plansObj[item.plan.id] = {
+        featurePlanId: item.id,
         planId: item.plan.id,
         name: item.plan.name,
+        isPublished: item.plan.isPublished,
         index: Object.keys(plansObj).length,
       }
     }
@@ -237,6 +247,42 @@ export default function ProductFeaturePlan({ children }) {
       </>
     )
   }
+  const togglePublishPlan = async (id, featurePlanId, isPublished) => {
+    try {
+      const response = await publishPlan(productId, {
+        id,
+        isPublished: !isPublished,
+      })
+      console.log(featurePlanId)
+      if (response.status === 200) {
+        const updatedPlans = Object.values(plansObj).map((plan) => {
+          if (plan.id === id) {
+            return { ...plan, isPublished: !isPublished }
+          }
+          return plan
+        })
+
+        console.log('Updated Plans:', updatedPlans)
+
+        const newIsPublishedValue = !isPublished
+
+        // dispatch(
+        //   featurePlanInfo({
+        //     productId,
+        //     data: {
+        //       id: featurePlanId,
+        //       plan: {
+        //         id: id,
+        //         isPublished: newIsPublishedValue,
+        //       },
+        //     },
+        //   })
+        // )
+      }
+    } catch (error) {
+      console.error('Error toggling publish status:', error)
+    }
+  }
 
   const handleCreateFeaturePlan = (
     featureId,
@@ -264,12 +310,34 @@ export default function ProductFeaturePlan({ children }) {
                 <tr>
                   <th className="border-bottom"></th>
                   {Object.values(plansObj).map((item, index) => (
-                    <th className="border-bottom" key={index}>
+                    <th
+                      className="border-bottom clickable-icon"
+                      key={index}
+                      onClick={() =>
+                        togglePublishPlan(
+                          item.planId,
+                          item.featurePlanId,
+                          item.isPublished
+                        )
+                      }
+                    >
+                      {item.isPublished ? (
+                        <FontAwesomeIcon
+                          icon={faCheckCircle}
+                          className="text-success me-2"
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={faTimesCircle}
+                          className="text-danger me-2"
+                        />
+                      )}
                       {item.name}
                     </th>
                   ))}
                 </tr>
               </thead>
+
               <tbody>
                 <TableRow />
               </tbody>
