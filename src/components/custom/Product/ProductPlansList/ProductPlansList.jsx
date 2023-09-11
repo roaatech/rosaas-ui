@@ -51,7 +51,7 @@ export const ProductPlansList = ({ productId }) => {
 
   const handleDeletePlan = async () => {
     if (list?.plans[currentId]?.isSubscribed) {
-      toast.error('Cannot delete a published plan.', {
+      toast.error('Cannot delete a subscribed plan.', {
         position: toast.POSITION.TOP_CENTER,
       })
       return
@@ -67,7 +67,7 @@ export const ProductPlansList = ({ productId }) => {
 
   const editForm = async (id) => {
     if (list?.plans[id]?.isSubscribed) {
-      toast.error('Cannot edit a published plan.', {
+      toast.error('Cannot edit a subscribed plan.', {
         position: toast.POSITION.TOP_CENTER,
       })
       return

@@ -264,23 +264,20 @@ export default function ProductFeaturePlan({ children }) {
 
         console.log('Updated Plans:', updatedPlans)
 
-        // dispatch(setAllPlans({ productId, data: updatedPlans }))
-
-        // Replace with your actual feature plan ID and the new isPublished value
         const newIsPublishedValue = !isPublished
 
-        dispatch(
-          featurePlanInfo({
-            productId,
-            data: {
-              id: featurePlanId,
-              plan: {
-                id: id,
-                isPublished: newIsPublishedValue,
-              },
-            },
-          })
-        )
+        // dispatch(
+        //   featurePlanInfo({
+        //     productId,
+        //     data: {
+        //       id: featurePlanId,
+        //       plan: {
+        //         id: id,
+        //         isPublished: newIsPublishedValue,
+        //       },
+        //     },
+        //   })
+        // )
       }
     } catch (error) {
       console.error('Error toggling publish status:', error)
