@@ -5,6 +5,10 @@ import {
   faEllipsisH,
   faTrashAlt,
   faNewspaper,
+  faCheckCircle,
+  faTimesCircle,
+  faCheck,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   Card,
@@ -13,6 +17,12 @@ import {
   Dropdown,
   Table,
 } from '@themesberg/react-bootstrap'
+
+import {
+  MdOutlineUnpublished,
+  MdOutlinePublishedWithChanges,
+} from 'react-icons/md'
+
 import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
 import { useParams } from 'react-router-dom'
@@ -23,8 +33,12 @@ import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmati
 import { BsCardHeading } from 'react-icons/bs'
 
 import {
+  PlanInfo,
+  PlansChangeAttr,
   deleteFeaturePlan,
+  featurePlanInfo,
   setAllFeaturePlan,
+  setAllPlans,
 } from '../../../../store/slices/products'
 import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
@@ -36,7 +50,12 @@ export default function ProductFeaturePlan({ children }) {
   const [currentPlanId, setCurrentPlanId] = useState('')
   const [currentFeatureId, setCurrentFeatureId] = useState('')
   const dispatch = useDispatch()
-  const { getFeaturePlanList, deleteFeaturePlanReq } = useRequest()
+  const {
+    getFeaturePlanList,
+    deleteFeaturePlanReq,
+    publishPlan,
+    getProductPlans,
+  } = useRequest()
   const [visible, setVisible] = useState(false)
   const [InfoVisible, setInfoVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
@@ -49,6 +68,9 @@ export default function ProductFeaturePlan({ children }) {
   const productId = routeParams.id
   const listDataStore = useSelector(
     (state) => state.products.products[productId]?.featurePlan
+  )
+  const planList = useSelector(
+    (state) => state.products.products[productId]?.plans
   )
   console.log({ listDataStore })
   // delete default key from list
@@ -92,11 +114,19 @@ export default function ProductFeaturePlan({ children }) {
       console.log({ list })
       if (!list || list.length == 0) {
         const FeaturePlanData = await getFeaturePlanList(productId)
-        console.log({ FeaturePlanData })
         dispatch(
           setAllFeaturePlan({
             productId: productId,
             data: FeaturePlanData.data.data,
+          })
+        )
+      }
+      if (!planList || planList.length == 0) {
+        const AllPlanData = await getProductPlans(productId)
+        dispatch(
+          setAllPlans({
+            productId: productId,
+            data: AllPlanData.data.data,
           })
         )
       }
@@ -106,11 +136,14 @@ export default function ProductFeaturePlan({ children }) {
   const plansObj = {}
   const featuresObj = {}
   const tableData = {}
+
   const generateTableData = list?.map((item) => {
     if (!plansObj[item.plan.id]) {
       plansObj[item.plan.id] = {
+        featurePlanId: item.id,
         planId: item.plan.id,
         name: item.plan.name,
+        isPublished: planList[item.plan.id]?.isPublished,
         index: Object.keys(plansObj).length,
       }
     }
@@ -238,6 +271,30 @@ export default function ProductFeaturePlan({ children }) {
     )
   }
 
+  const togglePublishPlan = async (id, isPublished) => {
+    await publishPlan(productId, {
+      id,
+      isPublished: !isPublished,
+    })
+
+    console.log({ plansObj })
+    console.log({ list })
+    console.log({
+      productId,
+      planId: id,
+      attr: 'isPublished',
+      value: !isPublished,
+    })
+    dispatch(
+      PlansChangeAttr({
+        productId,
+        planId: id,
+        attr: 'isPublished',
+        value: !isPublished,
+      })
+    )
+  }
+
   const handleCreateFeaturePlan = (
     featureId,
     planId,
@@ -264,12 +321,28 @@ export default function ProductFeaturePlan({ children }) {
                 <tr>
                   <th className="border-bottom"></th>
                   {Object.values(plansObj).map((item, index) => (
-                    <th className="border-bottom" key={index}>
+                    <th
+                      className="border-bottom clickable-icon"
+                      key={index}
+                      onClick={() =>
+                        togglePublishPlan(item.planId, item.isPublished)
+                      }
+                    >
+                      {item.isPublished ? (
+                        <span className="label green">
+                          <MdOutlinePublishedWithChanges />
+                        </span>
+                      ) : (
+                        <span className="label red">
+                          <MdOutlineUnpublished />
+                        </span>
+                      )}
                       {item.name}
                     </th>
                   ))}
                 </tr>
               </thead>
+
               <tbody>
                 <TableRow />
               </tbody>

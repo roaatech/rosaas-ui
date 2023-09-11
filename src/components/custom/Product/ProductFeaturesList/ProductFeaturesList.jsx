@@ -32,6 +32,7 @@ import {
   featureUnitMap,
 } from '../../../../const'
 import { Wrapper } from './ProductFeaturesList.styled'
+import { toast } from 'react-toastify'
 
 export const ProductFeaturesList = ({ productId }) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
@@ -45,6 +46,12 @@ export const ProductFeaturesList = ({ productId }) => {
   const [popUpLable, setPopUpLable] = useState('')
 
   const handleDeleteFeature = async () => {
+    if (list?.features[currentId]?.isSubscribed) {
+      toast.error('Cannot delete a subscribed feature.', {
+        position: toast.POSITION.TOP_CENTER,
+      })
+      return
+    }
     await deleteFeatureReq(productId, { id: currentId })
     dispatch(deleteFeature({ productId, FeatureId: currentId }))
   }
@@ -55,6 +62,12 @@ export const ProductFeaturesList = ({ productId }) => {
   }
 
   const editForm = async (id) => {
+    if (list?.features[id]?.isSubscribed) {
+      toast.error('Cannot edit a subscribed feature.', {
+        position: toast.POSITION.TOP_CENTER,
+      })
+      return
+    }
     setPopUpLable('Edit-Feature')
     setType('edit')
     setCurrentId(id)

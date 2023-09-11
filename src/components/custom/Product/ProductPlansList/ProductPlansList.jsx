@@ -11,11 +11,17 @@ import {
 } from '@themesberg/react-bootstrap'
 import TableDate from '../../Shared/TableDate/TableDate'
 import { useDispatch, useSelector } from 'react-redux'
-import { deletePlan, setAllPlans } from '../../../../store/slices/products'
-import { FormattedMessage } from 'react-intl'
+import {
+  PlansChangeAttr,
+  deletePlan,
+  setAllPlans,
+} from '../../../../store/slices/products'
+import { FormattedMessage, useIntl } from 'react-intl'
 import {
   faEdit,
   faEllipsisH,
+  faToggleOff,
+  faToggleOn,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -24,9 +30,20 @@ import PlanForm from './PlanForm/PlanForm'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { Wrapper } from './ProductPlansList.styled'
+import { toast } from 'react-toastify'
+import {
+  BsCheck,
+  BsFillBagCheckFill,
+  BsFillBagDashFill,
+  BsFillCheckCircleFill,
+  BsFillXCircleFill,
+  BsShare,
+} from 'react-icons/bs'
+import Label from '../../Shared/label/Label'
+import { PublishStatus } from '../../../../const'
 
 export const ProductPlansList = ({ productId }) => {
-  const { getProductPlans, deletePlanReq } = useRequest()
+  const { getProductPlans, deletePlanReq, publishPlan } = useRequest()
   const [update, setUpdate] = useState(1)
   const dispatch = useDispatch()
   const list = useSelector((state) => state.products.products[productId])
@@ -35,8 +52,17 @@ export const ProductPlansList = ({ productId }) => {
   const [visible, setVisible] = useState(false)
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
-
+  const intl = useIntl()
   const handleDeletePlan = async () => {
+    if (list?.plans[currentId]?.isSubscribed) {
+      toast.error(
+        intl.formatMessage({ id: 'Cannot-delete-a-subscribed-plan.' }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+      return
+    }
     await deletePlanReq(productId, { id: currentId })
     dispatch(deletePlan({ productId, PlanId: currentId }))
   }
@@ -47,6 +73,15 @@ export const ProductPlansList = ({ productId }) => {
   }
 
   const editForm = async (id) => {
+    if (list?.plans[id]?.isSubscribed) {
+      toast.error(
+        intl.formatMessage({ id: 'Cannot-edit-a-subscribed-plan.' }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+      return
+    }
     setPopUpLable('Edit-Plan')
     setType('edit')
     setCurrentId(id)
@@ -58,13 +93,38 @@ export const ProductPlansList = ({ productId }) => {
       if (!list?.plans) {
         const listData = await getProductPlans(productId)
         dispatch(setAllPlans({ productId, data: listData.data.data }))
+        console.log({ plans: list.plans })
       }
     })()
   }, [])
 
+  const togglePublishPlan = async (id, isPublished) => {
+    await publishPlan(productId, {
+      id,
+      isPublished: !isPublished,
+    })
+
+    dispatch(
+      PlansChangeAttr({
+        productId,
+        planId: id,
+        attr: 'isPublished',
+        value: !isPublished,
+      })
+    )
+  }
+
   const TableRow = (props) => {
-    const { name, description, id, displayOrder, createdDate, editedDate } =
-      props
+    const {
+      name,
+      description,
+      id,
+      displayOrder,
+      createdDate,
+      isPublished,
+      editedDate,
+    } = props
+    const publishStatus = isPublished ? true : false
 
     return (
       <>
@@ -72,6 +132,12 @@ export const ProductPlansList = ({ productId }) => {
           <td>
             <span className="fw-normal">{name}</span>
           </td>
+          <td>
+            <span>
+              <Label {...PublishStatus[publishStatus]} />
+            </span>
+          </td>
+
           <td className="description">
             <DescriptionCell data={{ description }} />
           </td>
@@ -85,6 +151,7 @@ export const ProductPlansList = ({ productId }) => {
               <TableDate createdDate={createdDate} editedDate={editedDate} />
             </span>
           </td>
+
           <td>
             <Dropdown as={ButtonGroup}>
               <Dropdown.Toggle
@@ -105,6 +172,21 @@ export const ProductPlansList = ({ productId }) => {
                 >
                   <FontAwesomeIcon icon={faEdit} className="me-2" />
                   <FormattedMessage id="Edit" />
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => togglePublishPlan(id, isPublished)}
+                >
+                  {isPublished ? (
+                    <span className="text-danger ">
+                      <BsFillXCircleFill className="me-2" />
+                      Unpublish
+                    </span>
+                  ) : (
+                    <span className="text-success">
+                      <BsFillCheckCircleFill className="me-2" />
+                      Publish
+                    </span>
+                  )}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => deleteConfirm(id)}
@@ -136,9 +218,11 @@ export const ProductPlansList = ({ productId }) => {
                     <FormattedMessage id="Name" />
                   </th>
                   <th className="border-bottom">
+                    <FormattedMessage id="Status" />
+                  </th>
+                  <th className="border-bottom">
                     <FormattedMessage id="Description" />
                   </th>
-
                   <th className="border-bottom">
                     <FormattedMessage id="Display-Order" />
                   </th>

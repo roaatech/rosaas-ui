@@ -7,4 +7,19 @@ export const Wrapper = styled.div`
   .planFeatureButton {
     font-size: var(--defaultFont);
   }
+  .clickable-text,
+  .clickable-icon {
+    cursor: pointer;
+  }
+
+  span.label {
+    font-size: var(--normalFont);
+    margin-right: 0.25rem;
+  }
+  .green {
+    color: var(--green);
+  }
+  .red {
+    color: var(--red);
+  }
 `

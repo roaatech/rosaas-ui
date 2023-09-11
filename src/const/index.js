@@ -3,7 +3,10 @@ import {
   BsFillCheckCircleFill,
   BsFillExclamationCircleFill,
 } from 'react-icons/bs'
-
+import {
+  MdOutlineUnpublished,
+  MdOutlinePublishedWithChanges,
+} from 'react-icons/md'
 const Product_id = '88e67328-3b20-413e-b6e1-010b48fa7bc9'
 const Product_Client_id = '88283b02-e969-485a-a5a3-9e5d1d0d3337'
 const Client_id = 'spa_rosas_admin_panel'
@@ -20,6 +23,20 @@ const HealthStatus = {
     value: <FormattedMessage id="Unavailable" />,
     color: '#d26b4e',
     icon: <BsFillExclamationCircleFill />,
+  },
+}
+const PublishStatus = {
+  true: {
+    background: '#eff9f6',
+    value: <FormattedMessage id="Published" />,
+    color: '#00a675',
+    icon: <MdOutlinePublishedWithChanges />,
+  },
+  false: {
+    background: '#f5e8e4',
+    value: <FormattedMessage id="Unpublished" />,
+    color: '#d26b4e',
+    icon: <MdOutlineUnpublished />,
   },
 }
 
@@ -262,4 +279,5 @@ export {
   featureUnitMap,
   featureResetMap,
   cycle,
+  PublishStatus,
 }
