@@ -142,6 +142,55 @@ export const productsSlice = createSlice({
       delete allProduct[action.payload.productId].plans[action.payload.PlanId]
       state.products = allProduct
     },
+    // planPrice
+
+    setAllPlansPrice: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+      const allPlansPrice = {}
+      action.payload.data.map((item) => {
+        allPlansPrice[item.id] = item
+      })
+      allProduct[action.payload.productId].plansPrice = allPlansPrice
+      state.products = allProduct
+    },
+    PlansPriceInfo: (state, action) => {
+      const { productId, planPriceId, data } = action.payload
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
+
+      if (!currentProducts[productId].plansPrice) {
+        currentProducts[productId].plansPrice = {}
+      }
+      if (currentProducts[productId].plansPrice[planPriceId]) {
+        currentProducts[productId].plansPrice[planPriceId] = data
+      } else {
+        // for sort new in the top
+        currentProducts[productId].plansPrice = {
+          [planPriceId]: data,
+          ...currentProducts[productId].plansPrice,
+        }
+      }
+      state.products = currentProducts
+    },
+    PlansPricePublished: (state, action) => {
+      const { productId, planPriceId, status } = action.payload
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
+
+      currentProducts[productId].plansPrice[planPriceId].isPublished = status
+
+      state.products = currentProducts
+    },
+
+    deletePlanPrice: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+      delete allProduct[action.payload.productId].plansPrice[
+        action.payload.PlanPriceId
+      ]
+      state.products = allProduct
+    },
 
     // featurePlan
 
@@ -195,5 +244,9 @@ export const {
   setAllFeatures,
   PlanInfo,
   deletePlan,
+  setAllPlansPrice,
+  PlansPriceInfo,
+  deletePlanPrice,
+  PlansPricePublished,
 } = productsSlice.actions
 export default productsSlice.reducer
