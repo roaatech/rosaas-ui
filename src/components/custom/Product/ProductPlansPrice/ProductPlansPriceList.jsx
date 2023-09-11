@@ -21,7 +21,6 @@ import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmati
 
 import {
   PlansPriceChangeAttr,
-  PlansPricePublished,
   deletePlanPrice,
   setAllPlans,
   setAllPlansPrice,

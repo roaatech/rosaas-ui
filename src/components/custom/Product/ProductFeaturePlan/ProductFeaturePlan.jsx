@@ -17,6 +17,12 @@ import {
   Dropdown,
   Table,
 } from '@themesberg/react-bootstrap'
+
+import {
+  MdOutlineUnpublished,
+  MdOutlinePublishedWithChanges,
+} from 'react-icons/md'
+
 import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
 import { useParams } from 'react-router-dom'
@@ -28,6 +34,7 @@ import { BsCardHeading } from 'react-icons/bs'
 
 import {
   PlanInfo,
+  PlansChangeAttr,
   deleteFeaturePlan,
   featurePlanInfo,
   setAllFeaturePlan,
@@ -43,7 +50,12 @@ export default function ProductFeaturePlan({ children }) {
   const [currentPlanId, setCurrentPlanId] = useState('')
   const [currentFeatureId, setCurrentFeatureId] = useState('')
   const dispatch = useDispatch()
-  const { getFeaturePlanList, deleteFeaturePlanReq, publishPlan } = useRequest()
+  const {
+    getFeaturePlanList,
+    deleteFeaturePlanReq,
+    publishPlan,
+    getProductPlans,
+  } = useRequest()
   const [visible, setVisible] = useState(false)
   const [InfoVisible, setInfoVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
@@ -56,6 +68,9 @@ export default function ProductFeaturePlan({ children }) {
   const productId = routeParams.id
   const listDataStore = useSelector(
     (state) => state.products.products[productId]?.featurePlan
+  )
+  const planList = useSelector(
+    (state) => state.products.products[productId]?.plans
   )
   console.log({ listDataStore })
   // delete default key from list
@@ -99,11 +114,19 @@ export default function ProductFeaturePlan({ children }) {
       console.log({ list })
       if (!list || list.length == 0) {
         const FeaturePlanData = await getFeaturePlanList(productId)
-        console.log({ FeaturePlanData })
         dispatch(
           setAllFeaturePlan({
             productId: productId,
             data: FeaturePlanData.data.data,
+          })
+        )
+      }
+      if (!planList || planList.length == 0) {
+        const AllPlanData = await getProductPlans(productId)
+        dispatch(
+          setAllPlans({
+            productId: productId,
+            data: AllPlanData.data.data,
           })
         )
       }
@@ -120,7 +143,7 @@ export default function ProductFeaturePlan({ children }) {
         featurePlanId: item.id,
         planId: item.plan.id,
         name: item.plan.name,
-        isPublished: item.plan.isPublished,
+        isPublished: planList[item.plan.id]?.isPublished,
         index: Object.keys(plansObj).length,
       }
     }
@@ -247,41 +270,29 @@ export default function ProductFeaturePlan({ children }) {
       </>
     )
   }
-  const togglePublishPlan = async (id, featurePlanId, isPublished) => {
-    try {
-      const response = await publishPlan(productId, {
-        id,
-        isPublished: !isPublished,
+
+  const togglePublishPlan = async (id, isPublished) => {
+    await publishPlan(productId, {
+      id,
+      isPublished: !isPublished,
+    })
+
+    console.log({ plansObj })
+    console.log({ list })
+    console.log({
+      productId,
+      planId: id,
+      attr: 'isPublished',
+      value: !isPublished,
+    })
+    dispatch(
+      PlansChangeAttr({
+        productId,
+        planId: id,
+        attr: 'isPublished',
+        value: !isPublished,
       })
-      console.log(featurePlanId)
-      if (response.status === 200) {
-        const updatedPlans = Object.values(plansObj).map((plan) => {
-          if (plan.id === id) {
-            return { ...plan, isPublished: !isPublished }
-          }
-          return plan
-        })
-
-        console.log('Updated Plans:', updatedPlans)
-
-        const newIsPublishedValue = !isPublished
-
-        // dispatch(
-        //   featurePlanInfo({
-        //     productId,
-        //     data: {
-        //       id: featurePlanId,
-        //       plan: {
-        //         id: id,
-        //         isPublished: newIsPublishedValue,
-        //       },
-        //     },
-        //   })
-        // )
-      }
-    } catch (error) {
-      console.error('Error toggling publish status:', error)
-    }
+    )
   }
 
   const handleCreateFeaturePlan = (
@@ -314,23 +325,17 @@ export default function ProductFeaturePlan({ children }) {
                       className="border-bottom clickable-icon"
                       key={index}
                       onClick={() =>
-                        togglePublishPlan(
-                          item.planId,
-                          item.featurePlanId,
-                          item.isPublished
-                        )
+                        togglePublishPlan(item.planId, item.isPublished)
                       }
                     >
                       {item.isPublished ? (
-                        <FontAwesomeIcon
-                          icon={faCheckCircle}
-                          className="text-success me-2"
-                        />
+                        <span className="label green">
+                          <MdOutlinePublishedWithChanges />
+                        </span>
                       ) : (
-                        <FontAwesomeIcon
-                          icon={faTimesCircle}
-                          className="text-danger me-2"
-                        />
+                        <span className="label red">
+                          <MdOutlineUnpublished />
+                        </span>
                       )}
                       {item.name}
                     </th>

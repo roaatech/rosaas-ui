@@ -137,6 +137,15 @@ export const productsSlice = createSlice({
       state.products = currentProducts
     },
 
+    PlansChangeAttr: (state, action) => {
+      const { productId, planId, attr, value } = action.payload
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
+      currentProducts[productId].plans[planId][attr] = value
+      state.products = currentProducts
+    },
+
     deletePlan: (state, action) => {
       const allProduct = JSON.parse(JSON.stringify(current(state.products)))
       delete allProduct[action.payload.productId].plans[action.payload.PlanId]
@@ -273,6 +282,7 @@ export const {
   PlansPriceInfo,
   deletePlanPrice,
   PlansPriceChangeAttr,
+  PlansChangeAttr,
   deleteAllPlan,
   deleteAllPlanPrice,
   PlansPublished,

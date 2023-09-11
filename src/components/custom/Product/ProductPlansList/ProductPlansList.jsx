@@ -11,8 +11,12 @@ import {
 } from '@themesberg/react-bootstrap'
 import TableDate from '../../Shared/TableDate/TableDate'
 import { useDispatch, useSelector } from 'react-redux'
-import { deletePlan, setAllPlans } from '../../../../store/slices/products'
-import { FormattedMessage } from 'react-intl'
+import {
+  PlansChangeAttr,
+  deletePlan,
+  setAllPlans,
+} from '../../../../store/slices/products'
+import { FormattedMessage, useIntl } from 'react-intl'
 import {
   faEdit,
   faEllipsisH,
@@ -48,12 +52,15 @@ export const ProductPlansList = ({ productId }) => {
   const [visible, setVisible] = useState(false)
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
-
+  const intl = useIntl()
   const handleDeletePlan = async () => {
     if (list?.plans[currentId]?.isSubscribed) {
-      toast.error('Cannot delete a subscribed plan.', {
-        position: toast.POSITION.TOP_CENTER,
-      })
+      toast.error(
+        intl.formatMessage({ id: 'Cannot-delete-a-subscribed-plan.' }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
       return
     }
     await deletePlanReq(productId, { id: currentId })
@@ -67,9 +74,12 @@ export const ProductPlansList = ({ productId }) => {
 
   const editForm = async (id) => {
     if (list?.plans[id]?.isSubscribed) {
-      toast.error('Cannot edit a subscribed plan.', {
-        position: toast.POSITION.TOP_CENTER,
-      })
+      toast.error(
+        intl.formatMessage({ id: 'Cannot-edit-a-subscribed-plan.' }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
       return
     }
     setPopUpLable('Edit-Plan')
@@ -87,38 +97,21 @@ export const ProductPlansList = ({ productId }) => {
       }
     })()
   }, [])
-  const [planList, setPlanList] = useState(null) // Updated variable name
 
   const togglePublishPlan = async (id, isPublished) => {
-    try {
-      if (!list || !list.plans) {
-        console.error('list or list.plans is undefined or null')
-        return // Exit the function gracefully
-      }
+    await publishPlan(productId, {
+      id,
+      isPublished: !isPublished,
+    })
 
-      const response = await publishPlan(productId, {
-        id,
-        isPublished: !isPublished,
+    dispatch(
+      PlansChangeAttr({
+        productId,
+        planId: id,
+        attr: 'isPublished',
+        value: !isPublished,
       })
-
-      if (response.status === 200) {
-        const updatedPlans = Object.values(list.plans).map((plan) => {
-          if (plan.id === id) {
-            return { ...plan, isPublished: !isPublished }
-          }
-          return plan
-        })
-
-        dispatch(
-          setAllPlans({
-            productId,
-            data: updatedPlans,
-          })
-        )
-      }
-    } catch (error) {
-      console.error('Error toggling publish status:', error)
-    }
+    )
   }
 
   const TableRow = (props) => {
