@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../axios/apis/useRequest.js'
-import { Product_id } from '../../../../const/index.js'
+import { Product_id, cycle } from '../../../../const/index.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Form } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import { tenantInfo } from '../../../../store/slices/tenants.js'
 import {
+  PlansPriceChangeAttr,
+  deleteAllPlan,
+  deleteAllPlanPrice,
   setAllPlans,
   setAllProduct,
 } from '../../../../store/slices/products.js'
@@ -28,7 +31,7 @@ const TenantForm = ({
     createTenantRequest,
     editTenantRequest,
     getProductPlans,
-    getProductPlanPrice,
+    getProductPlanPriceList,
   } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
@@ -101,6 +104,18 @@ const TenantForm = ({
           uniqueName: values.uniqueName,
           title: values.title,
         })
+
+        dispatch(
+          deleteAllPlan({
+            productId: values.product,
+          })
+        )
+        dispatch(
+          deleteAllPlanPrice({
+            productId: values.product,
+          })
+        )
+
         navigate(`/tenants/${createTenant.data.data.id}`)
       } else {
         const editTenant = await editTenantRequest({
@@ -154,12 +169,12 @@ const TenantForm = ({
       formik.setFieldValue('price', '')
 
       if (formik.values.plan) {
-        const planDataRes = await getProductPlanPrice(formik.values.product)
+        const planDataRes = await getProductPlanPriceList(formik.values.product)
         const planData = planDataRes.data.data
           .filter((item) => item.plan.id === formik.values.plan)
           .map((item) => ({
             value: item.id,
-            label: `${item.cycle} (${item.price})`,
+            label: `${cycle[item.cycle]} (${item.price})`,
           }))
         setPriceList(planData)
       } else {

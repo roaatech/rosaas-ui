@@ -20,6 +20,7 @@ import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 
 import {
+  PlansPriceChangeAttr,
   PlansPricePublished,
   deletePlanPrice,
   setAllPlans,
@@ -77,11 +78,18 @@ export default function ProductPlansPriceList({ children }) {
   }
 
   const changePublished = async (id, status) => {
-    await PlansPricePublishedReq(productId, {
-      id,
-      data: { isPublished: status },
-    })
-    dispatch(PlansPricePublished({ productId, planPriceId: id, status }))
+    // await PlansPricePublishedReq(productId, {
+    //   id,
+    //   data: { isPublished: status },
+    // })
+    dispatch(
+      PlansPriceChangeAttr({
+        productId,
+        planPriceId: id,
+        attr: 'isPublished',
+        value: status,
+      })
+    )
   }
   const deleteConfirm = (id) => {
     if (listData[id].isSubscribed == true) {

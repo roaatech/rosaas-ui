@@ -142,6 +142,12 @@ export const productsSlice = createSlice({
       delete allProduct[action.payload.productId].plans[action.payload.PlanId]
       state.products = allProduct
     },
+    deleteAllPlan: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+      delete allProduct[action.payload.productId].plans
+      state.products = allProduct
+    },
+
     // planPrice
 
     setAllPlansPrice: (state, action) => {
@@ -173,13 +179,14 @@ export const productsSlice = createSlice({
       }
       state.products = currentProducts
     },
-    PlansPricePublished: (state, action) => {
-      const { productId, planPriceId, status } = action.payload
+
+    PlansPriceChangeAttr: (state, action) => {
+      const { productId, planPriceId, attr, value } = action.payload
       const currentProducts = JSON.parse(
         JSON.stringify(current(state.products))
       )
 
-      currentProducts[productId].plansPrice[planPriceId].isPublished = status
+      currentProducts[productId].plansPrice[planPriceId][attr] = value
 
       state.products = currentProducts
     },
@@ -189,6 +196,11 @@ export const productsSlice = createSlice({
       delete allProduct[action.payload.productId].plansPrice[
         action.payload.PlanPriceId
       ]
+      state.products = allProduct
+    },
+    deleteAllPlanPrice: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+      delete allProduct[action.payload.productId].plansPrice
       state.products = allProduct
     },
 
@@ -251,6 +263,8 @@ export const {
   setAllPlansPrice,
   PlansPriceInfo,
   deletePlanPrice,
-  PlansPricePublished,
+  PlansPriceChangeAttr,
+  deleteAllPlan,
+  deleteAllPlanPrice,
 } = productsSlice.actions
 export default productsSlice.reducer

@@ -118,11 +118,6 @@ const useRequest = () => {
     )
   }
 
-  const getProductPlanPrice = async (productId) => {
-    return await Request.get(
-      `management/sadmin/v1/Products/${productId}/PlanPrices`
-    )
-  }
   // Price
 
   const getProductPlanPriceList = async (productId) => {
@@ -223,7 +218,6 @@ const useRequest = () => {
     createFeatureRequest,
     editFeatureRequest,
     deleteFeatureReq,
-    getProductPlanPrice,
     PlansPricePublishedReq,
     getProductPlanPriceList,
     createPlanPriceRequest,
