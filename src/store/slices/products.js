@@ -173,6 +173,16 @@ export const productsSlice = createSlice({
       }
       state.products = currentProducts
     },
+    PlansPricePublished: (state, action) => {
+      const { productId, planPriceId, status } = action.payload
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
+
+      currentProducts[productId].plansPrice[planPriceId].isPublished = status
+
+      state.products = currentProducts
+    },
 
     deletePlanPrice: (state, action) => {
       const allProduct = JSON.parse(JSON.stringify(current(state.products)))
@@ -241,5 +251,6 @@ export const {
   setAllPlansPrice,
   PlansPriceInfo,
   deletePlanPrice,
+  PlansPricePublished,
 } = productsSlice.actions
 export default productsSlice.reducer

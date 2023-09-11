@@ -20,19 +20,31 @@ import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 
 import {
-  deleteFeaturePlan,
-  setAllFeaturePlan,
+  PlansPricePublished,
+  deletePlanPrice,
   setAllPlans,
   setAllPlansPrice,
 } from '../../../../store/slices/products'
 import PlanPriceForm from './PlanPriceForm/PlanPriceForm'
 import { Wrapper } from './ProductPlansPriceList.styled'
-import { cycle, featureUnitMap } from '../../../../const'
+import { cycle } from '../../../../const'
+
+import {
+  MdOutlineUnpublished,
+  MdOutlinePublishedWithChanges,
+} from 'react-icons/md'
+import { toast } from 'react-toastify'
+import { useIntl } from 'react-intl'
 
 export default function ProductPlansPriceList({ children }) {
+  const intl = useIntl()
   const dispatch = useDispatch()
-  const { getProductPlans, getProductPlanPriceList, deleteFeaturePlanReq } =
-    useRequest()
+  const {
+    getProductPlans,
+    getProductPlanPriceList,
+    deletePlanPriceReq,
+    PlansPricePublishedReq,
+  } = useRequest()
   const [visible, setVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
@@ -55,26 +67,51 @@ export default function ProductPlansPriceList({ children }) {
   //   delete listData['00000000-0000-0000-0000-000000000000']
   let list = listData && Object.values(listData)
 
-  const handleDeleteFeaturePlan = async () => {
+  const handleDeletePlanPrice = async () => {
     try {
-      await deleteFeaturePlanReq({ productId, PlanFeatureId: currentId })
-      dispatch(deleteFeaturePlan({ productId, PlanFeatureId: currentId }))
+      await deletePlanPriceReq(productId, currentId)
+      dispatch(deletePlanPrice({ productId, PlanPriceId: currentId }))
     } catch (error) {
-      console.error('Error deleting feature:', error)
+      console.error('Error deleting planPrice:', error)
     }
   }
 
+  const changePublished = async (id, status) => {
+    await PlansPricePublishedReq(productId, {
+      id,
+      data: { isPublished: status },
+    })
+    dispatch(PlansPricePublished({ productId, planPriceId: id, status }))
+  }
   const deleteConfirm = (id) => {
-    setCurrentId(id)
-    setConfirm(true)
+    if (listData[id].isSubscribed == true) {
+      toast.error(
+        intl.formatMessage({ id: 'subscribed-plan-price-cannot-be-deleted' }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+    } else {
+      setCurrentId(id)
+      setConfirm(true)
+    }
   }
 
   const editForm = async (id) => {
-    setShow(false)
-    setPopUpLable('Edit-Feature-Plan')
-    setType('edit')
-    setCurrentId(id)
-    setVisible(true)
+    if (listData[id].isSubscribed == true) {
+      toast.error(
+        intl.formatMessage({ id: 'subscribed-plan-price-cannot-be-modified' }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+    } else {
+      setShow(false)
+      setPopUpLable('Edit-Plan-Price')
+      setType('edit')
+      setCurrentId(id)
+      setVisible(true)
+    }
   }
 
   const descriptionPop = async (id) => {
@@ -88,21 +125,21 @@ export default function ProductPlansPriceList({ children }) {
   useEffect(() => {
     ;(async () => {
       if (!plansData || Object.keys(plansData).length === 0) {
-        const FeaturePlanData = await getProductPlans(productId)
+        const allPlans = await getProductPlans(productId)
         dispatch(
           setAllPlans({
             productId: productId,
-            data: FeaturePlanData.data.data,
+            data: allPlans.data.data,
           })
         )
       }
 
       if (!list || list.length == 0) {
-        const FeaturePlanData = await getProductPlanPriceList(productId)
+        const allPlansPrices = await getProductPlanPriceList(productId)
         dispatch(
           setAllPlansPrice({
             productId: productId,
-            data: FeaturePlanData.data.data,
+            data: allPlansPrices.data.data,
           })
         )
       }
@@ -116,11 +153,11 @@ export default function ProductPlansPriceList({ children }) {
     tableData[item.plan?.id + ',' + item.cycle] = item.id
   })
 
-  const handleCreateFeaturePlan = (featureId, planId) => {
-    setCurrentPlanId(planId)
-    setCurrentCycle(featureId)
+  const handleCreatePlanPrice = (plan, cycle) => {
+    setCurrentPlanId(plan)
+    setCurrentCycle(cycle)
     setVisible(true)
-    setPopUpLable('Add-Feature-Plan')
+    setPopUpLable('Add-Plan-Price')
     setType('create')
   }
 
@@ -132,10 +169,10 @@ export default function ProductPlansPriceList({ children }) {
             <td>
               <span className="fw-bolder">{cycle[item]}</span>
             </td>
-            {console.log(plansData, '000000')}
             {Object.keys(plansData).map((planItem, planIndex) => (
               <td key={planIndex}>
                 <span className="fw-normal">
+                  {console.log()}
                   {tableData[planItem + ',' + item] ? (
                     <Dropdown as={ButtonGroup}>
                       <Dropdown.Toggle
@@ -144,7 +181,17 @@ export default function ProductPlansPriceList({ children }) {
                         variant="link"
                         className="text-dark m-0 p-0 planFeatureButton"
                       >
-                        {listData[tableData[planItem + ',' + item]]?.price}
+                        {listData[tableData[planItem + ',' + item]]?.price}{' '}
+                        {listData[tableData[planItem + ',' + item]]
+                          ?.isPublished ? (
+                          <span className="label green">
+                            <MdOutlinePublishedWithChanges />
+                          </span>
+                        ) : (
+                          <span className="label red">
+                            <MdOutlineUnpublished />
+                          </span>
+                        )}
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <Dropdown.Item
@@ -169,6 +216,28 @@ export default function ProductPlansPriceList({ children }) {
                           <FormattedMessage id="Edit" />
                         </Dropdown.Item>
                         <Dropdown.Item
+                          onSelect={() =>
+                            changePublished(
+                              tableData[planItem + ',' + item],
+                              !listData[tableData[planItem + ',' + item]]
+                                ?.isPublished
+                            )
+                          }
+                        >
+                          {listData[tableData[planItem + ',' + item]]
+                            ?.isPublished ? (
+                            <span className="label">
+                              <MdOutlineUnpublished />{' '}
+                              <FormattedMessage id="unPublished" />
+                            </span>
+                          ) : (
+                            <span className="label">
+                              <MdOutlinePublishedWithChanges />{' '}
+                              <FormattedMessage id="Published" />
+                            </span>
+                          )}
+                        </Dropdown.Item>
+                        <Dropdown.Item
                           onClick={() =>
                             deleteConfirm(tableData[planItem + ',' + item])
                           }
@@ -181,15 +250,10 @@ export default function ProductPlansPriceList({ children }) {
                     </Dropdown>
                   ) : (
                     <span
-                    //  className="clickable-text"
-                    //   onClick={() =>
-                    //     handleCreateFeaturePlan(
-                    //       item.featureId,
-                    //       plansObj[planItem].planId
-                    //     )
-                    //   }
+                      className="clickable-text cursor-pointer"
+                      onClick={() => handleCreatePlanPrice(planItem, item)}
                     >
-                      No
+                      ـــ
                     </span>
                   )}
                 </span>
@@ -226,12 +290,12 @@ export default function ProductPlansPriceList({ children }) {
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-feature-plan-confirmation-message" />
+                <FormattedMessage id="delete-plan-price-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
               setConfirm={setConfirm}
-              confirmFunction={handleDeleteFeaturePlan}
+              confirmFunction={handleDeletePlanPrice}
               sideBar={false}
             />
           </Card.Body>

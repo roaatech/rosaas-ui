@@ -87,6 +87,8 @@ const PlanPriceForm = ({
               price: values.price,
               description: values.description,
               id: createPlanPrice.data.data.id,
+              isPublished: false,
+              isSubscribed: false,
             },
           })
         )
@@ -114,6 +116,8 @@ const PlanPriceForm = ({
               price: values.price,
               description: values.description,
               id: planPriceData.id,
+              isPublished: planPriceData.isPublished,
+              isSubscribed: planPriceData.isSubscribed,
             },
           })
         )

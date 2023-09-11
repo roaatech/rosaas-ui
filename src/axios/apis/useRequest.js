@@ -144,12 +144,18 @@ const useRequest = () => {
     )
   }
 
-  const deletePlanPriceReq = async (productId, data) => {
+  const deletePlanPriceReq = async (productId, planPriceId) => {
     return await Request.delete(
-      `management/sadmin/v1/Products/${productId}/PlanPrices/${data.id}`
+      `management/sadmin/v1/Products/${productId}/PlanPrices/${planPriceId}`
     )
   }
 
+  const PlansPricePublishedReq = async (productId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/Products/${productId}/PlanPrices/${data.id}/publish`,
+      data.data
+    )
+  }
   // settings
   const getHeathCheckSettings = async () => {
     return await Request.get(`management/sadmin/v1/Settings/HealthCheck`)
@@ -218,6 +224,7 @@ const useRequest = () => {
     editFeatureRequest,
     deleteFeatureReq,
     getProductPlanPrice,
+    PlansPricePublishedReq,
     getProductPlanPriceList,
     createPlanPriceRequest,
     editPlanPriceRequest,
