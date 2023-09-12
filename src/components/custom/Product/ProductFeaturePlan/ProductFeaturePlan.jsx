@@ -309,6 +309,7 @@ export default function ProductFeaturePlan({ children }) {
     setVisible(true)
     setPopUpLable('Add-Feature-Plan')
     setType('create')
+    setShow(false)
   }
 
   return (
