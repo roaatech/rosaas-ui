@@ -31,11 +31,15 @@ const DynamicButtons = ({ buttons }) => {
   const [more, setMore] = useState(false)
   const request = useRequest()
   const deleteItem = async () => {
-    await request[buttons[currentButtonIndex].request]({
-      id: buttons[currentButtonIndex].id,
-    })
+    buttons[currentButtonIndex].request()
     navigate(buttons[currentButtonIndex].navAfterDelete)
   }
+  // const deleteItem = async () => {
+  //   await request[buttons[currentButtonIndex].request]({
+  //     id: buttons[currentButtonIndex].id,
+  //   })
+  //   navigate(buttons[currentButtonIndex].navAfterDelete)
+  // }
 
   useEffect(() => {
     ;(() => {

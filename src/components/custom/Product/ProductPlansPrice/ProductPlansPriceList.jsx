@@ -154,8 +154,6 @@ export default function ProductPlansPriceList({ children }) {
   }, [])
 
   const tableData = {}
-
-  console.log({ list })
   list?.map((item) => {
     tableData[item.plan?.id + ',' + item.cycle] = item.id
   })

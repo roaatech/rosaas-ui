@@ -75,7 +75,10 @@ const TenantDetails = () => {
     : null
 
   tenantObject?.subscriptions.map((item, index) => {
-    if (firstLoad == 0 && item?.name == window.location.href.split('#')[1]) {
+    if (
+      firstLoad == 0 &&
+      item?.product?.name == window.location.href.split('#')[1]
+    ) {
       dispatch(setActiveIndex(index + 1))
       firstLoad++
     }
@@ -90,7 +93,11 @@ const TenantDetails = () => {
     })()
   }, [visible, routeParams.id, updateDetails])
   useEffect(() => {
-    return () => dispatch(setActiveIndex(0))
+    firstLoad = 0
+    return () => {
+      dispatch(setActiveIndex(0))
+      firstLoad = 0
+    }
   }, [routeParams.id])
 
   return (
@@ -213,17 +220,6 @@ const TenantDetails = () => {
                           </Table>
                         </Card.Body>
                       </Card>
-                      <div className="buttons">
-                        <div className="action">
-                          {/* <Actions
-                            tenantData={tenantObject}
-                            actions={tenantStatus}
-                            deleteConfirm={deleteConfirm}
-                            chagneStatus={chagneStatus}
-                            setActionList={setActionList}
-                          /> */}
-                        </div>
-                      </div>
                     </TabPanel>
                     {tenantObject.subscriptions.map((product, index) => (
                       <TabPanel

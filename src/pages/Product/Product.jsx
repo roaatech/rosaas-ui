@@ -35,7 +35,11 @@ import { useNavigate } from 'react-router-dom'
 import { Wrapper } from './Product.styled'
 import CustomPaginator from '../../components/custom/Shared/CustomPaginator/CustomPaginator'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
-import { productInfo, setAllProduct } from '../../store/slices/products'
+import {
+  productInfo,
+  removeProductStore,
+  setAllProduct,
+} from '../../store/slices/products'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
@@ -62,6 +66,7 @@ export default function Product({ children }) {
   }
   const deleteProduct = async () => {
     await deleteProductReq({ id: currentId })
+    dispatch(removeProductStore(currentId))
   }
 
   const listData = useSelector((state) => state.products.products)
