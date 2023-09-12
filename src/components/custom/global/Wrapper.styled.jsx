@@ -28,8 +28,8 @@ const GlobalStyles = createGlobalStyle`
   --errorColor:red;
   --green:#3bc76f;
   --red:#ff6868;
-  --green2:#9de3b7;
-  --red2:#ffb3b3;
+  --green2:#eff9f6;
+  --red2:#f5e8e4;
   --primary-color:#414042;
  
 

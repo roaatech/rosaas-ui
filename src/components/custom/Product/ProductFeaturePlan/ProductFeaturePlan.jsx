@@ -44,7 +44,7 @@ import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { Wrapper } from './ProductFeaturePlan.styled'
 import InfoPopUp from '../../Shared/InfoPopUp/InfoPopUp'
-import { featureUnitMap } from '../../../../const'
+import { cycle, featureResetMap, featureUnitMap } from '../../../../const'
 
 export default function ProductFeaturePlan({ children }) {
   const [currentPlanId, setCurrentPlanId] = useState('')
@@ -57,7 +57,6 @@ export default function ProductFeaturePlan({ children }) {
     getProductPlans,
   } = useRequest()
   const [visible, setVisible] = useState(false)
-  const [InfoVisible, setInfoVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
   const routeParams = useParams()
@@ -75,6 +74,8 @@ export default function ProductFeaturePlan({ children }) {
   console.log({ listDataStore })
   // delete default key from list
   const listData = { ...listDataStore }
+
+  // const defaultData = {}
   listData['00000000-0000-0000-0000-000000000000'] &&
     delete listData['00000000-0000-0000-0000-000000000000']
   let list = listData && Object.values(listData)
@@ -155,6 +156,7 @@ export default function ProductFeaturePlan({ children }) {
         featureId: item.feature.id,
         name: item.feature.name,
         type: item.feature.type,
+        reset: item.feature.reset,
         index: Object.keys(featuresObj).length,
       }
     }
@@ -194,7 +196,9 @@ export default function ProductFeaturePlan({ children }) {
                           featureUnitMap[
                             listData[tableData[planIndex + ',' + featureIndex]]
                               .unit
-                          ]
+                          ] +
+                          ' / ' +
+                          featureResetMap[item.reset]
                         ) : (
                           <FormattedMessage id="Yes" />
                         )}
