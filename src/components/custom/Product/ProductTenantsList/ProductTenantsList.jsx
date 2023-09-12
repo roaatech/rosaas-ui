@@ -52,6 +52,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
     ;(async () => {
       if (!list?.subscribe) {
         const listData = await getProductTenants(params)
+        console.log(listData.data.data, '0000000000000000000')
         dispatch(setAllTenant(listData.data.data))
         dispatch(subscribe({ id: productId, data: listData.data.data }))
       }
