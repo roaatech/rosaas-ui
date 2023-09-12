@@ -10,7 +10,7 @@ import ProductDetailsTab from '../../components/custom/Product/ProdcutDetailsTab
 import ProductTenantsList from '../../components/custom/Product/ProductTenantsList/ProductTenantsList'
 import { TabView, TabPanel } from 'primereact/tabview'
 import { useDispatch, useSelector } from 'react-redux'
-import { productInfo } from '../../store/slices/products'
+import { productInfo, removeProductStore } from '../../store/slices/products'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
@@ -44,6 +44,11 @@ const ProductDetails = () => {
       dispatch(productInfo(productData.data.data))
     })()
   }, [visible, routeParams.id])
+
+  const deleteProduct = async () => {
+    await deleteProductReq({ id: routeParams.id })
+    dispatch(removeProductStore(routeParams.id))
+  }
 
   return (
     <Wrapper>
@@ -121,7 +126,7 @@ const ProductDetails = () => {
                   id: routeParams.id,
                   navAfterDelete: '/products',
                   label: 'Delete-Product',
-                  request: 'deleteProductReq',
+                  request: deleteProduct,
                   icon: <BsFillTrash3Fill />,
                 },
               ]}

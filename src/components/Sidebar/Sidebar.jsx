@@ -202,6 +202,7 @@ export default (props = {}) => {
         setSearchResults(allProducts)
       } else {
         const listData = await getProductList(query)
+        dispatch(setAllProduct(listData.data.data.items))
         setSearchResults(listData.data.data.items)
       }
     })()

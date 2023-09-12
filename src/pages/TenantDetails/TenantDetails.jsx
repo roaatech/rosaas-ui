@@ -133,7 +133,6 @@ const TenantDetails = () => {
                     }}
                   >
                     <TabPanel header={<FormattedMessage id="Details" />}>
-                      {activeIndex}
                       <div className="dynamicButtons">
                         <DynamicButtons
                           buttons={

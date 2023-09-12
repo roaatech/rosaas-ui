@@ -45,7 +45,7 @@ export const productsSlice = createSlice({
       state.products = currentProducts
     },
 
-    removeProduct: (state, action) => {
+    removeProductStore: (state, action) => {
       const currentProducts = { ...current(state.products) }
       delete currentProducts[action.payload]
       state.products = currentProducts
@@ -275,7 +275,7 @@ export const {
   setAllProduct,
   subscribe,
   productInfo,
-  removeProduct,
+  removeProductStore,
   setAllFeaturePlan,
   FeatureInfo,
   featurePlanInfo,
