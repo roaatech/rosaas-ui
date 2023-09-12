@@ -143,7 +143,10 @@ export default function ProductFeaturePlan({ children }) {
         featurePlanId: item.id,
         planId: item.plan.id,
         name: item.plan.name,
-        isPublished: planList[item.plan.id]?.isPublished,
+        isPublished:
+          planList && planList[item.plan.id]
+            ? planList[item.plan.id].isPublished
+            : false,
         index: Object.keys(plansObj).length,
       }
     }
