@@ -35,7 +35,6 @@ const PlanForm = ({
       .required('Plan Name is required')
       .max(15, 'Name must be at most 15 characters'),
 
-    description: Yup.string().required('Description is required'),
     displayOrder: Yup.number()
       .typeError('Display Order must be a number')
       .integer('Display Order must be an integer')
@@ -153,8 +152,7 @@ const PlanForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Description" />{' '}
-                <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Description" />
               </Form.Label>
 
               <TextareaAndCounter

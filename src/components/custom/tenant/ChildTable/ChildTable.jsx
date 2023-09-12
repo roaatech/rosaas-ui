@@ -170,7 +170,7 @@ export default function ChildTable({
             </Card.Header>
             <Card.Body className="pb-0">
               <Workflow
-                productId={productData.id}
+                productId={productData.product.id}
                 updateDetails={updateDetails}
                 productIndex={productIndex}
               />

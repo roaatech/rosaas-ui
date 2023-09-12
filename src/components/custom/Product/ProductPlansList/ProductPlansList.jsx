@@ -40,6 +40,12 @@ import {
   BsShare,
 } from 'react-icons/bs'
 import Label from '../../Shared/label/Label'
+
+import {
+  MdOutlineUnpublished,
+  MdOutlinePublishedWithChanges,
+} from 'react-icons/md'
+
 import { PublishStatus } from '../../../../const'
 
 export const ProductPlansList = ({ productId }) => {
@@ -177,14 +183,14 @@ export const ProductPlansList = ({ productId }) => {
                   onClick={() => togglePublishPlan(id, isPublished)}
                 >
                   {isPublished ? (
-                    <span className="text-danger ">
-                      <BsFillXCircleFill className="me-2" />
-                      Unpublish
+                    <span className=" ">
+                      <MdOutlineUnpublished className="me-2" />
+                      <FormattedMessage id="Unpublished" />
                     </span>
                   ) : (
-                    <span className="text-success">
-                      <BsFillCheckCircleFill className="me-2" />
-                      Publish
+                    <span className=" ">
+                      <MdOutlinePublishedWithChanges className="me-2" />
+                      <FormattedMessage id="Published" />
                     </span>
                   )}
                 </Dropdown.Item>
