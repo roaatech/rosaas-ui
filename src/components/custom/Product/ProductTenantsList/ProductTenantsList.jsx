@@ -32,6 +32,20 @@ export const ProductTenantsList = ({ productId, productName }) => {
 
   const list = useSelector((state) => state.products.products[productId])
 
+  function isDateTimeInFuture(dateTimeString) {
+    // Parse the given date string into a Date object
+    const [datePart, timePart] = dateTimeString.split(' ')
+    const [day, month, year] = datePart.split('/').map(Number)
+    const [hours, minutes, seconds] = timePart.split(':').map(Number)
+    const inputDate = new Date(year, month - 1, day, hours, minutes, seconds)
+
+    // Get the current date and time
+    const currentDate = new Date()
+
+    // Compare the two dates
+    return inputDate > currentDate
+  }
+
   useEffect(() => {
     let params = `${productId}/subscriptions`
 
@@ -83,16 +97,19 @@ export const ProductTenantsList = ({ productId, productName }) => {
             </OverlayTrigger>
           </span>
         </td> */}
+
         <td>
           <span className={`fw-normal`}>{plan.name}</span>
         </td>
         <td>
           <span className={`fw-normal`}>{DataTransform(startDate)}</span>
         </td>
-        <td>
-          <span className={`fw-normal`}>
-            <span className={`fw-normal`}>{DataTransform(endDate)}</span>
-          </span>
+        <td
+          className={`${
+            isDateTimeInFuture(DataTransform(endDate)) ? 'green' : 'red'
+          }`}
+        >
+          <span className={`fw-normal`}>{DataTransform(endDate)}</span>
         </td>
 
         <td>

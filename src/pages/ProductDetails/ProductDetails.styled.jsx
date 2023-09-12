@@ -91,4 +91,11 @@ export const Wrapper = styled.div`
   .table.user-table thead th {
     font-size: var(--defaultFont);
   }
+
+  td.red {
+    background-color: var(--red2);
+  }
+  td.green {
+    background-color: var(--green2);
+  }
 `
