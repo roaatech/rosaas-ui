@@ -44,7 +44,6 @@ const FeatureForm = ({
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Feature Name is required'),
-    description: Yup.string().required('Description is required'),
     type: Yup.string().required('Type is required'),
     // unit: Yup.string().test(
     //   'unit-validation',
@@ -177,8 +176,7 @@ const FeatureForm = ({
           </div>
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Description" />{' '}
-              <span style={{ color: 'red' }}>*</span>
+              <FormattedMessage id="Description" />
             </Form.Label>
 
             <TextareaAndCounter

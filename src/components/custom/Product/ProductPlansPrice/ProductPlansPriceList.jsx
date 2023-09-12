@@ -235,7 +235,7 @@ export default function ProductPlansPriceList({ children }) {
                             ?.isPublished ? (
                             <span className="label">
                               <MdOutlineUnpublished />{' '}
-                              <FormattedMessage id="unPublished" />
+                              <FormattedMessage id="Unpublished" />
                             </span>
                           ) : (
                             <span className="label">

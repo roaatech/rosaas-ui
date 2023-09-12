@@ -186,7 +186,7 @@ const TenantDetails = () => {
                                         key={index}
                                         className="p-1 border-round border-1 border-400 me-2"
                                       >
-                                        {subscription?.name}
+                                        {subscription?.product.name}
                                       </span>
                                     )
                                   )}
@@ -227,7 +227,7 @@ const TenantDetails = () => {
                     </TabPanel>
                     {tenantObject.subscriptions.map((product, index) => (
                       <TabPanel
-                        header={product?.name.toUpperCase()}
+                        header={product?.product.name.toUpperCase()}
                         key={index}
                       >
                         <ChildTable

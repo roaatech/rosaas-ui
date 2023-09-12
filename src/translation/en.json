@@ -86,7 +86,8 @@
   "Plans": "Plans",
   "Add-Plan": "Add Plan",
   "Create-Plan": "Create Plan",
-
+  "Unpublished": "Unpublished",
+  "Published": "Published",
   "Deactivate": "Deactivate",
   "Active": "Active",
   "Meta-Data": "Meta Data",
