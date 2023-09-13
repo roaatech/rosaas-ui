@@ -15,7 +15,7 @@ import { Wrapper } from './TenantDetails.styled'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import { useDispatch, useSelector } from 'react-redux'
-import { tenantInfo } from '../../store/slices/tenants'
+import { subscriptionData, tenantInfo } from '../../store/slices/tenants'
 import { removeTenant, setActiveIndex } from '../../store/slices/tenants'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { DataTransform } from '../../lib/sharedFun/Time'
@@ -23,6 +23,7 @@ import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import useActions from '../../components/custom/tenant/Actions/Actions'
+import { featureUnitMap } from '../../const'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -33,7 +34,8 @@ const TenantDetails = () => {
 
   const tenantsData = useSelector((state) => state.tenants.tenants)
   const activeIndex = useSelector((state) => state.tenants.currentTab)
-  const { getTenant, deleteTenantReq, editTenantStatus } = useRequest()
+  const { getTenant, deleteTenantReq, editTenantStatus, subscriptionDetails } =
+    useRequest()
   const routeParams = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -82,6 +84,41 @@ const TenantDetails = () => {
   })
 
   useEffect(() => {
+    const fetchSubscriptionDetails = async () => {
+      try {
+        const response = await subscriptionDetails(
+          '88e67328-3b20-413e-b6e1-010b48fa7bc9',
+          routeParams.id
+        )
+        console.log('Response data:', response.data)
+        const formattedSubscriptionData = {
+          data: response.data.data.subscriptionFeatures.map((feature) => ({
+            featureName: feature.feature.name,
+            featureStartDate: feature.startDate,
+            featureEndDate: feature.endDate,
+            remindLimit: `${feature.remainingUsage} ${
+              featureUnitMap[feature.feature.unit]
+            } / ${feature.feature.limit} ${
+              featureUnitMap[feature.feature.unit]
+            } `,
+          })),
+          planName: response.data.data.plan.name,
+          startDate: response.data.data.startDate,
+          endDate: response.data.data.endDate,
+        }
+        console.log('Formatted data:', formattedSubscriptionData)
+
+        dispatch(subscriptionData(formattedSubscriptionData))
+        console.log({ subscriptionData })
+      } catch (error) {
+        console.error('Error fetching subscription details:', error)
+      }
+    }
+
+    fetchSubscriptionDetails()
+  }, [routeParams.id])
+
+  useEffect(() => {
     ;(async () => {
       if (!tenantsData[routeParams.id]?.subscriptions[0]?.status) {
         const tenantData = await getTenant(routeParams.id)
@@ -91,7 +128,7 @@ const TenantDetails = () => {
   }, [visible, routeParams.id, updateDetails])
   useEffect(() => {
     return () => dispatch(setActiveIndex(0))
-  }, [routeParams.id])
+  }, [routeParams.id, dispatch])
 
   return (
     <Wrapper>
@@ -129,7 +166,7 @@ const TenantDetails = () => {
                       <div className="dynamicButtons">
                         <DynamicButtons
                           buttons={
-                            tenantStatus && tenantStatus[0]?.status != 13
+                            tenantStatus && tenantStatus[0]?.status !== 13
                               ? [
                                   {
                                     order: 1,
@@ -237,6 +274,7 @@ const TenantDetails = () => {
                           updateDetails={updateDetails}
                           updateTenant={updateTenant}
                           productIndex={index}
+                          // subscriptionData={subscriptionData}
                         />
                       </TabPanel>
                     ))}
@@ -270,4 +308,5 @@ const TenantDetails = () => {
     </Wrapper>
   )
 }
+
 export default TenantDetails

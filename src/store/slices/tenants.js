@@ -5,6 +5,7 @@ export const tenantsSlice = createSlice({
   name: 'tenants',
   initialState: {
     tenants: {},
+    subscriptionData: {},
     currentTab: 0,
   },
 
@@ -58,6 +59,9 @@ export const tenantsSlice = createSlice({
     setActiveIndex: (state, action) => {
       state.currentTab = action.payload
     },
+    subscriptionData: (state, action) => {
+      state.subscriptionData = action.payload
+    },
   },
 })
 
@@ -68,5 +72,6 @@ export const {
   removeTenant,
   history,
   setActiveIndex,
+  subscriptionData,
 } = tenantsSlice.actions
 export default tenantsSlice.reducer

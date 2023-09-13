@@ -41,6 +41,17 @@ export const DataTransform = (dateTime) => {
 
   return formattedDateTime
 }
+export const formatDate = (dateTime) => {
+  const utcDateTime = new Date(dateTime + 'Z')
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const localDateTime = utcToZonedTime(utcDateTime, timeZone)
+
+  const formattedDate = format(localDateTime, 'MM/dd/yyyy', {
+    timeZone,
+  })
+
+  return formattedDate
+}
 
 export const timeDifferenceFromNow = (targetDate) => {
   // Convert the targetDate parameter to a Date object if it is not already
