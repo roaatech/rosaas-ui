@@ -25,6 +25,16 @@ const HealthStatus = {
     icon: <BsFillExclamationCircleFill />,
   },
 }
+const DateStatus = {
+  true: {
+    label: (date) => `Expired on ${date}`,
+    color: 'red',
+  },
+  false: {
+    label: (date) => `Expires on ${date}`,
+    color: 'green',
+  },
+}
 const PublishStatus = {
   true: {
     background: '#eff9f6',
@@ -280,4 +290,5 @@ export {
   featureResetMap,
   cycle,
   PublishStatus,
+  DateStatus,
 }

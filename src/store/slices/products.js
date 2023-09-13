@@ -8,24 +8,24 @@ export const productsSlice = createSlice({
   },
 
   reducers: {
-    // setAllProduct: (state, action) => {
-    //   const allProduct = {}
-    //   action.payload.forEach((item) => {
-    //     if (!{ ...current(state.products) }[item.id]) {
-    //       allProduct[item.id] = item
-    //     } else {
-    //       allProduct[item.id] = { ...current(state.products) }[item.id]
-    //     }
-    //   })
-    //   state.products = allProduct
-    // },
     setAllProduct: (state, action) => {
-      const allProduct = { ...state.products }
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
       action.payload.forEach((item) => {
-        allProduct[item.id] = item
+        if (!{ ...current(state.products) }[item.id]) {
+          allProduct[item.id] = item
+          // } else {
+          //   allProduct[item.id] = { ...current(state.products) }[item.id]
+        }
       })
       state.products = allProduct
     },
+    // setAllProduct: (state, action) => {
+    //   const allProduct = { ...state.products }
+    //   action.payload.forEach((item) => {
+    //     allProduct[item.id] = item
+    //   })
+    //   state.products = allProduct
+    // },
 
     productInfo: (state, action) => {
       const currentProducts = { ...current(state.products) }
@@ -45,7 +45,7 @@ export const productsSlice = createSlice({
       state.products = currentProducts
     },
 
-    removeProduct: (state, action) => {
+    removeProductStore: (state, action) => {
       const currentProducts = { ...current(state.products) }
       delete currentProducts[action.payload]
       state.products = currentProducts
@@ -275,7 +275,7 @@ export const {
   setAllProduct,
   subscribe,
   productInfo,
-  removeProduct,
+  removeProductStore,
   setAllFeaturePlan,
   FeatureInfo,
   featurePlanInfo,

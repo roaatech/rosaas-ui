@@ -11,7 +11,7 @@ export const tenantsSlice = createSlice({
 
   reducers: {
     setAllTenant: (state, action) => {
-      const allTenant = {}
+      const allTenant = JSON.parse(JSON.stringify(current(state.tenants)))
       action.payload.map((item) => {
         if (!{ ...current(state.tenants) }[item.id]) {
           allTenant[item.id] = item

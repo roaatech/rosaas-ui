@@ -44,7 +44,7 @@ import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { Wrapper } from './ProductFeaturePlan.styled'
 import InfoPopUp from '../../Shared/InfoPopUp/InfoPopUp'
-import { featureUnitMap } from '../../../../const'
+import { cycle, featureResetMap, featureUnitMap } from '../../../../const'
 
 export default function ProductFeaturePlan({ children }) {
   const [currentPlanId, setCurrentPlanId] = useState('')
@@ -57,7 +57,6 @@ export default function ProductFeaturePlan({ children }) {
     getProductPlans,
   } = useRequest()
   const [visible, setVisible] = useState(false)
-  const [InfoVisible, setInfoVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
   const routeParams = useParams()
@@ -75,6 +74,8 @@ export default function ProductFeaturePlan({ children }) {
   console.log({ listDataStore })
   // delete default key from list
   const listData = { ...listDataStore }
+
+  // const defaultData = {}
   listData['00000000-0000-0000-0000-000000000000'] &&
     delete listData['00000000-0000-0000-0000-000000000000']
   let list = listData && Object.values(listData)
@@ -133,143 +134,128 @@ export default function ProductFeaturePlan({ children }) {
     })()
   }, [])
 
-  const plansObj = {}
   const featuresObj = {}
   const tableData = {}
 
   const generateTableData = list?.map((item) => {
-    if (!plansObj[item.plan.id]) {
-      plansObj[item.plan.id] = {
-        featurePlanId: item.id,
-        planId: item.plan.id,
-        name: item.plan.name,
-        isPublished:
-          planList && planList[item.plan.id]
-            ? planList[item.plan.id].isPublished
-            : false,
-        index: Object.keys(plansObj).length,
-      }
-    }
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         featureId: item.feature.id,
         name: item.feature.name,
         type: item.feature.type,
+        reset: item.feature.reset,
         index: Object.keys(featuresObj).length,
       }
     }
-    tableData[
-      plansObj[item.plan.id].index + ',' + featuresObj[item.feature.id].index
-    ] = item.id
+    tableData[item.plan.id + ',' + item.feature.id] = item.id
   })
 
   const TableRow = () => {
     return (
       <>
-        {Object.values(featuresObj).map((item, featureIndex) => (
-          <tr key={featureIndex}>
-            <td>
-              <span className="fw-bolder">{item.name}</span>
-            </td>
-
-            {Object.keys(plansObj).map((planItem, planIndex) => (
-              <td key={planIndex}>
-                <span className="fw-normal">
-                  {tableData[planIndex + ',' + featureIndex] ? (
-                    <Dropdown as={ButtonGroup}>
-                      <Dropdown.Toggle
-                        as={Button}
-                        split
-                        variant="link"
-                        className="text-dark m-0 p-0 planFeatureButton"
-                      >
-                        {/* <span className="icon icon-sm">
-                        <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
-                      </span> */}
-                        {listData[tableData[planIndex + ',' + featureIndex]]
-                          .limit ? (
-                          listData[tableData[planIndex + ',' + featureIndex]]
-                            .limit +
-                          ' ' +
-                          featureUnitMap[
-                            listData[tableData[planIndex + ',' + featureIndex]]
-                              .unit
-                          ]
-                        ) : (
-                          <FormattedMessage id="Yes" />
-                        )}
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <Dropdown.Item
-                          onSelect={() =>
-                            descriptionPop(
-                              tableData[planIndex + ',' + featureIndex]
-                            )
-                          }
-                        >
-                          <FontAwesomeIcon
-                            icon={faNewspaper}
-                            className="me-2"
-                          />
-
-                          <FormattedMessage id="View-Details" />
-                        </Dropdown.Item>
-
-                        <Dropdown.Item
-                          onSelect={() =>
-                            editForm(tableData[planIndex + ',' + featureIndex])
-                          }
-                        >
-                          <FontAwesomeIcon icon={faEdit} className="me-2" />
-                          <FormattedMessage id="Edit" />
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                          onClick={() =>
-                            deleteConfirm(
-                              tableData[planIndex + ',' + featureIndex]
-                            )
-                          }
-                          className="text-danger"
-                        >
-                          <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
-                          <FormattedMessage id="Delete" />
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  ) : item.type == 2 ? (
-                    <span
-                      className="clickable-text"
-                      onClick={() =>
-                        handleCreateFeaturePlan(
-                          item.featureId,
-                          plansObj[planItem].planId,
-                          item.name,
-                          plansObj[planItem].name
-                        )
-                      }
-                    >
-                      No
-                    </span>
-                  ) : (
-                    <span
-                      className="clickable-text"
-                      onClick={() =>
-                        handleCreateFeaturePlan(
-                          item.featureId,
-                          plansObj[planItem].planId,
-                          item.name,
-                          plansObj[planItem].name
-                        )
-                      }
-                    >
-                      ــــ
-                    </span>
-                  )}
-                </span>
+        {featuresObj &&
+          Object.values(featuresObj).length != 0 &&
+          Object.values(featuresObj).map((item) => (
+            <tr key={item.featureId}>
+              <td>
+                <span className="fw-bolder">{item.name}</span>
               </td>
-            ))}
-          </tr>
-        ))}
+
+              {planList &&
+                Object.keys(planList).length !== 0 &&
+                Object.keys(planList).map((planId, planIndex) => (
+                  <td key={planIndex}>
+                    <span className="fw-normal">
+                      {tableData[planId + ',' + item.featureId] ? (
+                        <Dropdown as={ButtonGroup}>
+                          <Dropdown.Toggle
+                            as={Button}
+                            split
+                            variant="link"
+                            className="text-dark m-0 p-0 planFeatureButton"
+                          >
+                            {listData[tableData[planId + ',' + item.featureId]]
+                              .limit ? (
+                              listData[tableData[planId + ',' + item.featureId]]
+                                .limit +
+                              ' ' +
+                              featureUnitMap[
+                                listData[
+                                  tableData[planId + ',' + item.featureId]
+                                ].unit
+                              ] +
+                              ' / ' +
+                              featureResetMap[item.reset]
+                            ) : (
+                              <FormattedMessage id="Yes" />
+                            )}
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item
+                              onSelect={() =>
+                                descriptionPop(
+                                  tableData[planId + ',' + item.featureId]
+                                )
+                              }
+                            >
+                              <FontAwesomeIcon
+                                icon={faNewspaper}
+                                className="me-2"
+                              />
+
+                              <FormattedMessage id="View-Details" />
+                            </Dropdown.Item>
+
+                            <Dropdown.Item
+                              onSelect={() =>
+                                editForm(
+                                  tableData[planId + ',' + item.featureId]
+                                )
+                              }
+                            >
+                              <FontAwesomeIcon icon={faEdit} className="me-2" />
+                              <FormattedMessage id="Edit" />
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onClick={() =>
+                                deleteConfirm(
+                                  tableData[planId + ',' + item.featureId]
+                                )
+                              }
+                              className="text-danger"
+                            >
+                              <FontAwesomeIcon
+                                icon={faTrashAlt}
+                                className="me-2"
+                              />
+                              <FormattedMessage id="Delete" />
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      ) : item.type == 2 ? (
+                        <span
+                          className="clickable-text"
+                          onClick={() =>
+                            handleCreateFeaturePlan(item.featureId, planId)
+                          }
+                        >
+                          No
+                        </span>
+                      ) : (
+                        <span
+                          className="clickable-text"
+                          onClick={() =>
+                            handleCreateFeaturePlan(item.featureId, planId)
+                          }
+                        >
+                          ــــ
+                        </span>
+                      )}
+                    </span>
+                  </td>
+                ))}
+            </tr>
+          ))}
       </>
     )
   }
@@ -280,14 +266,6 @@ export default function ProductFeaturePlan({ children }) {
       isPublished: !isPublished,
     })
 
-    console.log({ plansObj })
-    console.log({ list })
-    console.log({
-      productId,
-      planId: id,
-      attr: 'isPublished',
-      value: !isPublished,
-    })
     dispatch(
       PlansChangeAttr({
         productId,
@@ -298,12 +276,7 @@ export default function ProductFeaturePlan({ children }) {
     )
   }
 
-  const handleCreateFeaturePlan = (
-    featureId,
-    planId,
-    featureName,
-    planName
-  ) => {
+  const handleCreateFeaturePlan = (featureId, planId) => {
     setCurrentPlanId(planId)
     setCurrentFeatureId(featureId)
     setVisible(true)
@@ -324,26 +297,27 @@ export default function ProductFeaturePlan({ children }) {
               <thead>
                 <tr>
                   <th className="border-bottom"></th>
-                  {Object.values(plansObj).map((item, index) => (
-                    <th
-                      className="border-bottom clickable-icon"
-                      key={index}
-                      onClick={() =>
-                        togglePublishPlan(item.planId, item.isPublished)
-                      }
-                    >
-                      {item.isPublished ? (
-                        <span className="label green">
-                          <MdOutlinePublishedWithChanges />
-                        </span>
-                      ) : (
-                        <span className="label red">
-                          <MdOutlineUnpublished />
-                        </span>
-                      )}
-                      {item.name}
-                    </th>
-                  ))}
+                  {planList &&
+                    Object.keys(planList)?.map((item, index) => (
+                      <th
+                        className="border-bottom clickable-icon"
+                        key={index}
+                        onClick={() =>
+                          togglePublishPlan(item, planList[item].isPublished)
+                        }
+                      >
+                        {planList[item].isPublished ? (
+                          <span className="label green">
+                            <MdOutlinePublishedWithChanges />
+                          </span>
+                        ) : (
+                          <span className="label red">
+                            <MdOutlineUnpublished />
+                          </span>
+                        )}
+                        {planList[item].name}
+                      </th>
+                    ))}
                 </tr>
               </thead>
 
@@ -377,20 +351,6 @@ export default function ProductFeaturePlan({ children }) {
           feature={currentFeatureId}
         />
       </ThemeDialog>
-      {/* <ThemeDialog visible={InfoVisible} setVisible={setInfoVisible}>
-        <InfoPopUp
-          setVisible={setInfoVisible}
-          popupLabel={<FormattedMessage id={'Description'} />}
-          info={
-            listData
-              ? [currentId]
-                ? listData[currentId]?.description
-                : ''
-              : ''
-          }
-          // info={listData[currentId] ? listData[currentId].description : ''}
-        />
-      </ThemeDialog> */}
     </Wrapper>
   )
 }
