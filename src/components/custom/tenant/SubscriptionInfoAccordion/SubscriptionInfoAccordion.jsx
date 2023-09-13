@@ -61,7 +61,8 @@ const SubscriptionInfoAccordion = (props) => {
                   <Table responsive>
                     <thead>
                       <tr>
-                        <th>Feature Name</th>
+                        <th>Feature</th>
+                        <th>Reset</th>
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Remind / Limit</th>
@@ -72,20 +73,21 @@ const SubscriptionInfoAccordion = (props) => {
                         subscriptionData.data?.map((subscription, index) => (
                           <tr key={`subscription-${index}`}>
                             <td>{subscription.featureName}</td>
+                            <td>{subscription.featureReset}</td>
                             <td>{formatDate(subscription.featureStartDate)}</td>
                             <td>
                               <DateLabel
                                 endDate={
                                   subscription.featureEndDate
                                     ? formatDate(subscription.featureEndDate)
-                                    : 'Unlimited'
+                                    : formatDate(subscriptionData.endDate)
                                 }
                               />
                             </td>
                             <td>
                               {subscription.remindLimit ===
                               'null undefined / null undefined '
-                                ? ''
+                                ? '-'
                                 : subscription.remindLimit}
                             </td>
                           </tr>
