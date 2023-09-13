@@ -17,6 +17,7 @@ import { productInfo, subscribe } from '../../../../store/slices/products'
 import { setAllTenant } from '../../../../store/slices/tenants'
 import { FormattedMessage } from 'react-intl'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
+import DateLabel from '../../Shared/DateLabel/DateLabel'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { getProductTenants } = useRequest()
@@ -105,12 +106,8 @@ export const ProductTenantsList = ({ productId, productName }) => {
         <td>
           <span className={`fw-normal`}>{DataTransform(startDate)}</span>
         </td>
-        <td
-          className={`${
-            isDateTimeInFuture(DataTransform(endDate)) ? 'green' : 'red'
-          }`}
-        >
-          <span className={`fw-normal`}>{DataTransform(endDate)}</span>
+        <td>
+          <DateLabel endDate={endDate} />
         </td>
 
         <td>

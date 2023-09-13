@@ -19,6 +19,7 @@ import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
 import useActions from '../Actions/Actions'
+import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
 export default function ChildTable({
   productData,
   tenantId,
@@ -132,6 +133,11 @@ export default function ChildTable({
               <tr>
                 <td className="pl-0 pr-0" colSpan={2}>
                   <MetaDataAccordion defaultKey="metaData" data={products} />
+                </td>
+              </tr>
+              <tr>
+                <td className="pl-0 pr-0" colSpan={2}>
+                  <SubscriptionInfoAccordion />
                 </td>
               </tr>
 

@@ -46,6 +46,11 @@ const useRequest = () => {
       `management/sadmin/v1/Tenants/${id}/products/${productId}/processes${queries}`
     )
   }
+  const subscriptionDetails = async (productId, tenantId) => {
+    return await Request.get(
+      `management/sadmin/v1/products/${productId}/Tenants/${tenantId}`
+    )
+  }
 
   const createProductRequest = async (data) => {
     return await Request.post('management/sadmin/v1/Products', data)
@@ -230,6 +235,7 @@ const useRequest = () => {
     editPlanPriceRequest,
     deletePlanPriceReq,
     publishPlan,
+    subscriptionDetails,
   }
 }
 export default useRequest
