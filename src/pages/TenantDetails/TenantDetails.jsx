@@ -25,6 +25,8 @@ import { AiFillEdit } from 'react-icons/ai'
 import useActions from '../../components/custom/tenant/Actions/Actions'
 import { featureUnitMap } from '../../const'
 
+import { featureResetMap } from '../../const'
+
 let firstLoad = 0
 const TenantDetails = () => {
   const [confirm, setConfirm] = useState(false)
@@ -93,7 +95,8 @@ const TenantDetails = () => {
         console.log('Response data:', response.data)
         const formattedSubscriptionData = {
           data: response.data.data.subscriptionFeatures.map((feature) => ({
-            featureName: feature.feature.name,
+            featureName: feature.feature.name ,
+            featureReset:   featureResetMap[feature.feature.reset]  ,
             featureStartDate: feature.startDate,
             featureEndDate: feature.endDate,
             remindLimit: `${feature.remainingUsage} ${
