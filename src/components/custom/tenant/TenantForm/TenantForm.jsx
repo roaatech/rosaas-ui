@@ -133,11 +133,12 @@ const TenantForm = ({
 
   let planOptions
   if (listData[formik.values.product]?.plans) {
-    planOptions = Object.values(listData[formik.values.product].plans).map(
-      (item, index) => {
-        return { value: item.id, label: item.name }
-      }
-    )
+    planOptions = Object.values(listData[formik.values.product].plans)
+      .filter((item) => item.isPublished === true) // Add your filter condition here
+      .map((item, index) => ({
+        value: item.id,
+        label: item.name,
+      }))
   } else {
     planOptions = []
   }
@@ -171,7 +172,10 @@ const TenantForm = ({
       if (formik.values.plan) {
         const planDataRes = await getProductPlanPriceList(formik.values.product)
         const planData = planDataRes.data.data
-          .filter((item) => item.plan.id === formik.values.plan)
+          .filter(
+            (item) =>
+              item.plan.id === formik.values.plan && item.isPublished === true
+          )
           .map((item) => ({
             value: item.id,
             label: `${cycle[item.cycle]} (${item.price})`,
