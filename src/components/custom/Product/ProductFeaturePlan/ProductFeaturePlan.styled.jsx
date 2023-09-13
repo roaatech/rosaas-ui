@@ -19,7 +19,7 @@ export const Wrapper = styled.div`
   .green {
     color: var(--green);
   }
-  .red {
-    color: var(--red);
+  .grey {
+    color: '# ccc';
   }
 `

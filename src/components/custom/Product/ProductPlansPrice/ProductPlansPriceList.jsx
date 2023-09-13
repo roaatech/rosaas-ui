@@ -77,10 +77,10 @@ export default function ProductPlansPriceList({ children }) {
   }
 
   const changePublished = async (id, status) => {
-    // await PlansPricePublishedReq(productId, {
-    //   id,
-    //   data: { isPublished: status },
-    // })
+    await PlansPricePublishedReq(productId, {
+      id,
+      data: { isPublished: status },
+    })
     dispatch(
       PlansPriceChangeAttr({
         productId,

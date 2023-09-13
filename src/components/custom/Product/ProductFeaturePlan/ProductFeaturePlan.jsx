@@ -30,7 +30,7 @@ import { FormattedMessage } from 'react-intl'
 import TableDate from '../../Shared/TableDate/TableDate'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
-import { BsCardHeading } from 'react-icons/bs'
+import { BsCardHeading, BsToggleOff, BsToggleOn } from 'react-icons/bs'
 
 import {
   PlanInfo,
@@ -308,11 +308,11 @@ export default function ProductFeaturePlan({ children }) {
                       >
                         {planList[item].isPublished ? (
                           <span className="label green">
-                            <MdOutlinePublishedWithChanges />
+                            <BsToggleOn />
                           </span>
                         ) : (
-                          <span className="label red">
-                            <MdOutlineUnpublished />
+                          <span className="label grey">
+                            <BsToggleOff />
                           </span>
                         )}
                         {planList[item].name}
