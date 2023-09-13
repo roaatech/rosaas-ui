@@ -158,7 +158,7 @@ const useRequest = () => {
 
   const PlansPricePublishedReq = async (productId, data) => {
     return await Request.post(
-      `management/sadmin/v1/Products/${productId}/PlanPrices/${data.id}/publish`,
+      `management/sadmin/v1/products/${productId}/PlanPrices/${data.id}/publish`,
       data.data
     )
   }
