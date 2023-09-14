@@ -109,7 +109,7 @@ export default function ProductFeaturePlan({ children }) {
   }
 
   const editForm = async (id) => {
-    if (listData[currentId]?.plan?.isSubscribed) {
+    if (listData[id]?.plan?.isSubscribed) {
       toast.error(
         intl.formatMessage({ id: 'Cannot-edit-a-subscribed-feature-plan.' }),
         {
@@ -301,6 +301,23 @@ export default function ProductFeaturePlan({ children }) {
   }
 
   const handleCreateFeaturePlan = (featureId, planId) => {
+    console.log('listData:', listData)
+
+    const matchingPlan = Object.values(listData).find(
+      (item) => item.plan.id === planId
+    )
+
+    if (matchingPlan && matchingPlan.plan.isSubscribed) {
+      toast.error(
+        intl.formatMessage({
+          id: "Cannot-create-a-Plan's-Feature-while-it-is-subscribed.",
+        }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+      return
+    }
     setCurrentPlanId(planId)
     setCurrentFeatureId(featureId)
     setVisible(true)
