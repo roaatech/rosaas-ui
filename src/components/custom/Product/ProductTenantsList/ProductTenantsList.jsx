@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { productInfo, subscribe } from '../../../../store/slices/products'
 import { setAllTenant } from '../../../../store/slices/tenants'
 import { FormattedMessage } from 'react-intl'
-import { DataTransform } from '../../../../lib/sharedFun/Time'
+import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 
 export const ProductTenantsList = ({ productId, productName }) => {
@@ -104,7 +104,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
           <span className={`fw-normal`}>{plan.name}</span>
         </td>
         <td>
-          <span className={`fw-normal`}>{DataTransform(startDate)}</span>
+          <span className={`fw-normal`}>{formatDate(startDate)}</span>
         </td>
         <td>
           <DateLabel endDate={endDate} />

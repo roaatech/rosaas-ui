@@ -26,7 +26,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
 import { useParams } from 'react-router-dom'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import TableDate from '../../Shared/TableDate/TableDate'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
@@ -45,6 +45,7 @@ import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { Wrapper } from './ProductFeaturePlan.styled'
 import InfoPopUp from '../../Shared/InfoPopUp/InfoPopUp'
 import { cycle, featureResetMap, featureUnitMap } from '../../../../const'
+import { toast } from 'react-toastify'
 
 export default function ProductFeaturePlan({ children }) {
   const [currentPlanId, setCurrentPlanId] = useState('')
@@ -74,14 +75,27 @@ export default function ProductFeaturePlan({ children }) {
   console.log({ listDataStore })
   // delete default key from list
   const listData = { ...listDataStore }
-
+  const intl = useIntl()
   // const defaultData = {}
   listData['00000000-0000-0000-0000-000000000000'] &&
     delete listData['00000000-0000-0000-0000-000000000000']
   let list = listData && Object.values(listData)
+  console.log({ list })
 
   const handleDeleteFeaturePlan = async () => {
     try {
+      if (listData[currentId]?.plan?.isSubscribed) {
+        toast.error(
+          intl.formatMessage({
+            id: 'Cannot-delete-a-subscribed-feature-plan.',
+          }),
+          {
+            position: toast.POSITION.TOP_CENTER,
+          }
+        )
+        return
+      }
+
       await deleteFeaturePlanReq({ productId, PlanFeatureId: currentId })
       dispatch(deleteFeaturePlan({ productId, PlanFeatureId: currentId }))
     } catch (error) {
@@ -95,6 +109,16 @@ export default function ProductFeaturePlan({ children }) {
   }
 
   const editForm = async (id) => {
+    if (listData[currentId]?.plan?.isSubscribed) {
+      toast.error(
+        intl.formatMessage({ id: 'Cannot-edit-a-subscribed-feature-plan.' }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+      return
+    }
+
     setShow(false)
     setPopUpLable('Edit-Feature-Plan')
     setType('edit')

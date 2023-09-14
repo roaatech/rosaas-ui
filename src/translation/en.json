@@ -159,5 +159,7 @@
   "Add-Plan-Price": "Add Plan Price",
   "Add-Plan-Feature": "Add Plan Feature ",
   "Edit-Feature-Plan": "Edit Feature Plan",
-  "Edit-Feature": "Edit Feature"
+  "Edit-Feature": "Edit Feature",
+  "Cannot-delete-a-subscribed-feature-plan.": "Cannot delete a subscribed Feature's Plan.",
+  "Cannot-edit-a-subscribed-feature-plan.": "Cannot edit a subscribed Feature's Plan."
 }
