@@ -36,8 +36,64 @@ const PlanPriceForm = ({
   const dispatch = useDispatch()
   const routeParams = useParams()
   const productId = routeParams.id
+  const [cyclesYouDontHave, setCyclesYouDontHave] = useState([])
+  const allPlansPrices = useSelector(
+    (state) => state.products.products[productId]?.plansPrice
+  )
+  // console.log(allPlansPrices)
+  useEffect(() => {
+    const setAllPlansPrices = async () => {
+      if (!allPlansPrices) {
+        try {
+          const response = await getProductPlanPriceList(productId)
 
-  console.log({ planPriceData }, '*********')
+          dispatch(
+            setAllPlansPrice({
+              productId: productId,
+              data: response.data.data,
+            })
+          )
+        } catch (error) {
+          console.error('Error fetching plan prices:', error)
+        }
+      }
+    }
+
+    setAllPlansPrices()
+  }, [dispatch, productId, allPlansPrices])
+
+  console.log({ allPlansPrices })
+  const handlePlanCycle = async (values) => {
+    const usualCycles = Object.keys(cycle).map(Number)
+    let cyclesYouHave = []
+
+    try {
+      if (allPlansPrices) {
+        const planPricesArray = Object.values(allPlansPrices)
+
+        const matchingPlanPrices = planPricesArray.filter((planPrice) => {
+          return planPrice.plan.id === values
+        })
+
+        if (matchingPlanPrices.length > 0) {
+          matchingPlanPrices.forEach((planPrice) => {
+            const cycle = planPrice.cycle
+            cyclesYouHave.push(cycle)
+          })
+
+          const cyclesYouDontHave = usualCycles.filter((cycle) => {
+            return !cyclesYouHave.includes(cycle)
+          })
+
+          setCyclesYouDontHave(cyclesYouDontHave)
+        } else {
+          setCyclesYouDontHave(usualCycles)
+        }
+      }
+    } catch (error) {
+      console.error('Error handling plan cycle:', error)
+    }
+  }
   const initialValues = {
     plan: plan || (planPriceData ? planPriceData.plan.id : ''),
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
@@ -178,7 +234,10 @@ const PlanPriceForm = ({
                     name="plan"
                     id="plan"
                     value={formik.values.plan}
-                    onChange={formik.handleChange}
+                    onChange={(e) => {
+                      formik.handleChange(e)
+                      handlePlanCycle(e.target.value)
+                    }}
                     onBlur={formik.handleBlur}
                     isInvalid={formik.touched.plan && formik.errors.plan}
                   >
@@ -217,9 +276,9 @@ const PlanPriceForm = ({
                 disabled={show}
               >
                 <option value="">Select Option</option>
-                {Object.entries(cycle).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
+                {cyclesYouDontHave.map((cycleValue) => (
+                  <option key={cycleValue} value={cycleValue}>
+                    {cycle[cycleValue]}
                   </option>
                 ))}
               </select>
