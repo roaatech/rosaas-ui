@@ -10,7 +10,7 @@ export const productsSlice = createSlice({
   reducers: {
     setAllProduct: (state, action) => {
       const allProduct = JSON.parse(JSON.stringify(current(state.products)))
-      action.payload.forEach((item) => {
+      action?.payload?.forEach((item) => {
         if (!{ ...current(state.products) }[item.id]) {
           allProduct[item.id] = item
           // } else {

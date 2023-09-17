@@ -99,7 +99,6 @@ export const ProductPlansList = ({ productId }) => {
       if (!list?.plans) {
         const listData = await getProductPlans(productId)
         dispatch(setAllPlans({ productId, data: listData.data.data }))
-        console.log({ plans: list.plans })
       }
     })()
   }, [])

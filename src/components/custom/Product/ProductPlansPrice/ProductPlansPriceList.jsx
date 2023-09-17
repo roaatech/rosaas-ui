@@ -177,7 +177,6 @@ export default function ProductPlansPriceList({ children }) {
             {Object.keys(plansData).map((planItem, planIndex) => (
               <td key={planIndex}>
                 <span className="fw-normal">
-                  {console.log()}
                   {tableData[planItem + ',' + item] ? (
                     <Dropdown as={ButtonGroup}>
                       <Dropdown.Toggle

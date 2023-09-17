@@ -13,7 +13,6 @@ const SubscriptionInfoAccordion = (props) => {
   const subscriptionData = useSelector(
     (state) => state.tenants.subscriptionData
   )
-  console.log({ subscriptionData })
   const { defaultKey = [], className = '' } = props
 
   return (

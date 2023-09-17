@@ -17,8 +17,6 @@ import { FormattedMessage } from 'react-intl'
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './ProductForm.styled.jsx'
 import { generateApiKey } from '../../../../lib/sharedFun/common.js'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { AiFillCopy } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
 
 const ProductForm = ({
@@ -45,7 +43,9 @@ const ProductForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Product Name is required'),
+    name: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
     defaultHealthCheckUrl: Yup.string()
       .required(<FormattedMessage id="This-field-is-required" />)
       .matches(

@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import SimpleBar from 'simplebar-react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
+import { useNavigate } from 'react-router-dom'
+
 import {
   BsFillPersonLinesFill,
   BsBoxSeam,
@@ -43,6 +45,8 @@ import { FormattedMessage } from 'react-intl'
 import QuickActions from './QuickActions/QuickActions'
 
 export default (props = {}) => {
+  const navigate = useNavigate()
+
   const location = useLocation()
   const { pathname } = location
   const [show, setShow] = useState(false)
@@ -329,7 +333,7 @@ export default (props = {}) => {
                 <CollapsableNavItem
                   eventKey={productsIsOpen}
                   title={
-                    <Link
+                    <div
                       style={{
                         textDecoration: 'none',
                         color: 'inherit',
@@ -339,9 +343,10 @@ export default (props = {}) => {
                         marginBottom: '0px',
                         height: '35px',
                         backgroundColor: 'transparent',
+                        cursor: 'pointer',
                       }}
                       className=" products-nav nav-link  "
-                      to="/products"
+                      onClick={() => navigate('/products')}
                     >
                       <BsBoxes
                         style={{
@@ -350,7 +355,7 @@ export default (props = {}) => {
                       />{' '}
                       {'  '}
                       <FormattedMessage id="Products" />
-                    </Link>
+                    </div>
                   }
                   icon={BsBoxSeam}
                   style={{}}

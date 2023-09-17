@@ -2,21 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../axios/apis/useRequest.js'
-import { Product_id, cycle } from '../../../../const/index.js'
+import { cycle } from '../../../../const/index.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Form } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
-import { tenantInfo } from '../../../../store/slices/tenants.js'
 import {
-  PlansPriceChangeAttr,
   deleteAllPlan,
   deleteAllPlanPrice,
   setAllPlans,
   setAllProduct,
 } from '../../../../store/slices/products.js'
-import { MultiSelect } from 'primereact/multiselect'
 import { Wrapper } from './TenantForm.styled.jsx'
+import { FormattedMessage } from 'react-intl'
 
 const TenantForm = ({
   type,
@@ -26,7 +24,6 @@ const TenantForm = ({
   setVisible,
   popupLabel,
 }) => {
-  const [selectedCities, setSelectedCities] = useState()
   const {
     createTenantRequest,
     editTenantRequest,
@@ -47,29 +44,37 @@ const TenantForm = ({
     let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
 
     ;(async () => {
-      // if (list.length == 0) {
       const productList = await getProductList(query)
       dispatch(setAllProduct(productList.data.data.items))
-      // }
     })()
   }, [])
 
   const createValidation = {
-    title: Yup.string().max(100, 'Must be maximum 100 digits'),
-    product: Yup.string().required('Please select a product'),
-    plan: Yup.string().required('Please select a plan'),
-    price: Yup.string().required('Please select a price'),
+    title: Yup.string().max(
+      100,
+      <FormattedMessage id="Must-be-maximum-100-digits" />
+    ),
+    product: Yup.string().required(
+      <FormattedMessage id="Please-select-a-product" />
+    ),
+    plan: Yup.string().required(<FormattedMessage id="Please-select-a-plan" />),
+    price: Yup.string().required(
+      <FormattedMessage id="Please-select-a-price" />
+    ),
 
     uniqueName: Yup.string()
-      .max(100, 'Must be maximum 100 digits')
-      .required('Unique Name is required')
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
+      .required(<FormattedMessage id="Unique-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        'English Characters, Numbers, and Underscores are only accepted.'
+        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
   }
   const editValidation = {
-    title: Yup.string().max(100, 'Must be maximum 100 digits'),
+    title: Yup.string().max(
+      100,
+      <FormattedMessage id="Must-be-maximum-100-digits" />
+    ),
   }
   const validationSchema = Yup.object().shape(
     type === 'create' ? createValidation : editValidation
@@ -201,7 +206,9 @@ const TenantForm = ({
         <Modal.Body>
           <div>
             <Form.Group className="mb-3">
-              <Form.Label>Title</Form.Label>
+              <Form.Label>
+                <FormattedMessage id="Title" />
+              </Form.Label>
               <input
                 className="form-control"
                 type="text"
@@ -225,7 +232,8 @@ const TenantForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  Unique Name <span style={{ color: 'red' }}>*</span>
+                  <FormattedMessage id="Unique-Name" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <input
                   className="form-control"
@@ -250,7 +258,8 @@ const TenantForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  Product <span style={{ color: 'red' }}>*</span>
+                  <FormattedMessage id="Product" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
                   className="form-select"
@@ -261,7 +270,9 @@ const TenantForm = ({
                   onBlur={formik.handleBlur}
                   isInvalid={formik.touched.product && formik.errors.product}
                 >
-                  <option value="">Select Option</option>
+                  <option value="">
+                    <FormattedMessage id="Select-Option" />
+                  </option>
                   {options.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -283,7 +294,8 @@ const TenantForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  Plan <span style={{ color: 'red' }}>*</span>
+                  <FormattedMessage id="Plan" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
                   className="form-select"
@@ -295,7 +307,9 @@ const TenantForm = ({
                   isInvalid={formik.touched.plan && formik.errors.plan}
                   disabled={!formik.values.product}
                 >
-                  <option value="">Select Option</option>
+                  <option value="">
+                    <FormattedMessage id="Select-Option" />
+                  </option>
                   {planOptions?.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -317,7 +331,8 @@ const TenantForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  Price <span style={{ color: 'red' }}>*</span>
+                  <FormattedMessage id="Price" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
                   className="form-select"
@@ -329,7 +344,9 @@ const TenantForm = ({
                   isInvalid={formik.touched.price && formik.errors.price}
                   disabled={!formik.values.plan || !formik.values.product}
                 >
-                  <option value="">Select Option </option>
+                  <option value="">
+                    <FormattedMessage id="Select-Option" />{' '}
+                  </option>
                   {priceList.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -376,14 +393,14 @@ const TenantForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>
-            Submit
+            <FormattedMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray ms-auto"
             onClick={() => setVisible(false)}
           >
-            Close
+            <FormattedMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

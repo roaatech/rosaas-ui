@@ -71,7 +71,6 @@ export default function ProductFeaturePlan({ children }) {
   const planList = useSelector(
     (state) => state.products.products[productId]?.plans
   )
-  console.log({ listDataStore })
   // delete default key from list
   const listData = { ...listDataStore }
 
@@ -112,7 +111,6 @@ export default function ProductFeaturePlan({ children }) {
 
   useEffect(() => {
     ;(async () => {
-      console.log({ list })
       if (!list || list.length == 0) {
         const FeaturePlanData = await getFeaturePlanList(productId)
         dispatch(

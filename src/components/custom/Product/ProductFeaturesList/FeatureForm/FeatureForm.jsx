@@ -43,8 +43,12 @@ const FeatureForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Feature Name is required'),
-    type: Yup.string().required('Type is required'),
+    name: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
+    type: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
     // unit: Yup.string().test(
     //   'unit-validation',
     //   'Unit is required when Type is Number',
@@ -217,7 +221,9 @@ const FeatureForm = ({
                 // }}
                 value={formik.values.type}
               >
-                <option value="">Select Type</option>
+                <option value="">
+                  <FormattedMessage id="Select-Option" />
+                </option>
                 {Object.entries(featureTypeMap).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
@@ -285,7 +291,9 @@ const FeatureForm = ({
                 onChange={formik.handleChange}
                 value={formik.values.reset}
               >
-                <option value="">Select Reset</option>
+                <option value="">
+                  <FormattedMessage id="Select-Option" />
+                </option>
                 {Object.entries(featureResetMap).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}

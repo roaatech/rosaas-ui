@@ -92,11 +92,10 @@ const TenantDetails = () => {
           '88e67328-3b20-413e-b6e1-010b48fa7bc9',
           routeParams.id
         )
-        console.log('Response data:', response.data)
         const formattedSubscriptionData = {
           data: response.data.data.subscriptionFeatures.map((feature) => ({
-            featureName: feature.feature.name ,
-            featureReset:   featureResetMap[feature.feature.reset]  ,
+            featureName: feature.feature.name,
+            featureReset: featureResetMap[feature.feature.reset],
             featureStartDate: feature.startDate,
             featureEndDate: feature.endDate,
             remindLimit: `${feature.remainingUsage} ${
@@ -109,10 +108,8 @@ const TenantDetails = () => {
           startDate: response.data.data.startDate,
           endDate: response.data.data.endDate,
         }
-        console.log('Formatted data:', formattedSubscriptionData)
 
         dispatch(subscriptionData(formattedSubscriptionData))
-        console.log({ subscriptionData })
       } catch (error) {
         console.error('Error fetching subscription details:', error)
       }

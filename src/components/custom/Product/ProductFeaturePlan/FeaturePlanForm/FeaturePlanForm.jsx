@@ -90,8 +90,12 @@ const FeaturePlanForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    feature: Yup.string().required('Please select a feature'),
-    plan: Yup.string().required('Please select a plan'),
+    feature: Yup.string().required(
+      <FormattedMessage id="Please-Select-a-Option" />
+    ),
+    plan: Yup.string().required(
+      <FormattedMessage id="Please-Select-a-Option" />
+    ),
     limit: Yup.number()
       .nullable()
       .test('', 'Limit must be number more than 0', function (value) {
@@ -242,7 +246,8 @@ const FeaturePlanForm = ({
           <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
               <Form.Label>
-                Plan <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Plan" />{' '}
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
                 className="form-select"
@@ -315,7 +320,9 @@ const FeaturePlanForm = ({
                 }
                 disabled={isFeatureBoolean(formik.values.feature) || show}
               >
-                <option value="">Select Unit</option>
+                <option value="">
+                  <FormattedMessage id="Select-Option" />
+                </option>
                 {Object.entries(featureUnitMap).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}

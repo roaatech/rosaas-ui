@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
@@ -37,7 +37,6 @@ const PlanPriceForm = ({
   const routeParams = useParams()
   const productId = routeParams.id
 
-  console.log({ planPriceData }, '*********')
   const initialValues = {
     plan: plan || (planPriceData ? planPriceData.plan.id : ''),
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
@@ -48,11 +47,15 @@ const PlanPriceForm = ({
   const allProducts = useSelector((state) => state.products.products)
 
   const validationSchema = Yup.object().shape({
-    plan: Yup.string().required('Please select a plan'),
-    cycle: Yup.number().required('Please select a cycle'),
+    plan: Yup.string().required(
+      <FormattedMessage id="Please-Select-a-Option" />
+    ),
+    cycle: Yup.number().required(
+      <FormattedMessage id="Please-Select-a-Option" />
+    ),
     price: Yup.number()
-      .required('This filed is required')
-      .min(1, 'The price must be more than 0'),
+      .required(<FormattedMessage id="This-field-is-required" />)
+      .min(1, <FormattedMessage id="The-price-must-be-more-than-0" />),
   })
 
   const formik = useFormik({
@@ -182,7 +185,9 @@ const PlanPriceForm = ({
                     onBlur={formik.handleBlur}
                     isInvalid={formik.touched.plan && formik.errors.plan}
                   >
-                    <option value="">Select Option</option>
+                    <option value="">
+                      <FormattedMessage id="Select-Option" />
+                    </option>
                     {planOptions?.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
