@@ -253,7 +253,6 @@ const PlanPriceForm = ({
                       formik.handleChange(e)
 
                       if (!selectedPlan) {
-                        // Set plan to an empty string if not selected
                         formik.setFieldValue('plan', '')
                       } else {
                         handlePlanCycle(selectedPlan)
