@@ -37,10 +37,23 @@ const PlanPriceForm = ({
   const routeParams = useParams()
   const productId = routeParams.id
   const [cyclesYouDontHave, setCyclesYouDontHave] = useState([])
+
+  console.log({ cyclesYouDontHave })
   const allPlansPrices = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
-  // console.log(allPlansPrices)
+
+  useEffect(() => {
+    const setHasPlanAndHandleCycle = async () => {
+      if (plan) {
+        handlePlanCycle(plan)
+      } else {
+        formik.setFieldValue('plan', '')
+      }
+    }
+    setHasPlanAndHandleCycle()
+  }, [plan])
+
   useEffect(() => {
     const setAllPlansPrices = async () => {
       if (!allPlansPrices) {
@@ -77,15 +90,15 @@ const PlanPriceForm = ({
 
         if (matchingPlanPrices.length > 0) {
           matchingPlanPrices.forEach((planPrice) => {
-            const cycle = planPrice.cycle
+            const cycle = parseInt(planPrice.cycle)
             cyclesYouHave.push(cycle)
           })
 
-          const cyclesYouDontHave = usualCycles.filter((cycle) => {
+          const cyclesnotHave = usualCycles.filter((cycle) => {
             return !cyclesYouHave.includes(cycle)
           })
 
-          setCyclesYouDontHave(cyclesYouDontHave)
+          setCyclesYouDontHave(cyclesnotHave)
         } else {
           setCyclesYouDontHave(usualCycles)
         }
@@ -99,6 +112,7 @@ const PlanPriceForm = ({
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
     price: planPriceData ? planPriceData.price : '',
     description: planPriceData ? planPriceData.description : '',
+    cyclesYouDontHave: cyclesYouDontHave,
   }
 
   const allProducts = useSelector((state) => state.products.products)
@@ -183,7 +197,7 @@ const PlanPriceForm = ({
       setSubmitting(false)
     },
   })
-
+  console.log({ formik: formik.values.plan })
   const allPlans = allProducts[productId].plans
   let planOptions
   if (allProducts[productId]?.plans) {
@@ -235,8 +249,15 @@ const PlanPriceForm = ({
                     id="plan"
                     value={formik.values.plan}
                     onChange={(e) => {
+                      const selectedPlan = e.target.value
                       formik.handleChange(e)
-                      handlePlanCycle(e.target.value)
+
+                      if (!selectedPlan) {
+                        // Set plan to an empty string if not selected
+                        formik.setFieldValue('plan', '')
+                      } else {
+                        handlePlanCycle(selectedPlan)
+                      }
                     }}
                     onBlur={formik.handleBlur}
                     isInvalid={formik.touched.plan && formik.errors.plan}
@@ -248,6 +269,7 @@ const PlanPriceForm = ({
                       </option>
                     ))}
                   </select>
+
                   {formik.touched.plan && formik.errors.plan && (
                     <Form.Control.Feedback
                       type="invalid"
@@ -273,7 +295,7 @@ const PlanPriceForm = ({
                 name="cycle"
                 onChange={formik.handleChange}
                 value={formik.values.cycle}
-                disabled={show}
+                disabled={show || cyclesYouDontHave.length === 0}
               >
                 <option value="">Select Option</option>
                 {cyclesYouDontHave.map((cycleValue) => (
@@ -290,6 +312,9 @@ const PlanPriceForm = ({
                   {formik.errors.cycle}
                 </Form.Control.Feedback>
               )}
+              {formik.values.plan && cyclesYouDontHave.length === 0 ? (
+                <div className="assigned-value">All values are assigned.</div>
+              ) : null}
             </Form.Group>
           </div>
 

@@ -1,5 +1,9 @@
 import styled from 'styled-components'
 export const Wrapper = styled.div`
+  .assigned-value {
+    color: var(--red);
+    font-size: 0.875em;
+  }
   .inputIcon {
     position: relative;
 
