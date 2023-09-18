@@ -5,7 +5,11 @@ const Wrapper = styled.div`
     width: fit-content;
     margin-bottom: 1.25rem;
   }
-
+  .line-cell {
+    border-top: 1px solid #000;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
   thead.p-datatable-thead {
     display: none;
   }

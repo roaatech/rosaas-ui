@@ -18,6 +18,7 @@ import { setAllTenant } from '../../../../store/slices/tenants'
 import { FormattedMessage } from 'react-intl'
 import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
+import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { getProductTenants } = useRequest()
@@ -101,10 +102,13 @@ export const ProductTenantsList = ({ productId, productName }) => {
         </td> */}
 
         <td>
-          <span className={`fw-normal`}>{plan.name}</span>
+          <span className={`fw-normal`}>
+            <DateLabelWhite text={plan.name} />
+          </span>
         </td>
         <td>
-          <span className={`fw-normal`}>{formatDate(startDate)}</span>
+          {' '}
+          <DateLabelWhite text={formatDate(startDate)} />
         </td>
         <td>
           <DateLabel endDate={endDate} />

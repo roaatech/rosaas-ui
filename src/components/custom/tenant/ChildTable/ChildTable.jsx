@@ -95,10 +95,10 @@ export default function ChildTable({
           >
             <tbody>
               <tr>
-                <td className="fw-bold firstTd">
+                <td className="fw-bold firstTd line-cell">
                   <FormattedMessage id="Status" />
                 </td>
-                <td>
+                <td className=" line-cell">
                   <TenantStatus statusValue={productData.status} />
                 </td>
               </tr>

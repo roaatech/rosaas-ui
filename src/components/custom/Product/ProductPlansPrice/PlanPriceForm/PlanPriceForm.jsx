@@ -47,8 +47,6 @@ const PlanPriceForm = ({
     const setHasPlanAndHandleCycle = async () => {
       if (plan) {
         handlePlanCycle(plan)
-      } else {
-        formik.setFieldValue('plan', '')
       }
     }
     setHasPlanAndHandleCycle()
@@ -75,7 +73,6 @@ const PlanPriceForm = ({
     setAllPlansPrices()
   }, [dispatch, productId, allPlansPrices])
 
-  console.log({ allPlansPrices })
   const handlePlanCycle = async (values) => {
     const usualCycles = Object.keys(cycle).map(Number)
     let cyclesYouHave = []
@@ -94,11 +91,11 @@ const PlanPriceForm = ({
             cyclesYouHave.push(cycle)
           })
 
-          const cyclesnotHave = usualCycles.filter((cycle) => {
+          const cyclesNotHave = usualCycles.filter((cycle) => {
             return !cyclesYouHave.includes(cycle)
           })
 
-          setCyclesYouDontHave(cyclesnotHave)
+          setCyclesYouDontHave(cyclesNotHave)
         } else {
           setCyclesYouDontHave(usualCycles)
         }
@@ -107,6 +104,43 @@ const PlanPriceForm = ({
       console.error('Error handling plan cycle:', error)
     }
   }
+  const [plansWithAllCyclesAssigned, setPlansWithAllCyclesAssigned] = useState(
+    []
+  )
+
+  const handlePlansWithAllCyclesAssigned = () => {
+    const usualCycles = Object.keys(cycle).map(Number)
+    const plansWithAllCyclesAssigned = []
+
+    try {
+      if (allPlansPrices) {
+        const planPricesArray = Object.values(allPlansPrices)
+
+        Object.keys(allPlans).forEach((planId) => {
+          const cyclesAssignedToPlan = planPricesArray
+            .filter((planPrice) => planPrice.plan.id === planId)
+            .map((planPrice) => parseInt(planPrice.cycle))
+          if (
+            usualCycles.every((cycle) => cyclesAssignedToPlan.includes(cycle))
+          ) {
+            // console.log({ cyclesAssignedToPlan })
+            plansWithAllCyclesAssigned.push(planId)
+            // console.log({ plansWithAllCyclesAssigned })
+            // console.log({ usualCycles })
+          }
+        })
+
+        setPlansWithAllCyclesAssigned(plansWithAllCyclesAssigned)
+      }
+    } catch (error) {
+      console.error('Error handling plans with all cycles assigned:', error)
+    }
+  }
+
+  useEffect(() => {
+    handlePlansWithAllCyclesAssigned()
+  }, [])
+
   const initialValues = {
     plan: plan || (planPriceData ? planPriceData.plan.id : ''),
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
@@ -121,8 +155,9 @@ const PlanPriceForm = ({
     plan: Yup.string().required('Please select a plan'),
     cycle: Yup.number().required('Please select a cycle'),
     price: Yup.number()
-      .required('This filed is required')
-      .min(1, 'The price must be more than 0'),
+      .required('This field is required')
+      .min(1, 'The price must be more than 0')
+      .max(999999, 'The price must not exceed 999,999'),
   })
 
   const formik = useFormik({
@@ -146,12 +181,12 @@ const PlanPriceForm = ({
             })
           )
         }
+
         dispatch(
           PlansPriceInfo({
             planPriceId: createPlanPrice.data.data.id,
             productId: productId,
             data: {
-              // planId: values.plan,
               plan: { id: values.plan, name: allPlans[values.plan].name },
               cycle: values.cycle,
               price: values.price,
@@ -197,8 +232,9 @@ const PlanPriceForm = ({
       setSubmitting(false)
     },
   })
-  console.log({ formik: formik.values.plan })
+
   const allPlans = allProducts[productId].plans
+
   let planOptions
   if (allProducts[productId]?.plans) {
     planOptions = Object.values(allPlans).map((item, index) => {
@@ -207,6 +243,10 @@ const PlanPriceForm = ({
   } else {
     planOptions = []
   }
+
+  const filteredPlanOptions = planOptions.filter(
+    (option) => !plansWithAllCyclesAssigned.includes(option.value)
+  )
 
   useEffect(() => {
     ;(async () => {
@@ -235,7 +275,7 @@ const PlanPriceForm = ({
         </Modal.Header>
 
         <Modal.Body>
-          {type != 'edit' && (
+          {type !== 'edit' && (
             <>
               <div>
                 <Form.Group className="mb-3">
@@ -262,7 +302,7 @@ const PlanPriceForm = ({
                     isInvalid={formik.touched.plan && formik.errors.plan}
                   >
                     <option value="">Select Option</option>
-                    {planOptions?.map((option) => (
+                    {filteredPlanOptions.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
@@ -279,43 +319,45 @@ const PlanPriceForm = ({
                   )}
                 </Form.Group>
               </div>
+
+              <div>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <FormattedMessage id="cycle" />
+                    <span style={{ color: 'red' }}> *</span>
+                  </Form.Label>
+                  <select
+                    className="form-control"
+                    id="cycle"
+                    name="cycle"
+                    onChange={formik.handleChange}
+                    value={formik.values.cycle}
+                    disabled={show || cyclesYouDontHave.length === 0}
+                  >
+                    <option value="">Select Option</option>
+                    {cyclesYouDontHave.map((cycleValue) => (
+                      <option key={cycleValue} value={cycleValue}>
+                        {cycle[cycleValue]}
+                      </option>
+                    ))}
+                  </select>
+                  {formik.touched.cycle && formik.errors.cycle && (
+                    <Form.Control.Feedback
+                      type="invalid"
+                      style={{ display: 'block' }}
+                    >
+                      {formik.errors.cycle}
+                    </Form.Control.Feedback>
+                  )}
+                  {formik.values.plan && cyclesYouDontHave.length === 0 ? (
+                    <div className="assigned-value">
+                      All values are assigned.
+                    </div>
+                  ) : null}
+                </Form.Group>
+              </div>
             </>
           )}
-
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="cycle" />
-                <span style={{ color: 'red' }}> *</span>
-              </Form.Label>
-              <select
-                className="form-control"
-                id="cycle"
-                name="cycle"
-                onChange={formik.handleChange}
-                value={formik.values.cycle}
-                disabled={show || cyclesYouDontHave.length === 0}
-              >
-                <option value="">Select Option</option>
-                {cyclesYouDontHave.map((cycleValue) => (
-                  <option key={cycleValue} value={cycleValue}>
-                    {cycle[cycleValue]}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.cycle && formik.errors.cycle && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.cycle}
-                </Form.Control.Feedback>
-              )}
-              {formik.values.plan && cyclesYouDontHave.length === 0 ? (
-                <div className="assigned-value">All values are assigned.</div>
-              ) : null}
-            </Form.Group>
-          </div>
 
           <div>
             <Form.Group className="mb-3">
