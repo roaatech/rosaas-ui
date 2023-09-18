@@ -23,7 +23,6 @@ const PlanPriceForm = ({
   setVisible,
   popupLabel,
   setActiveIndex,
-  show = false,
   plan,
   cycleValue,
 }) => {
@@ -92,6 +91,8 @@ const PlanPriceForm = ({
               id: createPlanPrice.data.data.id,
               isPublished: false,
               isSubscribed: false,
+              createdDate: new Date().toISOString().slice(0, 19),
+              editedDate: new Date().toISOString().slice(0, 19),
             },
           })
         )
@@ -121,6 +122,8 @@ const PlanPriceForm = ({
               id: planPriceData.id,
               isPublished: planPriceData.isPublished,
               isSubscribed: planPriceData.isSubscribed,
+              createdDate: planPriceData.createdDate,
+              editedDate: new Date().toISOString().slice(0, 19),
             },
           })
         )
@@ -183,7 +186,6 @@ const PlanPriceForm = ({
                     value={formik.values.plan}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    isInvalid={formik.touched.plan && formik.errors.plan}
                   >
                     <option value="">
                       <FormattedMessage id="Select-Option" />
@@ -219,7 +221,6 @@ const PlanPriceForm = ({
                 name="cycle"
                 onChange={formik.handleChange}
                 value={formik.values.cycle}
-                disabled={show}
               >
                 <option value="">Select Option</option>
                 {Object.entries(cycle).map(([value, label]) => (
@@ -252,7 +253,6 @@ const PlanPriceForm = ({
                 name="price"
                 onChange={formik.handleChange}
                 value={formik.values.price}
-                disabled={show}
               />
               {formik.touched.price && formik.errors.price && (
                 <Form.Control.Feedback
@@ -275,7 +275,6 @@ const PlanPriceForm = ({
                 maxLength={250}
                 showCharCount
                 inputValue={formik?.values?.description}
-                disabled={show}
               />
 
               {formik.touched.description && formik.errors.description && (
@@ -286,20 +285,18 @@ const PlanPriceForm = ({
             </Form.Group>
           </div>
         </Modal.Body>
-        {!show && (
-          <Modal.Footer>
-            <Button variant="secondary" type="submit">
-              <FormattedMessage id="Submit" />
-            </Button>
-            <Button
-              variant="link"
-              className="text-gray ms-auto"
-              onClick={() => setVisible(false)}
-            >
-              <FormattedMessage id="Close" />
-            </Button>
-          </Modal.Footer>
-        )}
+        <Modal.Footer>
+          <Button variant="secondary" type="submit">
+            <FormattedMessage id="Submit" />
+          </Button>
+          <Button
+            variant="link"
+            className="text-gray ms-auto"
+            onClick={() => setVisible(false)}
+          >
+            <FormattedMessage id="Close" />
+          </Button>
+        </Modal.Footer>
       </Form>
     </Wrapper>
   )

@@ -23,8 +23,6 @@ const FeaturePlanForm = ({
   setVisible,
   popupLabel,
   setActiveIndex,
-  show,
-  setShow,
   plan,
   feature,
 }) => {
@@ -193,6 +191,8 @@ const FeaturePlanForm = ({
         newData.description = values.description
         newData.limit = values.limit
         newData.unit = values.unit
+        newData.createdDate = FeaturePlanData.createdDate
+        newData.editedDate = new Date().toISOString().slice(0, 19)
 
         dispatch(featurePlanInfo({ productId, data: newData }))
       }
@@ -224,7 +224,6 @@ const FeaturePlanForm = ({
                 value={formik.values.feature}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.feature && formik.errors.feature}
               >
                 <option value={''}>{'select'}</option>
                 {featureOptions.map((option) => (
@@ -256,7 +255,6 @@ const FeaturePlanForm = ({
                 value={formik.values.plan}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.plan && formik.errors.plan}
               >
                 <option value={''}>{'select'}</option>
                 {planOptions.map((option) => (
@@ -286,7 +284,6 @@ const FeaturePlanForm = ({
                 maxLength={250}
                 showCharCount
                 inputValue={formik?.values?.description}
-                disabled={show}
               />
 
               {formik.touched.description && formik.errors.description && (
@@ -318,7 +315,7 @@ const FeaturePlanForm = ({
                     ? ''
                     : formik.values.unit
                 }
-                disabled={isFeatureBoolean(formik.values.feature) || show}
+                disabled={isFeatureBoolean(formik.values.feature)}
               >
                 <option value="">
                   <FormattedMessage id="Select-Option" />
@@ -362,7 +359,7 @@ const FeaturePlanForm = ({
                     ? ''
                     : formik.values.limit
                 }
-                disabled={isFeatureBoolean(formik.values.feature) || show}
+                disabled={isFeatureBoolean(formik.values.feature)}
               />
 
               {formik.touched.limit && formik.errors.limit && (
@@ -376,7 +373,7 @@ const FeaturePlanForm = ({
             </Form.Group>
           </div>
         </Modal.Body>
-        <Modal.Footer style={{ display: show ? 'none' : 'block' }}>
+        <Modal.Footer>
           <Button variant="secondary" type="submit">
             <FormattedMessage id="Submit" />
           </Button>

@@ -225,13 +225,6 @@ export default (props = {}) => {
         variant="dark"
         className="navbar-theme-primary px-4 d-md-none"
       >
-        <Navbar.Brand
-          className="me-lg-5"
-          as={Link}
-          to={Routes.DashboardOverview.path}
-        >
-          <Image src={logo} className="navbar-brand-light" />
-        </Navbar.Brand>
         <Navbar.Toggle
           as={Button}
           aria-controls="main-navbar"

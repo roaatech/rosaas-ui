@@ -268,7 +268,6 @@ const TenantForm = ({
                   value={formik.values.product}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  isInvalid={formik.touched.product && formik.errors.product}
                 >
                   <option value="">
                     <FormattedMessage id="Select-Option" />
@@ -304,7 +303,6 @@ const TenantForm = ({
                   value={formik.values.plan}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  isInvalid={formik.touched.plan && formik.errors.plan}
                   disabled={!formik.values.product}
                 >
                   <option value="">
@@ -341,7 +339,6 @@ const TenantForm = ({
                   value={formik.values.price}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  isInvalid={formik.touched.price && formik.errors.price}
                   disabled={!formik.values.plan || !formik.values.product}
                 >
                   <option value="">

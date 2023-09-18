@@ -35,6 +35,8 @@ import {
 } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import { useIntl } from 'react-intl'
+import ShowDetails from '../../Shared/ShowDetails/ShowDetails'
+import { DataTransform } from '../../../../lib/sharedFun/Time'
 
 export default function ProductPlansPriceList({ children }) {
   const intl = useIntl()
@@ -90,6 +92,7 @@ export default function ProductPlansPriceList({ children }) {
       })
     )
   }
+
   const deleteConfirm = (id) => {
     if (listData[id].isSubscribed == true) {
       toast.error(
@@ -164,6 +167,19 @@ export default function ProductPlansPriceList({ children }) {
     setVisible(true)
     setPopUpLable('Add-Plan-Price')
     setType('create')
+  }
+
+  const handleData = (data) => {
+    console.log({ data })
+    return {
+      Plan: data.plan.name,
+      cycle: cycle[data.cycle],
+      Published: data.isPublished ? 'TRUE' : 'FALSE',
+      Subscribed: data.isSubscribed ? 'TRUE' : 'FALSE',
+      Description: data.description,
+      'Created-Date': DataTransform(data.createdDate),
+      'Edited-Date': DataTransform(data.editedDate),
+    }
   }
 
   const TableRow = () => {
@@ -307,16 +323,22 @@ export default function ProductPlansPriceList({ children }) {
       </div>
 
       <ThemeDialog visible={visible} setVisible={setVisible}>
-        <PlanPriceForm
-          popupLabel={<FormattedMessage id={popUpLable} />}
-          type={type}
-          planPriceData={type == 'edit' ? listData[currentId] : {}}
-          setVisible={setVisible}
-          show={show}
-          setShow={setShow}
-          plan={currentPlanId}
-          cycleValue={currentCycle}
-        />
+        {show ? (
+          <ShowDetails
+            popupLabel={<FormattedMessage id={popUpLable} />}
+            data={handleData(listData[currentId])}
+            setVisible={setVisible}
+          />
+        ) : (
+          <PlanPriceForm
+            popupLabel={<FormattedMessage id={popUpLable} />}
+            type={type}
+            planPriceData={type == 'edit' ? listData[currentId] : {}}
+            setVisible={setVisible}
+            plan={currentPlanId}
+            cycleValue={currentCycle}
+          />
+        )}
       </ThemeDialog>
     </Wrapper>
   )
