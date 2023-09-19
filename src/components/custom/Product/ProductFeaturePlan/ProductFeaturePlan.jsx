@@ -220,7 +220,7 @@ export default function ProductFeaturePlan({ children }) {
                             >
                               <FontAwesomeIcon
                                 icon={faNewspaper}
-                                className="me-2"
+                                className="mx-2"
                               />
 
                               <FormattedMessage id="View-Details" />
@@ -233,7 +233,7 @@ export default function ProductFeaturePlan({ children }) {
                                 )
                               }
                             >
-                              <FontAwesomeIcon icon={faEdit} className="me-2" />
+                              <FontAwesomeIcon icon={faEdit} className="mx-2" />
                               <FormattedMessage id="Edit" />
                             </Dropdown.Item>
                             <Dropdown.Item
@@ -246,7 +246,7 @@ export default function ProductFeaturePlan({ children }) {
                             >
                               <FontAwesomeIcon
                                 icon={faTrashAlt}
-                                className="me-2"
+                                className="mx-2"
                               />
                               <FormattedMessage id="Delete" />
                             </Dropdown.Item>

@@ -259,7 +259,7 @@ const TenantDetails = () => {
                                     (subscription, index) => (
                                       <span
                                         key={index}
-                                        className="p-1 border-round border-1 border-400 me-2"
+                                        className="p-1 border-round border-1 border-400 mx-2"
                                       >
                                         {subscription?.product.name}
                                       </span>

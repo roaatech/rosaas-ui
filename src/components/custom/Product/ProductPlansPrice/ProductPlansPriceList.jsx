@@ -174,8 +174,8 @@ export default function ProductPlansPriceList({ children }) {
     return {
       Plan: data.plan.name,
       cycle: cycle[data.cycle],
-      Published: data.isPublished ? 'TRUE' : 'FALSE',
-      Subscribed: data.isSubscribed ? 'TRUE' : 'FALSE',
+      Published: data.isPublished ? 'Yes' : 'No',
+      Subscribed: data.isSubscribed ? 'Yes' : 'No',
       Description: data.description,
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
@@ -221,7 +221,7 @@ export default function ProductPlansPriceList({ children }) {
                         >
                           <FontAwesomeIcon
                             icon={faNewspaper}
-                            className="me-2"
+                            className="mx-2"
                           />
 
                           <FormattedMessage id="View-Details" />
@@ -232,7 +232,7 @@ export default function ProductPlansPriceList({ children }) {
                             editForm(tableData[planItem + ',' + item])
                           }
                         >
-                          <FontAwesomeIcon icon={faEdit} className="me-2" />
+                          <FontAwesomeIcon icon={faEdit} className="mx-2" />
                           <FormattedMessage id="Edit" />
                         </Dropdown.Item>
                         <Dropdown.Item
@@ -263,7 +263,7 @@ export default function ProductPlansPriceList({ children }) {
                           }
                           className="text-danger"
                         >
-                          <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+                          <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
                           <FormattedMessage id="Delete" />
                         </Dropdown.Item>
                       </Dropdown.Menu>

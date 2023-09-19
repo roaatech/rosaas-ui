@@ -1,3 +1,9 @@
+/* ${(props) => {
+   props.direction == 'rtl'
+     ? require('../../../scss/voltrtl.scss')
+     : require('../../../scss/voltltr.scss')
+ }}   */
+
 import { createGlobalStyle } from 'styled-components'
 
 const darkBackground = '#676668'
@@ -12,11 +18,7 @@ const GlobalStyles = createGlobalStyle`
   ${require('primeicons/primeicons.css')}
  ${require('../../../scss/voltltr.scss')}   
  ${require('../../../scss/custom.scss')}  
- /* ${(props) => {
-   props.direction == 'rtl'
-     ? require('../../../scss/voltrtl.scss')
-     : require('../../../scss/voltltr.scss')
- }}   */
+
 :root{
   --darkBackground:${darkBackground};
   --gray: #f9f9f9;
@@ -343,11 +345,30 @@ nav svg.svg-inline--fa.fa-bell {
 .dropdown-item:hover, .dropdown-item:focus{
   background-color: var(--table-hover);
 }
+.dropdown-item{
+   text-align: ${localStorage.getItem('direction') == 'rtl' && 'right'}
+}
+
+.modal-footer{
+  display: flex;
+    justify-content: space-between;
+}
 
 .p-inputtext:enabled:hover {
     border-color: var(--primary3);
 }
 
+.p-dialog.p-confirm-dialog .p-confirm-dialog-message{
+  margin: ${localStorage.getItem('direction') == 'rtl' && '0 10px 0 0'}
+}
+
+.modal-header .btn-close{
+  margin: ${localStorage.getItem('direction') == 'rtl' && '0 auto 0 0 '}
+  
+}
+.p-paginator .p-dropdown .p-dropdown-label{
+  padding-right: 10px;
+}
 .p-inputtext:focus {
     background-color: #ffffff;
     outline: 0;

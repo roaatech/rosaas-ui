@@ -93,7 +93,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
                       .background,
                 }}
                 size="sm"
-                className="p-1 border-round border-1 border-400 me-2">
+                className="p-1 border-round border-1 border-400 mx-2">
                 {urlIsOverridden[healthCheckUrlIsOverridden.toString()].value}
               </span>
             </OverlayTrigger>
@@ -142,7 +142,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
                   to={`/tenants/${tenantId}#${productName}`}
                   className="w-100 d-block"
                 >
-                  <FontAwesomeIcon icon={faGear} className="me-2" />{' '}
+                  <FontAwesomeIcon icon={faGear} className="mx-2" />{' '}
                   <FormattedMessage id="Manage" />
                 </Link>
               </Dropdown.Item>

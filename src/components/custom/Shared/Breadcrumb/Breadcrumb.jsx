@@ -4,7 +4,7 @@ import { BsFillHouseDoorFill } from 'react-icons/bs'
 import { Breadcrumb } from '@themesberg/react-bootstrap'
 import { Wrapper } from './Breadcrumb.styled'
 import { useEffect } from 'react'
-import Navbar from '../../../Navbar'
+import Navbar from '../../../Navbar/Navbar'
 import { breadcrumbConst } from '../../../../const'
 import { useIntl, FormattedMessage } from 'react-intl'
 

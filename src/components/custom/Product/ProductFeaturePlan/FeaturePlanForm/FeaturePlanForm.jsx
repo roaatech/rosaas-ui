@@ -215,17 +215,20 @@ const FeaturePlanForm = ({
           <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
               <Form.Label>
-                Feature <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Feature" />{' '}
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
-                className="form-select"
+                className="form-control"
                 name="feature"
                 id="feature"
                 value={formik.values.feature}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
-                <option value={''}>{'select'}</option>
+                <option value={''}>
+                  <FormattedMessage id="Select-Option" />
+                </option>
                 {featureOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {`${option.label} (${option.type})`}
@@ -249,14 +252,16 @@ const FeaturePlanForm = ({
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
-                className="form-select"
+                className="form-control"
                 name="plan"
                 id="plan"
                 value={formik.values.plan}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               >
-                <option value={''}>{'select'}</option>
+                <option value={''}>
+                  <FormattedMessage id="Select-Option" />
+                </option>
                 {planOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -379,7 +384,7 @@ const FeaturePlanForm = ({
           </Button>
           <Button
             variant="link"
-            className="text-gray ms-auto"
+            className="text-gray "
             onClick={() => setVisible(false)}
           >
             <FormattedMessage id="Close" />

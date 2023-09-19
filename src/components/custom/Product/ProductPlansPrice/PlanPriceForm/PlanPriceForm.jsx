@@ -287,7 +287,7 @@ const PlanPriceForm = ({
                     <span style={{ color: 'red' }}>*</span>
                   </Form.Label>
                   <select
-                    className="form-select"
+                    className="form-control"
                     name="plan"
                     id="plan"
                     value={formik.values.plan}
@@ -368,37 +368,6 @@ const PlanPriceForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="cycle" />
-                <span style={{ color: 'red' }}> *</span>
-              </Form.Label>
-              <select
-                className="form-control"
-                id="cycle"
-                name="cycle"
-                onChange={formik.handleChange}
-                value={formik.values.cycle}
-              >
-                <option value="">Select Option</option>
-                {Object.entries(cycle).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.cycle && formik.errors.cycle && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.cycle}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
-
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
                 <FormattedMessage id="Price" />{' '}
                 <span style={{ color: 'red' }}> *</span>
               </Form.Label>
@@ -447,7 +416,7 @@ const PlanPriceForm = ({
           </Button>
           <Button
             variant="link"
-            className="text-gray ms-auto"
+            className="text-gray "
             onClick={() => setVisible(false)}
           >
             <FormattedMessage id="Close" />

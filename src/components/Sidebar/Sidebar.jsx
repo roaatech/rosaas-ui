@@ -258,7 +258,7 @@ export default (props = {}) => {
                     onClick={() => dispatch(logOut())}
                     className="text-dark"
                   >
-                    <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+                    <FontAwesomeIcon icon={faSignOutAlt} className="mx-2" />
                     <FormattedMessage id="Sign-Out" />
                   </Button>
                 </div>

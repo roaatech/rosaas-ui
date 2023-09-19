@@ -14,7 +14,9 @@ export const Wrapper = styled.div`
       padding: 5px 20px;
       border-radius: 5px;
       display: inline-block;
-      margin-right: 10px;
+      margin: ${localStorage.getItem('direction') == 'rtl'
+        ? '0 0 0 10px'
+        : '0 10px 0 0'};
     }
 
     .url {

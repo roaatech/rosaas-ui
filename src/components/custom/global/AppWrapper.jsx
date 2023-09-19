@@ -25,11 +25,12 @@ const AppWrapper = ({ children, customHistory }) => {
   let loaded = useSelector((state) => state.main.preloader)
   useEffect(() => {
     ;(async () => {
-      // if (localStorage.getItem("direction") === "ltr") {
-      //   changeDirection("ltr");
-      // } else {
-      //   changeDirection("rtl");
-      // }
+      if (localStorage.getItem('direction') === 'rtl') {
+        changeDirection('rtl')
+      } else {
+        changeDirection('ltr')
+      }
+
       if (localStorage.getItem('dark') == 'true') {
         dispatch(changeMode(true))
       } else {

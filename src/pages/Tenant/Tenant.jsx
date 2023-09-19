@@ -241,11 +241,11 @@ export default function Tenant({ children }) {
                       <Dropdown.Item
                         onSelect={() => navigate(`/tenants/${data.id}`)}
                       >
-                        <FontAwesomeIcon icon={faEye} className="me-2" /> View
+                        <FontAwesomeIcon icon={faEye} className="mx-2" /> View
                         Details
                       </Dropdown.Item>
                       <Dropdown.Item onSelect={() => editForm(data.id)}>
-                        <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
+                        <FontAwesomeIcon icon={faEdit} className="mx-2" /> Edit
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>

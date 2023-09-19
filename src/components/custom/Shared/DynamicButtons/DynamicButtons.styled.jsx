@@ -26,6 +26,8 @@ export const Wrapper = styled.div`
   }
 
   .dropdown > button {
-    border-radius: 0 8px 8px 0;
+    border-radius: ${localStorage.getItem('direction') == 'rtl'
+      ? ' 8px 0 0 8px '
+      : '0 8px 8px 0'};
   }
 `
