@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
@@ -23,7 +23,6 @@ const PlanPriceForm = ({
   setVisible,
   popupLabel,
   setActiveIndex,
-  show = false,
   plan,
   cycleValue,
 }) => {
@@ -37,7 +36,6 @@ const PlanPriceForm = ({
   const routeParams = useParams()
   const productId = routeParams.id
 
-  console.log({ planPriceData }, '*********')
   const initialValues = {
     plan: plan || (planPriceData ? planPriceData.plan.id : ''),
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
@@ -48,11 +46,15 @@ const PlanPriceForm = ({
   const allProducts = useSelector((state) => state.products.products)
 
   const validationSchema = Yup.object().shape({
-    plan: Yup.string().required('Please select a plan'),
-    cycle: Yup.number().required('Please select a cycle'),
+    plan: Yup.string().required(
+      <FormattedMessage id="Please-Select-a-Option" />
+    ),
+    cycle: Yup.number().required(
+      <FormattedMessage id="Please-Select-a-Option" />
+    ),
     price: Yup.number()
-      .required('This filed is required')
-      .min(1, 'The price must be more than 0'),
+      .required(<FormattedMessage id="This-field-is-required" />)
+      .min(1, <FormattedMessage id="The-price-must-be-more-than-0" />),
   })
 
   const formik = useFormik({
@@ -89,6 +91,8 @@ const PlanPriceForm = ({
               id: createPlanPrice.data.data.id,
               isPublished: false,
               isSubscribed: false,
+              createdDate: new Date().toISOString().slice(0, 19),
+              editedDate: new Date().toISOString().slice(0, 19),
             },
           })
         )
@@ -118,6 +122,8 @@ const PlanPriceForm = ({
               id: planPriceData.id,
               isPublished: planPriceData.isPublished,
               isSubscribed: planPriceData.isSubscribed,
+              createdDate: planPriceData.createdDate,
+              editedDate: new Date().toISOString().slice(0, 19),
             },
           })
         )
@@ -180,9 +186,10 @@ const PlanPriceForm = ({
                     value={formik.values.plan}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    isInvalid={formik.touched.plan && formik.errors.plan}
                   >
-                    <option value="">Select Option</option>
+                    <option value="">
+                      <FormattedMessage id="Select-Option" />
+                    </option>
                     {planOptions?.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
@@ -214,7 +221,6 @@ const PlanPriceForm = ({
                 name="cycle"
                 onChange={formik.handleChange}
                 value={formik.values.cycle}
-                disabled={show}
               >
                 <option value="">Select Option</option>
                 {Object.entries(cycle).map(([value, label]) => (
@@ -247,7 +253,6 @@ const PlanPriceForm = ({
                 name="price"
                 onChange={formik.handleChange}
                 value={formik.values.price}
-                disabled={show}
               />
               {formik.touched.price && formik.errors.price && (
                 <Form.Control.Feedback
@@ -270,7 +275,6 @@ const PlanPriceForm = ({
                 maxLength={250}
                 showCharCount
                 inputValue={formik?.values?.description}
-                disabled={show}
               />
 
               {formik.touched.description && formik.errors.description && (
@@ -281,20 +285,18 @@ const PlanPriceForm = ({
             </Form.Group>
           </div>
         </Modal.Body>
-        {!show && (
-          <Modal.Footer>
-            <Button variant="secondary" type="submit">
-              <FormattedMessage id="Submit" />
-            </Button>
-            <Button
-              variant="link"
-              className="text-gray ms-auto"
-              onClick={() => setVisible(false)}
-            >
-              <FormattedMessage id="Close" />
-            </Button>
-          </Modal.Footer>
-        )}
+        <Modal.Footer>
+          <Button variant="secondary" type="submit">
+            <FormattedMessage id="Submit" />
+          </Button>
+          <Button
+            variant="link"
+            className="text-gray ms-auto"
+            onClick={() => setVisible(false)}
+          >
+            <FormattedMessage id="Close" />
+          </Button>
+        </Modal.Footer>
       </Form>
     </Wrapper>
   )

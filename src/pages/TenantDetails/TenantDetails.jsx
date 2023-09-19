@@ -7,12 +7,10 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 import { BsFillPersonLinesFill } from 'react-icons/bs'
 import { TabView, TabPanel } from 'primereact/tabview'
 import ChildTable from '../../components/custom/tenant/ChildTable/ChildTable'
-import { Button } from 'primereact/button'
 import DeleteConfirmation from '../../components/custom/global/DeleteConfirmation/DeleteConfirmation'
 import useRequest from '../../axios/apis/useRequest'
 import TenantForm from '../../components/custom/tenant/TenantForm/TenantForm'
 import { Wrapper } from './TenantDetails.styled'
-import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import { useDispatch, useSelector } from 'react-redux'
 import { subscriptionData, tenantInfo } from '../../store/slices/tenants'
@@ -92,11 +90,10 @@ const TenantDetails = () => {
           '88e67328-3b20-413e-b6e1-010b48fa7bc9',
           routeParams.id
         )
-        console.log('Response data:', response.data)
         const formattedSubscriptionData = {
           data: response.data.data.subscriptionFeatures.map((feature) => ({
-            featureName: feature.feature.name ,
-            featureReset:   featureResetMap[feature.feature.reset]  ,
+            featureName: feature.feature.name,
+            featureReset: featureResetMap[feature.feature.reset],
             featureStartDate: feature.startDate,
             featureEndDate: feature.endDate,
             remindLimit: `${feature.remainingUsage} ${
@@ -109,10 +106,8 @@ const TenantDetails = () => {
           startDate: response.data.data.startDate,
           endDate: response.data.data.endDate,
         }
-        console.log('Formatted data:', formattedSubscriptionData)
 
         dispatch(subscriptionData(formattedSubscriptionData))
-        console.log({ subscriptionData })
       } catch (error) {
         console.error('Error fetching subscription details:', error)
       }
@@ -253,17 +248,6 @@ const TenantDetails = () => {
                           </Table>
                         </Card.Body>
                       </Card>
-                      <div className="buttons">
-                        <div className="action">
-                          {/* <Actions
-                            tenantData={tenantObject}
-                            actions={tenantStatus}
-                            deleteConfirm={deleteConfirm}
-                            chagneStatus={chagneStatus}
-                            setActionList={setActionList}
-                          /> */}
-                        </div>
-                      </div>
                     </TabPanel>
                     {tenantObject.subscriptions.map((product, index) => (
                       <TabPanel
@@ -277,7 +261,6 @@ const TenantDetails = () => {
                           updateDetails={updateDetails}
                           updateTenant={updateTenant}
                           productIndex={index}
-                          // subscriptionData={subscriptionData}
                         />
                       </TabPanel>
                     ))}

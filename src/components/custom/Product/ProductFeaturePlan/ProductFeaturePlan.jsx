@@ -45,6 +45,8 @@ import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { Wrapper } from './ProductFeaturePlan.styled'
 import InfoPopUp from '../../Shared/InfoPopUp/InfoPopUp'
 import { cycle, featureResetMap, featureUnitMap } from '../../../../const'
+import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
+import ShowDetails from '../../Shared/ShowDetails/ShowDetails'
 
 export default function ProductFeaturePlan({ children }) {
   const [currentPlanId, setCurrentPlanId] = useState('')
@@ -71,7 +73,6 @@ export default function ProductFeaturePlan({ children }) {
   const planList = useSelector(
     (state) => state.products.products[productId]?.plans
   )
-  console.log({ listDataStore })
   // delete default key from list
   const listData = { ...listDataStore }
 
@@ -110,9 +111,19 @@ export default function ProductFeaturePlan({ children }) {
     setPopUpLable('View-Details')
   }
 
+  const handleData = (data) => {
+    return {
+      Feature: data.feature.name,
+      Plan: data.plan.name,
+      Limit: data.limit,
+      Unit: data.unit,
+      Description: data.description,
+      'Created-Date': DataTransform(data.createdDate),
+      'Edited-Date': DataTransform(data.editedDate),
+    }
+  }
   useEffect(() => {
     ;(async () => {
-      console.log({ list })
       if (!list || list.length == 0) {
         const FeaturePlanData = await getFeaturePlanList(productId)
         dispatch(
@@ -340,16 +351,22 @@ export default function ProductFeaturePlan({ children }) {
       </div>
 
       <ThemeDialog visible={visible} setVisible={setVisible}>
-        <FeaturePlanForm
-          popupLabel={<FormattedMessage id={popUpLable} />}
-          type={type}
-          FeaturePlanData={type == 'edit' ? listData[currentId] : {}}
-          setVisible={setVisible}
-          show={show}
-          setShow={setShow}
-          plan={currentPlanId}
-          feature={currentFeatureId}
-        />
+        {show ? (
+          <ShowDetails
+            popupLabel={<FormattedMessage id={popUpLable} />}
+            data={handleData(listData[currentId])}
+            setVisible={setVisible}
+          />
+        ) : (
+          <FeaturePlanForm
+            popupLabel={<FormattedMessage id={popUpLable} />}
+            type={type}
+            FeaturePlanData={type == 'edit' ? listData[currentId] : {}}
+            setVisible={setVisible}
+            plan={currentPlanId}
+            feature={currentFeatureId}
+          />
+        )}
       </ThemeDialog>
     </Wrapper>
   )

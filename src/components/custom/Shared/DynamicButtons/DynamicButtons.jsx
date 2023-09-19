@@ -7,12 +7,7 @@ import useRequest from '../../../../axios/apis/useRequest'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import TenantForm from '../../tenant/TenantForm/TenantForm'
-import {
-  Dropdown,
-  Button,
-  OverlayTrigger,
-  Tooltip,
-} from '@themesberg/react-bootstrap'
+import { Dropdown, Button } from '@themesberg/react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { Wrapper } from './DynamicButtons.styled'
@@ -155,20 +150,15 @@ const DynamicButtons = ({ buttons }) => {
             if (button.type == 'action') {
               return (
                 <span key={index}>
-                  <Button
-                    variant={button.variant}
-                    key={index}
-                    onClick={button.func}
-                  >
+                  <Button variant={button.variant} onClick={button.func}>
                     {button.icon} <FormattedMessage id={button.label} />
                   </Button>
                 </span>
               )
             } else if (button.type == 'delete') {
               return (
-                <span>
+                <span key={index}>
                   <Button
-                    key={index}
                     onClick={() => {
                       setConfirm(true)
                       setCurrentButtonIndex(index)
@@ -180,10 +170,9 @@ const DynamicButtons = ({ buttons }) => {
               )
             } else if (button.type == 'form') {
               return (
-                <span>
+                <span key={index}>
                   <Button
                     variant={button.variant}
-                    key={index}
                     onClick={() => {
                       setVisible(true)
                       setCurrentButtonIndex(index)
@@ -194,9 +183,6 @@ const DynamicButtons = ({ buttons }) => {
                 </span>
               )
             }
-          } else {
-            // if (!more) setMore(true)
-            return <></>
           }
         })}
       </div>
@@ -218,7 +204,6 @@ const DynamicButtons = ({ buttons }) => {
                         <Dropdown.Divider />
                         <Dropdown.Item
                           className="redColor"
-                          key={index}
                           onClick={() => {
                             setConfirm(true)
                             setCurrentButtonIndex(index)
@@ -230,39 +215,34 @@ const DynamicButtons = ({ buttons }) => {
                     )
                   } else if (button.type == 'form') {
                     return (
-                      <>
-                        <Dropdown.Item
-                          key={index}
-                          onClick={() => {
-                            setVisible(true)
-                            setCurrentButtonIndex(index)
-                          }}
-                        >
-                          {button.icon} <FormattedMessage id={button.label} />
-                        </Dropdown.Item>
-                      </>
+                      <Dropdown.Item
+                        key={index}
+                        onClick={() => {
+                          setVisible(true)
+                          setCurrentButtonIndex(index)
+                        }}
+                      >
+                        {button.icon} <FormattedMessage id={button.label} />
+                      </Dropdown.Item>
                     )
                   } else if (button.type == 'action') {
                     if (button.label != 'Delete') {
                       return (
-                        <>
-                          <Dropdown.Item key={index} onClick={button.func}>
-                            {button.icon} <FormattedMessage id={button.label} />
-                          </Dropdown.Item>
-                        </>
+                        <Dropdown.Item key={index} onClick={button.func}>
+                          {button.icon} <FormattedMessage id={button.label} />
+                        </Dropdown.Item>
                       )
                     } else {
                       return (
-                        <>
+                        <span key={index}>
                           <Dropdown.Divider />
                           <Dropdown.Item
-                            key={index}
                             onClick={button.func}
                             className="redColor"
                           >
                             {button.icon} <FormattedMessage id={button.label} />
                           </Dropdown.Item>
-                        </>
+                        </span>
                       )
                     }
                   }

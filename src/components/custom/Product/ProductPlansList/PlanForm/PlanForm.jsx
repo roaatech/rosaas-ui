@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
@@ -32,13 +32,13 @@ const PlanForm = ({
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
-      .required('Plan Name is required')
-      .max(15, 'Name must be at most 15 characters'),
+      .required(<FormattedMessage id="Plan-Name-is-required" />)
+      .max(15, <FormattedMessage id="Name-must-be-at-most-15-characters" />),
 
     displayOrder: Yup.number()
-      .typeError('Display Order must be a number')
-      .integer('Display Order must be an integer')
-      .min(0, 'Display Order must be a positive number')
+      .typeError(<FormattedMessage id="Display-Order-must-be-a-number" />)
+      .integer(<FormattedMessage id="Display-Order-must-be-an-integer" />)
+      .min(0, <FormattedMessage id="Display-Order-must-be-a-positive-number" />)
       .default(0),
   })
   const formik = useFormik({

@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import SimpleBar from 'simplebar-react'
 import { useLocation } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
+import { useNavigate } from 'react-router-dom'
+
 import {
   BsFillPersonLinesFill,
   BsBoxSeam,
@@ -43,6 +45,8 @@ import { FormattedMessage } from 'react-intl'
 import QuickActions from './QuickActions/QuickActions'
 
 export default (props = {}) => {
+  const navigate = useNavigate()
+
   const location = useLocation()
   const { pathname } = location
   const [show, setShow] = useState(false)
@@ -221,13 +225,6 @@ export default (props = {}) => {
         variant="dark"
         className="navbar-theme-primary px-4 d-md-none"
       >
-        <Navbar.Brand
-          className="me-lg-5"
-          as={Link}
-          to={Routes.DashboardOverview.path}
-        >
-          <Image src={logo} className="navbar-brand-light" />
-        </Navbar.Brand>
         <Navbar.Toggle
           as={Button}
           aria-controls="main-navbar"
@@ -329,7 +326,7 @@ export default (props = {}) => {
                 <CollapsableNavItem
                   eventKey={productsIsOpen}
                   title={
-                    <Link
+                    <div
                       style={{
                         textDecoration: 'none',
                         color: 'inherit',
@@ -339,9 +336,10 @@ export default (props = {}) => {
                         marginBottom: '0px',
                         height: '35px',
                         backgroundColor: 'transparent',
+                        cursor: 'pointer',
                       }}
                       className=" products-nav nav-link  "
-                      to="/products"
+                      onClick={() => navigate('/products')}
                     >
                       <BsBoxes
                         style={{
@@ -350,7 +348,7 @@ export default (props = {}) => {
                       />{' '}
                       {'  '}
                       <FormattedMessage id="Products" />
-                    </Link>
+                    </div>
                   }
                   icon={BsBoxSeam}
                   style={{}}

@@ -20,7 +20,7 @@ const UrlItemList = ({ data }) => {
         path: data.healthStatusChangeUrl,
         title: <FormattedMessage id="Health-Status-Change-Url" />,
         description: (
-          <FormattedMessage id="Health-Status-Change-Url-description" />
+          <FormattedMessage id="Health-Status-Change-Url-Description" />
         ),
       },
       {

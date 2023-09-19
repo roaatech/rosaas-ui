@@ -13,13 +13,12 @@ const SubscriptionInfoAccordion = (props) => {
   const subscriptionData = useSelector(
     (state) => state.tenants.subscriptionData
   )
-  console.log({ subscriptionData })
   const { defaultKey = [], className = '' } = props
 
   return (
     <>
       <Wrapper>
-        {subscriptionData && (
+        {subscriptionData.startDate && (
           <Accordion className={className} defaultActiveKey={defaultKey}>
             <Accordion.Item eventKey="subscription">
               <Accordion.Button
@@ -27,7 +26,7 @@ const SubscriptionInfoAccordion = (props) => {
                 className="w-100 d-flex justify-content-between accordionButton"
               >
                 <span className="firstTd fw-bold">
-                  <FormattedMessage id="Subscription Info" />
+                  <FormattedMessage id="Subscription-Info" />
                 </span>
                 <span className={`mr-2 `}>
                   <span

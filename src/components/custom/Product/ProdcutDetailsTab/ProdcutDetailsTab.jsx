@@ -35,7 +35,7 @@ const ProductDetailsTab = ({ data }) => {
               <Card.Body className="pb-0">
                 <Table
                   responsive
-                  className="table-centered table-nowrap rounded mb-0"
+                  className="table-centered table-nowrap rounded mb-0 table"
                 >
                   <tbody>
                     <tr>
