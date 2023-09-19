@@ -38,7 +38,6 @@ const PlanPriceForm = ({
   const productId = routeParams.id
   const [cyclesYouDontHave, setCyclesYouDontHave] = useState([])
 
-  console.log({ cyclesYouDontHave })
   const allPlansPrices = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
@@ -123,10 +122,7 @@ const PlanPriceForm = ({
           if (
             usualCycles.every((cycle) => cyclesAssignedToPlan.includes(cycle))
           ) {
-            // console.log({ cyclesAssignedToPlan })
             plansWithAllCyclesAssigned.push(planId)
-            // console.log({ plansWithAllCyclesAssigned })
-            // console.log({ usualCycles })
           }
         })
 
@@ -157,7 +153,7 @@ const PlanPriceForm = ({
     price: Yup.number()
       .required('This field is required')
       .min(1, 'The price must be more than 0')
-      .max(999999, 'The price must not exceed 999,999'),
+      .max(999999, <FormattedMessage id="The-value-must-not-exceed-999,999" />),
   })
 
   const formik = useFormik({
