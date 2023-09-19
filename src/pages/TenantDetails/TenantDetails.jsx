@@ -161,35 +161,37 @@ const TenantDetails = () => {
                     }}
                   >
                     <TabPanel header={<FormattedMessage id="Details" />}>
-                      <div className="dynamicButtons">
-                        <DynamicButtons
-                          buttons={
-                            tenantStatus && tenantStatus[0]?.status !== 13
-                              ? [
-                                  {
-                                    order: 1,
-                                    type: 'form',
-                                    id: routeParams.id,
-                                    label: 'Edit',
-                                    component: 'editTenant',
-                                    updateTenant: updateTenant,
-                                    icon: <AiFillEdit />,
-                                  },
-                                  ...renderActions(
+                      <div className="row-button ">
+                        <div className="dynamicButtons">
+                          <DynamicButtons
+                            buttons={
+                              tenantStatus && tenantStatus[0]?.status !== 13
+                                ? [
+                                    {
+                                      order: 1,
+                                      type: 'form',
+                                      id: routeParams.id,
+                                      label: 'Edit',
+                                      component: 'editTenant',
+                                      updateTenant: updateTenant,
+                                      icon: <AiFillEdit />,
+                                    },
+                                    ...renderActions(
+                                      tenantObject,
+                                      tenantStatus,
+                                      chagneStatus,
+                                      deleteConfirm
+                                    ),
+                                  ]
+                                : renderActions(
                                     tenantObject,
                                     tenantStatus,
                                     chagneStatus,
                                     deleteConfirm
-                                  ),
-                                ]
-                              : renderActions(
-                                  tenantObject,
-                                  tenantStatus,
-                                  chagneStatus,
-                                  deleteConfirm
-                                )
-                          }
-                        />
+                                  )
+                            }
+                          />
+                        </div>
                       </div>
                       <Card border="light" className="shadow-sm border-0">
                         <Card.Body className="p-0">
@@ -198,11 +200,49 @@ const TenantDetails = () => {
                             className="table-centered table-nowrap rounded mb-0"
                           >
                             <tbody>
+                              {/* <tr className="row-button ">
+                                <td colSpan="2">
+                                  <div className="dynamicButtons">
+                                    <DynamicButtons
+                                      buttons={
+                                        tenantStatus &&
+                                        tenantStatus[0]?.status !== 13
+                                          ? [
+                                              {
+                                                order: 1,
+                                                type: 'form',
+                                                id: routeParams.id,
+                                                label: 'Edit',
+                                                component: 'editTenant',
+                                                updateTenant: updateTenant,
+                                                icon: <AiFillEdit />,
+                                              },
+                                              ...renderActions(
+                                                tenantObject,
+                                                tenantStatus,
+                                                chagneStatus,
+                                                deleteConfirm
+                                              ),
+                                            ]
+                                          : renderActions(
+                                              tenantObject,
+                                              tenantStatus,
+                                              chagneStatus,
+                                              deleteConfirm
+                                            )
+                                      }
+                                    />
+                                  </div>
+                                </td> */}
+                              {/* </tr> */}
+
                               <tr>
-                                <td className="fw-bold">
+                                <td className="fw-bold line-cell">
                                   <FormattedMessage id="Title" />
                                 </td>
-                                <td>{tenantObject.title}</td>
+                                <td className=" line-cell">
+                                  {tenantObject.title}
+                                </td>
                               </tr>
                               <tr>
                                 <td className="fw-bold">
