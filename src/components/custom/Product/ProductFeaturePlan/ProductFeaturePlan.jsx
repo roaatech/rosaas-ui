@@ -2,13 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faEdit,
-  faEllipsisH,
   faTrashAlt,
   faNewspaper,
-  faCheckCircle,
-  faTimesCircle,
-  faCheck,
-  faTimes,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   Card,
@@ -18,35 +13,26 @@ import {
   Table,
 } from '@themesberg/react-bootstrap'
 
-import {
-  MdOutlineUnpublished,
-  MdOutlinePublishedWithChanges,
-} from 'react-icons/md'
-
 import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
 import { useParams } from 'react-router-dom'
-import { FormattedMessage } from 'react-intl'
-import TableDate from '../../Shared/TableDate/TableDate'
+import { FormattedMessage, useIntl } from 'react-intl'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
-import { BsCardHeading, BsToggleOff, BsToggleOn } from 'react-icons/bs'
+import { BsToggleOff, BsToggleOn } from 'react-icons/bs'
 
 import {
-  PlanInfo,
   PlansChangeAttr,
   deleteFeaturePlan,
-  featurePlanInfo,
   setAllFeaturePlan,
   setAllPlans,
 } from '../../../../store/slices/products'
 import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
-import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { Wrapper } from './ProductFeaturePlan.styled'
-import InfoPopUp from '../../Shared/InfoPopUp/InfoPopUp'
-import { cycle, featureResetMap, featureUnitMap } from '../../../../const'
-import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
+import { featureResetMap, featureUnitMap } from '../../../../const'
+import { DataTransform } from '../../../../lib/sharedFun/Time'
 import ShowDetails from '../../Shared/ShowDetails/ShowDetails'
+import { toast } from 'react-toastify'
 
 export default function ProductFeaturePlan({ children }) {
   const [currentPlanId, setCurrentPlanId] = useState('')
@@ -75,14 +61,27 @@ export default function ProductFeaturePlan({ children }) {
   )
   // delete default key from list
   const listData = { ...listDataStore }
-
+  const intl = useIntl()
   // const defaultData = {}
   listData['00000000-0000-0000-0000-000000000000'] &&
     delete listData['00000000-0000-0000-0000-000000000000']
   let list = listData && Object.values(listData)
+  console.log({ list })
 
   const handleDeleteFeaturePlan = async () => {
     try {
+      if (listData[currentId]?.plan?.isSubscribed) {
+        toast.error(
+          intl.formatMessage({
+            id: 'Cannot-delete-a-subscribed-feature-plan.',
+          }),
+          {
+            position: toast.POSITION.TOP_CENTER,
+          }
+        )
+        return
+      }
+
       await deleteFeaturePlanReq({ productId, PlanFeatureId: currentId })
       dispatch(deleteFeaturePlan({ productId, PlanFeatureId: currentId }))
     } catch (error) {
@@ -96,6 +95,16 @@ export default function ProductFeaturePlan({ children }) {
   }
 
   const editForm = async (id) => {
+    if (listData[id]?.plan?.isSubscribed) {
+      toast.error(
+        intl.formatMessage({ id: 'Cannot-edit-a-subscribed-feature-plan.' }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+      return
+    }
+
     setShow(false)
     setPopUpLable('Edit-Feature-Plan')
     setType('edit')
@@ -288,6 +297,23 @@ export default function ProductFeaturePlan({ children }) {
   }
 
   const handleCreateFeaturePlan = (featureId, planId) => {
+    console.log('listData:', listData)
+
+    const matchingPlan = Object.values(listData).find(
+      (item) => item.plan.id === planId
+    )
+
+    if (matchingPlan && matchingPlan.plan.isSubscribed) {
+      toast.error(
+        intl.formatMessage({
+          id: "Cannot-create-a-Plan's-Feature-while-it-is-subscribed.",
+        }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+      return
+    }
     setCurrentPlanId(planId)
     setCurrentFeatureId(featureId)
     setVisible(true)

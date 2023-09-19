@@ -117,12 +117,39 @@ export const productsSlice = createSlice({
     setAllPlans: (state, action) => {
       const allProduct = JSON.parse(JSON.stringify(current(state.products)))
       const allPlans = {}
-      action.payload.data.map((item) => {
+
+      const sortedData = action.payload.data.sort(
+        (a, b) => a.displayOrder - b.displayOrder
+      )
+
+      sortedData.map((item) => {
         allPlans[item.id] = item
       })
+
       allProduct[action.payload.productId].plans = allPlans
       state.products = allProduct
     },
+    // PlanInfo: (state, action) => {
+    //   const { productId, planId, data } = action.payload
+    //   const currentProducts = JSON.parse(
+    //     JSON.stringify(current(state.products))
+    //   )
+
+    //   if (!currentProducts[productId].plans) {
+    //     currentProducts[productId].plans = {}
+    //   }
+    //   if (currentProducts[productId].plans[planId]) {
+    //     currentProducts[productId].plans[planId] = data
+    //     delete currentProducts[productId].featurePlan
+    //   } else {
+    //     currentProducts[productId].plans = {
+    //       [planId]: data,
+    //       ...currentProducts[productId].plans,
+    //     }
+    //   }
+    //   state.products = currentProducts
+    // },
+
     PlanInfo: (state, action) => {
       const { productId, planId, data } = action.payload
       const currentProducts = JSON.parse(
@@ -132,15 +159,21 @@ export const productsSlice = createSlice({
       if (!currentProducts[productId].plans) {
         currentProducts[productId].plans = {}
       }
-      if (currentProducts[productId].plans[planId]) {
-        currentProducts[productId].plans[planId] = data
-        delete currentProducts[productId].featurePlan
-      } else {
-        currentProducts[productId].plans = {
-          [planId]: data,
-          ...currentProducts[productId].plans,
-        }
-      }
+
+      currentProducts[productId].plans[planId] = data
+      delete currentProducts[productId].featurePlan
+
+      const sortedPlans = Object.values(currentProducts[productId].plans).sort(
+        (a, b) => a.displayOrder - b.displayOrder
+      )
+
+      const allPlans = {}
+      sortedPlans.forEach((plan) => {
+        allPlans[plan.id] = plan
+      })
+
+      currentProducts[productId].plans = allPlans
+
       state.products = currentProducts
     },
 

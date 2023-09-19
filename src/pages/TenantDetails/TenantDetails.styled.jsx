@@ -1,11 +1,22 @@
 import { styled } from 'styled-components'
 export const Wrapper = styled.div`
-  .dynamicButtons {
-    margin-left: auto;
-    width: fit-content;
-    margin-bottom: 1.25rem;
+  /* .row-button {
+    width: 100%;
+  } */
+  .line-cell {
+    border-top: 1px solid #000;
+    padding-right: 20px;
+    padding-left: 20px;
   }
-
+  .dynamicButtons {
+    margin-left: 0px;
+    margin-top: -15px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    align-self: flex-start;
+  }
   tr:last-child {
     border-bottom: 0 !important;
   }

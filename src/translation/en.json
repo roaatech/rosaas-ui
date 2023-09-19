@@ -12,6 +12,7 @@
   "Delete": "Delete",
   "This-field-is-required": "This field is required",
   "Please-enter-a-valid-value": "Please enter a valid value",
+  "All-values-are-assigned.": "All values are assigned.",
   "singInTo": "Sign in to",
   "otherLang": "العربية",
   "signIn": "Sign in",
@@ -183,5 +184,8 @@
   "English-Characters,-Numbers,-and-Underscores-are-only-accepted.": "English Characters, Numbers, and Underscores are only accepted.",
   "Must-be-maximum-100-digits": "Must be maximum 100 digits",
   "Display-Order-must-be-an-integer": "Display Order must be an integer",
-  "Display-Order-must-be-a-positive-number": "Display Order must be a positive number"
+  "Display-Order-must-be-a-positive-number": "Display Order must be a positive number",
+  "Cannot-delete-a-subscribed-feature-plan.": "Cannot delete a subscribed Feature's Plan.",
+  "Cannot-edit-a-subscribed-feature-plan.": "Cannot edit a subscribed Feature's Plan.",
+  "Cannot-create-a-Plan's-Feature-while-it-is-subscribed.": "Cannot create a Plan's Feature while it is subscribed."
 }

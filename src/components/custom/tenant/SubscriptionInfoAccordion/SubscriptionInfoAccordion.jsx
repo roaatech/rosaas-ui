@@ -8,6 +8,7 @@ import { Wrapper } from './SubscriptionInfoAccordion.styled'
 import Label from '../../Shared/label/Label'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import { size } from 'lodash'
+import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 
 const SubscriptionInfoAccordion = (props) => {
   const subscriptionData = useSelector(
@@ -29,29 +30,13 @@ const SubscriptionInfoAccordion = (props) => {
                   <FormattedMessage id="Subscription-Info" />
                 </span>
                 <span className={`mr-2 `}>
-                  <span
-                    style={{
-                      fontSize: 'var(--smallFont)',
-                      border: '1px solid',
-                      padding: '0.05rem 0.5rem',
-                      borderRadius: '7px',
-                      borderColor: 'var(--surface-400)',
-                    }}
-                  >
-                    {subscriptionData.planName}
+                  <span>
+                    <DateLabelWhite text={subscriptionData.planName} />
                   </span>
                   {'   '}From{' '}
-                  <span
-                    style={{
-                      fontSize: 'var(--smallFont)',
-                      border: '1px solid',
-                      padding: '0.05rem 0.5rem',
-                      borderRadius: '7px',
-                      borderColor: 'var(--surface-400)',
-                    }}
-                  >
-                    {formatDate(subscriptionData.startDate)}
-                  </span>{' '}
+                  <DateLabelWhite
+                    text={formatDate(subscriptionData.startDate)}
+                  />{' '}
                   to <DateLabel endDate={subscriptionData.endDate} />
                 </span>
               </Accordion.Button>
@@ -73,7 +58,11 @@ const SubscriptionInfoAccordion = (props) => {
                           <tr key={`subscription-${index}`}>
                             <td>{subscription.featureName}</td>
                             <td>{subscription.featureReset}</td>
-                            <td>{formatDate(subscription.featureStartDate)}</td>
+                            <td>
+                              <DateLabelWhite
+                                text={formatDate(subscription.featureStartDate)}
+                              />
+                            </td>
                             <td>
                               <DateLabel
                                 endDate={

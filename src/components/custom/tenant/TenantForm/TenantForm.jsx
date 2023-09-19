@@ -139,7 +139,7 @@ const TenantForm = ({
   let planOptions
   if (listData[formik.values.product]?.plans) {
     planOptions = Object.values(listData[formik.values.product].plans)
-      .filter((item) => item.isPublished === true) // Add your filter condition here
+      .filter((item) => item.isPublished === true)
       .map((item, index) => ({
         value: item.id,
         label: item.name,

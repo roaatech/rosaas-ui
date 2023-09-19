@@ -6,6 +6,6 @@ export const Wrapper = styled.span`
     padding: 7px 12px;
     border-radius: 5px;
     font-size: var(--smallFont);
-    background-color: var(--primary1);
+    /* background-color: var(--primary1); */
   }
 `
