@@ -137,14 +137,14 @@ export default function ProductFeaturePlan({ children }) {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item onSelect={() => editForm(id)}>
-                <FontAwesomeIcon icon={faEdit} className="me-2" />
+                <FontAwesomeIcon icon={faEdit} className="mx-2" />
                 <FormattedMessage id="Edit" />
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => deleteConfirm(id)}
                 className="text-danger"
               >
-                <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+                <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
                 <FormattedMessage id="Delete" />
               </Dropdown.Item>
             </Dropdown.Menu>

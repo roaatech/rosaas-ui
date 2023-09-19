@@ -34,7 +34,7 @@ const TableHead = ({
               <div className="p-input-icon-left mt-2 mr-2">{children[1]}</div>
             ) : null}
             {search && (
-              <div className={`p-input-icon-left mr-2`}>
+              <div className={`p-input-icon-left mx-2`}>
                 <BsSearch />
                 <InputText
                   className="form-control"
@@ -53,7 +53,7 @@ const TableHead = ({
               className="addButton"
               onClick={() => setVisibleHead(true)}
             >
-              <FontAwesomeIcon icon={faPlus} className="me-2" />
+              <FontAwesomeIcon icon={faPlus} className="mx-2" />
               {label}
             </Button>
           </ButtonGroup>

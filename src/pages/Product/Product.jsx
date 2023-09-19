@@ -234,18 +234,18 @@ export default function Product({ children }) {
                       <Dropdown.Item
                         onSelect={() => navigate(`/products/${data.id}`)}
                       >
-                        <FontAwesomeIcon icon={faEye} className="me-2" />
+                        <FontAwesomeIcon icon={faEye} className="mx-2" />
                         <FormattedMessage id="View-Details" />
                       </Dropdown.Item>
                       <Dropdown.Item onSelect={() => editForm(data.id)}>
-                        <FontAwesomeIcon icon={faEdit} className="me-2" />
+                        <FontAwesomeIcon icon={faEdit} className="mx-2" />
                         <FormattedMessage id="Edit" />
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => deleteConfirm(data.id)}
                         className="text-danger"
                       >
-                        <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+                        <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
                         <FormattedMessage id="Delete" />
                       </Dropdown.Item>
                     </Dropdown.Menu>

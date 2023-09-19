@@ -139,7 +139,14 @@ const DynamicButtons = ({ buttons }) => {
     <Wrapper className="d-flex">
       <div
         className="dynamicAction"
-        style={{ borderRadius: more == true ? '8px 0 0 8px' : '8px' }}
+        style={{
+          borderRadius:
+            more == true
+              ? localStorage.getItem('direction') == 'rtl'
+                ? '0 8px 8px 0'
+                : '8px 0 0 8px'
+              : '8px',
+        }}
       >
         {/* {more.toString()} */}
         {buttons.map((button, index) => {

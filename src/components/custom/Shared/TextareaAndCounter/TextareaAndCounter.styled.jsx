@@ -12,7 +12,7 @@ export const TextareaCounterWrapper = styled.div`
     font-size: var(--smallFont);
     position: absolute;
     bottom: -20px;
-    right: 0;
+    ${localStorage.getItem('direction') === 'rtl' ? 'left' : 'right'} : 0;
     padding-right: 6px;
   }
 

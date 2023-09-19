@@ -175,7 +175,7 @@ export const ProductPlansList = ({ productId }) => {
                     editForm(id)
                   }}
                 >
-                  <FontAwesomeIcon icon={faEdit} className="me-2" />
+                  <FontAwesomeIcon icon={faEdit} className="mx-2" />
                   <FormattedMessage id="Edit" />
                 </Dropdown.Item>
                 <Dropdown.Item
@@ -183,12 +183,12 @@ export const ProductPlansList = ({ productId }) => {
                 >
                   {isPublished ? (
                     <span className=" ">
-                      <MdOutlineUnpublished className="me-2" />
+                      <MdOutlineUnpublished className="mx-2" />
                       <FormattedMessage id="Unpublished" />
                     </span>
                   ) : (
                     <span className=" ">
-                      <MdOutlinePublishedWithChanges className="me-2" />
+                      <MdOutlinePublishedWithChanges className="mx-2" />
                       <FormattedMessage id="Published" />
                     </span>
                   )}
@@ -197,7 +197,7 @@ export const ProductPlansList = ({ productId }) => {
                   onClick={() => deleteConfirm(id)}
                   className="text-danger"
                 >
-                  <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+                  <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
                   <FormattedMessage id="Delete" />
                 </Dropdown.Item>
               </Dropdown.Menu>

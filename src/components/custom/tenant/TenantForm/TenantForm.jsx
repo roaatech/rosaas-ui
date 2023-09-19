@@ -262,7 +262,7 @@ const TenantForm = ({
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
-                  className="form-select"
+                  className="form-control"
                   name="product"
                   id="product"
                   value={formik.values.product}
@@ -297,7 +297,7 @@ const TenantForm = ({
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
-                  className="form-select"
+                  className="form-control"
                   name="plan"
                   id="plan"
                   value={formik.values.plan}
@@ -333,7 +333,7 @@ const TenantForm = ({
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
-                  className="form-select"
+                  className="form-control"
                   name="price"
                   id="price"
                   value={formik.values.price}
@@ -394,7 +394,7 @@ const TenantForm = ({
           </Button>
           <Button
             variant="link"
-            className="text-gray ms-auto"
+            className="text-gray "
             onClick={() => setVisible(false)}
           >
             <FormattedMessage id="Close" />

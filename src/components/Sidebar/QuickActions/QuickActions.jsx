@@ -79,7 +79,7 @@ const QuickAction = ({
           </div>
           {/* <ButtonGroup className={fullWidth && 'w-100'}>
           <Button variant="secondary" onClick={() => setVisibleHead(true)}>
-            <FontAwesomeIcon icon={faPlus} className="me-2" />
+            <FontAwesomeIcon icon={faPlus} className="mx-2" />
             {label}
           </Button>
           </ButtonGroup> */}
@@ -101,7 +101,7 @@ const QuickAction = ({
                 onSelect={() => setVisibleTenant(true)}
                 className="text-dark"
               >
-                <span className="me-2 ">
+                <span className="mx-2 ">
                   <BsFillPersonPlusFill className="product-icon" />
                   {/* <FontAwesomeIcon icon={faPlus} className="plus icon-dark" /> */}
                 </span>
@@ -111,7 +111,7 @@ const QuickAction = ({
                 onSelect={() => setVisibleProduct(true)}
                 className="text-dark"
               >
-                <span className=" me-2 ">
+                <span className=" mx-2 ">
                   <BsBoxSeam className="product-icon" />
                   <FontAwesomeIcon icon={faPlus} className="plus icon-dark" />
                 </span>
@@ -122,7 +122,7 @@ const QuickAction = ({
               onClick={() => deleteConfirm(id)}
               className="text-danger"
             >
-              <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+              <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
               <FormattedMessage id="Delete" />
             </Dropdown.Item> */}
             </Dropdown.Menu>

@@ -14,7 +14,9 @@ export const Wrapper = styled.div`
 
   span.label {
     font-size: var(--normalFont);
-    margin-right: 0.25rem;
+    margin: ${localStorage.getItem('direction') === 'rtl'
+      ? '0 0 0 0.25rem'
+      : '0 0.25rem 0 0'};
   }
   .green {
     color: var(--green);

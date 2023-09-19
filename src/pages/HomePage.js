@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Routes } from '../routes'
 import Sidebar from '../components/Sidebar/Sidebar'
-import Navbar from '../components/Navbar'
+import Navbar from '../components/Navbar/Navbar'
 import { useSelector } from 'react-redux'
 import useRequest from '../axios/apis/useRequest'
 import { Route, Routes as RouteG } from 'react-router-dom'
