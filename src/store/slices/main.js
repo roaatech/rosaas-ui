@@ -12,6 +12,8 @@ export const mainSlice = createSlice({
   reducers: {
     directionFun: (state, action) => {
       state.direction = action.payload
+      localStorage.setItem('direction', action.payload)
+      console.log(action.payload)
     },
     changeMode: (state, action) => {
       state.darkMode = action.payload

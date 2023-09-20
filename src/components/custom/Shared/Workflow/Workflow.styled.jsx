@@ -17,7 +17,9 @@ export const Wrapper = styled.div`
         content: '';
         position: absolute;
         top: 0;
-        left: 4px;
+        left: ${localStorage.getItem('direction') == 'rtl'
+          ? 'calc(100% - 6px)'
+          : '4px'};
         height: 100%;
         border-left: 2px solid #e5e7eb;
       }
@@ -25,7 +27,9 @@ export const Wrapper = styled.div`
         content: '';
         position: absolute;
         top: 8px;
-        left: 8px;
+        left: ${localStorage.getItem('direction') == 'rtl'
+          ? 'calc(100% - 2px)'
+          : '8px'};
         width: 10px;
         height: 10px;
         margin-top: 0.425rem;

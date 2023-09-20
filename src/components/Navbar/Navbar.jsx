@@ -19,7 +19,7 @@ import useGlobal from '../../lib/hocks/global'
 import { useSelector } from 'react-redux'
 import { logOut } from '../../store/slices/auth'
 import { useDispatch } from 'react-redux'
-import { changeMode } from '../../store/slices/main'
+import { changeMode, directionFun } from '../../store/slices/main'
 import { useDarkreader } from 'react-darkreader'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './Navbar.styled'
@@ -131,6 +131,21 @@ export default (props) => {
                 </Dropdown.Item> */}
 
                   {/* <Dropdown.Divider /> */}
+
+                  <Dropdown.Item
+                    className="fw-bold"
+                    onClick={() => {
+                      dispatch(
+                        directionFun(direction === 'rtl' ? 'ltr' : 'rtl')
+                      )
+                    }}
+                  >
+                    {direction === 'rtl' ? (
+                      <FormattedMessage id="AR" />
+                    ) : (
+                      <FormattedMessage id="EN" />
+                    )}
+                  </Dropdown.Item>
 
                   <Dropdown.Item
                     className="fw-bold"

@@ -57,14 +57,14 @@ export const Wrapper = styled.div`
     @media (max-width: 1100px) {
       margin-top: 20px;
       width: 100%;
-      margin-left: 0;
     }
     width: 35%;
-    margin: 0 0 0 15px;
+    margin: ${localStorage.getItem('direction') === 'rtl'
+      ? '0 15px 20px 0'
+      : '0 0 20px 15px'};
     font-size: var(--smallFont);
     background: var(--themeSecColor);
     border-radius: 10px;
-    margin-bottom: 20px;
   }
 
   .buttons {

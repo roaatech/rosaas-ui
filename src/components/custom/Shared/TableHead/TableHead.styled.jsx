@@ -6,6 +6,7 @@ export const Wrapper = styled.div`
   }
   input.p-inputtext.p-component {
     background: var(--themeSecColor);
+    background: var(--themeSecColor);
     color: var(--themeColor);
   }
 

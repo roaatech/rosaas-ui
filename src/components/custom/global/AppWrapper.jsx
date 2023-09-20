@@ -15,6 +15,7 @@ import {
   changePreloader,
 } from '../../../store/slices/main'
 import useRequest from '../../../axios/apis/useRequest'
+import { useState } from 'react'
 
 const AppWrapper = ({ children, customHistory }) => {
   const { userData } = useRequest()
@@ -23,6 +24,7 @@ const AppWrapper = ({ children, customHistory }) => {
   let direction = useSelector((state) => state.main.direction)
   let darkMode = useSelector((state) => state.main.darkMode)
   let loaded = useSelector((state) => state.main.preloader)
+  const [triggerReload, setTriggerReload] = useState(false)
   useEffect(() => {
     ;(async () => {
       if (localStorage.getItem('direction') === 'rtl') {
@@ -42,7 +44,7 @@ const AppWrapper = ({ children, customHistory }) => {
         await userData()
         // send token to get userData then set it in the store
       }
-
+      setTriggerReload(true)
       dispatch(changePreloader(false))
     })()
   }, [])
@@ -62,7 +64,7 @@ const AppWrapper = ({ children, customHistory }) => {
         locale={direction === 'rtl' ? 'ar' : 'en'}
         messages={messages}
       >
-        {children}
+        {true && children}
       </IntlProvider>
     </>
   )
