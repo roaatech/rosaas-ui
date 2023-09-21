@@ -57,6 +57,7 @@ export default (props = {}) => {
   const [filteredProducts, setFilteredProducts] = useState(
     Object.values(productsData)
   )
+  let direction = useSelector((state) => state.main.direction)
 
   const [visibleHead, setVisibleHead] = useState(false)
   const [first, setFirst] = useState(0)
@@ -75,7 +76,7 @@ export default (props = {}) => {
     }
 
     return (
-      <Wrapper>
+      <Wrapper direction={direction}>
         <Accordion as={Nav.Item} defaultActiveKey={'open'}>
           <Accordion.Item eventKey={eventKey}>
             <Accordion.Button

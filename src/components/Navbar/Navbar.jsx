@@ -74,7 +74,7 @@ export default (props) => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper direction={direction}>
       <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">
         <Container fluid className="px-0">
           <div className="d-flex justify-content-between w-100">
@@ -135,15 +135,13 @@ export default (props) => {
                   <Dropdown.Item
                     className="fw-bold"
                     onClick={() => {
-                      dispatch(
-                        directionFun(direction === 'rtl' ? 'ltr' : 'rtl')
-                      )
+                      changeDirection(direction === 'rtl' ? 'ltr' : 'rtl')
                     }}
                   >
                     {direction === 'rtl' ? (
-                      <FormattedMessage id="AR" />
+                      <FormattedMessage id="English" />
                     ) : (
-                      <FormattedMessage id="EN" />
+                      <FormattedMessage id="Arabic" />
                     )}
                   </Dropdown.Item>
 

@@ -103,14 +103,13 @@ const GlobalStyles = createGlobalStyle`
 }
 
 .sidebar{
-  right: ${localStorage.getItem('direction') == 'rtl' ? '0' : 'unset'};
-  left: ${localStorage.getItem('direction') == 'rtl' ? 'unset' : '0'}
+  right: ${(props) => (props.direction == 'rtl' ? '0' : 'unset')};
+  left: ${(props) => (props.direction == 'rtl' ? 'unset' : '0')}
 }
 
 .content {
-    margin: ${
-      localStorage.getItem('direction') == 'rtl' ? '0 260px 0 0' : '0 0 0 260px'
-    };
+    margin: ${(props) =>
+      props.direction == 'rtl' ? '0 260px 0 0' : '0 0 0 260px'};
 }
 
 .sidebar-inner .addNew {
@@ -365,19 +364,18 @@ nav svg.svg-inline--fa.fa-bell {
   background-color: var(--table-hover);
 }
 .dropdown-item{
-   text-align: ${localStorage.getItem('direction') == 'rtl' && 'right'}
+   text-align: ${(props) => props.direction == 'rtl' && 'right'}
 }
 .p-input-icon-left > .p-inputtext{
-   padding: ${
-     localStorage.getItem('direction') == 'rtl'
+   padding: ${(props) =>
+     props.direction == 'rtl'
        ? '0.5rem  2.5rem 0.5rem 0'
-       : '0.5rem  0 0.5rem  2.5rem'
-   }
+       : '0.5rem  0 0.5rem  2.5rem'}
 }
 
 .p-input-icon-left > i:first-of-type, .p-input-icon-left > svg:first-of-type, .p-input-icon-left > .p-input-prefix {
-    left: ${localStorage.getItem('direction') == 'rtl' ? 'unset' : '0.75rem'};
-    right: ${localStorage.getItem('direction') == 'rtl' ? '0.75rem' : 'unset'};
+    left: ${(props) => (props.direction == 'rtl' ? 'unset' : '0.75rem')};
+    right: ${(props) => (props.direction == 'rtl' ? '0.75rem' : 'unset')};
  }
 
 
@@ -391,17 +389,15 @@ nav svg.svg-inline--fa.fa-bell {
 }
 
 .p-dialog.p-confirm-dialog .p-confirm-dialog-message{
-  margin: ${localStorage.getItem('direction') == 'rtl' && '0 10px 0 0'}
+  margin: ${(props) => props.direction == 'rtl' && '0 10px 0 0'}
 }
 .accordion-button::after {
-  margin: ${
-    localStorage.getItem('direction') == 'rtl' ? '0 auto 0 0' : '0  0 0 auto'
-  }
+  margin: ${(props) =>
+    props.direction == 'rtl' ? '0 auto 0 0' : '0  0 0 auto'}
    
   }
 .modal-header .btn-close{
-  margin: ${localStorage.getItem('direction') == 'rtl' && '0 auto 0 0 '}
-  
+  margin: ${(props) => props.direction == 'rtl' && '0 auto 0 0 '}
 }
 .p-paginator .p-dropdown .p-dropdown-label{
   padding-right: 10px;

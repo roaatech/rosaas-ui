@@ -59,9 +59,8 @@ export const Wrapper = styled.div`
       width: 100%;
     }
     width: 35%;
-    margin: ${localStorage.getItem('direction') === 'rtl'
-      ? '0 15px 20px 0'
-      : '0 0 20px 15px'};
+    margin: ${(props) =>
+      props.direction == 'rtl' ? '0 15px 20px 0' : '0 0 20px 15px'};
     font-size: var(--smallFont);
     background: var(--themeSecColor);
     border-radius: 10px;

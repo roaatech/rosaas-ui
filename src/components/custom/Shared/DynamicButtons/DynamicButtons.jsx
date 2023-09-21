@@ -21,6 +21,8 @@ const DynamicButtons = ({ buttons }) => {
   const navigate = useNavigate()
   const productsData = useSelector((state) => state.products.products)
   const tenantsData = useSelector((state) => state.tenants.tenants)
+  let direction = useSelector((state) => state.main.direction)
+
   const [confirm, setConfirm] = useState(false)
   const [currentButtonIndex, setCurrentButtonIndex] = useState()
   const [more, setMore] = useState(false)
@@ -136,13 +138,13 @@ const DynamicButtons = ({ buttons }) => {
   }
 
   return (
-    <Wrapper className="d-flex">
+    <Wrapper direction={direction} className="d-flex">
       <div
         className="dynamicAction"
         style={{
           borderRadius:
             more == true
-              ? localStorage.getItem('direction') == 'rtl'
+              ? direction == 'rtl'
                 ? '0 8px 8px 0'
                 : '8px 0 0 8px'
               : '8px',

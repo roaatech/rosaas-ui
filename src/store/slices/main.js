@@ -4,7 +4,7 @@ export const mainSlice = createSlice({
   name: 'main',
   initialState: {
     darkMode: false,
-    direction: 'ltr',
+    direction: localStorage.getItem('direction') || 'ltr',
     preloader: true,
     sidebar: 1,
     history: [],
@@ -12,8 +12,6 @@ export const mainSlice = createSlice({
   reducers: {
     directionFun: (state, action) => {
       state.direction = action.payload
-      localStorage.setItem('direction', action.payload)
-      console.log(action.payload)
     },
     changeMode: (state, action) => {
       state.darkMode = action.payload

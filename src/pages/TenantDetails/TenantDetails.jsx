@@ -31,6 +31,7 @@ const TenantDetails = () => {
   const [currentId, setCurrentId] = useState('')
   const [updateDetails, setUpdateDetails] = useState(0)
   const [visible, setVisible] = useState(false)
+  let direction = useSelector((state) => state.main.direction)
 
   const tenantsData = useSelector((state) => state.tenants.tenants)
   const activeIndex = useSelector((state) => state.tenants.currentTab)
@@ -129,7 +130,7 @@ const TenantDetails = () => {
   }, [routeParams.id, dispatch])
 
   return (
-    <Wrapper>
+    <Wrapper direction={direction}>
       {tenantObject && (
         <BreadcrumbComponent
           breadcrumbInfo={'TenantDetails'}

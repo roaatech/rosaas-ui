@@ -21,12 +21,12 @@ export const Wrapper = styled.div`
   }
   .breadcrumb-item::before {
     color: var(--themeColor) !important;
-    padding: ${localStorage.getItem('direction') === 'rtl' && '0 0 0 10px '};
-    float: ${localStorage.getItem('direction') === 'rtl' && 'right'};
+    padding: ${(props) => props.direction == 'rtl' && '0 0 0 10px '};
+    float: ${(props) => props.direction == 'rtl' && 'right'};
   }
 
   .breadcrumb-item + .breadcrumb-item {
-    padding: ${localStorage.getItem('direction') === 'rtl' && '0 10px 0 0'};
+    padding: ${(props) => props.direction == 'rtl' && '0 10px 0 0'};
   }
 
   * {

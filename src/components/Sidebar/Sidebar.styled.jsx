@@ -27,8 +27,7 @@ export const Wrapper = styled.div`
     font-weight: 900;
     font-size: 12px;
     font-family: monospace;
-    transform: ${localStorage.getItem('direction') == 'rtl' &&
-    'rotate(180deg)'};
+    transform: ${(props) => props.direction == 'rtl' && 'rotate(180deg)'};
   }
 
   .accordion-item {
@@ -46,15 +45,15 @@ export const Wrapper = styled.div`
   }
 
   .nav-link .sidebar-icon {
-    margin: ${localStorage.getItem('direction') == 'rtl'
-      ? '0 0 0 0.5rem'
-      : '0 0.5rem 0 0'};
+    margin: ${(props) =>
+      props.direction == 'rtl' ? '0 0 0 0.5rem' : '0 0.5rem 0 0'};
   }
 
   .multi-level .nav-link {
-    padding: ${localStorage.getItem('direction') == 'rtl'
-      ? '0.5rem  45px 0.5rem  0'
-      : '0.5rem   0 0.5rem 0 45px'};
+    padding: ${(props) =>
+      props.direction == 'rtl'
+        ? '0.5rem  45px 0.5rem  0'
+        : '0.5rem   0 0.5rem 0 45px'};
   }
 `
 

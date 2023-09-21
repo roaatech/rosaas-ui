@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { TextareaCounterWrapper } from './TextareaAndCounter.styled'
+import { useSelector } from 'react-redux'
 
 const TextareaAndCounter = ({
   addTextarea,
@@ -11,6 +12,7 @@ const TextareaAndCounter = ({
   const [characterCount, setCharacterCount] = useState(inputValue?.length || 0)
   const [value, setValue] = useState(inputValue)
   const textareaRef = useRef(null)
+  let direction = useSelector((state) => state.main.direction)
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -29,7 +31,7 @@ const TextareaAndCounter = ({
   }
 
   return (
-    <TextareaCounterWrapper>
+    <TextareaCounterWrapper direction={direction}>
       <div className="textarea-container">
         <textarea
           className="form-control"

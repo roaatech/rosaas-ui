@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { urlStyle } from '../../../../const'
 import { Wrapper } from './Urls.styled'
+import { useSelector } from 'react-redux'
 
 const Urls = (data) => {
+  let direction = useSelector((state) => state.main.direction)
+
   const [URLS, setURLS] = useState([
     {
       method: 'POST',
@@ -27,7 +30,7 @@ const Urls = (data) => {
   ])
 
   return (
-    <Wrapper>
+    <Wrapper direction={direction}>
       {URLS.map((url, index) => (
         <div
           key={index}

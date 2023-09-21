@@ -20,6 +20,7 @@ import { AiFillEdit } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
 import useActions from '../Actions/Actions'
 import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
+import { useSelector } from 'react-redux'
 export default function ChildTable({
   productData,
   tenantId,
@@ -30,6 +31,7 @@ export default function ChildTable({
 }) {
   const { renderActions } = useActions()
   const { editTenantStatus } = useRequest()
+  let direction = useSelector((state) => state.main.direction)
 
   const chagneStatus = async (actionStatus) => {
     await editTenantStatus({
@@ -62,7 +64,7 @@ export default function ChildTable({
   ])
 
   return (
-    <Wrapper>
+    <Wrapper direction={direction}>
       <div className="dynamicButtons">
         <DynamicButtons
           buttons={

@@ -27,7 +27,7 @@ const AppWrapper = ({ children, customHistory }) => {
   const [triggerReload, setTriggerReload] = useState(false)
   useEffect(() => {
     ;(async () => {
-      if (localStorage.getItem('direction') === 'rtl') {
+      if (direction === 'rtl') {
         changeDirection('rtl')
       } else {
         changeDirection('ltr')
