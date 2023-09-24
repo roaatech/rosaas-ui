@@ -127,6 +127,7 @@ export default function ProductFeaturePlan({ children }) {
       Feature: data.feature.name,
       Plan: data.plan.name,
       Limit: data.limit,
+      // Reset: data.feature.reset,
       Unit: data.unit,
       Description: data.description,
       'Created-Date': DataTransform(data.createdDate),
@@ -168,6 +169,7 @@ export default function ProductFeaturePlan({ children }) {
         reset: item.feature.reset,
         index: Object.keys(featuresObj).length,
       }
+      console.log({ reset: item.feature.reset })
     }
     tableData[item.plan.id + ',' + item.feature.id] = item.id
   })
@@ -319,7 +321,7 @@ export default function ProductFeaturePlan({ children }) {
     setCurrentPlanId(planId)
     setCurrentFeatureId(featureId)
     setVisible(true)
-    setPopUpLable('Add-Feature-Plan')
+    setPopUpLable('Add-Plan-Feature')
     setType('create')
     setShow(false)
   }

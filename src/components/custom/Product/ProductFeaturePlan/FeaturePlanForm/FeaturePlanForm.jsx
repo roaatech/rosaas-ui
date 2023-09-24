@@ -48,6 +48,7 @@ const FeaturePlanForm = ({
     (state) => state.products.products[productId]?.plans
   )
   let allPlansArray = allPlans && Object.values(allPlans)
+  allPlansArray = allPlansArray.filter((plan) => !plan.isSubscribed)
 
   const featureOptions = listFeatureData
     ? allFeatureArray.map((item) => {
@@ -55,6 +56,7 @@ const FeaturePlanForm = ({
           value: item.id,
           label: item.name,
           type: item.type == 1 ? 'Number' : 'Boolean',
+          reset: item.reset,
         }
       })
     : []
@@ -159,6 +161,9 @@ const FeaturePlanForm = ({
                 name: featureOptions.find(
                   (item) => item.value === values.feature
                 ).label,
+                reset: featureOptions.find(
+                  (item) => item.value === values.feature
+                ).reset,
               },
               plan: {
                 id: values.plan,

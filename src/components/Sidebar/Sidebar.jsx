@@ -155,6 +155,7 @@ export default (props = {}) => {
   const sidebarStatus = (group) => {
     return group.some((obj) => location.pathname.includes(obj.id))
   }
+  const [activeIndex, setActiveIndex] = useState(0)
 
   const paramsID = useParams().id
 
