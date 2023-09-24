@@ -54,10 +54,14 @@ export default (props = {}) => {
   const [filteredTenant, setFilteredTenant] = useState(
     Object.values(tenantsData)
   )
+  const [filteredProducts, setFilteredProducts] = useState(
+    Object.values(productsData)
+  )
 
-  let filteredProducts = Object.values(productsData)
-  const setFilteredProducts = (newData) => {
-    filteredProducts = newData
+  let unFilteredProducts = Object.values(productsData)
+  const setUnFilteredProducts = (newData) => {
+    console.log({ newData })
+    unFilteredProducts = newData
   }
 
   let direction = useSelector((state) => state.main.direction)
@@ -316,8 +320,11 @@ export default (props = {}) => {
                 </CollapsableNavItem>
               ) : null}
 
-              {Array.isArray(filteredProducts) &&
-              filteredProducts.length > 0 ? (
+              {Array.isArray(
+                searchValue.length ? filteredProducts : unFilteredProducts
+              ) &&
+              (searchValue.length ? filteredProducts : unFilteredProducts)
+                .length > 0 ? (
                 <CollapsableNavItem
                   eventKey={productsIsOpen}
                   title={
@@ -332,7 +339,10 @@ export default (props = {}) => {
                   }
                   style={{}}
                 >
-                  {filteredProducts.map((product, index) => (
+                  {(searchValue.length
+                    ? filteredProducts
+                    : unFilteredProducts
+                  ).map((product, index) => (
                     <NavItem
                       key={index}
                       title={product.name}
