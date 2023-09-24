@@ -85,6 +85,7 @@ const Wrapper = styled.div`
   .firstTd {
     width: 145px;
     padding-right: 0 !important;
+    text-align: ${(props) => (props.direction == 'rtl' ? 'right' : 'left')};
   }
   .tableTitle {
     margin: 1rem 0 0.5rem 1rem;

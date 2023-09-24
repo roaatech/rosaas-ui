@@ -15,9 +15,8 @@ export const Wrapper = styled.div`
       padding: 3px 20px;
       border-radius: 5px;
       display: inline-block;
-      margin: ${localStorage.getItem('direction') == 'rtl'
-        ? '0 0 0 10px'
-        : '0 10px 0 0'};
+      margin: ${(props) =>
+        props.direction == 'rtl' ? '0 0 0 10px' : '0 10px 0 0'};
     }
 
     .url {

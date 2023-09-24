@@ -5,11 +5,13 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { Tooltip, OverlayTrigger } from '@themesberg/react-bootstrap'
 import { AiFillCopy } from 'react-icons/ai'
 import { FormattedMessage } from 'react-intl'
+import { useSelector } from 'react-redux'
 
 const UrlItem = ({ data }) => {
   const url = data
   const [code, setCode] = useState(url.path)
   const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
+  let direction = useSelector((state) => state.main.direction)
 
   const handleCopy = () => {
     setToolTipText('Copied')
@@ -19,7 +21,7 @@ const UrlItem = ({ data }) => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper direction={direction}>
       <div
         className="bar"
         style={{

@@ -21,6 +21,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
   const tenantsData = useSelector((state) => state.tenants.tenants)
   const [first, setFirst] = useState(0)
   const [rows, setRows] = useState(10)
+  let direction = useSelector((state) => state.main.direction)
 
   const timeLine =
     tenantsData[routeParams.id].subscriptions[productIndex].history
@@ -71,7 +72,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
   }, [routeParams.id, updateDetails, first, rows])
 
   return (
-    <Wrapper>
+    <Wrapper direction={direction}>
       <div className="timeLineCont">
         {allItems().map((item, index) => (
           <div key={index}>

@@ -12,9 +12,6 @@ import {
   BsFillPersonFill,
   BsGearFill,
   BsFillClipboard2CheckFill,
-  BsStars,
-  BsPencilSquare,
-  BsPencil,
   BsBoxes,
 } from 'react-icons/bs'
 import {
@@ -22,7 +19,6 @@ import {
   Badge,
   Image,
   Button,
-  Dropdown,
   Accordion,
   Navbar,
 } from '@themesberg/react-bootstrap'
@@ -33,8 +29,7 @@ import ProfilePicture from '../../assets/img/team/profile-picture-1.png'
 import { logOut } from '../../store/slices/auth'
 import { useDispatch, useSelector } from 'react-redux'
 import { SidebarWrapper, Wrapper } from './Sidebar.styled'
-import TableHead from '../custom/Shared/TableHead/TableHead'
-import TenantForm from '../custom/tenant/TenantForm/TenantForm'
+
 import useRequest from '../../axios/apis/useRequest'
 import { useParams } from 'react-router-dom'
 import { setAllTenant } from '../../store/slices/tenants'
@@ -56,6 +51,13 @@ export default (props = {}) => {
   const tenantsData = useSelector((state) => state.tenants.tenants)
   const productsData = useSelector((state) => state.products.products)
   const [searchValue, setSearchValue] = useState('')
+  const [filteredTenant, setFilteredTenant] = useState(
+    Object.values(tenantsData)
+  )
+  const [filteredProducts, setFilteredProducts] = useState(
+    Object.values(productsData)
+  )
+  let direction = useSelector((state) => state.main.direction)
 
   const [visibleHead, setVisibleHead] = useState(false)
   const [first, setFirst] = useState(0)
@@ -74,7 +76,7 @@ export default (props = {}) => {
     }
 
     return (
-      <Wrapper>
+      <Wrapper direction={direction}>
         <Accordion as={Nav.Item} defaultActiveKey={'open'}>
           <Accordion.Item eventKey={eventKey}>
             <Accordion.Button
@@ -156,7 +158,7 @@ export default (props = {}) => {
 
   const paramsID = useParams().id
 
-  let allTenant = Object.values(tenantsData)
+  let allTenant = Object.values(filteredTenant)
 
   const active = allTenant.filter(
     (item) => item.status == 4 || item.status == 7
@@ -166,7 +168,6 @@ export default (props = {}) => {
   )
   const archived = allTenant.filter((item) => item.status == 13)
   const isSearchPerformed = searchValue !== ''
-  // const activeIsOpen = pathname.includes('products') ? 'open' : pathname.includes('tenants') ? 'open' : 'close';
 
   const inactiveIsOpen = isSearchPerformed
     ? 'open'
@@ -180,21 +181,15 @@ export default (props = {}) => {
     : 'close'
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
   const settingIsOpen = sidebarStatus([{ id: 'setting' }]) ? 'open' : 'close'
-  const [searchResults, setSearchResults] = useState([])
   const [allProducts, setAllProducts] = useState([])
 
-  useEffect(() => {
-    const productsArray = Object.values(productsData)
-    setAllProducts(productsArray)
-  }, [productsData])
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=SearchTerm`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     ;(async () => {
-      // if (Object.keys(tenantsData).length == 0) {
       const listData = await getTenantList(query)
+      setFilteredTenant(listData.data.data.items)
       dispatch(setAllTenant(listData.data.data.items))
-      // }
     })()
   }, [first, searchValue, update, paramsID])
 
@@ -202,13 +197,9 @@ export default (props = {}) => {
     let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     ;(async () => {
-      if (searchValue === '' && allProducts.length > 0) {
-        setSearchResults(allProducts)
-      } else {
-        const listData = await getProductList(query)
-        dispatch(setAllProduct(listData.data.data.items))
-        setSearchResults(listData.data.data.items)
-      }
+      const listData = await getProductList(query)
+      dispatch(setAllProduct(listData.data.data.items))
+      setFilteredProducts(listData.data.data.items)
     })()
   }, [searchValue, allProducts])
 
@@ -254,7 +245,6 @@ export default (props = {}) => {
                     as={Link}
                     variant="secondary"
                     size="xs"
-                    // to={Routes.Signin.path}
                     onClick={() => dispatch(logOut())}
                     className="text-dark"
                   >
@@ -322,38 +312,23 @@ export default (props = {}) => {
                 </CollapsableNavItem>
               ) : null}
 
-              {Array.isArray(searchResults) && searchResults.length > 0 ? (
+              {Array.isArray(filteredProducts) &&
+              filteredProducts.length > 0 ? (
                 <CollapsableNavItem
                   eventKey={productsIsOpen}
                   title={
-                    <div
-                      style={{
-                        textDecoration: 'none',
-                        color: 'inherit',
-                        paddingRight: '70px',
-                        marginTop: '-33px',
-                        marginleft: '-80px',
-                        marginBottom: '0px',
-                        height: '35px',
-                        backgroundColor: 'transparent',
-                        cursor: 'pointer',
-                      }}
-                      className=" products-nav nav-link  "
-                      onClick={() => navigate('/products')}
-                    >
-                      <BsBoxes
-                        style={{
-                          marginLeft: '-10px',
-                        }}
-                      />{' '}
-                      {'  '}
+                    <span onClick={() => navigate('/products')}>
                       <FormattedMessage id="Products" />
-                    </div>
+                    </span>
                   }
-                  icon={BsBoxSeam}
+                  icon={
+                    <span onClick={() => navigate('/products')}>
+                      <BsBoxes />
+                    </span>
+                  }
                   style={{}}
                 >
-                  {searchResults.map((product, index) => (
+                  {filteredProducts.map((product, index) => (
                     <NavItem
                       key={index}
                       title={product.name}

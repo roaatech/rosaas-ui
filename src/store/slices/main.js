@@ -4,7 +4,7 @@ export const mainSlice = createSlice({
   name: 'main',
   initialState: {
     darkMode: false,
-    direction: 'ltr',
+    direction: localStorage.getItem('direction') || 'ltr',
     preloader: true,
     sidebar: 1,
     history: [],

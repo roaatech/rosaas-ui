@@ -27,6 +27,7 @@ export const Wrapper = styled.div`
     font-weight: 900;
     font-size: 12px;
     font-family: monospace;
+    transform: ${(props) => props.direction == 'rtl' && 'rotate(180deg)'};
   }
 
   .accordion-item {
@@ -43,10 +44,19 @@ export const Wrapper = styled.div`
     margin: 3px 0px !important;
   }
 
-  /*.multi-level .nav-link {
-    padding-left: 15px;
-  }*/
+  .nav-link .sidebar-icon {
+    margin: ${(props) =>
+      props.direction == 'rtl' ? '0 0 0 0.5rem' : '0 0.5rem 0 0'};
+  }
+
+  .multi-level .nav-link {
+    padding: ${(props) =>
+      props.direction == 'rtl'
+        ? '0.5rem  45px 0.5rem  0'
+        : '0.5rem   0 0.5rem 0 45px'};
+  }
 `
+
 export const SidebarWrapper = styled.div`
   .logo {
     width: 150px;

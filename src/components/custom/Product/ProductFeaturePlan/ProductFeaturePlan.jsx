@@ -37,6 +37,8 @@ import { toast } from 'react-toastify'
 export default function ProductFeaturePlan({ children }) {
   const [currentPlanId, setCurrentPlanId] = useState('')
   const [currentFeatureId, setCurrentFeatureId] = useState('')
+  let direction = useSelector((state) => state.main.direction)
+
   const dispatch = useDispatch()
   const {
     getFeaturePlanList,
@@ -323,7 +325,7 @@ export default function ProductFeaturePlan({ children }) {
   }
 
   return (
-    <Wrapper>
+    <Wrapper direction={direction}>
       <div>
         <Card
           border="light"

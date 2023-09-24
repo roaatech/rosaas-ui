@@ -19,7 +19,7 @@ import useGlobal from '../../lib/hocks/global'
 import { useSelector } from 'react-redux'
 import { logOut } from '../../store/slices/auth'
 import { useDispatch } from 'react-redux'
-import { changeMode } from '../../store/slices/main'
+import { changeMode, directionFun } from '../../store/slices/main'
 import { useDarkreader } from 'react-darkreader'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './Navbar.styled'
@@ -74,7 +74,7 @@ export default (props) => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper direction={direction}>
       <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">
         <Container fluid className="px-0">
           <div className="d-flex justify-content-between w-100">
@@ -131,6 +131,19 @@ export default (props) => {
                 </Dropdown.Item> */}
 
                   {/* <Dropdown.Divider /> */}
+
+                  <Dropdown.Item
+                    className="fw-bold"
+                    onClick={() => {
+                      changeDirection(direction === 'rtl' ? 'ltr' : 'rtl')
+                    }}
+                  >
+                    {direction === 'rtl' ? (
+                      <FormattedMessage id="English" />
+                    ) : (
+                      <FormattedMessage id="Arabic" />
+                    )}
+                  </Dropdown.Item>
 
                   <Dropdown.Item
                     className="fw-bold"
