@@ -31,11 +31,15 @@ import ProductPlansPriceList from '../../components/custom/Product/ProductPlansP
 
 const ProductDetails = () => {
   const routeParams = useParams()
+
   const listData = useSelector((state) => state.products.products)
   let productData = listData[routeParams.id]
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
   const [activeIndex, setActiveIndex] = useState(0)
+  useEffect(() => {
+    setActiveIndex(0)
+  }, [routeParams.id])
   const { getProduct, deleteProductReq } = useRequest()
 
   useEffect(() => {
