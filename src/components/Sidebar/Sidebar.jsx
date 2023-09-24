@@ -54,9 +54,12 @@ export default (props = {}) => {
   const [filteredTenant, setFilteredTenant] = useState(
     Object.values(tenantsData)
   )
-  const [filteredProducts, setFilteredProducts] = useState(
-    Object.values(productsData)
-  )
+
+  let filteredProducts = Object.values(productsData)
+  const setFilteredProducts = (newData) => {
+    filteredProducts = newData
+  }
+
   let direction = useSelector((state) => state.main.direction)
 
   const [visibleHead, setVisibleHead] = useState(false)
