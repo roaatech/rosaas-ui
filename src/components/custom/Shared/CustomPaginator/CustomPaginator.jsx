@@ -14,6 +14,9 @@ const CustomPaginator = ({
   const displayLastIndex =
     lastItemIndex > totalCount ? totalCount : lastItemIndex
   let direction = useSelector((state) => state.main.direction)
+  let pageDisplayText = `${
+    displayLastIndex > 0 ? first + 1 : 0
+  }-${displayLastIndex} / ${totalCount}`
 
   return (
     <Wrapper>
@@ -21,7 +24,9 @@ const CustomPaginator = ({
         style={{
           direction: direction === 'rtl' ? 'ltr' : 'rtl',
         }}
-      >{`${first + 1}-${displayLastIndex} / ${totalCount}`}</span>
+      >
+        {pageDisplayText}
+      </span>
       <Paginator
         size={'small'}
         first={first}
