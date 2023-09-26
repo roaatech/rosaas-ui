@@ -108,8 +108,7 @@ const GlobalStyles = createGlobalStyle`
 }
 
 .content {
-    margin: ${(props) =>
-      props.direction == 'rtl' ? '0 260px 0 0' : '0 0 0 260px'};
+    margin: ${(props) => (props.direction == 'rtl' ? '0 260px 0 0' : '')};
 }
 
 .sidebar-inner .addNew {
