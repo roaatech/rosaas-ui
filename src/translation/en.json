@@ -188,5 +188,12 @@
   "Display-Order-must-be-a-positive-number": "Display Order must be a positive number",
   "Cannot-delete-a-subscribed-feature-plan.": "Cannot delete a subscribed Feature's Plan.",
   "Cannot-edit-a-subscribed-feature-plan.": "Cannot edit a subscribed Feature's Plan.",
-  "Cannot-create-a-Plan's-Feature-while-it-is-subscribed.": "Cannot create a Plan's Feature while it is subscribed."
+  "Cannot-create-a-Plan's-Feature-while-it-is-subscribed.": "Cannot create a Plan's Feature while it is subscribed.",
+  "Never": "Never",
+  "Weekly": "Weekly",
+  "Monthly": "Monthly",
+  "Annual": "Annual",
+  "Week": "Week",
+  "Month": "Month",
+  "Year": "Year"
 }
