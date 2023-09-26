@@ -45,11 +45,21 @@ const SubscriptionInfoAccordion = (props) => {
                   <Table responsive>
                     <thead>
                       <tr>
-                        <th>Feature</th>
-                        <th>Reset</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Remind / Limit</th>
+                        <th>
+                          <FormattedMessage id="Feature" />
+                        </th>
+                        <th>
+                          <FormattedMessage id="Reset" />
+                        </th>
+                        <th>
+                          <FormattedMessage id="Start-Date" />
+                        </th>
+                        <th>
+                          <FormattedMessage id="End-Date" />
+                        </th>
+                        <th>
+                          <FormattedMessage id="Remind/Limit" />
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
