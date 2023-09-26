@@ -48,8 +48,10 @@ const FeaturePlanForm = ({
     (state) => state.products.products[productId]?.plans
   )
   let allPlansArray = allPlans && Object.values(allPlans)
-  allPlansArray = allPlansArray.filter((plan) => !plan.isSubscribed)
 
+  if (allPlansArray) {
+    allPlansArray = allPlansArray.filter((plan) => !plan.isSubscribed)
+  }
   const featureOptions = listFeatureData
     ? allFeatureArray.map((item) => {
         return {

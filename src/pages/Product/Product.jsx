@@ -49,7 +49,6 @@ export default function Product({ children }) {
   const [visible, setVisible] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)
-  // const [list, setList] = useState([]);
   const [rebase, setRebase] = useState(0)
   const [searchValue, setSearchValue] = useState('')
   const [sortField, setSortField] = useState('')
@@ -70,12 +69,12 @@ export default function Product({ children }) {
   }
 
   const listData = useSelector((state) => state.products.products)
-  let list = Object.values(listData)
+  let [list, setList] = useState(Object.values(listData))
 
   useEffect(() => {
     let query = `?page=${Math.ceil(
       (first + 1) / rows
-    )}&pageSize=${rows}&filters[0].Field=SearchTerm`
+    )}&pageSize=${rows}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     if (sortField) query += `&sort.Field=${sortField}`
     if (sortValue) query += `&sort.Direction=${sortValue}`
@@ -83,6 +82,7 @@ export default function Product({ children }) {
       // if (Object.values(listData).length == 0) {
       const productList = await getProductList(query)
       dispatch(setAllProduct(productList.data.data.items))
+      setList(productList.data.data.items)
       setTotalCount(productList.data.data.totalCount)
       // }
     })()
