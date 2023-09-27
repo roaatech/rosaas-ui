@@ -88,7 +88,7 @@ export const Wrapper = styled.div`
   .p-tabview .p-tabview-nav .p-tabview-ink-bar {
     background-color: var(--second-color);
   }
-  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link:first-child {
     transition: none;
   }
   .table.user-table thead th {
