@@ -51,35 +51,12 @@ const FeaturePlanForm = ({
   const allPlansfeatures = useSelector(
     (state) => state.products.products[productId]?.featurePlan
   )
-  console.log({ allPlansfeatures })
+  // console.log({ allPlansfeatures })
 
   if (allPlansArray) {
     allPlansArray = allPlansArray.filter((plan) => !plan.isSubscribed)
   }
-  const [plansWithAllFeaturesAssigned, setPlansWithAllFeaturesAssigned] =
-    useState([])
 
-  const handleplansWithAllFeaturesAssigned = () => {
-    const plansWithAllFeaturesAssigned = []
-
-    try {
-      if (allPlansfeatures) {
-        const planfeaturesArray = Object.values(allPlansfeatures)
-
-        Object.keys(allPlans).forEach((planId) => {
-          const featuresAssignedToPlan = planfeaturesArray
-            .filter((planFeature) => planFeature.plan.id === planId)
-            .map((planFeature) => planFeature.feature)
-          console.log({ featuresAssignedToPlan, planId })
-        })
-      }
-    } catch (error) {
-      console.error('Error handling plans with all cycles assigned:', error)
-    }
-  }
-  useEffect(() => {
-    handleplansWithAllFeaturesAssigned()
-  }, [])
   const featureOptions = listFeatureData
     ? allFeatureArray.map((item) => {
         return {
@@ -263,7 +240,6 @@ const FeaturePlanForm = ({
         )
 
         setAvailableFeatures(updatedAvailableFeatures)
-        console.log({ assignedFeatureIds, selectedPlanId })
       }
     }
   }, [formik.values.plan])
