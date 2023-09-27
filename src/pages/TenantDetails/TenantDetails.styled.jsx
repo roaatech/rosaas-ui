@@ -8,10 +8,10 @@ export const Wrapper = styled.div`
     padding-right: 20px;
     padding-left: 20px;
   }
-  .jXufio .accordion-item > * {
+  .accordion-item > *:first-child {
     transition: none;
   }
-  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link:first-child {
     transition: none;
   }
   .dynamicButtons {
