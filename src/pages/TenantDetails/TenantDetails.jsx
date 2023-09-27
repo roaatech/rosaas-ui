@@ -97,9 +97,9 @@ const TenantDetails = () => {
             featureReset: featureResetMap[feature.feature.reset],
             featureStartDate: feature.startDate,
             featureEndDate: feature.endDate,
-            remindLimit: `${feature.remainingUsage} ${
+            remindLimit: `${feature.remainingUsage}${
               featureUnitMap[feature.feature.unit]
-            } / ${feature.feature.limit} ${
+            } / ${feature.feature.limit}${
               featureUnitMap[feature.feature.unit]
             } `,
           })),

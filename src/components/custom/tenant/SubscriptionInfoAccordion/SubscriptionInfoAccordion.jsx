@@ -84,7 +84,7 @@ const SubscriptionInfoAccordion = (props) => {
                             </td>
                             <td>
                               {subscription.remindLimit ===
-                              'null undefined / null undefined '
+                              'nullundefined / nullundefined '
                                 ? '-'
                                 : subscription.remindLimit}
                             </td>

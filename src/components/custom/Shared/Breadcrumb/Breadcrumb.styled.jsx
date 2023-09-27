@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 export const Wrapper = styled.div`
-  background: var(--themeSecColor);
+  background: ${(props) => (props.darkMode ? '#414042' : 'white')};
   padding: 10px 25px;
   margin: 0;
   display: flex;

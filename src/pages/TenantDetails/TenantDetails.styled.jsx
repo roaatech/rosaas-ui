@@ -8,6 +8,12 @@ export const Wrapper = styled.div`
     padding-right: 20px;
     padding-left: 20px;
   }
+  .jXufio .accordion-item > * {
+    transition: none;
+  }
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    transition: none;
+  }
   .dynamicButtons {
     margin-left: 0px;
     margin-top: -15px;
@@ -27,9 +33,9 @@ export const Wrapper = styled.div`
   .action button {
     margin-bottom: 10px;
   }
-  .card-body {
+  /* .card-body {
     background: var(--themeSecColor);
-  }
+  } */
 
   tr > td {
     border-color: var(--themeGray) !important;

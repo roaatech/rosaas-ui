@@ -120,17 +120,21 @@ export default (props) => {
                   </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
-                  {/* <Dropdown.Item
-                  className="fw-bold"
-                  onClick={() => {
-                    dispatch(changeMode(!darkMode))
-                    toggle()
-                  }}
-                >
-                  {darkMode == false ? 'Dark Mode' : 'Light Mode'}
-                </Dropdown.Item> */}
+                  <Dropdown.Item
+                    className="fw-bold"
+                    onClick={() => {
+                      dispatch(changeMode(!darkMode))
+                      toggle()
+                    }}
+                  >
+                    {darkMode == false ? (
+                      <FormattedMessage id="Dark-Mode" />
+                    ) : (
+                      <FormattedMessage id="Light-Mode" />
+                    )}
+                  </Dropdown.Item>
 
-                  {/* <Dropdown.Divider /> */}
+                  <Dropdown.Divider />
 
                   <Dropdown.Item
                     className="fw-bold"
