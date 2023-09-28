@@ -17,7 +17,7 @@ import { subscriptionData, tenantInfo } from '../../store/slices/tenants'
 import { removeTenant, setActiveIndex } from '../../store/slices/tenants'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { DataTransform } from '../../lib/sharedFun/Time'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import useActions from '../../components/custom/tenant/Actions/Actions'
@@ -83,6 +83,7 @@ const TenantDetails = () => {
       firstLoad++
     }
   })
+  const intl = useIntl()
 
   useEffect(() => {
     const fetchSubscriptionDetails = async () => {
@@ -94,7 +95,9 @@ const TenantDetails = () => {
         const formattedSubscriptionData = {
           data: response.data.data.subscriptionFeatures.map((feature) => ({
             featureName: feature.feature.name,
-            featureReset: featureResetMap[feature.feature.reset],
+            featureReset: intl.formatMessage({
+              id: featureResetMap[feature.feature.reset],
+            }),
             featureStartDate: feature.startDate,
             featureEndDate: feature.endDate,
             remindLimit: `${feature.remainingUsage}${

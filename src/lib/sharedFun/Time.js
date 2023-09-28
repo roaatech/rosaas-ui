@@ -1,4 +1,5 @@
 import { format, utcToZonedTime } from 'date-fns-tz'
+import { useIntl } from 'react-intl'
 
 const isHour = (hour) => {
   return hour > 0 ? `${hour} hours and` : ''
@@ -34,7 +35,6 @@ export const DataTransform = (dateTime) => {
   const utcDateTime = new Date(dateTime + 'Z')
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = utcToZonedTime(utcDateTime, timeZone)
-
   const formattedDateTime = format(localDateTime, 'MM/dd/yyyy HH:mm:ss', {
     timeZone,
   })
@@ -75,13 +75,20 @@ export const timeDifferenceFromNow = (targetDate) => {
 }
 export const Time = (date, before) => {
   const timeDifference = timeDifferenceFromNow(date)
+  const intl = useIntl()
+
   return timeDifference.hours < 24
     ? `${before} ${isHour(timeDifference.hours)} 
 
     ${
       timeDifference.minutes < 1
-        ? 'a few seconds'
-        : timeDifference.minutes + ' minutes'
+        ? intl.formatMessage({
+            id: 'a-few-seconds',
+          })
+        : timeDifference.minutes +
+          intl.formatMessage({
+            id: 'minutes',
+          })
     }  `
     : `${before} ${DataTransform(date)}`
 }

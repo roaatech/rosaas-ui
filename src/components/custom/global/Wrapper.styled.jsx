@@ -121,6 +121,10 @@ const GlobalStyles = createGlobalStyle`
 }
   *{
     font-family: "Nunito Sans", sans-serif;
+    ${(props) =>
+      props.direction === 'rtl'
+        ? 'font-weight: lighter;'
+        : 'font-weight: normal;'}
   }
 
   img{

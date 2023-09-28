@@ -52,9 +52,9 @@ export const PublishStatus = {
 }
 
 export const cycle = {
-  2: <FormattedMessage id="Week" />,
-  3: <FormattedMessage id="Month" />,
-  4: <FormattedMessage id="Year" />,
+  2: 'Week',
+  3: 'Month',
+  4: 'Year',
 }
 
 export const urlIsOverridden = {
@@ -73,10 +73,10 @@ export const featureUnitMap = {
 }
 
 export const featureResetMap = {
-  1: <FormattedMessage id="Never" />,
-  2: <FormattedMessage id="Weekly" />,
-  3: <FormattedMessage id="Monthly" />,
-  4: <FormattedMessage id="Annual" />,
+  1: 'Never',
+  2: 'Weekly',
+  3: 'Monthly',
+  4: 'Annual',
 }
 
 export const urlStyle = {

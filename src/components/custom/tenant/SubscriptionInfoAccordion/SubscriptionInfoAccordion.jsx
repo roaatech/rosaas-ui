@@ -33,11 +33,13 @@ const SubscriptionInfoAccordion = (props) => {
                   <span>
                     <DateLabelWhite text={subscriptionData.planName} />
                   </span>
-                  {'   '}From{' '}
+                  {'   '}
+                  <FormattedMessage id="From" />{' '}
                   <DateLabelWhite
                     text={formatDate(subscriptionData.startDate)}
                   />{' '}
-                  to <DateLabel endDate={subscriptionData.endDate} />
+                  <FormattedMessage id="to" />{' '}
+                  <DateLabel endDate={subscriptionData.endDate} />
                 </span>
               </Accordion.Button>
               <Accordion.Body>

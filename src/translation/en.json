@@ -198,5 +198,9 @@
   "Year": "Year",
   "Remind/Limit": "Remind / Limit",
   "Dark-Mode": "Dark Mode",
-  "Light-Mode": "Light Mode"
+  "Light-Mode": "Light Mode",
+  "minutes": "minutes",
+  "a-few-seconds": "a few seconds",
+  "From": "From",
+  "to": "to"
 }

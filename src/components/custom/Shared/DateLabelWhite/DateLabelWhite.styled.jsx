@@ -2,13 +2,13 @@ import styled, { css } from 'styled-components'
 
 export const Wrapper = styled.span`
   .label-white {
-    font-weight: bold;
+    font-weight: lighter;
     padding: 7px 12px;
     border-radius: 5px;
     border: 1px solid;
     font-size: var(--smallFont);
   }
-  .label-start {
+  /* .label-start {
     font-size: var(--smallFont);
     font-weight: bold;
     border: 1px solid;
@@ -16,5 +16,5 @@ export const Wrapper = styled.span`
     border-radius: 5px;
     border-color: var(--surface-400);
     box-sizing: content-box;
-  }
+  } */
 `
