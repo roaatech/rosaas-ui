@@ -21,6 +21,7 @@ import { useParams } from 'react-router-dom'
 import useActions from '../Actions/Actions'
 import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
 import { useSelector } from 'react-redux'
+import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/SubscriptionInfoAccordionNew'
 export default function ChildTable({
   productData,
   tenantId,
@@ -140,6 +141,11 @@ export default function ChildTable({
               <tr>
                 <td className="pl-0 pr-0" colSpan={2}>
                   <SubscriptionInfoAccordion />
+                </td>
+              </tr>
+              <tr>
+                <td className="pl-0 pr-0" colSpan={2}>
+                  <SubscriptionInfoAccordionNew />
                 </td>
               </tr>
 
