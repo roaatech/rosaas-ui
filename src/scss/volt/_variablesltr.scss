@@ -545,7 +545,7 @@ $fontawesome-webfonts-path: "../vendor/font-awesome/webfonts";
 $font-awesome-5: "Font Awesome 5 Free";
 
 // stylelint-disable value-keyword-case
-$font-family-sans-serif: "Nunito Sans", sans-serif;
+$font-family-sans-serif: Cairo,"Nunito Sans", sans-serif;
 // stylelint-enable value-keyword-case
 $font-family-base: var(--bs-font-sans-serif);
 $font-family-code: var(--bs-font-monospace);

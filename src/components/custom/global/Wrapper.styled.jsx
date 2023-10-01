@@ -107,9 +107,13 @@ const GlobalStyles = createGlobalStyle`
   left: ${(props) => (props.direction == 'rtl' ? 'unset' : '0')}
 }
 
-.content {
+
+@media (min-width: 768px) {
+  .content {
     margin: ${(props) => (props.direction == 'rtl' ? '0 260px 0 0' : '')};
+  }
 }
+
 
 .sidebar-inner .addNew {
   width: 100%;
@@ -120,13 +124,18 @@ const GlobalStyles = createGlobalStyle`
 
 }
   *{
-    font-family: "Nunito Sans", sans-serif;
-    ${(props) =>
+    font-family: Cairo,"Nunito Sans", sans-serif;
+    /* ${(props) =>
       props.direction === 'rtl'
-        ? 'font-weight: lighter;'
-        : 'font-weight: normal;'}
+        ? 'font-size: lighter;'
+        : 'font-weight: normal;'} */
   }
+  /* * :lang(ar){
+    font-size: calc(var(-- ) );
 
+  } */
+
+ 
   img{
     width: max-content;
   }
@@ -369,6 +378,7 @@ nav svg.svg-inline--fa.fa-bell {
 .dropdown-item{
    text-align: ${(props) => props.direction == 'rtl' && 'right'}
 }
+
 .p-input-icon-left > .p-inputtext{
    padding: ${(props) =>
      props.direction == 'rtl'

@@ -209,11 +209,9 @@ export default function ProductFeaturePlan({ children }) {
                                 ].unit
                               ] +
                               ' / ' +
-                              (
-                                <FormattedMessage
-                                  id={featureResetMap[item.reset]}
-                                />
-                              )
+                              intl.formatMessage({
+                                id: featureResetMap[item.reset],
+                              })
                             ) : (
                               <FormattedMessage id="Yes" />
                             )}

@@ -362,7 +362,7 @@ export default (props = {}) => {
                 icon={<BsGearFill />}
               >
                 <NavItem
-                  title={<FormattedMessage id="Health-Check" />}
+                  title={<FormattedMessage id="Health-Check-sidebar" />}
                   link={`/settings/health-check`}
                   icon={BsFillClipboard2CheckFill}
                 />

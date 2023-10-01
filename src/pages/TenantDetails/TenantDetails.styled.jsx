@@ -3,6 +3,10 @@ export const Wrapper = styled.div`
   /* .row-button {
     width: 100%;
   } */
+  .table td,
+  .table th {
+    font-size: var(--defaultFont);
+  }
   .line-cell {
     border-top: 1px solid #000;
     padding-right: 20px;
