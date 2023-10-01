@@ -105,6 +105,7 @@ const TenantDetails = () => {
             } / ${feature.feature.limit}${
               featureUnitMap[feature.feature.unit]
             } `,
+            usage: feature.feature.limit - feature.remainingUsage,
           })),
           planName: response.data.data.plan.name,
           startDate: response.data.data.startDate,

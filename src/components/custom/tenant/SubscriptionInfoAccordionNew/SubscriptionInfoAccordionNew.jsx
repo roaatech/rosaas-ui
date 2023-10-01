@@ -194,6 +194,9 @@ const SubscriptionInfoAccordionNew = (props) => {
                                           <FormattedMessage id="End-Date" />
                                         </th>
                                         <th>
+                                          <FormattedMessage id="Usage" />
+                                        </th>
+                                        <th>
                                           <FormattedMessage id="Remind/Limit" />
                                         </th>
                                       </tr>
@@ -222,6 +225,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                             }
                                           />
                                         </td>
+                                        <td>{feature.usage}</td>
                                         <td>
                                           {feature.remindLimit ===
                                           'nullundefined / nullundefined '

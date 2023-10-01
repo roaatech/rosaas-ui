@@ -2,11 +2,12 @@ import styled, { css } from 'styled-components'
 
 export const Wrapper = styled.span`
   .label-white {
-    font-weight: 300;
+    font-weight: lighter !important;
     padding: 7px 12px;
     border-radius: 5px;
-    border: 1px solid;
+    /* border: 1px solid; */
     font-size: var(--smallFont);
+    min-width: auto;
   }
   /* .label-start {
     font-size: var(--smallFont);
