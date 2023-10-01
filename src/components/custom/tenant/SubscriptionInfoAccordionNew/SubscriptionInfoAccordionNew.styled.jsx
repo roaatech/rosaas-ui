@@ -33,6 +33,6 @@ export const Wrapper = styled.div`
   }
   .content {
     max-width: 100px;
-    margin-left: 30px;
+    margin-left: -45px;
   }
 `
