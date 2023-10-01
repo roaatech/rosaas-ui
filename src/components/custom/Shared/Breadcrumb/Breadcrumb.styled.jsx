@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 export const Wrapper = styled.div`
-  background: var(--themeSecColor);
+  background: ${(props) => (props.darkMode ? '#414042' : 'white')};
   padding: 10px 25px;
-  margin: 0; 
+  margin: 0;
   display: flex;
 
   h4 {
@@ -21,11 +21,18 @@ export const Wrapper = styled.div`
   }
   .breadcrumb-item::before {
     color: var(--themeColor) !important;
+    padding: ${(props) => props.direction == 'rtl' && '0 0 0 10px '};
+    float: ${(props) => props.direction == 'rtl' && 'right'};
   }
+
+  .breadcrumb-item + .breadcrumb-item {
+    padding: ${(props) => props.direction == 'rtl' && '0 10px 0 0'};
+  }
+
   * {
     color: var(--themeColor) !important;
   }
   nav.ps-0.pe-2.pb-0.navbar.navbar-expand.navbar-dark {
     padding: 0;
   }
-`;
+`

@@ -1,5 +1,15 @@
 import styled from 'styled-components'
 const Wrapper = styled.div`
+  .dynamicButtons {
+    margin-left: auto;
+    width: fit-content;
+    margin-bottom: 1.25rem;
+  }
+  .line-cell {
+    border-top: 1px solid #000;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
   thead.p-datatable-thead {
     display: none;
   }
@@ -75,6 +85,7 @@ const Wrapper = styled.div`
   .firstTd {
     width: 145px;
     padding-right: 0 !important;
+    text-align: ${(props) => (props.direction == 'rtl' ? 'right' : 'left')};
   }
   .tableTitle {
     margin: 1rem 0 0.5rem 1rem;

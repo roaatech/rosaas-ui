@@ -1,5 +1,32 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components'
 export const Wrapper = styled.div`
+  /* .row-button {
+    width: 100%;
+  } */
+  .table td,
+  .table th {
+    font-size: var(--defaultFont);
+  }
+  .line-cell {
+    border-top: 1px solid #000;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+  .accordion-item > *:first-child {
+    transition: none;
+  }
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link:first-child {
+    transition: none;
+  }
+  .dynamicButtons {
+    margin-left: 0px;
+    margin-top: -15px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    align-self: flex-start;
+  }
   tr:last-child {
     border-bottom: 0 !important;
   }
@@ -10,9 +37,9 @@ export const Wrapper = styled.div`
   .action button {
     margin-bottom: 10px;
   }
-  .card-body {
+  /* .card-body {
     background: var(--themeSecColor);
-  }
+  } */
 
   tr > td {
     border-color: var(--themeGray) !important;
@@ -40,14 +67,13 @@ export const Wrapper = styled.div`
     @media (max-width: 1100px) {
       margin-top: 20px;
       width: 100%;
-      margin-left: 0;
     }
     width: 35%;
-    margin: 0 0 0 15px;
+    margin: ${(props) =>
+      props.direction == 'rtl' ? '0 15px 20px 0' : '0 0 20px 15px'};
     font-size: var(--smallFont);
     background: var(--themeSecColor);
     border-radius: 10px;
-    margin-bottom: 20px;
   }
 
   .buttons {
@@ -57,7 +83,6 @@ export const Wrapper = styled.div`
     align-items: flex-start;
     flex-wrap: wrap;
 
-  
     .refresh {
       button.p-button.p-component.p-button-icon-only {
         padding: 0.3rem !important;
@@ -74,16 +99,13 @@ export const Wrapper = styled.div`
         }
       }
     }
-
-    
   }
   .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-   border-color: var(--second-color);
-  color: var(--second-color);
-}
+    border-color: var(--second-color);
+    color: var(--second-color);
+  }
 
-.p-tabview .p-tabview-nav .p-tabview-ink-bar{
-background-color: var(--second-color);
-
-}
-`;
+  .p-tabview .p-tabview-nav .p-tabview-ink-bar {
+    background-color: var(--second-color);
+  }
+`

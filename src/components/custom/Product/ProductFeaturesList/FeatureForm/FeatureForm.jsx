@@ -20,7 +20,13 @@ import {
   featureTypeMap,
   featureUnitMap,
 } from '../../../../../const/index.js'
-const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
+const FeatureForm = ({
+  type,
+  featureData,
+  setVisible,
+  popupLabel,
+  setActiveIndex,
+}) => {
   const { createFeatureRequest, editFeatureRequest, getProductFeatures } =
     useRequest()
   const dispatch = useDispatch()
@@ -32,25 +38,28 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
     name: featureData ? featureData.name : '',
     description: featureData ? featureData.description : '',
     type: featureData ? featureData.type : '',
-    unit: featureData ? featureData.unit : undefined,
+    // unit: featureData ? featureData.unit : undefined,
     reset: featureData ? featureData.reset : '',
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Feature Name is required'),
-    description: Yup.string().required('Description is required'),
-    type: Yup.string().required('Type is required'),
-    unit: Yup.string().test(
-      'unit-validation',
-      'Unit is required when Type is Number',
-      function (value) {
-        const type = this.resolve(Yup.ref('type'))
-        if (type === '1') {
-          return value !== undefined && value !== ''
-        }
-        return true
-      }
+    name: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
     ),
+    type: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
+    // unit: Yup.string().test(
+    //   'unit-validation',
+    //   'Unit is required when Type is Number',
+    //   function (value) {
+    //     const type = this.resolve(Yup.ref('type'))
+    //     if (type === '1') {
+    //       return value !== undefined && value !== ''
+    //     }
+    //     return true
+    //   }
+    // ),
   })
   const formik = useFormik({
     initialValues,
@@ -61,7 +70,7 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
           name: values.name,
           description: values.description,
           type: parseInt(values.type),
-          unit: parseInt(values.unit),
+          // unit: parseInt(values.unit),
           reset: parseInt(values.reset) || 1,
         })
 
@@ -83,7 +92,7 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
               name: values.name,
               description: values.description,
               type: values.type,
-              unit: values.unit,
+              // unit: values.unit,
               reset: values.reset || 1,
               id: createFeature.data.data.id,
               editedDate: new Date().toISOString().slice(0, 19),
@@ -91,13 +100,17 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
             },
           })
         )
+
+        if (setActiveIndex) {
+          setActiveIndex(2)
+        }
       } else {
         const editFeature = await editFeatureRequest(productId, {
           data: {
             name: values.name,
             description: values.description,
             type: parseInt(values.type),
-            unit: parseInt(values.unit),
+            // unit: parseInt(values.unit),
             reset: parseInt(values.reset) || 1,
           },
           id: featureData.id,
@@ -111,7 +124,7 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
               name: values.name,
               description: values.description,
               type: values.type,
-              unit: values.unit,
+              // unit: values.unit,
               reset: values.reset || 1,
               id: featureData.id,
               editedDate: new Date().toISOString().slice(0, 19),
@@ -167,8 +180,7 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
           </div>
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Description" />{' '}
-              <span style={{ color: 'red' }}>*</span>
+              <FormattedMessage id="Description" />
             </Form.Label>
 
             <TextareaAndCounter
@@ -200,15 +212,18 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
                 className="form-control"
                 id="type"
                 name="type"
-                onChange={(e) => {
-                  formik.handleChange(e)
-                  if (e.target.value === '2') {
-                    formik.setFieldValue('unit', '')
-                  }
-                }}
+                onChange={formik.handleChange}
+                // onChange={(e) => {
+                //   formik.handleChange(e)
+                //   if (e.target.value === '2') {
+                //     formik.setFieldValue('unit', '')
+                //   }
+                // }}
                 value={formik.values.type}
               >
-                <option value="">Select Type</option>
+                <option value="">
+                  <FormattedMessage id="Select-Option" />
+                </option>
                 {Object.entries(featureTypeMap).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
@@ -226,9 +241,8 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
               )}
             </Form.Group>
           </div>
-          <div>
-            {/* Unit */}
-            <Form.Group className="mb-3">
+          {/* <div>
+             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Unit" />
               </Form.Label>
@@ -238,7 +252,7 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
                 name="unit"
                 onChange={formik.handleChange}
                 value={formik.values.unit}
-                disabled={formik.values.type === '2'}
+                disabled={formik.values.type != '1'}
               >
                 <option value="">Select Unit</option>
                 {Object.entries(featureUnitMap).map(([value, label]) => (
@@ -247,8 +261,7 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
                   </option>
                 ))}
               </select>
-              {/* Display validation error */}
-              {formik.touched.unit && formik.errors.unit && (
+               {formik.touched.unit && formik.errors.unit && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
@@ -256,8 +269,7 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
                   {formik.errors.unit}
                 </Form.Control.Feedback>
               )}
-              {/* Show error message for conditional validation */}
-              {formik.values.type === '1' &&
+               {formik.values.type === '1' &&
                 formik.touched.unit &&
                 !formik.values.unit && (
                   <div className="invalid-feedback">
@@ -265,7 +277,7 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
                   </div>
                 )}
             </Form.Group>
-          </div>
+          </div> */}
           <div>
             {/* Reset */}
             <Form.Group className="mb-3">
@@ -279,7 +291,9 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
                 onChange={formik.handleChange}
                 value={formik.values.reset}
               >
-                <option value="">Select Reset</option>
+                <option value="">
+                  <FormattedMessage id="Select-Option" />
+                </option>
                 {Object.entries(featureResetMap).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
@@ -304,7 +318,7 @@ const FeatureForm = ({ type, featureData, setVisible, popupLabel }) => {
           </Button>
           <Button
             variant="link"
-            className="text-gray ms-auto"
+            className="text-gray "
             onClick={() => setVisible(false)}
           >
             <FormattedMessage id="Close" />

@@ -83,7 +83,6 @@ const PlanDetailsTab = ({ data }) => {
                       </td>
                       <td>{data.client.name}</td>
                     </tr> */}
-                    {console.log(data)}
                     <tr>
                       <td className="fw-bold">
                         <FormattedMessage id="Date" />

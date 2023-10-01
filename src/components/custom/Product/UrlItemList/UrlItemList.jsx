@@ -20,7 +20,7 @@ const UrlItemList = ({ data }) => {
         path: data.healthStatusChangeUrl,
         title: <FormattedMessage id="Health-Status-Change-Url" />,
         description: (
-          <FormattedMessage id="Health-Status-Change-Url-description" />
+          <FormattedMessage id="Health-Status-Change-Url-Description" />
         ),
       },
       {
@@ -50,8 +50,8 @@ const UrlItemList = ({ data }) => {
     ])
   }, [data])
 
-  return UrlItemList.map((url) => (
-    <tr>
+  return UrlItemList.map((url, index) => (
+    <tr key={index}>
       <td className="fw-bold">
         {url.title}{' '}
         <span className="fw-normal">

@@ -14,9 +14,18 @@ import {
   setAllFeatures,
 } from '../../../../../store/slices/products.js'
 import { setAllPlans } from '../../../../../store/slices/products.js'
-import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx' // Import the missing component
+import { featureUnitMap } from '../../../../../const/index.js'
 
-const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
+const FeaturePlanForm = ({
+  type,
+  FeaturePlanData,
+  setVisible,
+  popupLabel,
+  setActiveIndex,
+  plan,
+  feature,
+}) => {
   const routeParams = useParams()
   const productId = routeParams.id
   const {
@@ -39,24 +48,42 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
     (state) => state.products.products[productId]?.plans
   )
   let allPlansArray = allPlans && Object.values(allPlans)
+  const allPlansfeatures = useSelector(
+    (state) => state.products.products[productId]?.featurePlan
+  )
+  // console.log({ allPlansfeatures })
+
+  if (allPlansArray) {
+    allPlansArray = allPlansArray.filter((plan) => !plan.isSubscribed)
+  }
 
   const featureOptions = listFeatureData
-    ? allFeatureArray.map((item, index) => {
+    ? allFeatureArray.map((item) => {
         return {
           value: item.id,
           label: item.name,
           type: item.type == 1 ? 'Number' : 'Boolean',
+          reset: item.reset,
         }
       })
     : []
   const planOptions = allPlans
-    ? allPlansArray.map((item, index) => {
+    ? allPlansArray.map((item) => {
         return { value: item.id, label: item.name }
       })
     : []
 
   useEffect(() => {
     ;(async () => {
+      if (!allProducts[productId].featurePlan || !allPlansfeatures) {
+        const featurePlan = await getFeaturePlanList(productId)
+        dispatch(
+          setAllFeaturePlan({
+            productId: productId,
+            data: featurePlan.data.data,
+          })
+        )
+      }
       if (!listFeatureData) {
         const featureReq = await getProductFeatures(productId)
         dispatch(
@@ -68,18 +95,23 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
         dispatch(setAllPlans({ productId: productId, data: planReq.data.data }))
       }
     })()
-  }, [])
+  }, [allPlansfeatures])
 
   const initialValues = {
-    feature: FeaturePlanData ? FeaturePlanData?.feature?.id : '',
-    plan: FeaturePlanData ? FeaturePlanData?.plan?.id : '',
+    feature: feature || (FeaturePlanData ? FeaturePlanData?.feature?.id : ''),
+    plan: plan || (FeaturePlanData ? FeaturePlanData?.plan?.id : ''),
     limit: FeaturePlanData ? FeaturePlanData?.limit : '',
+    unit: FeaturePlanData ? FeaturePlanData?.unit : '',
     description: FeaturePlanData ? FeaturePlanData?.description : '',
   }
 
   const validationSchema = Yup.object().shape({
-    feature: Yup.string().required('Please select a feature'),
-    plan: Yup.string().required('Please select a plan'),
+    feature: Yup.string().required(
+      <FormattedMessage id="Please-Select-a-Option" />
+    ),
+    plan: Yup.string().required(
+      <FormattedMessage id="Please-Select-a-Option" />
+    ),
     limit: Yup.number()
       .nullable()
       .test('', 'Limit must be number more than 0', function (value) {
@@ -89,6 +121,20 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
         } else {
           const regex = /^[1-9]\d*$/
           return regex.test(value)
+        }
+      }),
+    unit: Yup.number()
+      .nullable()
+      .test('', 'This field is required', function (value) {
+        const feature = this.resolve(Yup.ref('feature'))
+        if (isFeatureBoolean(feature)) {
+          return true
+        } else {
+          if (value) {
+            return true
+          } else {
+            return false
+          }
         }
       }),
   })
@@ -104,6 +150,7 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
           planId: values.plan,
         }
         if (values.limit) dataDetails.limit = values.limit
+        if (values.unit) dataDetails.unit = parseInt(values.unit)
         const createFeaturePlan = await createFeaturePlanRequest({
           productId: productId,
           data: dataDetails,
@@ -124,11 +171,15 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
             data: {
               description: values.description,
               limit: values.limit,
+              unit: values.unit,
               feature: {
                 id: values.feature,
                 name: featureOptions.find(
                   (item) => item.value === values.feature
                 ).label,
+                reset: featureOptions.find(
+                  (item) => item.value === values.feature
+                ).reset,
               },
               plan: {
                 id: values.plan,
@@ -141,11 +192,16 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
             },
           })
         )
+
+        if (setActiveIndex) {
+          setActiveIndex(3)
+        }
       } else {
         const dataDetails = {
           description: values.description,
         }
         if (values.limit) dataDetails.limit = values.limit
+        if (values.unit) dataDetails.unit = parseInt(values.unit)
         const editFeaturePlan = await editFeaturePlanRequest({
           productId: productId,
           featurePlanId: FeaturePlanData.id,
@@ -155,12 +211,38 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
         const newData = JSON.parse(JSON.stringify(FeaturePlanData))
         newData.description = values.description
         newData.limit = values.limit
+        newData.unit = values.unit
+        newData.createdDate = FeaturePlanData.createdDate
+        newData.editedDate = new Date().toISOString().slice(0, 19)
 
         dispatch(featurePlanInfo({ productId, data: newData }))
       }
       setVisible && setVisible(false)
     },
   })
+  const [availableFeatures, setAvailableFeatures] = useState(featureOptions)
+
+  useEffect(() => {
+    if (formik.values.plan) {
+      const selectedPlanId = formik.values.plan
+
+      const featuresAssignedToPlan = Object.values(allPlansfeatures)
+        .filter((planFeature) => planFeature.plan.id === selectedPlanId)
+        .map((planFeature) => planFeature.feature)
+
+      if (featuresAssignedToPlan.length > 0) {
+        const assignedFeatureIds = featuresAssignedToPlan
+          .map((planFeature) => planFeature.id)
+          .filter((id) => id !== '00000000-0000-0000-0000-000000000000')
+
+        const updatedAvailableFeatures = featureOptions.filter(
+          (option) => !assignedFeatureIds.includes(option.value)
+        )
+
+        setAvailableFeatures(updatedAvailableFeatures)
+      }
+    }
+  }, [formik.values.plan])
 
   return (
     <Wrapper>
@@ -177,49 +259,20 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
           <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
               <Form.Label>
-                Feature <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Plan" />{' '}
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
-                className="form-select"
-                name="feature"
-                id="feature"
-                value={formik.values.feature}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                isInvalid={formik.touched.feature && formik.errors.feature}
-              >
-                <option value={''}>{'select'}</option>
-                {featureOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {`${option.label} (${option.type})`}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.feature && formik.errors.feature && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.feature}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
-          <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                Plan <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <select
-                className="form-select"
+                className="form-control"
                 name="plan"
                 id="plan"
                 value={formik.values.plan}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.plan && formik.errors.plan}
               >
-                <option value={''}>{'select'}</option>
+                <option value={''}>
+                  <FormattedMessage id="Select-Option" />
+                </option>
                 {planOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -232,6 +285,40 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
                   style={{ display: 'block' }}
                 >
                   {formik.errors.plan}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Feature" />{' '}
+                <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <select
+                className="form-control"
+                name="feature"
+                id="feature"
+                value={formik.values.feature}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                disabled={!formik.values.plan}
+              >
+                <option value={''}>
+                  <FormattedMessage id="Select-Option" />
+                </option>
+                {availableFeatures.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {`${option.label} (${option.type})`}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.feature && formik.errors.feature && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.feature}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
@@ -253,6 +340,49 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
                 <div className="invalid-feedback">
                   {formik.errors.description}
                 </div>
+              )}
+            </Form.Group>
+          </div>
+          <div
+            style={{
+              display: isFeatureBoolean(formik.values.feature)
+                ? 'none'
+                : 'block',
+            }}
+          >
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Unit" />
+                <span style={{ color: 'red' }}> *</span>
+              </Form.Label>
+              <select
+                className="form-control"
+                id="unit"
+                name="unit"
+                onChange={formik.handleChange}
+                value={
+                  isFeatureBoolean(formik.values.feature)
+                    ? ''
+                    : formik.values.unit
+                }
+                disabled={isFeatureBoolean(formik.values.feature)}
+              >
+                <option value="">
+                  <FormattedMessage id="Select-Option" />
+                </option>
+                {Object.entries(featureUnitMap).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.unit && formik.errors.unit && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.unit}
+                </Form.Control.Feedback>
               )}
             </Form.Group>
           </div>
@@ -299,7 +429,7 @@ const FeaturePlanForm = ({ type, FeaturePlanData, setVisible, popupLabel }) => {
           </Button>
           <Button
             variant="link"
-            className="text-gray ms-auto"
+            className="text-gray "
             onClick={() => setVisible(false)}
           >
             <FormattedMessage id="Close" />

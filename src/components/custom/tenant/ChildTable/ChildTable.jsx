@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import { Card, Table } from '@themesberg/react-bootstrap'
 import { Wrapper } from './ChildTable.style'
@@ -8,25 +8,30 @@ import MetaDataAccordion from '../MetaDataAccordion/MetaDataAccordion'
 import Workflow from '../../Shared/Workflow/Workflow'
 import { Button } from 'primereact/button'
 import { FiRefreshCw } from 'react-icons/fi'
-import { useDispatch } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
-import Actions from '../Actions/Actions'
 import ReactJson from 'react-json-view'
 
 import Label from '../../Shared/label/Label'
 import HealthCheckAccordion from '../HealthCheckAccordion/HealthCheckAccordion'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 import { FormattedMessage } from 'react-intl'
-
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import { AiFillEdit } from 'react-icons/ai'
+import { useParams } from 'react-router-dom'
+import useActions from '../Actions/Actions'
+import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
+import { useSelector } from 'react-redux'
 export default function ChildTable({
   productData,
   tenantId,
   updateDetails,
   updateTenant,
   productIndex,
+  tenantObject,
 }) {
+  const { renderActions } = useActions()
   const { editTenantStatus } = useRequest()
-  const dispatch = useDispatch()
+  let direction = useSelector((state) => state.main.direction)
 
   const chagneStatus = async (actionStatus) => {
     await editTenantStatus({
@@ -48,7 +53,7 @@ export default function ChildTable({
       </div>
     )
   }
-
+  const routeParams = useParams()
   const metadata = productData?.metadata ? productData.metadata : null
   const [products, setProducts] = useState([
     {
@@ -59,7 +64,31 @@ export default function ChildTable({
   ])
 
   return (
-    <Wrapper>
+    <Wrapper direction={direction}>
+      <div className="dynamicButtons">
+        <DynamicButtons
+          buttons={
+            productData.actions && productData.actions[0]?.status != 13
+              ? [
+                  {
+                    order: 1,
+                    type: 'form',
+                    id: routeParams.id,
+                    label: 'Edit',
+                    component: 'editTenant',
+                    updateTenant: updateTenant,
+                    icon: <AiFillEdit />,
+                  },
+                  ...renderActions(
+                    tenantObject,
+                    productData.actions,
+                    chagneStatus
+                  ),
+                ]
+              : renderActions(tenantObject, productData.actions, chagneStatus)
+          }
+        />
+      </div>
       <div className="content-container">
         <div className="content-details">
           <Table
@@ -68,10 +97,10 @@ export default function ChildTable({
           >
             <tbody>
               <tr>
-                <td className="fw-bold firstTd">
+                <td className="fw-bold firstTd line-cell">
                   <FormattedMessage id="Status" />
                 </td>
-                <td>
+                <td className=" line-cell">
                   <TenantStatus statusValue={productData.status} />
                 </td>
               </tr>
@@ -108,6 +137,11 @@ export default function ChildTable({
                   <MetaDataAccordion defaultKey="metaData" data={products} />
                 </td>
               </tr>
+              <tr>
+                <td className="pl-0 pr-0" colSpan={2}>
+                  <SubscriptionInfoAccordion />
+                </td>
+              </tr>
 
               {productData?.healthCheckStatus.showHealthStatus == true && (
                 <tr>
@@ -121,15 +155,6 @@ export default function ChildTable({
               )}
             </tbody>
           </Table>
-
-          <div className="buttons">
-            <div className="action">
-              <Actions
-                actions={productData.actions}
-                chagneStatus={chagneStatus}
-              />
-            </div>
-          </div>
         </div>
         <div className="content timeLine">
           <Card border="light" className="shadow-sm">
@@ -153,7 +178,7 @@ export default function ChildTable({
             </Card.Header>
             <Card.Body className="pb-0">
               <Workflow
-                productId={productData.id}
+                productId={productData.product.id}
                 updateDetails={updateDetails}
                 productIndex={productIndex}
               />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
@@ -12,7 +12,13 @@ import { PlanInfo, setAllPlans } from '../../../../../store/slices/products.js'
 
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
-const PlanForm = ({ type, planData, setVisible, popupLabel }) => {
+const PlanForm = ({
+  type,
+  planData,
+  setVisible,
+  popupLabel,
+  setActiveIndex,
+}) => {
   const { createPlanRequest, editPlanRequest, getProductPlans } = useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
@@ -26,14 +32,13 @@ const PlanForm = ({ type, planData, setVisible, popupLabel }) => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
-      .required('Plan Name is required')
-      .max(15, 'Name must be at most 15 characters'),
+      .required(<FormattedMessage id="Plan-Name-is-required" />)
+      .max(15, <FormattedMessage id="Name-must-be-at-most-15-characters" />),
 
-    description: Yup.string().required('Description is required'),
     displayOrder: Yup.number()
-      .typeError('Display Order must be a number')
-      .integer('Display Order must be an integer')
-      .min(0, 'Display Order must be a positive number')
+      .typeError(<FormattedMessage id="Display-Order-must-be-a-number" />)
+      .integer(<FormattedMessage id="Display-Order-must-be-an-integer" />)
+      .min(0, <FormattedMessage id="Display-Order-must-be-a-positive-number" />)
       .default(0),
   })
   const formik = useFormik({
@@ -71,6 +76,10 @@ const PlanForm = ({ type, planData, setVisible, popupLabel }) => {
             },
           })
         )
+
+        if (setActiveIndex) {
+          setActiveIndex(1)
+        }
       } else {
         const editPlan = await editPlanRequest(productId, {
           data: {
@@ -143,8 +152,7 @@ const PlanForm = ({ type, planData, setVisible, popupLabel }) => {
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Description" />{' '}
-                <span style={{ color: 'red' }}>*</span>
+                <FormattedMessage id="Description" />
               </Form.Label>
 
               <TextareaAndCounter
@@ -195,7 +203,7 @@ const PlanForm = ({ type, planData, setVisible, popupLabel }) => {
           </Button>
           <Button
             variant="link"
-            className="text-gray ms-auto"
+            className="text-gray "
             onClick={() => setVisible(false)}
           >
             <FormattedMessage id="Close" />

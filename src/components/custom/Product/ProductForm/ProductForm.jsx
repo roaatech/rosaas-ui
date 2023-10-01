@@ -17,8 +17,7 @@ import { FormattedMessage } from 'react-intl'
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './ProductForm.styled.jsx'
 import { generateApiKey } from '../../../../lib/sharedFun/common.js'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { AiFillCopy } from 'react-icons/ai'
+import { useNavigate } from 'react-router-dom'
 
 const ProductForm = ({
   type,
@@ -27,10 +26,11 @@ const ProductForm = ({
   popupLabel,
   update,
   setUpdate,
+  sideBar,
 }) => {
   const { createProductRequest, editProductRequest } = useRequest()
   const dispatch = useDispatch()
-
+  const navigate = useNavigate()
   const initialValues = {
     name: productData ? productData.name : '',
     apiKey: productData ? productData.apiKey : '',
@@ -43,7 +43,9 @@ const ProductForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Product Name is required'),
+    name: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
     defaultHealthCheckUrl: Yup.string()
       .required(<FormattedMessage id="This-field-is-required" />)
       .matches(
@@ -62,6 +64,7 @@ const ProductForm = ({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
+      setVisible(false)
       if (type == 'create') {
         const createProduct = await createProductRequest({
           name: values.name,
@@ -74,6 +77,9 @@ const ProductForm = ({
           deletionEndpoint: values.deletionEndpoint,
           clientId: Product_Client_id,
         })
+        if (sideBar) {
+          navigate(`/products/${createProduct.data.data.id}`)
+        }
         setUpdate(update + 1)
       } else {
         const editProduct = await editProductRequest({
@@ -360,7 +366,7 @@ const ProductForm = ({
           </Button>
           <Button
             variant="link"
-            className="text-gray ms-auto"
+            className="text-gray "
             onClick={() => setVisible(false)}
           >
             <FormattedMessage id="Close" />

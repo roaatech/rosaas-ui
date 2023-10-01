@@ -1,14 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { TextareaCounterWrapper } from './TextareaAndCounter.styled'
+import { useSelector } from 'react-redux'
 
 const TextareaAndCounter = ({
   addTextarea,
   maxLength,
   showCharCount,
   inputValue,
+  disabled,
 }) => {
   const [characterCount, setCharacterCount] = useState(inputValue?.length || 0)
   const [value, setValue] = useState(inputValue)
+  const textareaRef = useRef(null)
+  let direction = useSelector((state) => state.main.direction)
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+  }, [value])
+
   const handleTextareaChange = (e) => {
     const inputValue = e.target.value
     if (inputValue.length <= maxLength) {
@@ -19,14 +31,15 @@ const TextareaAndCounter = ({
   }
 
   return (
-    <TextareaCounterWrapper>
+    <TextareaCounterWrapper direction={direction}>
       <div className="textarea-container">
         <textarea
           className="form-control"
-          rows={Math.ceil(value.length / 63)}
           value={value}
           onChange={handleTextareaChange}
           maxLength={maxLength}
+          ref={textareaRef}
+          disabled={disabled}
         />
 
         {showCharCount && (

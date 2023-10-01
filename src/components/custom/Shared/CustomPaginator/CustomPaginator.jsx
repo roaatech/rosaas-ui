@@ -1,6 +1,7 @@
 import React from 'react'
 import { Paginator } from 'primereact/paginator'
 import { Wrapper } from './CustomPaginator.styled'
+import { useSelector } from 'react-redux'
 
 const CustomPaginator = ({
   first,
@@ -12,9 +13,20 @@ const CustomPaginator = ({
   const lastItemIndex = first + rows
   const displayLastIndex =
     lastItemIndex > totalCount ? totalCount : lastItemIndex
+  let direction = useSelector((state) => state.main.direction)
+  let pageDisplayText = `${
+    displayLastIndex > 0 ? first + 1 : 0
+  }-${displayLastIndex} / ${totalCount}`
+
   return (
     <Wrapper>
-      <span>{`${first + 1}-${displayLastIndex} of ${totalCount}`}</span>
+      <span
+        style={{
+          direction: direction === 'rtl' ? 'ltr' : 'rtl',
+        }}
+      >
+        {pageDisplayText}
+      </span>
       <Paginator
         size={'small'}
         first={first}

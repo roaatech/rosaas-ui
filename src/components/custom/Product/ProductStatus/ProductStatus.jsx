@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { Wrapper } from "./ProductStatus.styled";
-import { statusConst } from "../../../../const";
+import React, { useEffect } from 'react'
+import { useState } from 'react'
+import { Wrapper } from './ProductStatus.styled'
+import { statusConst } from '../../../../const'
 
 const ProductStatus = ({ rowData, setFirst }) => {
-  const [status, setStatus] = useState(2);
+  const [status, setStatus] = useState(2)
 
-  useEffect(() => {}, [rowData.status]);
+  useEffect(() => {}, [rowData.status])
 
   return (
     <Wrapper>
@@ -15,11 +15,12 @@ const ProductStatus = ({ rowData, setFirst }) => {
         style={{
           color: statusConst[status].color,
           background: statusConst[status].color + statusConst[status].opacity,
-        }}>
+        }}
+      >
         {statusConst[status].string}
       </span>
     </Wrapper>
-  );
-};
+  )
+}
 
-export default ProductStatus;
+export default ProductStatus

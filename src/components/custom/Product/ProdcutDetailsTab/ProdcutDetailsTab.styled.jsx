@@ -8,9 +8,9 @@ export const Wrapper = styled.div`
     color: var(--themeColor) !important;
   }
 
-  .card-body {
+  /* .card-body {
     background: var(--themeSecColor);
-  }
+  } */
 
   tr > td {
     border-color: var(--themeGray) !important;

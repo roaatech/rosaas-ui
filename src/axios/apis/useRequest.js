@@ -1,155 +1,69 @@
 import useApi from '../useApi'
 import { useDispatch } from 'react-redux'
 import { logOut as logOutRequest } from '../../store/slices/auth'
+import useUserReq from '../apis/User/useUserReq'
+import useTenantReq from '../apis/Tenant/useTenantReq'
+import useProductReq from '../apis/Product/useProductReq'
+import usePlanReq from './Product/plan/usePlanReq'
+import useFeatureReq from './Product/feature/useFeatureReq'
+import usePlanPriceReq from './Product/planPrice/usePlanPriceReq'
+import usePlanFeatureReq from './Product/planFeature/usePlanFeatureReq'
+import useSettingsReq from './Setting/useSettingReq'
+
 const useRequest = () => {
-  const dispatch = useDispatch()
-  const Request = useApi()
+  const { signIn, userData, logOut } = useUserReq()
+  const {
+    createTenantRequest,
+    editTenantRequest,
+    getTenant,
+    getTenantList,
+    deleteTenantReq,
+    getProductTenants,
+    editTenantStatus,
+    getTimeLine,
+    subscriptionDetails,
+  } = useTenantReq()
 
-  const logOut = async () => {
-    dispatch(logOutRequest())
-    return await Request.get(`logout`)
-  }
+  const {
+    createProductRequest,
+    editProductRequest,
+    getProduct,
+    getProductList,
+    deleteProductReq,
+  } = useProductReq()
 
-  const signIn = async (data) => {
-    return await Request.post('identity/sadmin/v1/Auth/Signin', data)
-  }
-  const userData = async () => {
-    return await Request.get('identity/sadmin/v1/Account')
-  }
-  const createTenantRequest = async (data) => {
-    return await Request.post('management/sadmin/v1/Tenants', data)
-  }
-  const editTenantRequest = async (data) => {
-    return await Request.put('management/sadmin/v1/Tenants', data)
-  }
-  const getTenant = async (id) => {
-    return await Request.get(`management/sadmin/v1/Tenants/${id}`)
-  }
-  const getTenantList = async (params) => {
-    return await Request.get(`management/sadmin/v1/Tenants${params}`)
-  }
-  const getProductTenants = async (params) => {
-    return await Request.get(`management/sadmin/v1/products/${params}`)
-  }
+  const {
+    getProductPlans,
+    createPlanRequest,
+    publishPlan,
+    editPlanRequest,
+    deletePlanReq,
+  } = usePlanReq()
 
-  const deleteTenantReq = async (data) => {
-    return await Request.delete(`management/sadmin/v1/Tenants`, { data })
-  }
+  const {
+    getProductFeatures,
+    createFeatureRequest,
+    editFeatureRequest,
+    deleteFeatureReq,
+  } = useFeatureReq()
 
-  const editTenantStatus = async (data) => {
-    return await Request.put('management/sadmin/v1/Tenants/status', data)
-  }
-  const getTimeLine = async (id, productId, queries) => {
-    return await Request.get(
-      `management/sadmin/v1/Tenants/${id}/products/${productId}/processes${queries}`
-    )
-  }
+  const {
+    getProductPlanPriceList,
+    createPlanPriceRequest,
+    editPlanPriceRequest,
+    deletePlanPriceReq,
+    PlansPricePublishedReq,
+  } = usePlanPriceReq()
 
-  const createProductRequest = async (data) => {
-    return await Request.post('management/sadmin/v1/Products', data)
-  }
-  const editProductRequest = async (data) => {
-    return await Request.put(
-      `management/sadmin/v1/Products/${data.id}`,
-      data.data
-    )
-  }
-  const getProduct = async (id) => {
-    return await Request.get(`management/sadmin/v1/Products/${id}`)
-  }
-  const getProductList = async (params) => {
-    return await Request.get(`management/sadmin/v1/Products${params}`)
-  }
-  const deleteProductReq = async (data) => {
-    return await Request.delete(`management/sadmin/v1/Products/${data.id}`)
-  }
+  const {
+    getFeaturePlanList,
+    createFeaturePlanRequest,
+    editFeaturePlanRequest,
+    getFeaturePlan,
+    deleteFeaturePlanReq,
+  } = usePlanFeatureReq()
 
-  // Features
-
-  const getProductFeatures = async (productId) => {
-    return await Request.get(
-      `management/sadmin/v1/Products/${productId}/Features`
-    )
-  }
-
-  const createFeatureRequest = async (productId, data) => {
-    return await Request.post(
-      `management/sadmin/v1/Products/${productId}/Features`,
-      data
-    )
-  }
-  const editFeatureRequest = async (productId, data) => {
-    return await Request.put(
-      `management/sadmin/v1/Products/${productId}/Features/${data.id}`,
-      data.data
-    )
-  }
-
-  const deleteFeatureReq = async (productId, data) => {
-    return await Request.delete(
-      `management/sadmin/v1/Products/${productId}/Features/${data.id}`
-    )
-  }
-
-  // Plans
-
-  const getProductPlans = async (productId) => {
-    return await Request.get(`management/sadmin/v1/Products/${productId}/Plans`)
-  }
-
-  const createPlanRequest = async (productId, data) => {
-    return await Request.post(
-      `management/sadmin/v1/Products/${productId}/Plans`,
-      data
-    )
-  }
-  const editPlanRequest = async (productId, data) => {
-    return await Request.put(
-      `management/sadmin/v1/Products/${productId}/Plans/${data.id}`,
-      data.data
-    )
-  }
-
-  const deletePlanReq = async (productId, data) => {
-    return await Request.delete(
-      `management/sadmin/v1/Products/${productId}/Plans/${data.id}`
-    )
-  }
-
-  // settings
-  const getHeathCheckSettings = async () => {
-    return await Request.get(`management/sadmin/v1/Settings/HealthCheck`)
-  }
-  const putHeathCheckSettings = async (data) => {
-    return await Request.put(`management/sadmin/v1/Settings/HealthCheck`, data)
-  }
-
-  // --------------------------------------
-
-  const getFeaturePlanList = async (id) => {
-    return await Request.get(`management/sadmin/v1/Products/${id}/PlanFeatures`)
-  }
-  const createFeaturePlanRequest = async (data) => {
-    return await Request.post(
-      `management/sadmin/v1/Products/${data.productId}/PlanFeatures`,
-      data.data
-    )
-  }
-  const editFeaturePlanRequest = async (data) => {
-    return await Request.put(
-      `management/sadmin/v1/Products/${data.productId}/PlanFeatures/${data.featurePlanId}`,
-      data.data
-    )
-  }
-  const getFeaturePlan = async (id) => {
-    return await Request.get(`management/sadmin/v1/Products/${id}/PlanFeatures`)
-  }
-
-  const deleteFeaturePlanReq = async (data) => {
-    return await Request.delete(
-      `management/sadmin/v1/Products/${data.productId}/PlanFeatures/${data.PlanFeatureId}`
-    )
-  }
+  const { getHeathCheckSettings, putHeathCheckSettings } = useSettingsReq()
 
   return {
     signIn,
@@ -183,6 +97,13 @@ const useRequest = () => {
     createFeatureRequest,
     editFeatureRequest,
     deleteFeatureReq,
+    PlansPricePublishedReq,
+    getProductPlanPriceList,
+    createPlanPriceRequest,
+    editPlanPriceRequest,
+    deletePlanPriceReq,
+    publishPlan,
+    subscriptionDetails,
   }
 }
 export default useRequest

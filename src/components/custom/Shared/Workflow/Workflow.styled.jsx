@@ -2,9 +2,13 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   .timeLineCont {
-    max-height: 350px;
+    max-height: calc(100vh - 390px);
     overflow-y: auto;
     margin-bottom: 10px;
+
+    @media (max-height: 600px) {
+      max-height: 350px;
+    }
     .time-line-item-container {
       position: relative;
       padding: 0px 15px 9px 15px;
@@ -13,7 +17,8 @@ export const Wrapper = styled.div`
         content: '';
         position: absolute;
         top: 0;
-        left: 4px;
+        left: ${(props) =>
+          props.direction == 'rtl' ? 'calc(100% - 6px)' : '4px'};
         height: 100%;
         border-left: 2px solid #e5e7eb;
       }
@@ -21,7 +26,8 @@ export const Wrapper = styled.div`
         content: '';
         position: absolute;
         top: 8px;
-        left: 8px;
+        left: ${(props) =>
+          props.direction == 'rtl' ? 'calc(100% - 2px)' : '8px'};
         width: 10px;
         height: 10px;
         margin-top: 0.425rem;
@@ -93,5 +99,23 @@ export const Wrapper = styled.div`
     margin: 0.143rem;
     transition: box-shadow 0.2s;
     border-radius: 50%;
+  }
+
+  .timeLineCont .time-line-item-container .timeLineItemCont {
+    background-color: unset;
+    padding-bottom: 3px !important;
+  }
+  .accordion .accordion-item {
+    background-color: var(--themeBackground) !important;
+    .accordion-button {
+      padding: 0;
+      & > span {
+        width: 100%;
+      }
+    }
+  }
+
+  .accordionButton span {
+    font-weight: 300 !important;
   }
 `

@@ -32,6 +32,7 @@ import {
   featureUnitMap,
 } from '../../../../const'
 import { Wrapper } from './ProductFeaturesList.styled'
+import { toast } from 'react-toastify'
 
 export const ProductFeaturesList = ({ productId }) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
@@ -45,6 +46,12 @@ export const ProductFeaturesList = ({ productId }) => {
   const [popUpLable, setPopUpLable] = useState('')
 
   const handleDeleteFeature = async () => {
+    if (list?.features[currentId]?.isSubscribed) {
+      toast.error('Cannot delete a subscribed feature.', {
+        position: toast.POSITION.TOP_CENTER,
+      })
+      return
+    }
     await deleteFeatureReq(productId, { id: currentId })
     dispatch(deleteFeature({ productId, FeatureId: currentId }))
   }
@@ -55,6 +62,12 @@ export const ProductFeaturesList = ({ productId }) => {
   }
 
   const editForm = async (id) => {
+    if (list?.features[id]?.isSubscribed) {
+      toast.error('Cannot edit a subscribed feature.', {
+        position: toast.POSITION.TOP_CENTER,
+      })
+      return
+    }
     setPopUpLable('Edit-Feature')
     setType('edit')
     setCurrentId(id)
@@ -75,7 +88,7 @@ export const ProductFeaturesList = ({ productId }) => {
       name,
       description,
       type,
-      unit,
+      // unit,
       reset,
       id,
       createdDate,
@@ -83,7 +96,7 @@ export const ProductFeaturesList = ({ productId }) => {
     } = props
 
     const mappedType = featureTypeMap[type]
-    const mappedUnit = featureUnitMap[unit]
+    // const mappedUnit = featureUnitMap[unit]
     const mappedReset = featureResetMap[reset]
 
     return (
@@ -99,11 +112,13 @@ export const ProductFeaturesList = ({ productId }) => {
           <td>
             <span className={`fw-normal`}>{mappedType}</span>
           </td>
-          <td>
+          {/* <td>
             <span className="fw-normal">{mappedUnit}</span>
-          </td>
+          </td> */}
           <td>
-            <span className="fw-normal">{mappedReset}</span>
+            <span className="fw-normal">
+              <FormattedMessage id={mappedReset} />
+            </span>
           </td>
           <td>
             <span className="fw-normal">
@@ -128,14 +143,14 @@ export const ProductFeaturesList = ({ productId }) => {
                     editForm(id)
                   }}
                 >
-                  <FontAwesomeIcon icon={faEdit} className="me-2" />
+                  <FontAwesomeIcon icon={faEdit} className="mx-2" />
                   <FormattedMessage id="Edit" />
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => deleteConfirm(id)}
                   className="text-danger"
                 >
-                  <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+                  <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
                   <FormattedMessage id="Delete" />
                 </Dropdown.Item>
               </Dropdown.Menu>
@@ -160,16 +175,16 @@ export const ProductFeaturesList = ({ productId }) => {
                   <th className="border-bottom">
                     <FormattedMessage id="Name" />
                   </th>
-                  <th className="border-bottom">
+                  <th className="border-bottom description">
                     <FormattedMessage id="Description" />
                   </th>
 
                   <th className="border-bottom">
                     <FormattedMessage id="Type" />
                   </th>
-                  <th className="border-bottom">
+                  {/* <th className="border-bottom">
                     <FormattedMessage id="Unit" />
-                  </th>
+                  </th> */}
                   <th className="border-bottom">
                     <FormattedMessage id="Reset" />
                   </th>
@@ -184,7 +199,7 @@ export const ProductFeaturesList = ({ productId }) => {
               <tbody>
                 {list?.features && Object.values(list?.features).length
                   ? Object.values(list?.features).map((t, index) => {
-                      return <TableRow key={`index`} {...t} />
+                      return <TableRow key={index} {...t} />
                     })
                   : null}
               </tbody>

@@ -48,7 +48,6 @@ const PlanForm = ({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      console.log('submit000000')
       if (!values.displayOrder) {
         values.displayOrder = 0
       }
@@ -60,7 +59,6 @@ const PlanForm = ({
           displayOrder: values.displayOrder,
         })
         navigate(`/plans/${createPlan.data.data.id}`)
-        console.log(createPlan, 'editPlan')
         setUpdate(update + 1)
       } else {
         const editPlan = await editPlanRequest({
@@ -185,7 +183,7 @@ const PlanForm = ({
           </Button>
           <Button
             variant="link"
-            className="text-gray ms-auto"
+            className="text-gray "
             onClick={() => setVisible(false)}
           >
             <FormattedMessage id="Close" />

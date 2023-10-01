@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'
 export const mainSlice = createSlice({
   name: 'main',
   initialState: {
-    darkMode: true,
-    direction: 'ltr',
+    darkMode: false,
+    direction: localStorage.getItem('direction') || 'ltr',
     preloader: true,
     sidebar: 1,
     history: [],

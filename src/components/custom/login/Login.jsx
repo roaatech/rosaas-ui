@@ -1,36 +1,37 @@
-import React from "react";
-import LoginWrapper from "./LoginWrapper.styled";
-import { FormattedMessage } from "react-intl";
+import React from 'react'
+import LoginWrapper from './LoginWrapper.styled'
+import { FormattedMessage } from 'react-intl'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BsFillEnvelopeOpenFill, BsUnlockFill } from "react-icons/bs";
+import { BsFillEnvelopeOpenFill, BsUnlockFill } from 'react-icons/bs'
 // import { faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "@themesberg/react-bootstrap";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { InputText } from "primereact/inputtext";
-import * as Yup from "yup";
-import useRequest from "../../../axios/apis/useRequest.js";
+import { Button } from '@themesberg/react-bootstrap'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { InputText } from 'primereact/inputtext'
+import * as Yup from 'yup'
+import useRequest from '../../../axios/apis/useRequest.js'
 const Login = () => {
-  const { signIn } = useRequest();
+  const { signIn } = useRequest()
   const initialValues = {
-    email: "",
-    password: "",
-  };
+    email: '',
+    password: '',
+  }
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().required("Password is required"),
-  });
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string().required('Password is required'),
+  })
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    const loginPass = await signIn(values);
-  };
+    const loginPass = await signIn(values)
+  }
 
   return (
     <LoginWrapper>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}>
+        onSubmit={handleSubmit}
+      >
         {({ isSubmitting }) => (
           <Form className="mt-4">
             <div>
@@ -75,7 +76,8 @@ const Login = () => {
                 variant="primary"
                 type="submit"
                 className="w-100"
-                disabled={isSubmitting}>
+                disabled={isSubmitting}
+              >
                 <FormattedMessage id="signIn" />
               </Button>
             </div>
@@ -83,7 +85,7 @@ const Login = () => {
         )}
       </Formik>
     </LoginWrapper>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

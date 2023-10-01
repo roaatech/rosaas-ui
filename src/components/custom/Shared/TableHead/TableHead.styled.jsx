@@ -6,6 +6,7 @@ export const Wrapper = styled.div`
   }
   input.p-inputtext.p-component {
     background: var(--themeSecColor);
+    background: var(--themeSecColor);
     color: var(--themeColor);
   }
 
@@ -17,5 +18,15 @@ export const Wrapper = styled.div`
   .p-button.p-button-sm:hover {
     background: var(--themeBackground) !important;
     color: var(--themeColor);
+  }
+
+  .addButton {
+    height: 40px;
+  }
+
+  .p-input-icon-left {
+    @media (max-width: 500px) {
+      margin-bottom: 0.5rem;
+    }
   }
 `

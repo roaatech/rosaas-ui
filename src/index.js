@@ -21,7 +21,7 @@ import { BrowserRouter } from 'react-router-dom'
 // vendor styles
 import 'react-datetime/css/react-datetime.css'
 import HomePage from './pages/HomePage'
-import ScrollToTop from './components/ScrollToTop'
+// import ScrollToTop from './components/ScrollToTop'
 import AppWrapper from './components/custom/global/AppWrapper'
 import { Provider } from 'react-redux'
 import store from './store/store'
@@ -35,7 +35,7 @@ fetch(`${process.env.PUBLIC_URL}/config.json`)
       <Provider store={store}>
         <BrowserRouter basename={data.baseHref}>
           <AppWrapper>
-            <ScrollToTop />
+            {/* <ScrollToTop /> */}
             <HomePage />
           </AppWrapper>
         </BrowserRouter>

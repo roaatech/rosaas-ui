@@ -16,6 +16,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { productInfo, subscribe } from '../../../../store/slices/products'
 import { setAllTenant } from '../../../../store/slices/tenants'
 import { FormattedMessage } from 'react-intl'
+import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
+import DateLabel from '../../Shared/DateLabel/DateLabel'
+import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { getProductTenants } = useRequest()
@@ -31,8 +34,22 @@ export const ProductTenantsList = ({ productId, productName }) => {
 
   const list = useSelector((state) => state.products.products[productId])
 
+  function isDateTimeInFuture(dateTimeString) {
+    // Parse the given date string into a Date object
+    const [datePart, timePart] = dateTimeString.split(' ')
+    const [day, month, year] = datePart.split('/').map(Number)
+    const [hours, minutes, seconds] = timePart.split(':').map(Number)
+    const inputDate = new Date(year, month - 1, day, hours, minutes, seconds)
+
+    // Get the current date and time
+    const currentDate = new Date()
+
+    // Compare the two dates
+    return inputDate > currentDate
+  }
+
   useEffect(() => {
-    let params = `${productId}/Tenants`
+    let params = `${productId}/subscriptions`
 
     ;(async () => {
       if (!list?.subscribe) {
@@ -50,8 +67,10 @@ export const ProductTenantsList = ({ productId, productName }) => {
       status,
       createdDate,
       editedDate,
-      id,
-      healthCheckUrlIsOverridden,
+      tenantId,
+      plan,
+      startDate,
+      endDate,
     } = props
 
     return (
@@ -74,12 +93,26 @@ export const ProductTenantsList = ({ productId, productName }) => {
                       .background,
                 }}
                 size="sm"
-                className="p-1 border-round border-1 border-400 me-2">
+                className="p-1 border-round border-1 border-400 mx-2">
                 {urlIsOverridden[healthCheckUrlIsOverridden.toString()].value}
               </span>
             </OverlayTrigger>
           </span>
         </td> */}
+
+        <td>
+          <span className={`fw-normal`}>
+            <DateLabelWhite text={plan.name} />
+          </span>
+        </td>
+        <td>
+          {' '}
+          <DateLabelWhite text={formatDate(startDate)} />
+        </td>
+        <td>
+          <DateLabel endDate={endDate} />
+        </td>
+
         <td>
           <span className="fw-normal">
             {status && <TenantStatus statusValue={status} />}
@@ -90,6 +123,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
             <TableDate createdDate={createdDate} editedDate={editedDate} />
           </span>
         </td>
+
         <td>
           <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle
@@ -105,10 +139,10 @@ export const ProductTenantsList = ({ productId, productName }) => {
             <Dropdown.Menu>
               <Dropdown.Item>
                 <Link
-                  to={`/tenants/${id}#${productName}`}
+                  to={`/tenants/${tenantId}#${productName}`}
                   className="w-100 d-block"
                 >
-                  <FontAwesomeIcon icon={faGear} className="me-2" />{' '}
+                  <FontAwesomeIcon icon={faGear} className="mx-2" />{' '}
                   <FormattedMessage id="Manage" />
                 </Link>
               </Dropdown.Item>
@@ -132,11 +166,21 @@ export const ProductTenantsList = ({ productId, productName }) => {
                 <FormattedMessage id="Unique-Name" />
               </th>
               <th className="border-bottom">
+                <FormattedMessage id="Plan" />
+              </th>
+              <th className="border-bottom">
+                <FormattedMessage id="Start-Date" />
+              </th>
+              <th className="border-bottom">
+                <FormattedMessage id="End-Date" />
+              </th>
+              <th className="border-bottom">
                 <FormattedMessage id="Status" />
               </th>
               <th className="border-bottom">
                 <FormattedMessage id="Created-Date" />
               </th>
+
               <th className="border-bottom">
                 <FormattedMessage id="Actions" />
               </th>
@@ -145,7 +189,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
           <tbody>
             {list?.subscribe?.length
               ? list?.subscribe?.map((t, index) => (
-                  <TableRow key={`index`} {...t} />
+                  <TableRow key={index} {...t} />
                 ))
               : null}
           </tbody>

@@ -81,4 +81,4 @@ export default [
   //     "icon": faPenFancy,
   //     "description": "Crafted by professional UI/UX designers"
   // }
-];
+]

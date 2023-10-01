@@ -1,0 +1,80 @@
+export const statusConst = {
+  1: {
+    string: 'Rosas-resource-created',
+    opacity: '35',
+    color: '#155dd7',
+    icon: 'pi-user-plus',
+  },
+  2: {
+    string: 'Create-request-is-sent',
+    opacity: '10',
+    color: '#155dd7',
+    icon: 'pi-user-plus',
+  },
+  3: {
+    string: 'Creating',
+    opacity: '15',
+    color: '#155dd7',
+    icon: 'pi-user-plus',
+  },
+  4: {
+    string: 'Created-As-Active',
+    opacity: '35',
+    color: '#00a675',
+    icon: 'pi-check-circle',
+  },
+  5: {
+    string: 'Active-request-is-sent',
+    opacity: '10',
+    color: '#00a675',
+    icon: 'pi-check-circle',
+  },
+  6: {
+    string: 'Activating',
+    opacity: '15',
+    color: '#00a675',
+    icon: 'pi-check-circle',
+  },
+  7: {
+    string: 'Active',
+    opacity: '35',
+    color: '#00a675',
+    icon: 'pi-check-circle',
+  },
+  8: {
+    string: 'Deactivate-request-is-sent',
+    opacity: '10',
+    color: '#eda100',
+    icon: 'pi-exclamation-triangle',
+  },
+  9: {
+    string: 'Deactivating',
+    opacity: '15',
+    color: '#eda100',
+    icon: 'pi-exclamation-triangle',
+  },
+  10: {
+    string: 'Inactive',
+    opacity: '35',
+    color: '#eda100',
+    icon: 'pi-exclamation-triangle',
+  },
+  11: {
+    string: 'Delete-request-is-sent',
+    opacity: '10',
+    color: '#FF6868',
+    icon: 'pi-trash',
+  },
+  12: {
+    string: 'Deleting',
+    opacity: '15',
+    color: '#FF6868',
+    icon: 'pi-trash',
+  },
+  13: {
+    string: 'Deleted',
+    opacity: '35',
+    color: '#FF6868',
+    icon: 'pi-trash',
+  },
+}

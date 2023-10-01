@@ -6,6 +6,7 @@ export const Wrapper = styled.div`
   justify-content: center;
   padding-top: 10px;
   flex-wrap: wrap;
+  direction: ltr;
   .p-paginator {
     background: var(--themeSecCol);
   }

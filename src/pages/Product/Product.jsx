@@ -35,7 +35,11 @@ import { useNavigate } from 'react-router-dom'
 import { Wrapper } from './Product.styled'
 import CustomPaginator from '../../components/custom/Shared/CustomPaginator/CustomPaginator'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
-import { productInfo, setAllProduct } from '../../store/slices/products'
+import {
+  productInfo,
+  removeProductStore,
+  setAllProduct,
+} from '../../store/slices/products'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
@@ -45,7 +49,6 @@ export default function Product({ children }) {
   const [visible, setVisible] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)
-  // const [list, setList] = useState([]);
   const [rebase, setRebase] = useState(0)
   const [searchValue, setSearchValue] = useState('')
   const [sortField, setSortField] = useState('')
@@ -62,15 +65,16 @@ export default function Product({ children }) {
   }
   const deleteProduct = async () => {
     await deleteProductReq({ id: currentId })
+    dispatch(removeProductStore(currentId))
   }
 
   const listData = useSelector((state) => state.products.products)
-  let list = Object.values(listData)
+  let [list, setList] = useState(Object.values(listData))
 
   useEffect(() => {
     let query = `?page=${Math.ceil(
       (first + 1) / rows
-    )}&pageSize=${rows}&filters[0].Field=SearchTerm`
+    )}&pageSize=${rows}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     if (sortField) query += `&sort.Field=${sortField}`
     if (sortValue) query += `&sort.Direction=${sortValue}`
@@ -78,6 +82,7 @@ export default function Product({ children }) {
       // if (Object.values(listData).length == 0) {
       const productList = await getProductList(query)
       dispatch(setAllProduct(productList.data.data.items))
+      setList(productList.data.data.items)
       setTotalCount(productList.data.data.totalCount)
       // }
     })()
@@ -115,6 +120,7 @@ export default function Product({ children }) {
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
           setFirst={setFirst}
+          title={<FormattedMessage id="Product-List" />}
         >
           <ProductForm
             popupLabel={<FormattedMessage id="Create-Product" />}
@@ -228,18 +234,18 @@ export default function Product({ children }) {
                       <Dropdown.Item
                         onSelect={() => navigate(`/products/${data.id}`)}
                       >
-                        <FontAwesomeIcon icon={faEye} className="me-2" />
+                        <FontAwesomeIcon icon={faEye} className="mx-2" />
                         <FormattedMessage id="View-Details" />
                       </Dropdown.Item>
                       <Dropdown.Item onSelect={() => editForm(data.id)}>
-                        <FontAwesomeIcon icon={faEdit} className="me-2" />
+                        <FontAwesomeIcon icon={faEdit} className="mx-2" />
                         <FormattedMessage id="Edit" />
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => deleteConfirm(data.id)}
                         className="text-danger"
                       >
-                        <FontAwesomeIcon icon={faTrashAlt} className="me-2" />
+                        <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
                         <FormattedMessage id="Delete" />
                       </Dropdown.Item>
                     </Dropdown.Menu>

@@ -4,11 +4,13 @@ import { BsFillHouseDoorFill } from 'react-icons/bs'
 import { Breadcrumb } from '@themesberg/react-bootstrap'
 import { Wrapper } from './Breadcrumb.styled'
 import { useEffect } from 'react'
-import Navbar from '../../../Navbar'
+import Navbar from '../../../Navbar/Navbar'
 import { breadcrumbConst } from '../../../../const'
 import { useIntl, FormattedMessage } from 'react-intl'
+import { useSelector } from 'react-redux'
 
 const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
+  let direction = useSelector((state) => state.main.direction)
   const intl = useIntl()
   const hasInfo = breadcrumbInfo ? 'yes' : null
   let navigation = '#'
@@ -26,7 +28,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
   useEffect(() => {
     if (breadcrumbInfo) {
       if (breadcrumbConst[breadcrumbInfo].name || parent) {
-        document.title = `ROSAS - ${intl.formatMessage({
+        document.title = `RoSaaS - ${intl.formatMessage({
           id: breadcrumbConst[breadcrumbInfo].name,
         })}`
       }
@@ -34,7 +36,10 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
   })
   return (
     <>
-      <Wrapper className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2">
+      <Wrapper
+        direction={direction}
+        className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2"
+      >
         <div className="d-block mb-xl-0">
           {hasInfo && (
             <Breadcrumb
@@ -69,7 +74,9 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
                     breadcrumbConst[breadcrumbInfo].parent
                   }
                 >
-                  {breadcrumbConst[breadcrumbInfo].parent}
+                  {intl.formatMessage({
+                    id: breadcrumbConst[breadcrumbInfo].parent,
+                  })}{' '}
                 </Breadcrumb.Item>
               )}
 

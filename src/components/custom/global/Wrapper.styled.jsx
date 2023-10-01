@@ -1,3 +1,9 @@
+/* ${(props) => {
+   props.direction == 'rtl'
+     ? require('../../../scss/voltrtl.scss')
+     : require('../../../scss/voltltr.scss')
+ }}   */
+
 import { createGlobalStyle } from 'styled-components'
 
 const darkBackground = '#676668'
@@ -5,18 +11,14 @@ const darkColor = '#414042'
 const lightBackground = '#f9f9f9'
 const lightColor = '#f5f8fb'
 const GlobalStyles = createGlobalStyle`
-
+ 
   ${require('react-toastify/dist/ReactToastify.css')}
   ${require('primereact/resources/themes/lara-light-indigo/theme.css')}
   ${require('primereact/resources/primereact.min.css')}
   ${require('primeicons/primeicons.css')}
- ${require('../../../scss/voltltr.scss')}   
- ${require('../../../scss/custom.scss')}  
- /* ${(props) => {
-   props.direction == 'rtl'
-     ? require('../../../scss/voltrtl.scss')
-     : require('../../../scss/voltltr.scss')
- }}   */
+  ${require('../../../scss/voltltr.scss')}   
+  ${require('../../../scss/custom.scss')}  
+
 :root{
   --darkBackground:${darkBackground};
   --gray: #f9f9f9;
@@ -28,6 +30,8 @@ const GlobalStyles = createGlobalStyle`
   --errorColor:red;
   --green:#3bc76f;
   --red:#ff6868;
+  --green2:#eff9f6;
+  --red2:#f5e8e4;
   --primary-color:#414042;
  
 
@@ -97,6 +101,20 @@ const GlobalStyles = createGlobalStyle`
 .react-switch.react-switch-docusaurus{
   display: none  !important; 
 }
+
+.sidebar{
+  right: ${(props) => (props.direction == 'rtl' ? '0' : 'unset')};
+  left: ${(props) => (props.direction == 'rtl' ? 'unset' : '0')}
+}
+
+
+@media (min-width: 768px) {
+  .content {
+    margin: ${(props) => (props.direction == 'rtl' ? '0 260px 0 0' : '')};
+  }
+}
+
+
 .sidebar-inner .addNew {
   width: 100%;
 }
@@ -106,9 +124,18 @@ const GlobalStyles = createGlobalStyle`
 
 }
   *{
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Tajawal',Cairo,"Nunito Sans", sans-serif;
+    /* ${(props) =>
+      props.direction === 'rtl'
+        ? 'font-size: lighter;'
+        : 'font-weight: normal;'} */
   }
+  /* * :lang(ar){
+    font-size: calc(var(-- ) );
 
+  } */
+
+ 
   img{
     width: max-content;
   }
@@ -199,7 +226,14 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1{
 .p-datatable .p-datatable-thead > tr > th{
   color: var(--themeColor) !important;
   background-color: var(--themeBackground) !important;
- }
+  }
+
+  .p-datatable.p-datatable-sm .p-datatable-tbody > tr > td, .p-datatable.p-datatable-sm .p-datatable-thead > tr > th{ 
+    padding: 0.75rem 0.5rem;
+   text-align: inherit;
+}
+ 
+
 
  .table thead th {
     text-transform: unset;
@@ -341,11 +375,46 @@ nav svg.svg-inline--fa.fa-bell {
 .dropdown-item:hover, .dropdown-item:focus{
   background-color: var(--table-hover);
 }
+.dropdown-item{
+   text-align: ${(props) => props.direction == 'rtl' && 'right'}
+}
+
+.p-input-icon-left > .p-inputtext{
+   padding: ${(props) =>
+     props.direction == 'rtl'
+       ? '0.5rem  2.5rem 0.5rem 0'
+       : '0.5rem  0 0.5rem  2.5rem'}
+}
+
+.p-input-icon-left > i:first-of-type, .p-input-icon-left > svg:first-of-type, .p-input-icon-left > .p-input-prefix {
+    left: ${(props) => (props.direction == 'rtl' ? 'unset' : '0.75rem')};
+    right: ${(props) => (props.direction == 'rtl' ? '0.75rem' : 'unset')};
+ }
+
+
+.modal-footer{
+  display: flex;
+    justify-content: space-between;
+}
 
 .p-inputtext:enabled:hover {
     border-color: var(--primary3);
 }
 
+.p-dialog.p-confirm-dialog .p-confirm-dialog-message{
+  margin: ${(props) => props.direction == 'rtl' && '0 10px 0 0'}
+}
+.accordion-button::after {
+  margin: ${(props) =>
+    props.direction == 'rtl' ? '0 auto 0 0' : '0  0 0 auto'}
+   
+  }
+.modal-header .btn-close{
+  margin: ${(props) => props.direction == 'rtl' && '0 auto 0 0 '}
+}
+.p-paginator .p-dropdown .p-dropdown-label{
+  padding-right: 10px;
+}
 .p-inputtext:focus {
     background-color: #ffffff;
     outline: 0;
