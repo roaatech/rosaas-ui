@@ -343,7 +343,7 @@ const PlanPriceForm = ({
                     </option>
                     {cyclesYouDontHave.map((cycleValue) => (
                       <option key={cycleValue} value={cycleValue}>
-                        {cycle[cycleValue]}
+                        <FormattedMessage id={cycle[cycleValue]} />
                       </option>
                     ))}
                   </select>

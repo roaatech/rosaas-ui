@@ -188,7 +188,9 @@ export default function ProductPlansPriceList({ children }) {
         {Object.keys(cycle).map((item, cycleIndex) => (
           <tr key={cycleIndex}>
             <td>
-              <span className="fw-bolder">{cycle[item]}</span>
+              <span className="fw-bolder">
+                <FormattedMessage id={cycle[item]} />
+              </span>
             </td>
             {Object.keys(plansData).map((planItem, planIndex) => (
               <td key={planIndex}>

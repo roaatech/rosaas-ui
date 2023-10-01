@@ -116,7 +116,9 @@ export const ProductFeaturesList = ({ productId }) => {
             <span className="fw-normal">{mappedUnit}</span>
           </td> */}
           <td>
-            <span className="fw-normal">{mappedReset}</span>
+            <span className="fw-normal">
+              <FormattedMessage id={mappedReset} />
+            </span>
           </td>
           <td>
             <span className="fw-normal">

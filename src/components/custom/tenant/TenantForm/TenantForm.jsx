@@ -14,7 +14,7 @@ import {
   setAllProduct,
 } from '../../../../store/slices/products.js'
 import { Wrapper } from './TenantForm.styled.jsx'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 const TenantForm = ({
   type,
@@ -135,7 +135,7 @@ const TenantForm = ({
       setVisible && setVisible(false)
     },
   })
-
+  const intl = useIntl()
   let planOptions
   if (listData[formik.values.product]?.plans) {
     planOptions = Object.values(listData[formik.values.product].plans)
@@ -183,7 +183,9 @@ const TenantForm = ({
           )
           .map((item) => ({
             value: item.id,
-            label: `${cycle[item.cycle]} (${item.price})`,
+            label: `${intl.formatMessage({
+              id: cycle[item.cycle],
+            })} (${item.price})`,
           }))
         setPriceList(planData)
       } else {

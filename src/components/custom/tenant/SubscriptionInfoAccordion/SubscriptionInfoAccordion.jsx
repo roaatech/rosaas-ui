@@ -33,11 +33,13 @@ const SubscriptionInfoAccordion = (props) => {
                   <span>
                     <DateLabelWhite text={subscriptionData.planName} />
                   </span>
-                  {'   '}From{' '}
+                  {'   '}
+                  <FormattedMessage id="From" />{' '}
                   <DateLabelWhite
                     text={formatDate(subscriptionData.startDate)}
                   />{' '}
-                  to <DateLabel endDate={subscriptionData.endDate} />
+                  <FormattedMessage id="to" />{' '}
+                  <DateLabel endDate={subscriptionData.endDate} />
                 </span>
               </Accordion.Button>
               <Accordion.Body>
@@ -45,11 +47,21 @@ const SubscriptionInfoAccordion = (props) => {
                   <Table responsive>
                     <thead>
                       <tr>
-                        <th>Feature</th>
-                        <th>Reset</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Remind / Limit</th>
+                        <th>
+                          <FormattedMessage id="Feature" />
+                        </th>
+                        <th>
+                          <FormattedMessage id="Reset" />
+                        </th>
+                        <th>
+                          <FormattedMessage id="Start-Date" />
+                        </th>
+                        <th>
+                          <FormattedMessage id="End-Date" />
+                        </th>
+                        <th>
+                          <FormattedMessage id="Remind/Limit" />
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -74,7 +86,7 @@ const SubscriptionInfoAccordion = (props) => {
                             </td>
                             <td>
                               {subscription.remindLimit ===
-                              'null undefined / null undefined '
+                              'nullundefined / nullundefined '
                                 ? '-'
                                 : subscription.remindLimit}
                             </td>

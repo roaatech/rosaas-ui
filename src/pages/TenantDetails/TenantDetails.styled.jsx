@@ -3,10 +3,20 @@ export const Wrapper = styled.div`
   /* .row-button {
     width: 100%;
   } */
+  .table td,
+  .table th {
+    font-size: var(--defaultFont);
+  }
   .line-cell {
     border-top: 1px solid #000;
     padding-right: 20px;
     padding-left: 20px;
+  }
+  .accordion-item > *:first-child {
+    transition: none;
+  }
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link:first-child {
+    transition: none;
   }
   .dynamicButtons {
     margin-left: 0px;
@@ -27,9 +37,9 @@ export const Wrapper = styled.div`
   .action button {
     margin-bottom: 10px;
   }
-  .card-body {
+  /* .card-body {
     background: var(--themeSecColor);
-  }
+  } */
 
   tr > td {
     border-color: var(--themeGray) !important;

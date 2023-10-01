@@ -48,10 +48,15 @@ const FeaturePlanForm = ({
     (state) => state.products.products[productId]?.plans
   )
   let allPlansArray = allPlans && Object.values(allPlans)
+  const allPlansfeatures = useSelector(
+    (state) => state.products.products[productId]?.featurePlan
+  )
+  // console.log({ allPlansfeatures })
 
   if (allPlansArray) {
     allPlansArray = allPlansArray.filter((plan) => !plan.isSubscribed)
   }
+
   const featureOptions = listFeatureData
     ? allFeatureArray.map((item) => {
         return {
@@ -70,6 +75,15 @@ const FeaturePlanForm = ({
 
   useEffect(() => {
     ;(async () => {
+      if (!allProducts[productId].featurePlan || !allPlansfeatures) {
+        const featurePlan = await getFeaturePlanList(productId)
+        dispatch(
+          setAllFeaturePlan({
+            productId: productId,
+            data: featurePlan.data.data,
+          })
+        )
+      }
       if (!listFeatureData) {
         const featureReq = await getProductFeatures(productId)
         dispatch(
@@ -81,7 +95,7 @@ const FeaturePlanForm = ({
         dispatch(setAllPlans({ productId: productId, data: planReq.data.data }))
       }
     })()
-  }, [])
+  }, [allPlansfeatures])
 
   const initialValues = {
     feature: feature || (FeaturePlanData ? FeaturePlanData?.feature?.id : ''),
@@ -206,6 +220,29 @@ const FeaturePlanForm = ({
       setVisible && setVisible(false)
     },
   })
+  const [availableFeatures, setAvailableFeatures] = useState(featureOptions)
+
+  useEffect(() => {
+    if (formik.values.plan) {
+      const selectedPlanId = formik.values.plan
+
+      const featuresAssignedToPlan = Object.values(allPlansfeatures)
+        .filter((planFeature) => planFeature.plan.id === selectedPlanId)
+        .map((planFeature) => planFeature.feature)
+
+      if (featuresAssignedToPlan.length > 0) {
+        const assignedFeatureIds = featuresAssignedToPlan
+          .map((planFeature) => planFeature.id)
+          .filter((id) => id !== '00000000-0000-0000-0000-000000000000')
+
+        const updatedAvailableFeatures = featureOptions.filter(
+          (option) => !assignedFeatureIds.includes(option.value)
+        )
+
+        setAvailableFeatures(updatedAvailableFeatures)
+      }
+    }
+  }, [formik.values.plan])
 
   return (
     <Wrapper>
@@ -219,39 +256,6 @@ const FeaturePlanForm = ({
           />
         </Modal.Header>
         <Modal.Body>
-          <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Feature" />{' '}
-                <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <select
-                className="form-control"
-                name="feature"
-                id="feature"
-                value={formik.values.feature}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              >
-                <option value={''}>
-                  <FormattedMessage id="Select-Option" />
-                </option>
-                {featureOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {`${option.label} (${option.type})`}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.feature && formik.errors.feature && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.feature}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
           <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
               <Form.Label>
@@ -281,6 +285,40 @@ const FeaturePlanForm = ({
                   style={{ display: 'block' }}
                 >
                   {formik.errors.plan}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Feature" />{' '}
+                <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <select
+                className="form-control"
+                name="feature"
+                id="feature"
+                value={formik.values.feature}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                disabled={!formik.values.plan}
+              >
+                <option value={''}>
+                  <FormattedMessage id="Select-Option" />
+                </option>
+                {availableFeatures.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {`${option.label} (${option.type})`}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.feature && formik.errors.feature && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.feature}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
