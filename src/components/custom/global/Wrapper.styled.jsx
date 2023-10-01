@@ -124,7 +124,7 @@ const GlobalStyles = createGlobalStyle`
 
 }
   *{
-    font-family: Cairo,"Nunito Sans", sans-serif;
+    font-family: 'Tajawal',Cairo,"Nunito Sans", sans-serif;
     /* ${(props) =>
       props.direction === 'rtl'
         ? 'font-size: lighter;'

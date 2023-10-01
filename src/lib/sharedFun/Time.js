@@ -78,9 +78,9 @@ export const Time = (date, before) => {
   const intl = useIntl()
 
   return timeDifference.hours < 24
-    ? `${before} ${isHour(timeDifference.hours)} intl.formatMessage({
-      id: 'hours-and',
-    }) 
+    ? `${before} ${isHour(timeDifference.hours)} ${intl.formatMessage({
+        id: 'hours-and',
+      })}
 
     ${
       timeDifference.minutes < 1
