@@ -41,6 +41,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                 <span className="firstTd fw-bold">
                   <FormattedMessage id="Subscription-Info" />
                 </span>
+
                 <span className={`mr-2 `}>
                   <span>
                     <DateLabelWhite text={subscriptionData.planName} />
@@ -53,18 +54,6 @@ const SubscriptionInfoAccordionNew = (props) => {
                   <FormattedMessage id="to" />{' '}
                   <DateLabel endDate={subscriptionData.endDate} />
                 </span>
-                {/* <span className={`mr-2 `}>
-                  <span>
-                    <DateLabelWhite text={subscriptionData.planName} />
-                  </span>
-                  {'   '}
-                  <FormattedMessage id="From" />{' '}
-                  <DateLabelWhite
-                    text={formatDate(subscriptionData.startDate)}
-                  />{' '}
-                  <FormattedMessage id="to" />{' '}
-                  <DateLabel endDate={subscriptionData.endDate} />
-                </span> */}
               </Accordion.Button>
 
               <Accordion.Body>
@@ -74,21 +63,21 @@ const SubscriptionInfoAccordionNew = (props) => {
                     variant="pills"
                     className="custom-nav-link justify-content-between"
                   >
-                    <table className="year">
+                    <table className="year-tabs">
                       <tbody>
                         <tr>
                           <td>
-                            <Nav.Item className="mb-sm-3 mb-md-0">
+                            <Nav.Item className="year ">
                               <Nav.Link eventKey="home">2021</Nav.Link>
                             </Nav.Item>
                           </td>
                           <td>
-                            <Nav.Item className="mb-sm-3 mb-md-0">
+                            <Nav.Item className=" year">
                               <Nav.Link eventKey="profile">2022</Nav.Link>
                             </Nav.Item>
                           </td>
                           <td>
-                            <Nav.Item className="mb-sm-3 mb-md-0">
+                            <Nav.Item className=" year">
                               <Nav.Link eventKey="messages">2023</Nav.Link>
                             </Nav.Item>
                           </td>
@@ -123,7 +112,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                           <Tab.Content className="content">
                             <Tab.Pane eventKey="allFeatures">
                               <Card.Body className="py-0 px-0">
-                                <Table>
+                                <Table responsive>
                                   <thead>
                                     <tr>
                                       <th>
@@ -189,7 +178,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                 eventKey={feature.featureName}
                               >
                                 <Card.Body className="py-0 px-0">
-                                  <Table>
+                                  <Table responsive>
                                     <thead>
                                       <tr>
                                         {/* <th>
@@ -233,7 +222,12 @@ const SubscriptionInfoAccordionNew = (props) => {
                                             }
                                           />
                                         </td>
-                                        <td>{feature.remindLimit || '-'}</td>
+                                        <td>
+                                          {feature.remindLimit ===
+                                          'nullundefined / nullundefined '
+                                            ? '-'
+                                            : feature.remindLimit}
+                                        </td>
                                       </tr>
                                     </tbody>
                                   </Table>

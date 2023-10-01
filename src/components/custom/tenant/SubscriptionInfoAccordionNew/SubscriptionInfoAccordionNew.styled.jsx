@@ -32,10 +32,15 @@ export const Wrapper = styled.div`
     max-width: 100px;
   }
   .content {
-    max-width: 100px;
+    max-width: 700px;
     margin-left: -45px;
   }
   .year {
+    padding: -100px;
+  }
+  .year-tabs {
     margin-left: 100px;
+    /* padding: -40px; */
+    border-spacing: 0px;
   }
 `
