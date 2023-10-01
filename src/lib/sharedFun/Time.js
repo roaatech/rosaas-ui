@@ -2,7 +2,7 @@ import { format, utcToZonedTime } from 'date-fns-tz'
 import { useIntl } from 'react-intl'
 
 const isHour = (hour) => {
-  return hour > 0 ? `${hour} hours and` : ''
+  return hour > 0 ? `${hour}` : ''
 }
 
 // export const DataTransform = (dateTime) => {
@@ -78,7 +78,9 @@ export const Time = (date, before) => {
   const intl = useIntl()
 
   return timeDifference.hours < 24
-    ? `${before} ${isHour(timeDifference.hours)} 
+    ? `${before} ${isHour(timeDifference.hours)} intl.formatMessage({
+      id: 'hours-and',
+    }) 
 
     ${
       timeDifference.minutes < 1
