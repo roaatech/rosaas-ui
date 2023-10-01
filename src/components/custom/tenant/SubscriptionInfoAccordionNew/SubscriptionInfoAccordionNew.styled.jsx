@@ -35,4 +35,7 @@ export const Wrapper = styled.div`
     max-width: 100px;
     margin-left: -45px;
   }
+  .year {
+    margin-left: 100px;
+  }
 `

@@ -41,6 +41,18 @@ const SubscriptionInfoAccordionNew = (props) => {
                 <span className="firstTd fw-bold">
                   <FormattedMessage id="Subscription-Info" />
                 </span>
+                <span className={`mr-2 `}>
+                  <span>
+                    <DateLabelWhite text={subscriptionData.planName} />
+                  </span>
+                  {'   '}
+                  <FormattedMessage id="From" />{' '}
+                  <DateLabelWhite
+                    text={formatDate(subscriptionData.startDate)}
+                  />{' '}
+                  <FormattedMessage id="to" />{' '}
+                  <DateLabel endDate={subscriptionData.endDate} />
+                </span>
                 {/* <span className={`mr-2 `}>
                   <span>
                     <DateLabelWhite text={subscriptionData.planName} />
@@ -62,22 +74,22 @@ const SubscriptionInfoAccordionNew = (props) => {
                     variant="pills"
                     className="custom-nav-link justify-content-between"
                   >
-                    <table>
+                    <table className="year">
                       <tbody>
                         <tr>
                           <td>
                             <Nav.Item className="mb-sm-3 mb-md-0">
-                              <Nav.Link eventKey="home">Home</Nav.Link>
+                              <Nav.Link eventKey="home">2021</Nav.Link>
                             </Nav.Item>
                           </td>
                           <td>
                             <Nav.Item className="mb-sm-3 mb-md-0">
-                              <Nav.Link eventKey="profile">Profile</Nav.Link>
+                              <Nav.Link eventKey="profile">2022</Nav.Link>
                             </Nav.Item>
                           </td>
                           <td>
                             <Nav.Item className="mb-sm-3 mb-md-0">
-                              <Nav.Link eventKey="messages">Messages</Nav.Link>
+                              <Nav.Link eventKey="messages">2023</Nav.Link>
                             </Nav.Item>
                           </td>
                         </tr>{' '}
