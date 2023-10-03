@@ -42,9 +42,9 @@ export const Wrapper = styled.div`
     margin-left: 100px;
     border-spacing: 0px;
   }
-  .vertical-tab-panel {
+  /* .vertical-tab-panel {
     padding: -20px;
-  }
+  } */
 
   /* .p-tabview .p-tabview-nav li {
     width: 100%;
@@ -52,34 +52,52 @@ export const Wrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
   } */
-  .features .p-tabview-nav {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 100px;
-    min-width: 100px;
-    border-width: 0 2px 0 0;
-    padding-right: 120px;
+  .table-tabs {
+    min-width: 900px;
   }
 
-  .p-tabview .p-component {
-    display: flex;
+  .feat-table {
+    margin-left: -20px;
   }
-  .p-tabview .p-tabview-panel {
-    width: 100%;
-    display: block;
-    display: flex;
-    flex-wrap: wrap;
-    margin-left: -15px;
-    margin-top: -9px;
+  .tabs {
+    max-width: 180px;
+  }
+  .custom-nav-link .nav-link.active {
+    border-bottom: 0px;
+    border-color: var(--second-color);
+    border-width: 2px;
+    border-left: 0;
+    border-right: 2px solid;
+    color: var(--second-color);
+    font-weight: 700;
+    background-color: transparent;
+    border-radius: 0%;
+    transition:
+      border-color 0.3s,
+      color 0.3s,
+      font-weight 0.3s,
+      background-color 0.3s;
+  }
+  .custom-nav-link .nav-link {
+    font-weight: 700;
+    color: #6c757d;
+
+    border-bottom: 0px solid;
+    border-left: 0;
+    border-right: 2px solid #dee2e6;
+    margin-bottom: -17px;
+    border-top: 0;
+    border-radius: 0%;
+    transition:
+      border-color 0.3s,
+      color 0.3s,
+      font-weight 0.3s,
+      background-color 0.3s;
+  }
+  .custom-nav-link {
+    margin-left: -20px;
   }
 
-  .p-tabview .p-tabview-nav .p-tabview-ink-bar {
-    background-color: var(--second-color);
-  }
-  .table > :not(caption) > * > * {
-    border: solid #b2b4b6;
-    border-width: 0 0 3px 0;
-  }
   .feature-value {
     min-width: 110px;
     background-color: red2;
