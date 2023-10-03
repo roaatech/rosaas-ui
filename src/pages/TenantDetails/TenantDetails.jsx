@@ -67,7 +67,8 @@ const TenantDetails = () => {
   }
 
   let tenantObject = tenantsData[routeParams.id]
-
+  const [currentProduct, setCurrentProduct] = useState('')
+  console.log({ currentProduct })
   let tenantStatus = tenantObject?.subscriptions[0]?.actions
     ? tenantObject?.subscriptions
         ?.flatMap((item) => item?.actions?.map((action) => action))
@@ -86,10 +87,13 @@ const TenantDetails = () => {
   const intl = useIntl()
 
   useEffect(() => {
+    if (!currentProduct) {
+      return
+    }
     const fetchSubscriptionDetails = async () => {
       try {
         const response = await subscriptionDetails(
-          '88e67328-3b20-413e-b6e1-010b48fa7bc9',
+          currentProduct,
           routeParams.id
         )
         const formattedSubscriptionData = {
@@ -105,12 +109,33 @@ const TenantDetails = () => {
             } / ${feature.feature.limit}${
               featureUnitMap[feature.feature.unit]
             } `,
+            subscriptionFeaturesCycles: feature.subscriptionFeaturesCycles.map(
+              (cycle) => ({
+                featureName: feature.feature.name,
+                startDate: cycle.startDate,
+                endDate: cycle.endDate,
+                type: cycle.type,
+                reset: cycle.reset,
+                usage: cycle.limit - cycle.remainingUsage,
+                limit: cycle.limit,
+                remindLimit: `${cycle.remainingUsage}${
+                  featureUnitMap[cycle.unit]
+                } / ${cycle.limit}${featureUnitMap[cycle.unit]} `,
+              })
+            ),
+
             usage: feature.feature.limit - feature.remainingUsage,
           })),
+          subscriptionCycles: response.data.data.subscriptionCycles.map(
+            (cycle) => ({
+              startDate: cycle.startDate,
+            })
+          ),
           planName: response.data.data.plan.name,
           startDate: response.data.data.startDate,
           endDate: response.data.data.endDate,
         }
+        console.log({ formattedSubscriptionData })
 
         dispatch(subscriptionData(formattedSubscriptionData))
       } catch (error) {
@@ -119,12 +144,13 @@ const TenantDetails = () => {
     }
 
     fetchSubscriptionDetails()
-  }, [routeParams.id])
+  }, [routeParams.id, currentProduct])
 
   useEffect(() => {
     ;(async () => {
       if (!tenantsData[routeParams.id]?.subscriptions[0]?.status) {
         const tenantData = await getTenant(routeParams.id)
+        setCurrentProduct(tenantData.data.data.subscriptions[0].productId)
         dispatch(tenantInfo(tenantData.data.data))
       }
     })()

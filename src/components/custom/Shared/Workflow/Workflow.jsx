@@ -22,6 +22,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
   const [first, setFirst] = useState(0)
   const [rows, setRows] = useState(10)
   let direction = useSelector((state) => state.main.direction)
+  const [showNotes, setShowNotes] = useState(false)
 
   const timeLine =
     tenantsData[routeParams.id].subscriptions[productIndex].history
@@ -47,6 +48,21 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
             <ReactJson src={data} name={false} />
           </Card.Body>
         </Card>
+        <Card border="light" className="border-0">
+          {
+            <div className="notes-toggle">
+              <span className="show-more-link" onClick={toggleNotes}>
+                {showNotes ? 'Hide Notes' : 'Show Notes'}
+              </span>
+              {showNotes && (
+                <div className="notes">
+                  {' '}
+                  <span>{data.notes || 'No notes available'}</span>
+                </div>
+              )}
+            </div>
+          }
+        </Card>
       </div>
     )
   }
@@ -71,6 +87,9 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
     })()
   }, [routeParams.id, updateDetails, first, rows])
 
+  const toggleNotes = () => {
+    setShowNotes(!showNotes)
+  }
   return (
     <Wrapper direction={direction}>
       <div className="timeLineCont">
@@ -126,8 +145,26 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
                       ? rowExpansionTemplate(JSON.parse(item?.data))
                       : null,
                   },
+                  // {
+                  //   eventKey: 'notes',
+                  //   title: 'Notes',
+                  //   description: item.notes || 'No notes available',
+                  // },
                 ]}
               />
+              {
+                <div className="notes-toggle">
+                  <span className="show-more-link" onClick={toggleNotes}>
+                    {showNotes ? 'Hide Notes' : 'Show Notes'}
+                  </span>
+                  {showNotes && (
+                    <div className="notes">
+                      {' '}
+                      <span>{item.notes || 'No notes available'}</span>
+                    </div>
+                  )}
+                </div>
+              }
             </div>
           </div>
         ))}

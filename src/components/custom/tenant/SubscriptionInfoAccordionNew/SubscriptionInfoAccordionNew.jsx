@@ -18,6 +18,7 @@ import Label from '../../Shared/label/Label'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import { size } from 'lodash'
 import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
+import { TabPanel, TabView } from 'primereact/tabview'
 // import { Col, Row, Nav, Tab } from 'react-bootstrap'
 // import { CogIcon, UserCircleIcon } from '@heroicons/react/solid'
 
@@ -25,6 +26,13 @@ const SubscriptionInfoAccordionNew = (props) => {
   const subscriptionData = useSelector(
     (state) => state.tenants.subscriptionData
   )
+  console.log({ xxx: subscriptionData })
+
+  console.log({
+    dfsdf: subscriptionData.data?.map((feature, index) =>
+      feature.subscriptionFeaturesCycles?.map((cycle, cycleIndex) => cycle)
+    ),
+  })
   const { defaultKey = [], className = '' } = props
   const [activeFeature, setActiveFeature] = useState('')
 
@@ -41,7 +49,6 @@ const SubscriptionInfoAccordionNew = (props) => {
                 <span className="firstTd fw-bold">
                   <FormattedMessage id="Subscription-Info" />
                 </span>
-
                 <span className={`mr-2 `}>
                   <span>
                     <DateLabelWhite text={subscriptionData.planName} />
@@ -57,133 +64,24 @@ const SubscriptionInfoAccordionNew = (props) => {
               </Accordion.Button>
 
               <Accordion.Body>
-                <Tab.Container defaultActiveKey="home">
-                  <Nav
-                    fill
-                    variant="pills"
-                    className="custom-nav-link justify-content-between"
-                  >
-                    <table className="year-tabs">
-                      <tbody>
-                        <tr>
-                          <td>
-                            <Nav.Item className="year ">
-                              <Nav.Link eventKey="home">2021</Nav.Link>
-                            </Nav.Item>
-                          </td>
-                          <td>
-                            <Nav.Item className=" year">
-                              <Nav.Link eventKey="profile">2022</Nav.Link>
-                            </Nav.Item>
-                          </td>
-                          <td>
-                            <Nav.Item className=" year">
-                              <Nav.Link eventKey="messages">2023</Nav.Link>
-                            </Nav.Item>
-                          </td>
-                        </tr>{' '}
-                      </tbody>
-                    </table>
-                  </Nav>
-                  <Tab.Content>
-                    <Tab.Container defaultActiveKey="allFeatures">
+                <TabView activeIndex={0} className="custom-tabview">
+                  {subscriptionData.subscriptionCycles.map((year, index) => (
+                    <TabPanel key={index} header={formatDate(year.startDate)}>
                       <Row>
-                        <Col lg={3}>
-                          <Nav
-                            fill
-                            variant="pills"
-                            className="flex-column vertical-tab custom-nav-link"
-                          >
-                            <Nav.Item>
-                              <Nav.Link eventKey="allFeatures">
-                                All Features
-                              </Nav.Link>
-                            </Nav.Item>
-                            {subscriptionData.data?.map((feature, index) => (
-                              <Nav.Item key={`feature-nav-${index}`}>
-                                <Nav.Link eventKey={feature.featureName}>
-                                  {feature.featureName}
-                                </Nav.Link>
-                              </Nav.Item>
-                            ))}
-                          </Nav>
-                        </Col>
                         <Col lg={9}>
-                          <Tab.Content className="content">
-                            <Tab.Pane eventKey="allFeatures">
-                              <Card.Body className="py-0 px-0">
-                                <Table responsive>
-                                  <thead>
-                                    <tr>
-                                      <th>
-                                        <FormattedMessage id="Feature" />
-                                      </th>
-                                      <th>
-                                        <FormattedMessage id="Reset" />
-                                      </th>
-                                      <th>
-                                        <FormattedMessage id="Start-Date" />
-                                      </th>
-                                      <th>
-                                        <FormattedMessage id="End-Date" />
-                                      </th>
-                                      <th>
-                                        <FormattedMessage id="Remind/Limit" />
-                                      </th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {subscriptionData &&
-                                      subscriptionData.data?.map(
-                                        (subscription, index) => (
-                                          <tr key={`subscription-${index}`}>
-                                            <td>{subscription.featureName}</td>
-                                            <td>{subscription.featureReset}</td>
-                                            <td>
-                                              <DateLabelWhite
-                                                text={formatDate(
-                                                  subscription.featureStartDate
-                                                )}
-                                              />
-                                            </td>
-                                            <td>
-                                              <DateLabel
-                                                endDate={
-                                                  subscription.featureEndDate
-                                                    ? formatDate(
-                                                        subscription.featureEndDate
-                                                      )
-                                                    : formatDate(
-                                                        subscriptionData.endDate
-                                                      )
-                                                }
-                                              />
-                                            </td>
-                                            <td>
-                                              {subscription.remindLimit ===
-                                              'nullundefined / nullundefined '
-                                                ? '-'
-                                                : subscription.remindLimit}
-                                            </td>
-                                          </tr>
-                                        )
-                                      )}
-                                  </tbody>
-                                </Table>
-                              </Card.Body>
-                            </Tab.Pane>
-                            {subscriptionData.data?.map((feature, index) => (
-                              <Tab.Pane
-                                key={`feature-${index}`}
-                                eventKey={feature.featureName}
+                          <div className="features">
+                            <TabView activeIndex={0}>
+                              <TabPanel
+                                header="All Features"
+                                className="vertical-tab-panel"
                               >
                                 <Card.Body className="py-0 px-0">
                                   <Table responsive>
                                     <thead>
                                       <tr>
-                                        {/* <th>
+                                        <th>
                                           <FormattedMessage id="Feature" />
-                                        </th> */}
+                                        </th>
                                         <th>
                                           <FormattedMessage id="Reset" />
                                         </th>
@@ -194,56 +92,135 @@ const SubscriptionInfoAccordionNew = (props) => {
                                           <FormattedMessage id="End-Date" />
                                         </th>
                                         <th>
-                                          <FormattedMessage id="Usage" />
-                                        </th>
-                                        <th>
                                           <FormattedMessage id="Remind/Limit" />
                                         </th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      <tr>
-                                        {/* <td>{feature.featureName}</td> */}
-                                        <td>{feature.featureReset}</td>
-                                        <td>
-                                          <DateLabelWhite
-                                            text={formatDate(
-                                              feature.featureStartDate
-                                            )}
-                                          />
-                                        </td>
-                                        <td>
-                                          <DateLabel
-                                            endDate={
-                                              feature.featureEndDate
-                                                ? formatDate(
-                                                    feature.featureEndDate
-                                                  )
-                                                : formatDate(
-                                                    subscriptionData.endDate
-                                                  )
-                                            }
-                                          />
-                                        </td>
-                                        <td>{feature.usage}</td>
-                                        <td>
-                                          {feature.remindLimit ===
-                                          'nullundefined / nullundefined '
-                                            ? '-'
-                                            : feature.remindLimit}
-                                        </td>
-                                      </tr>
+                                      {subscriptionData &&
+                                        subscriptionData.data?.map(
+                                          (subscription, index) => (
+                                            <tr key={`subscription-${index}`}>
+                                              <td className="feature-value">
+                                                {subscription.featureName}
+                                              </td>
+                                              <td>
+                                                {subscription.featureReset}
+                                              </td>
+                                              <td>
+                                                <DateLabelWhite
+                                                  text={formatDate(
+                                                    subscription.featureStartDate
+                                                  )}
+                                                />
+                                              </td>
+                                              <td>
+                                                <DateLabel
+                                                  endDate={
+                                                    subscription.featureEndDate
+                                                      ? formatDate(
+                                                          subscription.featureEndDate
+                                                        )
+                                                      : formatDate(
+                                                          subscriptionData.endDate
+                                                        )
+                                                  }
+                                                />
+                                              </td>
+                                              <td className="remind-value">
+                                                {subscription.remindLimit ===
+                                                'nullundefined / nullundefined '
+                                                  ? '-'
+                                                  : subscription.remindLimit}
+                                              </td>
+                                            </tr>
+                                          )
+                                        )}
                                     </tbody>
                                   </Table>
                                 </Card.Body>
-                              </Tab.Pane>
-                            ))}
-                          </Tab.Content>
+                              </TabPanel>
+                              {subscriptionData.data?.map(
+                                (feature, featureIndex) => (
+                                  <TabPanel
+                                    key={`feature-${featureIndex}`}
+                                    header={feature.featureName}
+                                  >
+                                    <Row>
+                                      <Col lg={12}>
+                                        <Card.Body className="py-0 px-0">
+                                          <Table responsive>
+                                            <thead>
+                                              <tr>
+                                                <th>
+                                                  <FormattedMessage id="Reset" />
+                                                </th>
+                                                <th>
+                                                  <FormattedMessage id="Start-Date" />
+                                                </th>
+                                                <th>
+                                                  <FormattedMessage id="End-Date" />
+                                                </th>
+                                                <th>
+                                                  <FormattedMessage id="usage" />
+                                                </th>
+                                                <th>
+                                                  <FormattedMessage id="Remind/Limit" />
+                                                </th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {feature.subscriptionFeaturesCycles?.map(
+                                                (cycle, cycleIndex) => (
+                                                  <tr
+                                                    key={`cycle-${cycleIndex}`}
+                                                  >
+                                                    <td>{cycle.reset}</td>
+                                                    <td>
+                                                      <DateLabelWhite
+                                                        text={formatDate(
+                                                          cycle.startDate
+                                                        )}
+                                                      />
+                                                    </td>
+                                                    <td>
+                                                      <DateLabel
+                                                        endDate={
+                                                          cycle.endDate
+                                                            ? formatDate(
+                                                                cycle.endDate
+                                                              )
+                                                            : formatDate(
+                                                                subscriptionData.endDate
+                                                              )
+                                                        }
+                                                      />
+                                                    </td>
+                                                    <td>{cycle.usage}</td>
+                                                    <td className="remind-value">
+                                                      {cycle.remindLimit ==
+                                                      'nullundefined / nullundefined '
+                                                        ? '-'
+                                                        : cycle.remindLimit}
+                                                    </td>
+                                                  </tr>
+                                                )
+                                              )}
+                                            </tbody>
+                                          </Table>
+                                        </Card.Body>
+                                      </Col>
+                                    </Row>
+                                  </TabPanel>
+                                )
+                              )}
+                            </TabView>
+                          </div>
                         </Col>
                       </Row>
-                    </Tab.Container>
-                  </Tab.Content>
-                </Tab.Container>
+                    </TabPanel>
+                  ))}
+                </TabView>
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>
