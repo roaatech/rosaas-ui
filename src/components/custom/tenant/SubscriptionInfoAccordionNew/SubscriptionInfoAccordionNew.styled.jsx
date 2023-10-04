@@ -105,4 +105,9 @@ export const Wrapper = styled.div`
   .remind-value {
     min-width: 150px;
   }
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  }
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    border: solid #dee2e6;
+  }
 `

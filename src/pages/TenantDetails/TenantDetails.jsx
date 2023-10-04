@@ -86,66 +86,164 @@ const TenantDetails = () => {
   })
   const intl = useIntl()
 
+  // useEffect(() => {
+  //   if (!currentProduct) {
+  //     return
+  //   }
+  //   const fetchSubscriptionDetails = async () => {
+  //     try {
+  //       const response = await subscriptionDetails(
+  //         currentProduct,
+  //         routeParams.id
+  //       )
+  //       const formattedSubscriptionData = {
+  //         data: response.data.data.subscriptionFeatures.map((feature) => ({
+  //           featureName: feature.feature.name,
+  //           featureReset: intl.formatMessage({
+  //             id: featureResetMap[feature.feature.reset],
+  //           }),
+  //           featureStartDate: feature.startDate,
+  //           featureEndDate: feature.endDate,
+  //           remindLimit: `${feature.remainingUsage}${
+  //             featureUnitMap[feature.feature.unit]
+  //           } / ${feature.feature.limit}${
+  //             featureUnitMap[feature.feature.unit]
+  //           } `,
+  //           subscriptionFeaturesCycles: feature.subscriptionFeaturesCycles.map(
+  //             (cycle) => ({
+  //               subscriptionCycleId: cycle.subscriptionCycleId,
+  //               featureName: cycle.feature.name ? cycle.feature.name : ' ',
+  //               startDate: cycle.startDate,
+  //               endDate: cycle.endDate,
+  //               type: cycle.type,
+  //               reset: cycle.reset,
+  //               usage: cycle.limit - cycle.remainingUsage,
+  //               limit: cycle.limit,
+  //               remindLimit: `${cycle.remainingUsage}${
+  //                 featureUnitMap[cycle.unit]
+  //               } / ${cycle.limit}${featureUnitMap[cycle.unit]} `,
+  //             })
+  //           ),
+
+  //           usage: feature.feature.limit - feature.remainingUsage,
+  //         })),
+  //         subscriptionCycles: response.data.data.subscriptionCycles.map(
+  //           (cycle) => ({
+  //             startDate: cycle.startDate,
+  //             subscriptionCycleId: cycle.id,
+  //           })
+  //         ),
+  //         planName: response.data.data.plan.name,
+  //         startDate: response.data.data.startDate,
+  //         endDate: response.data.data.endDate,
+  //         currentSubscriptionCycleId:
+  //           response.data.data.currentSubscriptionCycleId,
+  //       }
+  //       console.log({ formattedSubscriptionData })
+
+  //       dispatch(subscriptionData(formattedSubscriptionData))
+  //     } catch (error) {
+  //       console.error('Error fetching subscription details:', error)
+  //     }
+  //   }
+
+  //   fetchSubscriptionDetails()
+  // }, [routeParams.id, currentProduct])
+  const staticSubscriptionData = {
+    data: [
+      {
+        featureName: 'Feature 1',
+        featureReset: 'Monthly',
+        featureStartDate: '2023-01-01',
+        featureEndDate: '2023-12-31',
+        remindLimit: '10/month',
+        subscriptionFeaturesCycles: [
+          {
+            subscriptionCycleId: 1,
+            featureName: 'Cycle 1',
+            startDate: '2023-01-01',
+            endDate: '2023-01-31',
+            type: 'Type A',
+            reset: 'Monthly',
+            usage: 5,
+            limit: 10,
+            remindLimit: '5/month',
+          },
+          {
+            subscriptionCycleId: 2,
+            featureName: 'Cycle 2',
+            startDate: '2023-02-01',
+            endDate: '2023-02-28',
+            type: 'Type B',
+            reset: 'Monthly',
+            usage: 3,
+            limit: 10,
+            remindLimit: '7/month',
+          },
+        ],
+        usage: 8,
+      },
+      {
+        featureName: 'Feature 2',
+        featureReset: 'Weekly',
+        featureStartDate: '2023-03-01',
+        featureEndDate: '2023-03-31',
+        remindLimit: '20/week',
+        subscriptionFeaturesCycles: [
+          {
+            subscriptionCycleId: 3,
+            featureName: 'Cycle 3',
+            startDate: '2023-03-01',
+            endDate: '2023-03-07',
+            type: 'Type A',
+            reset: 'Weekly',
+            usage: 2,
+            limit: 5,
+            remindLimit: '3/week',
+          },
+          {
+            subscriptionCycleId: 4,
+            featureName: 'Cycle 4',
+            startDate: '2023-03-08',
+            endDate: '2023-03-14',
+            type: 'Type B',
+            reset: 'Weekly',
+            usage: 1,
+            limit: 5,
+            remindLimit: '4/week',
+          },
+        ],
+        usage: 3,
+      },
+    ],
+    subscriptionCycles: [
+      {
+        startDate: '2023-01-01',
+        subscriptionCycleId: 1,
+      },
+      {
+        startDate: '2023-02-01',
+        subscriptionCycleId: 2,
+      },
+      {
+        startDate: '2023-03-01',
+        subscriptionCycleId: 3,
+      },
+      {
+        startDate: '2023-03-08',
+        subscriptionCycleId: 4,
+      },
+    ],
+    planName: 'Plan 1',
+    startDate: '2023-01-01',
+    endDate: '2023-12-31',
+    currentSubscriptionCycleId: 1,
+  }
+
+  // Replace the useEffect with this static data
   useEffect(() => {
-    if (!currentProduct) {
-      return
-    }
-    const fetchSubscriptionDetails = async () => {
-      try {
-        const response = await subscriptionDetails(
-          currentProduct,
-          routeParams.id
-        )
-        const formattedSubscriptionData = {
-          data: response.data.data.subscriptionFeatures.map((feature) => ({
-            featureName: feature.feature.name,
-            featureReset: intl.formatMessage({
-              id: featureResetMap[feature.feature.reset],
-            }),
-            featureStartDate: feature.startDate,
-            featureEndDate: feature.endDate,
-            remindLimit: `${feature.remainingUsage}${
-              featureUnitMap[feature.feature.unit]
-            } / ${feature.feature.limit}${
-              featureUnitMap[feature.feature.unit]
-            } `,
-            subscriptionFeaturesCycles: feature.subscriptionFeaturesCycles.map(
-              (cycle) => ({
-                featureName: feature.feature.name,
-                startDate: cycle.startDate,
-                endDate: cycle.endDate,
-                type: cycle.type,
-                reset: cycle.reset,
-                usage: cycle.limit - cycle.remainingUsage,
-                limit: cycle.limit,
-                remindLimit: `${cycle.remainingUsage}${
-                  featureUnitMap[cycle.unit]
-                } / ${cycle.limit}${featureUnitMap[cycle.unit]} `,
-              })
-            ),
-
-            usage: feature.feature.limit - feature.remainingUsage,
-          })),
-          subscriptionCycles: response.data.data.subscriptionCycles.map(
-            (cycle) => ({
-              startDate: cycle.startDate,
-            })
-          ),
-          planName: response.data.data.plan.name,
-          startDate: response.data.data.startDate,
-          endDate: response.data.data.endDate,
-        }
-        console.log({ formattedSubscriptionData })
-
-        dispatch(subscriptionData(formattedSubscriptionData))
-      } catch (error) {
-        console.error('Error fetching subscription details:', error)
-      }
-    }
-
-    fetchSubscriptionDetails()
-  }, [routeParams.id, currentProduct])
-
+    dispatch(subscriptionData(staticSubscriptionData))
+  }, [])
   useEffect(() => {
     ;(async () => {
       if (!tenantsData[routeParams.id]?.subscriptions[0]?.status) {
