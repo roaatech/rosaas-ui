@@ -35,7 +35,15 @@ const SubscriptionInfoAccordionNew = (props) => {
   })
   const { defaultKey = [], className = '' } = props
 
-  const [SubscriptionCyc, setSubscriptionCyc] = useState('')
+  const [currentTab, setCurrentTab] = useState(0)
+  const [showAllFeaturesTab, setShowAllFeaturesTab] = useState(true)
+  const handleTabChange = (index) => {
+    setCurrentTab(index)
+
+    setShowAllFeaturesTab(index !== 0)
+
+    console.log(index !== 0)
+  }
 
   return (
     <>
@@ -65,7 +73,11 @@ const SubscriptionInfoAccordionNew = (props) => {
               </Accordion.Button>
 
               <Accordion.Body>
-                <TabView activeIndex={0} className="custom-tabview">
+                <TabView
+                  activeIndex={currentTab}
+                  className="custom-tabview"
+                  onTabChange={(e) => handleTabChange(e.index)}
+                >
                   {subscriptionData.subscriptionCycles.map((cyc, index) => (
                     <TabPanel
                       key={index}
@@ -94,7 +106,14 @@ const SubscriptionInfoAccordionNew = (props) => {
                                         className="flex-column vertical-tab custom-nav-link mb-3"
                                       >
                                         <Nav.Item>
-                                          <Nav.Link eventKey="allFeatures">
+                                          <Nav.Link
+                                            eventKey="allFeatures"
+                                            className={
+                                              showAllFeaturesTab
+                                                ? 'hide-tab-content'
+                                                : ''
+                                            }
+                                          >
                                             All Features
                                           </Nav.Link>
                                         </Nav.Item>
@@ -115,7 +134,14 @@ const SubscriptionInfoAccordionNew = (props) => {
                                     </Col>
                                     <Col lg={8}>
                                       <Tab.Content className="content">
-                                        <Tab.Pane eventKey="allFeatures">
+                                        <Tab.Pane
+                                          eventKey="allFeatures"
+                                          className={
+                                            showAllFeaturesTab
+                                              ? 'hide-tab-content'
+                                              : ''
+                                          }
+                                        >
                                           <Card.Body className="py-0 px-0">
                                             <Table
                                               responsive

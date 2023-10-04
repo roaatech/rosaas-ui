@@ -110,4 +110,7 @@ export const Wrapper = styled.div`
   .p-tabview .p-tabview-nav li .p-tabview-nav-link {
     border: solid #dee2e6;
   }
+  .hide-tab-content {
+    display: none !important;
+  }
 `
