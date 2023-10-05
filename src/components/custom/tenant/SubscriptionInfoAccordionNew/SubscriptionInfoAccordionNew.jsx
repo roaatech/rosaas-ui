@@ -8,8 +8,9 @@ import {
   Tab,
   Col,
   Table,
+  Container,
 } from '@themesberg/react-bootstrap'
-import { DateStatus, featureUnitMap } from '../../../../const'
+import { DateStatus, cycle, featureUnitMap } from '../../../../const'
 import { useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { formatDate } from '../../../../lib/sharedFun/Time'
@@ -36,11 +37,11 @@ const SubscriptionInfoAccordionNew = (props) => {
   const { defaultKey = [], className = '' } = props
 
   const [currentTab, setCurrentTab] = useState(0)
-  const [showAllFeaturesTab, setShowAllFeaturesTab] = useState(true)
+  const [hideAllFeaturesTab, setHideAllFeaturesTab] = useState(false)
   const handleTabChange = (index) => {
     setCurrentTab(index)
 
-    setShowAllFeaturesTab(index !== 0)
+    setHideAllFeaturesTab(index !== 0)
 
     console.log(index !== 0)
   }
@@ -88,18 +89,111 @@ const SubscriptionInfoAccordionNew = (props) => {
                           : formatDate(cyc.startDate)
                       }
                     >
-                      <Card border="light" className="shadow-sm mt-3">
-                        <Card.Body>dndf</Card.Body>
+                      {/* <Card border="light" className="shadow-sm mt-3">
+                        <div className="dispatchCont">
+                          <Card.Body className="py-0 px-0">
+                            <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                              <div className="mb-0 w-25">
+                                <FormattedMessage id="Plan" />
+                              </div>
+                              <div className="small card-stats">{cyc.plan}</div>
+                            </div>
+                            <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                              <div className="mb-0 w-25">
+                                <FormattedMessage id="Cycle" />
+                              </div>
+                              <div className="small card-stats">
+                                {cycle[cyc.cycle]}
+                              </div>
+                            </div>
+                            <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                              <div className="mb-0 w-25">
+                                <FormattedMessage id="Price" />
+                              </div>
+                              <div className="small card-stats">
+                                {cyc.price}
+                              </div>
+                            </div>
+                            <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                              <div className="mb-0 w-25">
+                                <FormattedMessage id="Start-Date" />
+                              </div>
+                              <div className="small card-stats">
+                                {cyc.startDate}
+                              </div>
+                            </div>
+                            <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                              <div className="mb-0 w-25">
+                                <FormattedMessage id="End-Date" />
+                              </div>
+                              <div className="small card-stats">
+                                {cyc.endDate}
+                              </div>
+                            </div>
+                          </Card.Body>
+                        </div>
+                      </Card> */}
+
+                      <Card border="light" className="shadow-sm mt-3 main-card">
+                        <Row>
+                          <Col md={6}>
+                            <div className="dispatchCont">
+                              <Card.Body className="py-0 px-0">
+                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                                  <div className="mb-0 w-25">
+                                    <FormattedMessage id="Plan" />
+                                  </div>
+                                  <div className="small card-stats">
+                                    {cyc.plan}
+                                  </div>
+                                </div>
+
+                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                                  <div className="mb-0 w-25">
+                                    <FormattedMessage id="Price" />
+                                  </div>
+                                  <div className="small card-stats">
+                                    {cyc.price} /
+                                    <FormattedMessage id={cycle[cyc.cycle]} />
+                                  </div>
+                                </div>
+                              </Card.Body>
+                            </div>
+                          </Col>
+                          <Col md={6}>
+                            <div className="dispatchCont">
+                              <Card.Body className="py-0 px-0">
+                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                                  <div className="mb-0 w-25">
+                                    <FormattedMessage id="Start-Date" />
+                                  </div>
+                                  <div className="small card-stats">
+                                    {cyc.startDate}
+                                  </div>
+                                </div>
+                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                                  <div className="mb-0 w-25">
+                                    <FormattedMessage id="End-Date" />
+                                  </div>
+                                  <div className="small card-stats">
+                                    {cyc.endDate}
+                                  </div>
+                                </div>
+                              </Card.Body>
+                            </div>
+                          </Col>
+                        </Row>
                       </Card>
+
                       <Card border="light" className="shadow-sm mt-3">
                         <Card.Body>
                           {/* {setSubscriptionCyc(cyc?.subscriptionCycleId)} */}
                           <Row className="d-flex">
-                            <Col lg={8}>
+                            <Col>
                               <div className="features">
                                 <Tab.Container defaultActiveKey="allFeatures">
                                   <Row className="table-tabs">
-                                    <Col lg={4} className="tabs">
+                                    <Col className="tabs">
                                       <Nav
                                         fill
                                         variant="pills"
@@ -109,7 +203,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                           <Nav.Link
                                             eventKey="allFeatures"
                                             className={
-                                              showAllFeaturesTab
+                                              hideAllFeaturesTab
                                                 ? 'hide-tab-content'
                                                 : ''
                                             }
@@ -132,12 +226,12 @@ const SubscriptionInfoAccordionNew = (props) => {
                                         )}
                                       </Nav>
                                     </Col>
-                                    <Col lg={8}>
+                                    <Col className="table-res">
                                       <Tab.Content className="content">
                                         <Tab.Pane
                                           eventKey="allFeatures"
                                           className={
-                                            showAllFeaturesTab
+                                            hideAllFeaturesTab
                                               ? 'hide-tab-content'
                                               : ''
                                           }
@@ -181,7 +275,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                                         <tr
                                                           key={`subscription-${index}`}
                                                         >
-                                                          <td className="feature-value">
+                                                          <td>
                                                             {
                                                               subscription.featureName
                                                             }

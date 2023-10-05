@@ -1,5 +1,8 @@
 import styled from 'styled-components'
 export const Wrapper = styled.div`
+  .th {
+    max-width: 20px;
+  }
   .label {
     margin-right: 0.25rem;
     background: '#eff9f6';
@@ -52,22 +55,30 @@ export const Wrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
   } */
-  .table-tabs {
+  /* .table-tabs {
     min-width: 900px;
+  } */
+  .custom-tabview {
+    max-width: 700px;
   }
-
   .feat-table {
     margin-left: -20px;
+    max-width: 120px;
+  }
+  .table-res {
+    max-width: 500px;
   }
   .tabs {
     max-width: 180px;
   }
+
   .custom-nav-link .nav-link.active {
     border-bottom: 0px;
-    border-color: var(--second-color);
-    border-width: 2px;
-    border-left: 0;
-    border-right: 2px solid;
+
+    border-left: ${(props) =>
+      props.direction == 'rtl' ? '0' : ' 2px solid var(--second-color)'};
+    border-right: ${(props) =>
+      props.direction == 'rtl' ? ' 2px solid var(--second-color)' : '0'};
     color: var(--second-color);
     font-weight: 700;
     background-color: transparent;
@@ -112,5 +123,15 @@ export const Wrapper = styled.div`
   }
   .hide-tab-content {
     display: none !important;
+  }
+  .table td {
+    max-width: auto;
+    padding-right: 10px;
+    padding-left: 20px;
+  }
+  .main-card {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
   }
 `
