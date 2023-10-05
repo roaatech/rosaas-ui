@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+const secondColor = '#ffab03'
 export const Wrapper = styled.div`
   .th {
     max-width: 20px;
@@ -76,9 +77,10 @@ export const Wrapper = styled.div`
     border-bottom: 0px;
 
     border-left: ${(props) =>
-      props.direction == 'rtl' ? '0' : ' 2px solid var(--second-color)'};
+      props.direction == 'rtl' ? ' 2px solid' : '0px'};
     border-right: ${(props) =>
-      props.direction == 'rtl' ? ' 2px solid var(--second-color)' : '0'};
+      props.direction == 'rtl' ? '0px' : ' 2px solid'};
+    border-color: var(--second-color) !important;
     color: var(--second-color);
     font-weight: 700;
     background-color: transparent;
