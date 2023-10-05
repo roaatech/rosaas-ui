@@ -8,6 +8,9 @@ const TextareaAndCounter = ({
   showCharCount,
   inputValue,
   disabled,
+  placeholder,
+  id,
+  name,
 }) => {
   const [characterCount, setCharacterCount] = useState(inputValue?.length || 0)
   const [value, setValue] = useState(inputValue)
@@ -40,6 +43,9 @@ const TextareaAndCounter = ({
           maxLength={maxLength}
           ref={textareaRef}
           disabled={disabled}
+          placeholder={placeholder}
+          id={id}
+          name={name}
         />
 
         {showCharCount && (

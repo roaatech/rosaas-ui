@@ -129,26 +129,6 @@ export const productsSlice = createSlice({
       allProduct[action.payload.productId].plans = allPlans
       state.products = allProduct
     },
-    // PlanInfo: (state, action) => {
-    //   const { productId, planId, data } = action.payload
-    //   const currentProducts = JSON.parse(
-    //     JSON.stringify(current(state.products))
-    //   )
-
-    //   if (!currentProducts[productId].plans) {
-    //     currentProducts[productId].plans = {}
-    //   }
-    //   if (currentProducts[productId].plans[planId]) {
-    //     currentProducts[productId].plans[planId] = data
-    //     delete currentProducts[productId].featurePlan
-    //   } else {
-    //     currentProducts[productId].plans = {
-    //       [planId]: data,
-    //       ...currentProducts[productId].plans,
-    //     }
-    //   }
-    //   state.products = currentProducts
-    // },
 
     PlanInfo: (state, action) => {
       const { productId, planId, data } = action.payload
@@ -197,6 +177,59 @@ export const productsSlice = createSlice({
       state.products = allProduct
     },
 
+    //Specifications
+
+    setAllSpecifications: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+      const allSpecifications = {}
+      action.payload.data.map((item) => {
+        allSpecifications[item.id] = item
+      })
+
+      allProduct[action.payload.productId].specifications = allSpecifications
+      state.products = allProduct
+    },
+
+    SpecificationInfo: (state, action) => {
+      const { productId, specificationId, data } = action.payload
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
+
+      if (!currentProducts[productId].specifications) {
+        currentProducts[productId].specifications = {}
+      }
+
+      currentProducts[productId].specifications[specificationId] = data
+
+      const sortedSpecifications = Object.values(
+        currentProducts[productId].specifications
+      )
+
+      const allSpecifications = {}
+      sortedSpecifications.forEach((plan) => {
+        allSpecifications[plan.id] = plan
+      })
+
+      currentProducts[productId].specifications = allSpecifications
+
+      state.products = currentProducts
+    },
+
+    SpecificationChangeAttr: (state, action) => {
+      const { productId, planId, attr, value } = action.payload
+      const currentProducts = JSON.parse(
+        JSON.stringify(current(state.products))
+      )
+      currentProducts[productId].plans[planId][attr] = value
+      state.products = currentProducts
+    },
+
+    deleteSpecification: (state, action) => {
+      const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+      delete allProduct[action.payload.productId].plans[action.payload.PlanId]
+      state.products = allProduct
+    },
     // planPrice
 
     setAllPlansPrice: (state, action) => {
@@ -305,6 +338,10 @@ export const productsSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
+  setAllSpecifications,
+  specificationInfo,
+  specificationChangeAttr,
+  deleteSpecification,
   setAllProduct,
   subscribe,
   productInfo,

@@ -9,6 +9,7 @@ import useFeatureReq from './Product/feature/useFeatureReq'
 import usePlanPriceReq from './Product/planPrice/usePlanPriceReq'
 import usePlanFeatureReq from './Product/planFeature/usePlanFeatureReq'
 import useSettingsReq from './Setting/useSettingReq'
+import useSpecificationReq from './Product/specification/useSpecificationReq'
 
 const useRequest = () => {
   const { signIn, userData, logOut } = useUserReq()
@@ -39,7 +40,13 @@ const useRequest = () => {
     editPlanRequest,
     deletePlanReq,
   } = usePlanReq()
-
+  const {
+    getProductSpecification,
+    createSpecificationRequest,
+    publishSpecification,
+    editSpecificationRequest,
+    deleteSpecificationReq,
+  } = useSpecificationReq()
   const {
     getProductFeatures,
     createFeatureRequest,
@@ -104,6 +111,11 @@ const useRequest = () => {
     deletePlanPriceReq,
     publishPlan,
     subscriptionDetails,
+    getProductSpecification,
+    createSpecificationRequest,
+    publishSpecification,
+    editSpecificationRequest,
+    deleteSpecificationReq,
   }
 }
 export default useRequest

@@ -63,7 +63,7 @@ export const Wrapper = styled.div`
     max-width: 700px;
   }
   .feat-table {
-    margin-left: -20px;
+    /* margin-left: -20px; */
     max-width: 120px;
   }
   .table-res {
@@ -93,7 +93,7 @@ export const Wrapper = styled.div`
   }
   .custom-nav-link .nav-link {
     font-weight: 700;
-    color: #6c757d;
+    /* color: #6c757d; */
 
     border-bottom: 0px solid;
     border-left: 0;

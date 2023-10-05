@@ -28,6 +28,8 @@ import ProductFeaturePlan from '../../components/custom/Product/ProductFeaturePl
 import ProductFeaturesList from '../../components/custom/Product/ProductFeaturesList/ProductFeaturesList'
 import ProductPlansList from '../../components/custom/Product/ProductPlansList/ProductPlansList'
 import ProductPlansPriceList from '../../components/custom/Product/ProductPlansPrice/ProductPlansPriceList'
+import ProductCustomSpecificationList from '../../components/custom/Product/CustomSpecification/ProductCustomSpecificationList'
+import { MdEditNote } from 'react-icons/md'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -72,6 +74,15 @@ const ProductDetails = () => {
             </h4>
             <DynamicButtons
               buttons={[
+                {
+                  order: 4,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Add-Specification',
+                  component: 'addSpecification',
+                  icon: <MdEditNote />,
+                  setActiveIndex: setActiveIndex,
+                },
                 {
                   order: 4,
                   type: 'form',
@@ -143,6 +154,12 @@ const ProductDetails = () => {
           >
             <TabPanel header={<FormattedMessage id="Details" />}>
               <ProductDetailsTab data={productData} />
+            </TabPanel>
+            <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
+              <ProductCustomSpecificationList
+                productId={productData.id}
+                productName={productData.name}
+              />
             </TabPanel>
 
             <TabPanel header={<FormattedMessage id="Plans" />}>

@@ -27,7 +27,7 @@ const SubscriptionInfoAccordionNew = (props) => {
   const subscriptionData = useSelector(
     (state) => state.tenants.subscriptionData
   )
-  console.log({ xxx: subscriptionData })
+  console.log({ subscriptionData })
 
   console.log({
     dfsdf: subscriptionData.data?.map((feature, index) =>
