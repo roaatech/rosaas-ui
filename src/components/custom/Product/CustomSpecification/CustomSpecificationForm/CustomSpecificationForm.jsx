@@ -71,8 +71,8 @@ const CustomSpecificationForm = ({
               ar: values.descriptionAr,
             },
             isRequired: values.isRequired,
-            isUserEditable: values.isUserEditable || false, // Add isUserEditable
-            regularExpression: values.regularExpression, // Add regularExpression
+            isUserEditable: values.isUserEditable || false,
+            regularExpression: values.regularExpression,
             validationFailureDescription: {
               en: values.validationFailureDescriptionEn,
               ar: values.validationFailureDescriptionAr,
@@ -107,6 +107,7 @@ const CustomSpecificationForm = ({
                 ar: values.displayNameAr,
               },
               isUserEditable: values.isUserEditable || false,
+              isRequired: values.isRequired || false,
               regularExpression: values.regularExpression,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: new Date().toISOString().slice(0, 19),
@@ -135,6 +136,7 @@ const CustomSpecificationForm = ({
               ar: values.displayNameAr,
             },
             isUserEditable: values.isUserEditable || false,
+            isRequired: values.isRequired || false,
             regularExpression: values.regularExpression,
             validationFailureDescription: {
               en: values.validationFailureDescriptionEn,
@@ -158,6 +160,7 @@ const CustomSpecificationForm = ({
                 ar: values.descriptionAr,
               },
               isUserEditable: values.isUserEditable || false,
+              isRequired: values.isRequired || false,
               regularExpression: values.regularExpression,
               validationFailureDescription: {
                 en: values.validationFailureDescriptionEn,

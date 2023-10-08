@@ -11,10 +11,12 @@ import {
   deleteAllPlan,
   deleteAllPlanPrice,
   setAllPlans,
+  setAllSpecifications,
   setAllProduct,
 } from '../../../../store/slices/products.js'
 import { Wrapper } from './TenantForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
+import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
 
 const TenantForm = ({
   type,
@@ -29,6 +31,7 @@ const TenantForm = ({
     editTenantRequest,
     getProductPlans,
     getProductPlanPriceList,
+    getProductSpecification,
   } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
@@ -38,6 +41,7 @@ const TenantForm = ({
   const { getProductList } = useRequest()
 
   const listData = useSelector((state) => state.products.products)
+
   let list = Object.values(listData)
 
   useEffect(() => {
@@ -90,6 +94,13 @@ const TenantForm = ({
     plan: tenantData ? tenantData.plan : '',
     price: tenantData ? tenantData.price : '',
     product: tenantData ? selectedProduct : '',
+
+    specificationValues: tenantData
+      ? tenantData.specifications.reduce((acc, specification) => {
+          acc[specification.specificationId] = specification.value
+          return acc
+        }, {})
+      : {},
   }
 
   const formik = useFormik({
@@ -108,6 +119,12 @@ const TenantForm = ({
           ],
           uniqueName: values.uniqueName,
           title: values.title,
+          specifications: [
+            {
+              specificationId: values.specificationId,
+              value: values.specificationValue,
+            },
+          ],
         })
 
         dispatch(
@@ -135,6 +152,7 @@ const TenantForm = ({
       setVisible && setVisible(false)
     },
   })
+
   const intl = useIntl()
   let planOptions
   if (listData[formik.values.product]?.plans) {
@@ -151,6 +169,7 @@ const TenantForm = ({
   const options = list.map((item) => {
     return { value: item.id, label: item.name }
   })
+  const [specificationValues, setSpecificationValues] = useState({})
 
   useEffect(() => {
     ;(async () => {
@@ -166,9 +185,52 @@ const TenantForm = ({
             })
           )
         }
+        if (!listData[formik.values.product].specifications) {
+          const specifications = await getProductSpecification(
+            formik.values.product
+          )
+
+          dispatch(
+            setAllSpecifications({
+              productId: formik.values.product,
+              data: specifications.data.data,
+            })
+          )
+          console.log('Specifications data:', specifications.data.data) // Log the specifications data here
+          console.log('listData:', listData)
+          console.log('specifications:', specifications)
+        }
       }
     })()
   }, [formik.values.product])
+  console.log(
+    'Checking if specifications array exists:',
+    listData[formik.values.product]?.specifications
+  )
+
+  if (Array.isArray(listData[formik.values.product]?.specifications)) {
+    console.log('Inside map function')
+    listData[formik.values.product]?.specifications?.map((specification) =>
+      console.log({ specification111111: specification })
+    )
+  } else {
+    console.log('Specifications array is not an array or is empty.')
+  }
+  const productData = listData[formik.values.product]
+
+  const specificationsArray = productData?.specifications
+    ? Object.values(productData.specifications)
+    : []
+  console.log('specificationsArray:', specificationsArray)
+
+  const handleSpecificationChange = (specificationId, event) => {
+    const newValue = event.target.value
+    setSpecificationValues((prevValues) => ({
+      ...prevValues,
+      [specificationId]: newValue,
+    }))
+  }
+  console.log('specificationValues:', specificationValues)
 
   useEffect(() => {
     ;(async () => {
@@ -363,6 +425,29 @@ const TenantForm = ({
               </Form.Group>
             </div>
           )}
+          {Array.isArray(specificationsArray) &&
+            specificationsArray.length > 0 &&
+            specificationsArray.map((specification) => {
+              // Extract the necessary properties
+              const { id, displayName, isRequired } = specification
+
+              return (
+                <Form.Group className="mb-3" key={id}>
+                  <Form.Label>
+                    {displayName[`${intl.locale}`]}
+                    {isRequired && <span style={{ color: 'red' }}>*</span>}
+                  </Form.Label>
+                  <div>
+                    <SpecificationInput
+                      className="form-control"
+                      dataType={specification.dataType}
+                      value={specificationValues[id] || ''}
+                      onChange={(event) => handleSpecificationChange(id, event)}
+                    />
+                  </div>
+                </Form.Group>
+              )
+            })}
           {/* <div>
             <Form.Group className="mb-3">
               <Form.Label>
