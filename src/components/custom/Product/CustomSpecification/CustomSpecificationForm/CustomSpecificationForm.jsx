@@ -20,7 +20,7 @@ import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 
 const CustomSpecificationForm = ({
   type,
-  planData: specificaitionData,
+  specificationData,
   setVisible,
   popupLabel,
   setActiveIndex,
@@ -34,16 +34,19 @@ const CustomSpecificationForm = ({
   const routeParams = useParams()
   const productId = routeParams.id
   const initialValues = {
-    name: specificaitionData ? specificaitionData.name : '',
-    descriptionEn: specificaitionData?.description?.en || '',
-    descriptionAr: specificaitionData?.description?.ar || '',
-    isRequired: specificaitionData?.isRequired || false,
-    isUserEditable: specificaitionData?.isUserEditable || false,
-    regularExpression: specificaitionData?.regularExpression || '',
+    name: specificationData ? specificationData.name : '',
+
+    descriptionEn: specificationData?.description?.en || '',
+    descriptionAr: specificationData?.description?.ar || '',
+    displayNameAr: specificationData?.displayName?.ar || '',
+    displayNameEn: specificationData?.displayName?.en || '',
+    isRequired: specificationData?.isRequired || false,
+    isUserEditable: specificationData?.isUserEditable || false,
+    regularExpression: specificationData?.regularExpression || '',
     validationFailureDescriptionEn:
-      specificaitionData?.validationFailureDescription?.en || '',
+      specificationData?.validationFailureDescription?.en || '',
     validationFailureDescriptionAr:
-      specificaitionData?.validationFailureDescription?.ar || '',
+      specificationData?.validationFailureDescription?.ar || '',
   }
   const allProducts = useSelector((state) => state.products.products)
 
@@ -62,7 +65,7 @@ const CustomSpecificationForm = ({
           {
             name: values.name,
             // productId: productId,
-            displayName: { en: values.nameEn, ar: values.nameAr },
+            displayName: { en: values.displayNameEn, ar: values.displayNameAr },
             description: {
               en: values.descriptionEn,
               ar: values.descriptionAr,
@@ -78,6 +81,7 @@ const CustomSpecificationForm = ({
             dataType: 1,
           }
         )
+        setVisible && setVisible(false)
 
         if (!allProducts[productId].specification) {
           const specification = await getProductSpecification(productId)
@@ -94,10 +98,23 @@ const CustomSpecificationForm = ({
             productId: productId,
             data: {
               name: values.name,
-              description: values.description,
+              description: {
+                en: values.descriptionEn,
+                ar: values.descriptionAr,
+              },
+              displayName: {
+                en: values.displayNameEn,
+                ar: values.displayNameAr,
+              },
+              isUserEditable: values.isUserEditable || false,
+              regularExpression: values.regularExpression,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: new Date().toISOString().slice(0, 19),
               id: createSpecification.data.data.id,
+              validationFailureDescription: {
+                en: values.validationFailureDescriptionEn,
+                ar: values.validationFailureDescriptionAr,
+              },
             },
           })
         )
@@ -113,19 +130,26 @@ const CustomSpecificationForm = ({
               en: values.descriptionEn,
               ar: values.descriptionAr,
             },
-            isUserEditable: values.isUserEditable || false, // Add isUserEditable
-            regularExpression: values.regularExpression, // Add regularExpression
+            displayName: {
+              en: values.displayNameEn,
+              ar: values.displayNameAr,
+            },
+            isUserEditable: values.isUserEditable || false,
+            regularExpression: values.regularExpression,
             validationFailureDescription: {
               en: values.validationFailureDescriptionEn,
               ar: values.validationFailureDescriptionAr,
             },
+            inputType: 1,
+            dataType: 1,
           },
-          id: specificaitionData.id,
+          id: specificationData.id,
         })
+        setVisible && setVisible(false)
 
         dispatch(
           specificationInfo({
-            planId: specificaitionData.id,
+            planId: specificationData.id,
             productId: productId,
             data: {
               name: values.name,
@@ -139,9 +163,13 @@ const CustomSpecificationForm = ({
                 en: values.validationFailureDescriptionEn,
                 ar: values.validationFailureDescriptionAr,
               },
+              displayName: {
+                en: values.displayNameEn,
+                ar: values.displayNameAr,
+              },
               editedDate: new Date().toISOString().slice(0, 19),
-              createdDate: specificaitionData.createdDate,
-              id: specificaitionData.id,
+              createdDate: specificationData.createdDate,
+              id: specificationData.id,
             },
           })
         )
@@ -206,10 +234,10 @@ const CustomSpecificationForm = ({
                       <input
                         type="text"
                         className="form-control"
-                        id="nameEn"
-                        name="nameEn"
+                        id="displayNameEn"
+                        name="displayNameEn"
                         onChange={formik.handleChange}
-                        value={formik.values.nameEn}
+                        value={formik.values.displayNameEn}
                         placeholder="Enter English Name"
                       />
                     </div>
@@ -219,10 +247,10 @@ const CustomSpecificationForm = ({
                       <input
                         type="text"
                         className="form-control"
-                        id="nameAr"
-                        name="nameAr"
+                        id="displayNameAr"
+                        name="displayNameAr"
                         onChange={formik.handleChange}
-                        value={formik.values.nameAr}
+                        value={formik.values.displayNameAr}
                         placeholder="Enter Arabic Name"
                       />
                     </div>
@@ -231,12 +259,12 @@ const CustomSpecificationForm = ({
                 </TabView>
               </Card>
               {/* Display validation error */}
-              {formik.touched.nameEn && formik.errors.nameEn && (
+              {formik.touched.displayNameEn && formik.errors.displayNameEn && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.nameEn}
+                  {formik.errors.displayNameEn}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
@@ -257,7 +285,7 @@ const CustomSpecificationForm = ({
                         addTextarea={formik.setFieldValue}
                         maxLength={250}
                         showCharCount
-                        inputValue={formik?.values?.descriptionEn}
+                        inputValue={formik.values.descriptionEn}
                         placeholder="Enter English Description"
                         id="descriptionEn"
                         name="descriptionEn"
@@ -285,6 +313,7 @@ const CustomSpecificationForm = ({
                         placeholder="Enter Arabic Description"
                         id="descriptionAr"
                         name="descriptionAr"
+                        onChange={formik.handleChange}
                       />
                     </div>
                   </TabPanel>
@@ -430,6 +459,7 @@ const CustomSpecificationForm = ({
                         placeholder="Enter English Validation Failure Description"
                         id="validationFailureDescriptionEn"
                         name="validationFailureDescriptionEn"
+                        onChange={formik.handleChange}
                       />
                     </div>
                   </TabPanel>
@@ -445,6 +475,7 @@ const CustomSpecificationForm = ({
                         placeholder="Enter Arabic Validation Failure Description"
                         id="validationFailureDescriptionAr"
                         name="validationFailureDescriptionAr"
+                        onChange={formik.handleChange}
                       />
                     </div>
                   </TabPanel>

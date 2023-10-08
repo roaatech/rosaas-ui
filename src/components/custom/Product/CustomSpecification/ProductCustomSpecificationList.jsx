@@ -57,6 +57,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
   const [update, setUpdate] = useState(1)
   const dispatch = useDispatch()
   const list = useSelector((state) => state.products.products[productId])
+  console.log({ list })
   const [currentId, setCurrentId] = useState('')
   const [confirm, setConfirm] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -97,6 +98,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
     setPopUpLable('Edit-Specification')
     setType('edit')
     setCurrentId(id)
+    console.log({ sss: list.specifications[currentId] })
     setVisible(true)
   }
 
@@ -166,29 +168,27 @@ export const ProductCustomSpecificationList = ({ productId }) => {
           </td>
 
           <td className="description">
-            <DescriptionCell
-              data={
-                direction === 'rtl'
-                  ? description.ar
-                    ? description.ar
-                    : description.en
-                  : description.en
-                  ? description.en
-                  : description.ar
-              }
-            />
+            {direction === 'rtl'
+              ? description.ar
+                ? description.ar
+                : description.en
+              : description.en
+              ? description.en
+              : description.ar}
+          </td>
+
+          <td>
+            <span className="fw-normal">{isRequired ? 'True' : 'False'}</span>
           </td>
           <td>
-            <span className="fw-normal">{permissions}</span>
+            <span className="fw-normal">
+              {isUserEditable ? 'True' : 'False'}
+            </span>
           </td>
           <td>
-            <span className="fw-normal">{isRequired}</span>
-          </td>
-          <td>
-            <span className="fw-normal">{isUserEditable}</span>
-          </td>
-          <td>
-            <span className="fw-normal">{regularExpression}</span>
+            <span className="fw-normal">
+              {regularExpression ? regularExpression : '-'}
+            </span>
           </td>
           <td>
             <span className="fw-normal">
@@ -199,6 +199,11 @@ export const ProductCustomSpecificationList = ({ productId }) => {
                 : validationFailureDescription.en
                 ? validationFailureDescription.en
                 : validationFailureDescription.ar}
+            </span>
+          </td>
+          <td>
+            <span className="fw-normal">
+              <TableDate createdDate={createdDate} editedDate={editedDate} />
             </span>
           </td>
           <td>
@@ -275,9 +280,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
                   <th className="border-bottom">
                     <FormattedMessage id="Description" />
                   </th>
-                  <th className="border-bottom">
-                    <FormattedMessage id="Permissions" />
-                  </th>
+
                   <th className="border-bottom">
                     <FormattedMessage id="Is-Required" />
                   </th>
