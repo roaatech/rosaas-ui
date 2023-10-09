@@ -96,11 +96,11 @@ const TenantForm = ({
     product: tenantData ? selectedProduct : '',
 
     specificationValues: tenantData
-      ? tenantData.specifications.reduce((acc, specification) => {
-          acc[specification.specificationId] = specification.value
-          return acc
-        }, {})
-      : {},
+      ? tenantData.specifications.map((specification) => ({
+          specificationId: specification.specificationId,
+          value: specification.value,
+        }))
+      : [],
   }
 
   const formik = useFormik({
@@ -109,6 +109,13 @@ const TenantForm = ({
     onSubmit: async (values) => {
       setVisible(false)
       if (type == 'create') {
+        const specificationsArray = Object.keys(specificationValues).map(
+          (specificationId) => ({
+            specificationId,
+            value: specificationValues[specificationId],
+          })
+        )
+
         const createTenant = await createTenantRequest({
           subscriptions: [
             {
@@ -119,12 +126,7 @@ const TenantForm = ({
           ],
           uniqueName: values.uniqueName,
           title: values.title,
-          specifications: [
-            {
-              specificationId: values.specificationId,
-              value: values.specificationValue,
-            },
-          ],
+          specifications: specificationsArray,
         })
 
         dispatch(
@@ -170,6 +172,7 @@ const TenantForm = ({
     return { value: item.id, label: item.name }
   })
   const [specificationValues, setSpecificationValues] = useState({})
+  console.log({ specificationValues })
 
   useEffect(() => {
     ;(async () => {
@@ -429,7 +432,13 @@ const TenantForm = ({
             specificationsArray.length > 0 &&
             specificationsArray.map((specification) => {
               // Extract the necessary properties
-              const { id, displayName, isRequired } = specification
+              const {
+                id,
+                displayName,
+                isRequired,
+                regularExpression,
+                validationFailureDescription,
+              } = specification
 
               return (
                 <Form.Group className="mb-3" key={id}>
@@ -442,6 +451,11 @@ const TenantForm = ({
                       className="form-control"
                       dataType={specification.dataType}
                       value={specificationValues[id] || ''}
+                      regularExpression={regularExpression}
+                      validationFailureDescription={
+                        validationFailureDescription[intl.locale]
+                      }
+                      isRequired={isRequired}
                       onChange={(event) => handleSpecificationChange(id, event)}
                     />
                   </div>
