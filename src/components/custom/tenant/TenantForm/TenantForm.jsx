@@ -122,11 +122,11 @@ const TenantForm = ({
               productId: values.product,
               planId: values.plan,
               planPriceId: values.price,
+              specifications: specificationsArray,
             },
           ],
           uniqueName: values.uniqueName,
           title: values.title,
-          specifications: specificationsArray,
         })
 
         dispatch(

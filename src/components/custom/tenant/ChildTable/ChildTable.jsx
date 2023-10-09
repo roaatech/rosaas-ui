@@ -14,7 +14,7 @@ import ReactJson from 'react-json-view'
 import Label from '../../Shared/label/Label'
 import HealthCheckAccordion from '../HealthCheckAccordion/HealthCheckAccordion'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
@@ -30,6 +30,7 @@ export default function ChildTable({
   productIndex,
   tenantObject,
 }) {
+  console.log({ productData })
   const { renderActions } = useActions()
   const { editTenantStatus } = useRequest()
   let direction = useSelector((state) => state.main.direction)
@@ -42,7 +43,7 @@ export default function ChildTable({
     })
     updateTenant()
   }
-
+  const intl = useIntl()
   const rowExpansionTemplate = (data) => {
     return (
       <div className="">
@@ -105,6 +106,14 @@ export default function ChildTable({
                   <TenantStatus statusValue={productData.status} />
                 </td>
               </tr>
+              {productData.specifications.map((spec, index) => (
+                <tr key={spec.id}>
+                  <td className="fw-bold firstTd">
+                    {spec.displayName[intl.locale]}
+                  </td>
+                  <td>{spec.value}</td>
+                </tr>
+              ))}
               <tr>
                 <td className="fw-bold firstTd">
                   <FormattedMessage id="Health-Check-Url" />
