@@ -2,7 +2,7 @@ import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
-import { Modal, Button, Card } from '@themesberg/react-bootstrap'
+import { Modal, Button, Card, Row, Col } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
@@ -92,33 +92,33 @@ const CustomSpecificationForm = ({
             })
           )
         }
-        dispatch(
-          specificationInfo({
-            planId: createSpecification.data.data.id,
-            productId: productId,
-            data: {
-              name: values.name,
-              description: {
-                en: values.descriptionEn,
-                ar: values.descriptionAr,
-              },
-              displayName: {
-                en: values.displayNameEn,
-                ar: values.displayNameAr,
-              },
-              isUserEditable: values.isUserEditable || false,
-              isRequired: values.isRequired || false,
-              regularExpression: values.regularExpression,
-              editedDate: new Date().toISOString().slice(0, 19),
-              createdDate: new Date().toISOString().slice(0, 19),
-              id: createSpecification.data.data.id,
-              validationFailureDescription: {
-                en: values.validationFailureDescriptionEn,
-                ar: values.validationFailureDescriptionAr,
-              },
-            },
-          })
-        )
+        // dispatch(
+        //   specificationInfo({
+        //     specificationId: createSpecification.data.data.id,
+        //     productId: productId,
+        //     data: {
+        //       name: values.name,
+        //       description: {
+        //         en: values.descriptionEn,
+        //         ar: values.descriptionAr,
+        //       },
+        //       displayName: {
+        //         en: values.displayNameEn,
+        //         ar: values.displayNameAr,
+        //       },
+        //       isUserEditable: values.isUserEditable || false,
+        //       isRequired: values.isRequired || false,
+        //       regularExpression: values.regularExpression,
+        //       editedDate: new Date().toISOString().slice(0, 19),
+        //       createdDate: new Date().toISOString().slice(0, 19),
+        //       id: createSpecification.data.data.id,
+        //       validationFailureDescription: {
+        //         en: values.validationFailureDescriptionEn,
+        //         ar: values.validationFailureDescriptionAr,
+        //       },
+        //     },
+        //   })
+        // )
 
         if (setActiveIndex) {
           setActiveIndex(1)
@@ -147,11 +147,10 @@ const CustomSpecificationForm = ({
           },
           id: specificationData.id,
         })
-        setVisible && setVisible(false)
 
         dispatch(
           specificationInfo({
-            planId: specificationData.id,
+            specificationId: specificationData.id,
             productId: productId,
             data: {
               name: values.name,
@@ -221,6 +220,12 @@ const CustomSpecificationForm = ({
               )}
             </Form.Group>
           </div>
+          {/* <Card
+            border="light"
+            className="table-wrapper table-responsive shadow-sm"
+          >
+            <Row>
+              <Col md={6}> */}
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
@@ -261,7 +266,7 @@ const CustomSpecificationForm = ({
                   {/* Add more language tabs as needed */}
                 </TabView>
               </Card>
-              {/* Display validation error */}
+
               {formik.touched.displayNameEn && formik.errors.displayNameEn && (
                 <Form.Control.Feedback
                   type="invalid"
@@ -272,6 +277,8 @@ const CustomSpecificationForm = ({
               )}
             </Form.Group>
           </div>
+          {/* </Col>
+              <Col md={6}> */}
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
@@ -294,16 +301,6 @@ const CustomSpecificationForm = ({
                         name="descriptionEn"
                         onChange={formik.handleChange}
                       />
-                      {/* <textarea
-    className="form-control"
-    id="descriptionEn"
-    name="descriptionEn"
-    onChange={formik.handleChange}
-    value={formik.values.descriptionEn}
-    maxLength={250}
-    placeholder="Enter English Description"
-    rows={4} // Adjust the number of rows as needed
-  /> */}
                     </div>
                   </TabPanel>
                   <TabPanel header="Ar">
@@ -336,6 +333,9 @@ const CustomSpecificationForm = ({
               </Card>
             </Form.Group>
           </div>
+          {/* </Col>{' '}
+            </Row>
+          </Card> */}
 
           {/* <div>
             <Form.Group className="mb-3">

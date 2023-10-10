@@ -208,5 +208,13 @@
   "a-few-seconds": "من بضع ثوان",
   "From": "من",
   "to": "إلى",
-  "hours-and": "ساعة و"
+  "hours-and": "ساعة و",
+  "Add-Custom-Specification": "إضافة مواصفة مخصصة",
+  "Custom-Specification": "مواصفة مخصصة",
+  "Display-Name": "اسم العرض",
+  "Is-Required": "مطلوب",
+  "Is-User-Editable": "قابل للتحرير",
+  "Regular-Expression": "تعبير منظم",
+  "Validation-Failure-Description": "وصف فشل التحقق من الصحة",
+  "Subscription-Options": "خيارات الاشتراك"
 }

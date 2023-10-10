@@ -106,14 +106,7 @@ export default function ChildTable({
                   <TenantStatus statusValue={productData.status} />
                 </td>
               </tr>
-              {productData.specifications.map((spec, index) => (
-                <tr key={spec.id}>
-                  <td className="fw-bold firstTd">
-                    {spec.displayName[intl.locale]}
-                  </td>
-                  <td>{spec.value}</td>
-                </tr>
-              ))}
+
               <tr>
                 <td className="fw-bold firstTd">
                   <FormattedMessage id="Health-Check-Url" />
@@ -141,7 +134,16 @@ export default function ChildTable({
                 </td>
                 <td>{DataTransform(productData.editedDate)}</td>
               </tr>
-
+              {productData.specifications.map((spec, index) => (
+                <tr key={spec.id}>
+                  <td className="fw-bold firstTd">
+                    {spec.displayName[intl.locale] ||
+                      (intl.locale === 'ar' && spec.displayName['en']) ||
+                      (intl.locale === 'en' && spec.displayName['ar'])}
+                  </td>
+                  <td>{spec.value}</td>
+                </tr>
+              ))}
               <tr>
                 <td className="pl-0 pr-0" colSpan={2}>
                   <MetaDataAccordion defaultKey="metaData" data={products} />

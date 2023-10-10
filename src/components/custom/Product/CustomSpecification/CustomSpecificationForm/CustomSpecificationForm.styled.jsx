@@ -1,5 +1,8 @@
 import styled from 'styled-components'
 export const Wrapper = styled.div`
+  .form {
+    min-width: 2000px;
+  }
   .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
     border-color: var(--second-color);
     color: var(--second-color);

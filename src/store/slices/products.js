@@ -190,39 +190,41 @@ export const productsSlice = createSlice({
       state.products = allProduct
     },
 
-    SpecificationInfo: (state, action) => {
+    specificationInfo: (state, action) => {
       const { productId, specificationId, data } = action.payload
-      const currentProducts = JSON.parse(
-        JSON.stringify(current(state.products))
-      )
+      console.log('Payload received:', action.payload)
 
-      if (!currentProducts[productId].specifications) {
-        currentProducts[productId].specifications = {}
+      const currentProducts = { ...state.products }
+
+      const productToUpdate = currentProducts[productId]
+
+      if (!productToUpdate.specifications) {
+        productToUpdate.specifications = {}
       }
 
-      currentProducts[productId].specifications[specificationId] = data
+      productToUpdate.specifications[specificationId] = data
+      console.log('Updated product:', productToUpdate)
 
-      const sortedSpecifications = Object.values(
-        currentProducts[productId].specifications
-      )
-
-      const allSpecifications = {}
-      sortedSpecifications.forEach((plan) => {
-        allSpecifications[plan.id] = plan
-      })
-
-      currentProducts[productId].specifications = allSpecifications
-
-      state.products = currentProducts
+      state.products = {
+        ...currentProducts,
+        [productId]: productToUpdate,
+      }
     },
-
-    SpecificationChangeAttr: (state, action) => {
-      const { productId, planId, attr, value } = action.payload
-      const currentProducts = JSON.parse(
-        JSON.stringify(current(state.products))
-      )
-      currentProducts[productId].plans[planId][attr] = value
-      state.products = currentProducts
+    specificationChangeAttr: (state, action) => {
+      const { productId, specificationId, attr, value } = action.payload
+      state.products = {
+        ...state.products,
+        [productId]: {
+          ...state.products[productId],
+          specifications: {
+            ...state.products[productId]?.specifications,
+            [specificationId]: {
+              ...state.products[productId]?.specifications?.[specificationId],
+              [attr]: value,
+            },
+          },
+        },
+      }
     },
 
     deleteSpecification: (state, action) => {

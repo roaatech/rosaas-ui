@@ -5,7 +5,7 @@ import useRequest from '../../../../axios/apis/useRequest.js'
 import { cycle } from '../../../../const/index.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Form } from '@themesberg/react-bootstrap'
+import { Form, OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import {
   deleteAllPlan,
@@ -17,6 +17,7 @@ import {
 import { Wrapper } from './TenantForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
+import { BsFillQuestionCircleFill } from 'react-icons/bs'
 
 const TenantForm = ({
   type,
@@ -459,7 +460,7 @@ const TenantForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Price" />{' '}
+                  <FormattedMessage id="Subscription-Options" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
@@ -501,14 +502,37 @@ const TenantForm = ({
                 isRequired,
                 regularExpression,
                 validationFailureDescription,
+                description,
               } = specification
 
               return (
                 <Form.Group className="mb-3" key={id}>
                   <Form.Label>
-                    {displayName[`${intl.locale}`]}
+                    {displayName[`${intl.locale}`] ||
+                      (intl.locale === 'ar' && displayName['en']) ||
+                      (intl.locale === 'en' && displayName['ar'])}
+
                     {isRequired && <span style={{ color: 'red' }}>*</span>}
                   </Form.Label>
+                  {'  '}
+                  {description && (
+                    <span className="fw-normal">
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            {description?.[intl.locale] ||
+                              (intl.locale === 'ar' && description['en']) ||
+                              (intl.locale === 'en' && description['ar'])}
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          <BsFillQuestionCircleFill style={{ width: '12px' }} />
+                        </span>
+                      </OverlayTrigger>
+                    </span>
+                  )}
                   <div>
                     <SpecificationInput
                       className="form-control"

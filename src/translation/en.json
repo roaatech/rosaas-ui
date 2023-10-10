@@ -204,5 +204,13 @@
   "a-few-seconds": "a few seconds",
   "From": "From",
   "to": "to",
-  "hours-and": "hours and"
+  "hours-and": "hours and",
+  "Add-Custom-Specification": "Add Custom Specification",
+  "Custom-Specification": "Custom Specification",
+  "Display-Name": "Display Name",
+  "Is-Required": "Is Required",
+  "Is-User-Editable": "Is User Editable",
+  "Regular-Expression": "Regular Expression",
+  "Validation-Failure-Description": "Validation Failure Description",
+  "Subscription-Options": "Subscription Options"
 }
