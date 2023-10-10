@@ -34,6 +34,7 @@ const TenantDetails = () => {
   let direction = useSelector((state) => state.main.direction)
 
   const tenantsData = useSelector((state) => state.tenants.tenants)
+
   const activeIndex = useSelector((state) => state.tenants.currentTab)
   const { getTenant, deleteTenantReq, editTenantStatus, subscriptionDetails } =
     useRequest()

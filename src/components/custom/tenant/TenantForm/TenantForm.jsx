@@ -84,9 +84,22 @@ const TenantForm = ({
     type === 'create' ? createValidation : editValidation
   )
 
-  const selectedProduct = tenantData?.products?.map((product) => {
-    return product.id
+  const selectedProduct = tenantData?.subscriptions?.map((product) => {
+    return product.productId
   })
+  const specificationValue = tenantData?.subscriptions?.flatMap(
+    (subscription) =>
+      subscription?.specifications?.map((specification) => ({
+        specificationId: specification.id,
+        value: specification.value,
+      }))
+  )
+
+  const specificationValuesObject = specificationValue?.reduce((acc, obj) => {
+    acc[obj.specificationId] = obj.value
+    return acc
+  }, {})
+  console.log({ 1111: specificationValue, specificationValuesObject })
 
   const initialValues = {
     title: tenantData ? tenantData.title : '',
@@ -95,12 +108,12 @@ const TenantForm = ({
     price: tenantData ? tenantData.price : '',
     product: tenantData ? selectedProduct : '',
 
-    specificationValues: tenantData
-      ? tenantData.specifications.map((specification) => ({
-          specificationId: specification.specificationId,
-          value: specification.value,
-        }))
-      : [],
+    // specificationValues: tenantData
+    //   ? tenantData.specifications.map((specification) => ({
+    //       specificationId: specification.specificationId,
+    //       value: specification.value,
+    //     }))
+    //   : [],
   }
 
   const formik = useFormik({
@@ -108,14 +121,20 @@ const TenantForm = ({
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setVisible(false)
-      if (type == 'create') {
-        const specificationsArray = Object.keys(specificationValues).map(
-          (specificationId) => ({
-            specificationId,
-            value: specificationValues[specificationId],
+      const specificationsArray = productData?.specifications
+        ? Object.values(productData.specifications).map((specification) => {
+            const specificationId = specification.id
+            const value =
+              specificationValues[specificationId] !== undefined
+                ? specificationValues[specificationId]
+                : ''
+            return {
+              specificationId,
+              value,
+            }
           })
-        )
-
+        : []
+      if (type == 'create') {
         const createTenant = await createTenantRequest({
           subscriptions: [
             {
@@ -147,6 +166,7 @@ const TenantForm = ({
           uniqueName: values.uniqueName,
           id: tenantData.id,
           product: selectedProduct,
+          specifications: specificationsArray,
         })
         updateTenant()
       }
@@ -154,6 +174,7 @@ const TenantForm = ({
       setVisible && setVisible(false)
     },
   })
+  useEffect(() => {})
 
   const intl = useIntl()
   let planOptions
@@ -224,8 +245,15 @@ const TenantForm = ({
   const specificationsArray = productData?.specifications
     ? Object.values(productData.specifications)
     : []
-  console.log('specificationsArray:', specificationsArray)
 
+  useEffect(() => {
+    if (type == 'edit' && Object.keys(specificationValuesObject).length > 0) {
+      setSpecificationValues((prevValues) => ({
+        ...prevValues,
+        ...specificationValuesObject,
+      }))
+    }
+  }, [type])
   const handleSpecificationChange = (specificationId, event) => {
     const newValue = event.target.value
     setSpecificationValues((prevValues) => ({
@@ -321,7 +349,7 @@ const TenantForm = ({
               </Form.Group>
             </div>
           )}
-          {type === 'create' && (
+          {type === 'create' ? (
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
@@ -335,6 +363,41 @@ const TenantForm = ({
                   value={formik.values.product}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
+                >
+                  <option value="">
+                    <FormattedMessage id="Select-Option" />
+                  </option>
+                  {options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.product && formik.errors.product && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.product}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          ) : (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <FormattedMessage id="Product" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <select
+                  className="form-control"
+                  name="product"
+                  id="product"
+                  value={selectedProduct}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  disabled={true}
                 >
                   <option value="">
                     <FormattedMessage id="Select-Option" />
@@ -450,7 +513,11 @@ const TenantForm = ({
                     <SpecificationInput
                       className="form-control"
                       dataType={specification.dataType}
-                      value={specificationValues[id] || ''}
+                      value={
+                        specificationValues[id] !== undefined
+                          ? specificationValues[id]
+                          : ''
+                      }
                       regularExpression={regularExpression}
                       validationFailureDescription={
                         validationFailureDescription[intl.locale]
