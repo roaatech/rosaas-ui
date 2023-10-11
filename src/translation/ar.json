@@ -216,5 +216,9 @@
   "Is-User-Editable": "قابل للتحرير",
   "Regular-Expression": "تعبير منظم",
   "Validation-Failure-Description": "وصف فشل التحقق من الصحة",
-  "Subscription-Options": "خيارات الاشتراك"
+  "Subscription-Options": "خيارات الاشتراك",
+  "Display-Name-is-required": "اسم العرض مطلوب",
+  "Edit-Specification": "تعديل المواصفات",
+  "Permissions": "صلاحيات",
+  "Add-Specification": "إضافة مواصفة"
 }

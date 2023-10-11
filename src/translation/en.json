@@ -214,5 +214,7 @@
   "Validation-Failure-Description": "Validation Failure Description",
   "Subscription-Options": "Subscription Options",
   "Edit-Specification": "Edit Specification",
-  "Permissions": "Permissions"
+  "Permissions": "Permissions",
+  "Display-Name-is-required": "Display Name is required",
+  "Add-Specification": "Add Specification"
 }

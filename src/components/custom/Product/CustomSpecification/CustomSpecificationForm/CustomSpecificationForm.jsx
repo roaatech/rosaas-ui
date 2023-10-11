@@ -49,12 +49,19 @@ const CustomSpecificationForm = ({
       specificationData?.validationFailureDescription?.ar || '',
   }
   const allProducts = useSelector((state) => state.products.products)
-
   const validationSchema = Yup.object().shape({
     name: Yup.string()
-      .required(<FormattedMessage id="Plan-Name-is-required" />)
-      .max(15, <FormattedMessage id="Name-must-be-at-most-15-characters" />),
+      .max(100, 'Must be at most 100 characters')
+      .required('Unique Name is required')
+      .matches(
+        /^[a-zA-Z0-9_-]+$/,
+        'English Characters, Numbers, and Underscores are only accepted.'
+      ),
+    displayNameEn: Yup.string().required(
+      <FormattedMessage id="Display-Name-English-is-required" />
+    ),
   })
+
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
@@ -268,13 +275,16 @@ const CustomSpecificationForm = ({
                     </TabView>
                     {/* </Card> */}
 
-                    {formik.touched.displayNameEn &&
-                      formik.errors.displayNameEn && (
+                    {(formik.touched.displayNameEn ||
+                      formik.touched.displayNameAr) &&
+                      (formik.errors.displayNameEn ||
+                        formik.errors.displayNameAr) && (
                         <Form.Control.Feedback
                           type="invalid"
                           style={{ display: 'block' }}
                         >
-                          {formik.errors.displayNameEn}
+                          {formik.errors.displayNameEn ||
+                            formik.errors.displayNameAr}
                         </Form.Control.Feedback>
                       )}
                   </Form.Group>
