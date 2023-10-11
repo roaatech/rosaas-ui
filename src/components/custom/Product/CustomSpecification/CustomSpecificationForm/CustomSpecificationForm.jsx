@@ -2,7 +2,7 @@ import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
-import { Modal, Button, Card, Row, Col } from '@themesberg/react-bootstrap'
+import { Modal, Button, Card, Row, Col, Container } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
@@ -206,6 +206,7 @@ const CustomSpecificationForm = ({
             border="light"
             className="table-wrapper table-responsive shadow-sm" 
           > 
+          <Container>
            <Row>
             <Col md={6}   style={{ borderRight: '1px solid #f1f1f1' }}> 
             <Form.Group className="mb-3">
@@ -282,13 +283,16 @@ const CustomSpecificationForm = ({
                       />
                     </div>
                     </Col>
-                    </Row>
+           </Row>
+           </Container> 
            </Card>
           <Card
             border="light"
             className="table-wrapper table-responsive shadow-sm "
             style={{  marginTop: '15px' }}
           >
+            
+          <Container>
             <Row>
               <Col md={6}   style={{ borderRight: '1px solid #f1f1f1' }}>
                 <div>
@@ -406,6 +410,7 @@ const CustomSpecificationForm = ({
                 </div>
               </Col>{' '}
             </Row>
+            </Container>
           </Card>
 
           {/* <div>
@@ -503,6 +508,7 @@ const CustomSpecificationForm = ({
             className="table-wrapper table-responsive shadow-sm"
             style={{ marginTop: '15px' }}
           > 
+          <Container>
               <Row>
                 <Col md={6} style={{ borderRight: '1px solid #f1f1f1' }}>
                 <div className="toggle-container d-flex align-items-center justify-content-between  mb-1">
@@ -596,6 +602,7 @@ const CustomSpecificationForm = ({
                   </Form.Group>
                 </Col>
               </Row> 
+              </Container>
             {/* <Card.Body>
               <Row className="d-flex align-items-center">
                 <Col
