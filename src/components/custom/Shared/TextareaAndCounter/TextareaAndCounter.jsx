@@ -12,6 +12,7 @@ const TextareaAndCounter = ({
   id,
   name,
   onChange,
+  disableMainClass
 }) => {
   const [characterCount, setCharacterCount] = useState(inputValue?.length || 0)
   const [value, setValue] = useState(inputValue)
@@ -42,7 +43,7 @@ const TextareaAndCounter = ({
     <TextareaCounterWrapper direction={direction}>
       <div className="textarea-container">
         <textarea
-          className="form-control"
+          className= {disableMainClass ? 'form-control' : 'textarea-input form-control'}  
           value={value}
           onChange={handleTextareaChange}
           maxLength={maxLength}

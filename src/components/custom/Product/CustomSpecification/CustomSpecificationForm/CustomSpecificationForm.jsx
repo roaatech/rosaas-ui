@@ -202,7 +202,12 @@ const CustomSpecificationForm = ({
         </Modal.Header>
 
         <Modal.Body>
-          <div>
+        <Card
+            border="light"
+            className="table-wrapper table-responsive shadow-sm" 
+          > 
+           <Row>
+            <Col md={6}   style={{ borderRight: '1px solid #f1f1f1' }}> 
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Name" />{' '}
@@ -225,18 +230,70 @@ const CustomSpecificationForm = ({
                   {formik.errors.name}
                 </Form.Control.Feedback>
               )}
-            </Form.Group>
-          </div>
+              
+              </Form.Group> 
+              </Col>
+              <Col md={6}>
+                <div className="toggle-container d-flex align-items-center justify-content-between mb-2">
+                      <Form.Label >
+                        <FormattedMessage id="Is-Published" />
+                      </Form.Label>
+                      <FontAwesomeIcon
+                        icon={
+                          formik.values.isPublished
+                            ? faToggleOn
+                            : faToggleOff
+                        }
+                        className={
+                          formik.values.isPublished
+                            ? 'active-toggle fa-lg'
+                            : 'passive-toggle fa-lg'
+                        }
+                        onClick={() =>
+                          formik.setFieldValue(
+                            'isPublished',
+                            !formik.values.isPublished
+                          )
+                        }
+                      />
+                    </div>
+
+                    <div className="toggle-container d-flex align-items-center justify-content-between ">
+                      <Form.Label >
+                        <FormattedMessage id="Is-User-Editable" />
+                      </Form.Label>
+                      <FontAwesomeIcon
+                        icon={
+                          formik.values.isUserEditable
+                            ? faToggleOn
+                            : faToggleOff
+                        }
+                        className={
+                          formik.values.isUserEditable
+                            ? 'active-toggle fa-lg'
+                            : 'passive-toggle fa-lg'
+                        }
+                        onClick={() =>
+                          formik.setFieldValue(
+                            'isUserEditable',
+                            !formik.values.isUserEditable
+                          )
+                        }
+                      />
+                    </div>
+                    </Col>
+                    </Row>
+           </Card>
           <Card
             border="light"
             className="table-wrapper table-responsive shadow-sm "
-            style={{ padding: '15px', paddingBottom: '0px' }}
+            style={{  marginTop: '15px' }}
           >
             <Row>
-              <Col md={6} style={{ borderRight: '1px solid #f1f1f1' }}>
+              <Col md={6}   style={{ borderRight: '1px solid #f1f1f1' }}>
                 <div>
-                  <Form.Group className="mb-3 ">
-                    <Form.Label>
+                  <Form.Group>  
+                    <Form.Label  className="mb-0">
                       <FormattedMessage id="Display-Name" />{' '}
                       <span style={{ color: 'red' }}>*</span>
                     </Form.Label>
@@ -292,8 +349,8 @@ const CustomSpecificationForm = ({
               </Col>
               <Col md={6}>
                 <div>
-                  <Form.Group className="mb-3">
-                    <Form.Label>
+                   <Form.Group>
+                    <Form.Label  className="mb-0 ">
                       <FormattedMessage id="Description" />
                     </Form.Label>
                     {/* <Card
@@ -312,6 +369,7 @@ const CustomSpecificationForm = ({
                             id="descriptionEn"
                             name="descriptionEn"
                             onChange={formik.handleChange}
+                            disableMainClass = {true}
                           />
                         </div>
                       </TabPanel>
@@ -326,6 +384,7 @@ const CustomSpecificationForm = ({
                             id="descriptionAr"
                             name="descriptionAr"
                             onChange={formik.handleChange}
+                            disableMainClass = {true}
                           />
                         </div>
                       </TabPanel>
@@ -443,55 +502,11 @@ const CustomSpecificationForm = ({
             border="light"
             className="table-wrapper table-responsive shadow-sm"
             style={{ marginTop: '15px' }}
-          >
-            <Card.Body>
+          > 
               <Row>
                 <Col md={6} style={{ borderRight: '1px solid #f1f1f1' }}>
-                  <Form.Group className="mb-3">
-                    <Form.Label style={{ marginTop: '10px' }}>
-                      <FormattedMessage id="Regular-Expression" />
-                    </Form.Label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="regularExpression"
-                      name="regularExpression"
-                      onChange={formik.handleChange}
-                      value={formik.values.regularExpression}
-                    />
-                  </Form.Group>
-                  <Form.Label style={{ marginTop: '10px' }}>
-                    <FormattedMessage id="Permissions" />{' '}
-                  </Form.Label>
-                  <Card
-                    border="light"
-                    className="table-wrapper table-responsive shadow-sm"
-                  >
-                    <div className="d-flex align-items-center justify-content-between mx-5">
-                      <Form.Label className="Permission ">
-                        <FormattedMessage id="Is-User-Editable" />
-                      </Form.Label>
-                      <FontAwesomeIcon
-                        icon={
-                          formik.values.isUserEditable
-                            ? faToggleOn
-                            : faToggleOff
-                        }
-                        className={
-                          formik.values.isUserEditable
-                            ? 'active-toggle fa-lg'
-                            : 'passive-toggle fa-lg'
-                        }
-                        onClick={() =>
-                          formik.setFieldValue(
-                            'isUserEditable',
-                            !formik.values.isUserEditable
-                          )
-                        }
-                      />
-                    </div>
-                    <div className="d-flex align-items-center justify-content-between mx-5">
-                      <Form.Label className="Permission">
+                <div className="toggle-container d-flex align-items-center justify-content-between  mb-1">
+                      <Form.Label  >
                         <FormattedMessage id="Is-Required" />
                       </Form.Label>
                       <FontAwesomeIcon
@@ -511,12 +526,24 @@ const CustomSpecificationForm = ({
                         }
                       />
                     </div>
-                  </Card>
+                   <Form.Group>
+                    <Form.Label >
+                      <FormattedMessage id="Regular-Expression" />
+                    </Form.Label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="regularExpression"
+                      name="regularExpression"
+                      onChange={formik.handleChange}
+                      value={formik.values.regularExpression}
+                    />
+                  </Form.Group> 
                 </Col>
 
                 <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>
+                   <Form.Group>
+                    <Form.Label  className="mb-0 ">
                       <FormattedMessage id="Validation-Failure-Description" />
                     </Form.Label>
                     <TabView>
@@ -533,6 +560,7 @@ const CustomSpecificationForm = ({
                             id="validationFailureDescriptionEn"
                             name="validationFailureDescriptionEn"
                             onChange={formik.handleChange}
+                            disableMainClass = {true}
                           />
                         </div>
                       </TabPanel>
@@ -549,6 +577,7 @@ const CustomSpecificationForm = ({
                             id="validationFailureDescriptionAr"
                             name="validationFailureDescriptionAr"
                             onChange={formik.handleChange}
+                            disableMainClass = {true}
                           />
                         </div>
                       </TabPanel>
@@ -566,8 +595,7 @@ const CustomSpecificationForm = ({
                       )}
                   </Form.Group>
                 </Col>
-              </Row>
-            </Card.Body>
+              </Row> 
             {/* <Card.Body>
               <Row className="d-flex align-items-center">
                 <Col
@@ -651,6 +679,7 @@ const CustomSpecificationForm = ({
               </Row>
             </Card.Body> */}
           </Card>
+         
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">

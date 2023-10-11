@@ -4,7 +4,7 @@ export const Wrapper = styled.div`
     min-width: 2000px;
   }
   .p-tabview .p-tabview-nav .p-tabview-title {
-    font-size: 14px;
+    font-size: 12px;
     margin-bottom: -28px;
     margin-top: -20px;
   }
@@ -57,5 +57,25 @@ export const Wrapper = styled.div`
         padding: 0;
       }
     }
+  }
+
+  .textarea-container textarea {
+    max-height: 43.6px !important;
+  }
+
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link{ 
+    padding:  0.5rem  0.75rem 1rem 0.75rem ;
+  }
+
+  .table-wrapper.table-responsive{
+    padding:  0.5rem  0.5rem 0rem  0.5rem ;
+  }
+
+  
+  .char-counter{
+    font-size: 10px;
+  }
+  .toggle-container .fa-lg {
+    font-size: 1.5em;
   }
 `
