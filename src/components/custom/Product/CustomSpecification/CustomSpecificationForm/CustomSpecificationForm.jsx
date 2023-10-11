@@ -58,7 +58,7 @@ const CustomSpecificationForm = ({
         'English Characters, Numbers, and Underscores are only accepted.'
       ),
     displayNameEn: Yup.string().required(
-      <FormattedMessage id="Display-Name-English-is-required" />
+      <FormattedMessage id="Display-Name-is-required" />
     ),
   })
 
