@@ -212,5 +212,7 @@
   "Is-User-Editable": "Is User Editable",
   "Regular-Expression": "Regular Expression",
   "Validation-Failure-Description": "Validation Failure Description",
-  "Subscription-Options": "Subscription Options"
+  "Subscription-Options": "Subscription Options",
+  "Edit-Specification": "Edit Specification",
+  "Permissions": "Permissions"
 }

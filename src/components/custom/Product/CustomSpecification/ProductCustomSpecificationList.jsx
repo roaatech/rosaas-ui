@@ -323,7 +323,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
           </Card.Body>
         </Card>
 
-        <ThemeDialog visible={visible} setVisible={setVisible}>
+        <ThemeDialog visible={visible} setVisible={setVisible} size="lg">
           <>
             <CustomSpecificationForm
               popupLabel={<FormattedMessage id={popUpLable} />}

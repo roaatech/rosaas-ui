@@ -149,7 +149,7 @@ const DynamicButtons = ({ buttons }) => {
       </>
     ),
   }
-
+  console.log(currentButtonIndex)
   return (
     <Wrapper direction={direction} className="d-flex">
       <div
@@ -286,7 +286,11 @@ const DynamicButtons = ({ buttons }) => {
         sideBar={false}
       />
 
-      <ThemeDialog visible={visible} setVisible={setVisible}>
+      <ThemeDialog
+        visible={visible}
+        setVisible={setVisible}
+        size={currentButtonIndex === 0 ? 'lg' : ''}
+      >
         {currentButtonIndex !== undefined &&
         buttons[currentButtonIndex].type == 'form' ? (
           forms[buttons[currentButtonIndex].component]()

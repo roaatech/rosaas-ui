@@ -175,8 +175,32 @@ const TenantForm = ({
       setVisible && setVisible(false)
     },
   })
-  useEffect(() => {})
 
+  const validateSpecifications = (specifications, intl) => {
+    return specifications.reduce((errors, specification) => {
+      const {
+        id,
+        isRequired,
+        regularExpression,
+        validationFailureDescription,
+      } = specification
+      const value = specificationValues[id] || ''
+
+      if (isRequired && !value.trim()) {
+        errors.push(intl.formatMessage({ id: 'This field is required.' }))
+      }
+
+      if (regularExpression && !new RegExp(regularExpression).test(value)) {
+        errors.push(
+          intl.formatMessage({
+            id: validationFailureDescription || 'Invalid input.',
+          })
+        )
+      }
+
+      return errors
+    }, [])
+  }
   const intl = useIntl()
   let planOptions
   if (listData[formik.values.product]?.plans) {

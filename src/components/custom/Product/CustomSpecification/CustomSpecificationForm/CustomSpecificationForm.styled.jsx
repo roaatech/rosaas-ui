@@ -3,9 +3,17 @@ export const Wrapper = styled.div`
   .form {
     min-width: 2000px;
   }
+  .p-tabview .p-tabview-nav .p-tabview-title {
+    font-size: 14px;
+    margin-bottom: -28px;
+    margin-top: -20px;
+  }
   .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
     border-color: var(--second-color);
     color: var(--second-color);
+  }
+  .p-tabview-nav-content {
+    margin-bottom: -20px;
   }
   .custom-checkbox
     .custom-control-input:checked

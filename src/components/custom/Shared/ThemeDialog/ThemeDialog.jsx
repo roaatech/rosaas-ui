@@ -28,8 +28,10 @@ const ThemeDialog = ({
   children,
   visible,
   setVisible,
+  size,
   search = true,
 }) => {
+  console.log(size)
   return (
     <Wrapper>
       <React.Fragment>
@@ -38,6 +40,7 @@ const ThemeDialog = ({
           centered
           show={visible}
           onHide={() => setVisible(false)}
+          size={size}
         >
           {children.length > 1 ? children[0] : children}
         </Modal>

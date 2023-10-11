@@ -44,22 +44,22 @@ const SpecificationInput = ({
   const InputComponent = getInputComponent(dataType)
   const [error, setError] = useState(null)
 
-  const validate = (inputValue) => {
-    if (isRequired && inputValue.trim() === '') {
-      setError('This field is required.')
-    } else if (
-      regularExpression &&
-      !new RegExp(regularExpression).test(inputValue)
-    ) {
-      setError(validationFailureDescription || 'Invalid input.')
-    } else {
-      setError(null)
-    }
-  }
+  // const validate = (inputValue) => {
+  //   if (isRequired && inputValue.trim() === '') {
+  //     setError('This field is required.')
+  //   } else if (
+  //     regularExpression &&
+  //     !new RegExp(regularExpression).test(inputValue)
+  //   ) {
+  //     setError(validationFailureDescription || 'Invalid input.')
+  //   } else {
+  //     setError(null)
+  //   }
+  // }
 
   const handleChange = (event) => {
     const inputValue = event.target.value
-    validate(inputValue)
+    // validate(inputValue)
     onChange(event)
   }
 
