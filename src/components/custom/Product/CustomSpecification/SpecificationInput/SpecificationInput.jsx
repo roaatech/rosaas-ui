@@ -90,7 +90,8 @@ const SpecificationInput = ({
               </span>
             )}
             <div>
-              <InputComponent
+              <input
+                type="text"
                 value={specificationValues[id] || ''}
                 className="form-control"
                 onChange={(event) => {

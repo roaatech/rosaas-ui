@@ -108,7 +108,7 @@ const TenantForm = ({
 
     filteredSpecificationsArray &&
       filteredSpecificationsArray.forEach((specification) => {
-        const {
+        let {
           id: specificationId,
           isRequired,
           regularExpression,
@@ -116,19 +116,26 @@ const TenantForm = ({
         } = specification
 
         const value = specificationValues[specificationId] || ''
+        if (regularExpression.startsWith('/')) {
+          regularExpression = regularExpression.slice(1)
+        }
+        if (regularExpression.endsWith('/')) {
+          regularExpression = regularExpression.slice(0, -1)
+        }
 
-        let variable = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'
-        let rgx = new RegExp(regularExpression, 'g')
-        console.log('rgx.match(value)')
-        console.log(value.match(rgx))
-        console.log(value)
+        let flags = ''
+        if (/[gimus]+$/.test(regularExpression)) {
+          flags = regularExpression.slice(-1)
+          regularExpression = regularExpression.slice(0, -1)
+        }
+
+        let pattern = regularExpression
+
+        let regex = new RegExp(pattern, flags)
+
         if (isRequired && !value.trim()) {
           errors[specificationId] = 'This field is required'
-        } else if (regularExpression && !rgx.match(value)) {
-          console.log('sdzlfjsdllsjkdflsadjkf')
-          console.log(regularExpression)
-          console.log(rgx)
-          console.log(value)
+        } else if (regularExpression && !regex.test(value)) {
           errors[specificationId] = validationFailureDescription.en
         }
       })
