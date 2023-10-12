@@ -2,7 +2,14 @@ import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
-import { Modal, Button, Card, Row, Col, Container } from '@themesberg/react-bootstrap'
+import {
+  Modal,
+  Button,
+  Card,
+  Row,
+  Col,
+  Container,
+} from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
@@ -60,6 +67,19 @@ const CustomSpecificationForm = ({
     displayNameEn: Yup.string().required(
       <FormattedMessage id="Display-Name-is-required" />
     ),
+    regularExpression: Yup.string()
+      .test(
+        'isValidPattern',
+        'Regular expression must be in the valid pattern style with slashes and optional flags (e.g., /^pattern$/g).',
+        (value) => {
+          if (!value) {
+            return true // Allow empty string
+          }
+          const isValidPattern = /^\/.*\/[gimus]*$/.test(value)
+          return isValidPattern
+        }
+      )
+      .nullable(),
   })
 
   const formik = useFormik({
@@ -202,214 +222,208 @@ const CustomSpecificationForm = ({
         </Modal.Header>
 
         <Modal.Body>
-        <Card
+          <Card
             border="light"
-            className="table-wrapper table-responsive shadow-sm" 
-          > 
-          <Container>
-           <Row>
-            <Col md={6}   style={{ borderRight: '1px solid #f1f1f1' }}> 
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Name" />{' '}
-                <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                name="name"
-                onChange={formik.handleChange}
-                value={formik.values.name}
-              />
-              {/* Display validation error */}
-              {formik.touched.name && formik.errors.name && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.name}
-                </Form.Control.Feedback>
-              )}
-              
-              </Form.Group> 
-              </Col>
-              <Col md={6}>
-                <div className="toggle-container d-flex align-items-center justify-content-between mb-2">
-                      <Form.Label >
-                        <FormattedMessage id="Is-Published" />
-                      </Form.Label>
-                      <FontAwesomeIcon
-                        icon={
-                          formik.values.isPublished
-                            ? faToggleOn
-                            : faToggleOff
-                        }
-                        className={
-                          formik.values.isPublished
-                            ? 'active-toggle fa-lg'
-                            : 'passive-toggle fa-lg'
-                        }
-                        onClick={() =>
-                          formik.setFieldValue(
-                            'isPublished',
-                            !formik.values.isPublished
-                          )
-                        }
-                      />
-                    </div>
+            className="table-wrapper table-responsive shadow-sm"
+          >
+            <Container>
+              <Row>
+                <Col md={6} style={{ borderRight: '1px solid #f1f1f1' }}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>
+                      <FormattedMessage id="Name" />{' '}
+                      <span style={{ color: 'red' }}>*</span>
+                    </Form.Label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="name"
+                      name="name"
+                      onChange={formik.handleChange}
+                      value={formik.values.name}
+                    />
+                    {/* Display validation error */}
+                    {formik.touched.name && formik.errors.name && (
+                      <Form.Control.Feedback
+                        type="invalid"
+                        style={{ display: 'block' }}
+                      >
+                        {formik.errors.name}
+                      </Form.Control.Feedback>
+                    )}
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <div className="toggle-container d-flex align-items-center justify-content-between mb-2">
+                    <Form.Label>
+                      <FormattedMessage id="Is-Published" />
+                    </Form.Label>
+                    <FontAwesomeIcon
+                      icon={
+                        formik.values.isPublished ? faToggleOn : faToggleOff
+                      }
+                      className={
+                        formik.values.isPublished
+                          ? 'active-toggle fa-lg'
+                          : 'passive-toggle fa-lg'
+                      }
+                      onClick={() =>
+                        formik.setFieldValue(
+                          'isPublished',
+                          !formik.values.isPublished
+                        )
+                      }
+                    />
+                  </div>
 
-                    <div className="toggle-container d-flex align-items-center justify-content-between ">
-                      <Form.Label >
-                        <FormattedMessage id="Is-User-Editable" />
-                      </Form.Label>
-                      <FontAwesomeIcon
-                        icon={
-                          formik.values.isUserEditable
-                            ? faToggleOn
-                            : faToggleOff
-                        }
-                        className={
-                          formik.values.isUserEditable
-                            ? 'active-toggle fa-lg'
-                            : 'passive-toggle fa-lg'
-                        }
-                        onClick={() =>
-                          formik.setFieldValue(
-                            'isUserEditable',
-                            !formik.values.isUserEditable
-                          )
-                        }
-                      />
-                    </div>
-                    </Col>
-           </Row>
-           </Container> 
-           </Card>
+                  <div className="toggle-container d-flex align-items-center justify-content-between ">
+                    <Form.Label>
+                      <FormattedMessage id="Is-User-Editable" />
+                    </Form.Label>
+                    <FontAwesomeIcon
+                      icon={
+                        formik.values.isUserEditable ? faToggleOn : faToggleOff
+                      }
+                      className={
+                        formik.values.isUserEditable
+                          ? 'active-toggle fa-lg'
+                          : 'passive-toggle fa-lg'
+                      }
+                      onClick={() =>
+                        formik.setFieldValue(
+                          'isUserEditable',
+                          !formik.values.isUserEditable
+                        )
+                      }
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </Container>
+          </Card>
           <Card
             border="light"
             className="table-wrapper table-responsive shadow-sm "
-            style={{  marginTop: '15px' }}
+            style={{ marginTop: '15px' }}
           >
-            
-          <Container>
-            <Row>
-              <Col md={6}   style={{ borderRight: '1px solid #f1f1f1' }}>
-                <div>
-                  <Form.Group>  
-                    <Form.Label  className="mb-0">
-                      <FormattedMessage id="Display-Name" />{' '}
-                      <span style={{ color: 'red' }}>*</span>
-                    </Form.Label>
-                    {/* <Card
+            <Container>
+              <Row>
+                <Col md={6} style={{ borderRight: '1px solid #f1f1f1' }}>
+                  <div>
+                    <Form.Group>
+                      <Form.Label className="mb-0">
+                        <FormattedMessage id="Display-Name" />{' '}
+                        <span style={{ color: 'red' }}>*</span>
+                      </Form.Label>
+                      {/* <Card
                 border="light"
                 className="table-wrapper table-responsive shadow-sm"
               > */}
-                    <TabView>
-                      <TabPanel header="En">
-                        <div className="form-group mt-3">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="displayNameEn"
-                            name="displayNameEn"
-                            onChange={formik.handleChange}
-                            value={formik.values.displayNameEn}
-                            placeholder="Enter English Name"
-                          />
-                        </div>
-                      </TabPanel>
-                      <TabPanel header="Ar">
-                        <div className="form-group mt-3">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="displayNameAr"
-                            name="displayNameAr"
-                            onChange={formik.handleChange}
-                            value={formik.values.displayNameAr}
-                            placeholder="Enter Arabic Name"
-                          />
-                        </div>
-                      </TabPanel>
-                      {/* Add more language tabs as needed */}
-                    </TabView>
-                    {/* </Card> */}
+                      <TabView>
+                        <TabPanel header="En">
+                          <div className="form-group mt-3">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="displayNameEn"
+                              name="displayNameEn"
+                              onChange={formik.handleChange}
+                              value={formik.values.displayNameEn}
+                              placeholder="Enter English Name"
+                            />
+                          </div>
+                        </TabPanel>
+                        <TabPanel header="Ar">
+                          <div className="form-group mt-3">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="displayNameAr"
+                              name="displayNameAr"
+                              onChange={formik.handleChange}
+                              value={formik.values.displayNameAr}
+                              placeholder="Enter Arabic Name"
+                            />
+                          </div>
+                        </TabPanel>
+                        {/* Add more language tabs as needed */}
+                      </TabView>
+                      {/* </Card> */}
 
-                    {(formik.touched.displayNameEn ||
-                      formik.touched.displayNameAr) &&
-                      (formik.errors.displayNameEn ||
-                        formik.errors.displayNameAr) && (
-                        <Form.Control.Feedback
-                          type="invalid"
-                          style={{ display: 'block' }}
-                        >
-                          {formik.errors.displayNameEn ||
-                            formik.errors.displayNameAr}
-                        </Form.Control.Feedback>
-                      )}
-                  </Form.Group>
-                </div>
-              </Col>
-              <Col md={6}>
-                <div>
-                   <Form.Group>
-                    <Form.Label  className="mb-0 ">
-                      <FormattedMessage id="Description" />
-                    </Form.Label>
-                    {/* <Card
+                      {(formik.touched.displayNameEn ||
+                        formik.touched.displayNameAr) &&
+                        (formik.errors.displayNameEn ||
+                          formik.errors.displayNameAr) && (
+                          <Form.Control.Feedback
+                            type="invalid"
+                            style={{ display: 'block' }}
+                          >
+                            {formik.errors.displayNameEn ||
+                              formik.errors.displayNameAr}
+                          </Form.Control.Feedback>
+                        )}
+                    </Form.Group>
+                  </div>
+                </Col>
+                <Col md={6}>
+                  <div>
+                    <Form.Group>
+                      <Form.Label className="mb-0 ">
+                        <FormattedMessage id="Description" />
+                      </Form.Label>
+                      {/* <Card
                       border="light"
                       className="table-wrapper table-responsive shadow-sm"
                     > */}
-                    <TabView>
-                      <TabPanel header="En">
-                        <div className="form-group mt-3">
-                          <TextareaAndCounter
-                            addTextarea={formik.setFieldValue}
-                            maxLength={250}
-                            showCharCount
-                            inputValue={formik.values.descriptionEn}
-                            placeholder="Enter English Description"
-                            id="descriptionEn"
-                            name="descriptionEn"
-                            onChange={formik.handleChange}
-                            disableMainClass = {true}
-                          />
-                        </div>
-                      </TabPanel>
-                      <TabPanel header="Ar">
-                        <div className="form-group mt-3">
-                          <TextareaAndCounter
-                            addTextarea={formik.setFieldValue}
-                            maxLength={250}
-                            showCharCount
-                            inputValue={formik?.values?.descriptionAr}
-                            placeholder="Enter Arabic Description"
-                            id="descriptionAr"
-                            name="descriptionAr"
-                            onChange={formik.handleChange}
-                            disableMainClass = {true}
-                          />
-                        </div>
-                      </TabPanel>
-                      {/* Add more language tabs as needed */}
-                    </TabView>
+                      <TabView>
+                        <TabPanel header="En">
+                          <div className="form-group mt-3">
+                            <TextareaAndCounter
+                              addTextarea={formik.setFieldValue}
+                              maxLength={250}
+                              showCharCount
+                              inputValue={formik.values.descriptionEn}
+                              placeholder="Enter English Description"
+                              id="descriptionEn"
+                              name="descriptionEn"
+                              onChange={formik.handleChange}
+                              disableMainClass={true}
+                            />
+                          </div>
+                        </TabPanel>
+                        <TabPanel header="Ar">
+                          <div className="form-group mt-3">
+                            <TextareaAndCounter
+                              addTextarea={formik.setFieldValue}
+                              maxLength={250}
+                              showCharCount
+                              inputValue={formik?.values?.descriptionAr}
+                              placeholder="Enter Arabic Description"
+                              id="descriptionAr"
+                              name="descriptionAr"
+                              onChange={formik.handleChange}
+                              disableMainClass={true}
+                            />
+                          </div>
+                        </TabPanel>
+                        {/* Add more language tabs as needed */}
+                      </TabView>
 
-                    {/* Display validation error */}
-                    {formik.touched.descriptionEn &&
-                      formik.errors.descriptionEn && (
-                        <Form.Control.Feedback
-                          type="invalid"
-                          style={{ display: 'block' }}
-                        >
-                          {formik.errors.descriptionEn}
-                        </Form.Control.Feedback>
-                      )}
-                    {/* </Card> */}
-                  </Form.Group>
-                </div>
-              </Col>{' '}
-            </Row>
+                      {/* Display validation error */}
+                      {formik.touched.descriptionEn &&
+                        formik.errors.descriptionEn && (
+                          <Form.Control.Feedback
+                            type="invalid"
+                            style={{ display: 'block' }}
+                          >
+                            {formik.errors.descriptionEn}
+                          </Form.Control.Feedback>
+                        )}
+                      {/* </Card> */}
+                    </Form.Group>
+                  </div>
+                </Col>{' '}
+              </Row>
             </Container>
           </Card>
 
@@ -507,33 +521,31 @@ const CustomSpecificationForm = ({
             border="light"
             className="table-wrapper table-responsive shadow-sm"
             style={{ marginTop: '15px' }}
-          > 
-          <Container>
+          >
+            <Container>
               <Row>
                 <Col md={6} style={{ borderRight: '1px solid #f1f1f1' }}>
-                <div className="toggle-container d-flex align-items-center justify-content-between  mb-1">
-                      <Form.Label  >
-                        <FormattedMessage id="Is-Required" />
-                      </Form.Label>
-                      <FontAwesomeIcon
-                        icon={
-                          formik.values.isRequired ? faToggleOn : faToggleOff
-                        }
-                        className={
-                          formik.values.isRequired
-                            ? 'active-toggle fa-lg'
-                            : 'passive-toggle fa-lg'
-                        }
-                        onClick={() =>
-                          formik.setFieldValue(
-                            'isRequired',
-                            !formik.values.isRequired
-                          )
-                        }
-                      />
-                    </div>
-                   <Form.Group>
-                    <Form.Label >
+                  <div className="toggle-container d-flex align-items-center justify-content-between  mb-1">
+                    <Form.Label>
+                      <FormattedMessage id="Is-Required" />
+                    </Form.Label>
+                    <FontAwesomeIcon
+                      icon={formik.values.isRequired ? faToggleOn : faToggleOff}
+                      className={
+                        formik.values.isRequired
+                          ? 'active-toggle fa-lg'
+                          : 'passive-toggle fa-lg'
+                      }
+                      onClick={() =>
+                        formik.setFieldValue(
+                          'isRequired',
+                          !formik.values.isRequired
+                        )
+                      }
+                    />
+                  </div>
+                  <Form.Group>
+                    <Form.Label>
                       <FormattedMessage id="Regular-Expression" />
                     </Form.Label>
                     <input
@@ -544,12 +556,22 @@ const CustomSpecificationForm = ({
                       onChange={formik.handleChange}
                       value={formik.values.regularExpression}
                     />
-                  </Form.Group> 
+                    {/* Display validation error */}
+                    {formik.touched.regularExpression &&
+                      formik.errors.regularExpression && (
+                        <Form.Control.Feedback
+                          type="invalid"
+                          style={{ display: 'block' }}
+                        >
+                          {formik.errors.regularExpression}
+                        </Form.Control.Feedback>
+                      )}
+                  </Form.Group>
                 </Col>
 
                 <Col md={6}>
-                   <Form.Group>
-                    <Form.Label  className="mb-0 ">
+                  <Form.Group>
+                    <Form.Label className="mb-0 ">
                       <FormattedMessage id="Validation-Failure-Description" />
                     </Form.Label>
                     <TabView>
@@ -566,7 +588,7 @@ const CustomSpecificationForm = ({
                             id="validationFailureDescriptionEn"
                             name="validationFailureDescriptionEn"
                             onChange={formik.handleChange}
-                            disableMainClass = {true}
+                            disableMainClass={true}
                           />
                         </div>
                       </TabPanel>
@@ -583,7 +605,7 @@ const CustomSpecificationForm = ({
                             id="validationFailureDescriptionAr"
                             name="validationFailureDescriptionAr"
                             onChange={formik.handleChange}
-                            disableMainClass = {true}
+                            disableMainClass={true}
                           />
                         </div>
                       </TabPanel>
@@ -601,8 +623,8 @@ const CustomSpecificationForm = ({
                       )}
                   </Form.Group>
                 </Col>
-              </Row> 
-              </Container>
+              </Row>
+            </Container>
             {/* <Card.Body>
               <Row className="d-flex align-items-center">
                 <Col
@@ -686,7 +708,6 @@ const CustomSpecificationForm = ({
               </Row>
             </Card.Body> */}
           </Card>
-         
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
