@@ -37,6 +37,7 @@ const TenantForm = ({
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
   const navigate = useNavigate()
+  const [specValidationErrors, setSpecValidationErrors] = useState({})
 
   const dispatch = useDispatch()
   const { getProductList } = useRequest()
@@ -88,19 +89,12 @@ const TenantForm = ({
   const selectedProduct = tenantData?.subscriptions?.map((product) => {
     return product.productId
   })
-  const specificationValue = tenantData?.subscriptions?.flatMap(
-    (subscription) =>
-      subscription?.specifications?.map((specification) => ({
-        specificationId: specification.id,
-        value: specification.value,
-      }))
-  )
-
-  const specificationValuesObject = specificationValue?.reduce((acc, obj) => {
-    acc[obj.specificationId] = obj.value
-    return acc
-  }, {})
-  console.log({ 1111: specificationValue, specificationValuesObject })
+  const specificationValuesObject = (tenantData?.subscriptions || [])
+    .flatMap((subscription) => subscription?.specifications || [])
+    .reduce((acc, specification) => {
+      acc[specification.id] = specification.value
+      return acc
+    }, {})
 
   const initialValues = {
     title: tenantData ? tenantData.title : '',
@@ -108,99 +102,94 @@ const TenantForm = ({
     plan: tenantData ? tenantData.plan : '',
     price: tenantData ? tenantData.price : '',
     product: tenantData ? selectedProduct : '',
+  }
+  const validateSpecifications = () => {
+    const errors = {}
 
-    // specificationValues: tenantData
-    //   ? tenantData.specifications.map((specification) => ({
-    //       specificationId: specification.specificationId,
-    //       value: specification.value,
-    //     }))
-    //   : [],
+    filteredSpecificationsArray &&
+      filteredSpecificationsArray.forEach((specification) => {
+        const {
+          id: specificationId,
+          isRequired,
+          regularExpression,
+          validationFailureDescription,
+        } = specification
+
+        const value = specificationValues[specificationId] || ''
+
+        let variable = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$'
+        let rgx = new RegExp(regularExpression, 'g')
+        console.log('rgx.match(value)')
+        console.log(value.match(rgx))
+        console.log(value)
+        if (isRequired && !value.trim()) {
+          errors[specificationId] = 'This field is required'
+        } else if (regularExpression && !rgx.match(value)) {
+          console.log('sdzlfjsdllsjkdflsadjkf')
+          console.log(regularExpression)
+          console.log(rgx)
+          console.log(value)
+          errors[specificationId] = validationFailureDescription.en
+        }
+      })
+
+    setSpecValidationErrors(errors)
+    return { errors }
   }
 
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
+
     onSubmit: async (values) => {
-      setVisible(false)
-      const specificationsArray = productData?.specifications
-        ? Object.values(productData.specifications).map((specification) => {
-            const specificationId = specification.id
-            const value =
-              specificationValues[specificationId] !== undefined
-                ? specificationValues[specificationId]
-                : ''
-            return {
-              specificationId,
-              value,
-            }
+      const specErrors = validateSpecifications()
+      formik.setErrors(specErrors.errors)
+      if (
+        Object.keys(formik.errors).length === 0 &&
+        Object.keys(specErrors.errors).length === 0
+      ) {
+        if (type == 'create') {
+          const createTenant = await createTenantRequest({
+            subscriptions: [
+              {
+                productId: values.product,
+                planId: values.plan,
+                planPriceId: values.price,
+                specifications: specificationsArray,
+              },
+            ],
+            uniqueName: values.uniqueName,
+            title: values.title,
           })
-        : []
-      if (type == 'create') {
-        const createTenant = await createTenantRequest({
-          subscriptions: [
-            {
+
+          dispatch(
+            deleteAllPlan({
               productId: values.product,
-              planId: values.plan,
-              planPriceId: values.price,
-              specifications: specificationsArray,
-            },
-          ],
-          uniqueName: values.uniqueName,
-          title: values.title,
-        })
+            })
+          )
+          dispatch(
+            deleteAllPlanPrice({
+              productId: values.product,
+            })
+          )
 
-        dispatch(
-          deleteAllPlan({
-            productId: values.product,
+          navigate(`/tenants/${createTenant.data.data.id}`)
+        } else {
+          const editTenant = await editTenantRequest({
+            title: values.title,
+            uniqueName: values.uniqueName,
+            id: tenantData.id,
+            product: selectedProduct,
+            specifications: specificationsArray,
           })
-        )
-        dispatch(
-          deleteAllPlanPrice({
-            productId: values.product,
-          })
-        )
-
-        navigate(`/tenants/${createTenant.data.data.id}`)
-      } else {
-        const editTenant = await editTenantRequest({
-          title: values.title,
-          uniqueName: values.uniqueName,
-          id: tenantData.id,
-          product: selectedProduct,
-          specifications: specificationsArray,
-        })
-        updateTenant()
+          updateTenant()
+        }
+        setVisible && setVisible(false)
+        setVisible && setVisible(false)
       }
-      setVisible && setVisible(false)
-      setVisible && setVisible(false)
     },
   })
 
-  const validateSpecifications = (specifications, intl) => {
-    return specifications.reduce((errors, specification) => {
-      const {
-        id,
-        isRequired,
-        regularExpression,
-        validationFailureDescription,
-      } = specification
-      const value = specificationValues[id] || ''
-
-      if (isRequired && !value.trim()) {
-        errors.push(intl.formatMessage({ id: 'This field is required.' }))
-      }
-
-      if (regularExpression && !new RegExp(regularExpression).test(value)) {
-        errors.push(
-          intl.formatMessage({
-            id: validationFailureDescription || 'Invalid input.',
-          })
-        )
-      }
-
-      return errors
-    }, [])
-  }
   const intl = useIntl()
   let planOptions
   if (listData[formik.values.product]?.plans) {
@@ -218,7 +207,6 @@ const TenantForm = ({
     return { value: item.id, label: item.name }
   })
   const [specificationValues, setSpecificationValues] = useState({})
-  console.log({ specificationValues })
 
   useEffect(() => {
     ;(async () => {
@@ -245,32 +233,20 @@ const TenantForm = ({
               data: specifications.data.data,
             })
           )
-          console.log('Specifications data:', specifications.data.data) // Log the specifications data here
-          console.log('listData:', listData)
-          console.log('specifications:', specifications)
         }
       }
     })()
   }, [formik.values.product])
-  console.log(
-    'Checking if specifications array exists:',
-    listData[formik.values.product]?.specifications
-  )
 
-  if (Array.isArray(listData[formik.values.product]?.specifications)) {
-    console.log('Inside map function')
-    listData[formik.values.product]?.specifications?.map((specification) =>
-      console.log({ specification111111: specification })
-    )
-  } else {
-    console.log('Specifications array is not an array or is empty.')
-  }
   const productData = listData[formik.values.product]
 
   const specificationsArray = productData?.specifications
     ? Object.values(productData.specifications)
     : []
 
+  const filteredSpecificationsArray = specificationsArray.filter(
+    (spec) => spec.isPublished === true
+  )
   useEffect(() => {
     if (type == 'edit' && Object.keys(specificationValuesObject).length > 0) {
       setSpecificationValues((prevValues) => ({
@@ -286,7 +262,6 @@ const TenantForm = ({
       [specificationId]: newValue,
     }))
   }
-  console.log('specificationValues:', specificationValues)
 
   useEffect(() => {
     ;(async () => {
@@ -516,93 +491,23 @@ const TenantForm = ({
               </Form.Group>
             </div>
           )}
-          {Array.isArray(specificationsArray) &&
-            specificationsArray.length > 0 &&
-            specificationsArray.map((specification) => {
-              // Extract the necessary properties
-              const {
-                id,
-                displayName,
-                isRequired,
-                regularExpression,
-                validationFailureDescription,
-                description,
-              } = specification
+          {Array.isArray(filteredSpecificationsArray) &&
+            filteredSpecificationsArray.length > 0 && (
+              <>
+                <SpecificationInput
+                  specifications={filteredSpecificationsArray}
+                  specificationValues={specificationValues}
+                  handleSpecificationChange={handleSpecificationChange}
+                  tenantData={tenantData}
+                  intl={intl}
+                  specValidationErrors={specValidationErrors}
+                />
+              </>
+            )}
 
-              return (
-                <Form.Group className="mb-3" key={id}>
-                  <Form.Label>
-                    {displayName[`${intl.locale}`] ||
-                      (intl.locale === 'ar' && displayName['en']) ||
-                      (intl.locale === 'en' && displayName['ar'])}
-
-                    {isRequired && <span style={{ color: 'red' }}>*</span>}
-                  </Form.Label>
-                  {'  '}
-                  {description && (
-                    <span className="fw-normal">
-                      <OverlayTrigger
-                        trigger={['hover', 'focus']}
-                        overlay={
-                          <Tooltip>
-                            {description?.[intl.locale] ||
-                              (intl.locale === 'ar' && description['en']) ||
-                              (intl.locale === 'en' && description['ar'])}
-                          </Tooltip>
-                        }
-                      >
-                        <span>
-                          <BsFillQuestionCircleFill style={{ width: '12px' }} />
-                        </span>
-                      </OverlayTrigger>
-                    </span>
-                  )}
-                  <div>
-                    <SpecificationInput
-                      className="form-control"
-                      dataType={specification.dataType}
-                      value={
-                        specificationValues[id] !== undefined
-                          ? specificationValues[id]
-                          : ''
-                      }
-                      regularExpression={regularExpression}
-                      validationFailureDescription={
-                        validationFailureDescription[intl.locale]
-                      }
-                      isRequired={isRequired}
-                      onChange={(event) => handleSpecificationChange(id, event)}
-                    />
-                  </div>
-                </Form.Group>
-              )
-            })}
-          {/* <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                Product <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-
-              <MultiSelect
-                id="product"
-                name="product"
-                value={formik.values.product}
-                options={options}
-                onChange={(e) => formik.setFieldValue('product', e.value)}
-                className="w-100"
-                display="chip"
-              />
-
-              {formik.touched.product && formik.errors.product && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.product}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div> */}
+          {formik.errors.specifications && (
+            <div className="text-danger">{formik.errors.specifications}</div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>

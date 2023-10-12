@@ -1,79 +1,109 @@
-import React, { useState } from 'react'
-
-const TextInput = ({ value, onChange, className }) => (
-  <input type="text" value={value} onChange={onChange} className={className} />
-)
-
-const NumberInput = ({ value, onChange, className }) => (
-  <input
-    type="number"
-    value={value}
-    onChange={onChange}
-    className={className}
-  />
-)
-
-const DateInput = ({ value, onChange, className }) => (
-  <input type="date" value={value} onChange={onChange} className={className} />
-)
-
-function getInputComponent(dataType) {
-  switch (dataType) {
-    case 1:
-      return TextInput
-    case 2:
-      return NumberInput
-    case 3:
-      return DateInput
-    default:
-      return TextInput
-  }
-}
+import React from 'react'
+import { Form, OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
+import { BsFillQuestionCircleFill } from 'react-icons/bs'
+import * as Yup from 'yup'
+import { useFormik } from 'formik'
 
 const SpecificationInput = ({
-  dataType,
-  value,
-  onChange,
-  displayName,
-  className,
-  regularExpression,
-  validationFailureDescription,
-  isRequired,
+  specifications,
+  specificationValues,
+  handleSpecificationChange,
+  specValidationErrors,
+  intl,
 }) => {
-  const sanitizedValue = String(value)
-  const InputComponent = getInputComponent(dataType)
-  const [error, setError] = useState(null)
+  const formik = useFormik({
+    initialValues: {
+      specifications: Array.isArray(specificationValues)
+        ? specificationValues.map((value, id) => ({
+            id: id,
+            value: value || '',
+          }))
+        : [],
+    },
+    onSubmit: (values) => {},
+  })
 
-  // const validate = (inputValue) => {
-  //   if (isRequired && inputValue.trim() === '') {
-  //     setError('This field is required.')
-  //   } else if (
-  //     regularExpression &&
-  //     !new RegExp(regularExpression).test(inputValue)
-  //   ) {
-  //     setError(validationFailureDescription || 'Invalid input.')
-  //   } else {
-  //     setError(null)
-  //   }
-  // }
-
-  const handleChange = (event) => {
-    const inputValue = event.target.value
-    // validate(inputValue)
-    onChange(event)
+  const getInputComponent = (dataType) => {
+    switch (dataType) {
+      case 1:
+        return (props) => (
+          <input
+            type="text"
+            value={props.value}
+            onChange={props.onChange}
+            className={props.className}
+          />
+        )
+      default:
+        return (props) => (
+          <input
+            type="text"
+            value={props.value}
+            onChange={props.onChange}
+            className={props.className}
+          />
+        )
+    }
   }
 
   return (
-    <div className={`form-group`}>
-      <div>
-        <InputComponent
-          value={sanitizedValue}
-          className={className}
-          onChange={handleChange}
-        />
-        {error && <div className="text-danger">{error}</div>}
-      </div>
-    </div>
+    <Form>
+      {specifications.map((specification) => {
+        const {
+          id,
+          displayName,
+          isRequired,
+          regularExpression,
+          validationFailureDescription,
+          description,
+          dataType,
+        } = specification
+
+        const InputComponent = getInputComponent(dataType)
+        const fieldName = `specifications[${id}].value`
+        const error = specValidationErrors[id]
+
+        return (
+          <Form.Group className="mb-3" key={id}>
+            <Form.Label>
+              {displayName[`${intl.locale}`] ||
+                (intl.locale === 'ar' && displayName['en']) ||
+                (intl.locale === 'en' && displayName['ar'])}
+              {isRequired && <span style={{ color: 'red' }}>*</span>}
+            </Form.Label>{' '}
+            {description && (
+              <span className="fw-normal">
+                <OverlayTrigger
+                  trigger={['hover', 'focus']}
+                  overlay={
+                    <Tooltip>
+                      {description?.[intl.locale] ||
+                        (intl.locale === 'ar' && description['en']) ||
+                        (intl.locale === 'en' && description['ar'])}
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <BsFillQuestionCircleFill style={{ width: '12px' }} />
+                  </span>
+                </OverlayTrigger>
+              </span>
+            )}
+            <div>
+              <InputComponent
+                value={specificationValues[id] || ''}
+                className="form-control"
+                onChange={(event) => {
+                  handleSpecificationChange(id, event)
+                  formik.handleChange(event)
+                }}
+              />
+              {error && <div className="text-danger">{error}</div>}
+            </div>
+          </Form.Group>
+        )
+      })}
+    </Form>
   )
 }
 
