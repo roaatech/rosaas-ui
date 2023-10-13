@@ -149,6 +149,19 @@ const TenantForm = ({
     validationSchema: validationSchema,
 
     onSubmit: async (values) => {
+      const specificationsArray = productData?.specifications
+        ? Object.values(productData.specifications).map((specification) => {
+            const specificationId = specification.id
+            const value =
+              specificationValues[specificationId] !== undefined
+                ? specificationValues[specificationId]
+                : ''
+            return {
+              specificationId,
+              value,
+            }
+          })
+        : []
       const specErrors = validateSpecifications()
       formik.setErrors(specErrors.errors)
       if (
