@@ -9,6 +9,8 @@ import {
   Row,
   Col,
   Container,
+  OverlayTrigger,
+  Tooltip,
 } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -19,7 +21,7 @@ import {
   specificationInfo,
   setAllSpecifications,
 } from '../../../../../store/slices/products.js'
-
+import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import { TabPanel, TabView } from 'primereact/tabview'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -232,7 +234,22 @@ const CustomSpecificationForm = ({
                   <Form.Group className="mb-3">
                     <Form.Label>
                       <FormattedMessage id="Name" />{' '}
-                      <span style={{ color: 'red' }}>*</span>
+                      <span style={{ color: 'red' }}>* </span>
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              The unique name used to identify the json property
+                              name
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
                     </Form.Label>
                     <input
                       type="text"
@@ -253,10 +270,25 @@ const CustomSpecificationForm = ({
                     )}
                   </Form.Group>
                 </Col>
-                <Col md={6}>
-                  <div className="toggle-container d-flex align-items-center justify-content-between mb-2">
+                <Col md={6} className="pt-3">
+                  <div className="toggle-container d-flex align-items-center justify-content-between ">
                     <Form.Label>
-                      <FormattedMessage id="Is-Published" />
+                      <FormattedMessage id="Is-Published" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              display this specification in the Tenant adding
+                              form
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
                     </Form.Label>
                     <FontAwesomeIcon
                       icon={
@@ -278,7 +310,19 @@ const CustomSpecificationForm = ({
 
                   <div className="toggle-container d-flex align-items-center justify-content-between ">
                     <Form.Label>
-                      <FormattedMessage id="Is-User-Editable" />
+                      <FormattedMessage id="Is-User-Editable" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>Value will be editable by a user.</Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
                     </Form.Label>
                     <FontAwesomeIcon
                       icon={
@@ -311,9 +355,23 @@ const CustomSpecificationForm = ({
                 <Col md={6} style={{ borderRight: '1px solid #f1f1f1' }}>
                   <div>
                     <Form.Group>
-                      <Form.Label className="mb-0">
+                      <Form.Label className="mb-1">
                         <FormattedMessage id="Display-Name" />{' '}
-                        <span style={{ color: 'red' }}>*</span>
+                        <span style={{ color: 'red' }}>* </span>
+                        <span className="fw-normal">
+                          <OverlayTrigger
+                            trigger={['hover', 'focus']}
+                            overlay={
+                              <Tooltip>
+                                A friendly name (label) for the specification
+                              </Tooltip>
+                            }
+                          >
+                            <span>
+                              <BsFillQuestionCircleFill />
+                            </span>
+                          </OverlayTrigger>
+                        </span>
                       </Form.Label>
                       {/* <Card
                 border="light"
@@ -368,8 +426,23 @@ const CustomSpecificationForm = ({
                 <Col md={6}>
                   <div>
                     <Form.Group>
-                      <Form.Label className="mb-0 ">
-                        <FormattedMessage id="Description" />
+                      <Form.Label className="mb-1 ">
+                        <FormattedMessage id="Description" />{' '}
+                        <span className="fw-normal">
+                          <OverlayTrigger
+                            trigger={['hover', 'focus']}
+                            overlay={
+                              <Tooltip>
+                                A description that will be displayed as a hint
+                                to describe a label in Tenant adding form
+                              </Tooltip>
+                            }
+                          >
+                            <span>
+                              <BsFillQuestionCircleFill />
+                            </span>
+                          </OverlayTrigger>
+                        </span>
                       </Form.Label>
                       {/* <Card
                       border="light"
@@ -525,9 +598,23 @@ const CustomSpecificationForm = ({
             <Container>
               <Row>
                 <Col md={6} style={{ borderRight: '1px solid #f1f1f1' }}>
-                  <div className="toggle-container d-flex align-items-center justify-content-between  mb-1">
+                  <div className="toggle-container d-flex align-items-center justify-content-between  mb-2">
                     <Form.Label>
-                      <FormattedMessage id="Is-Required" />
+                      <FormattedMessage id="Is-Required" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              value must be present to create a tenant
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
                     </Form.Label>
                     <FontAwesomeIcon
                       icon={formik.values.isRequired ? faToggleOn : faToggleOff}
@@ -546,7 +633,22 @@ const CustomSpecificationForm = ({
                   </div>
                   <Form.Group>
                     <Form.Label>
-                      <FormattedMessage id="Regular-Expression" />
+                      <FormattedMessage id="Regular-Expression" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              The pattern used to match character combinations
+                              in Value
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
                     </Form.Label>
                     <input
                       type="text"
@@ -571,8 +673,22 @@ const CustomSpecificationForm = ({
 
                 <Col md={6}>
                   <Form.Group>
-                    <Form.Label className="mb-0 ">
-                      <FormattedMessage id="Validation-Failure-Description" />
+                    <Form.Label className="mb-1 ">
+                      <FormattedMessage id="Validation-Failure-Description" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              A message to describe the validation error
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
                     </Form.Label>
                     <TabView>
                       <TabPanel header="En">

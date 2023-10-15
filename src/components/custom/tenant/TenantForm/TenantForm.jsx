@@ -260,11 +260,11 @@ const TenantForm = ({
 
   const productData = listData[formik.values.product]
 
-  const specificationsArray = productData?.specifications
+  const allSpecificationsArray = productData?.specifications
     ? Object.values(productData.specifications)
     : []
 
-  const filteredSpecificationsArray = specificationsArray.filter(
+  const filteredSpecificationsArray = allSpecificationsArray.filter(
     (spec) => spec.isPublished === true
   )
   useEffect(() => {

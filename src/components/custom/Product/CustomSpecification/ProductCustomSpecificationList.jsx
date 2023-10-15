@@ -77,7 +77,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
       return
     }
     await deleteSpecificationReq(productId, { id: currentId })
-    dispatch(deleteSpecification({ productId, PlanId: currentId }))
+    dispatch(deleteSpecification({ productId, specificationId: currentId }))
   }
 
   const deleteConfirm = (id) => {

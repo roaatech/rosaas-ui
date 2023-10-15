@@ -68,14 +68,17 @@ export const Wrapper = styled.div`
   }
 
   .table-wrapper.table-responsive{
-    padding:  0.5rem  0.5rem 0rem  0.5rem ;
+    padding: 0.75rem 0rem 1rem 0rem ;
   }
-
+  .p-tabview .p-tabview-panels{
+    padding: 1.25rem 0rem;
+  }
   
   .char-counter{
     font-size: 10px;
   }
   .toggle-container .fa-lg {
     font-size: 1.5em;
+    cursor: pointer;
   }
 `

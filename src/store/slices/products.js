@@ -229,7 +229,9 @@ export const productsSlice = createSlice({
 
     deleteSpecification: (state, action) => {
       const allProduct = JSON.parse(JSON.stringify(current(state.products)))
-      delete allProduct[action.payload.productId].plans[action.payload.PlanId]
+      delete allProduct[action.payload.productId].specifications[
+        action.payload.specificationId
+      ]
       state.products = allProduct
     },
     // planPrice
