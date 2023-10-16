@@ -14,7 +14,7 @@ import {
 } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { Wrapper } from './CustomSpecificationForm.styled.jsx'
 import { useParams } from 'react-router-dom'
 import {
@@ -26,7 +26,6 @@ import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCo
 import { TabPanel, TabView } from 'primereact/tabview'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
-
 const CustomSpecificationForm = ({
   type,
   specificationData,
@@ -41,6 +40,8 @@ const CustomSpecificationForm = ({
   } = useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
+  const intl = useIntl()
+
   const productId = routeParams.id
   const initialValues = {
     name: specificationData ? specificationData.name : '',
@@ -50,6 +51,7 @@ const CustomSpecificationForm = ({
     displayNameAr: specificationData?.displayName?.ar || '',
     displayNameEn: specificationData?.displayName?.en || '',
     isRequired: specificationData?.isRequired || false,
+    isPublished: specificationData?.isPublished || false,
     isUserEditable: specificationData?.isUserEditable || false,
     regularExpression: specificationData?.regularExpression || '',
     validationFailureDescriptionEn:
@@ -60,19 +62,28 @@ const CustomSpecificationForm = ({
   const allProducts = useSelector((state) => state.products.products)
   const validationSchema = Yup.object().shape({
     name: Yup.string()
-      .max(100, 'Must be at most 100 characters')
-      .required('Unique Name is required')
+      .max(100, intl.formatMessage({ id: 'Maximum-Length-100' }))
+      .required(intl.formatMessage({ id: 'Name-Required' }))
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        'English Characters, Numbers, and Underscores are only accepted.'
+        intl.formatMessage({
+          id: 'English-Characters,-Numbers,-and-Underscores-are-only-accepted.',
+        })
       ),
-    displayNameEn: Yup.string().required(
-      <FormattedMessage id="Display-Name-is-required" />
-    ),
+    displayNameEn: Yup.string().test({
+      name: 'displayNameRequired',
+      message: <FormattedMessage id="Display-Name-is-required" />,
+      test: (value, context) => {
+        const { parent } = context
+        const displayNameEn = parent.displayNameEn
+        const displayNameAr = parent.displayNameAr
+        return !!displayNameEn || !!displayNameAr
+      },
+    }),
     regularExpression: Yup.string()
       .test(
         'isValidPattern',
-        'Regular expression must be in the valid pattern style with slashes and optional flags (e.g., /^pattern$/g).',
+        intl.formatMessage({ id: 'Valid-Regular-Expression' }),
         (value) => {
           if (!value) {
             return true // Allow empty string
@@ -101,6 +112,7 @@ const CustomSpecificationForm = ({
             },
             isRequired: values.isRequired,
             isUserEditable: values.isUserEditable || false,
+            isPublished: values.isPublished || false,
             regularExpression: values.regularExpression,
             validationFailureDescription: {
               en: values.validationFailureDescriptionEn,
@@ -121,39 +133,12 @@ const CustomSpecificationForm = ({
             })
           )
         }
-        // dispatch(
-        //   specificationInfo({
-        //     specificationId: createSpecification.data.data.id,
-        //     productId: productId,
-        //     data: {
-        //       name: values.name,
-        //       description: {
-        //         en: values.descriptionEn,
-        //         ar: values.descriptionAr,
-        //       },
-        //       displayName: {
-        //         en: values.displayNameEn,
-        //         ar: values.displayNameAr,
-        //       },
-        //       isUserEditable: values.isUserEditable || false,
-        //       isRequired: values.isRequired || false,
-        //       regularExpression: values.regularExpression,
-        //       editedDate: new Date().toISOString().slice(0, 19),
-        //       createdDate: new Date().toISOString().slice(0, 19),
-        //       id: createSpecification.data.data.id,
-        //       validationFailureDescription: {
-        //         en: values.validationFailureDescriptionEn,
-        //         ar: values.validationFailureDescriptionAr,
-        //       },
-        //     },
-        //   })
-        // )
 
         if (setActiveIndex) {
           setActiveIndex(1)
         }
       } else {
-        const editPlan = await editSpecificationRequest(productId, {
+        const editSpecification = await editSpecificationRequest(productId, {
           data: {
             name: values.name,
             description: {
@@ -165,6 +150,8 @@ const CustomSpecificationForm = ({
               ar: values.displayNameAr,
             },
             isUserEditable: values.isUserEditable || false,
+            isPublished: values.isPublished || false,
+
             isRequired: values.isRequired || false,
             regularExpression: values.regularExpression,
             validationFailureDescription: {
@@ -188,6 +175,8 @@ const CustomSpecificationForm = ({
                 ar: values.descriptionAr,
               },
               isUserEditable: values.isUserEditable || false,
+              isPublished: values.isPublished || false,
+
               isRequired: values.isRequired || false,
               regularExpression: values.regularExpression,
               validationFailureDescription: {
@@ -500,96 +489,6 @@ const CustomSpecificationForm = ({
             </Container>
           </Card>
 
-          {/* <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Is-Required" />
-              </Form.Label>
-              <Form.Check
-                type="checkbox"
-                id="isRequired"
-                name="isRequired"
-                checked={formik.values.isRequired}
-                onChange={formik.handleChange}
-              />
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Is-User-Editable" />
-              </Form.Label>
-              <Form.Check
-                type="checkbox"
-                id="isUserEditable"
-                name="isUserEditable"
-                checked={formik.values.isUserEditable}
-                onChange={formik.handleChange}
-              />
-            </Form.Group>
-          </div> */}
-          {/* <Form.Label style={{ marginTop: '10px' }}>
-            <FormattedMessage id="Permissions" />{' '}
-          </Form.Label>
-          <Card
-            border="light"
-            className="table-wrapper table-responsive shadow-sm"
-          >
-            <Card.Body>
-              <Row>
-                <Col
-                  md={6}
-                  style={{
-                    borderRight: '1px solid #f1f1f1',
-                  }}
-                >
-                  <div className="d-flex align-items-center justify-content-between mx-5">
-                    <Form.Label className="Permission">
-                      <FormattedMessage id="Is-Required" />
-                    </Form.Label>
-                    <FontAwesomeIcon
-                      icon={formik.values.isRequired ? faToggleOn : faToggleOff}
-                      className={
-                        formik.values.isRequired
-                          ? 'active-toggle fa-lg'
-                          : 'passive-toggle fa-lg'
-                      }
-                      onClick={() =>
-                        formik.setFieldValue(
-                          'isRequired',
-                          !formik.values.isRequired
-                        )
-                      }
-                    />
-                  </div>
-                </Col>
-
-                <Col md={6}>
-                  <div className="d-flex align-items-center justify-content-between mx-5">
-                    <Form.Label className="Permission ">
-                      <FormattedMessage id="Is-User-Editable" />
-                    </Form.Label>
-                    <FontAwesomeIcon
-                      icon={
-                        formik.values.isUserEditable ? faToggleOn : faToggleOff
-                      }
-                      className={
-                        formik.values.isUserEditable
-                          ? 'active-toggle fa-lg'
-                          : 'passive-toggle fa-lg'
-                      }
-                      onClick={() =>
-                        formik.setFieldValue(
-                          'isUserEditable',
-                          !formik.values.isUserEditable
-                        )
-                      }
-                    />
-                  </div>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card> */}
           <Card
             border="light"
             className="table-wrapper table-responsive shadow-sm"
@@ -741,88 +640,6 @@ const CustomSpecificationForm = ({
                 </Col>
               </Row>
             </Container>
-            {/* <Card.Body>
-              <Row className="d-flex align-items-center">
-                <Col
-                  md={6}
-                  style={{
-                    borderRight: '1px solid #f1f1f1',
-                  }}
-                >
-                  <div>
-                    <Form.Group className="mb-3">
-                      <Form.Label style={{ marginTop: '10px' }}>
-                        <FormattedMessage id="Regular-Expression" />
-                      </Form.Label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="regularExpression"
-                        name="regularExpression"
-                        onChange={formik.handleChange}
-                        value={formik.values.regularExpression}
-                      />
-                    </Form.Group>
-                  </div>
-                </Col>
-                <Col>
-                  <div>
-                    <Form.Group className="mb-3">
-                      <Form.Label>
-                        <FormattedMessage id="Validation-Failure-Description" />
-                      </Form.Label>
-                     
-                      <TabView>
-                        <TabPanel header="En">
-                          <div className="form-group mt-3">
-                            <TextareaAndCounter
-                              addTextarea={formik.setFieldValue}
-                              maxLength={250}
-                              showCharCount
-                              inputValue={
-                                formik?.values?.validationFailureDescriptionEn
-                              }
-                              placeholder="Enter English Validation Failure Description"
-                              id="validationFailureDescriptionEn"
-                              name="validationFailureDescriptionEn"
-                              onChange={formik.handleChange}
-                            />
-                          </div>
-                        </TabPanel>
-                        <TabPanel header="Ar">
-                          <div className="form-group mt-3">
-                            <TextareaAndCounter
-                              addTextarea={formik.setFieldValue}
-                              maxLength={250}
-                              showCharCount
-                              inputValue={
-                                formik?.values?.validationFailureDescriptionAr
-                              }
-                              placeholder="Enter Arabic Validation Failure Description"
-                              id="validationFailureDescriptionAr"
-                              name="validationFailureDescriptionAr"
-                              onChange={formik.handleChange}
-                            />
-                          </div>
-                        </TabPanel>
-                      </TabView>
-
-                     
-                      {formik.touched.validationFailureDescriptionEn &&
-                        formik.errors.validationFailureDescriptionEn && (
-                          <Form.Control.Feedback
-                            type="invalid"
-                            style={{ display: 'block' }}
-                          >
-                            {formik.errors.validationFailureDescriptionEn}
-                          </Form.Control.Feedback>
-                        )}
-                      
-                    </Form.Group>
-                  </div>
-                </Col>
-              </Row>
-            </Card.Body> */}
           </Card>
         </Modal.Body>
         <Modal.Footer>

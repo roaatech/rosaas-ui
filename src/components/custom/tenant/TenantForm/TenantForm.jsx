@@ -78,7 +78,7 @@ const TenantForm = ({
   }
   const editValidation = {
     title: Yup.string().max(
-      100,
+      1,
       <FormattedMessage id="Must-be-maximum-100-digits" />
     ),
   }
@@ -103,9 +103,9 @@ const TenantForm = ({
     price: tenantData ? tenantData.price : '',
     product: tenantData ? selectedProduct : '',
   }
+  let [validateErrors, setValidateErrors] = useState({})
   const validateSpecifications = () => {
-    const errors = {}
-
+    setSpecValidationErrors({})
     filteredSpecificationsArray &&
       filteredSpecificationsArray.forEach((specification) => {
         let {
@@ -134,40 +134,51 @@ const TenantForm = ({
         let regex = new RegExp(pattern, flags)
 
         if (isRequired && !value.trim()) {
-          errors[specificationId] = 'This field is required'
+          validateErrors[specificationId] = 'This field is required'
         } else if (regularExpression && !regex.test(value)) {
-          errors[specificationId] = validationFailureDescription.en
+          validateErrors[specificationId] = validationFailureDescription.en
         }
       })
 
-    setSpecValidationErrors(errors)
-    return { errors }
+    setSpecValidationErrors(validateErrors)
+    return { errors: validateErrors }
   }
 
   const formik = useFormik({
     initialValues,
-    validationSchema: validationSchema,
+    validate: (values) => {
+      setSpecValidationErrors({})
+      setValidateErrors({})
+      try {
+        validationSchema.validateSync(values, { abortEarly: false })
+      } catch (validationErrors) {
+        return validationErrors.inner.reduce((errors, error) => {
+          validateSpecifications(values)
+          setValidateErrors({})
+
+          formik.setErrors({})
+          return {
+            ...errors,
+            [error.path]: error.message,
+          }
+        }, {})
+      }
+    },
 
     onSubmit: async (values) => {
-      const specificationsArray = productData?.specifications
-        ? Object.values(productData.specifications).map((specification) => {
-            const specificationId = specification.id
-            const value =
-              specificationValues[specificationId] !== undefined
-                ? specificationValues[specificationId]
-                : ''
-            return {
-              specificationId,
-              value,
-            }
-          })
-        : []
-      const specErrors = validateSpecifications()
-      formik.setErrors(specErrors.errors)
-      if (
-        Object.keys(formik.errors).length === 0 &&
-        Object.keys(specErrors.errors).length === 0
-      ) {
+      const specificationsArray = filteredSpecificationsArray?.map(
+        (specification) => {
+          const specificationId = specification.id
+          const value = specificationValues[specificationId] || ''
+          return {
+            specificationId,
+            value,
+            productId: selectedProduct[0],
+          }
+        }
+      )
+
+      if (Object.keys(formik.errors).length === 0) {
         if (type == 'create') {
           const createTenant = await createTenantRequest({
             subscriptions: [
@@ -182,17 +193,6 @@ const TenantForm = ({
             title: values.title,
           })
 
-          dispatch(
-            deleteAllPlan({
-              productId: values.product,
-            })
-          )
-          dispatch(
-            deleteAllPlanPrice({
-              productId: values.product,
-            })
-          )
-
           navigate(`/tenants/${createTenant.data.data.id}`)
         } else {
           const editTenant = await editTenantRequest({
@@ -205,10 +205,14 @@ const TenantForm = ({
           updateTenant()
         }
         setVisible && setVisible(false)
-        setVisible && setVisible(false)
       }
     },
   })
+  useEffect(() => {
+    setValidateErrors({})
+  }, [setVisible])
+
+  console.log({ errorsf: validateErrors })
 
   const intl = useIntl()
   let planOptions
@@ -267,6 +271,7 @@ const TenantForm = ({
   const filteredSpecificationsArray = allSpecificationsArray.filter(
     (spec) => spec.isPublished === true
   )
+
   useEffect(() => {
     if (type == 'edit' && Object.keys(specificationValuesObject).length > 0) {
       setSpecificationValues((prevValues) => ({
@@ -369,7 +374,7 @@ const TenantForm = ({
               </Form.Group>
             </div>
           )}
-          {type === 'create' ? (
+          {type === 'create' && (
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
@@ -403,7 +408,8 @@ const TenantForm = ({
                 )}
               </Form.Group>
             </div>
-          ) : (
+          )}
+          {/* ) : (
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
@@ -438,7 +444,7 @@ const TenantForm = ({
                 )}
               </Form.Group>
             </div>
-          )}
+          )} */}
           {type === 'create' && (
             <div>
               <Form.Group className="mb-3">
@@ -511,7 +517,8 @@ const TenantForm = ({
               </Form.Group>
             </div>
           )}
-          {Array.isArray(filteredSpecificationsArray) &&
+          {type === 'create' &&
+            Array.isArray(filteredSpecificationsArray) &&
             filteredSpecificationsArray.length > 0 && (
               <>
                 <SpecificationInput
@@ -525,9 +532,9 @@ const TenantForm = ({
               </>
             )}
 
-          {formik.errors.specifications && (
+          {/* {formik.errors.specifications && (
             <div className="text-danger">{formik.errors.specifications}</div>
-          )}
+          )} */}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>

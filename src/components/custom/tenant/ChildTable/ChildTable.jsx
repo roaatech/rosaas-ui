@@ -30,7 +30,6 @@ export default function ChildTable({
   productIndex,
   tenantObject,
 }) {
-  console.log({ productData })
   const { renderActions } = useActions()
   const { editTenantStatus } = useRequest()
   let direction = useSelector((state) => state.main.direction)
@@ -64,7 +63,7 @@ export default function ChildTable({
       description: metadata ? rowExpansionTemplate(JSON.parse(metadata)) : null,
     },
   ])
-
+  console.log({ productData })
   return (
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
@@ -72,13 +71,23 @@ export default function ChildTable({
           buttons={
             productData.actions && productData.actions[0]?.status != 13
               ? [
+                  // {
+                  //   order: 1,
+                  //   type: 'form',
+                  //   id: routeParams.id,
+                  //   label: 'Edit',
+                  //   component: 'editTenant',
+                  //   updateTenant: updateTenant,
+                  //   icon: <AiFillEdit />,
+                  // },
                   {
                     order: 1,
                     type: 'form',
                     id: routeParams.id,
-                    label: 'Edit',
-                    component: 'editTenant',
+                    label: 'Edit Specification',
+                    component: 'editTenantSpecification',
                     updateTenant: updateTenant,
+                    selectedProduct: productData.productId,
                     icon: <AiFillEdit />,
                   },
                   ...renderActions(

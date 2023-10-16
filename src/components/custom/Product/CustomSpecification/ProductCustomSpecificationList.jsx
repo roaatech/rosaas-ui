@@ -69,7 +69,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
   const handleDeleteSpecification = async () => {
     if (list?.specifications[currentId]?.isSubscribed) {
       toast.error(
-        intl.formatMessage({ id: 'Cannot-delete-a-subscribed-plan.' }),
+        intl.formatMessage({ id: 'Cannot-delete-a-subscribed-specification.' }),
         {
           position: toast.POSITION.TOP_CENTER,
         }
@@ -88,7 +88,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
   const editForm = async (id) => {
     if (list?.specifications[id]?.isSubscribed) {
       toast.error(
-        intl.formatMessage({ id: 'Cannot-edit-a-subscribed-plan.' }),
+        intl.formatMessage({ id: 'Cannot-edit-a-subscribed-specification.' }),
         {
           position: toast.POSITION.TOP_CENTER,
         }
@@ -104,7 +104,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
 
   useEffect(() => {
     ;(async () => {
-      if (!list?.plans) {
+      if (!list?.specifications) {
         const listData = await getProductSpecification(productId)
         dispatch(setAllSpecifications({ productId, data: listData.data.data }))
       }

@@ -16,6 +16,7 @@ const useRequest = () => {
   const {
     createTenantRequest,
     editTenantRequest,
+    editTenantSpecificationRequest,
     getTenant,
     getTenantList,
     deleteTenantReq,
@@ -116,6 +117,7 @@ const useRequest = () => {
     publishSpecification,
     editSpecificationRequest,
     deleteSpecificationReq,
+    editTenantSpecificationRequest,
   }
 }
 export default useRequest

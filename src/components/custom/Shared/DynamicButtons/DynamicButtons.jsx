@@ -4,7 +4,7 @@ import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmati
 import ThemeDialog from '../ThemeDialog/ThemeDialog'
 import ProductForm from '../../Product/ProductForm/ProductForm'
 import useRequest from '../../../../axios/apis/useRequest'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import TenantForm from '../../tenant/TenantForm/TenantForm'
 import { Dropdown, Button } from '@themesberg/react-bootstrap'
@@ -17,12 +17,15 @@ import PlanForm from '../../Product/ProductPlansList/PlanForm/PlanForm'
 import { useEffect } from 'react'
 import PlanPriceForm from '../../Product/ProductPlansPrice/PlanPriceForm/PlanPriceForm'
 import CustomSpecificationForm from '../../Product/CustomSpecification/CustomSpecificationForm/CustomSpecificationForm'
+import TenantSpecificationForm from '../../tenant/TenantSpecificatifonForm/TenantSpecificationForm'
 
 const DynamicButtons = ({ buttons }) => {
+  const { getTenant } = useRequest()
   const navigate = useNavigate()
   const productsData = useSelector((state) => state.products.products)
   const tenantsData = useSelector((state) => state.tenants.tenants)
   let direction = useSelector((state) => state.main.direction)
+  const [tenantData, setTenantData] = useState()
 
   const [confirm, setConfirm] = useState(false)
   const [currentButtonIndex, setCurrentButtonIndex] = useState()
@@ -32,12 +35,22 @@ const DynamicButtons = ({ buttons }) => {
     buttons[currentButtonIndex].request()
     navigate(buttons[currentButtonIndex].navAfterDelete)
   }
+  const paramsID = useParams().id
   // const deleteItem = async () => {
   //   await request[buttons[currentButtonIndex].request]({
   //     id: buttons[currentButtonIndex].id,
   //   })
   //   navigate(buttons[currentButtonIndex].navAfterDelete)
   // }
+
+  const id = buttons[currentButtonIndex]?.id
+
+  const editForm = async () => {
+    const data = await getTenant(id)
+    setTenantData(data.data)
+  }
+
+  console.log({ tenantsData })
 
   useEffect(() => {
     ;(() => {
@@ -84,6 +97,20 @@ const DynamicButtons = ({ buttons }) => {
           setVisible={setVisible}
           sideBar={false}
           updateTenant={buttons[currentButtonIndex].updateTenant}
+        />
+      </>
+    ),
+    editTenantSpecification: () => (
+      <>
+        <TenantSpecificationForm
+          popupLabel={<FormattedMessage id="Edit-Specification" />}
+          type={'edit'}
+          tenantData={tenantsData[paramsID]}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+          updateTenant={buttons[currentButtonIndex].updateTenant}
+          selectedProduct={buttons[currentButtonIndex].selectedProduct}
         />
       </>
     ),
@@ -149,7 +176,7 @@ const DynamicButtons = ({ buttons }) => {
       </>
     ),
   }
-  console.log(currentButtonIndex)
+  console.log({ com: buttons[currentButtonIndex].component })
   return (
     <Wrapper direction={direction} className="d-flex">
       <div
@@ -289,7 +316,11 @@ const DynamicButtons = ({ buttons }) => {
       <ThemeDialog
         visible={visible}
         setVisible={setVisible}
-        size={currentButtonIndex === 0 ? 'lg' : ''}
+        size={
+          buttons[currentButtonIndex].component === 'addSpecification'
+            ? 'lg'
+            : ''
+        }
       >
         {currentButtonIndex !== undefined &&
         buttons[currentButtonIndex].type == 'form' ? (
