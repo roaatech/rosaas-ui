@@ -78,7 +78,7 @@ const TenantForm = ({
   }
   const editValidation = {
     title: Yup.string().max(
-      1,
+      100,
       <FormattedMessage id="Must-be-maximum-100-digits" />
     ),
   }
@@ -104,8 +104,8 @@ const TenantForm = ({
     product: tenantData ? selectedProduct : '',
   }
   const validateSpecifications = () => {
-    const validateErrors = {}
-    setSpecValidationErrors({})
+    const errors = {}
+
     filteredSpecificationsArray &&
       filteredSpecificationsArray.forEach((specification) => {
         let {
@@ -134,49 +134,37 @@ const TenantForm = ({
         let regex = new RegExp(pattern, flags)
 
         if (isRequired && !value.trim()) {
-          validateErrors[specificationId] = 'This field is required'
-        } else if (regularExpression && value.trim() && !regex.test(value)) {
-          validateErrors[specificationId] = validationFailureDescription.en
+          errors[specificationId] = 'This field is required'
+        } else if (regularExpression && !regex.test(value)) {
+          errors[specificationId] = validationFailureDescription.en
         }
       })
 
-    setSpecValidationErrors(validateErrors)
-    return { errors: validateErrors }
+    setSpecValidationErrors(errors)
+    return { errors }
   }
 
   const formik = useFormik({
     initialValues,
-    validate: (values) => {
-      try {
-        validationSchema.validateSync(values, { abortEarly: false })
-      } catch (validationErrors) {
-        return validationErrors.inner.reduce((errors, error) => {
-          const specErrors = validateSpecifications()
-          formik.setErrors(specErrors.errors)
-
-          return {
-            ...errors,
-            [error.path]: error.message,
-          }
-        }, {})
-      }
-    },
+    validationSchema: validationSchema,
 
     onSubmit: async (values) => {
-      const specificationsArray = filteredSpecificationsArray?.map(
-        (specification) => {
-          const specificationId = specification.id
-          const value = specificationValues[specificationId] || ''
-          return {
-            specificationId,
-            value,
-            productId: selectedProduct[0],
-          }
-        }
-      )
+      const specificationsArray = productData?.specifications
+        ? Object.values(productData.specifications).map((specification) => {
+            const specificationId = specification.id
+            const value =
+              specificationValues[specificationId] !== undefined
+                ? specificationValues[specificationId]
+                : ''
+            return {
+              specificationId,
+              value,
+              productId: values.product,
+            }
+          })
+        : []
       const specErrors = validateSpecifications()
       formik.setErrors(specErrors.errors)
-
       if (
         Object.keys(formik.errors).length === 0 &&
         Object.keys(specErrors.errors).length === 0
@@ -195,6 +183,17 @@ const TenantForm = ({
             title: values.title,
           })
 
+          dispatch(
+            deleteAllPlan({
+              productId: values.product,
+            })
+          )
+          dispatch(
+            deleteAllPlanPrice({
+              productId: values.product,
+            })
+          )
+
           navigate(`/tenants/${createTenant.data.data.id}`)
         } else {
           const editTenant = await editTenantRequest({
@@ -206,6 +205,7 @@ const TenantForm = ({
           })
           updateTenant()
         }
+        setVisible && setVisible(false)
         setVisible && setVisible(false)
       }
     },
@@ -268,7 +268,6 @@ const TenantForm = ({
   const filteredSpecificationsArray = allSpecificationsArray.filter(
     (spec) => spec.isPublished === true
   )
-
   useEffect(() => {
     if (type == 'edit' && Object.keys(specificationValuesObject).length > 0) {
       setSpecificationValues((prevValues) => ({
@@ -529,9 +528,9 @@ const TenantForm = ({
               </>
             )}
 
-          {/* {formik.errors.specifications && (
+          {formik.errors.specifications && (
             <div className="text-danger">{formik.errors.specifications}</div>
-          )} */}
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>

@@ -1,13 +1,13 @@
 import styled from 'styled-components'
 const secondColor = '#ffab03'
 export const Wrapper = styled.div`
-  .th {
+  /* .th {
     max-width: 20px;
   }
   .label {
     margin-right: 0.25rem;
     background: '#eff9f6';
-  }
+  } */
   .green {
     color: var(--green);
     background: '#eff9f6';
@@ -35,8 +35,8 @@ export const Wrapper = styled.div`
   .custom-nav-link {
     max-width: 100px;
   }
-  .content {
-    max-width: 700px;
+  .contents {
+    /* max-width: 700px; */
     margin-left: -45px;
   }
   .year {
@@ -45,32 +45,6 @@ export const Wrapper = styled.div`
   .year-tabs {
     margin-left: 100px;
     border-spacing: 0px;
-  }
-  /* .vertical-tab-panel {
-    padding: -20px;
-  } */
-
-  /* .p-tabview .p-tabview-nav li {
-    width: 100%;
-    display: block;
-    display: flex;
-    flex-wrap: wrap;
-  } */
-  /* .table-tabs {
-    min-width: 900px;
-  } */
-  .custom-tabview {
-    max-width: 700px;
-  }
-  .feat-table {
-    /* margin-left: -20px; */
-    max-width: 120px;
-  }
-  .table-res {
-    max-width: 500px;
-  }
-  .tabs {
-    max-width: 180px;
   }
 
   .custom-nav-link .nav-link.active {
@@ -93,33 +67,21 @@ export const Wrapper = styled.div`
   }
   .custom-nav-link .nav-link {
     font-weight: 700;
-    /* color: #6c757d; */
-
     border-bottom: 0px solid;
     border-left: 0;
     border-right: 2px solid #dee2e6;
     margin-bottom: -17px;
     border-top: 0;
     border-radius: 0%;
+    color: #6c757d;
+
     transition:
       border-color 0.3s,
       color 0.3s,
       font-weight 0.3s,
       background-color 0.3s;
   }
-  .custom-nav-link {
-    margin-left: -20px;
-  }
 
-  .feature-value {
-    min-width: 110px;
-    background-color: red2;
-  }
-  .remind-value {
-    min-width: 150px;
-  }
-  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
-  }
   .p-tabview .p-tabview-nav li .p-tabview-nav-link {
     border: solid #dee2e6;
   }
@@ -130,10 +92,5 @@ export const Wrapper = styled.div`
     max-width: auto;
     padding-right: 10px;
     padding-left: 20px;
-  }
-  .main-card {
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 20px;
   }
 `
