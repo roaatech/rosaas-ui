@@ -135,7 +135,7 @@ const TenantForm = ({
 
         if (isRequired && !value.trim()) {
           errors[specificationId] = 'This field is required'
-        } else if (regularExpression && !regex.test(value)) {
+        } else if (regularExpression && value.trim() && !regex.test(value)) {
           errors[specificationId] = validationFailureDescription.en
         }
       })

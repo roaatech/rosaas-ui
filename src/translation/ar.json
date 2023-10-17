@@ -220,5 +220,6 @@
   "Display-Name-is-required": "اسم العرض مطلوب",
   "Edit-Specification": "تعديل المواصفات",
   "Permissions": "صلاحيات",
-  "Add-Specification": "إضافة مواصفة"
+  "Add-Specification": "إضافة مواصفة",
+  "Payment-Status-Suspended-Due-To-Non-Renewal": "الحالة المالية تعلقت بسبب عدم التجديد"
 }

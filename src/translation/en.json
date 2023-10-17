@@ -229,5 +229,6 @@
   "Hint-Description": "A description that will be displayed as a hint to describe a label in Tenant adding form",
   "Value-Presence-Required": "Value must be present to create a tenant",
   "Character-Combination-Pattern": "The pattern used to match character combinations in Value",
-  "Validation-Error-Message": "A message to describe the validation error"
+  "Validation-Error-Message": "A message to describe the validation error",
+  "Payment-Status-Suspended-Due-To-Non-Renewal": "Payment Status Suspended Due To Non Renewal"
 }

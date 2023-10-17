@@ -34,7 +34,9 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
     }
     return items
   }
-
+  allItems().map((item, index) =>
+    console.log({ sssssssssssssssssss: item.processType })
+  )
   const onPageChange = (event) => {
     setFirst(event.first)
     setRows(event.rows)

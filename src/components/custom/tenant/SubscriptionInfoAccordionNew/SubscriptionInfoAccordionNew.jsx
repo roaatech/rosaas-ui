@@ -24,6 +24,8 @@ import { TabPanel, TabView } from 'primereact/tabview'
 // import { CogIcon, UserCircleIcon } from '@heroicons/react/solid'
 
 const SubscriptionInfoAccordionNew = (props) => {
+  let direction = useSelector((state) => state.main.direction)
+
   const subscriptionData = useSelector(
     (state) => state.tenants.subscriptionData
   )
@@ -51,7 +53,7 @@ const SubscriptionInfoAccordionNew = (props) => {
 
   return (
     <>
-      <Wrapper>
+      <Wrapper direction={direction}>
         {subscriptionData.startDate && (
           <Accordion className={className} defaultActiveKey={defaultKey}>
             <Accordion.Item eventKey="subscription">
@@ -89,7 +91,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                           : formatDate(cyc.startDate)
                       }
                     >
-                      <Card border="light">
+                      <Card border="light" className="shadow-sm">
                         <Container>
                           <Row>
                             <Col md={6}>
@@ -117,14 +119,14 @@ const SubscriptionInfoAccordionNew = (props) => {
                               </div>
                             </Col>
                             <Col md={6}>
-                              <div>
+                              <div className="dispatchCont">
                                 <Card.Body className="py-0 px-0">
                                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
                                     <div className="mb-0 w-25">
                                       <FormattedMessage id="Start-Date" />
                                     </div>
                                     <div className="small card-stats">
-                                      {cyc.startDate}
+                                      {formatDate(cyc.startDate)}
                                     </div>
                                   </div>
                                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
@@ -132,7 +134,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                       <FormattedMessage id="End-Date" />
                                     </div>
                                     <div className="small card-stats">
-                                      {cyc.endDate}
+                                      {formatDate(cyc.endDate)}
                                     </div>
                                   </div>
                                 </Card.Body>
@@ -142,21 +144,29 @@ const SubscriptionInfoAccordionNew = (props) => {
                         </Container>
                       </Card>
 
-                      <Card border="light" className="shadow-sm mt-3">
+                      <Card border="light" className="shadow-sm mt-2">
                         <Card.Body>
                           {/* {setSubscriptionCyc(cyc?.subscriptionCycleId)} */}
-                          <Container>
+                          <Container className="p-0">
                             <Row>
-                              <Col>
+                              <Col
+                                className={` ${
+                                  window.innerWidth <= 768 ? 'col-sm-12' : ''
+                                }`}
+                              >
                                 <div>
                                   <Tab.Container defaultActiveKey="allFeatures">
-                                    <Container>
+                                    <Container className="p-0 ">
                                       <Row>
-                                        <Col md={2}>
+                                        <Col md={3}>
                                           <Nav
                                             fill
                                             variant="pills"
-                                            className="flex-column vertical-tab custom-nav-link mb-3"
+                                            className={`flex-column vertical-tab custom-nav-link mb-3 ${
+                                              window.innerWidth <= 768
+                                                ? 'custom-horizontal-tab'
+                                                : ''
+                                            }`}
                                           >
                                             <Nav.Item>
                                               <Nav.Link
@@ -187,7 +197,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                             )}
                                           </Nav>
                                         </Col>
-                                        <Col md={10}>
+                                        <Col md={9}>
                                           <Tab.Content>
                                             <Tab.Pane
                                               eventKey="allFeatures"

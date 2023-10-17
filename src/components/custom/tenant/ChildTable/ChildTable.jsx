@@ -204,7 +204,7 @@ export default function ChildTable({
             </Card.Header>
             <Card.Body className="pb-0">
               <Workflow
-                productId={productData.product.id}
+                productId={productData && productData?.product?.id}
                 updateDetails={updateDetails}
                 productIndex={productIndex}
               />
