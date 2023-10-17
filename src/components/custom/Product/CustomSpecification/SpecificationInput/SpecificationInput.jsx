@@ -10,6 +10,7 @@ const SpecificationInput = ({
   handleSpecificationChange,
   specValidationErrors,
   intl,
+  showValidaiton,
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -61,7 +62,8 @@ const SpecificationInput = ({
 
         const InputComponent = getInputComponent(dataType)
         const fieldName = `specifications[${id}].value`
-        const error = specValidationErrors[id]
+        let error = {}
+        error = specValidationErrors[id]
 
         return (
           <Form.Group className="mb-3" key={id}>

@@ -103,8 +103,8 @@ const TenantForm = ({
     price: tenantData ? tenantData.price : '',
     product: tenantData ? selectedProduct : '',
   }
-  let [validateErrors, setValidateErrors] = useState({})
   const validateSpecifications = () => {
+    const validateErrors = {}
     setSpecValidationErrors({})
     filteredSpecificationsArray &&
       filteredSpecificationsArray.forEach((specification) => {
@@ -135,7 +135,7 @@ const TenantForm = ({
 
         if (isRequired && !value.trim()) {
           validateErrors[specificationId] = 'This field is required'
-        } else if (regularExpression && !regex.test(value)) {
+        } else if (regularExpression && value.trim() && !regex.test(value)) {
           validateErrors[specificationId] = validationFailureDescription.en
         }
       })
@@ -147,16 +147,13 @@ const TenantForm = ({
   const formik = useFormik({
     initialValues,
     validate: (values) => {
-      setSpecValidationErrors({})
-      setValidateErrors({})
       try {
         validationSchema.validateSync(values, { abortEarly: false })
       } catch (validationErrors) {
         return validationErrors.inner.reduce((errors, error) => {
-          validateSpecifications(values)
-          setValidateErrors({})
+          const specErrors = validateSpecifications()
+          formik.setErrors(specErrors.errors)
 
-          formik.setErrors({})
           return {
             ...errors,
             [error.path]: error.message,
@@ -177,8 +174,13 @@ const TenantForm = ({
           }
         }
       )
+      const specErrors = validateSpecifications()
+      formik.setErrors(specErrors.errors)
 
-      if (Object.keys(formik.errors).length === 0) {
+      if (
+        Object.keys(formik.errors).length === 0 &&
+        Object.keys(specErrors.errors).length === 0
+      ) {
         if (type == 'create') {
           const createTenant = await createTenantRequest({
             subscriptions: [
@@ -208,11 +210,6 @@ const TenantForm = ({
       }
     },
   })
-  useEffect(() => {
-    setValidateErrors({})
-  }, [setVisible])
-
-  console.log({ errorsf: validateErrors })
 
   const intl = useIntl()
   let planOptions

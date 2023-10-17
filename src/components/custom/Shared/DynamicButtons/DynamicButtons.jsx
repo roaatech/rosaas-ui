@@ -176,7 +176,6 @@ const DynamicButtons = ({ buttons }) => {
       </>
     ),
   }
-  console.log({ com: buttons[currentButtonIndex].component })
   return (
     <Wrapper direction={direction} className="d-flex">
       <div
@@ -317,14 +316,14 @@ const DynamicButtons = ({ buttons }) => {
         visible={visible}
         setVisible={setVisible}
         size={
-          buttons[currentButtonIndex].component === 'addSpecification'
+          buttons[currentButtonIndex]?.component === 'addSpecification'
             ? 'lg'
             : ''
         }
       >
         {currentButtonIndex !== undefined &&
         buttons[currentButtonIndex].type == 'form' ? (
-          forms[buttons[currentButtonIndex].component]()
+          forms[buttons[currentButtonIndex]?.component]()
         ) : (
           <></>
         )}
