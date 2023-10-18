@@ -93,7 +93,9 @@ export const Wrapper = styled.div`
       font-weight 0.3s,
       background-color 0.3s;
   }
-
+  .p-tabview .p-tabview-panels {
+    padding: 5px;
+  }
   .p-tabview .p-tabview-nav li .p-tabview-nav-link {
     border: solid #dee2e6;
   }

@@ -34,9 +34,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
     }
     return items
   }
-  allItems().map((item, index) =>
-    console.log({ sssssssssssssssssss: item.processType })
-  )
+
   const onPageChange = (event) => {
     setFirst(event.first)
     setRows(event.rows)
@@ -49,21 +47,21 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
           <Card.Body className="p-0">
             <ReactJson src={data} name={false} />
           </Card.Body>
-        </Card>
-        <Card border="light" className="border-0">
-          {
-            <div className="notes-toggle">
-              <span className="show-more-link" onClick={toggleNotes}>
-                {showNotes ? 'Hide Notes' : 'Show Notes'}
-              </span>
-              {showNotes && (
-                <div className="notes">
-                  {' '}
-                  <span>{data.notes || 'No notes available'}</span>
-                </div>
-              )}
-            </div>
-          }
+          <Card.Body className="p-0">
+            {
+              <div className="notes-toggle">
+                <span className="show-more-link" onClick={toggleNotes}>
+                  {showNotes ? 'Hide Notes' : 'Show Notes'}
+                </span>
+                {showNotes && (
+                  <div className="notes">
+                    {' '}
+                    <span>{data.notes || 'No notes available'}</span>
+                  </div>
+                )}
+              </div>
+            }
+          </Card.Body>
         </Card>
       </div>
     )

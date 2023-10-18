@@ -158,11 +158,11 @@ export default function ChildTable({
                   <MetaDataAccordion defaultKey="metaData" data={products} />
                 </td>
               </tr>
-              <tr>
+              {/* <tr>
                 <td className="pl-0 pr-0" colSpan={2}>
                   <SubscriptionInfoAccordion />
                 </td>
-              </tr>
+              </tr> */}
               <tr>
                 <td className="pl-0 pr-0" colSpan={2}>
                   <SubscriptionInfoAccordionNew />

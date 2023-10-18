@@ -355,9 +355,11 @@ const SubscriptionInfoAccordionNew = (props) => {
                                                                     }
                                                                   </td>
                                                                   <td>
-                                                                    {
-                                                                      cycle.reset
-                                                                    }
+                                                                    <FormattedMessage
+                                                                      id={
+                                                                        cycle.reset
+                                                                      }
+                                                                    />
                                                                   </td>
                                                                   <td>
                                                                     <DateLabelWhite

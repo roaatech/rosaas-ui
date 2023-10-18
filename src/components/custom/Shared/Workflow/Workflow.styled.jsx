@@ -122,17 +122,26 @@ export const Wrapper = styled.div`
   .notes {
     max-height: ${(props) => (props.showNotes ? 'none' : '25px')};
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition:
+      border-color 0.3s,
+      color 0.3s,
+      font-weight 0.3s,
+      background-color 0.3s;
+    font-size: var(--smallFont);
   }
 
   .notes-toggle .show-more-link {
     cursor: pointer;
     color: var(--second-color);
-    transition: color 0.3s ease;
     font-size: var(--smallFont);
     line-height: 15px;
     width: 100%;
     display: inline-block;
+    transition:
+      border-color 0.3s,
+      color 0.3s,
+      font-weight 0.3s,
+      background-color 0.3s;
   }
 
   .notes-toggle .show-more-link:hover {
