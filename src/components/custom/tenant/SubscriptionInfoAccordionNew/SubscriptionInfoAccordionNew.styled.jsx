@@ -24,6 +24,11 @@ export const Wrapper = styled.div`
     border-radius: 5px;
     border-color: var(--surface-400);
   }
+  .table-card .card-body {
+    padding: 0px 0px;
+    flex: 1 1 auto;
+    margin: 0px;
+  }
   /* .label-start {
     font-size: var(--smallFont);
     font-weight: bold;

@@ -144,10 +144,13 @@ const SubscriptionInfoAccordionNew = (props) => {
                         </Container>
                       </Card>
 
-                      <Card border="light" className="shadow-sm mt-2">
+                      <Card
+                        border="light"
+                        className="shadow-sm mt-2 table-card "
+                      >
                         <Card.Body>
                           {/* {setSubscriptionCyc(cyc?.subscriptionCycleId)} */}
-                          <Container className="p-0">
+                          <Container className="p-0 m-0">
                             <Row>
                               <Col
                                 className={` ${
