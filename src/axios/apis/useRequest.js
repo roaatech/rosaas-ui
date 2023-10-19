@@ -71,7 +71,12 @@ const useRequest = () => {
     deleteFeaturePlanReq,
   } = usePlanFeatureReq()
 
-  const { getHeathCheckSettings, putHeathCheckSettings } = useSettingsReq()
+  const {
+    getHeathCheckSettings,
+    putHeathCheckSettings,
+    getSubscriptionsSettings,
+    putSubscriptionsSettings,
+  } = useSettingsReq()
 
   return {
     signIn,
@@ -118,6 +123,8 @@ const useRequest = () => {
     editSpecificationRequest,
     deleteSpecificationReq,
     editTenantSpecificationRequest,
+    getSubscriptionsSettings,
+    putSubscriptionsSettings,
   }
 }
 export default useRequest

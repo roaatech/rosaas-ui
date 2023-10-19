@@ -13,6 +13,10 @@ import {
   BsGearFill,
   BsFillClipboard2CheckFill,
   BsBoxes,
+  BsSubscript,
+  BsPersonFillDown,
+  BsPersonSlash,
+  BsPeople,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -371,6 +375,11 @@ export default (props = {}) => {
                   title={<FormattedMessage id="Health-Check-sidebar" />}
                   link={`/settings/health-check`}
                   icon={BsFillClipboard2CheckFill}
+                />
+                <NavItem
+                  title={<FormattedMessage id="Subscriptions" />}
+                  link={`/settings/subscriptions`}
+                  icon={BsPeople}
                 />
               </CollapsableNavItem>
             </Nav>
