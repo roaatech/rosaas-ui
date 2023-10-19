@@ -34,16 +34,7 @@ const SubscriptionInfoAccordionNew = (props) => {
   const subscriptionData = useSelector(
     (state) => state.tenants.subscriptionData
   )
-  console.log({ subscriptionData })
-  console.log({
-    dataTest: subscriptionData?.subscriptionCycles,
-  })
 
-  console.log({
-    dfsdf: subscriptionData.data?.map((feature, index) =>
-      feature.subscriptionFeaturesCycles?.map((cycle, cycleIndex) => cycle)
-    ),
-  })
   const { defaultKey = [], className = '' } = props
 
   const [currentTab, setCurrentTab] = useState(0)
@@ -52,8 +43,6 @@ const SubscriptionInfoAccordionNew = (props) => {
     setCurrentTab(index)
 
     setHideAllFeaturesTab(index !== 0)
-
-    console.log(index !== 0)
   }
 
   return (

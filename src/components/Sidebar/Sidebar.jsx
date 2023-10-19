@@ -61,7 +61,6 @@ export default (props = {}) => {
 
   let unFilteredProducts = Object.values(productsData)
   const setUnFilteredProducts = (newData) => {
-    console.log({ newData })
     unFilteredProducts = newData
   }
 

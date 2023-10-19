@@ -50,8 +50,6 @@ const DynamicButtons = ({ buttons }) => {
     setTenantData(data.data)
   }
 
-  console.log({ tenantsData })
-
   useEffect(() => {
     ;(() => {
       const checkMoreArray = buttons.map((button) => {

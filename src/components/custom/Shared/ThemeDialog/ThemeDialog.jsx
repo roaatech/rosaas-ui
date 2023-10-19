@@ -31,7 +31,6 @@ const ThemeDialog = ({
   size,
   search = true,
 }) => {
-  console.log(size)
   return (
     <Wrapper>
       <React.Fragment>

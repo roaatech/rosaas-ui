@@ -63,7 +63,6 @@ export default function ChildTable({
       description: metadata ? rowExpansionTemplate(JSON.parse(metadata)) : null,
     },
   ])
-  console.log({ productData })
   return (
     <Wrapper direction={direction}>
       <div className="dynamicButtons">

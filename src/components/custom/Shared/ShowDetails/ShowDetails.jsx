@@ -4,7 +4,7 @@ import { Wrapper } from './ShowDetails.styled.jsx'
 import { FormattedMessage } from 'react-intl'
 
 const ShowDetails = ({ data, setVisible, popupLabel }) => {
-  console.log({ data })
+  // console.log({ data })
   return (
     <Wrapper>
       <div>

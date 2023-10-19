@@ -57,7 +57,6 @@ export const ProductCustomSpecificationList = ({ productId }) => {
   const [update, setUpdate] = useState(1)
   const dispatch = useDispatch()
   const list = useSelector((state) => state.products.products[productId])
-  console.log({ list })
   const [currentId, setCurrentId] = useState('')
   const [confirm, setConfirm] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -98,7 +97,6 @@ export const ProductCustomSpecificationList = ({ productId }) => {
     setPopUpLable('Edit-Specification')
     setType('edit')
     setCurrentId(id)
-    console.log({ sss: list.specifications[currentId] })
     setVisible(true)
   }
 

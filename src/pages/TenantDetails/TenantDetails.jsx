@@ -69,7 +69,6 @@ const TenantDetails = () => {
 
   let tenantObject = tenantsData[routeParams.id]
   const [currentProduct, setCurrentProduct] = useState('')
-  console.log({ currentProduct })
   let tenantStatus = tenantObject?.subscriptions[0]?.actions
     ? tenantObject?.subscriptions
         ?.flatMap((item) => item?.actions?.map((action) => action))
@@ -144,7 +143,6 @@ const TenantDetails = () => {
           currentSubscriptionCycleId:
             response.data.data.currentSubscriptionCycleId,
         }
-        console.log({ formattedSubscriptionData })
 
         dispatch(subscriptionData(formattedSubscriptionData))
       } catch (error) {

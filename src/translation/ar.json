@@ -227,5 +227,22 @@
   "All-Features": "جميع الميزات",
   "Cannot-delete-a-subscribed-specification.": "لا يمكن حذف مواصفة مشترك بها.",
   "Cannot-edit-a-subscribed-specification.": "لا يمكن تعديل مواصفة مشترك بها.",
-  "delete-specification-confirmation-message": "هل ترغب في حذف هذه المواصفة المخصصة؟"
+  "delete-specification-confirmation-message": "هل ترغب في حذف هذه المواصفة المخصصة؟",
+  "English-Validation-Failure": "أدخل وصف فشل الصحة باللغة الإنجليزية",
+  "Arabic-Validation-Failure": "أدخل وصف فشل الصحة باللغة العربية",
+  "Name-Required": "الاسم مطلوب",
+  "Maximum-Length-100": "يجب أن لا يتجاوز الحد الأقصى 100 حرف",
+  "Valid-Regular-Expression": "يجب أن تكون التعبيرات العادية صالحة وفقًا للنمط الصحيح مع شرطات وعلامات اختيارية (مثل /^النمط$/g)",
+  "JSON-Property-Name": "الاسم الفريد المستخدم لتحديد اسم خاصية JSON",
+  "Tenant-Specification-Display": "عرض هذا المواصفة في نموذج إضافة المستأجر",
+  "User-Editable-Value": "يمكن تحرير القيمة من قبل المستخدم",
+  "Friendly-Name-Label": "اسم ودي (لافتة) للمواصفة",
+  "Hint-Description": "وصف سيتم عرضه كتلميح لشرح لافتة في نموذج إضافة المستأجر",
+  "Value-Presence-Required": "يجب وجود القيمة لإنشاء مستأجر",
+  "Character-Combination-Pattern": "النمط المستخدم لمطابقة تركيبات الأحرف في القيمة",
+  "Validation-Error-Message": "رسالة لشرح خطأ الصحة",
+  "Arabic-Description": "أدخل الوصف باللغة العربية",
+  "English-Name": "ادخل الاسم باللغة الإنجليزية",
+  "Arabic-Name": "أدخل الاسم باللغة العربية",
+  "English-Description": "أدخل الوصف باللغة الإنجليزية"
 }

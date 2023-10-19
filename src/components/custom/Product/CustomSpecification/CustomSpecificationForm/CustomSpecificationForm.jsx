@@ -397,7 +397,9 @@ const CustomSpecificationForm = ({
                               name="displayNameEn"
                               onChange={formik.handleChange}
                               value={formik.values.displayNameEn}
-                              placeholder="Enter English Name"
+                              placeholder={intl.formatMessage({
+                                id: 'English-Name',
+                              })}
                             />
                           </div>
                         </TabPanel>
@@ -410,7 +412,9 @@ const CustomSpecificationForm = ({
                               name="displayNameAr"
                               onChange={formik.handleChange}
                               value={formik.values.displayNameAr}
-                              placeholder="Enter Arabic Name"
+                              placeholder={intl.formatMessage({
+                                id: 'Arabic-Name',
+                              })}
                             />
                           </div>
                         </TabPanel>
@@ -467,7 +471,9 @@ const CustomSpecificationForm = ({
                               maxLength={250}
                               showCharCount
                               inputValue={formik.values.descriptionEn}
-                              placeholder="Enter English Description"
+                              placeholder={intl.formatMessage({
+                                id: 'English-Description',
+                              })}
                               id="descriptionEn"
                               name="descriptionEn"
                               onChange={formik.handleChange}
@@ -482,7 +488,9 @@ const CustomSpecificationForm = ({
                               maxLength={250}
                               showCharCount
                               inputValue={formik?.values?.descriptionAr}
-                              placeholder="Enter Arabic Description"
+                              placeholder={intl.formatMessage({
+                                id: 'Arabic-Description',
+                              })}
                               id="descriptionAr"
                               name="descriptionAr"
                               onChange={formik.handleChange}
@@ -626,7 +634,9 @@ const CustomSpecificationForm = ({
                             inputValue={
                               formik?.values?.validationFailureDescriptionEn
                             }
-                            placeholder="Enter English Validation Failure Description"
+                            placeholder={intl.formatMessage({
+                              id: 'English-Validation-Failure',
+                            })}
                             id="validationFailureDescriptionEn"
                             name="validationFailureDescriptionEn"
                             onChange={formik.handleChange}
@@ -643,7 +653,9 @@ const CustomSpecificationForm = ({
                             inputValue={
                               formik?.values?.validationFailureDescriptionAr
                             }
-                            placeholder="Enter Arabic Validation Failure Description"
+                            placeholder={intl.formatMessage({
+                              id: 'Arabic-Validation-Failure',
+                            })}
                             id="validationFailureDescriptionAr"
                             name="validationFailureDescriptionAr"
                             onChange={formik.handleChange}

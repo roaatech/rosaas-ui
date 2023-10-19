@@ -36,12 +36,10 @@ const TenantSpecificationForm = ({
     getProductPlanPriceList,
     getProductSpecification,
   } = useRequest()
-  console.log({ tenantData })
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
   const navigate = useNavigate()
   const [specValidationErrors, setSpecValidationErrors] = useState({})
-  console.log({ selectedProduct })
   const dispatch = useDispatch()
   const { getProductList } = useRequest()
 
