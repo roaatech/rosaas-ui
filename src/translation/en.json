@@ -242,7 +242,7 @@
   "Arabic-Name": "Enter Arabic Name",
   "English-Description": "Enter English Description",
   "Subscriptions-Settings": "Subscriptions Settings",
-  "subscription-Worker-Time-Period": "Subscription Worker Time Period in hours",
+  "subscription-Worker-Time-Period": "Subscription Worker Period in hours",
   "subscription-Worker-Time-Period-desc": " Regularly monitors and updates subscription status to ensure smooth transitions, including deactivation upon expiration.",
   "Grace-Period": "Grace Period in hours",
   "Grace-Period-desc": "Offers customers extra time to resolve payment issues or update their information before subscription deactivation due to non-payment."
