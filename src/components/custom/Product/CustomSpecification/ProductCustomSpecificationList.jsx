@@ -20,25 +20,15 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import {
   faEdit,
   faEllipsisH,
-  faToggleOff,
-  faToggleOn,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons'
 
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import CustomSpecificationForm from './CustomSpecificationForm/CustomSpecificationForm'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
-import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { Wrapper } from './ProductCustomSpecification.styled'
 import { toast } from 'react-toastify'
-import {
-  BsCheck,
-  BsFillBagCheckFill,
-  BsFillBagDashFill,
-  BsFillCheckCircleFill,
-  BsFillXCircleFill,
-  BsShare,
-} from 'react-icons/bs'
+
 import Label from '../../Shared/label/Label'
 
 import {

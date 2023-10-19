@@ -18,6 +18,7 @@ import { Wrapper } from './TenantSpecificatifonForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
+import { validateSpecifications } from '../validateSpecifications/validateSpecifications.jsx'
 
 const TenantSpecificationForm = ({
   type,
@@ -67,45 +68,6 @@ const TenantSpecificationForm = ({
     product: selectedProduct,
   }
   let [validateErrors, setValidateErrors] = useState({})
-  const validateSpecifications = () => {
-    setSpecValidationErrors({})
-    filteredSpecificationsArray &&
-      filteredSpecificationsArray.forEach((specification) => {
-        let {
-          id: specificationId,
-          isRequired,
-          regularExpression,
-          validationFailureDescription,
-        } = specification
-
-        const value = specificationValues[specificationId] || ''
-        if (regularExpression.startsWith('/')) {
-          regularExpression = regularExpression.slice(1)
-        }
-        if (regularExpression.endsWith('/')) {
-          regularExpression = regularExpression.slice(0, -1)
-        }
-
-        let flags = ''
-        if (/[gimus]+$/.test(regularExpression)) {
-          flags = regularExpression.slice(-1)
-          regularExpression = regularExpression.slice(0, -1)
-        }
-
-        let pattern = regularExpression
-
-        let regex = new RegExp(pattern, flags)
-
-        if (isRequired && !value.trim()) {
-          validateErrors[specificationId] = 'This field is required'
-        } else if (regularExpression && value.trim() && !regex.test(value)) {
-          validateErrors[specificationId] = validationFailureDescription.en
-        }
-      })
-
-    setSpecValidationErrors(validateErrors)
-    return { errors: validateErrors }
-  }
 
   const formik = useFormik({
     initialValues,
@@ -121,7 +83,12 @@ const TenantSpecificationForm = ({
           }
         }
       )
-      const specErrors = validateSpecifications()
+      const specErrors = validateSpecifications(
+        filteredSpecificationsArray,
+        specificationValues,
+        intl,
+        setSpecValidationErrors
+      )
       formik.setErrors(specErrors.errors)
 
       if (

@@ -1,13 +1,6 @@
 import styled from 'styled-components'
 const secondColor = '#ffab03'
 export const Wrapper = styled.div`
-  /* .th {
-    max-width: 20px;
-  }
-  .label {
-    margin-right: 0.25rem;
-    background: '#eff9f6';
-  } */
   .green {
     color: var(--green);
     background: '#eff9f6';
@@ -24,27 +17,14 @@ export const Wrapper = styled.div`
     border-radius: 5px;
     border-color: var(--surface-400);
   }
-  /* .table-card .card-body {
-    padding: 0px 0px;
-    flex: 1 1 auto;
-    margin: 0px;
-  } */
+
   .info-card .card {
     background-color: transparent;
   }
-  /* .label-start {
-    font-size: var(--smallFont);
-    font-weight: bold;
-    border: 1px solid;
-    padding: 7px 12px;
-    border-radius: 5px;
-    border-color: var(--surface-400);
-  } */
+
   .custom-nav-link {
-    /* max-width: 100px; */
   }
   .contents {
-    /* max-width: 700px; */
     margin-left: -45px;
   }
   .year {
@@ -132,7 +112,6 @@ export const Wrapper = styled.div`
     flex-direction: column;
   }
 
-  /* Horizontal layout for screens <= 768px */
   @media screen and (max-width: 768px) {
     .vertical-tab {
       flex-direction: row !important;

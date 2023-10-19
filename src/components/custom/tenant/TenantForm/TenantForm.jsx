@@ -5,7 +5,7 @@ import useRequest from '../../../../axios/apis/useRequest.js'
 import { cycle } from '../../../../const/index.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Form, OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
+import { Form } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import {
   deleteAllPlan,
@@ -17,8 +17,7 @@ import {
 import { Wrapper } from './TenantForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
-import { BsFillQuestionCircleFill } from 'react-icons/bs'
-import { validateSpecifications } from './validateSpecifications/validateSpecifications.jsx'
+import { validateSpecifications } from '../validateSpecifications/validateSpecifications.jsx'
 
 const TenantForm = ({
   type,
