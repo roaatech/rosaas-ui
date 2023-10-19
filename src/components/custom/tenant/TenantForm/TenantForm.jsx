@@ -134,9 +134,14 @@ const TenantForm = ({
         let regex = new RegExp(pattern, flags)
 
         if (isRequired && !value.trim()) {
-          errors[specificationId] = 'This field is required'
+          errors[specificationId] = intl.formatMessage({
+            id: 'This-field-is-required',
+          })
         } else if (regularExpression && value.trim() && !regex.test(value)) {
-          errors[specificationId] = validationFailureDescription.en
+          errors[specificationId] =
+            validationFailureDescription[intl.locale] ||
+            (intl.locale === 'ar' && validationFailureDescription['en']) ||
+            (intl.locale === 'en' && validationFailureDescription['ar'])
         }
       })
 
@@ -268,14 +273,14 @@ const TenantForm = ({
   const filteredSpecificationsArray = allSpecificationsArray.filter(
     (spec) => spec.isPublished === true
   )
-  useEffect(() => {
-    if (type == 'edit' && Object.keys(specificationValuesObject).length > 0) {
-      setSpecificationValues((prevValues) => ({
-        ...prevValues,
-        ...specificationValuesObject,
-      }))
-    }
-  }, [type])
+  // useEffect(() => {
+  //   if (type == 'edit' && Object.keys(specificationValuesObject).length > 0) {
+  //     setSpecificationValues((prevValues) => ({
+  //       ...prevValues,
+  //       ...specificationValuesObject,
+  //     }))
+  //   }
+  // }, [type])
   const handleSpecificationChange = (specificationId, event) => {
     const newValue = event.target.value
     setSpecificationValues((prevValues) => ({

@@ -100,6 +100,7 @@
   "Create-Plan": "إنشاء خطة",
   "Unpublished": "لم يتم نشرها",
   "Published": "تم نشرها",
+  "Is-Published": "هل سيتم نشره",
   "Deactivate": "إلغاء التنشيط",
   "Active": "نشطة",
   "Meta-Data": "بيانات الوصف",
@@ -221,5 +222,10 @@
   "Edit-Specification": "تعديل المواصفات",
   "Permissions": "صلاحيات",
   "Add-Specification": "إضافة مواصفة",
-  "Payment-Status-Suspended-Due-To-Non-Renewal": "الحالة المالية تعلقت بسبب عدم التجديد"
+  "Payment-Status-Suspended-Due-To-Non-Renewal": "الحالة المالية تعلقت بسبب عدم التجديد",
+  "usage": "استخدام",
+  "All-Features": "جميع الميزات",
+  "Cannot-delete-a-subscribed-specification.": "لا يمكن حذف مواصفة مشترك بها.",
+  "Cannot-edit-a-subscribed-specification.": "لا يمكن تعديل مواصفة مشترك بها.",
+  "delete-specification-confirmation-message": "هل ترغب في حذف هذه المواصفة المخصصة؟"
 }

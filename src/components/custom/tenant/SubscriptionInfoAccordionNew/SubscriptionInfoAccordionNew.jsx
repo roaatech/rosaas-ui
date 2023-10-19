@@ -10,7 +10,12 @@ import {
   Table,
   Container,
 } from '@themesberg/react-bootstrap'
-import { DateStatus, cycle, featureUnitMap } from '../../../../const'
+import {
+  DateStatus,
+  cycle,
+  featureResetMap,
+  featureUnitMap,
+} from '../../../../const'
 import { useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { formatDate } from '../../../../lib/sharedFun/Time'
@@ -91,13 +96,14 @@ const SubscriptionInfoAccordionNew = (props) => {
                           : formatDate(cyc.startDate)
                       }
                     >
-                      <Card border="light" className="shadow-sm">
-                        <Container>
-                          <Row>
-                            <Col md={6}>
-                              <div className="dispatchCont">
+                      <div className="info-card">
+                        <Card border="light" className="shadow-sm ">
+                          <Container>
+                            <Row>
+                              <Col md={6}>
+                                {/* <div className="dispatchCont"> */}
                                 <Card.Body className="py-0 px-0">
-                                  <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                                  <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                                     <div className="mb-0 w-25">
                                       <FormattedMessage id="Plan" />
                                     </div>
@@ -106,7 +112,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                     </div>
                                   </div>
 
-                                  <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                                  <div className="d-flex align-items-center justify-content-between  py-2 ">
                                     <div className="mb-0 w-25">
                                       <FormattedMessage id="Price" />
                                     </div>
@@ -116,11 +122,11 @@ const SubscriptionInfoAccordionNew = (props) => {
                                     </div>
                                   </div>
                                 </Card.Body>
-                              </div>
-                            </Col>
-                            <Col md={6}>
-                              <div className="dispatchCont">
-                                <Card.Body className="py-0 px-0">
+                                {/* </div> */}
+                              </Col>
+                              <Col md={6}>
+                                {/* <div className="dispatchCont"> */}
+                                <Card.Body className="py-0 px-0 ">
                                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
                                     <div className="mb-0 w-25">
                                       <FormattedMessage id="Start-Date" />
@@ -129,7 +135,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                       {formatDate(cyc.startDate)}
                                     </div>
                                   </div>
-                                  <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                                  <div className="d-flex align-items-center justify-content-between py-2 ml-5">
                                     <div className="mb-0 w-25">
                                       <FormattedMessage id="End-Date" />
                                     </div>
@@ -138,12 +144,12 @@ const SubscriptionInfoAccordionNew = (props) => {
                                     </div>
                                   </div>
                                 </Card.Body>
-                              </div>
-                            </Col>
-                          </Row>
-                        </Container>
-                      </Card>
-
+                                {/* </div> */}
+                              </Col>
+                            </Row>
+                          </Container>
+                        </Card>
+                      </div>
                       <Card
                         border="light"
                         className="shadow-sm mt-2 table-card "
@@ -180,7 +186,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                                     : ''
                                                 }
                                               >
-                                                All Features
+                                                <FormattedMessage id="All-Features" />
                                               </Nav.Link>
                                             </Nav.Item>
                                             {subscriptionData.data?.map(
@@ -360,7 +366,10 @@ const SubscriptionInfoAccordionNew = (props) => {
                                                                   <td>
                                                                     <FormattedMessage
                                                                       id={
-                                                                        cycle.reset
+                                                                        featureResetMap[
+                                                                          cycle
+                                                                            .reset
+                                                                        ]
                                                                       }
                                                                     />
                                                                   </td>

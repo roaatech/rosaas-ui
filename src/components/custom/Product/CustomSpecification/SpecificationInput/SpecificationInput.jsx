@@ -3,14 +3,16 @@ import { Form, OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
+import { useIntl } from 'react-intl'
 
 const SpecificationInput = ({
   specifications,
   specificationValues,
   handleSpecificationChange,
   specValidationErrors,
-  intl,
 }) => {
+  const intl = useIntl()
+
   const formik = useFormik({
     initialValues: {
       specifications: Array.isArray(specificationValues)
@@ -23,28 +25,28 @@ const SpecificationInput = ({
     onSubmit: (values) => {},
   })
 
-  const getInputComponent = (dataType) => {
-    switch (dataType) {
-      case 1:
-        return (props) => (
-          <input
-            type="text"
-            value={props.value}
-            onChange={props.onChange}
-            className={props.className}
-          />
-        )
-      default:
-        return (props) => (
-          <input
-            type="text"
-            value={props.value}
-            onChange={props.onChange}
-            className={props.className}
-          />
-        )
-    }
-  }
+  // const getInputComponent = (dataType) => {
+  //   switch (dataType) {
+  //     case 1:
+  //       return (props) => (
+  //         <input
+  //           type="text"
+  //           value={props.value}
+  //           onChange={props.onChange}
+  //           className={props.className}
+  //         />
+  //       )
+  //     default:
+  //       return (props) => (
+  //         <input
+  //           type="text"
+  //           value={props.value}
+  //           onChange={props.onChange}
+  //           className={props.className}
+  //         />
+  //       )
+  //   }
+  // }
 
   return (
     <Form>
@@ -59,7 +61,7 @@ const SpecificationInput = ({
           dataType,
         } = specification
 
-        const InputComponent = getInputComponent(dataType)
+        // const InputComponent = getInputComponent(dataType)
         const fieldName = `specifications[${id}].value`
         const error = specValidationErrors[id]
 
@@ -92,6 +94,11 @@ const SpecificationInput = ({
             <div>
               <input
                 type="text"
+                name={
+                  displayName[`${intl.locale}`] ||
+                  (intl.locale === 'ar' && displayName['en']) ||
+                  (intl.locale === 'en' && displayName['ar'])
+                }
                 value={specificationValues[id] || ''}
                 className="form-control"
                 onChange={(event) => {

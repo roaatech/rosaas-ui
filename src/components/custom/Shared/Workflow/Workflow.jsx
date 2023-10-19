@@ -40,25 +40,23 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
     setRows(event.rows)
   }
 
-  const rowExpansionTemplate = (data) => {
+  const rowExpansionTemplate = (data, notes) => {
     return (
-      <div className="">
+      <div>
         <Card border="light" className="border-0">
           <Card.Body className="p-0">
             <ReactJson src={data} name={false} />
           </Card.Body>
+        </Card>
+        <Card border="light" className=" pt-1">
           <Card.Body className="p-0">
             {
-              <div className="notes-toggle">
-                <span className="show-more-link" onClick={toggleNotes}>
-                  {showNotes ? 'Hide Notes' : 'Show Notes'}
-                </span>
-                {showNotes && (
-                  <div className="notes">
-                    {' '}
-                    <span>{data.notes || 'No notes available'}</span>
-                  </div>
-                )}
+              <div className="d-flex align-items-center justify-content-between  py-2">
+                <span className="mb-0 w-25">Notes:</span>
+
+                <div className="small card-stats">
+                  <span>{notes || 'No notes available'}</span>
+                </div>
               </div>
             }
           </Card.Body>
@@ -142,29 +140,11 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
                       </div>
                     ),
                     description: item?.data
-                      ? rowExpansionTemplate(JSON.parse(item?.data))
+                      ? rowExpansionTemplate(JSON.parse(item?.data), item.notes)
                       : null,
                   },
-                  // {
-                  //   eventKey: 'notes',
-                  //   title: 'Notes',
-                  //   description: item.notes || 'No notes available',
-                  // },
                 ]}
               />
-              {
-                <div className="notes-toggle">
-                  <span className="show-more-link" onClick={toggleNotes}>
-                    {showNotes ? 'Hide Notes' : 'Show Notes'}
-                  </span>
-                  {showNotes && (
-                    <div className="notes">
-                      {' '}
-                      <span>{item.notes || 'No notes available'}</span>
-                    </div>
-                  )}
-                </div>
-              }
             </div>
           </div>
         ))}

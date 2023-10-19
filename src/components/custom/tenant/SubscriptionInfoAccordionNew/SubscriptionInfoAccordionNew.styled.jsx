@@ -24,10 +24,13 @@ export const Wrapper = styled.div`
     border-radius: 5px;
     border-color: var(--surface-400);
   }
-  .table-card .card-body {
+  /* .table-card .card-body {
     padding: 0px 0px;
     flex: 1 1 auto;
     margin: 0px;
+  } */
+  .info-card .card {
+    background-color: transparent;
   }
   /* .label-start {
     font-size: var(--smallFont);
@@ -98,11 +101,17 @@ export const Wrapper = styled.div`
       font-weight 0.3s,
       background-color 0.3s;
   }
+
   .p-tabview .p-tabview-panels {
     padding: 5px;
+    background-color: transparent;
   }
   .p-tabview .p-tabview-nav li .p-tabview-nav-link {
     border: solid #dee2e6;
+    background-color: transparent;
+  }
+  .p-tabview .p-tabview-nav {
+    background-color: transparent;
   }
   .hide-tab-content {
     display: none !important;

@@ -45,7 +45,6 @@ const CustomSpecificationForm = ({
   const productId = routeParams.id
   const initialValues = {
     name: specificationData ? specificationData.name : '',
-
     descriptionEn: specificationData?.description?.en || '',
     descriptionAr: specificationData?.description?.ar || '',
     displayNameAr: specificationData?.displayName?.ar || '',
@@ -86,13 +85,26 @@ const CustomSpecificationForm = ({
         intl.formatMessage({ id: 'Valid-Regular-Expression' }),
         (value) => {
           if (!value) {
-            return true // Allow empty string
+            return true
           }
           const isValidPattern = /^\/.*\/[gimus]*$/.test(value)
           return isValidPattern
         }
       )
       .nullable(),
+    validationFailureDescriptionEn: Yup.string().test({
+      name: 'validationFailureDescriptionRequired',
+      message: intl.formatMessage({
+        id: 'This-field-is-required',
+      }),
+      test: function (value) {
+        const parent = this.parent
+        const hasRegularExpression = !!parent.regularExpression
+        const hasValueEn = !!parent.validationFailureDescriptionEn
+        const hasValueAr = !!parent.validationFailureDescriptionAr
+        return !hasRegularExpression || hasValueEn || hasValueAr || !!value
+      },
+    }),
   })
 
   const formik = useFormik({
@@ -229,8 +241,9 @@ const CustomSpecificationForm = ({
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              The unique name used to identify the json property
-                              name
+                              {intl.formatMessage({
+                                id: 'JSON-Property-Name',
+                              })}
                             </Tooltip>
                           }
                         >
@@ -268,8 +281,9 @@ const CustomSpecificationForm = ({
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              display this specification in the Tenant adding
-                              form
+                              {intl.formatMessage({
+                                id: 'Tenant-Specification-Display',
+                              })}
                             </Tooltip>
                           }
                         >
@@ -304,7 +318,12 @@ const CustomSpecificationForm = ({
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
-                            <Tooltip>Value will be editable by a user.</Tooltip>
+                            <Tooltip>
+                              {' '}
+                              {intl.formatMessage({
+                                id: 'User-Editable-Value',
+                              })}
+                            </Tooltip>
                           }
                         >
                           <span>
@@ -352,7 +371,9 @@ const CustomSpecificationForm = ({
                             trigger={['hover', 'focus']}
                             overlay={
                               <Tooltip>
-                                A friendly name (label) for the specification
+                                {intl.formatMessage({
+                                  id: 'Friendly-Name-Label',
+                                })}{' '}
                               </Tooltip>
                             }
                           >
@@ -422,8 +443,9 @@ const CustomSpecificationForm = ({
                             trigger={['hover', 'focus']}
                             overlay={
                               <Tooltip>
-                                A description that will be displayed as a hint
-                                to describe a label in Tenant adding form
+                                {intl.formatMessage({
+                                  id: 'Hint-Description',
+                                })}
                               </Tooltip>
                             }
                           >
@@ -505,7 +527,9 @@ const CustomSpecificationForm = ({
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              value must be present to create a tenant
+                              {intl.formatMessage({
+                                id: 'Value-Presence-Required',
+                              })}{' '}
                             </Tooltip>
                           }
                         >
@@ -538,8 +562,9 @@ const CustomSpecificationForm = ({
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              The pattern used to match character combinations
-                              in Value
+                              {intl.formatMessage({
+                                id: 'Character-Combination-Pattern',
+                              })}
                             </Tooltip>
                           }
                         >
@@ -579,7 +604,9 @@ const CustomSpecificationForm = ({
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              A message to describe the validation error
+                              {intl.formatMessage({
+                                id: 'Validation-Error-Message',
+                              })}{' '}
                             </Tooltip>
                           }
                         >

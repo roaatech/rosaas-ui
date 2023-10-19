@@ -187,7 +187,7 @@ const TenantSpecificationForm = ({
     : []
 
   const filteredSpecificationsArray = allSpecificationsArray.filter(
-    (spec) => spec.isPublished === true
+    (spec) => spec.isPublished === true && spec.isUserEditable === true
   )
 
   useEffect(() => {
