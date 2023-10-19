@@ -18,6 +18,7 @@ import { Wrapper } from './TenantForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
+import { validateSpecifications } from './validateSpecifications/validateSpecifications.jsx'
 
 const TenantForm = ({
   type,
@@ -103,51 +104,6 @@ const TenantForm = ({
     price: tenantData ? tenantData.price : '',
     product: tenantData ? selectedProduct : '',
   }
-  const validateSpecifications = () => {
-    const errors = {}
-
-    filteredSpecificationsArray &&
-      filteredSpecificationsArray.forEach((specification) => {
-        let {
-          id: specificationId,
-          isRequired,
-          regularExpression,
-          validationFailureDescription,
-        } = specification
-
-        const value = specificationValues[specificationId] || ''
-        if (regularExpression.startsWith('/')) {
-          regularExpression = regularExpression.slice(1)
-        }
-        if (regularExpression.endsWith('/')) {
-          regularExpression = regularExpression.slice(0, -1)
-        }
-
-        let flags = ''
-        if (/[gimus]+$/.test(regularExpression)) {
-          flags = regularExpression.slice(-1)
-          regularExpression = regularExpression.slice(0, -1)
-        }
-
-        let pattern = regularExpression
-
-        let regex = new RegExp(pattern, flags)
-
-        if (isRequired && !value.trim()) {
-          errors[specificationId] = intl.formatMessage({
-            id: 'This-field-is-required',
-          })
-        } else if (regularExpression && value.trim() && !regex.test(value)) {
-          errors[specificationId] =
-            validationFailureDescription[intl.locale] ||
-            (intl.locale === 'ar' && validationFailureDescription['en']) ||
-            (intl.locale === 'en' && validationFailureDescription['ar'])
-        }
-      })
-
-    setSpecValidationErrors(errors)
-    return { errors }
-  }
 
   const formik = useFormik({
     initialValues,
@@ -168,7 +124,12 @@ const TenantForm = ({
             }
           })
         : []
-      const specErrors = validateSpecifications()
+      const specErrors = validateSpecifications(
+        filteredSpecificationsArray,
+        specificationValues,
+        intl,
+        setSpecValidationErrors
+      )
       formik.setErrors(specErrors.errors)
       if (
         Object.keys(formik.errors).length === 0 &&
@@ -273,14 +234,7 @@ const TenantForm = ({
   const filteredSpecificationsArray = allSpecificationsArray.filter(
     (spec) => spec.isPublished === true
   )
-  // useEffect(() => {
-  //   if (type == 'edit' && Object.keys(specificationValuesObject).length > 0) {
-  //     setSpecificationValues((prevValues) => ({
-  //       ...prevValues,
-  //       ...specificationValuesObject,
-  //     }))
-  //   }
-  // }, [type])
+
   const handleSpecificationChange = (specificationId, event) => {
     const newValue = event.target.value
     setSpecificationValues((prevValues) => ({
@@ -410,42 +364,7 @@ const TenantForm = ({
               </Form.Group>
             </div>
           )}
-          {/* ) : (
-            <div>
-              <Form.Group className="mb-3">
-                <Form.Label>
-                  <FormattedMessage id="Product" />{' '}
-                  <span style={{ color: 'red' }}>*</span>
-                </Form.Label>
-                <select
-                  className="form-control"
-                  name="product"
-                  id="product"
-                  value={selectedProduct}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  disabled={true}
-                >
-                  <option value="">
-                    <FormattedMessage id="Select-Option" />
-                  </option>
-                  {options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                {formik.touched.product && formik.errors.product && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.product}
-                  </Form.Control.Feedback>
-                )}
-              </Form.Group>
-            </div>
-          )} */}
+
           {type === 'create' && (
             <div>
               <Form.Group className="mb-3">

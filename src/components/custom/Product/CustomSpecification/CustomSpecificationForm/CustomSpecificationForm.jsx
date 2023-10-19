@@ -116,7 +116,6 @@ const CustomSpecificationForm = ({
           productId,
           {
             name: values.name,
-            // productId: productId,
             displayName: { en: values.displayNameEn, ar: values.displayNameAr },
             description: {
               en: values.descriptionEn,
@@ -261,7 +260,6 @@ const CustomSpecificationForm = ({
                       onChange={formik.handleChange}
                       value={formik.values.name}
                     />
-                    {/* Display validation error */}
                     {formik.touched.name && formik.errors.name && (
                       <Form.Control.Feedback
                         type="invalid"
@@ -383,10 +381,7 @@ const CustomSpecificationForm = ({
                           </OverlayTrigger>
                         </span>
                       </Form.Label>
-                      {/* <Card
-                border="light"
-                className="table-wrapper table-responsive shadow-sm"
-              > */}
+
                       <TabView>
                         <TabPanel header="En">
                           <div className="form-group mt-3">
@@ -418,9 +413,7 @@ const CustomSpecificationForm = ({
                             />
                           </div>
                         </TabPanel>
-                        {/* Add more language tabs as needed */}
                       </TabView>
-                      {/* </Card> */}
 
                       {(formik.touched.displayNameEn ||
                         formik.touched.displayNameAr) &&
@@ -459,10 +452,7 @@ const CustomSpecificationForm = ({
                           </OverlayTrigger>
                         </span>
                       </Form.Label>
-                      {/* <Card
-                      border="light"
-                      className="table-wrapper table-responsive shadow-sm"
-                    > */}
+
                       <TabView>
                         <TabPanel header="En">
                           <div className="form-group mt-3">
@@ -498,10 +488,8 @@ const CustomSpecificationForm = ({
                             />
                           </div>
                         </TabPanel>
-                        {/* Add more language tabs as needed */}
                       </TabView>
 
-                      {/* Display validation error */}
                       {formik.touched.descriptionEn &&
                         formik.errors.descriptionEn && (
                           <Form.Control.Feedback
@@ -590,7 +578,6 @@ const CustomSpecificationForm = ({
                       onChange={formik.handleChange}
                       value={formik.values.regularExpression}
                     />
-                    {/* Display validation error */}
                     {formik.touched.regularExpression &&
                       formik.errors.regularExpression && (
                         <Form.Control.Feedback
@@ -665,7 +652,6 @@ const CustomSpecificationForm = ({
                       </TabPanel>
                     </TabView>
 
-                    {/* Display validation error */}
                     {formik.touched.validationFailureDescriptionEn &&
                       formik.errors.validationFailureDescriptionEn && (
                         <Form.Control.Feedback
