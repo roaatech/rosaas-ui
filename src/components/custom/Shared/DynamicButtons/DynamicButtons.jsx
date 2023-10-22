@@ -35,20 +35,12 @@ const DynamicButtons = ({ buttons }) => {
     buttons[currentButtonIndex].request()
     navigate(buttons[currentButtonIndex].navAfterDelete)
   }
-  const paramsID = useParams().id
   // const deleteItem = async () => {
   //   await request[buttons[currentButtonIndex].request]({
   //     id: buttons[currentButtonIndex].id,
   //   })
   //   navigate(buttons[currentButtonIndex].navAfterDelete)
   // }
-
-  const id = buttons[currentButtonIndex]?.id
-
-  const editForm = async () => {
-    const data = await getTenant(id)
-    setTenantData(data.data)
-  }
 
   useEffect(() => {
     ;(() => {
@@ -103,7 +95,7 @@ const DynamicButtons = ({ buttons }) => {
         <TenantSpecificationForm
           popupLabel={<FormattedMessage id="Edit-Specification" />}
           type={'edit'}
-          tenantData={tenantsData[paramsID]}
+          tenantData={tenantsData[buttons[currentButtonIndex].id]}
           visible={visible}
           setVisible={setVisible}
           sideBar={false}

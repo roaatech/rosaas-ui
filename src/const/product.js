@@ -78,7 +78,15 @@ export const featureResetMap = {
   3: 'Monthly',
   4: 'Annual',
 }
-
+export const activeTab = {
+  details: 0,
+  customSpecification: 1,
+  plans: 2,
+  features: 3,
+  plansFeatures: 4,
+  plansPrice: 5,
+  subscriptions: 6,
+}
 export const urlStyle = {
   GET: {
     method: 'GET',

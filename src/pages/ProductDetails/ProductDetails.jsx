@@ -30,6 +30,7 @@ import ProductPlansList from '../../components/custom/Product/ProductPlansList/P
 import ProductPlansPriceList from '../../components/custom/Product/ProductPlansPrice/ProductPlansPriceList'
 import ProductCustomSpecificationList from '../../components/custom/Product/CustomSpecification/ProductCustomSpecificationList'
 import { MdEditNote } from 'react-icons/md'
+import { activeTab } from '../../const/product'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -40,7 +41,7 @@ const ProductDetails = () => {
   const dispatch = useDispatch()
   const [activeIndex, setActiveIndex] = useState(0)
   useEffect(() => {
-    setActiveIndex(0)
+    setActiveIndex(activeTab.details)
   }, [routeParams.id])
   const { getProduct, deleteProductReq } = useRequest()
 

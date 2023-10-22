@@ -26,6 +26,7 @@ import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCo
 import { TabPanel, TabView } from 'primereact/tabview'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
+import { activeTab } from '../../../../../const/product.js'
 const CustomSpecificationForm = ({
   type,
   specificationData,
@@ -146,7 +147,7 @@ const CustomSpecificationForm = ({
         }
 
         if (setActiveIndex) {
-          setActiveIndex(1)
+          setActiveIndex(activeTab.customSpecification)
         }
       } else {
         const editSpecification = await editSpecificationRequest(productId, {
