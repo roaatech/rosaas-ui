@@ -34,6 +34,7 @@ const TenantDetails = () => {
   let direction = useSelector((state) => state.main.direction)
 
   const tenantsData = useSelector((state) => state.tenants.tenants)
+
   const activeIndex = useSelector((state) => state.tenants.currentTab)
   const { getTenant, deleteTenantReq, editTenantStatus, subscriptionDetails } =
     useRequest()
@@ -67,7 +68,7 @@ const TenantDetails = () => {
   }
 
   let tenantObject = tenantsData[routeParams.id]
-
+  const [currentProduct, setCurrentProduct] = useState('')
   let tenantStatus = tenantObject?.subscriptions[0]?.actions
     ? tenantObject?.subscriptions
         ?.flatMap((item) => item?.actions?.map((action) => action))
@@ -86,10 +87,13 @@ const TenantDetails = () => {
   const intl = useIntl()
 
   useEffect(() => {
+    if (!currentProduct) {
+      return
+    }
     const fetchSubscriptionDetails = async () => {
       try {
         const response = await subscriptionDetails(
-          '88e67328-3b20-413e-b6e1-010b48fa7bc9',
+          currentProduct,
           routeParams.id
         )
         const formattedSubscriptionData = {
@@ -105,10 +109,39 @@ const TenantDetails = () => {
             } / ${feature.feature.limit}${
               featureUnitMap[feature.feature.unit]
             } `,
+            subscriptionFeaturesCycles: feature.subscriptionFeaturesCycles.map(
+              (cycle) => ({
+                subscriptionCycleId: cycle.subscriptionCycleId,
+                featureName: cycle.feature.name ? cycle.feature.name : ' ',
+                startDate: cycle.startDate,
+                endDate: cycle.endDate,
+                type: cycle.type,
+                reset: cycle.reset,
+                usage: cycle.limit - cycle.remainingUsage,
+                limit: cycle.limit,
+                remindLimit: `${cycle.remainingUsage}${
+                  featureUnitMap[cycle.unit]
+                } / ${cycle.limit}${featureUnitMap[cycle.unit]} `,
+              })
+            ),
+
+            usage: feature.feature.limit - feature.remainingUsage,
           })),
+          subscriptionCycles: response.data.data.subscriptionCycles.map(
+            (cycle) => ({
+              startDate: cycle.startDate,
+              endDate: cycle.endDate,
+              subscriptionCycleId: cycle.id,
+              plan: cycle.plan.name,
+              price: cycle.price,
+              cycle: cycle.cycle,
+            })
+          ),
           planName: response.data.data.plan.name,
           startDate: response.data.data.startDate,
           endDate: response.data.data.endDate,
+          currentSubscriptionCycleId:
+            response.data.data.currentSubscriptionCycleId,
         }
 
         dispatch(subscriptionData(formattedSubscriptionData))
@@ -118,12 +151,13 @@ const TenantDetails = () => {
     }
 
     fetchSubscriptionDetails()
-  }, [routeParams.id])
+  }, [routeParams.id, currentProduct])
 
   useEffect(() => {
     ;(async () => {
       if (!tenantsData[routeParams.id]?.subscriptions[0]?.status) {
         const tenantData = await getTenant(routeParams.id)
+        setCurrentProduct(tenantData.data.data.subscriptions[0].productId)
         dispatch(tenantInfo(tenantData.data.data))
       }
     })()

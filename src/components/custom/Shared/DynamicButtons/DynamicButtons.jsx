@@ -4,7 +4,7 @@ import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmati
 import ThemeDialog from '../ThemeDialog/ThemeDialog'
 import ProductForm from '../../Product/ProductForm/ProductForm'
 import useRequest from '../../../../axios/apis/useRequest'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import TenantForm from '../../tenant/TenantForm/TenantForm'
 import { Dropdown, Button } from '@themesberg/react-bootstrap'
@@ -16,12 +16,16 @@ import FeaturePlanForm from '../../Product/ProductFeaturePlan/FeaturePlanForm/Fe
 import PlanForm from '../../Product/ProductPlansList/PlanForm/PlanForm'
 import { useEffect } from 'react'
 import PlanPriceForm from '../../Product/ProductPlansPrice/PlanPriceForm/PlanPriceForm'
+import CustomSpecificationForm from '../../Product/CustomSpecification/CustomSpecificationForm/CustomSpecificationForm'
+import TenantSpecificationForm from '../../tenant/TenantSpecificatifonForm/TenantSpecificationForm'
 
 const DynamicButtons = ({ buttons }) => {
+  const { getTenant } = useRequest()
   const navigate = useNavigate()
   const productsData = useSelector((state) => state.products.products)
   const tenantsData = useSelector((state) => state.tenants.tenants)
   let direction = useSelector((state) => state.main.direction)
+  const [tenantData, setTenantData] = useState()
 
   const [confirm, setConfirm] = useState(false)
   const [currentButtonIndex, setCurrentButtonIndex] = useState()
@@ -86,6 +90,20 @@ const DynamicButtons = ({ buttons }) => {
         />
       </>
     ),
+    editTenantSpecification: () => (
+      <>
+        <TenantSpecificationForm
+          popupLabel={<FormattedMessage id="Edit-Specification" />}
+          type={'edit'}
+          tenantData={tenantsData[buttons[currentButtonIndex].id]}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+          updateTenant={buttons[currentButtonIndex].updateTenant}
+          selectedProduct={buttons[currentButtonIndex].selectedProduct}
+        />
+      </>
+    ),
 
     addFeaturePlan: () => (
       <>
@@ -103,6 +121,18 @@ const DynamicButtons = ({ buttons }) => {
       <>
         <PlanForm
           popupLabel={<FormattedMessage id="Add-Plan" />}
+          type={'create'}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+        />
+      </>
+    ),
+    addSpecification: () => (
+      <>
+        <CustomSpecificationForm
+          popupLabel={<FormattedMessage id="Add-Custom-Specification" />}
           type={'create'}
           visible={visible}
           setVisible={setVisible}
@@ -136,7 +166,6 @@ const DynamicButtons = ({ buttons }) => {
       </>
     ),
   }
-
   return (
     <Wrapper direction={direction} className="d-flex">
       <div
@@ -273,10 +302,18 @@ const DynamicButtons = ({ buttons }) => {
         sideBar={false}
       />
 
-      <ThemeDialog visible={visible} setVisible={setVisible}>
+      <ThemeDialog
+        visible={visible}
+        setVisible={setVisible}
+        size={
+          buttons[currentButtonIndex]?.component === 'addSpecification'
+            ? 'lg'
+            : ''
+        }
+      >
         {currentButtonIndex !== undefined &&
         buttons[currentButtonIndex].type == 'form' ? (
-          forms[buttons[currentButtonIndex].component]()
+          forms[buttons[currentButtonIndex]?.component]()
         ) : (
           <></>
         )}

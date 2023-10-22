@@ -9,6 +9,12 @@ const useTenantReq = () => {
   const editTenantRequest = async (data) => {
     return await Request.put('management/sadmin/v1/Tenants', data)
   }
+  const editTenantSpecificationRequest = async (data, tenantId, productId) => {
+    return await Request.put(
+      `management/sadmin/v1/Tenants/${tenantId}/Products/${productId}/Specifications`,
+      data
+    )
+  }
   const getTenant = async (id) => {
     return await Request.get(`management/sadmin/v1/Tenants/${id}`)
   }
@@ -48,6 +54,7 @@ const useTenantReq = () => {
     editTenantStatus,
     getTimeLine,
     subscriptionDetails,
+    editTenantSpecificationRequest,
   }
 }
 

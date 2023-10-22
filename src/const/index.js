@@ -14,6 +14,7 @@ import {
   cycle,
   PublishStatus,
   DateStatus,
+  activeTab,
 } from './product'
 
 export {
@@ -33,4 +34,5 @@ export {
   Owner,
   processType,
   breadcrumbConst,
+  activeTab as activeIndex,
 }

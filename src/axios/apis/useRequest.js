@@ -9,12 +9,14 @@ import useFeatureReq from './Product/feature/useFeatureReq'
 import usePlanPriceReq from './Product/planPrice/usePlanPriceReq'
 import usePlanFeatureReq from './Product/planFeature/usePlanFeatureReq'
 import useSettingsReq from './Setting/useSettingReq'
+import useSpecificationReq from './Product/specification/useSpecificationReq'
 
 const useRequest = () => {
   const { signIn, userData, logOut } = useUserReq()
   const {
     createTenantRequest,
     editTenantRequest,
+    editTenantSpecificationRequest,
     getTenant,
     getTenantList,
     deleteTenantReq,
@@ -39,7 +41,13 @@ const useRequest = () => {
     editPlanRequest,
     deletePlanReq,
   } = usePlanReq()
-
+  const {
+    getProductSpecification,
+    createSpecificationRequest,
+    publishSpecification,
+    editSpecificationRequest,
+    deleteSpecificationReq,
+  } = useSpecificationReq()
   const {
     getProductFeatures,
     createFeatureRequest,
@@ -63,7 +71,12 @@ const useRequest = () => {
     deleteFeaturePlanReq,
   } = usePlanFeatureReq()
 
-  const { getHeathCheckSettings, putHeathCheckSettings } = useSettingsReq()
+  const {
+    getHeathCheckSettings,
+    putHeathCheckSettings,
+    getSubscriptionsSettings,
+    putSubscriptionsSettings,
+  } = useSettingsReq()
 
   return {
     signIn,
@@ -104,6 +117,14 @@ const useRequest = () => {
     deletePlanPriceReq,
     publishPlan,
     subscriptionDetails,
+    getProductSpecification,
+    createSpecificationRequest,
+    publishSpecification,
+    editSpecificationRequest,
+    deleteSpecificationReq,
+    editTenantSpecificationRequest,
+    getSubscriptionsSettings,
+    putSubscriptionsSettings,
   }
 }
 export default useRequest

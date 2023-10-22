@@ -14,13 +14,14 @@ import ReactJson from 'react-json-view'
 import Label from '../../Shared/label/Label'
 import HealthCheckAccordion from '../HealthCheckAccordion/HealthCheckAccordion'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
 import useActions from '../Actions/Actions'
 import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
 import { useSelector } from 'react-redux'
+import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/SubscriptionInfoAccordionNew'
 export default function ChildTable({
   productData,
   tenantId,
@@ -41,7 +42,7 @@ export default function ChildTable({
     })
     updateTenant()
   }
-
+  const intl = useIntl()
   const rowExpansionTemplate = (data) => {
     return (
       <div className="">
@@ -62,7 +63,6 @@ export default function ChildTable({
       description: metadata ? rowExpansionTemplate(JSON.parse(metadata)) : null,
     },
   ])
-
   return (
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
@@ -70,13 +70,23 @@ export default function ChildTable({
           buttons={
             productData.actions && productData.actions[0]?.status != 13
               ? [
+                  // {
+                  //   order: 1,
+                  //   type: 'form',
+                  //   id: routeParams.id,
+                  //   label: 'Edit',
+                  //   component: 'editTenant',
+                  //   updateTenant: updateTenant,
+                  //   icon: <AiFillEdit />,
+                  // },
                   {
                     order: 1,
                     type: 'form',
                     id: routeParams.id,
-                    label: 'Edit',
-                    component: 'editTenant',
+                    label: 'Edit-Specification',
+                    component: 'editTenantSpecification',
                     updateTenant: updateTenant,
+                    selectedProduct: productData.productId,
                     icon: <AiFillEdit />,
                   },
                   ...renderActions(
@@ -104,6 +114,7 @@ export default function ChildTable({
                   <TenantStatus statusValue={productData.status} />
                 </td>
               </tr>
+
               <tr>
                 <td className="fw-bold firstTd">
                   <FormattedMessage id="Health-Check-Url" />
@@ -131,15 +142,29 @@ export default function ChildTable({
                 </td>
                 <td>{DataTransform(productData.editedDate)}</td>
               </tr>
-
+              {productData.specifications.map((spec, index) => (
+                <tr key={spec.id}>
+                  <td className="fw-bold firstTd">
+                    {spec.displayName[intl.locale] ||
+                      (intl.locale === 'ar' && spec.displayName['en']) ||
+                      (intl.locale === 'en' && spec.displayName['ar'])}
+                  </td>
+                  <td>{spec.value}</td>
+                </tr>
+              ))}
               <tr>
                 <td className="pl-0 pr-0" colSpan={2}>
                   <MetaDataAccordion defaultKey="metaData" data={products} />
                 </td>
               </tr>
-              <tr>
+              {/* <tr>
                 <td className="pl-0 pr-0" colSpan={2}>
                   <SubscriptionInfoAccordion />
+                </td>
+              </tr> */}
+              <tr>
+                <td className="pl-0 pr-0" colSpan={2}>
+                  <SubscriptionInfoAccordionNew />
                 </td>
               </tr>
 
@@ -178,7 +203,7 @@ export default function ChildTable({
             </Card.Header>
             <Card.Body className="pb-0">
               <Workflow
-                productId={productData.product.id}
+                productId={productData && productData?.product?.id}
                 updateDetails={updateDetails}
                 productIndex={productIndex}
               />

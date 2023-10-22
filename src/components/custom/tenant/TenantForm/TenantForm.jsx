@@ -11,10 +11,13 @@ import {
   deleteAllPlan,
   deleteAllPlanPrice,
   setAllPlans,
+  setAllSpecifications,
   setAllProduct,
 } from '../../../../store/slices/products.js'
 import { Wrapper } from './TenantForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
+import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
+import { validateSpecifications } from '../validateSpecifications/validateSpecifications.jsx'
 
 const TenantForm = ({
   type,
@@ -29,15 +32,18 @@ const TenantForm = ({
     editTenantRequest,
     getProductPlans,
     getProductPlanPriceList,
+    getProductSpecification,
   } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
   const navigate = useNavigate()
+  const [specValidationErrors, setSpecValidationErrors] = useState({})
 
   const dispatch = useDispatch()
   const { getProductList } = useRequest()
 
   const listData = useSelector((state) => state.products.products)
+
   let list = Object.values(listData)
 
   useEffect(() => {
@@ -80,9 +86,15 @@ const TenantForm = ({
     type === 'create' ? createValidation : editValidation
   )
 
-  const selectedProduct = tenantData?.products?.map((product) => {
-    return product.id
+  const selectedProduct = tenantData?.subscriptions?.map((product) => {
+    return product.productId
   })
+  const specificationValuesObject = (tenantData?.subscriptions || [])
+    .flatMap((subscription) => subscription?.specifications || [])
+    .reduce((acc, specification) => {
+      acc[specification.id] = specification.value
+      return acc
+    }, {})
 
   const initialValues = {
     title: tenantData ? tenantData.title : '',
@@ -95,46 +107,75 @@ const TenantForm = ({
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
+
     onSubmit: async (values) => {
-      setVisible(false)
-      if (type == 'create') {
-        const createTenant = await createTenantRequest({
-          subscriptions: [
-            {
+      const specificationsArray = productData?.specifications
+        ? Object.values(productData.specifications).map((specification) => {
+            const specificationId = specification.id
+            const value =
+              specificationValues[specificationId] !== undefined
+                ? specificationValues[specificationId]
+                : ''
+            return {
+              specificationId,
+              value,
               productId: values.product,
-              planId: values.plan,
-              planPriceId: values.price,
-            },
-          ],
-          uniqueName: values.uniqueName,
-          title: values.title,
-        })
-
-        dispatch(
-          deleteAllPlan({
-            productId: values.product,
+            }
           })
-        )
-        dispatch(
-          deleteAllPlanPrice({
-            productId: values.product,
+        : []
+      const specErrors = validateSpecifications(
+        filteredSpecificationsArray,
+        specificationValues,
+        intl,
+        setSpecValidationErrors
+      )
+      formik.setErrors(specErrors.errors)
+      if (
+        Object.keys(formik.errors).length === 0 &&
+        Object.keys(specErrors.errors).length === 0
+      ) {
+        if (type == 'create') {
+          const createTenant = await createTenantRequest({
+            subscriptions: [
+              {
+                productId: values.product,
+                planId: values.plan,
+                planPriceId: values.price,
+                specifications: specificationsArray,
+              },
+            ],
+            uniqueName: values.uniqueName,
+            title: values.title,
           })
-        )
 
-        navigate(`/tenants/${createTenant.data.data.id}`)
-      } else {
-        const editTenant = await editTenantRequest({
-          title: values.title,
-          uniqueName: values.uniqueName,
-          id: tenantData.id,
-          product: selectedProduct,
-        })
-        updateTenant()
+          dispatch(
+            deleteAllPlan({
+              productId: values.product,
+            })
+          )
+          dispatch(
+            deleteAllPlanPrice({
+              productId: values.product,
+            })
+          )
+
+          navigate(`/tenants/${createTenant.data.data.id}`)
+        } else {
+          const editTenant = await editTenantRequest({
+            title: values.title,
+            uniqueName: values.uniqueName,
+            id: tenantData.id,
+            product: selectedProduct,
+            specifications: specificationsArray,
+          })
+          updateTenant()
+        }
+        setVisible && setVisible(false)
+        setVisible && setVisible(false)
       }
-      setVisible && setVisible(false)
-      setVisible && setVisible(false)
     },
   })
+
   const intl = useIntl()
   let planOptions
   if (listData[formik.values.product]?.plans) {
@@ -151,6 +192,7 @@ const TenantForm = ({
   const options = list.map((item) => {
     return { value: item.id, label: item.name }
   })
+  const [specificationValues, setSpecificationValues] = useState({})
 
   useEffect(() => {
     ;(async () => {
@@ -166,9 +208,39 @@ const TenantForm = ({
             })
           )
         }
+        if (!listData[formik.values.product].specifications) {
+          const specifications = await getProductSpecification(
+            formik.values.product
+          )
+
+          dispatch(
+            setAllSpecifications({
+              productId: formik.values.product,
+              data: specifications.data.data,
+            })
+          )
+        }
       }
     })()
   }, [formik.values.product])
+
+  const productData = listData[formik.values.product]
+
+  const allSpecificationsArray = productData?.specifications
+    ? Object.values(productData.specifications)
+    : []
+
+  const filteredSpecificationsArray = allSpecificationsArray.filter(
+    (spec) => spec.isPublished === true
+  )
+
+  const handleSpecificationChange = (specificationId, event) => {
+    const newValue = event.target.value
+    setSpecificationValues((prevValues) => ({
+      ...prevValues,
+      [specificationId]: newValue,
+    }))
+  }
 
   useEffect(() => {
     ;(async () => {
@@ -291,6 +363,7 @@ const TenantForm = ({
               </Form.Group>
             </div>
           )}
+
           {type === 'create' && (
             <div>
               <Form.Group className="mb-3">
@@ -331,7 +404,7 @@ const TenantForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Price" />{' '}
+                  <FormattedMessage id="Subscription-Options" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
@@ -363,32 +436,24 @@ const TenantForm = ({
               </Form.Group>
             </div>
           )}
-          {/* <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                Product <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
+          {type === 'create' &&
+            Array.isArray(filteredSpecificationsArray) &&
+            filteredSpecificationsArray.length > 0 && (
+              <>
+                <SpecificationInput
+                  specifications={filteredSpecificationsArray}
+                  specificationValues={specificationValues}
+                  handleSpecificationChange={handleSpecificationChange}
+                  tenantData={tenantData}
+                  intl={intl}
+                  specValidationErrors={specValidationErrors}
+                />
+              </>
+            )}
 
-              <MultiSelect
-                id="product"
-                name="product"
-                value={formik.values.product}
-                options={options}
-                onChange={(e) => formik.setFieldValue('product', e.value)}
-                className="w-100"
-                display="chip"
-              />
-
-              {formik.touched.product && formik.errors.product && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.product}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div> */}
+          {formik.errors.specifications && (
+            <div className="text-danger">{formik.errors.specifications}</div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>

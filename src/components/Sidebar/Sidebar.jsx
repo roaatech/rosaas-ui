@@ -13,6 +13,10 @@ import {
   BsGearFill,
   BsFillClipboard2CheckFill,
   BsBoxes,
+  BsSubscript,
+  BsPersonFillDown,
+  BsPersonSlash,
+  BsPeople,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -24,7 +28,8 @@ import {
 } from '@themesberg/react-bootstrap'
 import { Link } from 'react-router-dom'
 import { Routes } from '../../routes'
-import logo from '../../assets/img/brand/rosas.svg'
+import logoEn from '../../assets/img/brand/rosas.svg'
+import logoAr from '../../assets/img/brand/rosas-ar.svg'
 import ProfilePicture from '../../assets/img/team/profile-picture-1.png'
 import { logOut } from '../../store/slices/auth'
 import { useDispatch, useSelector } from 'react-redux'
@@ -60,12 +65,17 @@ export default (props = {}) => {
 
   let unFilteredProducts = Object.values(productsData)
   const setUnFilteredProducts = (newData) => {
-    console.log({ newData })
     unFilteredProducts = newData
   }
 
   let direction = useSelector((state) => state.main.direction)
+  let selectedLogo
 
+  if (direction === 'rtl') {
+    selectedLogo = logoAr
+  } else {
+    selectedLogo = logoEn
+  }
   const [visibleHead, setVisibleHead] = useState(false)
   const [first, setFirst] = useState(0)
   const { getTenantList, getProductList } = useRequest()
@@ -269,7 +279,7 @@ export default (props = {}) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              <img src={logo} alt="logo" className="my-3 logo" />
+              <img src={selectedLogo} alt="logo" className="my-3 logo" />
 
               <QuickActions setSearchValue={setSearchValues} />
               {active.length ? (
@@ -365,6 +375,11 @@ export default (props = {}) => {
                   title={<FormattedMessage id="Health-Check-sidebar" />}
                   link={`/settings/health-check`}
                   icon={BsFillClipboard2CheckFill}
+                />
+                <NavItem
+                  title={<FormattedMessage id="Subscriptions" />}
+                  link={`/settings/subscriptions`}
+                  icon={BsPeople}
                 />
               </CollapsableNavItem>
             </Nav>

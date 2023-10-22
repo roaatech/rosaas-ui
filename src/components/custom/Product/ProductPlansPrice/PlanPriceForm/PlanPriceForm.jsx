@@ -15,7 +15,7 @@ import {
 } from '../../../../../store/slices/products.js'
 
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
-import { cycle } from '../../../../../const/index.js'
+import { activeIndex, cycle } from '../../../../../const/index.js'
 
 const PlanPriceForm = ({
   type,
@@ -200,7 +200,7 @@ const PlanPriceForm = ({
         )
 
         if (setActiveIndex) {
-          setActiveIndex(4)
+          setActiveIndex(activeIndex.plansPrice)
         }
       } else {
         const editPlan = await editPlanPriceRequest(productId, {

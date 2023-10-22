@@ -1,6 +1,7 @@
 import styled from 'styled-components'
+const darkColor = '#414042'
 export const Wrapper = styled.div`
-  background: ${(props) => (props.darkMode ? '#414042' : 'white')};
+  background: ${(props) => (props.darkMode ? darkColor : 'white')};
   padding: 10px 25px;
   margin: 0;
   display: flex;

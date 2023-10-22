@@ -15,7 +15,7 @@ import {
 } from '../../../../../store/slices/products.js'
 import { setAllPlans } from '../../../../../store/slices/products.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx' // Import the missing component
-import { featureUnitMap } from '../../../../../const/index.js'
+import { activeIndex, featureUnitMap } from '../../../../../const/index.js'
 
 const FeaturePlanForm = ({
   type,
@@ -194,7 +194,7 @@ const FeaturePlanForm = ({
         )
 
         if (setActiveIndex) {
-          setActiveIndex(3)
+          setActiveIndex(activeIndex.plansFeatures)
         }
       } else {
         const dataDetails = {
