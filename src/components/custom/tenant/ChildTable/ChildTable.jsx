@@ -83,7 +83,7 @@ export default function ChildTable({
                     order: 1,
                     type: 'form',
                     id: routeParams.id,
-                    label: 'Edit Specification',
+                    label: 'Edit-Specification',
                     component: 'editTenantSpecification',
                     updateTenant: updateTenant,
                     selectedProduct: productData.productId,
