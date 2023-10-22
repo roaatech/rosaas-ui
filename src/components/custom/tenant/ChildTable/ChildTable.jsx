@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Card, Table } from '@themesberg/react-bootstrap'
 import { Wrapper } from './ChildTable.style'
@@ -20,8 +20,9 @@ import { AiFillEdit } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
 import useActions from '../Actions/Actions'
 import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/SubscriptionInfoAccordionNew'
+import { setAllSpecifications } from '../../../../store/slices/products'
 export default function ChildTable({
   productData,
   tenantId,
@@ -30,6 +31,38 @@ export default function ChildTable({
   productIndex,
   tenantObject,
 }) {
+  const { getProductSpecification } = useRequest()
+  const dispatch = useDispatch()
+
+  const listProducts = useSelector((state) => state.products.products)
+  useEffect(() => {
+    ;(async () => {
+      if (listProducts[productData.productId]) {
+        if (!listProducts[productData.productId].specifications) {
+          const specifications = await getProductSpecification(
+            productData.productId
+          )
+
+          dispatch(
+            setAllSpecifications({
+              productId: productData.productId,
+              data: specifications.data.data,
+            })
+          )
+        }
+      }
+    })()
+  }, [productData.productId])
+  const currentProduct = listProducts[productData.productId]
+
+  const checkSpecificationsArray =
+    (currentProduct?.specifications
+      ? Object.values(currentProduct.specifications)
+      : []
+    ).filter(
+      (spec) => spec.isPublished === true && spec.isUserEditable === true
+    ).length > 0
+
   const { renderActions } = useActions()
   const { editTenantStatus } = useRequest()
   let direction = useSelector((state) => state.main.direction)
@@ -70,25 +103,26 @@ export default function ChildTable({
           buttons={
             productData.actions && productData.actions[0]?.status != 13
               ? [
-                  // {
-                  //   order: 1,
-                  //   type: 'form',
-                  //   id: routeParams.id,
-                  //   label: 'Edit',
-                  //   component: 'editTenant',
-                  //   updateTenant: updateTenant,
-                  //   icon: <AiFillEdit />,
-                  // },
-                  {
-                    order: 1,
-                    type: 'form',
-                    id: routeParams.id,
-                    label: 'Edit-Specification',
-                    component: 'editTenantSpecification',
-                    updateTenant: updateTenant,
-                    selectedProduct: productData.productId,
-                    icon: <AiFillEdit />,
-                  },
+                  !checkSpecificationsArray
+                    ? {
+                        order: 1,
+                        type: 'form',
+                        id: routeParams.id,
+                        label: 'Edit',
+                        component: 'editTenant',
+                        updateTenant: updateTenant,
+                        icon: <AiFillEdit />,
+                      }
+                    : {
+                        order: 1,
+                        type: 'form',
+                        id: routeParams.id,
+                        label: 'Edit-Specification',
+                        component: 'editTenantSpecification',
+                        updateTenant: updateTenant,
+                        selectedProduct: productData.productId,
+                        icon: <AiFillEdit />,
+                      },
                   ...renderActions(
                     tenantObject,
                     productData.actions,
