@@ -30,9 +30,13 @@ export default function NoteInputConfirmation({
       <ConfirmDialog
         message={
           <>
-            <h6>
+            <h6 className="mr-1">
               {' '}
-              <BsExclamationTriangle style={{ width: '30px' }} /> {message}
+              <BsExclamationTriangle
+                className="mb-1"
+                style={{ width: '20px' }}
+              />{' '}
+              {message}
             </h6>
             <br />
             <input
