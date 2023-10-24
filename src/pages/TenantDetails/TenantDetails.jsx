@@ -24,6 +24,7 @@ import useActions from '../../components/custom/tenant/Actions/Actions'
 import { featureUnitMap } from '../../const'
 
 import { featureResetMap } from '../../const'
+import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -47,15 +48,23 @@ const TenantDetails = () => {
     await dispatch(removeTenant(routeParams.id))
     setUpdateDetails(updateDetails + 1)
   }
-
-  const chagneStatus = async (actionStatus) => {
+  const [status, setStatus] = useState()
+  const chagneStatus = async (actionStatus, notes) => {
     await editTenantStatus({
       TenantId: routeParams.id,
       status: actionStatus,
+      notes: notes,
     })
     updateTenant()
   }
-
+  const statusConfirm = (data) => {
+    setConfirm(true)
+    setStatus(data)
+  }
+  const messages = {
+    8: 'Deactivate-Tenant-Confirmation',
+    11: 'Delete-Tenant-Confirmation',
+  }
   const deleteConfirm = (id) => {
     setCurrentId(id)
     setConfirm(true)
@@ -218,6 +227,7 @@ const TenantDetails = () => {
                                       tenantObject,
                                       tenantStatus,
                                       chagneStatus,
+                                      statusConfirm,
                                       deleteConfirm
                                     ),
                                   ]
@@ -225,6 +235,7 @@ const TenantDetails = () => {
                                     tenantObject,
                                     tenantStatus,
                                     chagneStatus,
+                                    statusConfirm,
                                     deleteConfirm
                                   )
                             }
@@ -343,7 +354,6 @@ const TenantDetails = () => {
                       </TabPanel>
                     ))}
                   </TabView>
-
                   <DeleteConfirmation
                     message="Do you want to delete this Tenant?"
                     icon="pi pi-exclamation-triangle"
@@ -353,6 +363,15 @@ const TenantDetails = () => {
                     sideBar={true}
                   />
 
+                  {status && (
+                    <NoteInputConfirmation
+                      confirm={confirm}
+                      setConfirm={setConfirm}
+                      confirmFunction={chagneStatus}
+                      message={intl.formatMessage({ id: messages[status] })}
+                      data={status}
+                    />
+                  )}
                   <ThemeDialog visible={visible} setVisible={setVisible}>
                     <TenantForm
                       popupLabel={<FormattedMessage id="Edit-Tenant" />}

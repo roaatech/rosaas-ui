@@ -12,7 +12,7 @@ import {
   PlansPriceInfo,
   setAllPlansPrice,
   setAllPlans,
-} from '../../../../../store/slices/products.js'
+} from '../../../../../store/slices/products/productsSlice.js'
 
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import { activeIndex, cycle } from '../../../../../const/index.js'

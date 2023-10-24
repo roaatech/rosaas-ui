@@ -124,6 +124,14 @@ export default function Tenant({ children }) {
           setVisibleHead={setVisibleHead}
           setFirst={setFirst}
         >
+          <DeleteConfirmation
+            message="Do you want to delete this Tenant?"
+            icon="pi pi-exclamation-triangle"
+            confirm={confirm}
+            setConfirm={setConfirm}
+            confirmFunction={deleteTenant}
+            sideBar={true}
+          />
           <TenantForm
             type={'create'}
             update={update}

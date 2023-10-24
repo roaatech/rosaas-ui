@@ -49,7 +49,7 @@ const SpecificationInput = ({
   // }
 
   return (
-    <Form>
+    <div>
       {specifications.map((specification) => {
         const {
           id,
@@ -73,7 +73,7 @@ const SpecificationInput = ({
                 (intl.locale === 'en' && displayName['ar'])}
               {isRequired && <span style={{ color: 'red' }}>*</span>}
             </Form.Label>{' '}
-            {description && (
+            {description.en || description.ar ? (
               <span className="fw-normal">
                 <OverlayTrigger
                   trigger={['hover', 'focus']}
@@ -90,6 +90,8 @@ const SpecificationInput = ({
                   </span>
                 </OverlayTrigger>
               </span>
+            ) : (
+              ''
             )}
             <div>
               <input
@@ -111,7 +113,7 @@ const SpecificationInput = ({
           </Form.Group>
         )
       })}
-    </Form>
+    </div>
   )
 }
 

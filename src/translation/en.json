@@ -245,5 +245,7 @@
   "subscription-Worker-Time-Period": "Subscription Worker Period in hours",
   "subscription-Worker-Time-Period-desc": " Regularly monitors and updates subscription status to ensure smooth transitions, including deactivation upon expiration.",
   "Grace-Period": "Grace Period in hours",
-  "Grace-Period-desc": "Offers customers extra time to resolve payment issues or update their information before subscription deactivation due to non-payment."
+  "Grace-Period-desc": "Offers customers extra time to resolve payment issues or update their information before subscription deactivation due to non-payment.",
+  "Deactivate-Tenant-Confirmation": "Are you sure you want to deactivate this tenant ?",
+  "Delete-Tenant-Confirmation": "Do you wish to permanently delete this tenant ?"
 }

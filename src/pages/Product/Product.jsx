@@ -39,7 +39,7 @@ import {
   productInfo,
   removeProductStore,
   setAllProduct,
-} from '../../store/slices/products'
+} from '../../store/slices/products/productsSlice.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 

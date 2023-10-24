@@ -10,7 +10,10 @@ import ProductDetailsTab from '../../components/custom/Product/ProdcutDetailsTab
 import ProductTenantsList from '../../components/custom/Product/ProductTenantsList/ProductTenantsList'
 import { TabView, TabPanel } from 'primereact/tabview'
 import { useDispatch, useSelector } from 'react-redux'
-import { productInfo, removeProductStore } from '../../store/slices/products'
+import {
+  productInfo,
+  removeProductStore,
+} from '../../store/slices/products/productsSlice.js'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'

@@ -22,7 +22,7 @@ import useActions from '../Actions/Actions'
 import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
 import { useDispatch, useSelector } from 'react-redux'
 import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/SubscriptionInfoAccordionNew'
-import { setAllSpecifications } from '../../../../store/slices/products'
+import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
 export default function ChildTable({
   productData,
   tenantId,
@@ -68,11 +68,11 @@ export default function ChildTable({
   let direction = useSelector((state) => state.main.direction)
 
   const chagneStatus = async (actionStatus) => {
-    await editTenantStatus({
-      TenantId: tenantId,
-      status: actionStatus,
-      productId: productData.id,
-    })
+    // await editTenantStatus({
+    //   TenantId: tenantId,
+    //   status: actionStatus,
+    //   productId: productData.id,
+    // })
     updateTenant()
   }
   const intl = useIntl()
@@ -100,29 +100,30 @@ export default function ChildTable({
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
         <DynamicButtons
+          disableFormButtons={!checkSpecificationsArray}
           buttons={
             productData.actions && productData.actions[0]?.status != 13
               ? [
-                  !checkSpecificationsArray
-                    ? {
-                        order: 1,
-                        type: 'form',
-                        id: routeParams.id,
-                        label: 'Edit',
-                        component: 'editTenant',
-                        updateTenant: updateTenant,
-                        icon: <AiFillEdit />,
-                      }
-                    : {
-                        order: 1,
-                        type: 'form',
-                        id: routeParams.id,
-                        label: 'Edit-Specification',
-                        component: 'editTenantSpecification',
-                        updateTenant: updateTenant,
-                        selectedProduct: productData.productId,
-                        icon: <AiFillEdit />,
-                      },
+                  //  {
+                  //       order: 1,
+                  //       type: 'form',
+                  //       id: routeParams.id,
+                  //       label: 'Edit',
+                  //       component: 'editTenant',
+                  //       updateTenant: updateTenant,
+                  //       icon: <AiFillEdit />,
+                  //     }
+                  //   :
+                  {
+                    order: 1,
+                    type: 'form',
+                    id: routeParams.id,
+                    label: 'Edit-Specification',
+                    component: 'editTenantSpecification',
+                    updateTenant: updateTenant,
+                    selectedProduct: productData.productId,
+                    icon: <AiFillEdit />,
+                  },
                   ...renderActions(
                     tenantObject,
                     productData.actions,

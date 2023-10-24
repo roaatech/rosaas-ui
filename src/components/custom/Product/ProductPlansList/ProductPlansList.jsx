@@ -15,7 +15,7 @@ import {
   PlansChangeAttr,
   deletePlan,
   setAllPlans,
-} from '../../../../store/slices/products'
+} from '../../../../store/slices/products/productsSlice.js'
 import { FormattedMessage, useIntl } from 'react-intl'
 import {
   faEdit,

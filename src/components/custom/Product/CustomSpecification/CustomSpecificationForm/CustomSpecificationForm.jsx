@@ -20,7 +20,7 @@ import { useParams } from 'react-router-dom'
 import {
   specificationInfo,
   setAllSpecifications,
-} from '../../../../../store/slices/products.js'
+} from '../../../../../store/slices/products/productsSlice.js'
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import { TabPanel, TabView } from 'primereact/tabview'

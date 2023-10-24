@@ -24,7 +24,7 @@ import {
   deletePlanPrice,
   setAllPlans,
   setAllPlansPrice,
-} from '../../../../store/slices/products'
+} from '../../../../store/slices/products/productsSlice.js'
 import PlanPriceForm from './PlanPriceForm/PlanPriceForm'
 import { Wrapper } from './ProductPlansPriceList.styled'
 import { cycle } from '../../../../const'

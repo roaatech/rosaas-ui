@@ -26,7 +26,7 @@ import {
   deleteFeaturePlan,
   setAllFeaturePlan,
   setAllPlans,
-} from '../../../../store/slices/products'
+} from '../../../../store/slices/products/productsSlice.js'
 import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 import { Wrapper } from './ProductFeaturePlan.styled'
 import { featureResetMap, featureUnitMap } from '../../../../const'

@@ -12,8 +12,8 @@ import {
   featurePlanInfo,
   setAllFeaturePlan,
   setAllFeatures,
-} from '../../../../../store/slices/products.js'
-import { setAllPlans } from '../../../../../store/slices/products.js'
+} from '../../../../../store/slices/products/productsSlice.js'
+import { setAllPlans } from '../../../../../store/slices/products/productsSlice.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx' // Import the missing component
 import { activeIndex, featureUnitMap } from '../../../../../const/index.js'
 
