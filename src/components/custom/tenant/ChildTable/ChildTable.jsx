@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/SubscriptionInfoAccordionNew'
 import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
+import { statusConst } from '../../../../const'
 export default function ChildTable({
   productData,
   tenantId,
@@ -84,10 +85,7 @@ export default function ChildTable({
     setConfirm(true)
     setStatus(data)
   }
-  const messages = {
-    8: 'Deactivate-Tenant-Confirmation',
-    11: 'Delete-Tenant-Confirmation',
-  }
+
   const intl = useIntl()
   const rowExpansionTemplate = (data) => {
     return (
@@ -270,7 +268,7 @@ export default function ChildTable({
             setConfirm={setConfirm}
             confirmFunction={chagneStatus}
             message={intl.formatMessage({
-              id: messages[status] || 'default-status-message',
+              id: statusConst[status].message || 'default-status-message',
             })}
             data={status}
           />

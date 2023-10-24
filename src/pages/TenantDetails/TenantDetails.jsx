@@ -61,10 +61,7 @@ const TenantDetails = () => {
     setConfirm(true)
     setStatus(data)
   }
-  const messages = {
-    8: 'Deactivate-Tenant-Confirmation',
-    11: 'Delete-Tenant-Confirmation',
-  }
+
   const deleteConfirm = (id) => {
     setCurrentId(id)
     setConfirm(true)
