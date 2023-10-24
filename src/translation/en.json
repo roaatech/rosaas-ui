@@ -247,5 +247,7 @@
   "Grace-Period": "Grace Period in hours",
   "Grace-Period-desc": "Offers customers extra time to resolve payment issues or update their information before subscription deactivation due to non-payment.",
   "Deactivate-Tenant-Confirmation": "Are you sure you want to deactivate this tenant ?",
-  "Delete-Tenant-Confirmation": "Do you wish to permanently delete this tenant ?"
+  "default-status-message": "Are you sure you want to do this action ?",
+  "Delete-Tenant-Confirmation": "Do you wish to permanently delete this tenant ?",
+  "Activate-Tenant-Confirmation": "Are you sure you want to activate this tenant ?"
 }

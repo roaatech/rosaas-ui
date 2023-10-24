@@ -21,7 +21,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import useActions from '../../components/custom/tenant/Actions/Actions'
-import { featureUnitMap } from '../../const'
+import { featureUnitMap, statusConst } from '../../const'
 
 import { featureResetMap } from '../../const'
 import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
@@ -368,7 +368,11 @@ const TenantDetails = () => {
                       confirm={confirm}
                       setConfirm={setConfirm}
                       confirmFunction={chagneStatus}
-                      message={intl.formatMessage({ id: messages[status] })}
+                      message={intl.formatMessage({
+                        id:
+                          statusConst[status].message ||
+                          'default-status-message',
+                      })}
                       data={status}
                     />
                   )}

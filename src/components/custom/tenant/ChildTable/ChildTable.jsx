@@ -269,7 +269,9 @@ export default function ChildTable({
             confirm={confirm}
             setConfirm={setConfirm}
             confirmFunction={chagneStatus}
-            message={intl.formatMessage({ id: messages[status] })}
+            message={intl.formatMessage({
+              id: messages[status] || 'default-status-message',
+            })}
             data={status}
           />
         )}
