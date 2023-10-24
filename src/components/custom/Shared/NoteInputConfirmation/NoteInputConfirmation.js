@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import { FormattedMessage } from 'react-intl'
 import { GiTriangleTarget } from 'react-icons/gi'
 import { BsExclamationTriangle } from 'react-icons/bs'
+import DescriptionCell from '../DescriptionCell/DescriptionCell'
+import { TextareaCounterWrapper } from '../TextareaAndCounter/TextareaAndCounter.styled'
+import TextareaAndCounter from '../TextareaAndCounter/TextareaAndCounter'
 
 export default function NoteInputConfirmation({
   confirm,
@@ -15,6 +18,7 @@ export default function NoteInputConfirmation({
   const [notes, setNotes] = useState('')
 
   const accept = async () => {
+    // alert(notes)
     await confirmFunction(data, notes)
     setConfirm(false)
     setNotes('')
@@ -39,12 +43,12 @@ export default function NoteInputConfirmation({
               {message}
             </h6>
             <br />
-            <input
-              type="text"
-              value={notes}
-              className="form-control"
+
+            <TextareaAndCounter
+              maxLength="250"
+              showCharCount="true"
+              inputValue={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Description"
             />
           </>
         }

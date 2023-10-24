@@ -71,10 +71,11 @@ export default function ChildTable({
 
   let direction = useSelector((state) => state.main.direction)
 
-  const chagneStatus = async (actionStatus) => {
+  const chagneStatus = async (actionStatus, notes) => {
     await editTenantStatus({
       TenantId: tenantId,
       status: actionStatus,
+      notes: notes,
       productId: productData.id,
     })
     updateTenant()
