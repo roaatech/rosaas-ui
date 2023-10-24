@@ -60,6 +60,8 @@ const CustomSpecificationForm = ({
       specificationData?.validationFailureDescription?.ar || '',
   }
   const allProducts = useSelector((state) => state.products.products)
+  const direction = useSelector((state) => state.main.direction)
+
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .max(100, intl.formatMessage({ id: 'Maximum-Length-100' }))
@@ -231,7 +233,10 @@ const CustomSpecificationForm = ({
           >
             <Container>
               <Row>
-                <Col md={6} style={{ borderRight: '1px solid #f1f1f1' }}>
+                <Col
+                  md={6}
+                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
+                >
                   <Form.Group className="mb-3">
                     <Form.Label>
                       <FormattedMessage id="Name" />{' '}
@@ -248,7 +253,11 @@ const CustomSpecificationForm = ({
                           }
                         >
                           <span>
-                            <BsFillQuestionCircleFill />
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
                           </span>
                         </OverlayTrigger>
                       </span>
@@ -287,7 +296,11 @@ const CustomSpecificationForm = ({
                           }
                         >
                           <span>
-                            <BsFillQuestionCircleFill />
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
                           </span>
                         </OverlayTrigger>
                       </span>
@@ -326,7 +339,11 @@ const CustomSpecificationForm = ({
                           }
                         >
                           <span>
-                            <BsFillQuestionCircleFill />
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
                           </span>
                         </OverlayTrigger>
                       </span>
@@ -359,7 +376,10 @@ const CustomSpecificationForm = ({
           >
             <Container>
               <Row>
-                <Col md={6} style={{ borderRight: '1px solid #f1f1f1' }}>
+                <Col
+                  md={6}
+                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
+                >
                   <div>
                     <Form.Group>
                       <Form.Label className="mb-1">
@@ -377,7 +397,11 @@ const CustomSpecificationForm = ({
                             }
                           >
                             <span>
-                              <BsFillQuestionCircleFill />
+                              <BsFillQuestionCircleFill
+                                className={
+                                  direction == 'rtl' ? 'ar-questionCircle' : ''
+                                }
+                              />
                             </span>
                           </OverlayTrigger>
                         </span>
@@ -448,7 +472,11 @@ const CustomSpecificationForm = ({
                             }
                           >
                             <span>
-                              <BsFillQuestionCircleFill />
+                              <BsFillQuestionCircleFill
+                                className={
+                                  direction == 'rtl' ? 'ar-questionCircle' : ''
+                                }
+                              />
                             </span>
                           </OverlayTrigger>
                         </span>
@@ -515,7 +543,10 @@ const CustomSpecificationForm = ({
           >
             <Container>
               <Row>
-                <Col md={6} style={{ borderRight: '1px solid #f1f1f1' }}>
+                <Col
+                  md={6}
+                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
+                >
                   <div className="toggle-container d-flex align-items-center justify-content-between  mb-2">
                     <Form.Label>
                       <FormattedMessage id="Is-Required" />{' '}
@@ -531,7 +562,11 @@ const CustomSpecificationForm = ({
                           }
                         >
                           <span>
-                            <BsFillQuestionCircleFill />
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
                           </span>
                         </OverlayTrigger>
                       </span>
@@ -566,7 +601,11 @@ const CustomSpecificationForm = ({
                           }
                         >
                           <span>
-                            <BsFillQuestionCircleFill />
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
                           </span>
                         </OverlayTrigger>
                       </span>
@@ -607,7 +646,11 @@ const CustomSpecificationForm = ({
                           }
                         >
                           <span>
-                            <BsFillQuestionCircleFill />
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
                           </span>
                         </OverlayTrigger>
                       </span>
