@@ -23,6 +23,7 @@ import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/Subscription
 import { useDispatch, useSelector } from 'react-redux'
 import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/SubscriptionInfoAccordionNew'
 import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
+import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 export default function ChildTable({
   productData,
   tenantId,
@@ -65,15 +66,26 @@ export default function ChildTable({
 
   const { renderActions } = useActions()
   const { editTenantStatus } = useRequest()
+  const [confirm, setConfirm] = useState(false)
+  const [status, setStatus] = useState()
+
   let direction = useSelector((state) => state.main.direction)
 
   const chagneStatus = async (actionStatus) => {
-    // await editTenantStatus({
-    //   TenantId: tenantId,
-    //   status: actionStatus,
-    //   productId: productData.id,
-    // })
+    await editTenantStatus({
+      TenantId: tenantId,
+      status: actionStatus,
+      productId: productData.id,
+    })
     updateTenant()
+  }
+  const statusConfirm = (data) => {
+    setConfirm(true)
+    setStatus(data)
+  }
+  const messages = {
+    8: 'Deactivate-Tenant-Confirmation',
+    11: 'Delete-Tenant-Confirmation',
   }
   const intl = useIntl()
   const rowExpansionTemplate = (data) => {
@@ -127,10 +139,16 @@ export default function ChildTable({
                   ...renderActions(
                     tenantObject,
                     productData.actions,
-                    chagneStatus
+                    chagneStatus,
+                    statusConfirm
                   ),
                 ]
-              : renderActions(tenantObject, productData.actions, chagneStatus)
+              : renderActions(
+                  tenantObject,
+                  productData.actions,
+                  chagneStatus,
+                  statusConfirm
+                )
           }
         />
       </div>
@@ -245,6 +263,15 @@ export default function ChildTable({
             </Card.Body>
           </Card>
         </div>
+        {status && (
+          <NoteInputConfirmation
+            confirm={confirm}
+            setConfirm={setConfirm}
+            confirmFunction={chagneStatus}
+            message={intl.formatMessage({ id: messages[status] })}
+            data={status}
+          />
+        )}
       </div>
     </Wrapper>
   )
