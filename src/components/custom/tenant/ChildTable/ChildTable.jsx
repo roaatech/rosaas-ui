@@ -206,7 +206,7 @@ export default function ChildTable({
               ))}
 
               <tr>
-                <td className="pl-0 pr-0 accordions" colSpan={2}>
+                <td className="accordions" colSpan={2}>
                   <MetaDataAccordion defaultKey="metaData" data={products} />
                 </td>
               </tr>
@@ -216,14 +216,14 @@ export default function ChildTable({
                 </td>
               </tr> */}
               <tr>
-                <td className="pl-0 pr-0  accordions" colSpan={2}>
+                <td className="accordions" colSpan={2}>
                   <SubscriptionInfoAccordionNew />
                 </td>
               </tr>
 
               {productData?.healthCheckStatus.showHealthStatus == true && (
                 <tr>
-                  <td className="pl-0 pr-0  accordions " colSpan={2}>
+                  <td className="accordions" colSpan={2}>
                     <HealthCheckAccordion
                       defaultKey="HealthCheckStatus"
                       data={[productData]}
