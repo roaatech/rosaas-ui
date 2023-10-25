@@ -14,6 +14,7 @@ export default function NoteInputConfirmation({
   message,
   icon,
   data,
+  placeholder,
 }) {
   const [notes, setNotes] = useState('')
 
@@ -49,6 +50,7 @@ export default function NoteInputConfirmation({
               showCharCount="true"
               inputValue={notes}
               onChange={(e) => setNotes(e.target.value)}
+              placeholder={placeholder}
             />
           </>
         }

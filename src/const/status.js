@@ -80,4 +80,10 @@ export const statusConst = {
     color: '#FF6868',
     icon: 'pi-trash',
   },
+  14: {
+    string: 'Failure',
+    opacity: '35',
+    color: '#ff0000',
+    icon: 'pi-trash',
+  },
 }

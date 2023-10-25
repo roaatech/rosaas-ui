@@ -15,4 +15,5 @@ export const processType = {
   7: 'External-System-Successfully-Informed',
   8: 'Failed-To-Inform-External-System',
   9: 'Payment-Status-Suspended-Due-To-Non-Renewal',
+  10: 'Specifications-Updated',
 }

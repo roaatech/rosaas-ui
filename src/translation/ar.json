@@ -252,5 +252,8 @@
   "Grace-Period": "فترة السماح بالساعات",
   "Deactivate-Tenant-Confirmation": "هل أنت متأكد من رغبتك في تعطيل هذا المستأجر؟",
   "Delete-Tenant-Confirmation": "هل ترغب في حذف هذا المستأجر نهائيًا؟",
-  "default-status-message": "هل أنت متأكد أنك تريد القيام بهذا الإجراء؟"
+  "default-status-message": "هل أنت متأكد أنك تريد القيام بهذا الإجراء؟",
+  "Comment": "تعليق",
+  "Activate": "تفعيل",
+  "Specifications-Updated": "تم تحديث المواصفات"
 }

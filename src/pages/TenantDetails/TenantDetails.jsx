@@ -371,6 +371,7 @@ const TenantDetails = () => {
                           'default-status-message',
                       })}
                       data={status}
+                      placeholder={intl.formatMessage({ id: 'Comment' })}
                     />
                   )}
                   <ThemeDialog visible={visible} setVisible={setVisible}>

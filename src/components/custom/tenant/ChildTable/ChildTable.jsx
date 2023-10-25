@@ -271,6 +271,7 @@ export default function ChildTable({
               id: statusConst[status].message || 'default-status-message',
             })}
             data={status}
+            placeholder={intl.formatMessage({ id: 'Comment' })}
           />
         )}
       </div>

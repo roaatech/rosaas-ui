@@ -249,5 +249,8 @@
   "Deactivate-Tenant-Confirmation": "Are you sure you want to deactivate this tenant ?",
   "default-status-message": "Are you sure you want to do this action ?",
   "Delete-Tenant-Confirmation": "Do you wish to permanently delete this tenant ?",
-  "Activate-Tenant-Confirmation": "Are you sure you want to activate this tenant ?"
+  "Activate-Tenant-Confirmation": "Are you sure you want to activate this tenant ?",
+  "Comment": "Comment",
+  "Activate": "Activate",
+  "Specifications-Updated": "Specifications Updated"
 }
