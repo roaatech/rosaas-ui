@@ -35,16 +35,16 @@ const Wrapper = styled.div`
       /* text-transform: capitalize; */
     }
   }
-  .collapsed {
+  .accordions .collapsed {
     background-color: #ffffff !important;
     border: 0px !important;
     padding-top: 5px !important;
     padding-bottom: 5px !important;
   }
-  .accordion-button {
+  .accordions .accordion-button {
     padding-top: 5px !important;
   }
-  .accordion {
+  .accordions .accordion {
     --bs-accordion-border-color: #ffffff !important;
   }
   .accordion-item {
