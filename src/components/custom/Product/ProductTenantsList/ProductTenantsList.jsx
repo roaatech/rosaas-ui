@@ -22,6 +22,8 @@ import { FormattedMessage } from 'react-intl'
 import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
+import Label from '../../Shared/label/Label'
+import { PaymentStatus } from '../../../../const/product'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { getProductTenants } = useRequest()
@@ -74,7 +76,9 @@ export const ProductTenantsList = ({ productId, productName }) => {
       plan,
       startDate,
       endDate,
+      isPaid,
     } = props
+    const paymentStatus = isPaid ? true : false
 
     return (
       <tr>
@@ -84,6 +88,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
         <td>
           <span className="fw-normal">{uniqueName}</span>
         </td>
+
         {/* <td>
           <span className="fw-normal">
             <OverlayTrigger
@@ -106,6 +111,11 @@ export const ProductTenantsList = ({ productId, productName }) => {
         <td>
           <span className={`fw-normal`}>
             <DateLabelWhite text={plan.name} />
+          </span>
+        </td>
+        <td>
+          <span>
+            <Label {...PaymentStatus[paymentStatus]} />
           </span>
         </td>
         <td>
@@ -168,8 +178,12 @@ export const ProductTenantsList = ({ productId, productName }) => {
               <th className="border-bottom">
                 <FormattedMessage id="Unique-Name" />
               </th>
+
               <th className="border-bottom">
                 <FormattedMessage id="Plan" />
+              </th>
+              <th className="border-bottom">
+                <FormattedMessage id="Payment-Status" />
               </th>
               <th className="border-bottom">
                 <FormattedMessage id="Start-Date" />

@@ -20,7 +20,7 @@
   "yourEmail": "Your Email",
   "yourPassword": "Your Password",
   "Settings": "Settings",
-  "Health-Check-Settings": "Health Check Settings",
+  "Health-Check-Settings": "Health Check",
   "Health-Status-Change-Url": "Health Status Change Url",
   "Health-Status-Change-Url-Description": "Health Status Change Url Description",
   "Creation-Url": "Creation Url",
@@ -252,5 +252,8 @@
   "Activate-Tenant-Confirmation": "Are you sure you want to activate this tenant ?",
   "Comment": "Comment",
   "Activate": "Activate",
-  "Specifications-Updated": "Specifications Updated"
+  "Specifications-Updated": "Specifications Updated",
+  "Payment-Status": "Payment Status",
+  "Paid": "Paid",
+  "Unpaid": "Unpaid"
 }

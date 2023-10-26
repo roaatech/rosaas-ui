@@ -75,7 +75,10 @@ const SubscriptionsSettings = () => {
 
   return (
     <>
-      <BreadcrumbComponent breadcrumbInfo={'HealthCheck'} icon={BsGearFill} />
+      <BreadcrumbComponent
+        breadcrumbInfo={'SubscriptionSettings'}
+        icon={BsGearFill}
+      />
       <Wrapper>
         <Form onSubmit={formik.handleSubmit}>
           <UpperContent>

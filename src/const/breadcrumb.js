@@ -6,6 +6,13 @@ export const breadcrumbConst = {
     active: 'Settings',
     icon: {},
   },
+  SubscriptionSettings: {
+    title: 'Settings',
+    name: 'Subscriptions',
+    navigation: '/settings/Subscriptions',
+    active: 'Settings',
+    icon: {},
+  },
   Dashboard: {
     title: 'Dashboard',
     navigation: '/',
