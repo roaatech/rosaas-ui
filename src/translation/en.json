@@ -200,7 +200,7 @@
   "Remind/Limit": "Remind / Limit",
   "Dark-Mode": "Dark Mode",
   "Light-Mode": "Light Mode",
-  "minutes": "minutes",
+  "minutes": " minutes",
   "a-few-seconds": "a few seconds",
   "From": "From",
   "to": "to",
@@ -245,5 +245,12 @@
   "subscription-Worker-Time-Period": "Subscription Worker Period in hours",
   "subscription-Worker-Time-Period-desc": " Regularly monitors and updates subscription status to ensure smooth transitions, including deactivation upon expiration.",
   "Grace-Period": "Grace Period in hours",
-  "Grace-Period-desc": "Offers customers extra time to resolve payment issues or update their information before subscription deactivation due to non-payment."
+  "Grace-Period-desc": "Offers customers extra time to resolve payment issues or update their information before subscription deactivation due to non-payment.",
+  "Deactivate-Tenant-Confirmation": "Are you sure you want to deactivate this tenant ?",
+  "default-status-message": "Are you sure you want to do this action ?",
+  "Delete-Tenant-Confirmation": "Do you wish to permanently delete this tenant ?",
+  "Activate-Tenant-Confirmation": "Are you sure you want to activate this tenant ?",
+  "Comment": "Comment",
+  "Activate": "Activate",
+  "Specifications-Updated": "Specifications Updated"
 }

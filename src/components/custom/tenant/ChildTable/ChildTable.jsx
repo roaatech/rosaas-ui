@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Card, Table } from '@themesberg/react-bootstrap'
 import { Wrapper } from './ChildTable.style'
@@ -20,8 +20,11 @@ import { AiFillEdit } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
 import useActions from '../Actions/Actions'
 import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/SubscriptionInfoAccordionNew'
+import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
+import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
+import { statusConst } from '../../../../const'
 export default function ChildTable({
   productData,
   tenantId,
@@ -30,18 +33,59 @@ export default function ChildTable({
   productIndex,
   tenantObject,
 }) {
+  const { getProductSpecification } = useRequest()
+  const dispatch = useDispatch()
+
+  const listProducts = useSelector((state) => state.products.products)
+  useEffect(() => {
+    ;(async () => {
+      if (listProducts[productData.productId]) {
+        if (!listProducts[productData.productId].specifications) {
+          const specifications = await getProductSpecification(
+            productData.productId
+          )
+
+          dispatch(
+            setAllSpecifications({
+              productId: productData.productId,
+              data: specifications.data.data,
+            })
+          )
+        }
+      }
+    })()
+  }, [productData.productId])
+  const currentProduct = listProducts[productData.productId]
+
+  const checkSpecificationsArray =
+    (currentProduct?.specifications
+      ? Object.values(currentProduct.specifications)
+      : []
+    ).filter(
+      (spec) => spec.isPublished === true && spec.isUserEditable === true
+    ).length > 0
+
   const { renderActions } = useActions()
   const { editTenantStatus } = useRequest()
+  const [confirm, setConfirm] = useState(false)
+  const [status, setStatus] = useState()
+
   let direction = useSelector((state) => state.main.direction)
 
-  const chagneStatus = async (actionStatus) => {
+  const chagneStatus = async (actionStatus, notes) => {
     await editTenantStatus({
       TenantId: tenantId,
       status: actionStatus,
+      notes: notes,
       productId: productData.id,
     })
     updateTenant()
   }
+  const statusConfirm = (data) => {
+    setConfirm(true)
+    setStatus(data)
+  }
+
   const intl = useIntl()
   const rowExpansionTemplate = (data) => {
     return (
@@ -67,18 +111,20 @@ export default function ChildTable({
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
         <DynamicButtons
+          disableFormButtons={!checkSpecificationsArray}
           buttons={
             productData.actions && productData.actions[0]?.status != 13
               ? [
-                  // {
-                  //   order: 1,
-                  //   type: 'form',
-                  //   id: routeParams.id,
-                  //   label: 'Edit',
-                  //   component: 'editTenant',
-                  //   updateTenant: updateTenant,
-                  //   icon: <AiFillEdit />,
-                  // },
+                  //  {
+                  //       order: 1,
+                  //       type: 'form',
+                  //       id: routeParams.id,
+                  //       label: 'Edit',
+                  //       component: 'editTenant',
+                  //       updateTenant: updateTenant,
+                  //       icon: <AiFillEdit />,
+                  //     }
+                  //   :
                   {
                     order: 1,
                     type: 'form',
@@ -92,10 +138,16 @@ export default function ChildTable({
                   ...renderActions(
                     tenantObject,
                     productData.actions,
-                    chagneStatus
+                    chagneStatus,
+                    statusConfirm
                   ),
                 ]
-              : renderActions(tenantObject, productData.actions, chagneStatus)
+              : renderActions(
+                  tenantObject,
+                  productData.actions,
+                  chagneStatus,
+                  statusConfirm
+                )
           }
         />
       </div>
@@ -152,8 +204,9 @@ export default function ChildTable({
                   <td>{spec.value}</td>
                 </tr>
               ))}
+
               <tr>
-                <td className="pl-0 pr-0" colSpan={2}>
+                <td className="accordions" colSpan={2}>
                   <MetaDataAccordion defaultKey="metaData" data={products} />
                 </td>
               </tr>
@@ -163,14 +216,14 @@ export default function ChildTable({
                 </td>
               </tr> */}
               <tr>
-                <td className="pl-0 pr-0" colSpan={2}>
+                <td className="accordions" colSpan={2}>
                   <SubscriptionInfoAccordionNew />
                 </td>
               </tr>
 
               {productData?.healthCheckStatus.showHealthStatus == true && (
                 <tr>
-                  <td className="pl-0 pr-0" colSpan={2}>
+                  <td className="accordions" colSpan={2}>
                     <HealthCheckAccordion
                       defaultKey="HealthCheckStatus"
                       data={[productData]}
@@ -210,6 +263,18 @@ export default function ChildTable({
             </Card.Body>
           </Card>
         </div>
+        {status && (
+          <NoteInputConfirmation
+            confirm={confirm}
+            setConfirm={setConfirm}
+            confirmFunction={chagneStatus}
+            message={intl.formatMessage({
+              id: statusConst[status].message || 'default-status-message',
+            })}
+            data={status}
+            placeholder={intl.formatMessage({ id: 'Comment' })}
+          />
+        )}
       </div>
     </Wrapper>
   )

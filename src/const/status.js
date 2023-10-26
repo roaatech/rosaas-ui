@@ -3,19 +3,19 @@ export const statusConst = {
     string: 'Rosas-resource-created',
     opacity: '35',
     color: '#155dd7',
-    icon: 'pi-user-plus',
+    // icon: 'pi-user-plus',
   },
   2: {
     string: 'Create-request-is-sent',
     opacity: '10',
     color: '#155dd7',
-    icon: 'pi-user-plus',
+    // icon: 'pi-user-plus',
   },
   3: {
     string: 'Creating',
     opacity: '15',
     color: '#155dd7',
-    icon: 'pi-user-plus',
+    // icon: 'pi-user-plus',
   },
   4: {
     string: 'Created-As-Active',
@@ -28,6 +28,7 @@ export const statusConst = {
     opacity: '10',
     color: '#00a675',
     icon: 'pi-check-circle',
+    message: 'Activate-Tenant-Confirmation',
   },
   6: {
     string: 'Activating',
@@ -46,6 +47,7 @@ export const statusConst = {
     opacity: '10',
     color: '#eda100',
     icon: 'pi-exclamation-triangle',
+    message: 'Deactivate-Tenant-Confirmation',
   },
   9: {
     string: 'Deactivating',
@@ -64,6 +66,7 @@ export const statusConst = {
     opacity: '10',
     color: '#FF6868',
     icon: 'pi-trash',
+    message: 'Delete-Tenant-Confirmation',
   },
   12: {
     string: 'Deleting',
@@ -75,6 +78,12 @@ export const statusConst = {
     string: 'Deleted',
     opacity: '35',
     color: '#FF6868',
+    icon: 'pi-trash',
+  },
+  14: {
+    string: 'Failure',
+    opacity: '35',
+    color: '#ff0000',
     icon: 'pi-trash',
   },
 }

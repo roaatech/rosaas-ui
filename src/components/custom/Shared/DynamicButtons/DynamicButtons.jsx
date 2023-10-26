@@ -19,7 +19,7 @@ import PlanPriceForm from '../../Product/ProductPlansPrice/PlanPriceForm/PlanPri
 import CustomSpecificationForm from '../../Product/CustomSpecification/CustomSpecificationForm/CustomSpecificationForm'
 import TenantSpecificationForm from '../../tenant/TenantSpecificatifonForm/TenantSpecificationForm'
 
-const DynamicButtons = ({ buttons }) => {
+const DynamicButtons = ({ buttons, disableFormButtons }) => {
   const { getTenant } = useRequest()
   const navigate = useNavigate()
   const productsData = useSelector((state) => state.products.products)
@@ -215,6 +215,7 @@ const DynamicButtons = ({ buttons }) => {
                       setVisible(true)
                       setCurrentButtonIndex(index)
                     }}
+                    disabled={disableFormButtons}
                   >
                     {button.icon} <FormattedMessage id={button.label} />
                   </Button>

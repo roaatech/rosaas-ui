@@ -63,22 +63,31 @@ export const Wrapper = styled.div`
     max-height: 43.6px !important;
   }
 
-  .p-tabview .p-tabview-nav li .p-tabview-nav-link{ 
-    padding:  0.5rem  0.75rem 1rem 0.75rem ;
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    padding: 0.5rem 0.75rem 1rem 0.75rem;
   }
 
-  .table-wrapper.table-responsive{
-    padding: 0.75rem 0rem 1rem 0rem ;
+  .table-wrapper.table-responsive {
+    padding: 0.75rem 0rem 1rem 0rem;
   }
-  .p-tabview .p-tabview-panels{
+  .p-tabview .p-tabview-panels {
     padding: 1.25rem 0rem;
   }
-  
-  .char-counter{
+
+  .char-counter {
     font-size: 10px;
   }
   .toggle-container .fa-lg {
     font-size: 1.5em;
     cursor: pointer;
+  }
+  .borderRight {
+    border-right: 1px solid #f1f1f1;
+  }
+  .borderLeft {
+    border-left: 1px solid #f1f1f1;
+  }
+  .ar-questionCircle {
+    transform: scaleX(-1);
   }
 `

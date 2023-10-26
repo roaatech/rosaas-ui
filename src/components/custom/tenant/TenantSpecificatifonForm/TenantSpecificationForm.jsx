@@ -13,7 +13,7 @@ import {
   setAllPlans,
   setAllSpecifications,
   setAllProduct,
-} from '../../../../store/slices/products.js'
+} from '../../../../store/slices/products/productsSlice.js'
 import { Wrapper } from './TenantSpecificatifonForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
