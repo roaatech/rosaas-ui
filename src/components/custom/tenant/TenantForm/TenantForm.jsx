@@ -89,7 +89,6 @@ const TenantForm = ({
   const selectedProduct = tenantData?.subscriptions?.map((product) => {
     return product.productId
   })
-  console.log({ selectedProduct })
 
   const specificationValuesObject = (tenantData?.subscriptions || [])
     .flatMap((subscription) => subscription?.specifications || [])
@@ -164,7 +163,6 @@ const TenantForm = ({
           navigate(`/tenants/${createTenant.data.data.id}`)
         }
       } else {
-        console.log({ selectedProduct })
         const editTenant = await editTenantRequest({
           title: values.title,
           id: tenantData.id,

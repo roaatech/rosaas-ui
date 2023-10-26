@@ -255,5 +255,8 @@
   "default-status-message": "هل أنت متأكد أنك تريد القيام بهذا الإجراء؟",
   "Comment": "تعليق",
   "Activate": "تفعيل",
-  "Specifications-Updated": "تم تحديث المواصفات"
+  "Specifications-Updated": "تم تحديث المواصفات",
+  "Payment-Status": "حالة الدفع",
+  "Paid": "مدفوع",
+  "Unpaid": "غير مدفوع"
 }

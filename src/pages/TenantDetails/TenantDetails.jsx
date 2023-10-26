@@ -49,11 +49,11 @@ const TenantDetails = () => {
     setUpdateDetails(updateDetails + 1)
   }
   const [status, setStatus] = useState()
-  const chagneStatus = async (actionStatus, notes) => {
+  const chagneStatus = async (actionStatus, comment) => {
     await editTenantStatus({
       TenantId: routeParams.id,
       status: actionStatus,
-      notes: notes,
+      comment: comment,
     })
     updateTenant()
   }
@@ -335,7 +335,8 @@ const TenantDetails = () => {
                         </Card.Body>
                       </Card>
                     </TabPanel>
-                    {tenantObject.subscriptions.map((product, index) => (
+
+                    {tenantObject?.subscriptions?.map((product, index) => (
                       <TabPanel
                         header={product?.product.name.toUpperCase()}
                         key={index}

@@ -76,7 +76,7 @@ export default function ChildTable({
     await editTenantStatus({
       TenantId: tenantId,
       status: actionStatus,
-      notes: notes,
+      comment: notes,
       productId: productData.id,
     })
     updateTenant()
