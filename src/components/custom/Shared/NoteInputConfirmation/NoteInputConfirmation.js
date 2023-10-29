@@ -15,9 +15,10 @@ export default function NoteInputConfirmation({
   const [notes, setNotes] = useState('')
 
   const accept = async () => {
-    await confirmFunction(data, notes)
-    setConfirm(false)
-    setNotes('')
+    alert(notes)
+    // await confirmFunction(data, notes)
+    // setConfirm(false)
+    // setNotes('')
   }
 
   const reject = () => {
@@ -39,7 +40,7 @@ export default function NoteInputConfirmation({
               {message}
             </h6>
             <br />
-            <input
+            <textarea
               type="text"
               value={notes}
               className="form-control"
