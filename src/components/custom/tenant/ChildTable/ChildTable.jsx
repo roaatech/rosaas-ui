@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Card, Table } from '@themesberg/react-bootstrap'
 import { Wrapper } from './ChildTable.style'
@@ -14,13 +14,16 @@ import ReactJson from 'react-json-view'
 import Label from '../../Shared/label/Label'
 import HealthCheckAccordion from '../HealthCheckAccordion/HealthCheckAccordion'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import { useParams } from 'react-router-dom'
 import useActions from '../Actions/Actions'
 import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/SubscriptionInfoAccordionNew'
+import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
+import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 export default function ChildTable({
   productData,
   tenantId,
@@ -29,8 +32,43 @@ export default function ChildTable({
   productIndex,
   tenantObject,
 }) {
+  const { getProductSpecification } = useRequest()
+  const dispatch = useDispatch()
+
+  const listProducts = useSelector((state) => state.products.products)
+  useEffect(() => {
+    ;(async () => {
+      if (listProducts[productData.productId]) {
+        if (!listProducts[productData.productId].specifications) {
+          const specifications = await getProductSpecification(
+            productData.productId
+          )
+
+          dispatch(
+            setAllSpecifications({
+              productId: productData.productId,
+              data: specifications.data.data,
+            })
+          )
+        }
+      }
+    })()
+  }, [productData.productId])
+  const currentProduct = listProducts[productData.productId]
+
+  const checkSpecificationsArray =
+    (currentProduct?.specifications
+      ? Object.values(currentProduct.specifications)
+      : []
+    ).filter(
+      (spec) => spec.isPublished === true && spec.isUserEditable === true
+    ).length > 0
+
   const { renderActions } = useActions()
   const { editTenantStatus } = useRequest()
+  const [confirm, setConfirm] = useState(false)
+  const [status, setStatus] = useState()
+
   let direction = useSelector((state) => state.main.direction)
 
   const chagneStatus = async (actionStatus) => {
@@ -41,7 +79,15 @@ export default function ChildTable({
     })
     updateTenant()
   }
-
+  const statusConfirm = (data) => {
+    setConfirm(true)
+    setStatus(data)
+  }
+  const messages = {
+    8: 'Deactivate-Tenant-Confirmation',
+    11: 'Delete-Tenant-Confirmation',
+  }
+  const intl = useIntl()
   const rowExpansionTemplate = (data) => {
     return (
       <div className="">
@@ -62,30 +108,47 @@ export default function ChildTable({
       description: metadata ? rowExpansionTemplate(JSON.parse(metadata)) : null,
     },
   ])
-
   return (
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
         <DynamicButtons
+          disableFormButtons={!checkSpecificationsArray}
           buttons={
             productData.actions && productData.actions[0]?.status != 13
               ? [
+                  //  {
+                  //       order: 1,
+                  //       type: 'form',
+                  //       id: routeParams.id,
+                  //       label: 'Edit',
+                  //       component: 'editTenant',
+                  //       updateTenant: updateTenant,
+                  //       icon: <AiFillEdit />,
+                  //     }
+                  //   :
                   {
                     order: 1,
                     type: 'form',
                     id: routeParams.id,
-                    label: 'Edit',
-                    component: 'editTenant',
+                    label: 'Edit-Specification',
+                    component: 'editTenantSpecification',
                     updateTenant: updateTenant,
+                    selectedProduct: productData.productId,
                     icon: <AiFillEdit />,
                   },
                   ...renderActions(
                     tenantObject,
                     productData.actions,
-                    chagneStatus
+                    chagneStatus,
+                    statusConfirm
                   ),
                 ]
-              : renderActions(tenantObject, productData.actions, chagneStatus)
+              : renderActions(
+                  tenantObject,
+                  productData.actions,
+                  chagneStatus,
+                  statusConfirm
+                )
           }
         />
       </div>
@@ -104,6 +167,7 @@ export default function ChildTable({
                   <TenantStatus statusValue={productData.status} />
                 </td>
               </tr>
+
               <tr>
                 <td className="fw-bold firstTd">
                   <FormattedMessage id="Health-Check-Url" />
@@ -131,15 +195,29 @@ export default function ChildTable({
                 </td>
                 <td>{DataTransform(productData.editedDate)}</td>
               </tr>
-
+              {productData.specifications.map((spec, index) => (
+                <tr key={spec.id}>
+                  <td className="fw-bold firstTd">
+                    {spec.displayName[intl.locale] ||
+                      (intl.locale === 'ar' && spec.displayName['en']) ||
+                      (intl.locale === 'en' && spec.displayName['ar'])}
+                  </td>
+                  <td>{spec.value}</td>
+                </tr>
+              ))}
               <tr>
                 <td className="pl-0 pr-0" colSpan={2}>
                   <MetaDataAccordion defaultKey="metaData" data={products} />
                 </td>
               </tr>
-              <tr>
+              {/* <tr>
                 <td className="pl-0 pr-0" colSpan={2}>
                   <SubscriptionInfoAccordion />
+                </td>
+              </tr> */}
+              <tr>
+                <td className="pl-0 pr-0" colSpan={2}>
+                  <SubscriptionInfoAccordionNew />
                 </td>
               </tr>
 
@@ -178,13 +256,22 @@ export default function ChildTable({
             </Card.Header>
             <Card.Body className="pb-0">
               <Workflow
-                productId={productData.product.id}
+                productId={productData && productData?.product?.id}
                 updateDetails={updateDetails}
                 productIndex={productIndex}
               />
             </Card.Body>
           </Card>
         </div>
+        {status && (
+          <NoteInputConfirmation
+            confirm={confirm}
+            setConfirm={setConfirm}
+            confirmFunction={chagneStatus}
+            message={intl.formatMessage({ id: messages[status] })}
+            data={status}
+          />
+        )}
       </div>
     </Wrapper>
   )

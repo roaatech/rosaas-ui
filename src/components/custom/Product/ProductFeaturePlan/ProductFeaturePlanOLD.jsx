@@ -23,7 +23,7 @@ import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmati
 import {
   deleteFeaturePlan,
   setAllFeaturePlan,
-} from '../../../../store/slices/products'
+} from '../../../../store/slices/products/productsSlice.js'
 import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { Wrapper } from './ProductFeaturePlan.styled'

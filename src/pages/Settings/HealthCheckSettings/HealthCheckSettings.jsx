@@ -13,8 +13,8 @@ import {
   OverlayTrigger,
   Tooltip,
 } from '@themesberg/react-bootstrap'
-import { Wrapper } from './Settings.styled'
-import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
+import { Wrapper } from './HealthCheckSettings.styled'
+import BreadcrumbComponent from '../../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import {
   BsGearFill,
   BsFillBackspaceFill,
@@ -23,12 +23,12 @@ import {
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useEffect } from 'react'
-import useRequest from '../../axios/apis/useRequest'
-import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
+import useRequest from '../../../axios/apis/useRequest'
+import UpperContent from '../../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
-import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
+import DynamicButtons from '../../../components/custom/Shared/DynamicButtons/DynamicButtons'
 
-const Settings = () => {
+const HealthCheckSettings = () => {
   const [edit, setEdit] = useState(false)
   const [oldData, setOldData] = useState({})
   const { getHeathCheckSettings, putHeathCheckSettings } = useRequest()
@@ -344,4 +344,4 @@ const Settings = () => {
   )
 }
 
-export default Settings
+export default HealthCheckSettings

@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   deleteFeature,
   setAllFeatures,
-} from '../../../../store/slices/products'
+} from '../../../../store/slices/products/productsSlice.js'
 import { FormattedMessage } from 'react-intl'
 import {
   faEdit,

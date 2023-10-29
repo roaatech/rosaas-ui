@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
-import { productInfo } from '../../../../store/slices/products.js'
+import { productInfo } from '../../../../store/slices/products/productsSlice.js'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'

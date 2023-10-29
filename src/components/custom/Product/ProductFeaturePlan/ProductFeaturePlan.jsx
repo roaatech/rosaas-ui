@@ -26,7 +26,7 @@ import {
   deleteFeaturePlan,
   setAllFeaturePlan,
   setAllPlans,
-} from '../../../../store/slices/products'
+} from '../../../../store/slices/products/productsSlice.js'
 import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 import { Wrapper } from './ProductFeaturePlan.styled'
 import { featureResetMap, featureUnitMap } from '../../../../const'
@@ -68,7 +68,6 @@ export default function ProductFeaturePlan({ children }) {
   listData['00000000-0000-0000-0000-000000000000'] &&
     delete listData['00000000-0000-0000-0000-000000000000']
   let list = listData && Object.values(listData)
-  console.log({ list })
 
   const handleDeleteFeaturePlan = async () => {
     try {
@@ -169,7 +168,6 @@ export default function ProductFeaturePlan({ children }) {
         reset: item.feature.reset,
         index: Object.keys(featuresObj).length,
       }
-      console.log({ reset: item.feature.reset })
     }
     tableData[item.plan.id + ',' + item.feature.id] = item.id
   })
@@ -303,8 +301,6 @@ export default function ProductFeaturePlan({ children }) {
   }
 
   const handleCreateFeaturePlan = (featureId, planId) => {
-    console.log('listData:', listData)
-
     const matchingPlan = Object.values(listData).find(
       (item) => item.plan.id === planId
     )

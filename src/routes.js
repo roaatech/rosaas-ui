@@ -6,7 +6,8 @@ import Redirect from './components/custom/global/Redirect/Redirect'
 import Dashboard from './pages/Welcome/Welcome'
 import Product from './pages/Product/Product'
 import signIn from './pages/signIn/signIn'
-import Settings from './pages/Settings/Settings'
+import HealthCheckSettings from './pages/Settings/HealthCheckSettings/HealthCheckSettings'
+import SubscriptionsSettings from './pages/Settings/SubscriptionsSettings/SubscriptionsSettings'
 export const Routes = {
   Dashboard: {
     path: '/Dashboard',
@@ -36,7 +37,12 @@ export const Routes = {
   },
   Settings: {
     path: '/settings/health-check',
-    component: Settings,
+    component: HealthCheckSettings,
+    roles: ['superAdmin'],
+  },
+  SubscriptionsSettings: {
+    path: '/settings/subscriptions',
+    component: SubscriptionsSettings,
     roles: ['superAdmin'],
   },
   Signin: {

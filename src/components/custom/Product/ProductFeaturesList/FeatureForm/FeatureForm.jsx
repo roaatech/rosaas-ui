@@ -10,12 +10,13 @@ import { Wrapper } from './FeatureForm.styled.jsx'
 import {
   FeatureInfo,
   setAllFeatures,
-} from '../../../../../store/slices/products.js'
+} from '../../../../../store/slices/products/productsSlice.js'
 import { useParams } from 'react-router-dom'
 
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
 import {
+  activeIndex,
   featureResetMap,
   featureTypeMap,
   featureUnitMap,
@@ -102,7 +103,7 @@ const FeatureForm = ({
         )
 
         if (setActiveIndex) {
-          setActiveIndex(2)
+          setActiveIndex(activeIndex.features)
         }
       } else {
         const editFeature = await editFeatureRequest(productId, {

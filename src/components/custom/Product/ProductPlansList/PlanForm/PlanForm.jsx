@@ -8,9 +8,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './PlanForm.styled.jsx'
 import { useParams } from 'react-router-dom'
-import { PlanInfo, setAllPlans } from '../../../../../store/slices/products.js'
+import {
+  PlanInfo,
+  setAllPlans,
+} from '../../../../../store/slices/products/productsSlice.js'
 
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+import { activeTab } from '../../../../../const/product.js'
 
 const PlanForm = ({
   type,
@@ -78,7 +82,7 @@ const PlanForm = ({
         )
 
         if (setActiveIndex) {
-          setActiveIndex(1)
+          setActiveIndex(activeTab.plans)
         }
       } else {
         const editPlan = await editPlanRequest(productId, {

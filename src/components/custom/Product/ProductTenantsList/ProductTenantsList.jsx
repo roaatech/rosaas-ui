@@ -13,7 +13,10 @@ import {
 import TableDate from '../../Shared/TableDate/TableDate'
 import { Link, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { productInfo, subscribe } from '../../../../store/slices/products'
+import {
+  productInfo,
+  subscribe,
+} from '../../../../store/slices/products/productsSlice.js'
 import { setAllTenant } from '../../../../store/slices/tenants'
 import { FormattedMessage } from 'react-intl'
 import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'

@@ -8,6 +8,11 @@ const TextareaAndCounter = ({
   showCharCount,
   inputValue,
   disabled,
+  placeholder,
+  id,
+  name,
+  onChange,
+  disableMainClass
 }) => {
   const [characterCount, setCharacterCount] = useState(inputValue?.length || 0)
   const [value, setValue] = useState(inputValue)
@@ -28,18 +33,25 @@ const TextareaAndCounter = ({
       setValue(inputValue)
       addTextarea('description', inputValue)
     }
+
+    if (onChange) {
+      onChange(e)
+    }
   }
 
   return (
     <TextareaCounterWrapper direction={direction}>
       <div className="textarea-container">
         <textarea
-          className="form-control"
+          className= {disableMainClass ? 'form-control' : 'textarea-input form-control'}  
           value={value}
           onChange={handleTextareaChange}
           maxLength={maxLength}
           ref={textareaRef}
           disabled={disabled}
+          placeholder={placeholder}
+          id={id}
+          name={name}
         />
 
         {showCharCount && (

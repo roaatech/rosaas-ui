@@ -16,7 +16,7 @@ export const TextareaCounterWrapper = styled.div`
     padding-right: 6px;
   }
 
-  .textarea-container textarea {
+  .textarea-container textarea.textarea-input {
     min-height: 70px !important;
   }
 `

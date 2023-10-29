@@ -118,4 +118,33 @@ export const Wrapper = styled.div`
   .accordionButton span {
     font-weight: 300 !important;
   }
+  /* Style for the notes container */
+  .notes {
+    max-height: ${(props) => (props.showNotes ? 'none' : '25px')};
+    overflow: hidden;
+    transition:
+      border-color 0.3s,
+      color 0.3s,
+      font-weight 0.3s,
+      background-color 0.3s;
+    font-size: var(--smallFont);
+  }
+
+  .notes-toggle .show-more-link {
+    cursor: pointer;
+    color: var(--second-color);
+    font-size: var(--smallFont);
+    line-height: 15px;
+    width: 100%;
+    display: inline-block;
+    transition:
+      border-color 0.3s,
+      color 0.3s,
+      font-weight 0.3s,
+      background-color 0.3s;
+  }
+
+  .notes-toggle .show-more-link:hover {
+    text-decoration: underline;
+  }
 `
