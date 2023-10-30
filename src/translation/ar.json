@@ -24,8 +24,8 @@
   "English": "الإنجليزية",
 
   "Settings": "الإعدادات",
-  "Health-Check-Settings": "إعدادات فحص التوفر",
-  "Health-Check-sidebar": "إعدادات فحص التوفر",
+  "Health-Check-Settings": " فحص التوفر",
+  "Health-Check-sidebar": " فحص التوفر",
   "Health-Status-Change-Url": "رابط تغيير حالة التوفر",
   "Health-Status-Change-Url-Description": "وصف رابط تغيير حالة التوفر",
   "Creation-Url": "رابط الإنشاء",
@@ -255,5 +255,8 @@
   "default-status-message": "هل أنت متأكد أنك تريد القيام بهذا الإجراء؟",
   "Comment": "تعليق",
   "Activate": "تفعيل",
-  "Specifications-Updated": "تم تحديث المواصفات"
+  "Specifications-Updated": "تم تحديث المواصفات",
+  "Payment-Status": "حالة الدفع",
+  "Paid": "مدفوع",
+  "Unpaid": "غير مدفوع"
 }

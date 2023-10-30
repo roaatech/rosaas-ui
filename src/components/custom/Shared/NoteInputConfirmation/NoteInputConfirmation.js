@@ -3,8 +3,8 @@ import { ConfirmDialog } from 'primereact/confirmdialog'
 import { FormattedMessage } from 'react-intl'
 import { GiTriangleTarget } from 'react-icons/gi'
 import { BsExclamationTriangle } from 'react-icons/bs'
-import DescriptionCell from '../DescriptionCell/DescriptionCell'
-import { TextareaCounterWrapper } from '../TextareaAndCounter/TextareaAndCounter.styled'
+// import DescriptionCell from '../DescriptionCell/DescriptionCell'
+// import { TextareaCounterWrapper } from '../TextareaAndCounter/TextareaAndCounter.styled'
 import TextareaAndCounter from '../TextareaAndCounter/TextareaAndCounter'
 
 export default function NoteInputConfirmation({
@@ -16,18 +16,17 @@ export default function NoteInputConfirmation({
   data,
   placeholder,
 }) {
-  const [notes, setNotes] = useState('')
+  const [comment, setComment] = useState('')
 
   const accept = async () => {
-    // alert(notes)
-    await confirmFunction(data, notes)
+    await confirmFunction(data, comment)
     setConfirm(false)
-    setNotes('')
+    setComment('')
   }
 
   const reject = () => {
     setConfirm(false)
-    setNotes('')
+    setComment('')
   }
 
   return (
@@ -48,8 +47,8 @@ export default function NoteInputConfirmation({
             <TextareaAndCounter
               maxLength="250"
               showCharCount="true"
-              inputValue={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              inputValue={comment}
+              onChange={(e) => setComment(e.target.value)}
               placeholder={placeholder}
             />
           </>
@@ -63,7 +62,7 @@ export default function NoteInputConfirmation({
         visible={confirm}
         onHide={() => {
           setConfirm(false)
-          setNotes('')
+          setComment('')
         }}
       />
     </>
