@@ -89,6 +89,7 @@ const TenantForm = ({
   const selectedProduct = tenantData?.subscriptions?.map((product) => {
     return product.productId
   })
+
   const specificationValuesObject = (tenantData?.subscriptions || [])
     .flatMap((subscription) => subscription?.specifications || [])
     .reduce((acc, specification) => {
@@ -160,19 +161,16 @@ const TenantForm = ({
           )
 
           navigate(`/tenants/${createTenant.data.data.id}`)
-        } else {
-          const editTenant = await editTenantRequest({
-            title: values.title,
-            uniqueName: values.uniqueName,
-            id: tenantData.id,
-            product: selectedProduct,
-            specifications: specificationsArray,
-          })
-          updateTenant()
         }
-        setVisible && setVisible(false)
-        setVisible && setVisible(false)
+      } else {
+        const editTenant = await editTenantRequest({
+          title: values.title,
+          id: tenantData.id,
+        })
+        updateTenant()
       }
+      setVisible && setVisible(false)
+      setVisible && setVisible(false)
     },
   })
 

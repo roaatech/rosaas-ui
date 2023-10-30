@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react'
 import { DescriptionCellWrapper } from './DescriptionCell.styled'
 
 const DescriptionCell = ({ data }) => {
-  // console.log(data)
   const [showMore, setShowMore] = useState(false)
   const contentRef = useRef(null)
   const [maxHeight, setMaxHeight] = useState('auto')

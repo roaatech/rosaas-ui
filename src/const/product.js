@@ -5,6 +5,8 @@ import {
 import {
   MdOutlineUnpublished,
   MdOutlinePublishedWithChanges,
+  MdPayments,
+  MdOutlinePayments,
 } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
 
@@ -48,6 +50,20 @@ export const PublishStatus = {
     value: <FormattedMessage id="Unpublished" />,
     color: '#d26b4e',
     icon: <MdOutlineUnpublished />,
+  },
+}
+export const PaymentStatus = {
+  true: {
+    background: '#eff9f6',
+    value: <FormattedMessage id="Paid" />,
+    color: '#00a675',
+    icon: <MdPayments />,
+  },
+  false: {
+    background: '#f5e8e4',
+    value: <FormattedMessage id="Unpaid" />,
+    color: '#d26b4e',
+    icon: <MdOutlinePayments />,
   },
 }
 

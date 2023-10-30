@@ -28,25 +28,14 @@ const useActions = () => {
       }
       actions &&
         actions.map((item) => {
-          if (item.status == 11 || item.status == 8) {
-            let button = {
-              type: 'action',
-              func: () => statusConfirm(item.status),
-              label: item.name,
-              icon: <i className={'pi ' + statusConst[item.status].icon}></i>,
-              order: 4,
-            }
-            actionArray = [...actionArray, button]
-          } else {
-            let button = {
-              type: 'action',
-              func: () => chagneStatus(item.status),
-              label: item.name,
-              icon: <i className={'pi ' + statusConst[item.status].icon}></i>,
-              order: 4,
-            }
-            actionArray = [...actionArray, button]
+          let button = {
+            type: 'action',
+            func: () => statusConfirm(item.status),
+            label: item.name,
+            icon: <i className={'pi ' + statusConst[item.status].icon}></i>,
+            order: 4,
           }
+          actionArray = [...actionArray, button]
         })
       return actionArray
     } else {

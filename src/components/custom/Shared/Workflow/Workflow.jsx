@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { history } from '../../../../store/slices/tenants'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 import MetaDataAccordion from '../../tenant/MetaDataAccordion/MetaDataAccordion'
-import { Card } from '@themesberg/react-bootstrap'
+import { Card, Col, Container, Row } from '@themesberg/react-bootstrap'
 import ReactJson from 'react-json-view'
 import { FormattedMessage } from 'react-intl'
 import CustomPaginator from '../CustomPaginator/CustomPaginator'
@@ -48,19 +48,27 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
             <ReactJson src={data} name={false} />
           </Card.Body>
         </Card>
-        <Card border="light" className=" pt-1">
-          <Card.Body className="p-0">
-            {
-              <div className="d-flex align-items-center justify-content-between  py-2">
-                <span className="mb-0 w-25">Notes:</span>
 
-                <div className="small card-stats">
-                  <span>{notes || 'No notes available'}</span>
-                </div>
-              </div>
-            }
-          </Card.Body>
-        </Card>
+        {notes?.map((note, index) => (
+          <div key={index}>
+            <Card border="light" className=" pt-1">
+              <Card.Body className="p-0">
+                <Container>
+                  <Row>
+                    <Col md={6} className="small">
+                      <FormattedMessage id={Owner[note.ownerType]} />:
+                    </Col>{' '}
+                    <Col md={6}>
+                      <div className="small ">
+                        <span>{note.text || 'No notes available'}</span>
+                      </div>
+                    </Col>
+                  </Row>{' '}
+                </Container>
+              </Card.Body>
+            </Card>
+          </div>
+        ))}
       </div>
     )
   }
@@ -85,9 +93,6 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
     })()
   }, [routeParams.id, updateDetails, first, rows])
 
-  const toggleNotes = () => {
-    setShowNotes(!showNotes)
-  }
   return (
     <Wrapper direction={direction}>
       <div className="timeLineCont">

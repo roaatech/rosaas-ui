@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/SubscriptionInfoAccordionNew'
 import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
+import { statusConst } from '../../../../const'
 export default function ChildTable({
   productData,
   tenantId,
@@ -71,10 +72,11 @@ export default function ChildTable({
 
   let direction = useSelector((state) => state.main.direction)
 
-  const chagneStatus = async (actionStatus) => {
+  const chagneStatus = async (actionStatus, notes) => {
     await editTenantStatus({
       TenantId: tenantId,
       status: actionStatus,
+      comment: notes,
       productId: productData.id,
     })
     updateTenant()
@@ -83,10 +85,7 @@ export default function ChildTable({
     setConfirm(true)
     setStatus(data)
   }
-  const messages = {
-    8: 'Deactivate-Tenant-Confirmation',
-    11: 'Delete-Tenant-Confirmation',
-  }
+
   const intl = useIntl()
   const rowExpansionTemplate = (data) => {
     return (
@@ -205,8 +204,9 @@ export default function ChildTable({
                   <td>{spec.value}</td>
                 </tr>
               ))}
+
               <tr>
-                <td className="pl-0 pr-0" colSpan={2}>
+                <td className="accordions" colSpan={2}>
                   <MetaDataAccordion defaultKey="metaData" data={products} />
                 </td>
               </tr>
@@ -216,14 +216,14 @@ export default function ChildTable({
                 </td>
               </tr> */}
               <tr>
-                <td className="pl-0 pr-0" colSpan={2}>
+                <td className="accordions" colSpan={2}>
                   <SubscriptionInfoAccordionNew />
                 </td>
               </tr>
 
               {productData?.healthCheckStatus.showHealthStatus == true && (
                 <tr>
-                  <td className="pl-0 pr-0" colSpan={2}>
+                  <td className="accordions" colSpan={2}>
                     <HealthCheckAccordion
                       defaultKey="HealthCheckStatus"
                       data={[productData]}
@@ -268,8 +268,11 @@ export default function ChildTable({
             confirm={confirm}
             setConfirm={setConfirm}
             confirmFunction={chagneStatus}
-            message={intl.formatMessage({ id: messages[status] })}
+            message={intl.formatMessage({
+              id: statusConst[status].message || 'default-status-message',
+            })}
             data={status}
+            placeholder={intl.formatMessage({ id: 'Comment' })}
           />
         )}
       </div>

@@ -21,7 +21,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import useActions from '../../components/custom/tenant/Actions/Actions'
-import { featureUnitMap } from '../../const'
+import { featureUnitMap, statusConst } from '../../const'
 
 import { featureResetMap } from '../../const'
 import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
@@ -49,11 +49,11 @@ const TenantDetails = () => {
     setUpdateDetails(updateDetails + 1)
   }
   const [status, setStatus] = useState()
-  const chagneStatus = async (actionStatus, notes) => {
+  const chagneStatus = async (actionStatus, comment) => {
     await editTenantStatus({
       TenantId: routeParams.id,
       status: actionStatus,
-      notes: notes,
+      comment: comment,
     })
     updateTenant()
   }
@@ -61,10 +61,7 @@ const TenantDetails = () => {
     setConfirm(true)
     setStatus(data)
   }
-  const messages = {
-    8: 'Deactivate-Tenant-Confirmation',
-    11: 'Delete-Tenant-Confirmation',
-  }
+
   const deleteConfirm = (id) => {
     setCurrentId(id)
     setConfirm(true)
@@ -338,7 +335,8 @@ const TenantDetails = () => {
                         </Card.Body>
                       </Card>
                     </TabPanel>
-                    {tenantObject.subscriptions.map((product, index) => (
+
+                    {tenantObject?.subscriptions?.map((product, index) => (
                       <TabPanel
                         header={product?.product.name.toUpperCase()}
                         key={index}
@@ -368,8 +366,13 @@ const TenantDetails = () => {
                       confirm={confirm}
                       setConfirm={setConfirm}
                       confirmFunction={chagneStatus}
-                      message={intl.formatMessage({ id: messages[status] })}
+                      message={intl.formatMessage({
+                        id:
+                          statusConst[status].message ||
+                          'default-status-message',
+                      })}
                       data={status}
+                      placeholder={intl.formatMessage({ id: 'Comment' })}
                     />
                   )}
                   <ThemeDialog visible={visible} setVisible={setVisible}>
