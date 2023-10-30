@@ -3,8 +3,8 @@ import { ConfirmDialog } from 'primereact/confirmdialog'
 import { FormattedMessage } from 'react-intl'
 import { GiTriangleTarget } from 'react-icons/gi'
 import { BsExclamationTriangle } from 'react-icons/bs'
-import DescriptionCell from '../DescriptionCell/DescriptionCell'
-import { TextareaCounterWrapper } from '../TextareaAndCounter/TextareaAndCounter.styled'
+// import DescriptionCell from '../DescriptionCell/DescriptionCell'
+// import { TextareaCounterWrapper } from '../TextareaAndCounter/TextareaAndCounter.styled'
 import TextareaAndCounter from '../TextareaAndCounter/TextareaAndCounter'
 
 export default function NoteInputConfirmation({
