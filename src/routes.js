@@ -8,6 +8,7 @@ import Product from './pages/Product/Product'
 import signIn from './pages/signIn/signIn'
 import HealthCheckSettings from './pages/Settings/HealthCheckSettings/HealthCheckSettings'
 import SubscriptionsSettings from './pages/Settings/SubscriptionsSettings/SubscriptionsSettings'
+import SubscriptionManagement from './components/custom/tenant/SubscriptionManagement/SubscriptionManagement'
 export const Routes = {
   Dashboard: {
     path: '/Dashboard',
@@ -28,6 +29,11 @@ export const Routes = {
   TenantDetails: {
     path: '/tenants/:id',
     component: TenantDetails,
+    roles: ['superAdmin'],
+  },
+  SubscriptionManagement: {
+    path: '/tenants/:id/Subscription-Management',
+    component: SubscriptionManagement,
     roles: ['superAdmin'],
   },
   ProductDetails: {

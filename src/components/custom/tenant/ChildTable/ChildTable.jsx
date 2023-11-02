@@ -17,7 +17,7 @@ import { DataTransform } from '../../../../lib/sharedFun/Time'
 import { FormattedMessage, useIntl } from 'react-intl'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import useActions from '../Actions/Actions'
 import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,6 +25,9 @@ import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/Subscr
 import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { statusConst } from '../../../../const'
+import { BsFillTrash3Fill } from 'react-icons/bs'
+import { MdFactCheck } from 'react-icons/md'
+import { setActiveIndex } from '../../../../store/slices/tenants'
 export default function ChildTable({
   productData,
   tenantId,
@@ -32,9 +35,11 @@ export default function ChildTable({
   updateTenant,
   productIndex,
   tenantObject,
+  setShowSubsMan,
 }) {
   const { getProductSpecification } = useRequest()
   const dispatch = useDispatch()
+  const activeIndex = useSelector((state) => state.tenants.currentTab)
 
   const listProducts = useSelector((state) => state.products.products)
   useEffect(() => {
@@ -98,6 +103,7 @@ export default function ChildTable({
       </div>
     )
   }
+  const navigate = useNavigate()
   const routeParams = useParams()
   const metadata = productData?.metadata ? productData.metadata : null
   const [products, setProducts] = useState([
@@ -134,6 +140,15 @@ export default function ChildTable({
                     updateTenant: updateTenant,
                     selectedProduct: productData.productId,
                     icon: <AiFillEdit />,
+                  },
+                  {
+                    order: 4,
+                    type: 'action',
+                    label: 'Subscription-Management',
+                    func: () => {
+                      navigate('./Subscription-Management')
+                    },
+                    icon: <MdFactCheck />,
                   },
                   ...renderActions(
                     tenantObject,
@@ -210,11 +225,6 @@ export default function ChildTable({
                   <MetaDataAccordion defaultKey="metaData" data={products} />
                 </td>
               </tr>
-              {/* <tr>
-                <td className="pl-0 pr-0" colSpan={2}>
-                  <SubscriptionInfoAccordion />
-                </td>
-              </tr> */}
               <tr>
                 <td className="accordions" colSpan={2}>
                   <SubscriptionInfoAccordionNew />

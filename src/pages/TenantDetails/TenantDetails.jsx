@@ -25,6 +25,8 @@ import { featureUnitMap, statusConst } from '../../const'
 
 import { featureResetMap } from '../../const'
 import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
+import SubscriptionManagement from '../../components/custom/tenant/SubscriptionManagement/SubscriptionManagement'
+import { MdFactCheck } from 'react-icons/md'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -72,7 +74,10 @@ const TenantDetails = () => {
     dispatch(removeTenant(routeParams.id))
     navigate(`/Dashboard`)
   }
-
+  const [showSubsMan, setShowSubsMan] = useState(false)
+  useEffect(() => {
+    setShowSubsMan(false)
+  }, [routeParams.id])
   let tenantObject = tenantsData[routeParams.id]
   const [currentProduct, setCurrentProduct] = useState('')
   let tenantStatus = tenantObject?.subscriptions[0]?.actions
@@ -103,7 +108,7 @@ const TenantDetails = () => {
           routeParams.id
         )
         const formattedSubscriptionData = {
-          data: response.data.data.subscriptionFeatures.map((feature) => ({
+          data: response.data.data?.subscriptionFeatures?.map((feature) => ({
             featureName: feature.feature.name,
             featureReset: intl.formatMessage({
               id: featureResetMap[feature.feature.reset],
@@ -163,9 +168,11 @@ const TenantDetails = () => {
     ;(async () => {
       if (!tenantsData[routeParams.id]?.subscriptions[0]?.status) {
         const tenantData = await getTenant(routeParams.id)
-        setCurrentProduct(tenantData.data.data.subscriptions[0].productId)
         dispatch(tenantInfo(tenantData.data.data))
       }
+      setCurrentProduct(
+        tenantsData[routeParams.id]?.subscriptions[0]?.productId
+      )
     })()
   }, [visible, routeParams.id, updateDetails])
   useEffect(() => {
@@ -348,9 +355,35 @@ const TenantDetails = () => {
                           updateDetails={updateDetails}
                           updateTenant={updateTenant}
                           productIndex={index}
+                          setShowSubsMan={setShowSubsMan}
                         />
                       </TabPanel>
                     ))}
+                    {showSubsMan && (
+                      <TabPanel
+                        header={
+                          <div>
+                            <span style={{ paddingRight: '10px' }}>
+                              <FormattedMessage id="Subscription-Management" />
+                            </span>
+                            <span
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => {
+                                dispatch(setActiveIndex(activeIndex - 1))
+                                setShowSubsMan(false)
+                              }}
+                            >
+                              &#x2716; {/* "x" character */}
+                            </span>
+                          </div>
+                        }
+                        key={'SubscriptionManagement'}
+                      >
+                        {/* <SubscriptionManagement
+                          props={{ productData: currentProduct }}
+                        /> */}
+                      </TabPanel>
+                    )}
                   </TabView>
                   <DeleteConfirmation
                     message="Do you want to delete this Tenant?"
