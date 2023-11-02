@@ -260,10 +260,13 @@
   "Paid": "مدفوع",
   "Unpaid": "غير مدفوع",
   "Subscription-Management": "إدارة الاشتراكات",
-  "Reset-Limit": "إعادة تعيين الحد",
-  "Reset-Subs": "إعادة تعيين الاشتراك",
+  "Reset-Limit": "إعادة ضبط الحد",
+  "Reset-Subs": "إعادة ضبط الاشتراك",
   "Upgrade-info": "معلومات الترقية",
   "Upgrade-Subscription": "ترقية الاشتراك",
   "Auto-Renewal": "تجديد تلقائي",
-  "Reseted-At": "تمت إعادة تعيينه في: "
+  "Reseted-At": "تمت إعادة ضبطه في: ",
+  "renew-message": "هل أنت متأكد أنك ترغب في التجديد؟",
+  "reset-limit-message": "هل أنت متأكد أنك ترغب في إعادة تعيين الحد؟",
+  "reset-subscription-message": "هل أنت متأكد أنك ترغب في إعادة تعيين الاشتراك؟"
 }

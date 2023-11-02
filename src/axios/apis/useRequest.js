@@ -24,6 +24,9 @@ const useRequest = () => {
     editTenantStatus,
     getTimeLine,
     subscriptionDetails,
+    subscriptionDetailsRenew,
+    subscriptionDetailsResetSub,
+    subscriptionDetailsLimitReset,
   } = useTenantReq()
 
   const {
@@ -125,6 +128,9 @@ const useRequest = () => {
     editTenantSpecificationRequest,
     getSubscriptionsSettings,
     putSubscriptionsSettings,
+    subscriptionDetailsRenew,
+    subscriptionDetailsResetSub,
+    subscriptionDetailsLimitReset,
   }
 }
 export default useRequest

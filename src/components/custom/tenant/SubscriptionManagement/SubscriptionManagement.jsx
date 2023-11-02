@@ -20,7 +20,14 @@ import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import { TabPanel, TabView } from 'primereact/tabview'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
-import { MdFactCheck, MdLockReset } from 'react-icons/md'
+import {
+  MdAutorenew,
+  MdFactCheck,
+  MdFiberNew,
+  MdLockReset,
+  MdNetworkCheck,
+  MdOutlineAutorenew,
+} from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import { BsFillPersonLinesFill, BsUpload } from 'react-icons/bs'
 import BreadcrumbComponent from '../../Shared/Breadcrumb/Breadcrumb'
@@ -30,11 +37,14 @@ import useRequest from '../../../../axios/apis/useRequest'
 import { subscriptionData, tenantInfo } from '../../../../store/slices/tenants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  faArrowCircleDown,
+  faArrowRotateBackward,
   faRefresh,
   faToggleOff,
   faToggleOn,
 } from '@fortawesome/free-solid-svg-icons'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
+import { GiReturnArrow } from 'react-icons/gi'
 
 const SubscriptionManagement = (props) => {
   const routeParams = useParams()
@@ -53,10 +63,16 @@ const SubscriptionManagement = (props) => {
   }, [tenantsData])
 
   const subscriptionDatas = useSelector(
-    (state) => state.tenants.subscriptionData
+    (state) => state.tenants.tenants[routeParams.id]?.subscriptionData?.data
   )
   const dispatch = useDispatch()
-  const { getTenant, subscriptionDetails } = useRequest()
+  const {
+    getTenant,
+    subscriptionDetails,
+    subscriptionDetailsRenew,
+    subscriptionDetailsLimitReset,
+    subscriptionDetailsResetSub,
+  } = useRequest()
   const [currentProduct, setCurrentProduct] = useState('')
   const [currentTab, setCurrentTab] = useState(0)
   const intl = useIntl()
@@ -64,7 +80,6 @@ const SubscriptionManagement = (props) => {
   const handleTabChange = (index) => {
     setCurrentTab(index)
   }
-  console.log({ tenantsData, currentProduct })
   const [showResetConfirmation, setShowResetConfirmation] = useState(false)
   const [resetTime, setResetTime] = useState(null)
 
@@ -72,18 +87,25 @@ const SubscriptionManagement = (props) => {
   const handleToggleClick = () => {
     setConfirm(true)
   }
-  const handleConfirmation = () => {
+  const handleConfirmation = async (data = '', comment) => {
     setAutoRenewal(!autoRenewal)
-
+    await subscriptionDetailsRenew(currentProduct, routeParams.id, {
+      autoRenewal: !autoRenewal,
+      comment,
+    })
     setConfirm(false)
   }
   const handleResetLimit = () => {
     setShowResetConfirmation(true)
   }
 
-  const handleResetConfirmation = () => {
+  const handleResetConfirmation = async (data = '', comment) => {
     const resetTime = new Date()
     setResetTime(resetTime)
+    await subscriptionDetailsLimitReset(currentProduct, routeParams.id, {
+      reset: true,
+      comment,
+    })
 
     setShowResetConfirmation(false)
   }
@@ -97,7 +119,11 @@ const SubscriptionManagement = (props) => {
     setShowResetSubscriptionConfirmation(true)
   }
 
-  const handleResetSubscriptionConfirmation = () => {
+  const handleResetSubscriptionConfirmation = async (data = '', comment) => {
+    await subscriptionDetailsResetSub(currentProduct, routeParams.id, {
+      reset: true,
+      comment,
+    })
     const resetTimesub = new Date()
     setResetSubscriptionTime(resetTimesub)
 
@@ -163,7 +189,12 @@ const SubscriptionManagement = (props) => {
         }
         console.log({ formattedSubscriptionData })
 
-        dispatch(subscriptionData(formattedSubscriptionData))
+        dispatch(
+          subscriptionData({
+            id: routeParams.id,
+            data: formattedSubscriptionData,
+          })
+        )
       } catch (error) {
         console.error('Error fetching subscription details:', error)
       }
@@ -186,7 +217,8 @@ const SubscriptionManagement = (props) => {
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Subscription-Management" />
+              <FormattedMessage id="Subscription-Management" />:{' '}
+              {tenantsData[routeParams.id]?.uniqueName}
             </h4>
             <DynamicButtons
               buttons={[
@@ -202,9 +234,23 @@ const SubscriptionManagement = (props) => {
                 {
                   order: 4,
                   type: 'action',
-                  label: 'Subscription-Management',
-
-                  icon: <MdFactCheck />,
+                  label: 'Auto-Renewal',
+                  func: handleToggleClick,
+                  icon: <MdOutlineAutorenew />,
+                },
+                {
+                  order: 4,
+                  type: 'action',
+                  label: 'Reset-Limit',
+                  func: handleResetLimit,
+                  icon: <GiReturnArrow />,
+                },
+                {
+                  order: 4,
+                  type: 'action',
+                  label: 'Reset-Subs',
+                  func: handleResetSubscription,
+                  icon: <GiReturnArrow />,
                 },
               ]}
             />
@@ -212,40 +258,6 @@ const SubscriptionManagement = (props) => {
 
           {subscriptionDatas.startDate && (
             <div>
-              {/* <div>
-                <Card
-                  border="light"
-                  className="table-wrapper table-responsive shadow-sm m-2 p-2"
-                >
-                  <Container>
-                    <Row>
-                      <Col md={6}>
-                        <span className="firstTd fw-bold">
-                          <FormattedMessage id="Subscription-Info" />
-                        </span>
-                      </Col>
-                      <Col md={6}>
-                        <span className={`mr-2 ml-6`}>
-                          <span>
-                            <DateLabelWhite text={subscriptionData.planName} />
-                          </span>
-                          {'   '}
-                          <span className={`mr-2 ml-2`}>
-                            <FormattedMessage id="From" />{' '}
-                          </span>
-                          <DateLabelWhite
-                            text={formatDate(subscriptionData.startDate)}
-                          />{' '}
-                          <span className={`mr-2 ml-2`}>
-                            <FormattedMessage id="to" />{' '}
-                          </span>{' '}
-                          <DateLabel endDate={subscriptionData.endDate} />
-                        </span>
-                      </Col>
-                    </Row>
-                  </Container>
-                </Card>
-              </div> */}
               <TabView
                 activeIndex={currentTab}
                 className="card"
@@ -289,7 +301,7 @@ const SubscriptionManagement = (props) => {
                             </Col>
                             <Col md={6}>
                               <Card.Body className="py-0 px-0 ">
-                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                                   <div className="mb-0 w-25">
                                     <FormattedMessage id="Start-Date" />
                                   </div>
@@ -297,7 +309,7 @@ const SubscriptionManagement = (props) => {
                                     {formatDate(cyc.startDate)}
                                   </div>
                                 </div>
-                                <div className="d-flex align-items-center justify-content-between border-bottom  border-light py-2 ml-5">
+                                <div className="d-flex align-items-center justify-content-between border-bottom  border-light py-2 ">
                                   <div className="mb-0 w-25">
                                     <FormattedMessage id="End-Date" />
                                   </div>
@@ -338,7 +350,7 @@ const SubscriptionManagement = (props) => {
                                     <FormattedMessage id="Reset-Subs" />
                                     <FontAwesomeIcon
                                       className="ml-3 mr-3 small icon-container"
-                                      icon={faRefresh}
+                                      icon={faArrowRotateBackward}
                                       onClick={handleResetSubscription}
                                     />
                                   </div>
@@ -357,13 +369,13 @@ const SubscriptionManagement = (props) => {
                             </Col>
                             <Col md={6}>
                               <Card.Body className="py-0 px-0 ">
-                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
+                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                                   <div className="mb-0 ">
                                     <FormattedMessage id="Reset-Limit" />
 
                                     <FontAwesomeIcon
                                       className="ml-3 mr-3 small  icon-container"
-                                      icon={faRefresh}
+                                      icon={faArrowRotateBackward}
                                       onClick={handleResetLimit}
                                     />
                                   </div>
@@ -378,7 +390,7 @@ const SubscriptionManagement = (props) => {
                                     )}
                                   </div>
                                 </div>
-                                <div className="d-flex align-items-center justify-content-between  py-2 ml-5">
+                                <div className="d-flex align-items-center justify-content-between  py-2 ">
                                   <div className="mb-0 w-25">
                                     <FormattedMessage id="Upgrade-info" />
                                   </div>
@@ -662,7 +674,7 @@ const SubscriptionManagement = (props) => {
                   setConfirm={setConfirm}
                   confirmFunction={handleConfirmation}
                   message={intl.formatMessage({
-                    id: 'default-status-message',
+                    id: 'renew-message',
                   })}
                   placeholder={intl.formatMessage({ id: 'Comment' })}
                 />
@@ -673,7 +685,7 @@ const SubscriptionManagement = (props) => {
                   setConfirm={setShowResetConfirmation}
                   confirmFunction={handleResetConfirmation}
                   message={intl.formatMessage({
-                    id: 'default-status-message',
+                    id: 'reset-limit-message',
                   })}
                   placeholder="Comment"
                 />
@@ -684,7 +696,7 @@ const SubscriptionManagement = (props) => {
                   setConfirm={setShowResetSubscriptionConfirmation}
                   confirmFunction={handleResetSubscriptionConfirmation}
                   message={intl.formatMessage({
-                    id: 'default-status-message',
+                    id: 'reset-subscription-message',
                   })}
                   placeholder="Comment"
                 />

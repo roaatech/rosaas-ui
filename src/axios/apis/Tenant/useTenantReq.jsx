@@ -44,6 +44,25 @@ const useTenantReq = () => {
       `management/sadmin/v1/products/${productId}/Tenants/${tenantId}`
     )
   }
+  const subscriptionDetailsRenew = async (productId, tenantId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/products/${productId}/Tenants/${tenantId}/Renew`,
+      data
+    )
+  }
+  const subscriptionDetailsResetSub = async (productId, tenantId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/products/${productId}/Tenants/${tenantId}/ResetSub`,
+      data
+    )
+  }
+
+  const subscriptionDetailsLimitReset = async (productId, tenantId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/products/${productId}/Tenants/${tenantId}/LimitReset`,
+      data
+    )
+  }
   return {
     createTenantRequest,
     editTenantRequest,
@@ -55,6 +74,9 @@ const useTenantReq = () => {
     getTimeLine,
     subscriptionDetails,
     editTenantSpecificationRequest,
+    subscriptionDetailsRenew,
+    subscriptionDetailsResetSub,
+    subscriptionDetailsLimitReset,
   }
 }
 

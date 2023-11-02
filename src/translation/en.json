@@ -262,5 +262,8 @@
   "Upgrade-info": "Upgrade info",
   "Upgrade-Subscription": "Upgrade Subscription",
   "Auto-Renewal": "Auto Renewal",
-  "Reseted-At": "Reseted At"
+  "Reseted-At": "Reseted At",
+  "renew-message": "Are you sure you want to renew?",
+  "reset-limit-message": "Are you sure you want to reset the limit?",
+  "reset-subscription-message": "Are you sure you want to reset the subscription?"
 }

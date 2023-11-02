@@ -21,6 +21,7 @@ export const tenantsSlice = createSlice({
       })
       state.tenants = allTenant
     },
+
     tenantInfo: (state, action) => {
       const currentTenants = { ...current(state.tenants) }
       currentTenants[action.payload.id] = action.payload
@@ -60,7 +61,10 @@ export const tenantsSlice = createSlice({
       state.currentTab = action.payload
     },
     subscriptionData: (state, action) => {
-      state.subscriptionData = action.payload
+      const currentTenants = JSON.parse(JSON.stringify(current(state.tenants)))
+      console.log({ currentTenants: currentTenants[action.payload.id] })
+      currentTenants[action.payload.id].subscriptionData = { ...action.payload }
+      state.tenants = currentTenants
     },
   },
 })
