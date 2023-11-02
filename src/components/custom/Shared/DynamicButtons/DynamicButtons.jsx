@@ -108,7 +108,7 @@ const DynamicButtons = ({ buttons, disableFormButtons }) => {
     upgradeSubscription: () => (
       <>
         <UpgradeForm
-          popupLabel={<FormattedMessage id="Edit-Specification" />}
+          popupLabel={<FormattedMessage id="Upgrade-Subscription" />}
           type={'edit'}
           tenantData={tenantsData[buttons[currentButtonIndex].id]}
           visible={visible}

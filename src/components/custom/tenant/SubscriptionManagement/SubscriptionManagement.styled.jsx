@@ -123,6 +123,22 @@ export const Wrapper = styled.div`
   .p-tabview .p-tabview-nav .p-tabview-ink-bar {
     background-color: var(--second-color);
   }
+  .passive-toggle {
+    color: #ccc;
+    cursor: pointer;
+  }
+  .active-toggle {
+    color: var(--second-color);
+    cursor: pointer;
+  }
+  .icon-container {
+    cursor: pointer;
+    color: #ccc;
+  }
+  .icon-container:hover {
+    color: var(--second-color);
+  }
+
   @media screen and (max-width: 768px) {
     .vertical-tab {
       flex-direction: row !important;

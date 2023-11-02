@@ -202,7 +202,7 @@
   "Week": "أسبوع",
   "Month": "شهر",
   "Year": "سنة",
-  "Remind/Limit": "تنبيه / قيد",
+  "Remind/Limit": "المتبقي / الحد الأعلى",
   "Dark-Mode": "الوضع الليلي",
   "Light-Mode": "الوضع النهاري",
   "minutes": " دقيقة",
@@ -259,5 +259,10 @@
   "Payment-Status": "حالة الدفع",
   "Paid": "مدفوع",
   "Unpaid": "غير مدفوع",
-  "Subscription-Management": "إدارة الاشتراكات"
+  "Subscription-Management": "إدارة الاشتراكات",
+  "Reset-Limit": "إعادة تعيين الحد",
+  "Reset-Subs": "إعادة تعيين الاشتراك",
+  "Upgrade-info": "معلومات الترقية",
+  "Upgrade-Subscription": "ترقية الاشتراك",
+  "Auto-Renewal": "تجديد تلقائي"
 }

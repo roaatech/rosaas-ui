@@ -39,34 +39,32 @@ import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputC
 const SubscriptionManagement = (props) => {
   const routeParams = useParams()
   let direction = useSelector((state) => state.main.direction)
-  console.log({ props })
   const tenantsData = useSelector((state) => state.tenants.tenants)
   useEffect(() => {
     ;(async () => {
       if (!tenantsData[routeParams.id]?.subscriptions[0]) {
         const tenantData = await getTenant(routeParams.id)
         dispatch(tenantInfo(tenantData.data.data))
-        console.log(tenantData)
       }
-      console.log('jshfkajshfkajhf')
-      setCurrentProduct(
-        tenantsData[routeParams.id]?.subscriptions[0]?.productId
-      )
     })()
   }, [routeParams.id])
+  useEffect(() => {
+    setCurrentProduct(tenantsData[routeParams.id]?.subscriptions[0]?.productId)
+  }, [tenantsData])
+
   const subscriptionDatas = useSelector(
     (state) => state.tenants.subscriptionData
   )
   const dispatch = useDispatch()
   const { getTenant, subscriptionDetails } = useRequest()
   const [currentProduct, setCurrentProduct] = useState('')
-
   const [currentTab, setCurrentTab] = useState(0)
   const intl = useIntl()
 
   const handleTabChange = (index) => {
     setCurrentTab(index)
   }
+  console.log({ tenantsData, currentProduct })
   const [showResetConfirmation, setShowResetConfirmation] = useState(false)
   const [resetTime, setResetTime] = useState(null)
 
@@ -116,7 +114,6 @@ const SubscriptionManagement = (props) => {
           currentProduct,
           routeParams.id
         )
-        console.log({ response })
         const formattedSubscriptionData = {
           data: response?.data.data?.subscriptionFeatures?.map((feature) => ({
             featureName: feature.feature.name,
@@ -197,7 +194,7 @@ const SubscriptionManagement = (props) => {
                   order: 1,
                   type: 'form',
                   id: routeParams.id,
-                  label: 'upgrade-Subscription',
+                  label: 'Upgrade-Subscription',
                   component: 'upgradeSubscription',
                   selectedProduct: currentProduct,
                   icon: <BsUpload />,
@@ -337,10 +334,10 @@ const SubscriptionManagement = (props) => {
                                 </div>
 
                                 <div className="d-flex align-items-center justify-content-between  py-2 ">
-                                  <div className="mb-0 w-25">
+                                  <div className="mb-0 ">
                                     <FormattedMessage id="Reset-Subs" />
                                     <FontAwesomeIcon
-                                      className="ml-2 small"
+                                      className="ml-3 mr-3 small icon-container"
                                       icon={faRefresh}
                                       onClick={handleResetSubscription}
                                     />
@@ -361,10 +358,11 @@ const SubscriptionManagement = (props) => {
                             <Col md={6}>
                               <Card.Body className="py-0 px-0 ">
                                 <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
-                                  <div className="mb-0 w-25">
+                                  <div className="mb-0 ">
                                     <FormattedMessage id="Reset-Limit" />
+
                                     <FontAwesomeIcon
-                                      className="ml-3 small"
+                                      className="ml-3 mr-3 small  icon-container"
                                       icon={faRefresh}
                                       onClick={handleResetLimit}
                                     />
@@ -381,7 +379,9 @@ const SubscriptionManagement = (props) => {
                                   </div>
                                 </div>
                                 <div className="d-flex align-items-center justify-content-between  py-2 ml-5">
-                                  <div className="mb-0 w-25"></div>
+                                  <div className="mb-0 w-25">
+                                    <FormattedMessage id="Upgrade-info" />
+                                  </div>
                                   <div className="small card-stats"></div>
                                 </div>
                               </Card.Body>

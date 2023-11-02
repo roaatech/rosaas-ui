@@ -256,5 +256,10 @@
   "Payment-Status": "Payment Status",
   "Paid": "Paid",
   "Unpaid": "Unpaid",
-  "Subscription-Management": "Subscription Management"
+  "Subscription-Management": "Subscription Management",
+  "Reset-Limit": "Reset Limit",
+  "Reset-Subs": "Reset Sub",
+  "Upgrade-info": "Upgrade info",
+  "Upgrade-Subscription": "Upgrade Subscription",
+  "Auto-Renewal": "Auto Renewal"
 }
