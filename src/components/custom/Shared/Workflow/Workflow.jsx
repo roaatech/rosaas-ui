@@ -51,15 +51,15 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
 
         {notes?.map((note, index) => (
           <div key={index}>
-            <Card border="light" className=" pt-1">
+            <Card border="light" className="notes-container  pt-1">
               <Card.Body className="p-0">
                 <Container>
                   <Row>
-                    <Col md={6} className="small">
+                    <Col md={3} className="note-label">
                       <FormattedMessage id={Owner[note.ownerType]} />:
                     </Col>{' '}
-                    <Col md={6}>
-                      <div className="small ">
+                    <Col md={9} className="note-text">
+                      <div className="">
                         <span>{note.text || 'No notes available'}</span>
                       </div>
                     </Col>
