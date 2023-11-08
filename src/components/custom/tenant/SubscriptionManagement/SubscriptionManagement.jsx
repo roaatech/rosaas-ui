@@ -105,7 +105,7 @@ const SubscriptionManagement = (props) => {
   }
   const handleConfirmation = async (data = '', comment) => {
     await cancelAutoRenewal({
-      subscriptionId,
+      subscriptionId: subscriptionDatas?.subscriptionId,
       comment,
     })
     setUpdate(update + 1)
