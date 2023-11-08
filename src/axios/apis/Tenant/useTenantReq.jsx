@@ -50,19 +50,30 @@ const useTenantReq = () => {
       data
     )
   }
-  const subscriptionDetailsResetSub = async (productId, tenantId, data) => {
+  const subscriptionDetailsResetSub = async (data) => {
+    return await Request.post(`management/sadmin/v1/Subscriptions/Reset`, data)
+  }
+
+  const subscriptionDetailsLimitReset = async (data) => {
     return await Request.post(
-      `management/sadmin/v1/products/${productId}/Tenants/${tenantId}/ResetSub`,
+      `management/sadmin/v1/Subscriptions/Features/Reset`,
       data
+    )
+  }
+  const setAutoRenewal = async (data) => {
+    return await Request.post(
+      `management/sadmin/v1/Subscriptions/AutoRenewal`,
+      data
+    )
+  }
+  const cancelAutoRenewal = async (data) => {
+    console.log({ reData: data })
+    return await Request.delete(
+      `management/sadmin/v1/Subscriptions/AutoRenewal`,
+      { data }
     )
   }
 
-  const subscriptionDetailsLimitReset = async (productId, tenantId, data) => {
-    return await Request.post(
-      `management/sadmin/v1/products/${productId}/Tenants/${tenantId}/LimitReset`,
-      data
-    )
-  }
   return {
     createTenantRequest,
     editTenantRequest,
@@ -77,6 +88,8 @@ const useTenantReq = () => {
     subscriptionDetailsRenew,
     subscriptionDetailsResetSub,
     subscriptionDetailsLimitReset,
+    setAutoRenewal,
+    cancelAutoRenewal,
   }
 }
 

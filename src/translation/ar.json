@@ -266,7 +266,13 @@
   "Upgrade-Subscription": "ترقية الاشتراك",
   "Auto-Renewal": "تجديد تلقائي",
   "Reseted-At": "تمت إعادة ضبطه في: ",
-  "renew-message": "هل أنت متأكد أنك ترغب في التجديد؟",
+  "cancel-renew-message": "هل أنت متأكد أنك ترغب في إلغاء التجديد التلقائي؟",
   "reset-limit-message": "هل أنت متأكد أنك ترغب في إعادة تعيين الحد؟",
-  "reset-subscription-message": "هل أنت متأكد أنك ترغب في إعادة تعيين الاشتراك؟"
+  "reset-subscription-message": "هل أنت متأكد أنك ترغب في إعادة تعيين الاشتراك؟",
+  "Non-Resettable": "غير قابل للإعادة تعيين",
+  "Renew-Subscription": "تجديد الاشتراك",
+  "Subscription-Reset": "إعادة تعيين الاشتراك",
+  "Subscription-Reset-Failure": "فشل إعادة تعيين الاشتراك",
+  "Subscription": "اشتراك",
+  "Subscription-Reset-Url": "عنوان URL لإعادة تعيين الاشتراك"
 }

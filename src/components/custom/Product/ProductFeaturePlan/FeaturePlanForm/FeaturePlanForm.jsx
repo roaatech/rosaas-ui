@@ -61,7 +61,7 @@ const FeaturePlanForm = ({
     ? allFeatureArray.map((item) => {
         return {
           value: item.id,
-          label: item.name,
+          label: item.title,
           type: item.type == 1 ? 'Number' : 'Boolean',
           reset: item.reset,
         }
@@ -69,7 +69,7 @@ const FeaturePlanForm = ({
     : []
   const planOptions = allPlans
     ? allPlansArray.map((item) => {
-        return { value: item.id, label: item.name }
+        return { value: item.id, label: item.title }
       })
     : []
 

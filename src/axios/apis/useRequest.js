@@ -27,6 +27,8 @@ const useRequest = () => {
     subscriptionDetailsRenew,
     subscriptionDetailsResetSub,
     subscriptionDetailsLimitReset,
+    setAutoRenewal,
+    cancelAutoRenewal,
   } = useTenantReq()
 
   const {
@@ -131,6 +133,8 @@ const useRequest = () => {
     subscriptionDetailsRenew,
     subscriptionDetailsResetSub,
     subscriptionDetailsLimitReset,
+    setAutoRenewal,
+    cancelAutoRenewal,
   }
 }
 export default useRequest

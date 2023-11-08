@@ -25,6 +25,14 @@ const UrlItemList = ({ data }) => {
       },
       {
         method: 'POST',
+        path: data.subscriptionResetUrl,
+        title: <FormattedMessage id="Subscription-Reset-Url" />,
+        description: (
+          <FormattedMessage id="Subscription-Reset-Url-Description" />
+        ),
+      },
+      {
+        method: 'POST',
         path: data.creationEndpoint,
         title: <FormattedMessage id="Creation-Url" />,
         description: <FormattedMessage id="Creation-Url-description" />,

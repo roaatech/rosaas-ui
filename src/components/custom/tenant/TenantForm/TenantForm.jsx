@@ -185,7 +185,7 @@ const TenantForm = ({
       .filter((item) => item.isPublished === true)
       .map((item, index) => ({
         value: item.id,
-        label: item.name,
+        label: item.title,
       }))
   } else {
     planOptions = []
@@ -257,9 +257,10 @@ const TenantForm = ({
           )
           .map((item) => ({
             value: item.id,
-            label: `${intl.formatMessage({
+            price: item.price,
+            cycle: intl.formatMessage({
               id: cycle[item.cycle],
-            })} (${item.price})`,
+            }),
           }))
         setPriceList(planData)
       } else {
@@ -427,6 +428,9 @@ const TenantForm = ({
                   </option>
                   {priceList.map((option) => (
                     <option key={option.value} value={option.value}>
+                      <span className="dolar">$</span>
+                      <div className="price">{option.price}</div>/
+                      <div className="cycle">{option.cycle}</div>
                       {option.label}
                     </option>
                   ))}

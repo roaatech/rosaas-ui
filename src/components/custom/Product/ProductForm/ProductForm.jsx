@@ -58,6 +58,12 @@ const ProductForm = ({
         /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
         <FormattedMessage id="Please-enter-a-valid-value" />
       ),
+    subscriptionResetUrl: Yup.string()
+      .required(<FormattedMessage id="This-field-is-required" />)
+      .matches(
+        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+        <FormattedMessage id="Please-enter-a-valid-value" />
+      ),
   })
 
   const formik = useFormik({
@@ -71,6 +77,7 @@ const ProductForm = ({
           apiKey: values.apiKey,
           defaultHealthCheckUrl: values.defaultHealthCheckUrl,
           healthStatusChangeUrl: values.healthStatusChangeUrl,
+          subscriptionResetUrl: values.subscriptionResetUrl,
           creationEndpoint: values.creationEndpoint,
           activationEndpoint: values.activationEndpoint,
           deactivationEndpoint: values.deactivationEndpoint,
@@ -88,6 +95,8 @@ const ProductForm = ({
             apiKey: values.apiKey,
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
             healthStatusChangeUrl: values.healthStatusChangeUrl,
+            subscriptionResetUrl: values.subscriptionResetUrl,
+
             creationEndpoint: values.creationEndpoint,
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
@@ -104,6 +113,8 @@ const ProductForm = ({
             apiKey: values.apiKey,
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
             healthStatusChangeUrl: values.healthStatusChangeUrl,
+            subscriptionResetUrl: values.subscriptionResetUrl,
+
             creationEndpoint: values.creationEndpoint,
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
@@ -250,6 +261,32 @@ const ProductForm = ({
                     style={{ display: 'block' }}
                   >
                     {formik.errors.healthStatusChangeUrl}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Subscription-Reset-Url" />
+                <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="subscriptionResetUrl"
+                name="subscriptionResetUrl"
+                onChange={formik.handleChange}
+                value={formik.values.subscriptionResetUrl}
+              />
+
+              {formik.touched.subscriptionResetUrl &&
+                formik.errors.subscriptionResetUrl && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.subscriptionResetUrl}
                   </Form.Control.Feedback>
                 )}
             </Form.Group>

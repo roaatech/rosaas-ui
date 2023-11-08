@@ -62,9 +62,11 @@ export const tenantsSlice = createSlice({
     },
     subscriptionData: (state, action) => {
       const currentTenants = JSON.parse(JSON.stringify(current(state.tenants)))
-      console.log({ currentTenants: currentTenants[action.payload.id] })
       currentTenants[action.payload.id].subscriptionData = { ...action.payload }
       state.tenants = currentTenants
+      console.log({
+        currentTenants: currentTenants[action.payload.id].subscriptionData,
+      })
     },
   },
 })

@@ -12,7 +12,7 @@ import {
 import { cycle, featureResetMap, featureUnitMap } from '../../../../const'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { formatDate } from '../../../../lib/sharedFun/Time'
+import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
 import { Wrapper } from './SubscriptionManagement.styled'
 import Label from '../../Shared/label/Label'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
@@ -29,7 +29,11 @@ import {
   MdOutlineAutorenew,
 } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
-import { BsFillPersonLinesFill, BsUpload } from 'react-icons/bs'
+import {
+  BsArrowCounterclockwise,
+  BsFillPersonLinesFill,
+  BsUpload,
+} from 'react-icons/bs'
 import BreadcrumbComponent from '../../Shared/Breadcrumb/Breadcrumb'
 import UpperContent from '../../Shared/UpperContent/UpperContent'
 import { useEffect } from 'react'
@@ -45,6 +49,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { GiReturnArrow } from 'react-icons/gi'
+import UpgradeForm from './UpgradeForm/UpgradeForm'
+import RenewForm from './RenewForm/RenewForm'
+import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
+import { set } from 'lodash'
 
 const SubscriptionManagement = (props) => {
   const routeParams = useParams()
@@ -60,6 +68,7 @@ const SubscriptionManagement = (props) => {
   }, [routeParams.id])
   useEffect(() => {
     setCurrentProduct(tenantsData[routeParams.id]?.subscriptions[0]?.productId)
+    console.log({ data: tenantsData[routeParams.id] })
   }, [tenantsData])
 
   const subscriptionDatas = useSelector(
@@ -72,6 +81,7 @@ const SubscriptionManagement = (props) => {
     subscriptionDetailsRenew,
     subscriptionDetailsLimitReset,
     subscriptionDetailsResetSub,
+    cancelAutoRenewal,
   } = useRequest()
   const [currentProduct, setCurrentProduct] = useState('')
   const [currentTab, setCurrentTab] = useState(0)
@@ -82,17 +92,23 @@ const SubscriptionManagement = (props) => {
   }
   const [showResetConfirmation, setShowResetConfirmation] = useState(false)
   const [resetTime, setResetTime] = useState(null)
+  const [update, setUpdate] = useState(0)
 
-  const [autoRenewal, setAutoRenewal] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [subscriptionId, setSubscribtionId] = useState()
   const handleToggleClick = () => {
-    setConfirm(true)
+    if (subscriptionDatas?.autoRenewal !== null) {
+      setConfirm(true)
+    } else {
+      setVisible(true)
+    }
   }
   const handleConfirmation = async (data = '', comment) => {
-    setAutoRenewal(!autoRenewal)
-    await subscriptionDetailsRenew(currentProduct, routeParams.id, {
-      autoRenewal: !autoRenewal,
+    await cancelAutoRenewal({
+      subscriptionId,
       comment,
     })
+    setUpdate(update + 1)
     setConfirm(false)
   }
   const handleResetLimit = () => {
@@ -100,12 +116,12 @@ const SubscriptionManagement = (props) => {
   }
 
   const handleResetConfirmation = async (data = '', comment) => {
-    const resetTime = new Date()
-    setResetTime(resetTime)
-    await subscriptionDetailsLimitReset(currentProduct, routeParams.id, {
-      reset: true,
+    await subscriptionDetailsLimitReset({
+      tenantId: routeParams.id,
+      productId: currentProduct,
       comment,
     })
+    setUpdate(update + 1)
 
     setShowResetConfirmation(false)
   }
@@ -118,93 +134,103 @@ const SubscriptionManagement = (props) => {
   const handleResetSubscription = () => {
     setShowResetSubscriptionConfirmation(true)
   }
-
   const handleResetSubscriptionConfirmation = async (data = '', comment) => {
-    await subscriptionDetailsResetSub(currentProduct, routeParams.id, {
-      reset: true,
+    await subscriptionDetailsResetSub({
+      tenantId: routeParams.id,
+      productId: currentProduct,
       comment,
     })
+    setUpdate(update + 1)
     const resetTimesub = new Date()
     setResetSubscriptionTime(resetTimesub)
 
     setShowResetSubscriptionConfirmation(false)
   }
+  const [formattedSubscriptionData, setFormattedSubscriptionData] =
+    useState(null)
 
+  const fetchSubscriptionDetails = async () => {
+    try {
+      const response = await subscriptionDetails(currentProduct, routeParams.id)
+      const formattedData = {
+        data: response?.data.data?.subscriptionFeatures?.map((feature) => ({
+          featureName: feature.feature.title,
+          featureReset: intl.formatMessage({
+            id: featureResetMap[feature.feature.reset],
+          }),
+          featureStartDate: feature.startDate,
+          featureEndDate: feature.endDate,
+          remindLimit: `${feature.remainingUsage}${
+            featureUnitMap[feature.feature.unit]
+          } / ${feature.feature.limit}${featureUnitMap[feature.feature.unit]} `,
+          subscriptionFeaturesCycles: feature.subscriptionFeaturesCycles.map(
+            (cycle) => ({
+              subscriptionCycleId: cycle.subscriptionCycleId,
+              featureName: cycle.feature.title ? cycle.feature.title : ' ',
+              startDate: cycle.startDate,
+              endDate: cycle.endDate,
+              type: cycle.type,
+              reset: cycle.reset,
+              usage: cycle.limit - cycle.remainingUsage,
+              limit: cycle.limit,
+              remindLimit: `${cycle.remainingUsage}${
+                featureUnitMap[cycle.unit]
+              } / ${cycle.limit}${featureUnitMap[cycle.unit]} `,
+            })
+          ),
+
+          usage: feature.feature.limit - feature.remainingUsage,
+        })),
+        subscriptionCycles: response.data.data.subscriptionCycles.map(
+          (cycle) => ({
+            startDate: cycle.startDate,
+            endDate: cycle.endDate,
+            subscriptionCycleId: cycle.id,
+            plan: cycle.plan.title,
+            price: cycle.price,
+            cycle: cycle.cycle,
+          })
+        ),
+        planName: response.data.data.plan.title,
+        startDate: response.data.data.startDate,
+        endDate: response.data.data.endDate,
+        currentSubscriptionCycleId:
+          response.data.data.currentSubscriptionCycleId,
+        lastResetDate: response.data.data.lastResetDate,
+        planId: response.data.data.plan.id,
+        subscriptionId: response.data.data.subscriptionId,
+        lastLimitsResetDate: response.data.data.lastLimitsResetDate,
+        autoRenewal: response.data.data.autoRenewal,
+      }
+      setFormattedSubscriptionData(formattedData)
+
+      console.log({ formattedSubscriptionData })
+      return formattedSubscriptionData
+    } catch (error) {
+      console.error('Error fetching subscription details:', error)
+    }
+  }
   useEffect(() => {
     if (!currentProduct) {
       return
     }
-    const fetchSubscriptionDetails = async () => {
-      try {
-        const response = await subscriptionDetails(
-          currentProduct,
-          routeParams.id
-        )
-        const formattedSubscriptionData = {
-          data: response?.data.data?.subscriptionFeatures?.map((feature) => ({
-            featureName: feature.feature.name,
-            featureReset: intl.formatMessage({
-              id: featureResetMap[feature.feature.reset],
-            }),
-            featureStartDate: feature.startDate,
-            featureEndDate: feature.endDate,
-            remindLimit: `${feature.remainingUsage}${
-              featureUnitMap[feature.feature.unit]
-            } / ${feature.feature.limit}${
-              featureUnitMap[feature.feature.unit]
-            } `,
-            subscriptionFeaturesCycles: feature.subscriptionFeaturesCycles.map(
-              (cycle) => ({
-                subscriptionCycleId: cycle.subscriptionCycleId,
-                featureName: cycle.feature.name ? cycle.feature.name : ' ',
-                startDate: cycle.startDate,
-                endDate: cycle.endDate,
-                type: cycle.type,
-                reset: cycle.reset,
-                usage: cycle.limit - cycle.remainingUsage,
-                limit: cycle.limit,
-                remindLimit: `${cycle.remainingUsage}${
-                  featureUnitMap[cycle.unit]
-                } / ${cycle.limit}${featureUnitMap[cycle.unit]} `,
-              })
-            ),
-
-            usage: feature.feature.limit - feature.remainingUsage,
-          })),
-          subscriptionCycles: response.data.data.subscriptionCycles.map(
-            (cycle) => ({
-              startDate: cycle.startDate,
-              endDate: cycle.endDate,
-              subscriptionCycleId: cycle.id,
-              plan: cycle.plan.name,
-              price: cycle.price,
-              cycle: cycle.cycle,
-            })
-          ),
-          planName: response.data.data.plan.name,
-          startDate: response.data.data.startDate,
-          endDate: response.data.data.endDate,
-          currentSubscriptionCycleId:
-            response.data.data.currentSubscriptionCycleId,
-        }
-        console.log({ formattedSubscriptionData })
-
-        dispatch(
-          subscriptionData({
-            id: routeParams.id,
-            data: formattedSubscriptionData,
-          })
-        )
-      } catch (error) {
-        console.error('Error fetching subscription details:', error)
-      }
-    }
 
     fetchSubscriptionDetails()
-  }, [routeParams.id, currentProduct])
+  }, [routeParams.id, currentProduct, update])
+  useEffect(() => {
+    if (formattedSubscriptionData) {
+      dispatch(
+        subscriptionData({
+          id: routeParams.id,
+          data: formattedSubscriptionData,
+        })
+      )
+    }
+    setSubscribtionId(subscriptionDatas?.subscriptionId)
+  }, [formattedSubscriptionData])
 
   const [confirm, setConfirm] = useState(false)
-
+  console.log({ subscriptionDatas })
   return (
     <Wrapper direction={direction}>
       {subscriptionDatas && (
@@ -243,14 +269,14 @@ const SubscriptionManagement = (props) => {
                   type: 'action',
                   label: 'Reset-Limit',
                   func: handleResetLimit,
-                  icon: <GiReturnArrow />,
+                  icon: <BsArrowCounterclockwise />,
                 },
                 {
                   order: 4,
                   type: 'action',
                   label: 'Reset-Subs',
                   func: handleResetSubscription,
-                  icon: <GiReturnArrow />,
+                  icon: <BsArrowCounterclockwise />,
                 },
               ]}
             />
@@ -284,16 +310,16 @@ const SubscriptionManagement = (props) => {
                                     <FormattedMessage id="Plan" />
                                   </div>
                                   <div className="small card-stats">
-                                    {cyc.plan}
+                                    {subscriptionDatas.planName}
                                   </div>
                                 </div>
 
                                 <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                                   <div className="mb-0 w-25">
-                                    <FormattedMessage id="Price" />
+                                    <FormattedMessage id="Subscription" />
                                   </div>
                                   <div className="small card-stats">
-                                    {cyc.price} /{' '}
+                                    ${cyc.price} /{' '}
                                     <FormattedMessage id={cycle[cyc.cycle]} />
                                   </div>
                                 </div>
@@ -328,20 +354,30 @@ const SubscriptionManagement = (props) => {
                               <Card.Body className="py-0 px-0">
                                 <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                                   <div className="mb-0 w-25">
-                                    <FormattedMessage id="Auto-Renewal" />
-                                  </div>
-                                  <div className="small card-stats">
+                                    <FormattedMessage id="Auto-Renewal" />{' '}
                                     <FontAwesomeIcon
                                       icon={
-                                        autoRenewal ? faToggleOn : faToggleOff
+                                        subscriptionDatas.autoRenewal
+                                          ? faToggleOn
+                                          : faToggleOff
                                       }
                                       className={
-                                        autoRenewal
-                                          ? 'active-toggle fa-lg'
-                                          : 'passive-toggle fa-lg'
+                                        subscriptionDatas.autoRenewal
+                                          ? 'active-toggle  ml-2'
+                                          : 'passive-toggle ml-2'
                                       }
                                       onClick={handleToggleClick}
                                     />
+                                  </div>
+                                  <div className="small card-stats">
+                                    {subscriptionDatas?.autoRenewal &&
+                                      `$${
+                                        subscriptionDatas?.autoRenewal?.price
+                                      } / ${
+                                        cycle[
+                                          subscriptionDatas?.autoRenewal?.cycle
+                                        ]
+                                      }`}
                                   </div>
                                 </div>
 
@@ -355,10 +391,12 @@ const SubscriptionManagement = (props) => {
                                     />
                                   </div>
                                   <div className="small card-stats">
-                                    {resetSubscriptionTime ? (
+                                    {subscriptionDatas.lastResetDate ? (
                                       <span>
                                         <FormattedMessage id="Reseted-At" />:{' '}
-                                        {resetSubscriptionTime.toLocaleString()}
+                                        {DataTransform(
+                                          subscriptionDatas.lastResetDate
+                                        )}
                                       </span>
                                     ) : (
                                       'not reset yet'
@@ -380,10 +418,12 @@ const SubscriptionManagement = (props) => {
                                     />
                                   </div>
                                   <div className="small card-stats">
-                                    {resetTime ? (
+                                    {subscriptionDatas.lastLimitsResetDate ? (
                                       <span>
-                                        <FormattedMessage id="Reseted-At" />:{' '}
-                                        {resetTime.toLocaleString()}
+                                        {/* <FormattedMessage id="Reseted-At" />:{' '} */}
+                                        {DataTransform(
+                                          subscriptionDatas.lastLimitsResetDate
+                                        )}
                                       </span>
                                     ) : (
                                       'not reset yet'
@@ -674,11 +714,28 @@ const SubscriptionManagement = (props) => {
                   setConfirm={setConfirm}
                   confirmFunction={handleConfirmation}
                   message={intl.formatMessage({
-                    id: 'renew-message',
+                    id: 'cancel-renew-message',
                   })}
                   placeholder={intl.formatMessage({ id: 'Comment' })}
                 />
               )}
+              {
+                <ThemeDialog visible={visible} setVisible={setVisible}>
+                  <RenewForm
+                    popupLabel={<FormattedMessage id="Renew-Subscription" />}
+                    type={'edit'}
+                    tenantData={subscriptionDatas}
+                    visible={visible}
+                    setVisible={setVisible}
+                    sideBar={false}
+                    selectedProduct={currentProduct}
+                    selectedPlan={subscriptionDatas?.planId}
+                    currentSubscription={subscriptionDatas?.subscriptionId}
+                    setUpdate={setUpdate}
+                    update={update}
+                  />
+                </ThemeDialog>
+              }
               {showResetConfirmation && (
                 <NoteInputConfirmation
                   confirm={showResetConfirmation}
