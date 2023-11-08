@@ -22,19 +22,6 @@ export const Wrapper = styled.div`
     background-color: transparent;
   }
 
-  .custom-nav-link {
-  }
-  .contents {
-    margin-left: -45px;
-  }
-  .year {
-    padding: -100px;
-  }
-  .year-tabs {
-    margin-left: 100px;
-    border-spacing: 0px;
-  }
-
   .custom-nav-link .nav-link.active {
     border-bottom: 0px;
 
@@ -95,16 +82,6 @@ export const Wrapper = styled.div`
   }
   .hide-tab-content {
     display: none !important;
-  }
-  .table td {
-    max-width: auto;
-    padding-right: 6px;
-    padding-left: 0px;
-  }
-  .table th {
-    max-width: auto;
-    padding-right: 6px;
-    padding-left: 0px;
   }
 
   .vertical-tab {

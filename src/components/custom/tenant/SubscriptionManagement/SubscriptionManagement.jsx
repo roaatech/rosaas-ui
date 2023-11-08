@@ -300,204 +300,294 @@ const SubscriptionManagement = (props) => {
                     }
                   >
                     <div className="info-card">
-                      <Card border="light" className="shadow-sm ">
-                        <Container>
-                          <Row>
-                            <Col md={6}>
-                              <Card.Body className="py-0 px-0">
-                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                                  <div className="mb-0 w-25">
-                                    <FormattedMessage id="Plan" />
-                                  </div>
-                                  <div className="small card-stats">
-                                    {subscriptionDatas.planName}
-                                  </div>
+                      <Card border="light" className="shadow-sm p-3">
+                        <Row>
+                          <Col md={6}>
+                            <Card.Body className="py-0 px-0">
+                              <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                                <div className="mb-0 w-25">
+                                  <FormattedMessage id="Plan" />
                                 </div>
+                                <div className="small card-stats">
+                                  {subscriptionDatas.planName}
+                                </div>
+                              </div>
 
-                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                                  <div className="mb-0 w-25">
-                                    <FormattedMessage id="Subscription" />
-                                  </div>
-                                  <div className="small card-stats">
-                                    ${cyc.price} /{' '}
-                                    <FormattedMessage id={cycle[cyc.cycle]} />
-                                  </div>
+                              <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                                <div className="mb-0 w-25">
+                                  <FormattedMessage id="Subscription" />
                                 </div>
-                              </Card.Body>
-                            </Col>
-                            <Col md={6}>
-                              <Card.Body className="py-0 px-0 ">
-                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                                  <div className="mb-0 w-25">
-                                    <FormattedMessage id="Start-Date" />
-                                  </div>
-                                  <div className="small card-stats">
-                                    {formatDate(cyc.startDate)}
-                                  </div>
+                                <div className="small card-stats">
+                                  ${cyc.price} /{' '}
+                                  <FormattedMessage id={cycle[cyc.cycle]} />
                                 </div>
-                                <div className="d-flex align-items-center justify-content-between border-bottom  border-light py-2 ">
-                                  <div className="mb-0 w-25">
-                                    <FormattedMessage id="End-Date" />
-                                  </div>
-                                  <div className="small card-stats">
-                                    {formatDate(cyc.endDate)}
-                                  </div>
+                              </div>
+                            </Card.Body>
+                          </Col>
+                          <Col md={6}>
+                            <Card.Body className="py-0 px-0 ">
+                              <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                                <div className="mb-0 w-25">
+                                  <FormattedMessage id="Start-Date" />
                                 </div>
-                              </Card.Body>
-                            </Col>
-                          </Row>
-                        </Container>
+                                <div className="small card-stats">
+                                  {formatDate(cyc.startDate)}
+                                </div>
+                              </div>
+                              <div className="d-flex align-items-center justify-content-between border-bottom  border-light py-2 ">
+                                <div className="mb-0 w-25">
+                                  <FormattedMessage id="End-Date" />
+                                </div>
+                                <div className="small card-stats">
+                                  {formatDate(cyc.endDate)}
+                                </div>
+                              </div>
+                            </Card.Body>
+                          </Col>
+                        </Row>
 
-                        <Container>
-                          <Row>
-                            <Col md={6}>
-                              <Card.Body className="py-0 px-0">
-                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                                  <div className="mb-0 w-25">
-                                    <FormattedMessage id="Auto-Renewal" />{' '}
-                                    <FontAwesomeIcon
-                                      icon={
-                                        subscriptionDatas.autoRenewal
-                                          ? faToggleOn
-                                          : faToggleOff
-                                      }
-                                      className={
-                                        subscriptionDatas.autoRenewal
-                                          ? 'active-toggle  ml-2'
-                                          : 'passive-toggle ml-2'
-                                      }
-                                      onClick={handleToggleClick}
-                                    />
-                                  </div>
-                                  <div className="small card-stats">
-                                    {subscriptionDatas?.autoRenewal &&
-                                      `$${
-                                        subscriptionDatas?.autoRenewal?.price
-                                      } / ${
-                                        cycle[
-                                          subscriptionDatas?.autoRenewal?.cycle
-                                        ]
-                                      }`}
-                                  </div>
+                        <Row>
+                          <Col md={6}>
+                            <Card.Body className="py-0 px-0">
+                              <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                                <div className="mb-0 w-25">
+                                  <FormattedMessage id="Auto-Renewal" />{' '}
+                                  <FontAwesomeIcon
+                                    icon={
+                                      subscriptionDatas.autoRenewal
+                                        ? faToggleOn
+                                        : faToggleOff
+                                    }
+                                    className={
+                                      subscriptionDatas.autoRenewal
+                                        ? 'active-toggle  ml-2'
+                                        : 'passive-toggle ml-2'
+                                    }
+                                    onClick={handleToggleClick}
+                                  />
                                 </div>
+                                <div className="small card-stats">
+                                  {subscriptionDatas?.autoRenewal &&
+                                    `$${
+                                      subscriptionDatas?.autoRenewal?.price
+                                    } / ${
+                                      cycle[
+                                        subscriptionDatas?.autoRenewal?.cycle
+                                      ]
+                                    }`}
+                                </div>
+                              </div>
 
-                                <div className="d-flex align-items-center justify-content-between  py-2 ">
-                                  <div className="mb-0 ">
-                                    <FormattedMessage id="Reset-Subs" />
-                                    <FontAwesomeIcon
-                                      className="ml-3 mr-3 small icon-container"
-                                      icon={faArrowRotateBackward}
-                                      onClick={handleResetSubscription}
-                                    />
-                                  </div>
-                                  <div className="small card-stats">
-                                    {subscriptionDatas.lastResetDate ? (
-                                      <span>
-                                        <FormattedMessage id="Reseted-At" />:{' '}
-                                        {DataTransform(
-                                          subscriptionDatas.lastResetDate
-                                        )}
-                                      </span>
-                                    ) : (
-                                      'not reset yet'
-                                    )}
-                                  </div>
+                              <div className="d-flex align-items-center justify-content-between  py-2 ">
+                                <div className="mb-0 ">
+                                  <FormattedMessage id="Reset-Subs" />
+                                  <FontAwesomeIcon
+                                    className="ml-3 mr-3 small icon-container"
+                                    icon={faArrowRotateBackward}
+                                    onClick={handleResetSubscription}
+                                  />
                                 </div>
-                              </Card.Body>
-                            </Col>
-                            <Col md={6}>
-                              <Card.Body className="py-0 px-0 ">
-                                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                                  <div className="mb-0 ">
-                                    <FormattedMessage id="Reset-Limit" />
+                                <div className="small card-stats">
+                                  {subscriptionDatas.lastResetDate ? (
+                                    <span>
+                                      <FormattedMessage id="Reseted-At" />:{' '}
+                                      {DataTransform(
+                                        subscriptionDatas.lastResetDate
+                                      )}
+                                    </span>
+                                  ) : (
+                                    'not reset yet'
+                                  )}
+                                </div>
+                              </div>
+                            </Card.Body>
+                          </Col>
+                          <Col md={6}>
+                            <Card.Body className="py-0 px-0 ">
+                              <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                                <div className="mb-0 ">
+                                  <FormattedMessage id="Reset-Limit" />
 
-                                    <FontAwesomeIcon
-                                      className="ml-3 mr-3 small  icon-container"
-                                      icon={faArrowRotateBackward}
-                                      onClick={handleResetLimit}
-                                    />
-                                  </div>
-                                  <div className="small card-stats">
-                                    {subscriptionDatas.lastLimitsResetDate ? (
-                                      <span>
-                                        {/* <FormattedMessage id="Reseted-At" />:{' '} */}
-                                        {DataTransform(
-                                          subscriptionDatas.lastLimitsResetDate
-                                        )}
-                                      </span>
-                                    ) : (
-                                      'not reset yet'
-                                    )}
-                                  </div>
+                                  <FontAwesomeIcon
+                                    className="ml-3 mr-3 small  icon-container"
+                                    icon={faArrowRotateBackward}
+                                    onClick={handleResetLimit}
+                                  />
                                 </div>
-                                <div className="d-flex align-items-center justify-content-between  py-2 ">
-                                  <div className="mb-0 w-25">
-                                    <FormattedMessage id="Upgrade-info" />
-                                  </div>
-                                  <div className="small card-stats"></div>
+                                <div className="small card-stats">
+                                  {subscriptionDatas.lastLimitsResetDate ? (
+                                    <span>
+                                      {/* <FormattedMessage id="Reseted-At" />:{' '} */}
+                                      {DataTransform(
+                                        subscriptionDatas.lastLimitsResetDate
+                                      )}
+                                    </span>
+                                  ) : (
+                                    'not reset yet'
+                                  )}
                                 </div>
-                              </Card.Body>
-                            </Col>
-                          </Row>
-                        </Container>
+                              </div>
+                              <div className="d-flex align-items-center justify-content-between  py-2 ">
+                                <div className="mb-0 w-25">
+                                  <FormattedMessage id="Upgrade-info" />
+                                </div>
+                                <div className="small card-stats"></div>
+                              </div>
+                            </Card.Body>
+                          </Col>
+                        </Row>
                       </Card>
                     </div>
                     <Card border="light" className="shadow-sm mt-2 table-card ">
                       <Card.Body>
-                        <Container className="p-0 m-0">
-                          <Row>
-                            <Col
-                              className={`${
-                                window.innerWidth <= 768 ? 'col-sm-12' : ''
-                              }`}
-                            >
-                              <div>
-                                <Tab.Container
-                                  defaultActiveKey={
-                                    currentTab === 0
-                                      ? 'allFeatures'
-                                      : subscriptionDatas.data?.[0]?.featureName
-                                  }
-                                >
-                                  <Container className="p-0 ">
-                                    <Row>
-                                      <Col md={3}>
-                                        <Nav
-                                          fill
-                                          variant="pills"
-                                          className={`flex-column vertical-tab custom-nav-link mb-3 ${
-                                            window.innerWidth <= 768
-                                              ? 'custom-horizontal-tab'
-                                              : ''
-                                          }`}
-                                        >
-                                          {currentTab === 0 && (
-                                            <Nav.Item>
-                                              <Nav.Link eventKey="allFeatures">
-                                                <FormattedMessage id="All-Features" />
-                                              </Nav.Link>
-                                            </Nav.Item>
-                                          )}
-                                          {subscriptionDatas.data?.map(
-                                            (feature, featureIndex) => (
-                                              <Nav.Item
-                                                key={`feature-nav-${featureIndex}`}
+                        <Row>
+                          <Col
+                            className={`${
+                              window.innerWidth <= 768 ? 'col-sm-12' : ''
+                            }`}
+                          >
+                            <div>
+                              <Tab.Container
+                                defaultActiveKey={
+                                  currentTab === 0
+                                    ? 'allFeatures'
+                                    : subscriptionDatas.data?.[0]?.featureName
+                                }
+                              >
+                                <Row>
+                                  <Col md={3}>
+                                    <Nav
+                                      fill
+                                      variant="pills"
+                                      className={`flex-column vertical-tab custom-nav-link mb-3 ${
+                                        window.innerWidth <= 768
+                                          ? 'custom-horizontal-tab'
+                                          : ''
+                                      }`}
+                                    >
+                                      {currentTab === 0 && (
+                                        <Nav.Item>
+                                          <Nav.Link eventKey="allFeatures">
+                                            <FormattedMessage id="All-Features" />
+                                          </Nav.Link>
+                                        </Nav.Item>
+                                      )}
+                                      {subscriptionDatas.data?.map(
+                                        (feature, featureIndex) => (
+                                          <Nav.Item
+                                            key={`feature-nav-${featureIndex}`}
+                                          >
+                                            <Nav.Link
+                                              eventKey={feature.featureName}
+                                            >
+                                              {feature.featureName}
+                                            </Nav.Link>
+                                          </Nav.Item>
+                                        )
+                                      )}
+                                    </Nav>
+                                  </Col>
+                                  <Col md={9}>
+                                    <Tab.Content>
+                                      {currentTab === 0 && (
+                                        <Tab.Pane eventKey="allFeatures">
+                                          <Card.Body className="py-0 px-0">
+                                            <Table
+                                              responsive
+                                              className="feat-table"
+                                            >
+                                              <thead>
+                                                <tr>
+                                                  <th>
+                                                    <FormattedMessage id="Feature" />
+                                                  </th>
+                                                  <th>
+                                                    <FormattedMessage id="Reset" />
+                                                  </th>
+                                                  <th>
+                                                    <FormattedMessage id="Start-Date" />
+                                                  </th>
+                                                  <th>
+                                                    <FormattedMessage id="End-Date" />
+                                                  </th>
+                                                  <th>
+                                                    <FormattedMessage id="Remind/Limit" />
+                                                  </th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                {subscriptionDatas &&
+                                                  subscriptionDatas.data
+                                                    ?.filter((subscription) => {
+                                                      return subscription.subscriptionFeaturesCycles.some(
+                                                        (cycle) =>
+                                                          cycle.subscriptionCycleId ===
+                                                          subscriptionDatas.currentSubscriptionCycleId
+                                                      )
+                                                    })
+                                                    .map(
+                                                      (subscription, index) => (
+                                                        <tr
+                                                          key={`subscription-${index}`}
+                                                        >
+                                                          <td>
+                                                            {
+                                                              subscription.featureName
+                                                            }
+                                                          </td>
+                                                          <td>
+                                                            {
+                                                              subscription.featureReset
+                                                            }
+                                                          </td>
+                                                          <td>
+                                                            <DateLabelWhite
+                                                              text={formatDate(
+                                                                subscription.featureStartDate
+                                                              )}
+                                                            />
+                                                          </td>
+                                                          <td>
+                                                            <DateLabel
+                                                              endDate={
+                                                                subscription.featureEndDate
+                                                                  ? formatDate(
+                                                                      subscription.featureEndDate
+                                                                    )
+                                                                  : formatDate(
+                                                                      subscriptionDatas.endDate
+                                                                    )
+                                                              }
+                                                            />
+                                                          </td>
+                                                          <td className="remind-value">
+                                                            {subscription.remindLimit ===
+                                                            'nullundefined / nullundefined '
+                                                              ? '-'
+                                                              : subscription.remindLimit}
+                                                          </td>
+                                                        </tr>
+                                                      )
+                                                    )}
+                                              </tbody>
+                                            </Table>
+                                          </Card.Body>
+                                        </Tab.Pane>
+                                      )}
+                                      {subscriptionDatas.data?.map(
+                                        (feature, featureIndex) => (
+                                          <Tab.Pane
+                                            key={`feature-${featureIndex}`}
+                                            eventKey={feature.featureName}
+                                          >
+                                            <Card.Body className="py-0 px-0">
+                                              <div
+                                                style={{
+                                                  maxWidth: '100%',
+                                                  overflowX: 'auto',
+                                                }}
+                                                className="table-container"
                                               >
-                                                <Nav.Link
-                                                  eventKey={feature.featureName}
-                                                >
-                                                  {feature.featureName}
-                                                </Nav.Link>
-                                              </Nav.Item>
-                                            )
-                                          )}
-                                        </Nav>
-                                      </Col>
-                                      <Col md={9}>
-                                        <Tab.Content>
-                                          {currentTab === 0 && (
-                                            <Tab.Pane eventKey="allFeatures">
-                                              <Card.Body className="py-0 px-0">
                                                 <Table
                                                   responsive
                                                   className="feat-table"
@@ -517,192 +607,85 @@ const SubscriptionManagement = (props) => {
                                                         <FormattedMessage id="End-Date" />
                                                       </th>
                                                       <th>
+                                                        <FormattedMessage id="usage" />
+                                                      </th>
+                                                      <th>
                                                         <FormattedMessage id="Remind/Limit" />
                                                       </th>
                                                     </tr>
                                                   </thead>
                                                   <tbody>
-                                                    {subscriptionDatas &&
-                                                      subscriptionDatas.data
-                                                        ?.filter(
-                                                          (subscription) => {
-                                                            return subscription.subscriptionFeaturesCycles.some(
-                                                              (cycle) =>
-                                                                cycle.subscriptionCycleId ===
-                                                                subscriptionDatas.currentSubscriptionCycleId
-                                                            )
-                                                          }
+                                                    {feature.subscriptionFeaturesCycles
+                                                      ?.filter(
+                                                        (cycle) =>
+                                                          cycle.subscriptionCycleId ===
+                                                          cyc.subscriptionCycleId
+                                                      )
+                                                      .map(
+                                                        (cycle, cycleIndex) => (
+                                                          <tr
+                                                            key={`cycle-${cycleIndex}`}
+                                                          >
+                                                            <td>
+                                                              {
+                                                                cycle.featureName
+                                                              }
+                                                            </td>
+                                                            <td>
+                                                              <FormattedMessage
+                                                                id={
+                                                                  featureResetMap[
+                                                                    cycle.reset
+                                                                  ]
+                                                                }
+                                                              />
+                                                            </td>
+                                                            <td>
+                                                              <DateLabelWhite
+                                                                text={formatDate(
+                                                                  cycle.startDate
+                                                                )}
+                                                              />
+                                                            </td>
+                                                            <td>
+                                                              <DateLabel
+                                                                endDate={
+                                                                  cycle.endDate
+                                                                    ? formatDate(
+                                                                        cycle.endDate
+                                                                      )
+                                                                    : formatDate(
+                                                                        subscriptionDatas.endDate
+                                                                      )
+                                                                }
+                                                              />
+                                                            </td>
+                                                            <td>
+                                                              {cycle.usage}
+                                                            </td>
+                                                            <td className="remind-value">
+                                                              {cycle.remindLimit ==
+                                                              'nullundefined / nullundefined '
+                                                                ? '-'
+                                                                : cycle.remindLimit}
+                                                            </td>
+                                                          </tr>
                                                         )
-                                                        .map(
-                                                          (
-                                                            subscription,
-                                                            index
-                                                          ) => (
-                                                            <tr
-                                                              key={`subscription-${index}`}
-                                                            >
-                                                              <td>
-                                                                {
-                                                                  subscription.featureName
-                                                                }
-                                                              </td>
-                                                              <td>
-                                                                {
-                                                                  subscription.featureReset
-                                                                }
-                                                              </td>
-                                                              <td>
-                                                                <DateLabelWhite
-                                                                  text={formatDate(
-                                                                    subscription.featureStartDate
-                                                                  )}
-                                                                />
-                                                              </td>
-                                                              <td>
-                                                                <DateLabel
-                                                                  endDate={
-                                                                    subscription.featureEndDate
-                                                                      ? formatDate(
-                                                                          subscription.featureEndDate
-                                                                        )
-                                                                      : formatDate(
-                                                                          subscriptionDatas.endDate
-                                                                        )
-                                                                  }
-                                                                />
-                                                              </td>
-                                                              <td className="remind-value">
-                                                                {subscription.remindLimit ===
-                                                                'nullundefined / nullundefined '
-                                                                  ? '-'
-                                                                  : subscription.remindLimit}
-                                                              </td>
-                                                            </tr>
-                                                          )
-                                                        )}
+                                                      )}
                                                   </tbody>
                                                 </Table>
-                                              </Card.Body>
-                                            </Tab.Pane>
-                                          )}
-                                          {subscriptionDatas.data?.map(
-                                            (feature, featureIndex) => (
-                                              <Tab.Pane
-                                                key={`feature-${featureIndex}`}
-                                                eventKey={feature.featureName}
-                                              >
-                                                <Card.Body className="py-0 px-0">
-                                                  <div
-                                                    style={{
-                                                      maxWidth: '100%',
-                                                      overflowX: 'auto',
-                                                    }}
-                                                    className="table-container"
-                                                  >
-                                                    <Table
-                                                      responsive
-                                                      className="feat-table"
-                                                    >
-                                                      <thead>
-                                                        <tr>
-                                                          <th>
-                                                            <FormattedMessage id="Feature" />
-                                                          </th>
-                                                          <th>
-                                                            <FormattedMessage id="Reset" />
-                                                          </th>
-                                                          <th>
-                                                            <FormattedMessage id="Start-Date" />
-                                                          </th>
-                                                          <th>
-                                                            <FormattedMessage id="End-Date" />
-                                                          </th>
-                                                          <th>
-                                                            <FormattedMessage id="usage" />
-                                                          </th>
-                                                          <th>
-                                                            <FormattedMessage id="Remind/Limit" />
-                                                          </th>
-                                                        </tr>
-                                                      </thead>
-                                                      <tbody>
-                                                        {feature.subscriptionFeaturesCycles
-                                                          ?.filter(
-                                                            (cycle) =>
-                                                              cycle.subscriptionCycleId ===
-                                                              cyc.subscriptionCycleId
-                                                          )
-                                                          .map(
-                                                            (
-                                                              cycle,
-                                                              cycleIndex
-                                                            ) => (
-                                                              <tr
-                                                                key={`cycle-${cycleIndex}`}
-                                                              >
-                                                                <td>
-                                                                  {
-                                                                    cycle.featureName
-                                                                  }
-                                                                </td>
-                                                                <td>
-                                                                  <FormattedMessage
-                                                                    id={
-                                                                      featureResetMap[
-                                                                        cycle
-                                                                          .reset
-                                                                      ]
-                                                                    }
-                                                                  />
-                                                                </td>
-                                                                <td>
-                                                                  <DateLabelWhite
-                                                                    text={formatDate(
-                                                                      cycle.startDate
-                                                                    )}
-                                                                  />
-                                                                </td>
-                                                                <td>
-                                                                  <DateLabel
-                                                                    endDate={
-                                                                      cycle.endDate
-                                                                        ? formatDate(
-                                                                            cycle.endDate
-                                                                          )
-                                                                        : formatDate(
-                                                                            subscriptionDatas.endDate
-                                                                          )
-                                                                    }
-                                                                  />
-                                                                </td>
-                                                                <td>
-                                                                  {cycle.usage}
-                                                                </td>
-                                                                <td className="remind-value">
-                                                                  {cycle.remindLimit ==
-                                                                  'nullundefined / nullundefined '
-                                                                    ? '-'
-                                                                    : cycle.remindLimit}
-                                                                </td>
-                                                              </tr>
-                                                            )
-                                                          )}
-                                                      </tbody>
-                                                    </Table>
-                                                  </div>
-                                                </Card.Body>
-                                              </Tab.Pane>
-                                            )
-                                          )}
-                                        </Tab.Content>
-                                      </Col>
-                                    </Row>
-                                  </Container>
-                                </Tab.Container>
-                              </div>
-                            </Col>
-                          </Row>
-                        </Container>
+                                              </div>
+                                            </Card.Body>
+                                          </Tab.Pane>
+                                        )
+                                      )}
+                                    </Tab.Content>
+                                  </Col>
+                                </Row>
+                              </Tab.Container>
+                            </div>
+                          </Col>
+                        </Row>
                       </Card.Body>
                     </Card>
                   </TabPanel>
