@@ -464,24 +464,35 @@ const SubscriptionManagement = (props) => {
                                                             }
                                                           </td>
                                                           <td>
-                                                            <DateLabelWhite
-                                                              text={formatDate(
-                                                                subscription.featureStartDate
-                                                              )}
-                                                            />
+                                                            {' '}
+                                                            {subscription.featureReset !=
+                                                            'Non Resettable' ? (
+                                                              <DateLabelWhite
+                                                                text={formatDate(
+                                                                  subscription.featureStartDate
+                                                                )}
+                                                              />
+                                                            ) : (
+                                                              '-'
+                                                            )}
                                                           </td>
                                                           <td>
-                                                            <DateLabel
-                                                              endDate={
-                                                                subscription.featureEndDate
-                                                                  ? formatDate(
-                                                                      subscription.featureEndDate
-                                                                    )
-                                                                  : formatDate(
-                                                                      subscriptionDatas.endDate
-                                                                    )
-                                                              }
-                                                            />
+                                                            {subscription.featureReset !=
+                                                            'Non Resettable' ? (
+                                                              <DateLabel
+                                                                endDate={
+                                                                  subscription.featureEndDate
+                                                                    ? formatDate(
+                                                                        subscription.featureEndDate
+                                                                      )
+                                                                    : formatDate(
+                                                                        subscriptionDatas.endDate
+                                                                      )
+                                                                }
+                                                              />
+                                                            ) : (
+                                                              '-'
+                                                            )}
                                                           </td>
                                                           <td className="remind-value">
                                                             {subscription.remindLimit ===
@@ -564,24 +575,34 @@ const SubscriptionManagement = (props) => {
                                                               />
                                                             </td>
                                                             <td>
-                                                              <DateLabelWhite
-                                                                text={formatDate(
-                                                                  cycle.startDate
-                                                                )}
-                                                              />
+                                                              {cycle.reset !=
+                                                              1 ? (
+                                                                <DateLabelWhite
+                                                                  text={formatDate(
+                                                                    cycle.startDate
+                                                                  )}
+                                                                />
+                                                              ) : (
+                                                                '-'
+                                                              )}
                                                             </td>
                                                             <td>
-                                                              <DateLabel
-                                                                endDate={
-                                                                  cycle.endDate
-                                                                    ? formatDate(
-                                                                        cycle.endDate
-                                                                      )
-                                                                    : formatDate(
-                                                                        subscriptionDatas.endDate
-                                                                      )
-                                                                }
-                                                              />
+                                                              {cycle.reset !=
+                                                              1 ? (
+                                                                <DateLabel
+                                                                  endDate={
+                                                                    cycle.endDate
+                                                                      ? formatDate(
+                                                                          cycle.endDate
+                                                                        )
+                                                                      : formatDate(
+                                                                          subscriptionDatas.endDate
+                                                                        )
+                                                                  }
+                                                                />
+                                                              ) : (
+                                                                '-'
+                                                              )}
                                                             </td>
                                                             <td>
                                                               {cycle.usage}
