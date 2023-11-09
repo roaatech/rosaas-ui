@@ -19,18 +19,12 @@ import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import { useNavigate, useParams } from 'react-router-dom'
 import useActions from '../Actions/Actions'
-import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
 import { useDispatch, useSelector } from 'react-redux'
-import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/SubscriptionInfoAccordionNew'
 import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { statusConst } from '../../../../const'
-import { BsFillTrash3Fill } from 'react-icons/bs'
 import { MdFactCheck } from 'react-icons/md'
-import {
-  setActiveIndex,
-  subscriptionData,
-} from '../../../../store/slices/tenants'
+import { subscriptionData } from '../../../../store/slices/tenants'
 import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import { fetchSubscriptionDetails } from '../SubscriptionManagement/fetchSubscriptionDetails/fetchSubscriptionDetails'
@@ -41,11 +35,9 @@ export default function ChildTable({
   updateTenant,
   productIndex,
   tenantObject,
-  setShowSubsMan,
 }) {
   const { getProductSpecification, subscriptionDetails } = useRequest()
   const dispatch = useDispatch()
-  const activeIndex = useSelector((state) => state.tenants.currentTab)
 
   const listProducts = useSelector((state) => state.products.products)
   useEffect(() => {
@@ -127,10 +119,9 @@ export default function ChildTable({
     useState(null)
 
   useEffect(() => {
-    if (!currentProduct || !routeParams.id) {
+    if (!currentProduct || !routeParams.id || subscriptionDatas) {
       return
     }
-    console.log({ currentProduct })
 
     fetchSubscriptionDetails({
       currentProduct: currentProduct.id,
@@ -143,7 +134,6 @@ export default function ChildTable({
   }, [routeParams.id, currentProduct])
   useEffect(() => {
     if (formattedSubscriptionData) {
-      console.log(formattedSubscriptionData)
       dispatch(
         subscriptionData({
           id: routeParams.id,
@@ -282,11 +272,6 @@ export default function ChildTable({
                   <MetaDataAccordion defaultKey="metaData" data={products} />
                 </td>
               </tr>
-              {/* <tr>
-                <td className="accordions" colSpan={2}>
-                  <SubscriptionInfoAccordionNew />
-                </td>
-              </tr> */}
 
               {productData?.healthCheckStatus.showHealthStatus == true && (
                 <tr>
