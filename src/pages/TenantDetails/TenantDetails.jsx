@@ -74,12 +74,8 @@ const TenantDetails = () => {
     dispatch(removeTenant(routeParams.id))
     navigate(`/Dashboard`)
   }
-  const [showSubsMan, setShowSubsMan] = useState(false)
-  useEffect(() => {
-    setShowSubsMan(false)
-  }, [routeParams.id])
+
   let tenantObject = tenantsData[routeParams.id]
-  const [currentProduct, setCurrentProduct] = useState('')
   let tenantStatus = tenantObject?.subscriptions[0]?.actions
     ? tenantObject?.subscriptions
         ?.flatMap((item) => item?.actions?.map((action) => action))
@@ -98,81 +94,11 @@ const TenantDetails = () => {
   const intl = useIntl()
 
   useEffect(() => {
-    if (!currentProduct) {
-      return
-    }
-    const fetchSubscriptionDetails = async () => {
-      try {
-        const response = await subscriptionDetails(
-          currentProduct,
-          routeParams.id
-        )
-        const formattedSubscriptionData = {
-          data: response.data.data?.subscriptionFeatures?.map((feature) => ({
-            featureName: feature.feature.name,
-            featureReset: intl.formatMessage({
-              id: featureResetMap[feature.feature.reset],
-            }),
-            featureStartDate: feature.startDate,
-            featureEndDate: feature.endDate,
-            remindLimit: `${feature.remainingUsage}${
-              featureUnitMap[feature.feature.unit]
-            } / ${feature.feature.limit}${
-              featureUnitMap[feature.feature.unit]
-            } `,
-            subscriptionFeaturesCycles: feature.subscriptionFeaturesCycles.map(
-              (cycle) => ({
-                subscriptionCycleId: cycle.subscriptionCycleId,
-                featureName: cycle.feature.name ? cycle.feature.name : ' ',
-                startDate: cycle.startDate,
-                endDate: cycle.endDate,
-                type: cycle.type,
-                reset: cycle.reset,
-                usage: cycle.limit - cycle.remainingUsage,
-                limit: cycle.limit,
-                remindLimit: `${cycle.remainingUsage}${
-                  featureUnitMap[cycle.unit]
-                } / ${cycle.limit}${featureUnitMap[cycle.unit]} `,
-              })
-            ),
-
-            usage: feature.feature.limit - feature.remainingUsage,
-          })),
-          subscriptionCycles: response.data.data.subscriptionCycles.map(
-            (cycle) => ({
-              startDate: cycle.startDate,
-              endDate: cycle.endDate,
-              subscriptionCycleId: cycle.id,
-              plan: cycle.plan.name,
-              price: cycle.price,
-              cycle: cycle.cycle,
-            })
-          ),
-          planName: response.data.data.plan.name,
-          startDate: response.data.data.startDate,
-          endDate: response.data.data.endDate,
-          currentSubscriptionCycleId:
-            response.data.data.currentSubscriptionCycleId,
-        }
-
-        dispatch(subscriptionData(formattedSubscriptionData))
-      } catch (error) {
-        console.error('Error fetching subscription details:', error)
-      }
-    }
-
-    fetchSubscriptionDetails()
-  }, [routeParams.id, currentProduct])
-
-  useEffect(() => {
     ;(async () => {
       if (!tenantsData[routeParams.id]?.subscriptions[0]?.status) {
         const tenantData = await getTenant(routeParams.id)
         dispatch(tenantInfo(tenantData.data.data))
       }
-      setCurrentProduct(
-        tenantsData[routeParams.id]?.subscriptions[0]?.productId
-      )
     })()
   }, [visible, routeParams.id, updateDetails])
   useEffect(() => {
@@ -253,42 +179,6 @@ const TenantDetails = () => {
                             className="table-centered table-nowrap rounded mb-0"
                           >
                             <tbody>
-                              {/* <tr className="row-button ">
-                                <td colSpan="2">
-                                  <div className="dynamicButtons">
-                                    <DynamicButtons
-                                      buttons={
-                                        tenantStatus &&
-                                        tenantStatus[0]?.status !== 13
-                                          ? [
-                                              {
-                                                order: 1,
-                                                type: 'form',
-                                                id: routeParams.id,
-                                                label: 'Edit',
-                                                component: 'editTenant',
-                                                updateTenant: updateTenant,
-                                                icon: <AiFillEdit />,
-                                              },
-                                              ...renderActions(
-                                                tenantObject,
-                                                tenantStatus,
-                                                chagneStatus,
-                                                deleteConfirm
-                                              ),
-                                            ]
-                                          : renderActions(
-                                              tenantObject,
-                                              tenantStatus,
-                                              chagneStatus,
-                                              deleteConfirm
-                                            )
-                                      }
-                                    />
-                                  </div>
-                                </td> */}
-                              {/* </tr> */}
-
                               <tr>
                                 <td className="fw-bold line-cell">
                                   <FormattedMessage id="Title" />
@@ -355,35 +245,9 @@ const TenantDetails = () => {
                           updateDetails={updateDetails}
                           updateTenant={updateTenant}
                           productIndex={index}
-                          setShowSubsMan={setShowSubsMan}
                         />
                       </TabPanel>
                     ))}
-                    {showSubsMan && (
-                      <TabPanel
-                        header={
-                          <div>
-                            <span style={{ paddingRight: '10px' }}>
-                              <FormattedMessage id="Subscription-Management" />
-                            </span>
-                            <span
-                              style={{ cursor: 'pointer' }}
-                              onClick={() => {
-                                dispatch(setActiveIndex(activeIndex - 1))
-                                setShowSubsMan(false)
-                              }}
-                            >
-                              &#x2716; {/* "x" character */}
-                            </span>
-                          </div>
-                        }
-                        key={'SubscriptionManagement'}
-                      >
-                        {/* <SubscriptionManagement
-                          props={{ productData: currentProduct }}
-                        /> */}
-                      </TabPanel>
-                    )}
                   </TabView>
                   <DeleteConfirmation
                     message="Do you want to delete this Tenant?"

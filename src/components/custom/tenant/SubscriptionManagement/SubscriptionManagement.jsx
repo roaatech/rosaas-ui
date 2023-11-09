@@ -53,6 +53,7 @@ import UpgradeForm from './UpgradeForm/UpgradeForm'
 import RenewForm from './RenewForm/RenewForm'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import { set } from 'lodash'
+import { fetchSubscriptionDetails } from './fetchSubscriptionDetails/fetchSubscriptionDetails'
 
 const SubscriptionManagement = (props) => {
   const routeParams = useParams()
@@ -149,85 +150,19 @@ const SubscriptionManagement = (props) => {
   const [formattedSubscriptionData, setFormattedSubscriptionData] =
     useState(null)
 
-  const fetchSubscriptionDetails = async () => {
-    try {
-      const response = await subscriptionDetails(currentProduct, routeParams.id)
-      const formattedData = {
-        data: response?.data.data?.subscriptionFeatures?.map((feature) => ({
-          featureName: feature.feature.title,
-          featureReset: intl.formatMessage({
-            id: featureResetMap[feature.feature.reset],
-          }),
-          featureStartDate: feature.startDate,
-          featureEndDate: feature.endDate,
-          remindLimit: `${feature.remainingUsage}${
-            featureUnitMap[feature.feature.unit] != 'unit'
-              ? featureUnitMap[feature.feature.unit]
-              : ' '
-          } / ${feature.feature.limit}${
-            featureUnitMap[feature.feature.unit] != 'unit'
-              ? featureUnitMap[feature.feature.unit]
-              : ' '
-          } `,
-          subscriptionFeaturesCycles: feature.subscriptionFeaturesCycles.map(
-            (cycle) => ({
-              subscriptionCycleId: cycle.subscriptionCycleId,
-              featureName: cycle.feature.title ? cycle.feature.title : ' ',
-              startDate: cycle.startDate,
-              endDate: cycle.endDate,
-              type: cycle.type,
-              reset: cycle.reset,
-              usage: cycle.limit - cycle.remainingUsage,
-              limit: cycle.limit,
-              remindLimit: `${cycle.remainingUsage}${
-                featureUnitMap[cycle.unit] != 'unit'
-                  ? featureUnitMap[cycle.unit]
-                  : ' '
-              } / ${cycle.limit}${
-                featureUnitMap[cycle.unit] != 'unit'
-                  ? featureUnitMap[cycle.unit]
-                  : ' '
-              } `,
-            })
-          ),
-
-          usage: feature.feature.limit - feature.remainingUsage,
-        })),
-        subscriptionCycles: response.data.data.subscriptionCycles.map(
-          (cycle) => ({
-            startDate: cycle.startDate,
-            endDate: cycle.endDate,
-            subscriptionCycleId: cycle.id,
-            plan: cycle.plan.title,
-            price: cycle.price,
-            cycle: cycle.cycle,
-          })
-        ),
-        planName: response.data.data.plan.title,
-        startDate: response.data.data.startDate,
-        endDate: response.data.data.endDate,
-        currentSubscriptionCycleId:
-          response.data.data.currentSubscriptionCycleId,
-        lastResetDate: response.data.data.lastResetDate,
-        planId: response.data.data.plan.id,
-        subscriptionId: response.data.data.subscriptionId,
-        lastLimitsResetDate: response.data.data.lastLimitsResetDate,
-        autoRenewal: response.data.data.autoRenewal,
-      }
-      setFormattedSubscriptionData(formattedData)
-
-      console.log({ formattedSubscriptionData })
-      return formattedSubscriptionData
-    } catch (error) {
-      console.error('Error fetching subscription details:', error)
-    }
-  }
   useEffect(() => {
-    if (!currentProduct) {
+    if (!currentProduct || !routeParams.id) {
       return
     }
 
-    fetchSubscriptionDetails()
+    fetchSubscriptionDetails({
+      currentProduct,
+      intl,
+      tenantId: routeParams.id,
+      setFormattedSubscriptionData,
+      formattedSubscriptionData,
+      subscriptionDetails,
+    })
   }, [routeParams.id, currentProduct, update])
   useEffect(() => {
     if (formattedSubscriptionData) {
@@ -320,7 +255,7 @@ const SubscriptionManagement = (props) => {
                                 <div className="mb-0 w-25 fw-bold">
                                   <FormattedMessage id="Plan" />
                                 </div>
-                                <div className="small card-stats">
+                                <div className=" card-stats">
                                   {subscriptionDatas.planName}
                                 </div>
                               </div>
@@ -329,7 +264,7 @@ const SubscriptionManagement = (props) => {
                                 <div className="mb-0 w-25 fw-bold">
                                   <FormattedMessage id="Subscription" />
                                 </div>
-                                <div className="small card-stats">
+                                <div className=" card-stats">
                                   ${cyc.price} /{' '}
                                   <FormattedMessage id={cycle[cyc.cycle]} />
                                 </div>
@@ -342,7 +277,7 @@ const SubscriptionManagement = (props) => {
                                 <div className="mb-0 w-25 fw-bold">
                                   <FormattedMessage id="Start-Date" />
                                 </div>
-                                <div className="small card-stats">
+                                <div className=" card-stats">
                                   {formatDate(cyc.startDate)}
                                 </div>
                               </div>
@@ -350,7 +285,7 @@ const SubscriptionManagement = (props) => {
                                 <div className="mb-0 w-25 fw-bold">
                                   <FormattedMessage id="End-Date" />
                                 </div>
-                                <div className="small card-stats">
+                                <div className=" card-stats">
                                   {formatDate(cyc.endDate)}
                                 </div>
                               </div>
@@ -378,7 +313,7 @@ const SubscriptionManagement = (props) => {
                                     onClick={handleToggleClick}
                                   />
                                 </div>
-                                <div className="small card-stats">
+                                <div className=" card-stats">
                                   {subscriptionDatas?.autoRenewal &&
                                     `$${
                                       subscriptionDatas?.autoRenewal?.price
@@ -394,12 +329,12 @@ const SubscriptionManagement = (props) => {
                                 <div className="mb-0 fw-bold">
                                   <FormattedMessage id="Reset-Subs" />
                                   <FontAwesomeIcon
-                                    className="ml-3 mr-3 small icon-container"
+                                    className="ml-3 mr-3  icon-container"
                                     icon={faArrowRotateBackward}
                                     onClick={handleResetSubscription}
                                   />
                                 </div>
-                                <div className="small card-stats">
+                                <div className=" card-stats">
                                   {subscriptionDatas.lastResetDate ? (
                                     <span>
                                       <FormattedMessage id="Reseted-At" />:{' '}
@@ -426,7 +361,7 @@ const SubscriptionManagement = (props) => {
                                     onClick={handleResetLimit}
                                   />
                                 </div>
-                                <div className="small card-stats">
+                                <div className=" card-stats">
                                   {subscriptionDatas.lastLimitsResetDate ? (
                                     <span>
                                       {/* <FormattedMessage id="Reseted-At" />:{' '} */}
@@ -443,7 +378,7 @@ const SubscriptionManagement = (props) => {
                                 <div className="mb-0 w-25 fw-bold">
                                   <FormattedMessage id="Upgrade-info" />
                                 </div>
-                                <div className="small card-stats"></div>
+                                <div className=" card-stats"></div>
                               </div>
                             </Card.Body>
                           </Col>

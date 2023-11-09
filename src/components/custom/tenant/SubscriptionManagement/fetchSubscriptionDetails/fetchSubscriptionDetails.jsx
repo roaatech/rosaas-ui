@@ -1,24 +1,18 @@
 import { featureResetMap, featureUnitMap } from '../../../../../const'
 
-export const fetchSubscriptionDetails = async (
-  currentProduct,
-
-  intl,
-  tenantId,
-  setFormattedSubscriptionData,
-  formattedSubscriptionData
-) => {
-  console.log({
+export const fetchSubscriptionDetails = async (data) => {
+  const {
     currentProduct,
 
     intl,
     tenantId,
-
     setFormattedSubscriptionData,
     formattedSubscriptionData,
-  })
+    subscriptionDetails,
+  } = data
+
   try {
-    const response = await fetchSubscriptionDetails(currentProduct, tenantId)
+    const response = await subscriptionDetails(currentProduct, tenantId)
     const formattedData = {
       data: response?.data.data?.subscriptionFeatures?.map((feature) => ({
         featureName: feature.feature.title,
@@ -28,8 +22,14 @@ export const fetchSubscriptionDetails = async (
         featureStartDate: feature.startDate,
         featureEndDate: feature.endDate,
         remindLimit: `${feature.remainingUsage}${
-          featureUnitMap[feature.feature.unit]
-        } / ${feature.feature.limit}${featureUnitMap[feature.feature.unit]} `,
+          featureUnitMap[feature.feature.unit] != 'unit'
+            ? featureUnitMap[feature.feature.unit]
+            : ' '
+        } / ${feature.feature.limit}${
+          featureUnitMap[feature.feature.unit] != 'unit'
+            ? featureUnitMap[feature.feature.unit]
+            : ' '
+        } `,
         subscriptionFeaturesCycles: feature.subscriptionFeaturesCycles.map(
           (cycle) => ({
             subscriptionCycleId: cycle.subscriptionCycleId,
@@ -41,8 +41,14 @@ export const fetchSubscriptionDetails = async (
             usage: cycle.limit - cycle.remainingUsage,
             limit: cycle.limit,
             remindLimit: `${cycle.remainingUsage}${
-              featureUnitMap[cycle.unit]
-            } / ${cycle.limit}${featureUnitMap[cycle.unit]} `,
+              featureUnitMap[cycle.unit] != 'unit'
+                ? featureUnitMap[cycle.unit]
+                : ' '
+            } / ${cycle.limit}${
+              featureUnitMap[cycle.unit] != 'unit'
+                ? featureUnitMap[cycle.unit]
+                : ' '
+            } `,
           })
         ),
 
@@ -63,7 +69,10 @@ export const fetchSubscriptionDetails = async (
       endDate: response.data.data.endDate,
       currentSubscriptionCycleId: response.data.data.currentSubscriptionCycleId,
       lastResetDate: response.data.data.lastResetDate,
+      planId: response.data.data.plan.id,
+      subscriptionId: response.data.data.subscriptionId,
       lastLimitsResetDate: response.data.data.lastLimitsResetDate,
+      autoRenewal: response.data.data.autoRenewal,
     }
     setFormattedSubscriptionData(formattedData)
 
