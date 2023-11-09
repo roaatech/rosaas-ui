@@ -9,16 +9,16 @@ import {
   Table,
   Container,
 } from '@themesberg/react-bootstrap'
-import { cycle, featureResetMap, featureUnitMap } from '../../../../const'
+import { cycle, featureResetMap, featureUnitMap } from '../../const'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
+import { DataTransform, formatDate } from '../../lib/sharedFun/Time'
 import { Wrapper } from './SubscriptionManagement.styled'
-import Label from '../../Shared/label/Label'
-import DateLabel from '../../Shared/DateLabel/DateLabel'
-import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
+import Label from '../../components/custom/Shared/label/Label'
+import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel'
+import DateLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLabelWhite'
 import { TabPanel, TabView } from 'primereact/tabview'
-import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import {
   MdAutorenew,
@@ -34,11 +34,11 @@ import {
   BsFillPersonLinesFill,
   BsUpload,
 } from 'react-icons/bs'
-import BreadcrumbComponent from '../../Shared/Breadcrumb/Breadcrumb'
-import UpperContent from '../../Shared/UpperContent/UpperContent'
+import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
+import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { useEffect } from 'react'
-import useRequest from '../../../../axios/apis/useRequest'
-import { subscriptionData, tenantInfo } from '../../../../store/slices/tenants'
+import useRequest from '../../axios/apis/useRequest'
+import { subscriptionData, tenantInfo } from '../../store/slices/tenants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faArrowCircleDown,
@@ -47,13 +47,13 @@ import {
   faToggleOff,
   faToggleOn,
 } from '@fortawesome/free-solid-svg-icons'
-import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
+import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { GiReturnArrow } from 'react-icons/gi'
-import UpgradeForm from './UpgradeForm/UpgradeForm'
-import RenewForm from './RenewForm/RenewForm'
-import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
+import UpgradeForm from '../../components/custom/tenant/SubscriptionManagement/UpgradeForm/UpgradeForm'
+import RenewForm from '../../components/custom/tenant/SubscriptionManagement/RenewForm/RenewForm'
+import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import { set } from 'lodash'
-import { fetchSubscriptionDetails } from './fetchSubscriptionDetails/fetchSubscriptionDetails'
+import { fetchSubscriptionDetails } from '../../components/custom/tenant/SubscriptionManagement/fetchSubscriptionDetails/fetchSubscriptionDetails'
 
 const SubscriptionManagement = (props) => {
   const routeParams = useParams()

@@ -10,6 +10,7 @@ import usePlanPriceReq from './Product/planPrice/usePlanPriceReq'
 import usePlanFeatureReq from './Product/planFeature/usePlanFeatureReq'
 import useSettingsReq from './Setting/useSettingReq'
 import useSpecificationReq from './Product/specification/useSpecificationReq'
+import useSubManagementReq from './Tenant/useSubManagementReq'
 
 const useRequest = () => {
   const { signIn, userData, logOut } = useUserReq()
@@ -23,13 +24,15 @@ const useRequest = () => {
     getProductTenants,
     editTenantStatus,
     getTimeLine,
+  } = useTenantReq()
+  const {
     subscriptionDetails,
     subscriptionDetailsRenew,
     subscriptionDetailsResetSub,
     subscriptionDetailsLimitReset,
     setAutoRenewal,
     cancelAutoRenewal,
-  } = useTenantReq()
+  } = useSubManagementReq()
 
   const {
     createProductRequest,

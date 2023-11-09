@@ -25,7 +25,6 @@ import { featureUnitMap, statusConst } from '../../const'
 
 import { featureResetMap } from '../../const'
 import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
-import SubscriptionManagement from '../../components/custom/tenant/SubscriptionManagement/SubscriptionManagement'
 import { MdFactCheck } from 'react-icons/md'
 
 let firstLoad = 0
