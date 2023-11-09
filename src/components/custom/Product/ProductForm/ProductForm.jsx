@@ -36,6 +36,7 @@ const ProductForm = ({
     apiKey: productData ? productData.apiKey : '',
     defaultHealthCheckUrl: productData ? productData.defaultHealthCheckUrl : '',
     healthStatusChangeUrl: productData ? productData.healthStatusChangeUrl : '',
+    subscriptionResetUrl: productData ? productData.subscriptionResetUrl : '',
     creationEndpoint: productData ? productData.creationEndpoint : '',
     activationEndpoint: productData ? productData.activationEndpoint : '',
     deactivationEndpoint: productData ? productData.deactivationEndpoint : '',
@@ -46,24 +47,25 @@ const ProductForm = ({
     name: Yup.string().required(
       <FormattedMessage id="This-field-is-required" />
     ),
-    defaultHealthCheckUrl: Yup.string()
-      .required(<FormattedMessage id="This-field-is-required" />)
-      .matches(
-        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-        <FormattedMessage id="Please-enter-a-valid-value" />
-      ),
-    healthStatusChangeUrl: Yup.string()
-      .required(<FormattedMessage id="This-field-is-required" />)
-      .matches(
-        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-        <FormattedMessage id="Please-enter-a-valid-value" />
-      ),
-    subscriptionResetUrl: Yup.string()
-      .required(<FormattedMessage id="This-field-is-required" />)
-      .matches(
-        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-        <FormattedMessage id="Please-enter-a-valid-value" />
-      ),
+    defaultHealthCheckUrl: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
+    // .matches(
+    //   /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+    //   <FormattedMessage id="Please-enter-a-valid-value" />
+    // )
+    healthStatusChangeUrl: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
+    // .matches(
+    //   /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+    //   <FormattedMessage id="Please-enter-a-valid-value" />
+    // )
+    subscriptionResetUrl: Yup.string(),
+    // .matches(
+    //   /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
+    //   <FormattedMessage id="Please-enter-a-valid-value" />
+    // )
   })
 
   const formik = useFormik({
