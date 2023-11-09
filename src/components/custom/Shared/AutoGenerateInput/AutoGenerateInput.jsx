@@ -1,13 +1,5 @@
 import React, { useEffect } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faToggleOn, faToggleOff } from '@fortawesome/free-solid-svg-icons'
-import { Form } from 'formik'
-import {
-  Modal,
-  Button,
-  OverlayTrigger,
-  Tooltip,
-} from '@themesberg/react-bootstrap'
+import { OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './AutoGenerateInput.styled'
@@ -41,7 +33,10 @@ const AutoGenerateInput = ({
   return (
     <Wrapper>
       <div>
-        <strong> {label}</strong> <span style={{ color: 'red' }}>*</span>
+        <strong>
+          {' '}
+          {label} <span style={{ color: 'red' }}>*</span>
+        </strong>
         <div className="inputIcon">
           <span className="buttonCont">
             <OverlayTrigger

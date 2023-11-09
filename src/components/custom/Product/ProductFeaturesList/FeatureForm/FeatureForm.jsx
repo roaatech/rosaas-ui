@@ -46,10 +46,9 @@ const FeatureForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().max(
-      100,
-      <FormattedMessage id="Must-be-maximum-100-digits" />
-    ),
+    title: Yup.string()
+      .required(<FormattedMessage id="Title-is-required" />)
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
     name: Yup.string()
       .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
       .required(<FormattedMessage id="Unique-Name-is-required" />)
@@ -60,6 +59,7 @@ const FeatureForm = ({
     type: Yup.string().required(
       <FormattedMessage id="This-field-is-required" />
     ),
+
     // unit: Yup.string().test(
     //   'unit-validation',
     //   'Unit is required when Type is Number',
@@ -169,7 +169,8 @@ const FeatureForm = ({
         <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Title" />
+              <FormattedMessage id="Title" />{' '}
+              <span style={{ color: 'red' }}>*</span>
             </Form.Label>
 
             <input
@@ -332,12 +333,17 @@ const FeatureForm = ({
                 name="reset"
                 onChange={formik.handleChange}
                 value={formik.values.reset}
+                disabled={formik.values.type != '1'}
               >
                 <option value="">
                   <FormattedMessage id="Select-Option" />
                 </option>
                 {Object.entries(featureResetMap).map(([value, label]) => (
-                  <option key={value} value={value}>
+                  <option
+                    key={value}
+                    value={value}
+                    disabled={formik.values.type != '1'}
+                  >
                     {label}
                   </option>
                 ))}

@@ -45,10 +45,10 @@ const PlanForm = ({
         <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
 
-    title: Yup.string().max(
-      100,
-      <FormattedMessage id="Must-be-maximum-100-digits" />
-    ),
+    title: Yup.string()
+      .required(<FormattedMessage id="Title-is-required" />)
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+
     displayOrder: Yup.number()
       .typeError(<FormattedMessage id="Display-Order-must-be-a-number" />)
       .integer(<FormattedMessage id="Display-Order-must-be-an-integer" />)
@@ -146,7 +146,8 @@ const PlanForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Title" />
+                <FormattedMessage id="Title" />{' '}
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 className="form-control"

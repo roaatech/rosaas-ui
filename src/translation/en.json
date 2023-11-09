@@ -271,5 +271,6 @@
   "Subscription-Reset": "Subscription Reset",
   "Subscription-Reset-Failure": "Subscription Reset Failure",
   "Subscription": "Subscription",
-  "Subscription-Reset-Url": "Subscription Reset URL"
+  "Subscription-Reset-Url": "Subscription Reset URL",
+  "Title-is-required": "Title is required"
 }

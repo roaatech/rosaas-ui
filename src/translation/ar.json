@@ -274,5 +274,6 @@
   "Subscription-Reset": "إعادة تعيين الاشتراك",
   "Subscription-Reset-Failure": "فشل إعادة تعيين الاشتراك",
   "Subscription": "اشتراك",
-  "Subscription-Reset-Url": "عنوان URL لإعادة تعيين الاشتراك"
+  "Subscription-Reset-Url": "عنوان URL لإعادة تعيين الاشتراك",
+  "Title-is-required": "العنوان مطلوب"
 }

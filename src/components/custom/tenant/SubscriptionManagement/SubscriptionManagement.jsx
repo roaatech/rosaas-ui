@@ -161,8 +161,14 @@ const SubscriptionManagement = (props) => {
           featureStartDate: feature.startDate,
           featureEndDate: feature.endDate,
           remindLimit: `${feature.remainingUsage}${
-            featureUnitMap[feature.feature.unit]
-          } / ${feature.feature.limit}${featureUnitMap[feature.feature.unit]} `,
+            featureUnitMap[feature.feature.unit] != 'unit'
+              ? featureUnitMap[feature.feature.unit]
+              : ' '
+          } / ${feature.feature.limit}${
+            featureUnitMap[feature.feature.unit] != 'unit'
+              ? featureUnitMap[feature.feature.unit]
+              : ' '
+          } `,
           subscriptionFeaturesCycles: feature.subscriptionFeaturesCycles.map(
             (cycle) => ({
               subscriptionCycleId: cycle.subscriptionCycleId,
@@ -174,8 +180,14 @@ const SubscriptionManagement = (props) => {
               usage: cycle.limit - cycle.remainingUsage,
               limit: cycle.limit,
               remindLimit: `${cycle.remainingUsage}${
-                featureUnitMap[cycle.unit]
-              } / ${cycle.limit}${featureUnitMap[cycle.unit]} `,
+                featureUnitMap[cycle.unit] != 'unit'
+                  ? featureUnitMap[cycle.unit]
+                  : ' '
+              } / ${cycle.limit}${
+                featureUnitMap[cycle.unit] != 'unit'
+                  ? featureUnitMap[cycle.unit]
+                  : ' '
+              } `,
             })
           ),
 

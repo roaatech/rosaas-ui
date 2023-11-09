@@ -59,10 +59,10 @@ const TenantForm = ({
   }, [])
 
   const createValidation = {
-    title: Yup.string().max(
-      100,
-      <FormattedMessage id="Must-be-maximum-100-digits" />
-    ),
+    title: Yup.string()
+      .required(<FormattedMessage id="Title-is-required" />)
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+
     product: Yup.string().required(
       <FormattedMessage id="Please-select-a-product" />
     ),
@@ -80,10 +80,9 @@ const TenantForm = ({
       ),
   }
   const editValidation = {
-    title: Yup.string().max(
-      100,
-      <FormattedMessage id="Must-be-maximum-100-digits" />
-    ),
+    title: Yup.string()
+      .required(<FormattedMessage id="Title-is-required" />)
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
   }
   const validationSchema = Yup.object().shape(
     type === 'create' ? createValidation : editValidation
@@ -284,7 +283,8 @@ const TenantForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Title" />
+                <FormattedMessage id="Title" />{' '}
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 className="form-control"
