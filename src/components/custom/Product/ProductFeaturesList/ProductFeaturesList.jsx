@@ -88,6 +88,7 @@ export const ProductFeaturesList = ({ productId }) => {
       name,
       description,
       type,
+      title,
       // unit,
       reset,
       id,
@@ -102,6 +103,9 @@ export const ProductFeaturesList = ({ productId }) => {
     return (
       <>
         <tr>
+          <td>
+            <span className="fw-normal">{title}</span>
+          </td>
           <td>
             <span className="fw-normal">{name}</span>
           </td>
@@ -172,6 +176,9 @@ export const ProductFeaturesList = ({ productId }) => {
             <Table hover className="user-table align-items-center">
               <thead>
                 <tr>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Title" />
+                  </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Name" />
                   </th>

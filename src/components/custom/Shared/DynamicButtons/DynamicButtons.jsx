@@ -18,6 +18,7 @@ import { useEffect } from 'react'
 import PlanPriceForm from '../../Product/ProductPlansPrice/PlanPriceForm/PlanPriceForm'
 import CustomSpecificationForm from '../../Product/CustomSpecification/CustomSpecificationForm/CustomSpecificationForm'
 import TenantSpecificationForm from '../../tenant/TenantSpecificatifonForm/TenantSpecificationForm'
+import UpgradeForm from '../../tenant/SubscriptionManagement/UpgradeForm/UpgradeForm'
 
 const DynamicButtons = ({ buttons, disableFormButtons }) => {
   const { getTenant } = useRequest()
@@ -94,6 +95,20 @@ const DynamicButtons = ({ buttons, disableFormButtons }) => {
       <>
         <TenantSpecificationForm
           popupLabel={<FormattedMessage id="Edit-Specification" />}
+          type={'edit'}
+          tenantData={tenantsData[buttons[currentButtonIndex].id]}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+          updateTenant={buttons[currentButtonIndex].updateTenant}
+          selectedProduct={buttons[currentButtonIndex].selectedProduct}
+        />
+      </>
+    ),
+    upgradeSubscription: () => (
+      <>
+        <UpgradeForm
+          popupLabel={<FormattedMessage id="Upgrade-Subscription" />}
           type={'edit'}
           tenantData={tenantsData[buttons[currentButtonIndex].id]}
           visible={visible}

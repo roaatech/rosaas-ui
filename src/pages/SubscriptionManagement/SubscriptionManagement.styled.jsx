@@ -9,11 +9,6 @@ export const Wrapper = styled.div`
     color: var(--red);
     background: '#eff9f6';
   }
-  .firstTd {
-    width: 145px !important;
-    padding-right: 0 !important;
-    text-align: ${(props) => (props.direction == 'rtl' ? 'right' : 'left')};
-  }
   .label-white {
     font-size: var(--smallFont);
     font-weight: bold;
@@ -25,19 +20,6 @@ export const Wrapper = styled.div`
 
   .info-card .card {
     background-color: transparent;
-  }
-
-  .custom-nav-link {
-  }
-  .contents {
-    margin-left: -45px;
-  }
-  .year {
-    padding: -100px;
-  }
-  .year-tabs {
-    margin-left: 100px;
-    border-spacing: 0px;
   }
 
   .custom-nav-link .nav-link.active {
@@ -101,20 +83,37 @@ export const Wrapper = styled.div`
   .hide-tab-content {
     display: none !important;
   }
-  .table td {
-    max-width: auto;
-    padding-right: 6px;
-    padding-left: 0px;
-  }
-  .table th {
-    max-width: auto;
-    padding-right: 6px;
-    padding-left: 0px;
-  }
 
   .vertical-tab {
     display: flex;
     flex-direction: column;
+  }
+  .subscription-info {
+    border-bottom: 1px solid #000;
+    border-color: var(--surface-400);
+    padding: 20px;
+  }
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    border-color: var(--second-color);
+    color: var(--second-color);
+  }
+  .p-tabview .p-tabview-nav .p-tabview-ink-bar {
+    background-color: var(--second-color);
+  }
+  .passive-toggle {
+    color: #ccc;
+    cursor: pointer;
+  }
+  .active-toggle {
+    color: var(--second-color);
+    cursor: pointer;
+  }
+  .icon-container {
+    cursor: pointer;
+    color: #ccc;
+  }
+  .icon-container:hover {
+    color: var(--second-color);
   }
 
   @media screen and (max-width: 768px) {

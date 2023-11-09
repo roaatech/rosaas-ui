@@ -39,11 +39,7 @@ const useTenantReq = () => {
       `management/sadmin/v1/Tenants/${id}/products/${productId}/processes${queries}`
     )
   }
-  const subscriptionDetails = async (productId, tenantId) => {
-    return await Request.get(
-      `management/sadmin/v1/products/${productId}/Tenants/${tenantId}`
-    )
-  }
+
   return {
     createTenantRequest,
     editTenantRequest,
@@ -53,7 +49,6 @@ const useTenantReq = () => {
     getProductTenants,
     editTenantStatus,
     getTimeLine,
-    subscriptionDetails,
     editTenantSpecificationRequest,
   }
 }

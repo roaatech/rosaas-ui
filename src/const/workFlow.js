@@ -16,4 +16,7 @@ export const processType = {
   8: 'Failed-To-Inform-External-System',
   9: 'Payment-Status-Suspended-Due-To-Non-Renewal',
   10: 'Specifications-Updated',
+  11: 'Subscription-Reset',
+  12: 'Subscription-Reset-Failure',
+  13: 'Subscription-Feature-Limit-Reset',
 }

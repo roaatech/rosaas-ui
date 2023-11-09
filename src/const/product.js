@@ -83,13 +83,14 @@ export const featureTypeMap = {
 }
 
 export const featureUnitMap = {
-  1: 'KB',
-  2: 'MB',
-  3: 'GB',
+  1: 'unit',
+  2: 'KB',
+  3: 'MB',
+  4: 'GB',
 }
 
 export const featureResetMap = {
-  1: 'Never',
+  1: 'Non-Resettable',
   2: 'Weekly',
   3: 'Monthly',
   4: 'Annual',

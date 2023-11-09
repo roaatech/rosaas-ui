@@ -123,8 +123,8 @@ export default function ProductFeaturePlan({ children }) {
 
   const handleData = (data) => {
     return {
-      Feature: data.feature.name,
-      Plan: data.plan.name,
+      Feature: data.feature.title,
+      Plan: data.plan.title,
       Limit: data.limit,
       // Reset: data.feature.reset,
       Unit: data.unit,
@@ -163,7 +163,7 @@ export default function ProductFeaturePlan({ children }) {
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         featureId: item.feature.id,
-        name: item.feature.name,
+        name: item.feature.title,
         type: item.feature.type,
         reset: item.feature.reset,
         index: Object.keys(featuresObj).length,
@@ -180,7 +180,7 @@ export default function ProductFeaturePlan({ children }) {
           Object.values(featuresObj).map((item) => (
             <tr key={item.featureId}>
               <td>
-                <span className="fw-bolder">{item.name}</span>
+                <span className="fw-bolder">{item.title}</span>
               </td>
 
               {planList &&
@@ -201,11 +201,17 @@ export default function ProductFeaturePlan({ children }) {
                               listData[tableData[planId + ',' + item.featureId]]
                                 .limit +
                               ' ' +
-                              featureUnitMap[
+                              (featureUnitMap[
                                 listData[
                                   tableData[planId + ',' + item.featureId]
                                 ].unit
-                              ] +
+                              ] != 'none'
+                                ? featureUnitMap[
+                                    listData[
+                                      tableData[planId + ',' + item.featureId]
+                                    ].unit
+                                  ]
+                                : 'unit') +
                               ' / ' +
                               intl.formatMessage({
                                 id: featureResetMap[item.reset],
@@ -354,7 +360,7 @@ export default function ProductFeaturePlan({ children }) {
                             <BsToggleOff />
                           </span>
                         )}
-                        {planList[item].name}
+                        {planList[item].title}
                       </th>
                     ))}
                 </tr>

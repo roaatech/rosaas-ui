@@ -37,9 +37,9 @@ import { toast } from 'react-toastify'
 import { useIntl } from 'react-intl'
 import ShowDetails from '../../Shared/ShowDetails/ShowDetails'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
-
 export default function ProductPlansPriceList({ children }) {
   const intl = useIntl()
+  const newCycle = { 3: cycle[3], 4: cycle[4] }
   const dispatch = useDispatch()
   const {
     getProductPlans,
@@ -173,7 +173,7 @@ export default function ProductPlansPriceList({ children }) {
     // console.log({ data })
     return {
       Plan: data.plan.name,
-      cycle: cycle[data.cycle],
+      cycle: newCycle[data.cycle],
       Published: data.isPublished ? 'Yes' : 'No',
       Subscribed: data.isSubscribed ? 'Yes' : 'No',
       Description: data.description,
@@ -185,11 +185,11 @@ export default function ProductPlansPriceList({ children }) {
   const TableRow = () => {
     return (
       <>
-        {Object.keys(cycle).map((item, cycleIndex) => (
+        {Object.keys(newCycle).map((item, cycleIndex) => (
           <tr key={cycleIndex}>
             <td>
               <span className="fw-bolder">
-                <FormattedMessage id={cycle[item]} />
+                <FormattedMessage id={newCycle[item]} />
               </span>
             </td>
             {Object.keys(plansData).map((planItem, planIndex) => (

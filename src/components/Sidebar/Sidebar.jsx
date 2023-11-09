@@ -131,7 +131,7 @@ export default (props = {}) => {
     const classNames = badgeText
       ? 'd-flex justify-content-start align-items-center justify-content-between'
       : ''
-    const navItemClassName = link === pathname || isActive ? 'active' : ''
+    const navItemClassName = pathname.includes(link) || isActive ? 'active' : ''
     const linkProps = external ? { href: link } : { as: Link, to: link }
 
     return (

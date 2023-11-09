@@ -75,4 +75,13 @@ export const breadcrumbConst = {
     parentNavigation: '/tenant',
     icon: {},
   },
+  TenantManagement: {
+    title: 'Tenants',
+    name: 'Subscription-Management',
+    active: 'Subscription-Management',
+    navigation: '/tenant',
+    parent: 'Tenant-Details',
+    parentNavigation: '/tenant',
+    icon: {},
+  },
 }

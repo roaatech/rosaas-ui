@@ -5,17 +5,8 @@ export const Wrapper = styled.span`
     font-weight: lighter !important;
     padding: 7px 12px;
     border-radius: 5px;
-    /* border: 1px solid; */
+    border: 1px solid #cccccc;
     font-size: var(--smallFont);
     min-width: auto;
   }
-  /* .label-start {
-    font-size: var(--smallFont);
-    font-weight: bold;
-    border: 1px solid;
-    padding: 7px 12px;
-    border-radius: 5px;
-    border-color: var(--surface-400);
-    box-sizing: content-box;
-  } */
 `

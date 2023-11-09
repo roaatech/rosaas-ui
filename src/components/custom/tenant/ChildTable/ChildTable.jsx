@@ -13,18 +13,21 @@ import ReactJson from 'react-json-view'
 
 import Label from '../../Shared/label/Label'
 import HealthCheckAccordion from '../HealthCheckAccordion/HealthCheckAccordion'
-import { DataTransform } from '../../../../lib/sharedFun/Time'
+import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
 import { FormattedMessage, useIntl } from 'react-intl'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import useActions from '../Actions/Actions'
-import SubscriptionInfoAccordion from '../SubscriptionInfoAccordion/SubscriptionInfoAccordion'
 import { useDispatch, useSelector } from 'react-redux'
-import SubscriptionInfoAccordionNew from '../SubscriptionInfoAccordionNew/SubscriptionInfoAccordionNew'
 import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { statusConst } from '../../../../const'
+import { MdFactCheck } from 'react-icons/md'
+import { subscriptionData } from '../../../../store/slices/tenants'
+import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
+import DateLabel from '../../Shared/DateLabel/DateLabel'
+import { fetchSubscriptionDetails } from '../SubscriptionManagement/fetchSubscriptionDetails/fetchSubscriptionDetails'
 export default function ChildTable({
   productData,
   tenantId,
@@ -33,7 +36,7 @@ export default function ChildTable({
   productIndex,
   tenantObject,
 }) {
-  const { getProductSpecification } = useRequest()
+  const { getProductSpecification, subscriptionDetails } = useRequest()
   const dispatch = useDispatch()
 
   const listProducts = useSelector((state) => state.products.products)
@@ -98,6 +101,8 @@ export default function ChildTable({
       </div>
     )
   }
+
+  const navigate = useNavigate()
   const routeParams = useParams()
   const metadata = productData?.metadata ? productData.metadata : null
   const [products, setProducts] = useState([
@@ -107,6 +112,36 @@ export default function ChildTable({
       description: metadata ? rowExpansionTemplate(JSON.parse(metadata)) : null,
     },
   ])
+  const subscriptionDatas = useSelector(
+    (state) => state.tenants.tenants[routeParams.id]?.subscriptionData?.data
+  )
+  const [formattedSubscriptionData, setFormattedSubscriptionData] =
+    useState(null)
+
+  useEffect(() => {
+    if (!currentProduct || !routeParams.id || subscriptionDatas) {
+      return
+    }
+
+    fetchSubscriptionDetails({
+      currentProduct: currentProduct.id,
+      intl,
+      tenantId: routeParams.id,
+      setFormattedSubscriptionData,
+      formattedSubscriptionData,
+      subscriptionDetails,
+    })
+  }, [routeParams.id, currentProduct])
+  useEffect(() => {
+    if (formattedSubscriptionData) {
+      dispatch(
+        subscriptionData({
+          id: routeParams.id,
+          data: formattedSubscriptionData,
+        })
+      )
+    }
+  }, [formattedSubscriptionData])
   return (
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
@@ -134,6 +169,15 @@ export default function ChildTable({
                     updateTenant: updateTenant,
                     selectedProduct: productData.productId,
                     icon: <AiFillEdit />,
+                  },
+                  {
+                    order: 4,
+                    type: 'action',
+                    label: 'Subscription-Management',
+                    func: () => {
+                      navigate('./Subscription-Management')
+                    },
+                    icon: <MdFactCheck />,
                   },
                   ...renderActions(
                     tenantObject,
@@ -204,20 +248,28 @@ export default function ChildTable({
                   <td>{spec.value}</td>
                 </tr>
               ))}
-
+              {subscriptionDatas?.startDate && (
+                <tr>
+                  <td className="firstTd fw-bold">
+                    <FormattedMessage id="Subscription-Info" />
+                  </td>
+                  <td>
+                    <span>
+                      <DateLabelWhite text={subscriptionDatas.planName} />
+                    </span>
+                    {'   '}
+                    <FormattedMessage id="From" />{' '}
+                    <DateLabelWhite
+                      text={formatDate(subscriptionDatas.startDate)}
+                    />{' '}
+                    <FormattedMessage id="to" />{' '}
+                    <DateLabel endDate={subscriptionDatas.endDate} />
+                  </td>
+                </tr>
+              )}
               <tr>
                 <td className="accordions" colSpan={2}>
                   <MetaDataAccordion defaultKey="metaData" data={products} />
-                </td>
-              </tr>
-              {/* <tr>
-                <td className="pl-0 pr-0" colSpan={2}>
-                  <SubscriptionInfoAccordion />
-                </td>
-              </tr> */}
-              <tr>
-                <td className="accordions" colSpan={2}>
-                  <SubscriptionInfoAccordionNew />
                 </td>
               </tr>
 
