@@ -14,20 +14,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DataTransform, formatDate } from '../../lib/sharedFun/Time'
 import { Wrapper } from './SubscriptionManagement.styled'
-import Label from '../../components/custom/Shared/label/Label'
 import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel'
 import DateLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLabelWhite'
 import { TabPanel, TabView } from 'primereact/tabview'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
-import { AiFillEdit } from 'react-icons/ai'
-import {
-  MdAutorenew,
-  MdFactCheck,
-  MdFiberNew,
-  MdLockReset,
-  MdNetworkCheck,
-  MdOutlineAutorenew,
-} from 'react-icons/md'
+import { MdOutlineAutorenew } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import {
   BsArrowCounterclockwise,
@@ -41,18 +32,13 @@ import useRequest from '../../axios/apis/useRequest'
 import { subscriptionData, tenantInfo } from '../../store/slices/tenants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faArrowCircleDown,
   faArrowRotateBackward,
-  faRefresh,
   faToggleOff,
   faToggleOn,
 } from '@fortawesome/free-solid-svg-icons'
 import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
-import { GiReturnArrow } from 'react-icons/gi'
-import UpgradeForm from '../../components/custom/tenant/SubscriptionManagement/UpgradeForm/UpgradeForm'
 import RenewForm from '../../components/custom/tenant/SubscriptionManagement/RenewForm/RenewForm'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
-import { set } from 'lodash'
 import { fetchSubscriptionDetails } from '../../components/custom/tenant/SubscriptionManagement/fetchSubscriptionDetails/fetchSubscriptionDetails'
 
 const SubscriptionManagement = (props) => {
@@ -79,7 +65,6 @@ const SubscriptionManagement = (props) => {
   const {
     getTenant,
     subscriptionDetails,
-    subscriptionDetailsRenew,
     subscriptionDetailsLimitReset,
     subscriptionDetailsResetSub,
     cancelAutoRenewal,
@@ -92,11 +77,9 @@ const SubscriptionManagement = (props) => {
     setCurrentTab(index)
   }
   const [showResetConfirmation, setShowResetConfirmation] = useState(false)
-  const [resetTime, setResetTime] = useState(null)
   const [update, setUpdate] = useState(0)
 
   const [visible, setVisible] = useState(false)
-  const [subscriptionId, setSubscribtionId] = useState()
   const handleToggleClick = () => {
     if (subscriptionDatas?.autoRenewal !== null) {
       setConfirm(true)
@@ -130,7 +113,6 @@ const SubscriptionManagement = (props) => {
     showResetSubscriptionConfirmation,
     setShowResetSubscriptionConfirmation,
   ] = useState(false)
-  const [resetSubscriptionTime, setResetSubscriptionTime] = useState(null)
 
   const handleResetSubscription = () => {
     setShowResetSubscriptionConfirmation(true)
@@ -142,8 +124,6 @@ const SubscriptionManagement = (props) => {
       comment,
     })
     setUpdate(update + 1)
-    const resetTimesub = new Date()
-    setResetSubscriptionTime(resetTimesub)
 
     setShowResetSubscriptionConfirmation(false)
   }
@@ -154,7 +134,6 @@ const SubscriptionManagement = (props) => {
     if (!currentProduct || !routeParams.id) {
       return
     }
-
     fetchSubscriptionDetails({
       currentProduct,
       intl,
@@ -173,7 +152,6 @@ const SubscriptionManagement = (props) => {
         })
       )
     }
-    setSubscribtionId(subscriptionDatas?.subscriptionId)
   }, [formattedSubscriptionData])
 
   const [confirm, setConfirm] = useState(false)

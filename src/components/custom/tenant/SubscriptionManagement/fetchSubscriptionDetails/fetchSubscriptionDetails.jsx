@@ -76,7 +76,6 @@ export const fetchSubscriptionDetails = async (data) => {
     }
     setFormattedSubscriptionData(formattedData)
 
-    console.log({ formattedSubscriptionData })
     return formattedSubscriptionData
   } catch (error) {
     console.error('Error fetching subscription details:', error)

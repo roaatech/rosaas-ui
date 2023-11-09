@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { Form } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import { Wrapper } from './RenewForm.styled'
 import { FormattedMessage, useIntl } from 'react-intl'
 import useRequest from '../../../../../axios/apis/useRequest.js'
-import {
-  setAllPlans,
-  setAllProduct,
-} from '../../../../../store/slices/products/productsSlice.js'
-import { setAllSpecifications } from '../../../../../store/slices/products/specificationReducers.js'
 import { cycle } from '../../../../../const/product.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
@@ -29,22 +22,6 @@ const RenewForm = ({
   const { getProductPlanPriceList, setAutoRenewal } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
-  const navigate = useNavigate()
-
-  const dispatch = useDispatch()
-  const { getProductList } = useRequest()
-
-  const listData = useSelector((state) => state.products.products)
-  let list = Object.values(listData)
-
-  useEffect(() => {
-    let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
-
-    ;(async () => {
-      const productList = await getProductList(query)
-      dispatch(setAllProduct(productList.data.data.items))
-    })()
-  }, [])
 
   const validationSchema = Yup.object().shape({
     price: Yup.string().required(
@@ -53,9 +30,7 @@ const RenewForm = ({
   })
 
   const initialValues = {
-    plan: selectedPlan,
     price: tenantData ? tenantData.price : '',
-    product: selectedProduct,
     comment: tenantData ? tenantData.comment : '',
   }
 
