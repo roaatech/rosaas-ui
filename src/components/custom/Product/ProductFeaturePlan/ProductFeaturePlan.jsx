@@ -163,7 +163,8 @@ export default function ProductFeaturePlan({ children }) {
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         featureId: item.feature.id,
-        name: item.feature.title,
+        title: item.feature.title,
+        name: item.feature.name,
         type: item.feature.type,
         reset: item.feature.reset,
         index: Object.keys(featuresObj).length,
@@ -341,7 +342,7 @@ export default function ProductFeaturePlan({ children }) {
             <Table hover className="user-table align-items-center">
               <thead>
                 <tr>
-                  <th className="border-bottom"></th>
+                  <th className="border-bottom  table-title-cell"> Features / Plans</th>
                   {planList &&
                     Object.keys(planList)?.map((item, index) => (
                       <th
