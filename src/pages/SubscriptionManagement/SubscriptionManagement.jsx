@@ -55,7 +55,6 @@ const SubscriptionManagement = (props) => {
   }, [routeParams.id])
   useEffect(() => {
     setCurrentProduct(tenantsData[routeParams.id]?.subscriptions[0]?.productId)
-    console.log({ data: tenantsData[routeParams.id] })
   }, [tenantsData])
 
   const subscriptionDatas = useSelector(
@@ -155,7 +154,6 @@ const SubscriptionManagement = (props) => {
   }, [formattedSubscriptionData])
 
   const [confirm, setConfirm] = useState(false)
-  console.log({ subscriptionDatas })
   return (
     <Wrapper direction={direction}>
       {subscriptionDatas && (

@@ -275,5 +275,6 @@
   "Subscription-Reset-Failure": "فشل إعادة تعيين الاشتراك",
   "Subscription": "اشتراك",
   "Subscription-Reset-Url": "عنوان URL لإعادة تعيين الاشتراك",
-  "Title-is-required": "العنوان مطلوب"
+  "Title-is-required": "العنوان مطلوب",
+  "Random-Name": "إنشاء اسم عشوائي"
 }
