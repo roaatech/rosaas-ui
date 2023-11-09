@@ -317,7 +317,7 @@ const SubscriptionManagement = (props) => {
                           <Col md={6}>
                             <Card.Body className="py-0 px-0">
                               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                                <div className="mb-0 w-25">
+                                <div className="mb-0 w-25 fw-bold">
                                   <FormattedMessage id="Plan" />
                                 </div>
                                 <div className="small card-stats">
@@ -326,7 +326,7 @@ const SubscriptionManagement = (props) => {
                               </div>
 
                               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                                <div className="mb-0 w-25">
+                                <div className="mb-0 w-25 fw-bold">
                                   <FormattedMessage id="Subscription" />
                                 </div>
                                 <div className="small card-stats">
@@ -339,7 +339,7 @@ const SubscriptionManagement = (props) => {
                           <Col md={6}>
                             <Card.Body className="py-0 px-0 ">
                               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                                <div className="mb-0 w-25">
+                                <div className="mb-0 w-25 fw-bold">
                                   <FormattedMessage id="Start-Date" />
                                 </div>
                                 <div className="small card-stats">
@@ -347,7 +347,7 @@ const SubscriptionManagement = (props) => {
                                 </div>
                               </div>
                               <div className="d-flex align-items-center justify-content-between border-bottom  border-light py-2 ">
-                                <div className="mb-0 w-25">
+                                <div className="mb-0 w-25 fw-bold">
                                   <FormattedMessage id="End-Date" />
                                 </div>
                                 <div className="small card-stats">
@@ -362,7 +362,7 @@ const SubscriptionManagement = (props) => {
                           <Col md={6}>
                             <Card.Body className="py-0 px-0">
                               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                                <div className="mb-0 w-25">
+                                <div className="mb-0 w-25 fw-bold">
                                   <FormattedMessage id="Auto-Renewal" />{' '}
                                   <FontAwesomeIcon
                                     icon={
@@ -391,7 +391,7 @@ const SubscriptionManagement = (props) => {
                               </div>
 
                               <div className="d-flex align-items-center justify-content-between  py-2 ">
-                                <div className="mb-0 ">
+                                <div className="mb-0 fw-bold">
                                   <FormattedMessage id="Reset-Subs" />
                                   <FontAwesomeIcon
                                     className="ml-3 mr-3 small icon-container"
@@ -417,7 +417,7 @@ const SubscriptionManagement = (props) => {
                           <Col md={6}>
                             <Card.Body className="py-0 px-0 ">
                               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                                <div className="mb-0 ">
+                                <div className="mb-0 fw-bold">
                                   <FormattedMessage id="Reset-Limit" />
 
                                   <FontAwesomeIcon
@@ -440,7 +440,7 @@ const SubscriptionManagement = (props) => {
                                 </div>
                               </div>
                               <div className="d-flex align-items-center justify-content-between  py-2 ">
-                                <div className="mb-0 w-25">
+                                <div className="mb-0 w-25 fw-bold">
                                   <FormattedMessage id="Upgrade-info" />
                                 </div>
                                 <div className="small card-stats"></div>
