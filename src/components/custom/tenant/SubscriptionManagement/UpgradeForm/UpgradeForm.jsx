@@ -33,8 +33,6 @@ const UpgradeForm = ({
   console.log({ tenantData, selectedProduct })
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
-  const navigate = useNavigate()
-  const [specValidationErrors, setSpecValidationErrors] = useState({})
 
   const dispatch = useDispatch()
   const { getProductList } = useRequest()

@@ -273,5 +273,7 @@
   "Subscription": "Subscription",
   "Subscription-Reset-Url": "Subscription Reset URL",
   "Title-is-required": "Title is required",
-  "Random-Name": "Generate random name"
+  "Random-Name": "Generate random name",
+  "Subscription-Features": "Subscription Features",
+  "Features-History": "Features History"
 }

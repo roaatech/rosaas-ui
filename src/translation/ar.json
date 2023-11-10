@@ -276,5 +276,7 @@
   "Subscription": "اشتراك",
   "Subscription-Reset-Url": "عنوان URL لإعادة تعيين الاشتراك",
   "Title-is-required": "العنوان مطلوب",
-  "Random-Name": "إنشاء اسم عشوائي"
+  "Random-Name": "إنشاء اسم عشوائي",
+  "Subscription-Features": "ميزات الاشتراك",
+  "Features-History": "تاريخ الميزات"
 }

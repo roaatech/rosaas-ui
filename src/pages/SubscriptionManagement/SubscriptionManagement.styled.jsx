@@ -26,9 +26,9 @@ export const Wrapper = styled.div`
     border-bottom: 0px;
 
     border-right: ${(props) =>
-      props.direction == 'rtl' ? '0px' : ' 2px solid'};
+      props.direction == 'rtl' ? '0px' : ' 3px solid'};
     border-left: ${(props) =>
-      props.direction == 'rtl' ? ' 2px solid' : '0px'};
+      props.direction == 'rtl' ? ' 3px solid' : '0px'};
     border-color: var(--second-color) !important;
     color: var(--second-color);
     font-weight: 700;
@@ -45,9 +45,9 @@ export const Wrapper = styled.div`
     font-weight: 700;
     border-bottom: 0px solid;
     border-right: ${(props) =>
-      props.direction == 'rtl' ? '0px' : ' 2px solid #dee2e6'};
+      props.direction == 'rtl' ? '0px' : ' 3px solid #dee2e6'};
     border-left: ${(props) =>
-      props.direction == 'rtl' ? ' 2px solid #dee2e6' : '0px'};
+      props.direction == 'rtl' ? ' 3px solid #dee2e6' : '0px'};
     margin-bottom: -17px;
     border-top: 0;
     border-radius: 0%;
@@ -60,7 +60,7 @@ export const Wrapper = styled.div`
       background-color 0.3s;
   }
   .custom-nav-link .nav-link:hover {
-    border-color: #6c757d;
+    border-color: rgba(108, 117, 125, 0.5);
 
     transition:
       border-color 0.3s,
@@ -87,6 +87,10 @@ export const Wrapper = styled.div`
   .vertical-tab {
     display: flex;
     flex-direction: column;
+  }
+  .feat-tab {
+    box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.08);
+    padding-bottom: 3px;
   }
   .subscription-info {
     border-bottom: 1px solid #000;
