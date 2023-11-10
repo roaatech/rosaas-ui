@@ -22,6 +22,7 @@ import { MdOutlineAutorenew } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import {
   BsArrowCounterclockwise,
+  BsDownload,
   BsFillPersonLinesFill,
   BsUpload,
 } from 'react-icons/bs'
@@ -81,7 +82,6 @@ const SubscriptionManagement = (props) => {
   }
   const [showResetConfirmation, setShowResetConfirmation] = useState(false)
   const [update, setUpdate] = useState(0)
-
   const [visible, setVisible] = useState(false)
   const handleToggleClick = () => {
     if (subscriptionDatas?.autoRenewal !== null) {
@@ -98,8 +98,10 @@ const SubscriptionManagement = (props) => {
     setUpdate(update + 1)
     setConfirm(false)
   }
+  const hasSubsFeatsLimitsResettable =
+    subscriptionDatas?.hasSubscriptionFeaturesLimitsResettable
   const handleResetLimit = () => {
-    setShowResetConfirmation(true)
+    hasSubsFeatsLimitsResettable && setShowResetConfirmation(true)
   }
 
   const handleResetConfirmation = async (data = '', comment) => {
@@ -116,9 +118,9 @@ const SubscriptionManagement = (props) => {
     showResetSubscriptionConfirmation,
     setShowResetSubscriptionConfirmation,
   ] = useState(false)
-
+  const ResettableAllowed = subscriptionDatas?.isResettableAllowed
   const handleResetSubscription = () => {
-    setShowResetSubscriptionConfirmation(true)
+    ResettableAllowed && setShowResetSubscriptionConfirmation(true)
   }
   const handleResetSubscriptionConfirmation = async (data = '', comment) => {
     await subscriptionDetailsResetSub({
@@ -145,7 +147,7 @@ const SubscriptionManagement = (props) => {
       formattedSubscriptionData,
       subscriptionDetails,
     })
-  }, [routeParams.id, currentProduct, update])
+  }, [routeParams.id, currentProduct])
   useEffect(() => {
     update > 0 &&
       fetchSubscriptionDetails({
@@ -191,9 +193,20 @@ const SubscriptionManagement = (props) => {
                   type: 'form',
                   id: routeParams.id,
                   label: 'Upgrade-Subscription',
-                  component: 'upgradeSubscription',
+                  component: 'upDowngradeSubscription',
                   selectedProduct: currentProduct,
                   icon: <BsUpload />,
+                  formType: 'upgrade',
+                },
+                {
+                  order: 4,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Downgrade-Subscription',
+                  component: 'upDowngradeSubscription',
+                  selectedProduct: currentProduct,
+                  icon: <BsDownload />,
+                  formType: 'downgrade',
                 },
                 {
                   order: 4,
@@ -321,7 +334,11 @@ const SubscriptionManagement = (props) => {
                                   <div className="mb-0 fw-bold">
                                     <FormattedMessage id="Reset-Subs" />
                                     <FontAwesomeIcon
-                                      className="ml-3 mr-3  icon-container"
+                                      className={`${
+                                        ResettableAllowed
+                                          ? 'ml-3 mr-3  icon-container active-reset'
+                                          : 'ml-3 mr-3  icon-container passive-reset'
+                                      }`}
                                       icon={faArrowRotateBackward}
                                       onClick={handleResetSubscription}
                                     />
@@ -348,7 +365,11 @@ const SubscriptionManagement = (props) => {
                                     <FormattedMessage id="Reset-Limit" />
 
                                     <FontAwesomeIcon
-                                      className="ml-3 mr-3 small  icon-container"
+                                      className={`${
+                                        hasSubsFeatsLimitsResettable
+                                          ? 'ml-3 mr-3  icon-container active-reset'
+                                          : 'ml-3 mr-3  icon-container passive-reset'
+                                      }`}
                                       icon={faArrowRotateBackward}
                                       onClick={handleResetLimit}
                                     />

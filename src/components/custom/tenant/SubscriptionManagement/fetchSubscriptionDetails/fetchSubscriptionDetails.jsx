@@ -3,7 +3,6 @@ import { featureResetMap, featureUnitMap } from '../../../../../const'
 export const fetchSubscriptionDetails = async (data) => {
   const {
     currentProduct,
-
     intl,
     tenantId,
     setFormattedSubscriptionData,
@@ -65,14 +64,19 @@ export const fetchSubscriptionDetails = async (data) => {
         })
       ),
       planName: response.data.data.plan.title,
+      planId: response.data.data.plan.id,
+      planPrice: response.data.data.planPrice.price,
+      planCycle: response.data.data.planPrice.cycle,
       startDate: response.data.data.startDate,
       endDate: response.data.data.endDate,
       currentSubscriptionCycleId: response.data.data.currentSubscriptionCycleId,
       lastResetDate: response.data.data.lastResetDate,
-      planId: response.data.data.plan.id,
       subscriptionId: response.data.data.subscriptionId,
       lastLimitsResetDate: response.data.data.lastLimitsResetDate,
       autoRenewal: response.data.data.autoRenewal,
+      hasSubscriptionFeaturesLimitsResettable:
+        response.data.data.hasSubscriptionFeaturesLimitsResettable,
+      isResettableAllowed: response.data.data.isResettableAllowed,
     }
     setFormattedSubscriptionData(formattedData)
 

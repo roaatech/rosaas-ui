@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Form } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
-import { Wrapper } from './UpgradeForm.styled.jsx'
+import { Wrapper } from './UpDowngradeForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import useRequest from '../../../../../axios/apis/useRequest.js'
 import {
@@ -21,24 +21,24 @@ const UpgradeForm = ({
   updateTenant,
   setVisible,
   popupLabel,
+  type,
 }) => {
-  const {
-    createTenantRequest,
-    editTenantRequest,
-    getProductPlans,
-    getProductPlanPriceList,
-    getProductSpecification,
-  } = useRequest()
+  const { editTenantRequest, getProductPlans, getProductPlanPriceList } =
+    useRequest()
   const selectedProduct = tenantData?.subscriptions[0]?.productId
-  console.log({ tenantData, selectedProduct })
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
-
+  const subscriptionDatas = useSelector(
+    (state) => state.tenants.tenants[tenantData.id]?.subscriptionData?.data
+  )
   const dispatch = useDispatch()
   const { getProductList } = useRequest()
 
   const listData = useSelector((state) => state.products.products)
-  let list = Object.values(listData)
+  const currentPlanPrice = subscriptionDatas?.planPrice
+  const currentPlanCycle = subscriptionDatas?.planCycle
+  const currentPlanId = subscriptionDatas?.planId
+  const [idsWithValues, setIdsWithValues] = useState()
 
   useEffect(() => {
     let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
@@ -80,21 +80,31 @@ const UpgradeForm = ({
   })
 
   const intl = useIntl()
-  let planOptions
-  if (listData[selectedProduct]?.plans) {
-    planOptions = Object.values(listData[selectedProduct].plans)
-      .filter((item) => item.isPublished === true)
-      .map((item, index) => ({
-        value: item.id,
-        label: item.name,
-      }))
-  } else {
-    planOptions = []
-  }
-  console.log(planOptions)
-  const options = list.map((item) => {
-    return { value: item.id, label: item.name }
-  })
+  let [planOptions, setPlanOptions] = useState([])
+  useEffect(() => {
+    if (listData[selectedProduct]?.plans && idsWithValues) {
+      setPlanOptions(
+        Object.values(listData[selectedProduct].plans)
+          .filter(
+            (item) => item.isPublished === true && item.id !== currentPlanId
+          )
+          .filter((item) => idsWithValues.includes(item.id))
+          .map((item, index) => ({
+            value: item.id,
+            label: item.title,
+          }))
+      )
+
+      // setPlanOptions(
+      //   Object.values(plans)
+      //     .filter((item) => idsWithValues.includes(item.value))
+      //     .map((item, index) => ({
+      //       value: item.value,
+      //       label: item.label,
+      //     }))
+      // )
+    }
+  }, [idsWithValues])
 
   useEffect(() => {
     ;(async () => {
@@ -103,7 +113,7 @@ const UpgradeForm = ({
       if (listData[selectedProduct]) {
         if (!listData[selectedProduct].plans) {
           const planData = await getProductPlans(selectedProduct)
-          console.log({ planData })
+
           dispatch(
             setAllPlans({
               productId: selectedProduct,
@@ -115,29 +125,48 @@ const UpgradeForm = ({
     })()
   }, [selectedProduct])
 
-  const productData = listData[selectedProduct]
-
   useEffect(() => {
     ;(async () => {
       formik.setFieldValue('price', '')
 
-      if (formik.values.plan) {
-        const planDataRes = await getProductPlanPriceList(selectedProduct)
-        const planData = planDataRes.data.data
-          .filter(
-            (item) =>
-              item.plan.id === formik.values.plan && item.isPublished === true
-          )
-          .map((item) => ({
-            value: item.id,
-            label: `${intl.formatMessage({
-              id: cycle[item.cycle],
-            })} (${item.price})`,
-          }))
-        setPriceList(planData)
-      } else {
-        setPriceList([])
-      }
+      const planDataRes = await getProductPlanPriceList(selectedProduct)
+      const currentPlanCycles = Array.isArray(planDataRes.data.data)
+        ? planDataRes.data.data.filter((item) => item.plan.id === currentPlanId)
+        : null
+      const otherCurrentCycle = Array.isArray(currentPlanCycles)
+        ? currentPlanCycles.find((item) => item.price !== currentPlanPrice)
+        : null
+
+      const planData = planDataRes.data.data
+        .filter(
+          (item) =>
+            item.plan.id === formik.values.plan && item.isPublished === true
+        )
+        .map((item) => ({
+          value: item.id,
+          label: `${intl.formatMessage({
+            id: cycle[item.cycle],
+          })} (${item.price})`,
+        }))
+
+      const hidePlanData = planDataRes.data.data
+        .filter(
+          (item) =>
+            item.isPublished === true &&
+            (type == 'upgrade'
+              ? item.cycle == currentPlanCycle
+                ? item.price > currentPlanPrice
+                : item.price > otherCurrentCycle.price
+              : item.cycle == currentPlanCycle
+              ? item.price < currentPlanPrice
+              : item.price < otherCurrentCycle.price)
+        )
+        .map((item) => ({
+          value: item.id,
+          planId: item.plan.id,
+        }))
+      setIdsWithValues(hidePlanData.map((item) => item.planId))
+      setPriceList(planData)
     })()
   }, [formik.values.plan, selectedProduct])
 

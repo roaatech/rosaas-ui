@@ -112,12 +112,19 @@ export const Wrapper = styled.div`
     color: var(--second-color);
     cursor: pointer;
   }
-  .icon-container {
+  .active-toggle:hover {
+    color: #ffab03b4;
     cursor: pointer;
+  }
+  .active-reset {
+    cursor: pointer;
+    color: var(--second-color);
+  }
+  .passive-reset {
     color: #ccc;
   }
-  .icon-container:hover {
-    color: var(--second-color);
+  .active-reset:hover {
+    color: #ffab03b4;
   }
 
   @media screen and (max-width: 768px) {
