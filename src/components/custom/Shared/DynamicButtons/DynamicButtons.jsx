@@ -113,7 +113,8 @@ const DynamicButtons = ({ buttons, disableFormButtons }) => {
           visible={visible}
           setVisible={setVisible}
           sideBar={false}
-          updateTenant={buttons[currentButtonIndex].updateTenant}
+          update={buttons[currentButtonIndex].update}
+          setUpdate={buttons[currentButtonIndex].setUpdate}
           selectedProduct={buttons[currentButtonIndex].selectedProduct}
           type={buttons[currentButtonIndex].formType}
         />

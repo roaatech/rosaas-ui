@@ -21,6 +21,7 @@ import { validateSpecifications } from '../validateSpecifications/validateSpecif
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import { setAllPlansPrice } from '../../../../store/slices/products/productsSlice.js'
 
 const TenantForm = ({
   type,
@@ -50,12 +51,13 @@ const TenantForm = ({
   let list = Object.values(listData)
 
   useEffect(() => {
-    let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
-
-    ;(async () => {
-      const productList = await getProductList(query)
-      dispatch(setAllProduct(productList.data.data.items))
-    })()
+    if (!listData) {
+      let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
+      ;(async () => {
+        const productList = await getProductList(query)
+        dispatch(setAllProduct(productList.data.data.items))
+      })()
+    }
   }, [])
 
   const createValidation = {
@@ -248,25 +250,42 @@ const TenantForm = ({
       formik.setFieldValue('price', '')
 
       if (formik.values.plan) {
-        const planDataRes = await getProductPlanPriceList(formik.values.product)
-        const planData = planDataRes.data.data
-          .filter(
-            (item) =>
-              item.plan.id === formik.values.plan && item.isPublished === true
+        if (!listData[formik.values.product].plansPrice) {
+          const planDataRes = await getProductPlanPriceList(
+            formik.values.product
           )
-          .map((item) => ({
-            value: item.id,
-            price: item.price,
-            cycle: intl.formatMessage({
-              id: cycle[item.cycle],
-            }),
-          }))
-        setPriceList(planData)
-      } else {
-        setPriceList([])
+          dispatch(
+            setAllPlansPrice({
+              productId: formik.values.product,
+              data: planDataRes.data.data,
+            })
+          )
+        }
+        const planData = listData?.[formik.values.product]?.plansPrice
+        if (planData) {
+          const planDataArray = Object.values(planData)
+            .filter(
+              (item) =>
+                item.plan.id === formik.values.plan && item.isPublished === true
+            )
+            .map((item) => ({
+              value: item.id,
+              price: item.price,
+              cycle: intl.formatMessage({
+                id: cycle[item.cycle],
+              }),
+            }))
+          setPriceList(planDataArray)
+        } else {
+          setPriceList([])
+        }
       }
     })()
-  }, [formik.values.plan, formik.values.product])
+  }, [
+    formik.values.plan,
+    formik.values.product,
+    listData?.[formik.values.product]?.plansPrice,
+  ])
 
   return (
     <Wrapper>

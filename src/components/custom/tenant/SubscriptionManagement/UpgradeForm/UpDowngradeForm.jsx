@@ -10,18 +10,20 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import useRequest from '../../../../../axios/apis/useRequest.js'
 import {
   setAllPlans,
+  setAllPlansPrice,
   setAllProduct,
 } from '../../../../../store/slices/products/productsSlice.js'
 import { setAllSpecifications } from '../../../../../store/slices/products/specificationReducers.js'
 import { cycle } from '../../../../../const/product.js'
+import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
-const UpgradeForm = ({
+const UpDownGradeForm = ({
   tenantData,
-  update,
-  updateTenant,
   setVisible,
   popupLabel,
   type,
+  setUpdate,
+  update,
 }) => {
   const { editTenantRequest, getProductPlans, getProductPlanPriceList } =
     useRequest()
@@ -31,8 +33,10 @@ const UpgradeForm = ({
   const subscriptionDatas = useSelector(
     (state) => state.tenants.tenants[tenantData.id]?.subscriptionData?.data
   )
+
   const dispatch = useDispatch()
-  const { getProductList } = useRequest()
+  const { getProductList, upgradeSubscription, downgradeSubscription } =
+    useRequest()
 
   const listData = useSelector((state) => state.products.products)
   const currentPlanPrice = subscriptionDatas?.planPrice
@@ -42,12 +46,17 @@ const UpgradeForm = ({
 
   useEffect(() => {
     let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
-
-    ;(async () => {
-      const productList = await getProductList(query)
-      dispatch(setAllProduct(productList.data.data.items))
-    })()
+    if (!listData[selectedProduct]) {
+      ;(async () => {
+        const productList = await getProductList(query)
+        dispatch(setAllProduct(productList.data.data.items))
+      })()
+    }
   }, [])
+  const [currentSubscriptionId, setCurrentSubscriptionId] = useState('')
+  useEffect(() => {
+    setCurrentSubscriptionId(subscriptionDatas?.subscriptionId)
+  }, [subscriptionDatas?.subscriptionId])
 
   const validationSchema = Yup.object().shape({
     plan: Yup.string().required(<FormattedMessage id="Please-select-a-plan" />),
@@ -56,23 +65,28 @@ const UpgradeForm = ({
     ),
   })
 
-  const initialValues = {
-    plan: tenantData ? tenantData.plan : '',
-    price: tenantData ? tenantData.price : '',
-    product: selectedProduct,
-  }
-
+  const initialValues = {}
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
 
     onSubmit: async (values) => {
-      const editTenant = await editTenantRequest({
-        planId: values.plan,
-        planPriceId: values.price,
-        id: tenantData.id,
-      })
-      updateTenant()
+      if (type == 'upgrade') {
+        const upgradeSubscriptionReq = await upgradeSubscription({
+          planPriceId: values.price,
+          planId: values.plan,
+          subscriptionId: currentSubscriptionId,
+          comment: values.comment,
+        })
+      } else {
+        const downgradeSubscriptionReq = await downgradeSubscription({
+          planPriceId: values.price,
+          planId: values.plan,
+          subscriptionId: currentSubscriptionId,
+          comment: values.comment,
+        })
+      }
+      setUpdate(update + 1)
 
       setVisible && setVisible(false)
       setVisible && setVisible(false)
@@ -94,15 +108,6 @@ const UpgradeForm = ({
             label: item.title,
           }))
       )
-
-      // setPlanOptions(
-      //   Object.values(plans)
-      //     .filter((item) => idsWithValues.includes(item.value))
-      //     .map((item, index) => ({
-      //       value: item.value,
-      //       label: item.label,
-      //     }))
-      // )
     }
   }, [idsWithValues])
 
@@ -128,47 +133,65 @@ const UpgradeForm = ({
   useEffect(() => {
     ;(async () => {
       formik.setFieldValue('price', '')
+      if (listData[selectedProduct]) {
+        if (!listData[selectedProduct].plansPrice) {
+          const planPriceDataRes =
+            await getProductPlanPriceList(selectedProduct)
+          dispatch(
+            setAllPlansPrice({
+              productId: selectedProduct,
+              data: planPriceDataRes.data.data,
+            })
+          )
+        }
+      }
+      const planDataRes = listData?.[selectedProduct]?.plansPrice
+      if (planDataRes) {
+        const planDataArray = Object.values(planDataRes)
+        const currentPlanCycles = Array.isArray(planDataArray)
+          ? planDataArray.filter((item) => item.plan.id === currentPlanId)
+          : null
+        const otherCurrentCycle = Array.isArray(currentPlanCycles)
+          ? currentPlanCycles.find((item) => item.price !== currentPlanPrice)
+          : null
 
-      const planDataRes = await getProductPlanPriceList(selectedProduct)
-      const currentPlanCycles = Array.isArray(planDataRes.data.data)
-        ? planDataRes.data.data.filter((item) => item.plan.id === currentPlanId)
-        : null
-      const otherCurrentCycle = Array.isArray(currentPlanCycles)
-        ? currentPlanCycles.find((item) => item.price !== currentPlanPrice)
-        : null
+        const planData = planDataArray
+          .filter(
+            (item) =>
+              item.plan.id === formik.values.plan && item.isPublished === true
+          )
+          .map((item) => ({
+            value: item.id,
+            label: `${intl.formatMessage({
+              id: cycle[item.cycle],
+            })} (${item.price})`,
+          }))
 
-      const planData = planDataRes.data.data
-        .filter(
-          (item) =>
-            item.plan.id === formik.values.plan && item.isPublished === true
-        )
-        .map((item) => ({
-          value: item.id,
-          label: `${intl.formatMessage({
-            id: cycle[item.cycle],
-          })} (${item.price})`,
-        }))
-
-      const hidePlanData = planDataRes.data.data
-        .filter(
-          (item) =>
-            item.isPublished === true &&
-            (type == 'upgrade'
-              ? item.cycle == currentPlanCycle
-                ? item.price > currentPlanPrice
-                : item.price > otherCurrentCycle.price
-              : item.cycle == currentPlanCycle
-              ? item.price < currentPlanPrice
-              : item.price < otherCurrentCycle.price)
-        )
-        .map((item) => ({
-          value: item.id,
-          planId: item.plan.id,
-        }))
-      setIdsWithValues(hidePlanData.map((item) => item.planId))
-      setPriceList(planData)
+        const hidePlanData = planDataArray
+          .filter(
+            (item) =>
+              item.isPublished === true &&
+              (type == 'upgrade'
+                ? item.cycle == currentPlanCycle
+                  ? item.price > currentPlanPrice
+                  : item.price > otherCurrentCycle.price
+                : item.cycle == currentPlanCycle
+                ? item.price < currentPlanPrice
+                : item.price < otherCurrentCycle.price)
+          )
+          .map((item) => ({
+            value: item.id,
+            planId: item.plan.id,
+          }))
+        setIdsWithValues(hidePlanData.map((item) => item.planId))
+        setPriceList(planData)
+      }
     })()
-  }, [formik.values.plan, selectedProduct])
+  }, [
+    formik.values.plan,
+    selectedProduct,
+    listData?.[selectedProduct]?.plansPrice,
+  ])
 
   return (
     <Wrapper>
@@ -251,6 +274,22 @@ const UpgradeForm = ({
               )}
             </Form.Group>
           </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Comment" />
+              </Form.Label>
+              <TextareaAndCounter
+                maxLength="250"
+                showCharCount="true"
+                id="comment"
+                name="comment"
+                inputValue={formik.values.comment}
+                onChange={formik.handleChange}
+                placeholder={'comment'}
+              />
+            </Form.Group>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>
@@ -269,4 +308,4 @@ const UpgradeForm = ({
   )
 }
 
-export default UpgradeForm
+export default UpDownGradeForm

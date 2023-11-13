@@ -8,6 +8,8 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import useRequest from '../../../../../axios/apis/useRequest.js'
 import { cycle } from '../../../../../const/product.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+import { useDispatch, useSelector } from 'react-redux'
+import { setAllPlansPrice } from '../../../../../store/slices/products/productsSlice'
 
 const RenewForm = ({
   tenantData,
@@ -22,7 +24,8 @@ const RenewForm = ({
   const { getProductPlanPriceList, setAutoRenewal } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
-
+  const listData = useSelector((state) => state.products.products)
+  const dispatch = useDispatch()
   const validationSchema = Yup.object().shape({
     price: Yup.string().required(
       <FormattedMessage id="Please-select-a-price" />
@@ -58,23 +61,35 @@ const RenewForm = ({
       formik.setFieldValue('price', '')
 
       if (selectedPlan) {
-        const planDataRes = await getProductPlanPriceList(selectedProduct)
-        const planData = planDataRes.data.data
-          .filter(
-            (item) => item.plan.id === selectedPlan && item.isPublished === true
+        if (!listData[selectedProduct].plansPrice) {
+          const planDataRes = await getProductPlanPriceList(selectedProduct)
+          dispatch(
+            setAllPlansPrice({
+              productId: selectedProduct,
+              data: planDataRes.data.data,
+            })
           )
-          .map((item) => ({
-            value: item.id,
-            label: `${intl.formatMessage({
-              id: cycle[item.cycle],
-            })} (${item.price})`,
-          }))
-        setPriceList(planData)
+        }
+        const planData = listData?.[selectedProduct]?.plansPrice
+        if (planData) {
+          const planDataArray = Object.values(planData)
+            .filter(
+              (item) =>
+                item.plan.id === selectedPlan && item.isPublished === true
+            )
+            .map((item) => ({
+              value: item.id,
+              label: `${intl.formatMessage({
+                id: cycle[item.cycle],
+              })} (${item.price})`,
+            }))
+          setPriceList(planDataArray)
+        }
       } else {
         setPriceList([])
       }
     })()
-  }, [selectedPlan, selectedProduct])
+  }, [selectedPlan, selectedProduct, listData?.[selectedProduct]?.plansPrice])
 
   return (
     <Wrapper>
@@ -130,6 +145,8 @@ const RenewForm = ({
               <TextareaAndCounter
                 maxLength="250"
                 showCharCount="true"
+                id="comment"
+                name="comment"
                 inputValue={formik.values.comment}
                 onChange={formik.handleChange}
                 placeholder={'comment'}
