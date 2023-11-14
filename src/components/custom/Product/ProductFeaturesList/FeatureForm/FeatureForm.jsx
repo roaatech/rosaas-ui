@@ -43,6 +43,7 @@ const FeatureForm = ({
     type: featureData ? featureData.type : '',
     // unit: featureData ? featureData.unit : undefined,
     reset: featureData ? featureData.reset : '',
+    displayOrder: featureData ? featureData.displayOrder : '0',
   }
 
   const validationSchema = Yup.object().shape({
@@ -59,6 +60,11 @@ const FeatureForm = ({
     type: Yup.string().required(
       <FormattedMessage id="This-field-is-required" />
     ),
+    displayOrder: Yup.number()
+      .typeError('Display Order must be a number')
+      .integer('Display Order must be an integer')
+      .min(0, 'Display Order must be a positive number')
+      .default(0),
 
     // unit: Yup.string().test(
     //   'unit-validation',
@@ -82,7 +88,8 @@ const FeatureForm = ({
           title: values.title,
           description: values.description,
           type: parseInt(values.type),
-          // unit: parseInt(values.unit),
+          displayOrder: values.displayOrder || 0,
+
           reset: parseInt(values.reset) || 1,
         })
 
@@ -105,6 +112,7 @@ const FeatureForm = ({
               title: values.title,
               description: values.description,
               type: values.type,
+              displayOrder: values.displayOrder || 0,
               // unit: values.unit,
               reset: values.reset || 1,
               id: createFeature.data.data.id,
@@ -124,6 +132,7 @@ const FeatureForm = ({
             title: values.title,
             description: values.description,
             type: parseInt(values.type),
+            displayOrder: values.displayOrder || 0,
             // unit: parseInt(values.unit),
             reset: parseInt(values.reset) || 1,
           },
@@ -139,6 +148,7 @@ const FeatureForm = ({
               title: values.title,
               description: values.description,
               type: values.type,
+              displayOrder: values.displayOrder || 0,
               // unit: values.unit,
               reset: values.reset || 1,
               id: featureData.id,
@@ -321,6 +331,7 @@ const FeatureForm = ({
                 )}
             </Form.Group>
           </div> */}
+
           <div>
             {/* Reset */}
             <Form.Group className="mb-3">
@@ -355,6 +366,30 @@ const FeatureForm = ({
                   style={{ display: 'block' }}
                 >
                   {formik.errors.reset}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Display-Order" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="displayOrder"
+                name="displayOrder"
+                onChange={formik.handleChange}
+                value={formik.values.displayOrder}
+              />
+
+              {formik.touched.displayOrder && formik.errors.displayOrder && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.displayOrder}
                 </Form.Control.Feedback>
               )}
             </Form.Group>

@@ -89,7 +89,7 @@ export const ProductFeaturesList = ({ productId }) => {
       description,
       type,
       title,
-      // unit,
+      displayOrder,
       reset,
       id,
       createdDate,
@@ -123,6 +123,9 @@ export const ProductFeaturesList = ({ productId }) => {
             <span className="fw-normal">
               <FormattedMessage id={mappedReset} />
             </span>
+          </td>
+          <td>
+            <span className="fw-normal">{displayOrder}</span>
           </td>
           <td>
             <span className="fw-normal">
@@ -194,6 +197,9 @@ export const ProductFeaturesList = ({ productId }) => {
                   </th> */}
                   <th className="border-bottom">
                     <FormattedMessage id="Reset" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Display-Order" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Date" />

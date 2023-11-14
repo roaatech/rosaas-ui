@@ -274,8 +274,10 @@ const SubscriptionManagement = (props) => {
                                     <FormattedMessage id="Subscription" />
                                   </div>
                                   <div className=" card-stats">
-                                    ${cyc.price} /{' '}
-                                    <FormattedMessage id={cycle[cyc.cycle]} />
+                                    ${subscriptionDatas.planPrice} /{' '}
+                                    <FormattedMessage
+                                      id={cycle[subscriptionDatas.planCycle]}
+                                    />
                                   </div>
                                 </div>
                               </Card.Body>
@@ -287,7 +289,7 @@ const SubscriptionManagement = (props) => {
                                     <FormattedMessage id="Start-Date" />
                                   </div>
                                   <div className=" card-stats">
-                                    {formatDate(cyc.startDate)}
+                                    {formatDate(subscriptionDatas.startDate)}
                                   </div>
                                 </div>
                                 <div className="d-flex align-items-center justify-content-between border-bottom  border-light py-2 ">
@@ -295,7 +297,7 @@ const SubscriptionManagement = (props) => {
                                     <FormattedMessage id="End-Date" />
                                   </div>
                                   <div className=" card-stats">
-                                    {formatDate(cyc.endDate)}
+                                    {formatDate(subscriptionDatas.endDate)}
                                   </div>
                                 </div>
                               </Card.Body>
