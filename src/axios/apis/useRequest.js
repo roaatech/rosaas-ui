@@ -32,6 +32,8 @@ const useRequest = () => {
     subscriptionDetailsLimitReset,
     setAutoRenewal,
     cancelAutoRenewal,
+    upgradeSubscription,
+    downgradeSubscription,
   } = useSubManagementReq()
 
   const {
@@ -138,6 +140,8 @@ const useRequest = () => {
     subscriptionDetailsLimitReset,
     setAutoRenewal,
     cancelAutoRenewal,
+    upgradeSubscription,
+    downgradeSubscription,
   }
 }
 export default useRequest

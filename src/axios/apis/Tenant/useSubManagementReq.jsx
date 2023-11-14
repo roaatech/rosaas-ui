@@ -35,6 +35,18 @@ const useSubManagementReq = () => {
       { data }
     )
   }
+  const upgradeSubscription = async (data) => {
+    return await Request.post(
+      `management/sadmin/v1/Subscriptions/Upgrade`,
+      data
+    )
+  }
+  const downgradeSubscription = async (data) => {
+    return await Request.post(
+      `/management/sadmin/v1/Subscriptions/Downgrade`,
+      data
+    )
+  }
   return {
     subscriptionDetails,
     subscriptionDetailsRenew,
@@ -42,6 +54,8 @@ const useSubManagementReq = () => {
     subscriptionDetailsLimitReset,
     setAutoRenewal,
     cancelAutoRenewal,
+    upgradeSubscription,
+    downgradeSubscription,
   }
 }
 export default useSubManagementReq

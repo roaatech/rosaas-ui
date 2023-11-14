@@ -186,7 +186,7 @@ const PlanPriceForm = ({
             planPriceId: createPlanPrice.data.data.id,
             productId: productId,
             data: {
-              plan: { id: values.plan, name: allPlans[values.plan].name },
+              plan: { id: values.plan, title: allPlans[values.plan].title },
               cycle: values.cycle,
               price: values.price,
               description: values.description,
@@ -217,7 +217,7 @@ const PlanPriceForm = ({
             planPriceId: planPriceData.id,
             productId: productId,
             data: {
-              plan: { id: values.plan, name: allPlans[values.plan].name },
+              plan: { id: values.plan, title: allPlans[values.plan].title },
               cycle: values.cycle,
               price: values.price,
               description: values.description,
@@ -241,7 +241,7 @@ const PlanPriceForm = ({
   let planOptions
   if (allProducts[productId]?.plans) {
     planOptions = Object.values(allPlans).map((item, index) => {
-      return { value: item.id, label: item.name }
+      return { value: item.id, label: item.title }
     })
   } else {
     planOptions = []

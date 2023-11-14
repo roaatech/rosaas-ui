@@ -172,7 +172,7 @@ export default function ProductPlansPriceList({ children }) {
   const handleData = (data) => {
     // console.log({ data })
     return {
-      Plan: data.plan.name,
+      Plan: data.plan.title,
       cycle: newCycle[data.cycle],
       Published: data.isPublished ? 'Yes' : 'No',
       Subscribed: data.isSubscribed ? 'Yes' : 'No',
@@ -301,7 +301,7 @@ export default function ProductPlansPriceList({ children }) {
                   <th className="border-bottom"></th>
                   {Object.values(plansData).map((item, index) => (
                     <th key={index} className="border-bottom">
-                      {item.name}
+                      {item.title}
                     </th>
                   ))}
                 </tr>

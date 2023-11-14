@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
 import useRequest from '../../../../axios/apis/useRequest.js'
-import { cycle } from '../../../../const/index.js'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { Form, OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
+import { Form } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import {
-  deleteAllPlan,
-  deleteAllPlanPrice,
-  setAllPlans,
   setAllSpecifications,
   setAllProduct,
 } from '../../../../store/slices/products/productsSlice.js'
 import { Wrapper } from './TenantSpecificatifonForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
-import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import { validateSpecifications } from '../validateSpecifications/validateSpecifications.jsx'
 
 const TenantSpecificationForm = ({
@@ -29,32 +22,24 @@ const TenantSpecificationForm = ({
   popupLabel,
   selectedProduct,
 }) => {
-  const {
-    createTenantRequest,
-    editTenantRequest,
-    editTenantSpecificationRequest,
-    getProductPlans,
-    getProductPlanPriceList,
-    getProductSpecification,
-  } = useRequest()
+  const { editTenantSpecificationRequest, getProductSpecification } =
+    useRequest()
   const [submitLoading, setSubmitLoading] = useState()
-  const [priceList, setPriceList] = useState([])
-  const navigate = useNavigate()
   const [specValidationErrors, setSpecValidationErrors] = useState({})
   const dispatch = useDispatch()
   const { getProductList } = useRequest()
 
   const listData = useSelector((state) => state.products.products)
 
-  let list = Object.values(listData)
-
   useEffect(() => {
-    let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
+    if (!listData) {
+      let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
 
-    ;(async () => {
-      const productList = await getProductList(query)
-      dispatch(setAllProduct(productList.data.data.items))
-    })()
+      ;(async () => {
+        const productList = await getProductList(query)
+        dispatch(setAllProduct(productList.data.data.items))
+      })()
+    }
   }, [])
 
   const specificationValuesObject = (tenantData?.subscriptions || [])
@@ -64,10 +49,7 @@ const TenantSpecificationForm = ({
       return acc
     }, {})
 
-  const initialValues = {
-    product: selectedProduct,
-  }
-  let [validateErrors, setValidateErrors] = useState({})
+  const initialValues = {}
 
   const formik = useFormik({
     initialValues,
@@ -109,43 +91,27 @@ const TenantSpecificationForm = ({
   })
 
   const intl = useIntl()
-  let planOptions
-  if (listData[formik.values.product]?.plans) {
-    planOptions = Object.values(listData[formik.values.product].plans)
-      .filter((item) => item.isPublished === true)
-      .map((item, index) => ({
-        value: item.id,
-        label: item.name,
-      }))
-  } else {
-    planOptions = []
-  }
 
-  const options = list.map((item) => {
-    return { value: item.id, label: item.name }
-  })
   useEffect(() => {
     ;(async () => {
-      if (listData[formik.values.product]) {
-        if (!listData[formik.values.product].specifications) {
-          const specifications = await getProductSpecification(
-            formik.values.product
-          )
+      if (listData[selectedProduct]) {
+        if (!listData[selectedProduct].specifications) {
+          const specifications = await getProductSpecification(selectedProduct)
 
           dispatch(
             setAllSpecifications({
-              productId: formik.values.product,
+              productId: selectedProduct,
               data: specifications.data.data,
             })
           )
         }
       }
     })()
-  }, [formik.values.product])
+  }, [selectedProduct])
 
   const [specificationValues, setSpecificationValues] = useState({})
 
-  const productData = listData[formik.values.product]
+  const productData = listData[selectedProduct]
 
   const allSpecificationsArray = productData?.specifications
     ? Object.values(productData.specifications)

@@ -174,7 +174,7 @@ const FeaturePlanForm = ({
               unit: values.unit,
               feature: {
                 id: values.feature,
-                name: featureOptions.find(
+                title: featureOptions.find(
                   (item) => item.value === values.feature
                 ).label,
                 reset: featureOptions.find(
@@ -183,7 +183,7 @@ const FeaturePlanForm = ({
               },
               plan: {
                 id: values.plan,
-                name: planOptions.find((item) => item.value === values.plan)
+                title: planOptions.find((item) => item.value === values.plan)
                   .label,
               },
               id: createFeaturePlan.data.data.id,
