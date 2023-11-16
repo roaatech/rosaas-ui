@@ -21,9 +21,9 @@ import { setAllTenant } from '../../../../store/slices/tenants'
 import { FormattedMessage } from 'react-intl'
 import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
-import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
+import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import Label from '../../Shared/label/Label'
-import { PaymentStatus } from '../../../../const/product'
+import { subscriptionStatus } from '../../../../const/product'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { getProductTenants } = useRequest()
@@ -76,9 +76,9 @@ export const ProductTenantsList = ({ productId, productName }) => {
       plan,
       startDate,
       endDate,
-      isPaid,
+      isActive,
     } = props
-    const paymentStatus = isPaid ? true : false
+    const subscribtionStatus = isActive ? true : false
 
     return (
       <tr>
@@ -110,17 +110,17 @@ export const ProductTenantsList = ({ productId, productName }) => {
 
         <td>
           <span className={`fw-normal`}>
-            <DateLabelWhite text={plan.name} />
+            <DataLabelWhite text={plan.name} />
           </span>
         </td>
         <td>
           <span>
-            <Label {...PaymentStatus[paymentStatus]} />
+            <Label {...subscriptionStatus[subscribtionStatus]} />
           </span>
         </td>
         <td>
           {' '}
-          <DateLabelWhite text={formatDate(startDate)} />
+          <DataLabelWhite text={formatDate(startDate)} />
         </td>
         <td>
           <DateLabel endDate={endDate} />
@@ -183,7 +183,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
                 <FormattedMessage id="Plan" />
               </th>
               <th className="border-bottom">
-                <FormattedMessage id="Payment-Status" />
+                <FormattedMessage id="Subscribtion-Status" />
               </th>
               <th className="border-bottom">
                 <FormattedMessage id="Start-Date" />
@@ -192,7 +192,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
                 <FormattedMessage id="End-Date" />
               </th>
               <th className="border-bottom">
-                <FormattedMessage id="Status" />
+                <FormattedMessage id="Tenant-Status" />
               </th>
               <th className="border-bottom">
                 <FormattedMessage id="Created-Date" />

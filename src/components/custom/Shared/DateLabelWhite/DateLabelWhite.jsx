@@ -2,7 +2,7 @@ import React from 'react'
 import { Wrapper } from './DateLabelWhite.styled'
 import { formatDate } from '../../../../lib/sharedFun/Time'
 
-const DateLabelWhite = ({ text }) => {
+const DataLabelWhite = ({ text }) => {
   return (
     <Wrapper>
       <span className="label-white">{text}</span>
@@ -10,4 +10,4 @@ const DateLabelWhite = ({ text }) => {
   )
 }
 
-export default DateLabelWhite
+export default DataLabelWhite
