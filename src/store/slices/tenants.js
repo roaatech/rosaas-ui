@@ -72,6 +72,16 @@ export const tenantsSlice = createSlice({
       }
       state.tenants = currentTenants
     },
+    subHistoryData: (state, action) => {
+      const currentTenants = JSON.parse(JSON.stringify(current(state.tenants)))
+      currentTenants[action.payload.id].subscriptionData.data.subHistoryData = {
+        ...action.payload,
+      }
+      console.log({
+        ssssddddd: currentTenants[action.payload.id].subscriptionData.data,
+      })
+      state.tenants = currentTenants
+    },
   },
 })
 
@@ -84,5 +94,6 @@ export const {
   setActiveIndex,
   subscriptionData,
   featuresData,
+  subHistoryData,
 } = tenantsSlice.actions
 export default tenantsSlice.reducer

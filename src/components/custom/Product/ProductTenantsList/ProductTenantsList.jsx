@@ -183,7 +183,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
                 <FormattedMessage id="Plan" />
               </th>
               <th className="border-bottom">
-                <FormattedMessage id="Subscribtion-Status" />
+                <FormattedMessage id="Subscription-Status" />
               </th>
               <th className="border-bottom">
                 <FormattedMessage id="Start-Date" />

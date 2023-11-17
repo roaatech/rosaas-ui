@@ -25,14 +25,13 @@ import { subscriptionData, tenantInfo } from '../../store/slices/tenants'
 import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
 import RenewForm from '../../components/custom/tenant/SubscriptionManagement/RenewForm/RenewForm'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
-import {
-  fetchSubscriptionDetails,
-  fetchSubscriptionFeatures,
-} from '../../components/custom/tenant/SubscriptionManagement/fetchSubscriptionDetails/fetchSubscriptionDetails'
+import { fetchSubscriptionDetails } from '../../components/custom/tenant/SubscriptionManagement/fetchSubscriptionDetails/fetchSubscriptionDetails'
 import Label from '../../components/custom/Shared/label/Label'
 
 import SubsGeneralData from '../../components/custom/tenant/SubscriptionManagement/SubsGeneralData/SubsGeneralData'
 import SubsFeatures from '../../components/custom/tenant/SubscriptionManagement/SubsFeatures/SubsFeatures'
+import SubsFeaturesHistory from '../../components/custom/tenant/SubscriptionManagement/SubsFeaturesHistory/SubsFeaturesHistotry'
+import SubsGeneralHistoryData from '../../components/custom/tenant/SubscriptionManagement/SubsGeneralHistoryData/SubsGeneralHistoryData'
 
 const SubscriptionManagement = (props) => {
   const routeParams = useParams()
@@ -65,7 +64,10 @@ const SubscriptionManagement = (props) => {
   } = useRequest()
   const [currentProduct, setCurrentProduct] = useState('')
   const [currentTab, setCurrentTab] = useState(0)
-  const [currentTabCycle, setCurrentTabCycle] = useState(0)
+  console.log({ currentTab })
+  const [hasResetableValue, setHasResetableValue] = useState()
+  console.log({ hasResetableValue })
+  const [currentTabCycle, setCurrentTabCycle] = useState()
   const [currentTabFeatures, setCurrentTabFeatures] = useState(0)
   const intl = useIntl()
 
@@ -93,10 +95,9 @@ const SubscriptionManagement = (props) => {
     setUpdate(update + 1)
     setConfirm(false)
   }
-  const hasSubsFeatsLimitsResettable =
-    subscriptionDatas?.hasSubscriptionFeaturesLimitsResettable
+
   const handleResetLimit = () => {
-    hasSubsFeatsLimitsResettable && setShowResetConfirmation(true)
+    hasResetableValue && setShowResetConfirmation(true)
   }
 
   const handleResetConfirmation = async (data = '', comment) => {
@@ -147,11 +148,9 @@ const SubscriptionManagement = (props) => {
     if (!subscriptionDatas) {
       return
     }
-    fetchSubscriptionFeatures({
-      subscriptionId: subscriptionDatas?.subscriptionId,
-      intl,
-      subscriptionFeturesList,
-    })
+    if (currentTab == 0) {
+      setCurrentTabCycle(subscriptionDatas?.currentSubscriptionCycleId)
+    }
   }, [subscriptionDatas])
   useEffect(() => {
     update > 0 &&
@@ -274,14 +273,18 @@ const SubscriptionManagement = (props) => {
                           handleToggleClick={handleToggleClick}
                           ResettableAllowed={ResettableAllowed}
                           handleResetSubscription={handleResetSubscription}
-                          hasSubsFeatsLimitsResettable={
-                            hasSubsFeatsLimitsResettable
-                          }
                           handleResetLimit={handleResetLimit}
-                          currentTab={currentTabCycle}
+                          currentTabCycle={currentTabCycle}
+                          hasResetableValue={hasResetableValue}
                         />
                       ) : (
-                        ''
+                        <SubsGeneralHistoryData
+                          tenantsData={tenantsData}
+                          handleToggleClick={handleToggleClick}
+                          ResettableAllowed={ResettableAllowed}
+                          handleResetSubscription={handleResetSubscription}
+                          handleResetLimit={handleResetLimit}
+                        />
                       )}
 
                       <Row className="p-1">
@@ -293,7 +296,12 @@ const SubscriptionManagement = (props) => {
                           <div>
                             <TabView
                               className="card "
-                              activeIndex={currentTabFeatures}
+                              activeIndex={
+                                subscriptionDatas?.currentSubscriptionCycleId ===
+                                cyc?.subscriptionCycleId
+                                  ? currentTabFeatures
+                                  : 1
+                              }
                               onTabChange={(e) =>
                                 handleFeatureTabChange(e.index)
                               }
@@ -310,6 +318,8 @@ const SubscriptionManagement = (props) => {
                                     subscriptionId={
                                       subscriptionDatas?.subscriptionId
                                     }
+                                    update={update}
+                                    setHasResetableValue={setHasResetableValue}
                                   />
                                 </TabPanel>
                               )}
@@ -319,177 +329,14 @@ const SubscriptionManagement = (props) => {
                                   <FormattedMessage id="Features-History" />
                                 }
                               >
-                                {' '}
-                                <div className="pr-2 pl-2 ">
-                                  {' '}
-                                  <Tab.Container
-                                    defaultActiveKey={
-                                      subscriptionDatas.data?.[0]?.featureName
-                                    }
-                                  >
-                                    <Row>
-                                      <Col md={3}>
-                                        <div className="feat-tab">
-                                          <Nav
-                                            fill
-                                            variant="pills"
-                                            className={`  flex-column vertical-tab custom-nav-link mb-3 ${
-                                              window.innerWidth <= 768
-                                                ? 'custom-horizontal-tab'
-                                                : ''
-                                            }`}
-                                          >
-                                            {subscriptionDatas.data?.map(
-                                              (feature, featureIndex) => (
-                                                <Nav.Item
-                                                  key={`feature-nav-${featureIndex}`}
-                                                >
-                                                  <Nav.Link
-                                                    eventKey={
-                                                      feature.featureName
-                                                    }
-                                                  >
-                                                    {feature.featureName}
-                                                  </Nav.Link>
-                                                </Nav.Item>
-                                              )
-                                            )}
-                                          </Nav>
-                                        </div>
-                                      </Col>
-                                      <Col md={9}>
-                                        <Tab.Content>
-                                          {subscriptionDatas.data?.map(
-                                            (feature, featureIndex) => (
-                                              <Tab.Pane
-                                                key={`feature-${featureIndex}`}
-                                                eventKey={feature.featureName}
-                                              >
-                                                <Card.Body className="py-0 px-0">
-                                                  <div
-                                                    style={{
-                                                      maxWidth: '100%',
-                                                      overflowX: 'auto',
-                                                    }}
-                                                    className="table-container"
-                                                  >
-                                                    <div className="feat-table">
-                                                      <Table responsive>
-                                                        <thead>
-                                                          <tr>
-                                                            <th>
-                                                              <FormattedMessage id="Feature" />
-                                                            </th>
-                                                            <th>
-                                                              <FormattedMessage id="Reset" />
-                                                            </th>
-                                                            <th>
-                                                              <FormattedMessage id="Start-Date" />
-                                                            </th>
-                                                            <th>
-                                                              <FormattedMessage id="End-Date" />
-                                                            </th>
-                                                            <th>
-                                                              <FormattedMessage id="usage" />
-                                                            </th>
-                                                            <th>
-                                                              <FormattedMessage id="Remind/Limit" />
-                                                            </th>
-                                                          </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                          {feature.subscriptionFeaturesCycles
-                                                            ?.filter(
-                                                              (cycle) =>
-                                                                cycle.subscriptionCycleId ===
-                                                                cyc.subscriptionCycleId
-                                                            )
-                                                            .map(
-                                                              (
-                                                                cycle,
-                                                                cycleIndex
-                                                              ) => (
-                                                                <tr
-                                                                  key={`cycle-${cycleIndex}`}
-                                                                >
-                                                                  <td>
-                                                                    {
-                                                                      cycle.featureName
-                                                                    }
-                                                                  </td>
-                                                                  <td>
-                                                                    <FormattedMessage
-                                                                      id={
-                                                                        featureResetMap[
-                                                                          cycle
-                                                                            .reset
-                                                                        ]
-                                                                      }
-                                                                    />
-                                                                  </td>
-                                                                  <td>
-                                                                    {cycle.reset !=
-                                                                    1 ? (
-                                                                      <Label
-                                                                        {...{
-                                                                          background:
-                                                                            '#cccccc40',
-                                                                          value:
-                                                                            formatDate(
-                                                                              cycle.startDate
-                                                                            ),
-                                                                          lighter: true,
-                                                                        }}
-                                                                      />
-                                                                    ) : (
-                                                                      '-'
-                                                                    )}
-                                                                  </td>
-                                                                  <td>
-                                                                    {cycle.reset !=
-                                                                    1 ? (
-                                                                      <DateLabel
-                                                                        endDate={
-                                                                          cycle.endDate
-                                                                            ? formatDate(
-                                                                                cycle.endDate
-                                                                              )
-                                                                            : formatDate(
-                                                                                subscriptionDatas.endDate
-                                                                              )
-                                                                        }
-                                                                      />
-                                                                    ) : (
-                                                                      '-'
-                                                                    )}
-                                                                  </td>
-                                                                  <td>
-                                                                    {
-                                                                      cycle.usage
-                                                                    }
-                                                                  </td>
-                                                                  <td className="remind-value">
-                                                                    {cycle.remindLimit ==
-                                                                    'nullundefined / nullundefined '
-                                                                      ? '-'
-                                                                      : cycle.remindLimit}
-                                                                  </td>
-                                                                </tr>
-                                                              )
-                                                            )}
-                                                        </tbody>
-                                                      </Table>
-                                                    </div>
-                                                  </div>
-                                                </Card.Body>
-                                              </Tab.Pane>
-                                            )
-                                          )}
-                                        </Tab.Content>
-                                      </Col>
-                                    </Row>
-                                  </Tab.Container>
-                                </div>
+                                <SubsFeaturesHistory
+                                  subscriptionId={
+                                    subscriptionDatas?.subscriptionId
+                                  }
+                                  currentTabFeatures={currentTabFeatures}
+                                  currentTabCycle={currentTabCycle}
+                                  update={update}
+                                />{' '}
                               </TabPanel>
                             </TabView>
                           </div>

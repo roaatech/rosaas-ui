@@ -35,6 +35,7 @@ const useRequest = () => {
     upgradeSubscription,
     downgradeSubscription,
     subscriptionFeturesList,
+    subscriptionCycleById,
   } = useSubManagementReq()
 
   const {
@@ -144,6 +145,7 @@ const useRequest = () => {
     upgradeSubscription,
     downgradeSubscription,
     subscriptionFeturesList,
+    subscriptionCycleById,
   }
 }
 export default useRequest

@@ -34,33 +34,48 @@ import {
 } from '../../../../../store/slices/tenants'
 
 export default function SubsFeatures(data) {
-  const { subscriptionId } = data
+  const { subscriptionId, update, setHasResetableValue } = data
   const { subscriptionFeturesList } = useRequest()
   const routeParams = useParams()
   const dispatch = useDispatch()
 
-  const subscriptionDatas = useSelector(
-    (state) => state.tenants.tenants[routeParams.id]?.subscriptionData?.data
+  const subscriptionFeatures = useSelector(
+    (state) =>
+      state.tenants.tenants[routeParams.id]?.subscriptionData?.data?.features
+        ?.data
   )
-  const subscriptionFeatures = subscriptionDatas?.features?.data
+  console.log({ subscriptionFeatures })
   useEffect(() => {
-    if (!subscriptionDatas) {
-      console.log('****************')
-      return
+    if (subscriptionFeatures) {
+      setHasResetableValue(
+        subscriptionFeatures.some((item) => item.reset !== 1)
+      )
     }
-    ;(async () => {
-      if (!subscriptionDatas.features) {
-        const response = await subscriptionFeturesList(subscriptionId)
-        dispatch(
-          featuresData({
-            id: routeParams.id,
-            data: response.data.data,
-          })
-        )
-      }
-    })()
+  }, [subscriptionFeatures])
+  const fetchDataAndUpdateFeatures = async () => {
+    try {
+      const response = await subscriptionFeturesList(subscriptionId)
+      dispatch(
+        featuresData({
+          id: routeParams.id,
+          data: response.data.data,
+        })
+      )
+    } catch (error) {
+      console.error('Error fetching and updating features:', error)
+    }
+  }
+
+  useEffect(() => {
+    if (update > 0 && !subscriptionFeatures) {
+      fetchDataAndUpdateFeatures()
+    }
+  }, [update, subscriptionFeatures])
+  useEffect(() => {
+    if (!subscriptionFeatures) {
+      fetchDataAndUpdateFeatures()
+    }
   }, [])
-  console.log(subscriptionFeatures)
 
   return (
     <div className="pr-2 pl-2">
@@ -87,7 +102,7 @@ export default function SubsFeatures(data) {
           </thead>
 
           <tbody>
-            {subscriptionDatas &&
+            {subscriptionFeatures &&
               Array.isArray(subscriptionFeatures) &&
               subscriptionFeatures?.map((subscription, index) => (
                 <tr key={`subscription-${index}`}>
@@ -112,13 +127,7 @@ export default function SubsFeatures(data) {
 
                   <td>
                     {subscription.reset != 1 ? (
-                      <DateLabel
-                        endDate={
-                          subscription.endDate
-                            ? formatDate(subscription.endDate)
-                            : formatDate(subscriptionDatas.endDate)
-                        }
-                      />
+                      <DateLabel endDate={formatDate(subscription.endDate)} />
                     ) : (
                       '-'
                     )}

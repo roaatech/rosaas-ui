@@ -3,9 +3,9 @@ import { Wrapper } from './Label.styled'
 import { statusConst } from '../../../../const'
 const Label = ({ color, background, value, icon, lighter }) => {
   return (
-    <Wrapper lighter={lighter ? true : false}>
+    <Wrapper>
       <span
-        className={'label'}
+        className={lighter ? 'lighter label' : 'normal label'}
         style={{
           color,
           background,

@@ -1,20 +1,12 @@
 import styled, { css } from 'styled-components'
 
 export const Wrapper = styled.span`
-  ${(props) =>
-    props.lighter
-      ? css`
-          font-weight: lighter !important;
-
-          .label {
-            font-weight: normal;
-          }
-        `
-      : css`
-          .label {
-            font-weight: bold;
-          }
-        `}
+  .lighter {
+    font-weight: lighter !important;
+  }
+  .normal {
+    font-weight: bold !important;
+  }
   .label {
     padding: 7px 12px;
     border-radius: 5px;
