@@ -1,37 +1,15 @@
-import {
-  faArrowRotateBackward,
-  faToggleOff,
-  faToggleOn,
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  Card,
-  Col,
-  OverlayTrigger,
-  Row,
-  Table,
-} from '@themesberg/react-bootstrap'
-import { Tooltip } from 'bootstrap'
-import { useEffect, useState } from 'react'
-import { BsFillQuestionCircleFill } from 'react-icons/bs'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { Card, Table } from '@themesberg/react-bootstrap'
+import { useEffect } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import ThemeDialog from '../../../Shared/ThemeDialog/ThemeDialog'
-import { cycle, featureResetMap, featureUnitMap } from '../../../../../const'
-import { DataTransform, formatDate } from '../../../../../lib/sharedFun/Time'
+import { featureResetMap, featureUnitMap } from '../../../../../const'
+import { formatDate } from '../../../../../lib/sharedFun/Time'
 import Label from '../../../Shared/label/Label'
-import {
-  PlanChangingType,
-  SubscriptionPlanChangeStatus,
-  SubscriptionResetStatus,
-} from '../../../../../const/subscriptionManagement'
+
 import DateLabel from '../../../Shared/DateLabel/DateLabel'
 import useRequest from '../../../../../axios/apis/useRequest'
-import {
-  subscriptionData,
-  featuresData,
-} from '../../../../../store/slices/tenants'
+import { featuresData } from '../../../../../store/slices/tenants'
 
 export default function SubsFeatures(data) {
   const { subscriptionId, update, setHasResetableValue } = data
@@ -44,7 +22,6 @@ export default function SubsFeatures(data) {
       state.tenants.tenants[routeParams.id]?.subscriptionData?.data?.features
         ?.data
   )
-  console.log({ subscriptionFeatures })
   useEffect(() => {
     if (subscriptionFeatures) {
       setHasResetableValue(
@@ -106,10 +83,13 @@ export default function SubsFeatures(data) {
               Array.isArray(subscriptionFeatures) &&
               subscriptionFeatures?.map((subscription, index) => (
                 <tr key={`subscription-${index}`}>
+                  {/* Feature */}
                   <td>{subscription.feature.name}</td>
 
+                  {/* Reset */}
                   <td>{featureResetMap[subscription.reset]}</td>
 
+                  {/* Start-Date */}
                   <td>
                     {' '}
                     {subscription.reset != 1 ? (
@@ -125,6 +105,7 @@ export default function SubsFeatures(data) {
                     )}
                   </td>
 
+                  {/* End-Date */}
                   <td>
                     {subscription.reset != 1 ? (
                       <DateLabel endDate={formatDate(subscription.endDate)} />
@@ -133,6 +114,7 @@ export default function SubsFeatures(data) {
                     )}
                   </td>
 
+                  {/* Remind/Limit */}
                   <td className="remind-value">
                     {`${subscription.limit}${
                       featureUnitMap[subscription.unit]

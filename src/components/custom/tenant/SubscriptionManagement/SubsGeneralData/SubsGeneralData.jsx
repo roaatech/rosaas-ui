@@ -119,10 +119,20 @@ export default function SubsGeneralData(data) {
                   />
                 </div>
                 <div className=" card-stats">
-                  {subscriptionDatas?.autoRenewal &&
-                    `$${subscriptionDatas?.autoRenewal?.price} / ${
-                      cycle[subscriptionDatas?.autoRenewal?.cycle]
-                    }`}
+                  {subscriptionDatas?.autoRenewal && (
+                    <Label
+                      {...{
+                        background: 'rgb(239, 249, 246)',
+                        value:
+                          subscriptionDatas?.autoRenewal &&
+                          `$${subscriptionDatas?.autoRenewal?.price} / ${
+                            cycle[subscriptionDatas?.autoRenewal?.cycle]
+                          }`,
+                        lighter: true,
+                        color: 'rgb(0, 166, 117)',
+                      }}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -145,8 +155,16 @@ export default function SubsGeneralData(data) {
                 <div className=" card-stats">
                   {subscriptionDatas.lastLimitsResetDate ? (
                     <span>
-                      {/* <FormattedMessage id="Reseted-At" />:{' '} */}
-                      {DataTransform(subscriptionDatas.lastLimitsResetDate)}
+                      <FormattedMessage id="Reseted-At" />:{' '}
+                      <Label
+                        {...{
+                          background: '#cccccc40',
+                          value: DataTransform(
+                            subscriptionDatas.lastLimitsResetDate
+                          ),
+                          lighter: true,
+                        }}
+                      />
                     </span>
                   ) : (
                     'not reset yet'

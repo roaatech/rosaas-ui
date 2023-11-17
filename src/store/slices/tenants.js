@@ -77,9 +77,7 @@ export const tenantsSlice = createSlice({
       currentTenants[action.payload.id].subscriptionData.data.subHistoryData = {
         ...action.payload,
       }
-      console.log({
-        ssssddddd: currentTenants[action.payload.id].subscriptionData.data,
-      })
+
       state.tenants = currentTenants
     },
   },
