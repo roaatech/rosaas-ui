@@ -8,8 +8,6 @@ import {
   Row,
   Card,
   Form,
-  Button,
-  InputGroup,
   OverlayTrigger,
   Tooltip,
 } from '@themesberg/react-bootstrap'
@@ -54,7 +52,6 @@ const ProductWarningsSettings = () => {
         return acc
       }, {})
       setMerged(mergedData)
-      console.log(mergedData)
       setOldData(warnings.data.data)
       formik.setValues(mergedData)
     })()
@@ -66,17 +63,41 @@ const ProductWarningsSettings = () => {
   }
 
   const initialValues = {}
-  const validationSchema = Yup.object().shape({
-    defaultHealthCheckUrl_messageEn: Yup.string().required(
-      'The field is required'
-    ),
-    defaultHealthCheckUrl_messageAr: Yup.string().required(
-      'The field is required'
-    ),
-    defaultHealthCheckUrl_typeSelect: Yup.number().required(
-      'The field is required'
-    ),
-  })
+  const generateValidationSchema = (data) => {
+    if (!data || typeof data !== 'object') {
+      throw new Error('Invalid data object')
+    }
+    const validationSchema = {}
+
+    Object.keys(data).forEach((key) => {
+      const fieldName = key.includes('_messageEn') ? key : undefined
+      const fieldArabicName = key.includes('_messageAr') ? key : undefined
+      const fieldType = key.includes('_typeSelect') ? key : undefined
+
+      if (fieldName) {
+        validationSchema[fieldName] = Yup.string().required(
+          'The field is required'
+        )
+      }
+
+      if (fieldArabicName) {
+        validationSchema[fieldArabicName] = Yup.string().required(
+          'The field is required'
+        )
+      }
+
+      if (fieldType) {
+        validationSchema[fieldType] = Yup.number().required(
+          'The field is required'
+        )
+      }
+    })
+
+    return Yup.object().shape(validationSchema)
+  }
+
+  const validationSchema = merged && generateValidationSchema(merged)
+
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
@@ -116,7 +137,7 @@ const ProductWarningsSettings = () => {
   return (
     <>
       <BreadcrumbComponent
-        breadcrumbInfo={'SubscriptionSettings'}
+        breadcrumbInfo={'ProductWarningsSettings'}
         icon={BsGearFill}
       />
       <Wrapper>
