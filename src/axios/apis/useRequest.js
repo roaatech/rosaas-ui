@@ -88,6 +88,8 @@ const useRequest = () => {
     putHeathCheckSettings,
     getSubscriptionsSettings,
     putSubscriptionsSettings,
+    getProductWarningsSettings,
+    putProductWarningsSettings,
   } = useSettingsReq()
 
   return {
@@ -146,6 +148,8 @@ const useRequest = () => {
     downgradeSubscription,
     subscriptionFeturesList,
     subscriptionCycleById,
+    getProductWarningsSettings,
+    putProductWarningsSettings,
   }
 }
 export default useRequest
