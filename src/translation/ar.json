@@ -332,5 +332,10 @@
   "Message-Ar": "رسالة بالعربية",
   "Message-En": "رسالة بالإنجليزية",
   "Product-Warnings-Settings": "إعدادات تحذيرات المنتج",
-  "Product-Warnings": "تحذيرات المنتج"
+  "Product-Warnings": "تحذيرات المنتج",
+  "Warnings": "تحذيرات",
+  "Subscription-Upgrade": "ترقية الاشتراك",
+  "Subscription-Downgrade-Url": "عنوان رابط تخفيض الاشتراك",
+  "info": "معلومات",
+  "Upgrade": "ترقية"
 }

@@ -89,7 +89,7 @@ export const Wrapper = styled.div`
     flex-direction: column;
   }
   .feat-tab {
-    box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.08);
+    box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.04);
     padding-bottom: 3px;
   }
   .subscription-info {

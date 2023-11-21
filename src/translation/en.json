@@ -329,5 +329,13 @@
   "features_desc": "Features",
   "publishedPlanPrices_desc": "Published Plan's Prices",
   "Product-Warnings-Settings": "Product Warnings Settings",
-  "Product-Warnings": "Product Warnings"
+  "Product-Warnings": "Product Warnings",
+  "Warnings": "Warnings",
+  "Subscription-Upgrade": "Subscription Upgrade",
+
+  "Subscription-Downgrade-Url": "Subscription Downgrade Url",
+
+  "info": "info",
+
+  "Upgrade": "Upgrade"
 }

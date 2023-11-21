@@ -79,26 +79,24 @@ export default function SubsFeaturesHistory(data) {
       {groupedFeatures && firstTab && (
         <Tab.Container defaultActiveKey={firstTab}>
           <Row>
-            <Col md={3}>
-              <div className="feat-tab">
-                <Nav
-                  fill
-                  variant="pills"
-                  className={`  flex-column vertical-tab custom-nav-link mb-3 ${
-                    window.innerWidth <= 768 ? 'custom-horizontal-tab' : ''
-                  }`}
-                >
-                  {Object.keys(groupedFeatures).map((featureId, index) => (
-                    <Nav.Item key={`feature-nav-${index}`}>
-                      <Nav.Link eventKey={featureId}>
-                        {groupedFeatures[featureId][0].feature.name}
-                      </Nav.Link>
-                    </Nav.Item>
-                  ))}
-                </Nav>
-              </div>
+            <Col md={2} className="feat-tab pr-0">
+              <Nav
+                fill
+                variant="pills"
+                className={`  flex-column vertical-tab custom-nav-link mb-3 ${
+                  window.innerWidth <= 768 ? 'custom-horizontal-tab' : ''
+                }`}
+              >
+                {Object.keys(groupedFeatures).map((featureId, index) => (
+                  <Nav.Item key={`feature-nav-${index}`}>
+                    <Nav.Link eventKey={featureId}>
+                      {groupedFeatures[featureId][0].feature.name}
+                    </Nav.Link>
+                  </Nav.Item>
+                ))}
+              </Nav>
             </Col>
-            <Col md={9}>
+            <Col md={10}>
               <Tab.Content>
                 {Object.keys(groupedFeatures).map((featureId, index) => (
                   <Tab.Pane key={`feature-${index}`} eventKey={featureId}>
