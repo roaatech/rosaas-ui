@@ -58,5 +58,7 @@ export const {
   deleteAllPlan,
   deleteAllPlanPrice,
   PlansPublished,
+  productWarningsStore,
+  removeProductWarningsStore,
 } = productsSlice.actions
 export default productsSlice.reducer

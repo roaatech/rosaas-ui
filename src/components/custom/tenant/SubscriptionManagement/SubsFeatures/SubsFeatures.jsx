@@ -49,6 +49,9 @@ export default function SubsFeatures(data) {
     }
   }, [update, subscriptionFeatures])
   useEffect(() => {
+    if (!subscriptionId || update > 0) {
+      return
+    }
     if (!subscriptionFeatures) {
       fetchDataAndUpdateFeatures()
     }

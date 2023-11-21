@@ -26,6 +26,9 @@ import UpperContent from '../../../components/custom/Shared/UpperContent/UpperCo
 import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../../components/custom/Shared/DynamicButtons/DynamicButtons'
 import { WarningType } from '../../../const/WarningsSettings'
+import ProductWarnings from '../../../components/custom/Product/ProductWarnings/ProductWarnings'
+import { useDispatch } from 'react-redux'
+import { removeProductWarningsStore } from '../../../store/slices/products/productsSlice'
 
 const ProductWarningsSettings = () => {
   const [edit, setEdit] = useState(false)
@@ -61,7 +64,7 @@ const ProductWarningsSettings = () => {
     setEdit(false)
     formik.setValues(merged)
   }
-
+  const dispatch = useDispatch()
   const initialValues = {}
   const generateValidationSchema = (data) => {
     if (!data || typeof data !== 'object') {
@@ -105,9 +108,11 @@ const ProductWarningsSettings = () => {
       putProductWarningsSettings(convertToFirstFormat(values))
       const originalFormatData = convertToFirstFormat(values)
       setOldData(originalFormatData)
+      dispatch(removeProductWarningsStore())
       setEdit(false)
     },
   })
+
   const convertToFirstFormat = (data) => {
     const result = {}
 

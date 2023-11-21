@@ -199,7 +199,7 @@ export default function ChildTable({
         <div className="content-details">
           <Table
             responsive
-            className="table-centered table-nowrap rounded mb-0"
+            className="table-centered table-nowrap rounded mb-0 accordions "
           >
             <tbody>
               <tr>

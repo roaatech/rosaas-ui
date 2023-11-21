@@ -34,6 +34,9 @@ import ProductPlansPriceList from '../../components/custom/Product/ProductPlansP
 import ProductCustomSpecificationList from '../../components/custom/Product/CustomSpecification/ProductCustomSpecificationList'
 import { MdEditNote } from 'react-icons/md'
 import { activeTab } from '../../const/product'
+import ProductWarnings from '../../components/custom/Product/ProductWarnings/ProductWarnings'
+import { productWarningsStore } from '../../store/slices/products/productsSlice'
+import { WarningVariant } from '../../const/WarningsSettings'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -46,19 +49,57 @@ const ProductDetails = () => {
   useEffect(() => {
     setActiveIndex(activeTab.details)
   }, [routeParams.id])
-  const { getProduct, deleteProductReq } = useRequest()
+  const { getProduct, deleteProductReq, getProductWarnings } = useRequest()
 
   useEffect(() => {
     ;(async () => {
       const productData = await getProduct(routeParams.id)
       dispatch(productInfo(productData.data.data))
     })()
-  }, [visible, routeParams.id])
+  }, [visible, routeParams?.id])
 
   const deleteProduct = async () => {
-    await deleteProductReq({ id: routeParams.id })
-    dispatch(removeProductStore(routeParams.id))
+    await deleteProductReq({ id: routeParams?.id })
+    dispatch(removeProductStore(routeParams?.id))
   }
+  let [errorNums, setErrorNums] = useState(0)
+  useEffect(() => {
+    ;(async () => {
+      if (warningsList || !productData?.id) {
+        return
+      }
+      const warningsData = await getProductWarnings(productData?.id)
+      dispatch(
+        productWarningsStore({
+          id: productData.id,
+          data: warningsData.data.data,
+        })
+      )
+    })()
+  }, [productData?.id])
+
+  const warningsList = useSelector(
+    (state) => state.products.products[productData?.id]?.warnings?.data
+  )
+
+  useEffect(() => {
+    let dengerNum = 0
+    warningsList &&
+      warningsList.map((warning, index) => {
+        const { property, isValid, setting } = warning
+        const type = setting.type
+
+        const warningVariant =
+          isValid === true
+            ? WarningVariant[1]
+            : WarningVariant[type] || WarningVariant[4]
+
+        if (warningVariant === 'danger') {
+          dengerNum++
+        }
+      })
+    setErrorNums(dengerNum)
+  }, [warningsList, productData?.id])
 
   return (
     <Wrapper>
@@ -156,9 +197,11 @@ const ProductDetails = () => {
             activeIndex={activeIndex}
             onTabChange={(e) => setActiveIndex(e.index)}
           >
-            <TabPanel header={<FormattedMessage id="Details" />}>
-              <ProductDetailsTab data={productData} />
-            </TabPanel>
+            {productData && (
+              <TabPanel header={<FormattedMessage id="Details" />}>
+                <ProductDetailsTab data={productData} />
+              </TabPanel>
+            )}
             <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
               <ProductCustomSpecificationList
                 productId={productData.id}
@@ -189,6 +232,23 @@ const ProductDetails = () => {
               <ProductTenantsList
                 productId={productData.id}
                 productName={productData.name}
+              />
+            </TabPanel>
+            <TabPanel
+              header={
+                <div>
+                  <FormattedMessage id="Warnings" />
+                  {errorNums > 0 && (
+                    <span className="error-badge">{errorNums}</span>
+                  )}
+                </div>
+              }
+              className={errorNums > 0 && 'warnings'}
+            >
+              <ProductWarnings
+                errorNum={errorNums}
+                setErrorNum={setErrorNums}
+                productId={productData.id}
               />
             </TabPanel>
           </TabView>

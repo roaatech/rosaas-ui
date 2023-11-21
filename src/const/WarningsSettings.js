@@ -4,3 +4,9 @@ export const WarningType = {
   3: 'Warning',
   4: 'Error',
 }
+export const WarningVariant = {
+  1: 'success',
+  2: 'info',
+  3: 'warning',
+  4: 'danger',
+}

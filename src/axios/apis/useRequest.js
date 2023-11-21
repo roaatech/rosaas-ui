@@ -44,6 +44,7 @@ const useRequest = () => {
     getProduct,
     getProductList,
     deleteProductReq,
+    getProductWarnings,
   } = useProductReq()
 
   const {
@@ -150,6 +151,7 @@ const useRequest = () => {
     subscriptionCycleById,
     getProductWarningsSettings,
     putProductWarningsSettings,
+    getProductWarnings,
   }
 }
 export default useRequest

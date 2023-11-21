@@ -12,6 +12,7 @@ const setAllProduct = (state, action) => {
   })
   state.products = allProduct
 }
+
 const productInfo = (state, action) => {
   const currentProducts = { ...current(state.products) }
 
@@ -30,10 +31,32 @@ const productInfo = (state, action) => {
   state.products = currentProducts
 }
 
+const productWarningsStore = (state, action) => {
+  const currentProducts = JSON.parse(JSON.stringify(current(state.products)))
+  currentProducts[action.payload.id].warnings = { ...action.payload }
+  state.products = currentProducts
+  console.log({ currentProducts })
+}
+const removeProductWarningsStore = (state, action) => {
+  const currentProducts = JSON.parse(JSON.stringify(current(state.products)))
+  console.log({ currentProductsBef: currentProducts })
+  Object.keys(currentProducts).forEach((productId) => {
+    currentProducts[productId].warnings = undefined
+  })
+  state.products = currentProducts
+  console.log({ currentProductsAfter: currentProducts })
+}
+
 const removeProductStore = (state, action) => {
   const currentProducts = { ...current(state.products) }
   delete currentProducts[action.payload]
   state.products = currentProducts
 }
 
-export { setAllProduct, productInfo, removeProductStore }
+export {
+  productWarningsStore,
+  setAllProduct,
+  productInfo,
+  removeProductStore,
+  removeProductWarningsStore,
+}
