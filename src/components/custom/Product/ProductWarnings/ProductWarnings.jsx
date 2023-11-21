@@ -10,6 +10,7 @@ import { Card, Alert } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { productWarningsStore } from '../../../../store/slices/products/productsSlice.js'
 import { WarningVariant } from '../../../../const/WarningsSettings'
+import { FormattedMessage } from 'react-intl'
 
 export const ProductWarnings = ({ productId }) => {
   const { getProductWarnings } = useRequest()
@@ -51,12 +52,17 @@ export const ProductWarnings = ({ productId }) => {
             if (warningVariants === 'danger') {
               icon = faExclamationCircle
             }
+            const formattedProperty =
+              property.charAt(0).toLowerCase() + property.slice(1)
 
             return (
               <div key={index}>
                 <Alert variant={warningVariants}>
                   <FontAwesomeIcon icon={icon} className="mr-2" />
-                  <strong>{property} :</strong> {message}
+                  <strong>
+                    <FormattedMessage id={formattedProperty} /> :
+                  </strong>{' '}
+                  {message}
                 </Alert>
               </div>
             )
