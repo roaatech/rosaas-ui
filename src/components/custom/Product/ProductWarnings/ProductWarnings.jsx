@@ -5,6 +5,7 @@ import {
   faCheckCircle,
   faExclamationCircle,
   faInfoCircle,
+  faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons'
 import { Card, Alert } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -46,7 +47,7 @@ export const ProductWarnings = ({ productId }) => {
               icon = faCheckCircle
             } else {
               warningVariants = WarningVariant[type] || WarningVariant[4]
-              icon = faInfoCircle
+              icon = faTriangleExclamation
             }
 
             if (warningVariants === 'danger') {

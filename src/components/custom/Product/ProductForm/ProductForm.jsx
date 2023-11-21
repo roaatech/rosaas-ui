@@ -50,29 +50,10 @@ const ProductForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
-    ),
-    defaultHealthCheckUrl: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
-    ),
-    // .matches(
-    //   /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-    //   <FormattedMessage id="Please-enter-a-valid-value" />
-    // )
-    healthStatusChangeUrl: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
-    ),
-    // .matches(
-    //   /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-    //   <FormattedMessage id="Please-enter-a-valid-value" />
-    // )
+    name: Yup.string(),
+    defaultHealthCheckUrl: Yup.string(),
+    healthStatusChangeUrl: Yup.string(),
     subscriptionResetUrl: Yup.string(),
-    // .matches(
-    //   /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-    //   <FormattedMessage id="Please-enter-a-valid-value" />
-    // )
-
     subscriptionDowngradeUrl: Yup.string(),
     subscriptionUpgradeUrl: Yup.string(),
   })

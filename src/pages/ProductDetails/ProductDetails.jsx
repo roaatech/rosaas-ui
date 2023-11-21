@@ -37,6 +37,7 @@ import { activeTab } from '../../const/product'
 import ProductWarnings from '../../components/custom/Product/ProductWarnings/ProductWarnings'
 import { productWarningsStore } from '../../store/slices/products/productsSlice'
 import { WarningVariant } from '../../const/WarningsSettings'
+import ClientCredentials from '../../components/custom/Product/ClientCredentials/ClientCredentials'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -202,6 +203,9 @@ const ProductDetails = () => {
                 <ProductDetailsTab data={productData} />
               </TabPanel>
             )}
+            <TabPanel header={<FormattedMessage id="Client-Credentials" />}>
+              <ClientCredentials data={productData} />
+            </TabPanel>
             <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
               <ProductCustomSpecificationList
                 productId={productData.id}

@@ -57,13 +57,23 @@ export const subscriptionStatus = {
     background: '#eff9f6',
     value: <FormattedMessage id="Active" />,
     color: '#00a675',
-    // icon: <MdPayments />,
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="Inactive" />,
     color: '#d26b4e',
-    // icon: <MdOutlinePayments />,
+  },
+}
+export const expirationStatus = {
+  true: {
+    background: '#eff9f6',
+    value: <FormattedMessage id="Valid" />,
+    color: '#00a675',
+  },
+  false: {
+    background: '#f5e8e4',
+    value: <FormattedMessage id="Expired" />,
+    color: '#d26b4e',
   },
 }
 
