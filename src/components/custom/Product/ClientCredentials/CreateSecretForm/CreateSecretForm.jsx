@@ -220,11 +220,11 @@ const CreateSecretForm = ({
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Header>
           <Modal.Title className="h6">
-            {type !== 'create' || !nextPage ? (
+            {type !== 'regenerate' && !nextPage ? (
               popupLabel
             ) : (
               <>
-                New secret created successfully{' '}
+                Secret generated successfully{' '}
                 <BsCheckCircleFill
                   style={{ color: 'green', marginLeft: '5px' }}
                 />
