@@ -21,6 +21,7 @@ import {
   clientCredentialsInfo,
   clientCredentials,
 } from '../../../../../store/slices/products/productsSlice.js'
+import { BsCheckCircle, BsCheckCircleFill } from 'react-icons/bs'
 const CreateSecretForm = ({
   type,
   setVisible,
@@ -55,7 +56,7 @@ const CreateSecretForm = ({
           const clientSecretRegenerate = await regenerateClientSecret(
             clientRecordId,
             currentId
-          )({ clientSecretRegenerate })
+          )
           setClientSecret(clientSecretRegenerate.data.data)
         } catch (error) {
           console.error('Error regenerating client secret:', error)
@@ -218,7 +219,18 @@ const CreateSecretForm = ({
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Header>
-          <Modal.Title className="h6">{popupLabel}</Modal.Title>
+          <Modal.Title className="h6">
+            {type !== 'create' || !nextPage ? (
+              popupLabel
+            ) : (
+              <>
+                New secret created successfully{' '}
+                <BsCheckCircleFill
+                  style={{ color: 'green', marginLeft: '5px' }}
+                />
+              </>
+            )}
+          </Modal.Title>
           <Button
             variant="close"
             aria-label="Close"
