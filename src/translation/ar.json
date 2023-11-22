@@ -337,5 +337,12 @@
   "Subscription-Upgrade": "ترقية الاشتراك",
   "Subscription-Downgrade-Url": "عنوان رابط تخفيض الاشتراك",
   "info": "معلومات",
-  "Upgrade": "ترقية"
+  "Upgrade": "ترقية",
+  "New-Secret": "سر جديد",
+  "Client-Credentials": "بيانات العميل",
+  "Secret-Title": "عنوان السر",
+  "expiration-date": "تاريخ الانتهاء",
+  "Valid": "صالح",
+  "Expiration": "انتهاء",
+  "Create-New-Secret": "إنشاء سر جديد"
 }

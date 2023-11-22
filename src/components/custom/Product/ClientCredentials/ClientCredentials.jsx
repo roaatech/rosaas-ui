@@ -7,6 +7,8 @@ import {
   faEllipsisH,
   faEdit,
   faTrashAlt,
+  faSyncAlt,
+  faBan,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   ButtonGroup,
@@ -35,6 +37,7 @@ import {
 } from '../../../../store/slices/products/productsSlice'
 import { formatDate } from '../../../../lib/sharedFun/Time'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
+import CreateSecretForm from './CreateSecretForm/CreateSecretForm'
 
 const ClientCredentials = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
@@ -47,12 +50,19 @@ const ClientCredentials = ({ data }) => {
     setCurrentId(id)
     setConfirm(true)
   }
+  const editForm = (id) => {
+    setCurrentId(id)
+    setVisibleEdit(true)
+  }
+  const regenerateClientSecret = (id) => {
+    setCurrentId(id)
+    setVisible(true)
+  }
   const productId = data?.id
-  console.log({ data })
+  const [update, setUpdate] = useState(0)
 
   const isExpirationValid = (expirationDate, created) => {
     const expiration = new Date(expirationDate)
-    console.log(expiration)
 
     const currentDate = new Date()
     if (expiration >= currentDate || expirationDate == null) {
@@ -65,7 +75,6 @@ const ClientCredentials = ({ data }) => {
     }
     ;(async () => {
       const listData = await getClientSecrets(productId, data?.client?.id)
-      console.log(listData?.data.data)
       dispatch(
         clientCredentials({
           id: productId,
@@ -73,8 +82,22 @@ const ClientCredentials = ({ data }) => {
         })
       )
     })()
-  }, [])
+  }, [update])
+  useEffect(() => {
+    ;(async () => {
+      const listData = await getClientSecrets(productId, data?.client?.id)
+      dispatch(
+        clientCredentials({
+          id: productId,
+          data: listData?.data.data,
+        })
+      )
+    })()
+  }, [update])
   const [clientRecordId, setClientRecordId] = useState()
+  const [visible, setVisible] = useState(false)
+  const [visibleEdit, setVisibleEdit] = useState(false)
+
   const handleDeleteSecret = async () => {
     await DeleteClientSecretReq(clientRecordId, currentId)
     dispatch(deleteClientSecret({ productId, id: currentId }))
@@ -125,7 +148,7 @@ const ClientCredentials = ({ data }) => {
               <Dropdown.Menu>
                 <Dropdown.Item
                   onSelect={() => {
-                    // editForm(id)
+                    editForm(id)
                   }}
                 >
                   <FontAwesomeIcon icon={faEdit} className="mx-2" />
@@ -135,8 +158,12 @@ const ClientCredentials = ({ data }) => {
                   onClick={() => deleteConfirm(id)}
                   className="text-danger"
                 >
-                  <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                  <FormattedMessage id="Delete" />
+                  <FontAwesomeIcon icon={faBan} className="mx-2" />
+                  <FormattedMessage id="Revoke" />
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => regenerateClientSecret(id)}>
+                  <FontAwesomeIcon icon={faSyncAlt} className="mx-2" />
+                  <FormattedMessage id="Regenerate-Secret" />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -157,6 +184,8 @@ const ClientCredentials = ({ data }) => {
               component: 'createSecret',
               clientId: client,
               icon: <BsPlusCircleFill />,
+              update,
+              setUpdate,
             },
           ]}
         />
@@ -190,20 +219,18 @@ const ClientCredentials = ({ data }) => {
               </tr>
             </thead>
             <tbody>
-              {data?.clientCredentials?.data &&
-              Object.values(data?.clientCredentials?.data).length
-                ? Object.values(data?.clientCredentials?.data).map(
-                    (t, index) => {
-                      if (t != undefined) {
-                        return <TableRow key={index} {...t} />
-                      }
+              {data?.clientCredentials &&
+              Object.values(data?.clientCredentials).length
+                ? Object.values(data?.clientCredentials).map((t, index) => {
+                    if (t != undefined) {
+                      return <TableRow key={index} {...t} />
                     }
-                  )
+                  })
                 : null}
             </tbody>
           </Table>
           <DeleteConfirmation
-            message={<FormattedMessage id="delete-plan-confirmation-message" />}
+            message="Are you sure you want to revoke this secret?"
             icon="pi pi-exclamation-triangle"
             confirm={confirm}
             setConfirm={setConfirm}
@@ -213,17 +240,34 @@ const ClientCredentials = ({ data }) => {
         </Card.Body>
       </Card>
 
-      {/* <ThemeDialog visible={visible} setVisible={setVisible}>
-          <>
-            <PlanForm
-              popupLabel={<FormattedMessage id={popUpLable} />}
-              type={type}
-              setVisible={setVisible}
-              sideBar={false}
-              planData={type == 'edit' ? list?.plans[currentId] : {}}
-            />
-          </>
-        </ThemeDialog> */}
+      <ThemeDialog visible={visible} setVisible={setVisible}>
+        <>
+          <CreateSecretForm
+            popupLabel={<FormattedMessage id="Regenerate" />}
+            type={'regenerate'}
+            setVisible={setVisible}
+            sideBar={false}
+            clientId={client}
+            currentId={currentId}
+            clientRecordId={clientRecordId}
+          />
+        </>
+      </ThemeDialog>
+      <ThemeDialog visible={visibleEdit} setVisible={setVisibleEdit}>
+        <>
+          <CreateSecretForm
+            popupLabel={<FormattedMessage id="Regenerate" />}
+            type={'Edit'}
+            setVisible={setVisibleEdit}
+            sideBar={false}
+            clientId={client}
+            currentId={currentId}
+            clientRecordId={clientRecordId}
+            update={update}
+            setUpdate={setUpdate}
+          />
+        </>
+      </ThemeDialog>
     </Wrapper>
   )
 }

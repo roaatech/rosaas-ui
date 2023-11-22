@@ -20,11 +20,24 @@ const useClientCredentialsReq = () => {
       `identity/sadmin/v1/ClientCredential/${ClientRecordId}/Secrets/${id}`
     )
   }
+  const editClientSecret = async (ClientRecordId, id, data) => {
+    return await Request.put(
+      `identity/sadmin/v1/ClientCredential/${ClientRecordId}/Secrets/${id}`,
+      data
+    )
+  }
+  const regenerateClientSecret = async (ClientRecordId, id) => {
+    return await Request.post(
+      `identity/sadmin/v1/ClientCredential/${ClientRecordId}/Secrets/${id}/Regenerate`
+    )
+  }
 
   return {
     createClientSecret,
     getClientSecrets,
+    regenerateClientSecret,
     DeleteClientSecret,
+    editClientSecret,
   }
 }
 

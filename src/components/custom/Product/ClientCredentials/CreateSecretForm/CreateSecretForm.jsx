@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
@@ -17,8 +17,22 @@ import {
   faEyeSlash,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons'
-const CreateSecretForm = ({ type, setVisible, popupLabel, clientId }) => {
-  const { createClientSecret } = useRequest()
+import {
+  clientCredentialsInfo,
+  clientCredentials,
+} from '../../../../../store/slices/products/productsSlice.js'
+const CreateSecretForm = ({
+  type,
+  setVisible,
+  popupLabel,
+  clientId,
+  update,
+  setUpdate,
+  currentId,
+  clientRecordId,
+}) => {
+  const { createClientSecret, regenerateClientSecret, editClientSecret } =
+    useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
   const productId = routeParams.id
@@ -34,25 +48,62 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, clientId }) => {
   })
   const [nextPage, setNexPage] = useState(false)
   const [clientSecret, setClientSecret] = useState(false)
+  useEffect(() => {
+    const fetchData = async () => {
+      if (type === 'regenerate') {
+        try {
+          const clientSecretRegenerate = await regenerateClientSecret(
+            clientRecordId,
+            currentId
+          )({ clientSecretRegenerate })
+          setClientSecret(clientSecretRegenerate.data.data)
+        } catch (error) {
+          console.error('Error regenerating client secret:', error)
+        }
+      }
+    }
+
+    fetchData()
+  }, [type])
+
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
+
     onSubmit: async (values, { setSubmitting }) => {
       if (type === 'create') {
-        let createFeature
+        let clientSecret
         if (customExpirationDate) {
-          createFeature = await createClientSecret(productId, id, {
+          clientSecret = await createClientSecret(productId, id, {
             description: values.title,
             expiration: customExpirationDate,
           })
+          setUpdate(update + 1)
         } else {
-          createFeature = await createClientSecret(productId, id, {
+          clientSecret = await createClientSecret(productId, id, {
             description: values.title,
           })
+          setUpdate(update + 1)
         }
-        setClientSecret(createFeature.data.data.secrest)
+        setClientSecret(clientSecret.data.data.secrest)
+        setNexPage(true)
       }
-      setNexPage(true)
+      if (type === 'Edit') {
+        let clientSecret
+        if (customExpirationDate) {
+          clientSecret = await editClientSecret(clientRecordId, currentId, {
+            description: values.title,
+            expiration: customExpirationDate,
+          })
+          setUpdate(update + 1)
+        } else {
+          clientSecret = await editClientSecret(clientRecordId, currentId, {
+            description: values.title,
+          })
+          setUpdate(update + 1)
+        }
+        setVisible(false)
+      }
 
       setSubmitting(false)
     },
@@ -176,8 +227,8 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, clientId }) => {
         </Modal.Header>
 
         <Modal.Body>
-          {nextPage && <ClientIdField />}
-          {!nextPage && (
+          {(nextPage || type === 'regenerate') && <ClientIdField />}
+          {!nextPage && type !== 'regenerate' && (
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Title" />{' '}
@@ -204,7 +255,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, clientId }) => {
             </Form.Group>
           )}
 
-          {!nextPage && (
+          {!nextPage && type !== 'regenerate' && (
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Expiration" />
@@ -222,9 +273,6 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, clientId }) => {
                       selectedValue === 'custom' || selectedValue === 'none'
                         ? ''
                         : calculateExpirationDate(e.target.value)
-                    )
-                    console.log(
-                      selectedValue === 'custom' || selectedValue === 'none'
                     )
                   }}
                 >
@@ -271,7 +319,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, clientId }) => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          {!nextPage && (
+          {!nextPage && type !== 'regenerate' && (
             <Button variant="secondary" type="submit">
               <FormattedMessage id="Submit" />
             </Button>

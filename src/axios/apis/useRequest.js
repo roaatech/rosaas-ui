@@ -47,8 +47,13 @@ const useRequest = () => {
     deleteProductReq,
     getProductWarnings,
   } = useProductReq()
-  const { createClientSecret, getClientSecrets, DeleteClientSecret } =
-    useClientCredentialsReq()
+  const {
+    createClientSecret,
+    getClientSecrets,
+    DeleteClientSecret,
+    regenerateClientSecret,
+    editClientSecret,
+  } = useClientCredentialsReq()
   const {
     getProductPlans,
     createPlanRequest,
@@ -157,6 +162,8 @@ const useRequest = () => {
     createClientSecret,
     getClientSecrets,
     DeleteClientSecret,
+    regenerateClientSecret,
+    editClientSecret,
   }
 }
 export default useRequest

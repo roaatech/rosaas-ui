@@ -332,10 +332,14 @@
   "Product-Warnings": "Product Warnings",
   "Warnings": "Warnings",
   "Subscription-Upgrade": "Subscription Upgrade",
-
+  "expiration-date": "Expiration Date",
   "Subscription-Downgrade-Url": "Subscription Downgrade Url",
-
+  "Secret-Title": "Secret Title",
   "info": "info",
-
-  "Upgrade": "Upgrade"
+  "New-Secret": "New Secret",
+  "Upgrade": "Upgrade",
+  "Valid": "Valid",
+  "Create-New-Secret": "Create New Secret",
+  "Client-Credentials": "Client Credentials",
+  "Expiration": "Expiration"
 }

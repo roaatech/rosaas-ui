@@ -33,21 +33,30 @@ const productInfo = (state, action) => {
 
 const clientCredentials = (state, action) => {
   const currentProducts = JSON.parse(JSON.stringify(current(state.products)))
-  currentProducts[action.payload.id].clientCredentials = { ...action.payload }
+  currentProducts[action.payload.id].clientCredentials = {
+    ...action.payload.data,
+  }
   state.products = currentProducts
 }
-
+const clientCredentialsInfo = (state, action) => {
+  const { id, data } = action.payload
+  const updatedProducts = {
+    ...state.products,
+    [id]: {
+      ...state.products[id],
+      clientCredentials: { ...data },
+    },
+  }
+  return { ...state, products: updatedProducts }
+}
 const deleteClientSecret = (state, action) => {
   const currentProducts = JSON.parse(JSON.stringify(state.products))
 
   const clientCredentials =
     currentProducts[action.payload.productId].clientCredentials.data
-  console.log({ clientCredentials })
-  console.log({ id: action.payload.id })
   const secretIndex = clientCredentials.findIndex(
     (secret) => secret.id === action.payload.id
   )
-  console.log({ secretIndex })
 
   if (secretIndex !== -1) {
     const secretIdToDelete = Object.keys(clientCredentials)[secretIndex]
@@ -59,7 +68,7 @@ const deleteClientSecret = (state, action) => {
 
 const productWarningsStore = (state, action) => {
   const currentProducts = JSON.parse(JSON.stringify(current(state.products)))
-  currentProducts[action.payload.id].warnings = { ...action.payload.data }
+  currentProducts[action.payload.id].warnings = { ...action.payload }
   state.products = currentProducts
 }
 const removeProductWarningsStore = (state, action) => {
@@ -84,4 +93,5 @@ export {
   removeProductWarningsStore,
   clientCredentials,
   deleteClientSecret,
+  clientCredentialsInfo,
 }

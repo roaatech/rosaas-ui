@@ -189,6 +189,8 @@ const DynamicButtons = ({ buttons, disableFormButtons }) => {
           type={'create'}
           setVisible={setVisible}
           clientId={buttons[currentButtonIndex].clientId}
+          update={buttons[currentButtonIndex].update}
+          setUpdate={buttons[currentButtonIndex].setUpdate}
         />
       </>
     ),
