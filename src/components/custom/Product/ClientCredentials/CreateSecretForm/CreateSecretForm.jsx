@@ -21,26 +21,43 @@ import {
   clientCredentialsInfo,
   clientCredentials,
 } from '../../../../../store/slices/products/productsSlice.js'
-import { BsCheckCircle, BsCheckCircleFill } from 'react-icons/bs'
-const CreateSecretForm = ({
-  type,
-  setVisible,
-  popupLabel,
-  clientId,
-  update,
-  setUpdate,
-  currentId,
-  clientRecordId,
-}) => {
-  const { createClientSecret, regenerateClientSecret, editClientSecret } =
-    useRequest()
+import { BsCheckCircleFill } from 'react-icons/bs'
+const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
+  const {
+    createClientSecret,
+    regenerateClientSecret,
+    editClientSecret,
+    getClientId,
+  } = useRequest()
+
   const dispatch = useDispatch()
   const routeParams = useParams()
   const productId = routeParams.id
   const allProducts = useSelector((state) => state.products.products)
-  const id = allProducts[productId]?.client.id
 
-  const initialValues = {}
+  const id = allProducts[productId]?.client.id
+  const secretItem =
+    currentId && allProducts[productId].clientCredentials[currentId]
+  console.log(secretItem)
+  const secretList = allProducts[productId].clientCredentials
+  const firstFieldKey = Object.keys(secretList)[0]
+  const [clientRecordId, setClientRecordId] = useState(
+    secretList?.[firstFieldKey]?.clientRecordId || ''
+  )
+  const [clientId, setClientId] = useState(
+    secretList?.[firstFieldKey]?.clientId || ''
+  )
+  useEffect(() => {
+    if (!secretItem?.expiration) {
+      return
+    }
+    setExpirationType('custom')
+    setCustomExpirationDate(secretItem?.expiration.split('T')[0])
+  }, [secretItem])
+  const [customExpirationDate, setCustomExpirationDate] = useState(new Date())
+  const initialValues = {
+    title: secretItem ? secretItem.description : '',
+  }
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -51,10 +68,25 @@ const CreateSecretForm = ({
   const [clientSecret, setClientSecret] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
+      if (!clientRecordId || !clientId) {
+        try {
+          const clientData = await getClientId(productId, id)
+
+          setClientRecordId(clientData.data.data.clientRecordId)
+          setClientId(clientData.data.data.clientId)
+        } catch (error) {
+          console.error('Error:', error)
+        }
+      }
+    }
+    fetchData()
+  }, [])
+  useEffect(() => {
+    const fetchData = async () => {
       if (type === 'regenerate') {
         try {
           const clientSecretRegenerate = await regenerateClientSecret(
-            clientRecordId,
+            secretItem.clientRecordId,
             currentId
           )
           setClientSecret(clientSecretRegenerate.data.data)
@@ -79,29 +111,93 @@ const CreateSecretForm = ({
             description: values.title,
             expiration: customExpirationDate,
           })
-          setUpdate(update + 1)
+          dispatch(
+            clientCredentials({
+              id: productId,
+              data: {
+                ...secretList,
+                ...[
+                  {
+                    id: clientSecret.data.data.id,
+                    description: values.title,
+                    expiration: customExpirationDate,
+                    clientRecordId,
+                    clientId,
+                    created: new Date().toISOString().slice(0, 19),
+                  },
+                ],
+              },
+            })
+          )
         } else {
           clientSecret = await createClientSecret(productId, id, {
             description: values.title,
           })
-          setUpdate(update + 1)
+          dispatch(
+            clientCredentials({
+              id: productId,
+              data: {
+                ...secretList,
+                ...[
+                  {
+                    id: clientSecret.data.data.id,
+                    description: values.title,
+                    expiration: customExpirationDate,
+                    clientId,
+                    clientRecordId,
+                    created: new Date().now().toISOString().slice(0, 19),
+                  },
+                ],
+              },
+            })
+          )
         }
         setClientSecret(clientSecret.data.data.secrest)
         setNexPage(true)
       }
-      if (type === 'Edit') {
+      if (type === 'edit') {
         let clientSecret
         if (customExpirationDate) {
-          clientSecret = await editClientSecret(clientRecordId, currentId, {
-            description: values.title,
-            expiration: customExpirationDate,
-          })
-          setUpdate(update + 1)
+          clientSecret = await editClientSecret(
+            secretItem.clientRecordId,
+            currentId,
+            {
+              description: values.title,
+              expiration: customExpirationDate,
+            }
+          )
+
+          dispatch(
+            clientCredentialsInfo({
+              itemId: currentId,
+              productId,
+              data: {
+                ...secretItem,
+                description: values.title,
+                expiration: customExpirationDate,
+              },
+            })
+          )
         } else {
-          clientSecret = await editClientSecret(clientRecordId, currentId, {
-            description: values.title,
-          })
-          setUpdate(update + 1)
+          clientSecret = await editClientSecret(
+            secretItem.clientRecordId,
+            currentId,
+            {
+              description: values.title,
+            }
+          )
+
+          dispatch(
+            clientCredentialsInfo({
+              itemId: currentId,
+              productId,
+              data: {
+                ...secretItem,
+                description: values.title,
+                expiration: customExpirationDate,
+              },
+            })
+          )
         }
         setVisible(false)
       }
@@ -120,7 +216,7 @@ const CreateSecretForm = ({
     navigator.clipboard.writeText(value)
   }
   const [expirationType, setExpirationType] = useState('')
-  const [customExpirationDate, setCustomExpirationDate] = useState(new Date())
+  console.log({ expirationType })
 
   const calculateExpirationDate = (data) => {
     const currentDate = new Date()
@@ -316,7 +412,9 @@ const CreateSecretForm = ({
                     id="expiration"
                     name="expiration"
                     value={
-                      expirationType !== 'none' ? calculateExpirationDate() : ''
+                      expirationType && expirationType !== 'none'
+                        ? calculateExpirationDate()
+                        : ''
                     }
                     onChange={(e) => {
                       setExpirationType('custom')

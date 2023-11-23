@@ -14,6 +14,11 @@ const useClientCredentialsReq = () => {
       `identity/sadmin/v1/ClientCredential/Secrets/${id}/${productId}`
     )
   }
+  const getClientId = async (productId, id) => {
+    return await Request.get(
+      `identity/sadmin/v1/ClientCredential/${id}/${productId}`
+    )
+  }
 
   const DeleteClientSecret = async (ClientRecordId, id) => {
     return await Request.delete(
@@ -38,6 +43,7 @@ const useClientCredentialsReq = () => {
     regenerateClientSecret,
     DeleteClientSecret,
     editClientSecret,
+    getClientId,
   }
 }
 

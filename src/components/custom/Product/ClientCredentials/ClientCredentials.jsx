@@ -42,6 +42,8 @@ import CreateSecretForm from './CreateSecretForm/CreateSecretForm'
 const ClientCredentials = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
+  const [type, setType] = useState('')
+
   const { getClientSecrets, DeleteClientSecret: DeleteClientSecretReq } =
     useRequest()
   const dispatch = useDispatch()
@@ -51,10 +53,12 @@ const ClientCredentials = ({ data }) => {
     setConfirm(true)
   }
   const editForm = (id) => {
+    setType('edit')
     setCurrentId(id)
-    setVisibleEdit(true)
+    setVisible(true)
   }
   const regenerateClientSecret = (id) => {
+    setType('regenerate')
     setCurrentId(id)
     setVisible(true)
   }
@@ -62,7 +66,7 @@ const ClientCredentials = ({ data }) => {
   const [update, setUpdate] = useState(0)
 
   const isExpirationValid = (expirationDate, created) => {
-    const expiration = new Date(expirationDate)
+    const expiration = expirationDate && new Date(expirationDate)
 
     const currentDate = new Date()
     if (expiration >= currentDate || expirationDate == null) {
@@ -100,12 +104,14 @@ const ClientCredentials = ({ data }) => {
 
   const handleDeleteSecret = async () => {
     await DeleteClientSecretReq(clientRecordId, currentId)
-    dispatch(deleteClientSecret({ productId, id: currentId }))
+    dispatch(deleteClientSecret({ productId, itemId: currentId }))
   }
   const [client, setClient] = useState()
   const TableRow = (props) => {
     const { clientId, description, id, created, clientRecordId, expiration } =
       props
+    const createdDate = new Date(created)
+    const expirationDate = new Date(expiration)
     setClient(clientId)
     setClientRecordId(clientRecordId)
 
@@ -126,11 +132,13 @@ const ClientCredentials = ({ data }) => {
             </span>
           </td>
           <td>
-            <span className="fw-normal">{created && formatDate(created)}</span>
+            <span className="fw-normal">
+              {createdDate && formatDate(createdDate)}
+            </span>
           </td>
           <td>
             <span className="fw-normal">
-              {expiration && formatDate(expiration)}
+              {expirationDate && formatDate(expirationDate)}
             </span>
           </td>
           <td>
@@ -243,28 +251,17 @@ const ClientCredentials = ({ data }) => {
       <ThemeDialog visible={visible} setVisible={setVisible}>
         <>
           <CreateSecretForm
-            popupLabel={<FormattedMessage id="Regenerate" />}
-            type={'regenerate'}
+            popupLabel={
+              type == 'edit' ? (
+                <FormattedMessage id="Edit" />
+              ) : (
+                <FormattedMessage id="Regenerate" />
+              )
+            }
+            type={type}
             setVisible={setVisible}
-            sideBar={false}
             clientId={client}
             currentId={currentId}
-            clientRecordId={clientRecordId}
-          />
-        </>
-      </ThemeDialog>
-      <ThemeDialog visible={visibleEdit} setVisible={setVisibleEdit}>
-        <>
-          <CreateSecretForm
-            popupLabel={<FormattedMessage id="Regenerate" />}
-            type={'Edit'}
-            setVisible={setVisibleEdit}
-            sideBar={false}
-            clientId={client}
-            currentId={currentId}
-            clientRecordId={clientRecordId}
-            update={update}
-            setUpdate={setUpdate}
           />
         </>
       </ThemeDialog>

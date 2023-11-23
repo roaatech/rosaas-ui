@@ -53,6 +53,7 @@ const useRequest = () => {
     DeleteClientSecret,
     regenerateClientSecret,
     editClientSecret,
+    getClientId,
   } = useClientCredentialsReq()
   const {
     getProductPlans,
@@ -164,6 +165,7 @@ const useRequest = () => {
     DeleteClientSecret,
     regenerateClientSecret,
     editClientSecret,
+    getClientId,
   }
 }
 export default useRequest
