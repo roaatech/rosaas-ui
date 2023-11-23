@@ -39,28 +39,44 @@ const clientCredentials = (state, action) => {
   state.products = currentProducts
 }
 const clientCredentialsInfo = (state, action) => {
-  const { id, data } = action.payload
-  const updatedProducts = {
-    ...state.products,
-    [id]: {
-      ...state.products[id],
-      clientCredentials: { ...data },
-    },
+  const currentProducts = JSON.parse(JSON.stringify(state.products))
+
+  const clientCredentials =
+    currentProducts[action.payload.productId].clientCredentials
+
+  if (clientCredentials && typeof clientCredentials === 'object') {
+    const secretIndex = Object.keys(clientCredentials).findIndex(
+      (key) => clientCredentials[key].id === action.payload.id
+    )
+
+    if (secretIndex !== -1) {
+      const secretKeyToUpdate = Object.keys(clientCredentials)[secretIndex]
+
+      clientCredentials[secretKeyToUpdate] = {
+        ...clientCredentials[secretKeyToUpdate],
+        data: action.payload.data,
+      }
+    }
   }
-  return { ...state, products: updatedProducts }
+
+  state.products = currentProducts
 }
 const deleteClientSecret = (state, action) => {
   const currentProducts = JSON.parse(JSON.stringify(state.products))
 
   const clientCredentials =
-    currentProducts[action.payload.productId].clientCredentials.data
-  const secretIndex = clientCredentials.findIndex(
-    (secret) => secret.id === action.payload.id
-  )
+    currentProducts[action.payload.productId].clientCredentials
 
-  if (secretIndex !== -1) {
-    const secretIdToDelete = Object.keys(clientCredentials)[secretIndex]
-    clientCredentials[secretIdToDelete] = undefined
+  if (clientCredentials && typeof clientCredentials === 'object') {
+    const secretIndex = Object.keys(clientCredentials).findIndex(
+      (key) => clientCredentials[key].id === action.payload.id
+    )
+
+    if (secretIndex !== -1) {
+      const secretIdToDelete = Object.keys(clientCredentials)[secretIndex]
+
+      delete clientCredentials[secretIdToDelete]
+    }
   }
 
   state.products = currentProducts
