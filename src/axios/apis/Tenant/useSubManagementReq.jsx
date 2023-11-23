@@ -7,6 +7,17 @@ const useSubManagementReq = () => {
       `management/sadmin/v1/products/${productId}/Tenants/${tenantId}`
     )
   }
+  const subscriptionFeturesList = async (subscriptionId) => {
+    return await Request.get(
+      `management/sadmin/v1/Subscriptions/${subscriptionId}/Features`
+    )
+  }
+  const subscriptionCycleById = async (subscriptionId, cycleId) => {
+    return await Request.get(
+      `management/sadmin/v1/Subscriptions/${subscriptionId}/Cycles/${cycleId}`
+    )
+  }
+
   const subscriptionDetailsRenew = async (productId, tenantId, data) => {
     return await Request.post(
       `management/sadmin/v1/products/${productId}/Tenants/${tenantId}/Renew`,
@@ -56,6 +67,8 @@ const useSubManagementReq = () => {
     cancelAutoRenewal,
     upgradeSubscription,
     downgradeSubscription,
+    subscriptionFeturesList,
+    subscriptionCycleById,
   }
 }
 export default useSubManagementReq

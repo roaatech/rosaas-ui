@@ -52,18 +52,18 @@ export const PublishStatus = {
     icon: <MdOutlineUnpublished />,
   },
 }
-export const PaymentStatus = {
+export const subscriptionStatus = {
   true: {
     background: '#eff9f6',
-    value: <FormattedMessage id="Paid" />,
+    value: <FormattedMessage id="Active" />,
     color: '#00a675',
-    icon: <MdPayments />,
+    // icon: <MdPayments />,
   },
   false: {
     background: '#f5e8e4',
-    value: <FormattedMessage id="Unpaid" />,
+    value: <FormattedMessage id="Inactive" />,
     color: '#d26b4e',
-    icon: <MdOutlinePayments />,
+    // icon: <MdOutlinePayments />,
   },
 }
 

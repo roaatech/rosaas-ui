@@ -9,6 +9,7 @@ import signIn from './pages/signIn/signIn'
 import HealthCheckSettings from './pages/Settings/HealthCheckSettings/HealthCheckSettings'
 import SubscriptionsSettings from './pages/Settings/SubscriptionsSettings/SubscriptionsSettings'
 import SubscriptionManagement from './pages/SubscriptionManagement/SubscriptionManagement'
+import ProductWarningsSettings from './pages/Settings/ProductWarningsSettings/ProductWarningsSettings'
 export const Routes = {
   Dashboard: {
     path: '/Dashboard',
@@ -49,6 +50,11 @@ export const Routes = {
   SubscriptionsSettings: {
     path: '/settings/subscriptions',
     component: SubscriptionsSettings,
+    roles: ['superAdmin'],
+  },
+  ProductWarningsSettings: {
+    path: '/settings/product-warnings',
+    component: ProductWarningsSettings,
     roles: ['superAdmin'],
   },
   Signin: {

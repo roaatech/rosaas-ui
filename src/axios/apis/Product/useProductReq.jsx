@@ -15,6 +15,9 @@ const useTenantReq = () => {
   const getProduct = async (id) => {
     return await Request.get(`management/sadmin/v1/Products/${id}`)
   }
+  const getProductWarnings = async (id) => {
+    return await Request.get(`management/sadmin/v1/Products/${id}/Warnings`)
+  }
   const getProductList = async (params) => {
     return await Request.get(`management/sadmin/v1/Products${params}`)
   }
@@ -28,6 +31,7 @@ const useTenantReq = () => {
     getProduct,
     getProductList,
     deleteProductReq,
+    getProductWarnings,
   }
 }
 

@@ -13,6 +13,13 @@ export const breadcrumbConst = {
     active: 'Settings',
     icon: {},
   },
+  ProductWarningsSettings: {
+    title: 'Settings',
+    name: 'Product-Warnings',
+    navigation: '/settings/Product-Warnings',
+    active: 'Settings',
+    icon: {},
+  },
   Dashboard: {
     title: 'Dashboard',
     navigation: '/',

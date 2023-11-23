@@ -342,7 +342,10 @@ export default function ProductFeaturePlan({ children }) {
             <Table hover className="user-table align-items-center">
               <thead>
                 <tr>
-                  <th className="border-bottom  table-title-cell"> Features / Plans</th>
+                  <th className="border-bottom  table-title-cell">
+                    {' '}
+                    Features / Plans
+                  </th>
                   {planList &&
                     Object.keys(planList)?.map((item, index) => (
                       <th

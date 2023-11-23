@@ -37,6 +37,12 @@ const ProductForm = ({
     defaultHealthCheckUrl: productData ? productData.defaultHealthCheckUrl : '',
     healthStatusChangeUrl: productData ? productData.healthStatusChangeUrl : '',
     subscriptionResetUrl: productData ? productData.subscriptionResetUrl : '',
+    subscriptionDowngradeUrl: productData
+      ? productData.subscriptionDowngradeUrl
+      : '',
+    subscriptionUpgradeUrl: productData
+      ? productData.subscriptionUpgradeUrl
+      : '',
     creationEndpoint: productData ? productData.creationEndpoint : '',
     activationEndpoint: productData ? productData.activationEndpoint : '',
     deactivationEndpoint: productData ? productData.deactivationEndpoint : '',
@@ -66,6 +72,9 @@ const ProductForm = ({
     //   /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
     //   <FormattedMessage id="Please-enter-a-valid-value" />
     // )
+
+    subscriptionDowngradeUrl: Yup.string(),
+    subscriptionUpgradeUrl: Yup.string(),
   })
 
   const formik = useFormik({
@@ -80,6 +89,8 @@ const ProductForm = ({
           defaultHealthCheckUrl: values.defaultHealthCheckUrl,
           healthStatusChangeUrl: values.healthStatusChangeUrl,
           subscriptionResetUrl: values.subscriptionResetUrl,
+          subscriptionUpgradeUrl: values.subscriptionUpgradeUrl,
+          subscriptionDowngradeUrl: values.subscriptionDowngradeUrl,
           creationEndpoint: values.creationEndpoint,
           activationEndpoint: values.activationEndpoint,
           deactivationEndpoint: values.deactivationEndpoint,
@@ -98,7 +109,8 @@ const ProductForm = ({
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
             healthStatusChangeUrl: values.healthStatusChangeUrl,
             subscriptionResetUrl: values.subscriptionResetUrl,
-
+            subscriptionUpgradeUrl: values.subscriptionUpgradeUrl,
+            subscriptionDowngradeUrl: values.subscriptionDowngradeUrl,
             creationEndpoint: values.creationEndpoint,
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
@@ -116,7 +128,8 @@ const ProductForm = ({
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
             healthStatusChangeUrl: values.healthStatusChangeUrl,
             subscriptionResetUrl: values.subscriptionResetUrl,
-
+            subscriptionUpgradeUrl: values.subscriptionUpgradeUrl,
+            subscriptionDowngradeUrl: values.subscriptionDowngradeUrl,
             creationEndpoint: values.creationEndpoint,
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
@@ -271,7 +284,6 @@ const ProductForm = ({
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Subscription-Reset-Url" />
-                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -289,6 +301,56 @@ const ProductForm = ({
                     style={{ display: 'block' }}
                   >
                     {formik.errors.subscriptionResetUrl}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Subscription-Upgrade-Url" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="subscriptionUpgradeUrl"
+                name="subscriptionUpgradeUrl"
+                onChange={formik.handleChange}
+                value={formik.values.subscriptionUpgradeUrl}
+              />
+
+              {formik.touched.subscriptionUpgradeUrl &&
+                formik.errors.subscriptionUpgradeUrl && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.subscriptionUpgradeUrl}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Subscription-Downgrade-Url" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="subscriptionDowngradeUrl"
+                name="subscriptionDowngradeUrl"
+                onChange={formik.handleChange}
+                value={formik.values.subscriptionDowngradeUrl}
+              />
+
+              {formik.touched.subscriptionDowngradeUrl &&
+                formik.errors.subscriptionDowngradeUrl && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.subscriptionDowngradeUrl}
                   </Form.Control.Feedback>
                 )}
             </Form.Group>

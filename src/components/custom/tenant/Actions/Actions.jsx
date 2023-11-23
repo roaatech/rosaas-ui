@@ -28,11 +28,12 @@ const useActions = () => {
       }
       actions &&
         actions.map((item) => {
+          const actionIcon = statusConst[item.status].icon || 'pi-star'
           let button = {
             type: 'action',
             func: () => statusConfirm(item.status),
             label: item.name,
-            icon: <i className={'pi ' + statusConst[item.status].icon}></i>,
+            icon: <i className={'pi ' + actionIcon}></i>,
             order: 4,
           }
           actionArray = [...actionArray, button]

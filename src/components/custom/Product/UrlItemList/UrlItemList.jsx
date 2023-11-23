@@ -33,6 +33,20 @@ const UrlItemList = ({ data }) => {
       },
       {
         method: 'POST',
+        path: data.subscriptionUpgradeUrl,
+        title: <FormattedMessage id="Subscription-Upgrade" />,
+        description: <FormattedMessage id="Subscription-Upgrade-Description" />,
+      },
+      {
+        method: 'POST',
+        path: data.subscriptionDowngradeUrl,
+        title: <FormattedMessage id="Subscription-Downgrade-Url" />,
+        description: (
+          <FormattedMessage id="Subscription-Downgrade-Url-Description" />
+        ),
+      },
+      {
+        method: 'POST',
         path: data.creationEndpoint,
         title: <FormattedMessage id="Creation-Url" />,
         description: <FormattedMessage id="Creation-Url-description" />,

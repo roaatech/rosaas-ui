@@ -25,7 +25,7 @@ import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputC
 import { statusConst } from '../../../../const'
 import { MdFactCheck } from 'react-icons/md'
 import { subscriptionData } from '../../../../store/slices/tenants'
-import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
+import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import { fetchSubscriptionDetails } from '../SubscriptionManagement/fetchSubscriptionDetails/fetchSubscriptionDetails'
 export default function ChildTable({
@@ -199,7 +199,7 @@ export default function ChildTable({
         <div className="content-details">
           <Table
             responsive
-            className="table-centered table-nowrap rounded mb-0"
+            className="table-centered table-nowrap rounded mb-0 accordions "
           >
             <tbody>
               <tr>
@@ -248,22 +248,20 @@ export default function ChildTable({
                   <td>{spec.value}</td>
                 </tr>
               ))}
-              {subscriptionDatas?.startDate && (
+              {productData?.startDate && (
                 <tr>
                   <td className="firstTd fw-bold">
                     <FormattedMessage id="Subscription-Info" />
                   </td>
                   <td>
                     <span>
-                      <DateLabelWhite text={subscriptionDatas.planName} />
+                      <DataLabelWhite text={productData.plan.name} />
                     </span>
                     {'   '}
                     <FormattedMessage id="From" />{' '}
-                    <DateLabelWhite
-                      text={formatDate(subscriptionDatas.startDate)}
-                    />{' '}
+                    <DataLabelWhite text={formatDate(productData.startDate)} />{' '}
                     <FormattedMessage id="to" />{' '}
-                    <DateLabel endDate={subscriptionDatas.endDate} />
+                    <DateLabel endDate={productData.endDate} />
                   </td>
                 </tr>
               )}

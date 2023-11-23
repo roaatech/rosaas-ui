@@ -34,6 +34,8 @@ const useRequest = () => {
     cancelAutoRenewal,
     upgradeSubscription,
     downgradeSubscription,
+    subscriptionFeturesList,
+    subscriptionCycleById,
   } = useSubManagementReq()
 
   const {
@@ -42,6 +44,7 @@ const useRequest = () => {
     getProduct,
     getProductList,
     deleteProductReq,
+    getProductWarnings,
   } = useProductReq()
 
   const {
@@ -86,6 +89,8 @@ const useRequest = () => {
     putHeathCheckSettings,
     getSubscriptionsSettings,
     putSubscriptionsSettings,
+    getProductWarningsSettings,
+    putProductWarningsSettings,
   } = useSettingsReq()
 
   return {
@@ -142,6 +147,11 @@ const useRequest = () => {
     cancelAutoRenewal,
     upgradeSubscription,
     downgradeSubscription,
+    subscriptionFeturesList,
+    subscriptionCycleById,
+    getProductWarningsSettings,
+    putProductWarningsSettings,
+    getProductWarnings,
   }
 }
 export default useRequest

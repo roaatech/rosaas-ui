@@ -2,7 +2,10 @@ import { current } from '@reduxjs/toolkit'
 const setAllFeatures = (state, action) => {
   const allProduct = JSON.parse(JSON.stringify(current(state.products)))
   const allFeatures = {}
-  action.payload.data.map((item) => {
+  const sortedFeatures = action.payload.data.sort(
+    (a, b) => a.displayOrder - b.displayOrder
+  )
+  sortedFeatures.map((item) => {
     allFeatures[item.id] = item
   })
   allProduct[action.payload.productId].features = allFeatures
@@ -15,6 +18,7 @@ const FeatureInfo = (state, action) => {
   if (!currentProducts[productId].features) {
     currentProducts[productId].features = {}
   }
+
   if (currentProducts[productId].features[featureId]) {
     currentProducts[productId].features[featureId] = data
     delete currentProducts[productId].featurePlan
@@ -24,6 +28,14 @@ const FeatureInfo = (state, action) => {
       ...currentProducts[productId].features,
     }
   }
+  const sortedFeatures = Object.values(
+    currentProducts[productId].features
+  ).sort((a, b) => a.displayOrder - b.displayOrder)
+  const allFeatures = {}
+  sortedFeatures.forEach((feature) => {
+    allFeatures[feature.id] = feature
+  })
+  currentProducts[productId].features = allFeatures
   state.products = currentProducts
 }
 
