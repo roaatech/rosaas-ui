@@ -341,5 +341,19 @@
   "Valid": "Valid",
   "Create-New-Secret": "Create New Secret",
   "Client-Credentials": "Client Credentials",
-  "Expiration": "Expiration"
+  "Expiration": "Expiration",
+  "Revoke": "Revoke",
+  "Regenerate-Secret": "Regenerate Secret",
+  "Client-ID": "Client ID",
+  "Client-Secret": "Client Secret",
+  "Secret-generated-successfully": "Secret generated successfully",
+  "One-Day": "One Day",
+  "Three-Day": "Three Day",
+  "warning-messege-secret-copy": "make sure you copy the Client Secret now. We don't store it and you will not be able to see it again.",
+  "Warning": "Warning",
+  "Expired": "Expired",
+  "Subscription-Was-Set-As-Unpaid-For-Non-Renewal": "Subscription Was Set As Unpaid For Non-Renewal",
+  "Subscription-Upgraded-Requested": "Subscription Upgrade Requested",
+  "Subscription-Downgraded-Requested": "Subscription Downgrade Requested",
+  "Subscription-Upgrade-Url": "Subscription Upgrade URL"
 }

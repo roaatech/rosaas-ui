@@ -81,6 +81,8 @@ export const cycle = {
   2: 'Week',
   3: 'Month',
   4: 'Year',
+  5: 'One-Day',
+  6: 'Three-Day',
 }
 
 export const urlIsOverridden = {

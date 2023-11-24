@@ -52,10 +52,17 @@ const ProductForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
-    ),
-    displayName: Yup.string(),
+    displayName: Yup.string()
+      .required(<FormattedMessage id="This-field-is-required" />)
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+    name: Yup.string()
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
+      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .matches(
+        /^[a-zA-Z0-9_-]+$/,
+        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+      ),
+
     defaultHealthCheckUrl: Yup.string(),
     healthStatusChangeUrl: Yup.string(),
     subscriptionResetUrl: Yup.string(),

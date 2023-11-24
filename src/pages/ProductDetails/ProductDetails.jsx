@@ -50,7 +50,7 @@ const ProductDetails = () => {
   useEffect(() => {
     setActiveIndex(activeTab.details)
   }, [routeParams.id])
-  const { getProduct, deleteProductReq, getProductWarnings } = useRequest()
+  const { getProduct, deleteProductReq } = useRequest()
 
   useEffect(() => {
     ;(async () => {
@@ -64,43 +64,6 @@ const ProductDetails = () => {
     dispatch(removeProductStore(routeParams?.id))
   }
   let [errorNums, setErrorNums] = useState(0)
-  useEffect(() => {
-    ;(async () => {
-      if (warningsList || !productData?.id) {
-        return
-      }
-      const warningsData = await getProductWarnings(productData?.id)
-      dispatch(
-        productWarningsStore({
-          id: productData.id,
-          data: warningsData.data.data,
-        })
-      )
-    })()
-  }, [productData?.id])
-
-  const warningsList = useSelector(
-    (state) => state.products.products[productData?.id]?.warnings?.data
-  )
-
-  useEffect(() => {
-    let dengerNum = 0
-    warningsList &&
-      warningsList.map((warning, index) => {
-        const { property, isValid, setting } = warning
-        const type = setting.type
-
-        const warningVariant =
-          isValid === true
-            ? WarningVariant[1]
-            : WarningVariant[type] || WarningVariant[4]
-
-        if (warningVariant === 'danger') {
-          dengerNum++
-        }
-      })
-    setErrorNums(dengerNum)
-  }, [warningsList, productData?.id])
 
   return (
     <Wrapper>
@@ -242,18 +205,16 @@ const ProductDetails = () => {
               header={
                 <div>
                   <FormattedMessage id="Warnings" />
-                  {errorNums > 0 && (
-                    <span className="error-badge">{errorNums}</span>
+                  {productData?.warningsNum > 0 && (
+                    <span className="error-badge">
+                      {productData?.warningsNum}
+                    </span>
                   )}
                 </div>
               }
-              className={errorNums > 0 && 'warnings'}
+              className={productData?.warningsNum > 0 && 'warnings'}
             >
-              <ProductWarnings
-                errorNum={errorNums}
-                setErrorNum={setErrorNums}
-                productId={productData.id}
-              />
+              <ProductWarnings productId={productData.id} />
             </TabPanel>
           </TabView>
         </div>

@@ -38,7 +38,6 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
   const id = allProducts[productId]?.client.id
   const secretItem =
     currentId && allProducts[productId].clientCredentials[currentId]
-  console.log(secretItem)
   const secretList = allProducts[productId].clientCredentials
   const firstFieldKey = Object.keys(secretList)[0]
   const [clientRecordId, setClientRecordId] = useState(
@@ -84,6 +83,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
   useEffect(() => {
     const fetchData = async () => {
       if (type === 'regenerate') {
+        setNexPage(true)
         try {
           const clientSecretRegenerate = await regenerateClientSecret(
             secretItem.clientRecordId,
@@ -216,7 +216,6 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
     navigator.clipboard.writeText(value)
   }
   const [expirationType, setExpirationType] = useState('')
-  console.log({ expirationType })
 
   const calculateExpirationDate = (data) => {
     const currentDate = new Date()
@@ -250,9 +249,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
           <strong>
             <FormattedMessage id={'Warning'} /> -
           </strong>{' '}
-          {
-            "make sure you copy the Client Secret now. We don't store it and you will not be able to see it again."
-          }
+          {<FormattedMessage id="warning-messege-secret-copy" />}
         </Alert>
         <Form.Group className="mb-3">
           <Form.Label>
@@ -316,11 +313,11 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Header>
           <Modal.Title className="h6">
-            {type !== 'regenerate' && !nextPage ? (
+            {!nextPage ? (
               popupLabel
             ) : (
               <>
-                Secret generated successfully{' '}
+                <FormattedMessage id="Secret-generated-successfully" />{' '}
                 <BsCheckCircleFill
                   style={{ color: 'green', marginLeft: '5px' }}
                 />
@@ -335,8 +332,8 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
         </Modal.Header>
 
         <Modal.Body>
-          {(nextPage || type === 'regenerate') && <ClientIdField />}
-          {!nextPage && type !== 'regenerate' && (
+          {nextPage && <ClientIdField />}
+          {!nextPage && (
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Title" />{' '}
@@ -363,7 +360,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
             </Form.Group>
           )}
 
-          {!nextPage && type !== 'regenerate' && (
+          {!nextPage && (
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Expiration" />
@@ -429,7 +426,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          {!nextPage && type !== 'regenerate' && (
+          {!nextPage && (
             <Button variant="secondary" type="submit">
               <FormattedMessage id="Submit" />
             </Button>
