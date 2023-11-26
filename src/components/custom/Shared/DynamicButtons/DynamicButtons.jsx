@@ -19,6 +19,7 @@ import PlanPriceForm from '../../Product/ProductPlansPrice/PlanPriceForm/PlanPri
 import CustomSpecificationForm from '../../Product/CustomSpecification/CustomSpecificationForm/CustomSpecificationForm'
 import TenantSpecificationForm from '../../tenant/TenantSpecificatifonForm/TenantSpecificationForm'
 import UpDowngradeForm from '../../tenant/SubscriptionManagement/UpgradeForm/UpDowngradeForm'
+import CreateSecretForm from '../../Product/ClientCredentials/CreateSecretForm/CreateSecretForm'
 
 const DynamicButtons = ({ buttons, disableFormButtons }) => {
   const { getTenant } = useRequest()
@@ -178,6 +179,18 @@ const DynamicButtons = ({ buttons, disableFormButtons }) => {
           setVisible={setVisible}
           sideBar={false}
           setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+        />
+      </>
+    ),
+    createSecret: () => (
+      <>
+        <CreateSecretForm
+          popupLabel={<FormattedMessage id="Create-New-Secret" />}
+          type={'create'}
+          setVisible={setVisible}
+          clientId={buttons[currentButtonIndex].clientId}
+          update={buttons[currentButtonIndex].update}
+          setUpdate={buttons[currentButtonIndex].setUpdate}
         />
       </>
     ),

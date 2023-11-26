@@ -22,7 +22,6 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
   const [first, setFirst] = useState(0)
   const [rows, setRows] = useState(10)
   let direction = useSelector((state) => state.main.direction)
-  const [showNotes, setShowNotes] = useState(false)
 
   const timeLine =
     tenantsData[routeParams.id].subscriptions[productIndex].history

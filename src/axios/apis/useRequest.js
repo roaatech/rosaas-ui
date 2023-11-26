@@ -11,6 +11,7 @@ import usePlanFeatureReq from './Product/planFeature/usePlanFeatureReq'
 import useSettingsReq from './Setting/useSettingReq'
 import useSpecificationReq from './Product/specification/useSpecificationReq'
 import useSubManagementReq from './Tenant/useSubManagementReq'
+import useClientCredentialsReq from './Product/ClientCredentials/useClientCredentialsReq'
 
 const useRequest = () => {
   const { signIn, userData, logOut } = useUserReq()
@@ -46,7 +47,14 @@ const useRequest = () => {
     deleteProductReq,
     getProductWarnings,
   } = useProductReq()
-
+  const {
+    createClientSecret,
+    getClientSecrets,
+    DeleteClientSecret,
+    regenerateClientSecret,
+    editClientSecret,
+    getClientId,
+  } = useClientCredentialsReq()
   const {
     getProductPlans,
     createPlanRequest,
@@ -152,6 +160,12 @@ const useRequest = () => {
     getProductWarningsSettings,
     putProductWarningsSettings,
     getProductWarnings,
+    createClientSecret,
+    getClientSecrets,
+    DeleteClientSecret,
+    regenerateClientSecret,
+    editClientSecret,
+    getClientId,
   }
 }
 export default useRequest

@@ -332,10 +332,28 @@
   "Product-Warnings": "Product Warnings",
   "Warnings": "Warnings",
   "Subscription-Upgrade": "Subscription Upgrade",
-
+  "expiration-date": "Expiration Date",
   "Subscription-Downgrade-Url": "Subscription Downgrade Url",
-
+  "Secret-Title": "Secret Title",
   "info": "info",
-
-  "Upgrade": "Upgrade"
+  "New-Secret": "New Secret",
+  "Upgrade": "Upgrade",
+  "Valid": "Valid",
+  "Create-New-Secret": "Create New Secret",
+  "Client-Credentials": "Client Credentials",
+  "Expiration": "Expiration",
+  "Revoke": "Revoke",
+  "Regenerate-Secret": "Regenerate Secret",
+  "Client-ID": "Client ID",
+  "Client-Secret": "Client Secret",
+  "Secret-generated-successfully": "Secret generated successfully",
+  "One-Day": "One Day",
+  "Three-Day": "Three Day",
+  "warning-messege-secret-copy": "make sure you copy the Client Secret now. We don't store it and you will not be able to see it again.",
+  "Warning": "Warning",
+  "Expired": "Expired",
+  "Subscription-Was-Set-As-Unpaid-For-Non-Renewal": "Subscription Was Set As Unpaid For Non-Renewal",
+  "Subscription-Upgraded-Requested": "Subscription Upgrade Requested",
+  "Subscription-Downgraded-Requested": "Subscription Downgrade Requested",
+  "Subscription-Upgrade-Url": "Subscription Upgrade URL"
 }

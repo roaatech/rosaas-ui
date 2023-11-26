@@ -31,7 +31,6 @@ export const productsSlice = createSlice({
   },
 })
 
-// Action creators are generated for each case reducer function
 export const {
   setAllSpecifications,
   specificationInfo,
@@ -60,5 +59,8 @@ export const {
   PlansPublished,
   productWarningsStore,
   removeProductWarningsStore,
+  clientCredentials,
+  deleteClientSecret,
+  clientCredentialsInfo,
 } = productsSlice.actions
 export default productsSlice.reducer

@@ -83,7 +83,7 @@ export default function SubsFeaturesHistory(data) {
               <Nav
                 fill
                 variant="pills"
-                className={`  flex-column vertical-tab custom-nav-link mb-3 mr-1 ${
+                className={`  flex-column vertical-tab custom-nav-link mb-3 mr-0 ${
                   window.innerWidth <= 768 ? 'custom-horizontal-tab' : ''
                 }`}
               >

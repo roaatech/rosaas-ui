@@ -18,6 +18,7 @@ import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './ProductForm.styled.jsx'
 import { generateApiKey } from '../../../../lib/sharedFun/common.js'
 import { useNavigate } from 'react-router-dom'
+import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 
 const ProductForm = ({
   type,
@@ -32,6 +33,7 @@ const ProductForm = ({
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const initialValues = {
+    displayName: productData ? productData.displayName : '',
     name: productData ? productData.name : '',
     apiKey: productData ? productData.apiKey : '',
     defaultHealthCheckUrl: productData ? productData.defaultHealthCheckUrl : '',
@@ -50,29 +52,20 @@ const ProductForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
-    ),
-    defaultHealthCheckUrl: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
-    ),
-    // .matches(
-    //   /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-    //   <FormattedMessage id="Please-enter-a-valid-value" />
-    // )
-    healthStatusChangeUrl: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
-    ),
-    // .matches(
-    //   /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-    //   <FormattedMessage id="Please-enter-a-valid-value" />
-    // )
-    subscriptionResetUrl: Yup.string(),
-    // .matches(
-    //   /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-    //   <FormattedMessage id="Please-enter-a-valid-value" />
-    // )
+    displayName: Yup.string()
+      .required(<FormattedMessage id="This-field-is-required" />)
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+    name: Yup.string()
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
+      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .matches(
+        /^[a-zA-Z0-9_-]+$/,
+        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+      ),
 
+    defaultHealthCheckUrl: Yup.string(),
+    healthStatusChangeUrl: Yup.string(),
+    subscriptionResetUrl: Yup.string(),
     subscriptionDowngradeUrl: Yup.string(),
     subscriptionUpgradeUrl: Yup.string(),
   })
@@ -84,6 +77,7 @@ const ProductForm = ({
       setVisible(false)
       if (type == 'create') {
         const createProduct = await createProductRequest({
+          displayName: values.displayName,
           name: values.name,
           apiKey: values.apiKey,
           defaultHealthCheckUrl: values.defaultHealthCheckUrl,
@@ -104,6 +98,7 @@ const ProductForm = ({
       } else {
         const editProduct = await editProductRequest({
           data: {
+            displayName: values.displayName,
             name: values.name,
             apiKey: values.apiKey,
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
@@ -123,6 +118,7 @@ const ProductForm = ({
         dispatch(
           productInfo({
             id: productData.id,
+            displayName: values.displayName,
             name: values.name,
             apiKey: values.apiKey,
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
@@ -162,27 +158,56 @@ const ProductForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Name" />
+                <FormattedMessage id="Display-Name" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
-                type="text"
                 className="form-control"
-                id="name"
-                name="name"
+                type="text"
+                id="displayName"
+                name="displayName"
                 onChange={formik.handleChange}
-                value={formik.values.name}
+                value={formik.values.displayName}
               />
 
-              {formik.touched.name && formik.errors.name && (
+              {formik.touched.displayName && formik.errors.displayName && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.name}
+                  {formik.errors.displayName}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
+          </div>
+          <div className="mb-3">
+            {type === 'create' && (
+              <AutoGenerateInput
+                label={<FormattedMessage id="Name" />}
+                id="name"
+                value={formik.values.displayName}
+                name={formik.values.name}
+                onChange={formik.handleChange}
+                onGenerateUniqueName={(generatedUniqueName) => {
+                  formik.setFieldValue('name', generatedUniqueName)
+                }}
+                onAutoGenerateClick={() => {
+                  formik.setFieldValue(
+                    'isAutoGenerated',
+                    !formik.values.isAutoGenerated
+                  )
+                }}
+                isAutoGenerated={formik.values.isAutoGenerated}
+              />
+            )}
+            {formik.touched.name && formik.errors.name && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.name}
+              </Form.Control.Feedback>
+            )}
           </div>
           <div>
             <Form.Group className="mb-3">

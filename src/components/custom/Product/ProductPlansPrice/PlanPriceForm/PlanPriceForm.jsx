@@ -155,7 +155,7 @@ const PlanPriceForm = ({
     ),
     price: Yup.number()
       .required(<FormattedMessage id="This-field-is-required" />)
-      .min(1, <FormattedMessage id="The-price-must-be-more-than-0" />)
+      .min(0, <FormattedMessage id="The-price-must-be-0-or-more" />)
       .max(999999, <FormattedMessage id="The-value-must-not-exceed-999,999" />),
   })
 
