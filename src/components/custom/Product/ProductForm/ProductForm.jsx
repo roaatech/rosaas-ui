@@ -19,6 +19,7 @@ import { Wrapper } from './ProductForm.styled.jsx'
 import { generateApiKey } from '../../../../lib/sharedFun/common.js'
 import { useNavigate } from 'react-router-dom'
 import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import { removeSubscriptionDataByProductId } from '../../../../store/slices/tenants.js'
 
 const ProductForm = ({
   type,
@@ -114,7 +115,9 @@ const ProductForm = ({
           },
           id: productData.id,
         })
-
+        dispatch(
+          removeSubscriptionDataByProductId({ productId: productData.id })
+        )
         dispatch(
           productInfo({
             id: productData.id,
@@ -257,7 +260,6 @@ const ProductForm = ({
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Default-Health-Check-Url" />
-                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -283,7 +285,6 @@ const ProductForm = ({
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Health-Status-Change-Url" />
-                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"

@@ -109,12 +109,13 @@ export const featureResetMap = {
 }
 export const activeTab = {
   details: 0,
-  customSpecification: 1,
-  plans: 2,
-  features: 3,
-  plansFeatures: 4,
-  plansPrice: 5,
-  subscriptions: 6,
+  clientCredintials: 1,
+  customSpecification: 2,
+  plans: 3,
+  features: 4,
+  plansFeatures: 5,
+  plansPrice: 6,
+  subscriptions: 7,
 }
 export const urlStyle = {
   GET: {

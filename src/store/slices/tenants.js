@@ -65,6 +65,26 @@ export const tenantsSlice = createSlice({
       currentTenants[action.payload.id].subscriptionData = { ...action.payload }
       state.tenants = currentTenants
     },
+    removeSubscriptionDataByProductId: (state, action) => {
+      const currentTenants = JSON.parse(JSON.stringify(current(state.tenants)))
+      const productIdToRemove = action.payload.productId
+
+      for (const tenantId in currentTenants) {
+        if (currentTenants.hasOwnProperty(tenantId)) {
+          const subscriptionData = currentTenants[tenantId].subscriptionData
+
+          if (
+            subscriptionData &&
+            subscriptionData.data &&
+            subscriptionData.data.productId === productIdToRemove
+          ) {
+            delete currentTenants[tenantId].subscriptionData
+          }
+        }
+      }
+
+      state.tenants = currentTenants
+    },
     featuresData: (state, action) => {
       const currentTenants = JSON.parse(JSON.stringify(current(state.tenants)))
       currentTenants[action.payload.id].subscriptionData.data.features = {
@@ -93,5 +113,6 @@ export const {
   subscriptionData,
   featuresData,
   subHistoryData,
+  removeSubscriptionDataByProductId,
 } = tenantsSlice.actions
 export default tenantsSlice.reducer

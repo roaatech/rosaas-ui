@@ -358,5 +358,17 @@
   "Subscription-Was-Set-As-Unpaid-For-Non-Renewal": "تم تعيين الاشتراك كغير مدفوع لعدم التجديد",
   "Subscription-Upgraded-Requested": "تمت طلب ترقية الاشتراك",
   "Subscription-Downgraded-Requested": "تمت طلب تخفيض الاشتراك",
-  "Subscription-Upgrade-Url": "رابط ترقية الاشتراك"
+  "Subscription-Upgrade-Url": "رابط ترقية الاشتراك",
+  "Subscription-Managenent-Product": "تحدد البرمجيات أو الخدمة المشترك فيها، وتعرف عرض المستخدمين الأساسي الذي اختاروه.",
+  "Subscription-Managenent-Plan": "تُمثل الطبقة المشترك فيها بالاسم، موضحة ميزاتها وفوائدها الفريدة.",
+  "Subscription-Managenent-Subscription-Status": "تشير إلى ما إذا كان الاشتراك نشطًا أم سلبيًا، مع تحديد حالة الوصول الحالية للمستخدم.",
+  "Subscription-Managenent-Subscription": "يعرض تكلفة الاشتراك التي يدفعها المستخدمون، مع خيارات دورة الفوترة المتنوعة.",
+  "Subscription-Managenent-Start-Date": "يحدد تاريخ بداية الاشتراك، مُشيرًا إلى متى بدأ الوصول إلى المنتج.",
+  "Subscription-Managenent-Auto-Renewal": "يتيح للمستخدمين اختيار التجديد التلقائي بعد انتهاء فترة الاشتراك، مما يضمن استمرارية الخدمة دون انقطاع.",
+  "Subscription-Managenent-Reset-Limit": "يتيح للمسؤولين إعادة تعيين الحدود المرتبطة بالخطة الحالية، مما يدير وصول المستخدم بفعالية.",
+  "Subscription-Managenent-Reset-Subscription": "يشغل إعادة تعيين بيانات الاشتراك في النظام الخارجي، مضمنًا تحديث المعلومات.",
+  "Subscription-Managenent-Info": "تحدد الترقيات أو التخفيضات التي سيتم تطبيقها بعد انتهاء فترة الاشتراك",
+  "Subscription-Managenent-End-Date": "يحدد نهاية فترة الاشتراك، مشيرًا إلى متى ينتهي الاشتراك الحالي.",
+  "disabled": "معطل",
+  "Not-Reset-Yet": "لم يتم الإعادة بعد"
 }

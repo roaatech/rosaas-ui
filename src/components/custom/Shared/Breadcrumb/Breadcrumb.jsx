@@ -5,15 +5,18 @@ import { Breadcrumb } from '@themesberg/react-bootstrap'
 import { Wrapper } from './Breadcrumb.styled'
 import { useEffect } from 'react'
 import Navbar from '../../../Navbar/Navbar'
-import { breadcrumbConst } from '../../../../const'
 import { useIntl, FormattedMessage } from 'react-intl'
 import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import { breadcrumbFun } from '../../../../const/breadcrumb'
 
 const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
+  const routeParams = useParams()
   let direction = useSelector((state) => state.main.direction)
   const intl = useIntl()
   const hasInfo = breadcrumbInfo ? 'yes' : null
   let navigation = '#'
+  const breadcrumbConst = breadcrumbFun(routeParams)
   if (breadcrumbInfo) {
     if (breadcrumbConst[breadcrumbInfo].navigation) {
       navigation = breadcrumbConst[breadcrumbInfo].navigation
@@ -54,7 +57,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
 
               {breadcrumbConst[breadcrumbInfo].title && (
                 <Breadcrumb.Item
-                  href={navigation}
+                  // href={navigation}
                   active={
                     breadcrumbConst[breadcrumbInfo].active ==
                     breadcrumbConst[breadcrumbInfo].title
@@ -68,7 +71,10 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
 
               {breadcrumbConst[breadcrumbInfo].parent && (
                 <Breadcrumb.Item
-                  href={navigation}
+                  href={
+                    breadcrumbConst[breadcrumbInfo]?.parentNavigation ||
+                    navigation
+                  }
                   active={
                     breadcrumbConst[breadcrumbInfo].active ==
                     breadcrumbConst[breadcrumbInfo].parent
