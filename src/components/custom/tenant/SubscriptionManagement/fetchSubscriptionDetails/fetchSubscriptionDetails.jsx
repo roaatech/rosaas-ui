@@ -47,6 +47,7 @@ export const fetchSubscriptionDetails = async (data) => {
         lastResetDate: response.data.data.lastResetDate,
         isResettableAllowed: response.data.data.isResettableAllowed,
       },
+      productId: currentProduct,
     }
     setFormattedSubscriptionData(formattedData)
     return formattedSubscriptionData

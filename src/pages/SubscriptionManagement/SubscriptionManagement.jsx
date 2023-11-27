@@ -127,6 +127,7 @@ const SubscriptionManagement = (props) => {
 
     setShowResetSubscriptionConfirmation(false)
   }
+
   const [formattedSubscriptionData, setFormattedSubscriptionData] =
     useState(null)
   useEffect(() => {

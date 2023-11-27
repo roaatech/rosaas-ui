@@ -355,5 +355,17 @@
   "Subscription-Was-Set-As-Unpaid-For-Non-Renewal": "Subscription Was Set As Unpaid For Non-Renewal",
   "Subscription-Upgraded-Requested": "Subscription Upgrade Requested",
   "Subscription-Downgraded-Requested": "Subscription Downgrade Requested",
-  "Subscription-Upgrade-Url": "Subscription Upgrade URL"
+  "Subscription-Upgrade-Url": "Subscription Upgrade URL",
+  "Subscription-Managenent-Product": " Specifies the subscribed software or service, defining the core offering users have chosen.",
+  "Subscription-Managenent-Plan": " Represents the selected subscription tier by name, outlining its unique features and benefits.",
+  "Subscription-Managenent-Subscription-Status": "Indicates if the subscription is active or passive, reflecting the user's current access status.",
+  "Subscription-Managenent-Subscription": "Displays the cost users pay for the subscription, with varied billing cycle options.",
+  "Subscription-Managenent-Start-Date": "Marks the commencement date of the subscription, signaling when access to the product began.",
+  "Subscription-Managenent-Auto-Renewal": " Allows users to choose automatic renewal after the subscription period concludes, ensuring uninterrupted service.",
+  "Subscription-Managenent-Reset-Limit": "Allows admins to reset usage limits tied to the current plan, managing user access effectively.",
+  "Subscription-Managenent-Reset-Subscription": "Triggers a reset of subscription data in the external system, ensuring up-to-date information.",
+  "Subscription-Managenent-Info": "Specifies the upgrades or downgrades that will be applied after the subscription period concludes",
+  "Subscription-Managenent-End-Date": "Marks the conclusion of the subscription period, indicating when the current subscription expires.",
+  "disabled": "disabled",
+  "Not-Reset-Yet": "Not Reset Yet"
 }

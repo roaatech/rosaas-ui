@@ -4,8 +4,14 @@ import {
   faToggleOn,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Card, Col, Row } from '@themesberg/react-bootstrap'
-import { FormattedMessage } from 'react-intl'
+import {
+  Card,
+  Col,
+  Row,
+  OverlayTrigger,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { cycle } from '../../../../../const'
@@ -18,6 +24,7 @@ import {
 } from '../../../../../const/subscriptionManagement'
 import DateLabel from '../../../Shared/DateLabel/DateLabel'
 import { subscriptionStatus } from '../../../../../const/product'
+import { BsFillQuestionCircleFill } from 'react-icons/bs'
 
 export default function SubsGeneralData(data) {
   const {
@@ -30,7 +37,8 @@ export default function SubsGeneralData(data) {
     hasResetableValue,
   } = data
   const routeParams = useParams()
-
+  const intl = useIntl()
+  const direction = useSelector((state) => state.main.direction)
   const subscriptionDatas = useSelector(
     (state) => state.tenants.tenants[routeParams.id]?.subscriptionData?.data
   )
@@ -44,6 +52,23 @@ export default function SubsGeneralData(data) {
               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                 <div className="mb-0 w-25 fw-bold">
                   <FormattedMessage id="Product" />
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Subscription-Managenent-Product" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <BsFillQuestionCircleFill
+                        style={{ color: '#6c757d' }}
+                        className={
+                          direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                        }
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </div>
                 <div className=" card-stats">
                   {tenantsData[routeParams.id]?.subscriptions[0]?.productName}
@@ -54,6 +79,23 @@ export default function SubsGeneralData(data) {
               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                 <div className="mb-0 w-25 fw-bold">
                   <FormattedMessage id="Plan" />
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Subscription-Managenent-Plan" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <BsFillQuestionCircleFill
+                        style={{ color: '#6c757d' }}
+                        className={
+                          direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                        }
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </div>
                 <div className=" card-stats">{subscriptionDatas.planName}</div>
               </div>
@@ -62,6 +104,23 @@ export default function SubsGeneralData(data) {
               <div className="d-flex align-items-center justify-content-between border-bottom  border-light py-2 ">
                 <div className="mb-0 w-25 fw-bold">
                   <FormattedMessage id="Subscription-Status" />
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Subscription-Managenent-Subscription-Status" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <BsFillQuestionCircleFill
+                        style={{ color: '#6c757d' }}
+                        className={
+                          direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                        }
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </div>
                 <div className=" card-stats">
                   <Label
@@ -76,6 +135,23 @@ export default function SubsGeneralData(data) {
               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                 <div className="mb-0 w-25 fw-bold">
                   <FormattedMessage id="Subscription" />
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Subscription-Managenent-Subscription" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <BsFillQuestionCircleFill
+                        style={{ color: '#6c757d' }}
+                        className={
+                          direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                        }
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </div>
                 <div className=" card-stats">
                   ${subscriptionDatas.planPrice} /{' '}
@@ -87,6 +163,23 @@ export default function SubsGeneralData(data) {
               <div className="d-flex align-items-center justify-content-between  py-2 ">
                 <div className="mb-0 w-25 fw-bold">
                   <FormattedMessage id="Start-Date" />
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Subscription-Managenent-Start-Date" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <BsFillQuestionCircleFill
+                        style={{ color: '#6c757d' }}
+                        className={
+                          direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                        }
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </div>
                 <div className=" card-stats">
                   <Label
@@ -106,20 +199,26 @@ export default function SubsGeneralData(data) {
               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                 <div className="mb-0 w-25 fw-bold">
                   <FormattedMessage id="Auto-Renewal" />{' '}
-                  <FontAwesomeIcon
-                    icon={
-                      subscriptionDatas.autoRenewal ? faToggleOn : faToggleOff
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Subscription-Managenent-Auto-Renewal" />
+                      </Tooltip>
                     }
-                    className={
-                      subscriptionDatas.autoRenewal
-                        ? 'active-toggle  ml-2'
-                        : 'passive-toggle ml-2'
-                    }
-                    onClick={handleToggleClick}
-                  />
+                  >
+                    <span>
+                      <BsFillQuestionCircleFill
+                        style={{ color: '#6c757d' }}
+                        className={
+                          direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                        }
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </div>
                 <div className=" card-stats">
-                  {subscriptionDatas?.autoRenewal && (
+                  {subscriptionDatas?.autoRenewal ? (
                     <Label
                       {...{
                         background: 'rgb(239, 249, 246)',
@@ -132,7 +231,29 @@ export default function SubsGeneralData(data) {
                         color: 'rgb(0, 166, 117)',
                       }}
                     />
+                  ) : (
+                    <Label
+                      {...{
+                        background: '#ccc',
+                        value: intl.formatMessage({ id: 'disabled' }),
+
+                        lighter: true,
+                        color: '#000000',
+                      }}
+                    />
                   )}
+
+                  <FontAwesomeIcon
+                    icon={
+                      subscriptionDatas.autoRenewal ? faToggleOn : faToggleOff
+                    }
+                    className={
+                      subscriptionDatas.autoRenewal
+                        ? 'active-toggle  ml-2 pl-2 border-left-1 border-light'
+                        : 'passive-toggle ml-2 pl-2 border-left-1 border-light'
+                    }
+                    onClick={handleToggleClick}
+                  />
                 </div>
               </div>
 
@@ -140,25 +261,32 @@ export default function SubsGeneralData(data) {
               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                 <div className="mb-0 fw-bold">
                   <FormattedMessage id="Reset-Limit" />
-
-                  <FontAwesomeIcon
-                    className={`${
-                      hasResetableValue
-                        ? 'ml-3 mr-3  icon-container active-reset'
-                        : 'ml-3 mr-3  icon-container passive-reset'
-                    }`}
-                    icon={faArrowRotateBackward}
-                    onClick={handleResetLimit}
-                  />
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Subscription-Managenent-Reset-Limit" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <BsFillQuestionCircleFill
+                        style={{ color: '#6c757d' }}
+                        className={
+                          direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                        }
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </div>
 
                 <div className=" card-stats">
                   {subscriptionDatas.lastLimitsResetDate ? (
                     <span>
-                      <FormattedMessage id="Reseted-At" />:{' '}
+                      {/* <FormattedMessage id="Reseted-At" />:{' '} */}
                       <Label
                         {...{
-                          background: '#cccccc40',
+                          background: '#ffab032b',
                           value: DataTransform(
                             subscriptionDatas.lastLimitsResetDate
                           ),
@@ -167,8 +295,25 @@ export default function SubsGeneralData(data) {
                       />
                     </span>
                   ) : (
-                    'not reset yet'
+                    <Label
+                      {...{
+                        background: '#ccc',
+                        value: intl.formatMessage({ id: 'Not-Reset-Yet' }),
+
+                        lighter: true,
+                        color: '#000000',
+                      }}
+                    />
                   )}
+                  <FontAwesomeIcon
+                    className={`${
+                      hasResetableValue
+                        ? 'ml-3  icon-container ml-2 pl-2 border-left-1 border-light active-reset'
+                        : 'ml-3   icon-container ml-2 pl-2 border-left-1 border-light passive-reset'
+                    }`}
+                    icon={faArrowRotateBackward}
+                    onClick={handleResetLimit}
+                  />
                 </div>
               </div>
 
@@ -176,15 +321,23 @@ export default function SubsGeneralData(data) {
               <div className="d-flex align-items-center justify-content-between  py-2  border-bottom  border-light ">
                 <div className="mb-0 fw-bold">
                   <FormattedMessage id="Reset-Subs" />
-                  <FontAwesomeIcon
-                    className={`${
-                      ResettableAllowed
-                        ? 'ml-3 mr-3  icon-container active-reset'
-                        : 'ml-3 mr-3  icon-container passive-reset'
-                    }`}
-                    icon={faArrowRotateBackward}
-                    onClick={handleResetSubscription}
-                  />
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Subscription-Managenent-Reset-Subscription" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <BsFillQuestionCircleFill
+                        style={{ color: '#6c757d' }}
+                        className={
+                          direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                        }
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </div>
                 <div className=" card-stats">
                   {subscriptionDatas.subscriptionReset.lastResetDate ||
@@ -203,7 +356,6 @@ export default function SubsGeneralData(data) {
                           />
                         </span>
                       )}
-
                       {subscriptionDatas.subscriptionReset.lastResetDate && (
                         <span>
                           <FormattedMessage id="Reseted-At" />:{' '}
@@ -214,11 +366,39 @@ export default function SubsGeneralData(data) {
                               )
                             : ''}
                         </span>
-                      )}
+                      )}{' '}
+                      <FontAwesomeIcon
+                        className={`${
+                          ResettableAllowed
+                            ? 'ml-3 ml-2 pl-2 border-left-1 border-light  icon-container active-reset'
+                            : 'ml-3  ml-2 pl-2 border-left-1 border-light icon-container passive-reset'
+                        }`}
+                        icon={faArrowRotateBackward}
+                        onClick={handleResetSubscription}
+                      />
                     </div>
                   ) : (
-                    'not reset yet'
-                  )}
+                    <div>
+                      <Label
+                        {...{
+                          background: '#ccc',
+                          value: intl.formatMessage({ id: 'Not-Reset-Yet' }),
+
+                          lighter: true,
+                          color: '#000000',
+                        }}
+                      />
+                      <FontAwesomeIcon
+                        className={`${
+                          ResettableAllowed
+                            ? 'ml-3 ml-2 pl-2 border-left-1 border-light  icon-container active-reset'
+                            : 'ml-3  ml-2 pl-2 border-left-1 border-light icon-container passive-reset'
+                        }`}
+                        icon={faArrowRotateBackward}
+                        onClick={handleResetSubscription}
+                      />
+                    </div>
+                  )}{' '}
                 </div>
               </div>
 
@@ -238,6 +418,23 @@ export default function SubsGeneralData(data) {
                     ''
                   )}{' '}
                   <FormattedMessage id="info" />
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Subscription-Managenent-Info" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <BsFillQuestionCircleFill
+                        className={
+                          direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                        }
+                        style={{ color: '#6c757d' }}
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </div>
                 <div className=" card-stats">
                   {subscriptionDatas &&
@@ -257,12 +454,10 @@ export default function SubsGeneralData(data) {
                             background: 'rgba(255, 201, 102, 0.4)',
                             value: (
                               <>
-                                <FormattedMessage
-                                  id={
-                                    subscriptionDatas.subscriptionPlanChange
-                                      .planDisplayName
-                                  }
-                                />
+                                {
+                                  subscriptionDatas.subscriptionPlanChange
+                                    .planDisplayName
+                                }
                                 :{' $'}
                                 {
                                   subscriptionDatas?.subscriptionPlanChange
@@ -289,6 +484,23 @@ export default function SubsGeneralData(data) {
               <div className="d-flex align-items-center justify-content-between py-2 ">
                 <div className="mb-0 w-25 fw-bold">
                   <FormattedMessage id="End-Date" />
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <FormattedMessage id="Subscription-Managenent-End-Date" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <BsFillQuestionCircleFill
+                        className={
+                          direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                        }
+                        style={{ color: '#6c757d' }}
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </div>
                 <div className=" card-stats">
                   <DateLabel endDate={subscriptionDatas.endDate} />

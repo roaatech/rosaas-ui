@@ -1,4 +1,4 @@
-import { breadcrumbConst } from './breadcrumb'
+import { breadcrumbFun } from './breadcrumb'
 import { statusConst } from './status'
 import { Owner, processType } from './workFlow'
 import {
@@ -33,6 +33,6 @@ export {
   statusConst,
   Owner,
   processType,
-  breadcrumbConst,
+  breadcrumbFun as breadcrumbConst,
   activeTab as activeIndex,
 }
