@@ -58,6 +58,7 @@ export default function ProductFeaturePlan({ children }) {
   const listDataStore = useSelector(
     (state) => state.products.products[productId]?.featurePlan
   )
+  console.log({ listDataStore })
   const planList = useSelector(
     (state) => state.products.products[productId]?.plans
   )
@@ -126,8 +127,9 @@ export default function ProductFeaturePlan({ children }) {
       Feature: data.feature.title,
       Plan: data.plan.title,
       Limit: data.limit,
-      // Reset: data.feature.reset,
       Unit: data.unit,
+      UnitDisplayName: data.unitDisplayName,
+      Reset: data.reset,
       Description: data.description,
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
@@ -166,7 +168,6 @@ export default function ProductFeaturePlan({ children }) {
         title: item.feature.title,
         name: item.feature.name,
         type: item.feature.type,
-        reset: item.feature.reset,
         index: Object.keys(featuresObj).length,
       }
     }
@@ -206,16 +207,26 @@ export default function ProductFeaturePlan({ children }) {
                                 listData[
                                   tableData[planId + ',' + item.featureId]
                                 ].unit
-                              ] != 'none'
+                              ] != 'unit'
                                 ? featureUnitMap[
                                     listData[
                                       tableData[planId + ',' + item.featureId]
                                     ].unit
                                   ]
-                                : 'unit') +
+                                : direction == 'rtl'
+                                ? listData[
+                                    tableData[planId + ',' + item.featureId]
+                                  ].unitDisplayName?.ar || 'unit'
+                                : listData[
+                                    tableData[planId + ',' + item.featureId]
+                                  ].unitDisplayName?.en || 'unit') +
                               ' / ' +
                               intl.formatMessage({
-                                id: featureResetMap[item.reset],
+                                id: featureResetMap[
+                                  listData[
+                                    tableData[planId + ',' + item.featureId]
+                                  ].reset
+                                ],
                               })
                             ) : (
                               <FormattedMessage id="Yes" />
