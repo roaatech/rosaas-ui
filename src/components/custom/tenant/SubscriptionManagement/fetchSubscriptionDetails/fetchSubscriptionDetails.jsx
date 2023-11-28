@@ -48,6 +48,7 @@ export const fetchSubscriptionDetails = async (data) => {
         isResettableAllowed: response.data.data.isResettableAllowed,
       },
       productId: currentProduct,
+      isPlanChangeAllowed: response.data.data.isPlanChangeAllowed,
     }
     setFormattedSubscriptionData(formattedData)
     return formattedSubscriptionData

@@ -202,6 +202,7 @@ const SubscriptionManagement = (props) => {
                   setUpdate,
                   icon: <BsUpload />,
                   formType: 'upgrade',
+                  disable: !subscriptionData?.isPlanChangeAllowed,
                 },
                 {
                   order: 4,
@@ -214,6 +215,7 @@ const SubscriptionManagement = (props) => {
                   setUpdate,
                   icon: <BsDownload />,
                   formType: 'downgrade',
+                  disable: !subscriptionData?.isPlanChangeAllowed,
                 },
                 {
                   order: 4,

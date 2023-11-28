@@ -128,14 +128,14 @@ export default function SubsFeatures(data) {
                       : `${subscription.limit}${
                           subscription.unit == 1
                             ? (intl.locale == 'ar'
-                                ? subscription.unitDisplayName?.en
-                                : subscription.unitDisplayName?.ar) || 'unit'
+                                ? subscription.unitDisplayName?.ar
+                                : subscription.unitDisplayName?.en) || 'unit'
                             : featureUnitMap[subscription.unit]
                         } / ${subscription.remainingUsage}${
                           subscription.unit == 1
                             ? (intl.locale == 'ar'
-                                ? subscription.unitDisplayName?.en
-                                : subscription.unitDisplayName?.ar) || 'unit'
+                                ? subscription.unitDisplayName?.ar
+                                : subscription.unitDisplayName?.en) || 'unit'
                             : featureUnitMap[subscription.unit]
                         }`}
                   </td>
