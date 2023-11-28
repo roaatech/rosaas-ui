@@ -1,6 +1,6 @@
 import { Card, Table } from '@themesberg/react-bootstrap'
 import { useEffect } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { featureResetMap, featureUnitMap } from '../../../../../const'
@@ -16,7 +16,7 @@ export default function SubsFeatures(data) {
   const { subscriptionFeturesList } = useRequest()
   const routeParams = useParams()
   const dispatch = useDispatch()
-
+  const intl = useIntl()
   const subscriptionFeatures = useSelector(
     (state) =>
       state.tenants.tenants[routeParams.id]?.subscriptionData?.data?.features
@@ -126,9 +126,17 @@ export default function SubsFeatures(data) {
                     }` === 'nullundefined / nullundefined'
                       ? '-'
                       : `${subscription.limit}${
-                          featureUnitMap[subscription.unit]
+                          subscription.unit == 1
+                            ? (intl.locale == 'ar'
+                                ? subscription.unitDisplayName?.en
+                                : subscription.unitDisplayName?.ar) || 'unit'
+                            : featureUnitMap[subscription.unit]
                         } / ${subscription.remainingUsage}${
-                          featureUnitMap[subscription.unit]
+                          subscription.unit == 1
+                            ? (intl.locale == 'ar'
+                                ? subscription.unitDisplayName?.en
+                                : subscription.unitDisplayName?.ar) || 'unit'
+                            : featureUnitMap[subscription.unit]
                         }`}
                   </td>
                 </tr>
