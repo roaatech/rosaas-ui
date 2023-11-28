@@ -367,5 +367,8 @@
   "Subscription-Managenent-Info": "Specifies the upgrades or downgrades that will be applied after the subscription period concludes",
   "Subscription-Managenent-End-Date": "Marks the conclusion of the subscription period, indicating when the current subscription expires.",
   "disabled": "disabled",
-  "Not-Reset-Yet": "Not Reset Yet"
+  "Not-Reset-Yet": "Not Reset Yet",
+  "Unit-Display-Name-En": "Unit Display Name (En)",
+  "Unit-Display-Name-Ar": "Unit Display Name (Ar)",
+  "Unit-Display-Name": "Unit Display Name"
 }

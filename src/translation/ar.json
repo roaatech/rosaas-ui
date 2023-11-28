@@ -370,5 +370,8 @@
   "Subscription-Managenent-Info": "تحدد الترقيات أو التخفيضات التي سيتم تطبيقها بعد انتهاء فترة الاشتراك",
   "Subscription-Managenent-End-Date": "يحدد نهاية فترة الاشتراك، مشيرًا إلى متى ينتهي الاشتراك الحالي.",
   "disabled": "معطل",
-  "Not-Reset-Yet": "لم يتم الإعادة بعد"
+  "Not-Reset-Yet": "لم يتم الإعادة بعد",
+  "Unit-Display-Name-En": "اسم العرض للوحدة (إنجليزي)",
+  "Unit-Display-Name-Ar": "اسم العرض للوحدة (عربي)",
+  "Unit-Display-Name": "اسم العرض للوحدة"
 }

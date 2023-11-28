@@ -230,6 +230,7 @@ const SubscriptionManagement = (props) => {
                   label: 'Reset-Limit',
                   func: handleResetLimit,
                   icon: <BsArrowCounterclockwise />,
+                  disable: !hasResetableValue,
                 },
                 {
                   order: 4,
@@ -237,6 +238,7 @@ const SubscriptionManagement = (props) => {
                   label: 'Reset-Subs',
                   func: handleResetSubscription,
                   icon: <BsArrowCounterclockwise />,
+                  disable: !ResettableAllowed,
                 },
               ]}
             />

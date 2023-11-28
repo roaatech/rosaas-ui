@@ -111,7 +111,7 @@ const ClientCredentials = ({ data }) => {
     const { clientId, description, id, created, clientRecordId, expiration } =
       props
     const createdDate = new Date(created)
-    const expirationDate = new Date(expiration)
+    const expirationDate = expiration && new Date(expiration)
     useEffect(() => {
       setClient(clientId)
       setClientRecordId(clientRecordId)

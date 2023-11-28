@@ -58,7 +58,6 @@ export default function ProductFeaturePlan({ children }) {
   const listDataStore = useSelector(
     (state) => state.products.products[productId]?.featurePlan
   )
-  console.log({ listDataStore })
   const planList = useSelector(
     (state) => state.products.products[productId]?.plans
   )
@@ -127,9 +126,10 @@ export default function ProductFeaturePlan({ children }) {
       Feature: data.feature.title,
       Plan: data.plan.title,
       Limit: data.limit,
-      Unit: data.unit,
-      UnitDisplayName: data.unitDisplayName,
-      Reset: data.reset,
+      Unit: featureUnitMap[data.unit],
+      'Unit-Display-Name-En': data.unitDisplayName?.en,
+      'Unit-Display-Name-Ar': data.unitDisplayName?.ar,
+      Reset: featureResetMap[data.reset],
       Description: data.description,
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),

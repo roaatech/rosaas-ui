@@ -397,6 +397,43 @@ const FeaturePlanForm = ({
               )}
             </Form.Group>
           </div>
+
+          <div
+            style={{
+              display: isFeatureBoolean(formik.values.feature)
+                ? 'none'
+                : 'block',
+            }}
+          >
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Limit" />
+                <span style={{ color: 'red' }}> *</span>
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="limit"
+                name="limit"
+                onChange={formik.handleChange}
+                value={
+                  isFeatureBoolean(formik.values.feature)
+                    ? ''
+                    : formik.values.limit
+                }
+                disabled={isFeatureBoolean(formik.values.feature)}
+              />
+
+              {formik.touched.limit && formik.errors.limit && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.limit}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
           <div
             style={{
               display: isFeatureBoolean(formik.values.feature)
@@ -496,42 +533,6 @@ const FeaturePlanForm = ({
                 </Form.Group>
               </div>
             )}
-          </div>
-          <div
-            style={{
-              display: isFeatureBoolean(formik.values.feature)
-                ? 'none'
-                : 'block',
-            }}
-          >
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Limit" />
-                <span style={{ color: 'red' }}> *</span>
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="limit"
-                name="limit"
-                onChange={formik.handleChange}
-                value={
-                  isFeatureBoolean(formik.values.feature)
-                    ? ''
-                    : formik.values.limit
-                }
-                disabled={isFeatureBoolean(formik.values.feature)}
-              />
-
-              {formik.touched.limit && formik.errors.limit && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.limit}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
           </div>
           <div
             style={{

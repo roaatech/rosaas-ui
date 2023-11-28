@@ -308,8 +308,8 @@ export default function SubsGeneralData(data) {
                   <FontAwesomeIcon
                     className={`${
                       hasResetableValue
-                        ? 'ml-3  icon-container ml-2 pl-2 border-left-1 border-light active-reset'
-                        : 'ml-3   icon-container ml-2 pl-2 border-left-1 border-light passive-reset'
+                        ? '  icon-container ml-2 pl-2 border-left-1 border-light active-reset'
+                        : '   icon-container ml-2 pl-2 border-left-1 border-light passive-reset'
                     }`}
                     icon={faArrowRotateBackward}
                     onClick={handleResetLimit}
@@ -370,8 +370,8 @@ export default function SubsGeneralData(data) {
                       <FontAwesomeIcon
                         className={`${
                           ResettableAllowed
-                            ? 'ml-3 ml-2 pl-2 border-left-1 border-light  icon-container active-reset'
-                            : 'ml-3  ml-2 pl-2 border-left-1 border-light icon-container passive-reset'
+                            ? ' ml-2 pl-2 border-left-1 border-light  icon-container active-reset'
+                            : '  ml-2 pl-2 border-left-1 border-light icon-container passive-reset'
                         }`}
                         icon={faArrowRotateBackward}
                         onClick={handleResetSubscription}
@@ -391,8 +391,8 @@ export default function SubsGeneralData(data) {
                       <FontAwesomeIcon
                         className={`${
                           ResettableAllowed
-                            ? 'ml-3 ml-2 pl-2 border-left-1 border-light  icon-container active-reset'
-                            : 'ml-3  ml-2 pl-2 border-left-1 border-light icon-container passive-reset'
+                            ? ' ml-2 pl-2 border-left-1 border-light  icon-container active-reset'
+                            : '  ml-2 pl-2 border-left-1 border-light icon-container passive-reset'
                         }`}
                         icon={faArrowRotateBackward}
                         onClick={handleResetSubscription}

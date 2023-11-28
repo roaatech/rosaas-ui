@@ -299,7 +299,11 @@ const DynamicButtons = ({ buttons }) => {
                   } else if (button.type == 'action') {
                     if (button.label != 'Delete') {
                       return (
-                        <Dropdown.Item key={index} onClick={button.func}>
+                        <Dropdown.Item
+                          key={index}
+                          onClick={button.func}
+                          disabled={button.disable}
+                        >
                           {button.icon} <FormattedMessage id={button.label} />
                         </Dropdown.Item>
                       )
@@ -310,6 +314,7 @@ const DynamicButtons = ({ buttons }) => {
                           <Dropdown.Item
                             onClick={button.func}
                             className="redColor"
+                            disabled={button.disable}
                           >
                             {button.icon} <FormattedMessage id={button.label} />
                           </Dropdown.Item>

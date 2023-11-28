@@ -17,7 +17,6 @@ import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCo
 
 import {
   activeIndex,
-  featureResetMap,
   featureTypeMap,
   featureUnitMap,
 } from '../../../../../const/index.js'
@@ -42,7 +41,6 @@ const FeatureForm = ({
     description: featureData ? featureData.description : '',
     type: featureData ? featureData.type : '',
     // unit: featureData ? featureData.unit : undefined,
-    reset: featureData ? featureData.reset : '',
     displayOrder: featureData ? featureData.displayOrder : '0',
   }
 
@@ -89,8 +87,6 @@ const FeatureForm = ({
           description: values.description,
           type: parseInt(values.type),
           displayOrder: values.displayOrder || 0,
-
-          reset: parseInt(values.reset) || 1,
         })
 
         if (!allProducts[productId].feature) {
@@ -114,7 +110,6 @@ const FeatureForm = ({
               type: values.type,
               displayOrder: values.displayOrder || 0,
               // unit: values.unit,
-              reset: values.reset || 1,
               id: createFeature.data.data.id,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: new Date().toISOString().slice(0, 19),
@@ -134,7 +129,6 @@ const FeatureForm = ({
             type: parseInt(values.type),
             displayOrder: values.displayOrder || 0,
             // unit: parseInt(values.unit),
-            reset: parseInt(values.reset) || 1,
           },
           id: featureData.id,
         })
@@ -150,7 +144,6 @@ const FeatureForm = ({
               type: values.type,
               displayOrder: values.displayOrder || 0,
               // unit: values.unit,
-              reset: values.reset || 1,
               id: featureData.id,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: featureData.createdDate,
@@ -332,44 +325,6 @@ const FeatureForm = ({
             </Form.Group>
           </div> */}
 
-          <div>
-            {/* Reset */}
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Reset" />
-              </Form.Label>
-              <select
-                className="form-control"
-                id="reset"
-                name="reset"
-                onChange={formik.handleChange}
-                value={formik.values.reset}
-                disabled={formik.values.type != '1'}
-              >
-                <option value="">
-                  <FormattedMessage id="Select-Option" />
-                </option>
-                {Object.entries(featureResetMap).map(([value, label]) => (
-                  <option
-                    key={value}
-                    value={value}
-                    disabled={formik.values.type != '1'}
-                  >
-                    {label}
-                  </option>
-                ))}
-              </select>
-              {/* Display validation error */}
-              {formik.touched.reset && formik.errors.reset && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.reset}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
