@@ -54,7 +54,6 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
     setCustomExpirationDate(secretItem?.expiration.split('T')[0])
   }, [secretItem])
   const [customExpirationDate, setCustomExpirationDate] = useState(null)
-  console.log({ customExpirationDate })
   const initialValues = {
     title: secretItem ? secretItem.description : '',
   }
@@ -374,7 +373,6 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
                   value={expirationType}
                   onChange={(e) => {
                     const selectedValue = e.target.value
-                    console.log(selectedValue)
                     setExpirationType(e.target.value)
                     setCustomExpirationDate(
                       selectedValue === 'custom' ||
