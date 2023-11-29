@@ -199,9 +199,13 @@ export default function ProductFeaturePlan({ children }) {
                             className="text-dark m-0 p-0 planFeatureButton"
                           >
                             {listData[tableData[planId + ',' + item.featureId]]
-                              .limit ? (
-                              listData[tableData[planId + ',' + item.featureId]]
-                                .limit +
+                              .limit || item.type == 1 ? (
+                              (listData[
+                                tableData[planId + ',' + item.featureId]
+                              ].limit ||
+                                intl.formatMessage({
+                                  id: 'Unlimited',
+                                })) +
                               ' ' +
                               (featureUnitMap[
                                 listData[
