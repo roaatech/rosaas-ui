@@ -34,6 +34,10 @@ import ProductPlansPriceList from '../../components/custom/Product/ProductPlansP
 import ProductCustomSpecificationList from '../../components/custom/Product/CustomSpecification/ProductCustomSpecificationList'
 import { MdEditNote } from 'react-icons/md'
 import { activeTab } from '../../const/product'
+import ProductWarnings from '../../components/custom/Product/ProductWarnings/ProductWarnings'
+import { productWarningsStore } from '../../store/slices/products/productsSlice'
+import { WarningVariant } from '../../const/WarningsSettings'
+import ClientCredentials from '../../components/custom/Product/ClientCredentials/ClientCredentials'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -53,12 +57,13 @@ const ProductDetails = () => {
       const productData = await getProduct(routeParams.id)
       dispatch(productInfo(productData.data.data))
     })()
-  }, [visible, routeParams.id])
+  }, [visible, routeParams?.id])
 
   const deleteProduct = async () => {
-    await deleteProductReq({ id: routeParams.id })
-    dispatch(removeProductStore(routeParams.id))
+    await deleteProductReq({ id: routeParams?.id })
+    dispatch(removeProductStore(routeParams?.id))
   }
+  let [errorNums, setErrorNums] = useState(0)
 
   return (
     <Wrapper>
@@ -156,8 +161,13 @@ const ProductDetails = () => {
             activeIndex={activeIndex}
             onTabChange={(e) => setActiveIndex(e.index)}
           >
-            <TabPanel header={<FormattedMessage id="Details" />}>
-              <ProductDetailsTab data={productData} />
+            {productData && (
+              <TabPanel header={<FormattedMessage id="Details" />}>
+                <ProductDetailsTab data={productData} />
+              </TabPanel>
+            )}
+            <TabPanel header={<FormattedMessage id="Client-Credentials" />}>
+              <ClientCredentials data={productData} />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
               <ProductCustomSpecificationList
@@ -190,6 +200,21 @@ const ProductDetails = () => {
                 productId={productData.id}
                 productName={productData.name}
               />
+            </TabPanel>
+            <TabPanel
+              header={
+                <div>
+                  <FormattedMessage id="Warnings" />
+                  {productData?.warningsNum > 0 && (
+                    <span className="error-badge">
+                      {productData?.warningsNum}
+                    </span>
+                  )}
+                </div>
+              }
+              className={productData?.warningsNum > 0 && 'warnings'}
+            >
+              <ProductWarnings productId={productData.id} />
             </TabPanel>
           </TabView>
         </div>

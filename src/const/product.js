@@ -52,18 +52,28 @@ export const PublishStatus = {
     icon: <MdOutlineUnpublished />,
   },
 }
-export const PaymentStatus = {
+export const subscriptionStatus = {
   true: {
     background: '#eff9f6',
-    value: <FormattedMessage id="Paid" />,
+    value: <FormattedMessage id="Active" />,
     color: '#00a675',
-    icon: <MdPayments />,
   },
   false: {
     background: '#f5e8e4',
-    value: <FormattedMessage id="Unpaid" />,
+    value: <FormattedMessage id="Inactive" />,
     color: '#d26b4e',
-    icon: <MdOutlinePayments />,
+  },
+}
+export const expirationStatus = {
+  true: {
+    background: '#eff9f6',
+    value: <FormattedMessage id="Valid" />,
+    color: '#00a675',
+  },
+  false: {
+    background: '#f5e8e4',
+    value: <FormattedMessage id="Expired" />,
+    color: '#d26b4e',
   },
 }
 
@@ -71,6 +81,8 @@ export const cycle = {
   2: 'Week',
   3: 'Month',
   4: 'Year',
+  5: 'One-Day',
+  6: 'Three-Day',
 }
 
 export const urlIsOverridden = {
@@ -83,25 +95,27 @@ export const featureTypeMap = {
 }
 
 export const featureUnitMap = {
-  1: 'KB',
-  2: 'MB',
-  3: 'GB',
+  1: 'unit',
+  2: 'KB',
+  3: 'MB',
+  4: 'GB',
 }
 
 export const featureResetMap = {
-  1: 'Never',
+  1: 'Non-Resettable',
   2: 'Weekly',
   3: 'Monthly',
   4: 'Annual',
 }
 export const activeTab = {
   details: 0,
-  customSpecification: 1,
-  plans: 2,
-  features: 3,
-  plansFeatures: 4,
-  plansPrice: 5,
-  subscriptions: 6,
+  clientCredintials: 1,
+  customSpecification: 2,
+  plans: 3,
+  features: 4,
+  plansFeatures: 5,
+  plansPrice: 6,
+  subscriptions: 7,
 }
 export const urlStyle = {
   GET: {

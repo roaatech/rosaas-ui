@@ -22,7 +22,6 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
   const [first, setFirst] = useState(0)
   const [rows, setRows] = useState(10)
   let direction = useSelector((state) => state.main.direction)
-  const [showNotes, setShowNotes] = useState(false)
 
   const timeLine =
     tenantsData[routeParams.id].subscriptions[productIndex].history
@@ -51,15 +50,15 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
 
         {notes?.map((note, index) => (
           <div key={index}>
-            <Card border="light" className=" pt-1">
+            <Card border="light" className="notes-container  pt-1">
               <Card.Body className="p-0">
                 <Container>
                   <Row>
-                    <Col md={6} className="small">
+                    <Col md={3} className="note-label">
                       <FormattedMessage id={Owner[note.ownerType]} />:
                     </Col>{' '}
-                    <Col md={6}>
-                      <div className="small ">
+                    <Col md={9} className="note-text">
+                      <div className="">
                         <span>{note.text || 'No notes available'}</span>
                       </div>
                     </Col>

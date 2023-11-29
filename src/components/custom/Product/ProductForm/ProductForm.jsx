@@ -18,6 +18,8 @@ import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './ProductForm.styled.jsx'
 import { generateApiKey } from '../../../../lib/sharedFun/common.js'
 import { useNavigate } from 'react-router-dom'
+import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import { removeSubscriptionDataByProductId } from '../../../../store/slices/tenants.js'
 
 const ProductForm = ({
   type,
@@ -32,10 +34,18 @@ const ProductForm = ({
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const initialValues = {
+    displayName: productData ? productData.displayName : '',
     name: productData ? productData.name : '',
     apiKey: productData ? productData.apiKey : '',
     defaultHealthCheckUrl: productData ? productData.defaultHealthCheckUrl : '',
     healthStatusChangeUrl: productData ? productData.healthStatusChangeUrl : '',
+    subscriptionResetUrl: productData ? productData.subscriptionResetUrl : '',
+    subscriptionDowngradeUrl: productData
+      ? productData.subscriptionDowngradeUrl
+      : '',
+    subscriptionUpgradeUrl: productData
+      ? productData.subscriptionUpgradeUrl
+      : '',
     creationEndpoint: productData ? productData.creationEndpoint : '',
     activationEndpoint: productData ? productData.activationEndpoint : '',
     deactivationEndpoint: productData ? productData.deactivationEndpoint : '',
@@ -43,21 +53,22 @@ const ProductForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
-    ),
-    defaultHealthCheckUrl: Yup.string()
+    displayName: Yup.string()
       .required(<FormattedMessage id="This-field-is-required" />)
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+    name: Yup.string()
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
+      .required(<FormattedMessage id="Unique-Name-is-required" />)
       .matches(
-        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-        <FormattedMessage id="Please-enter-a-valid-value" />
+        /^[a-zA-Z0-9_-]+$/,
+        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
-    healthStatusChangeUrl: Yup.string()
-      .required(<FormattedMessage id="This-field-is-required" />)
-      .matches(
-        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(:\d{2,5})?(\/[^\s]*)?$/i,
-        <FormattedMessage id="Please-enter-a-valid-value" />
-      ),
+
+    defaultHealthCheckUrl: Yup.string(),
+    healthStatusChangeUrl: Yup.string(),
+    subscriptionResetUrl: Yup.string(),
+    subscriptionDowngradeUrl: Yup.string(),
+    subscriptionUpgradeUrl: Yup.string(),
   })
 
   const formik = useFormik({
@@ -67,10 +78,14 @@ const ProductForm = ({
       setVisible(false)
       if (type == 'create') {
         const createProduct = await createProductRequest({
+          displayName: values.displayName,
           name: values.name,
           apiKey: values.apiKey,
           defaultHealthCheckUrl: values.defaultHealthCheckUrl,
           healthStatusChangeUrl: values.healthStatusChangeUrl,
+          subscriptionResetUrl: values.subscriptionResetUrl,
+          subscriptionUpgradeUrl: values.subscriptionUpgradeUrl,
+          subscriptionDowngradeUrl: values.subscriptionDowngradeUrl,
           creationEndpoint: values.creationEndpoint,
           activationEndpoint: values.activationEndpoint,
           deactivationEndpoint: values.deactivationEndpoint,
@@ -84,10 +99,14 @@ const ProductForm = ({
       } else {
         const editProduct = await editProductRequest({
           data: {
+            displayName: values.displayName,
             name: values.name,
             apiKey: values.apiKey,
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
             healthStatusChangeUrl: values.healthStatusChangeUrl,
+            subscriptionResetUrl: values.subscriptionResetUrl,
+            subscriptionUpgradeUrl: values.subscriptionUpgradeUrl,
+            subscriptionDowngradeUrl: values.subscriptionDowngradeUrl,
             creationEndpoint: values.creationEndpoint,
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
@@ -96,14 +115,20 @@ const ProductForm = ({
           },
           id: productData.id,
         })
-
+        dispatch(
+          removeSubscriptionDataByProductId({ productId: productData.id })
+        )
         dispatch(
           productInfo({
             id: productData.id,
+            displayName: values.displayName,
             name: values.name,
             apiKey: values.apiKey,
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
             healthStatusChangeUrl: values.healthStatusChangeUrl,
+            subscriptionResetUrl: values.subscriptionResetUrl,
+            subscriptionUpgradeUrl: values.subscriptionUpgradeUrl,
+            subscriptionDowngradeUrl: values.subscriptionDowngradeUrl,
             creationEndpoint: values.creationEndpoint,
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
@@ -136,27 +161,56 @@ const ProductForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Name" />
+                <FormattedMessage id="Display-Name" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
-                type="text"
                 className="form-control"
-                id="name"
-                name="name"
+                type="text"
+                id="displayName"
+                name="displayName"
                 onChange={formik.handleChange}
-                value={formik.values.name}
+                value={formik.values.displayName}
               />
 
-              {formik.touched.name && formik.errors.name && (
+              {formik.touched.displayName && formik.errors.displayName && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.name}
+                  {formik.errors.displayName}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
+          </div>
+          <div className="mb-3">
+            {type === 'create' && (
+              <AutoGenerateInput
+                label={<FormattedMessage id="Name" />}
+                id="name"
+                value={formik.values.displayName}
+                name={formik.values.name}
+                onChange={formik.handleChange}
+                onGenerateUniqueName={(generatedUniqueName) => {
+                  formik.setFieldValue('name', generatedUniqueName)
+                }}
+                onAutoGenerateClick={() => {
+                  formik.setFieldValue(
+                    'isAutoGenerated',
+                    !formik.values.isAutoGenerated
+                  )
+                }}
+                isAutoGenerated={formik.values.isAutoGenerated}
+              />
+            )}
+            {formik.touched.name && formik.errors.name && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.name}
+              </Form.Control.Feedback>
+            )}
           </div>
           <div>
             <Form.Group className="mb-3">
@@ -206,7 +260,6 @@ const ProductForm = ({
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Default-Health-Check-Url" />
-                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -232,7 +285,6 @@ const ProductForm = ({
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Health-Status-Change-Url" />
-                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
@@ -250,6 +302,81 @@ const ProductForm = ({
                     style={{ display: 'block' }}
                   >
                     {formik.errors.healthStatusChangeUrl}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Subscription-Reset-Url" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="subscriptionResetUrl"
+                name="subscriptionResetUrl"
+                onChange={formik.handleChange}
+                value={formik.values.subscriptionResetUrl}
+              />
+
+              {formik.touched.subscriptionResetUrl &&
+                formik.errors.subscriptionResetUrl && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.subscriptionResetUrl}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Subscription-Upgrade-Url" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="subscriptionUpgradeUrl"
+                name="subscriptionUpgradeUrl"
+                onChange={formik.handleChange}
+                value={formik.values.subscriptionUpgradeUrl}
+              />
+
+              {formik.touched.subscriptionUpgradeUrl &&
+                formik.errors.subscriptionUpgradeUrl && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.subscriptionUpgradeUrl}
+                  </Form.Control.Feedback>
+                )}
+            </Form.Group>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Subscription-Downgrade-Url" />
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="subscriptionDowngradeUrl"
+                name="subscriptionDowngradeUrl"
+                onChange={formik.handleChange}
+                value={formik.values.subscriptionDowngradeUrl}
+              />
+
+              {formik.touched.subscriptionDowngradeUrl &&
+                formik.errors.subscriptionDowngradeUrl && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.subscriptionDowngradeUrl}
                   </Form.Control.Feedback>
                 )}
             </Form.Group>

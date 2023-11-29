@@ -123,11 +123,13 @@ export default function ProductFeaturePlan({ children }) {
 
   const handleData = (data) => {
     return {
-      Feature: data.feature.name,
-      Plan: data.plan.name,
+      Feature: data.feature.title,
+      Plan: data.plan.title,
       Limit: data.limit,
-      // Reset: data.feature.reset,
-      Unit: data.unit,
+      Unit: featureUnitMap[data.unit],
+      'Unit-Display-Name-En': data.unitDisplayName?.en,
+      'Unit-Display-Name-Ar': data.unitDisplayName?.ar,
+      Reset: featureResetMap[data.reset],
       Description: data.description,
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
@@ -163,9 +165,9 @@ export default function ProductFeaturePlan({ children }) {
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         featureId: item.feature.id,
+        title: item.feature.title,
         name: item.feature.name,
         type: item.feature.type,
-        reset: item.feature.reset,
         index: Object.keys(featuresObj).length,
       }
     }
@@ -180,7 +182,7 @@ export default function ProductFeaturePlan({ children }) {
           Object.values(featuresObj).map((item) => (
             <tr key={item.featureId}>
               <td>
-                <span className="fw-bolder">{item.name}</span>
+                <span className="fw-bolder">{item.title}</span>
               </td>
 
               {planList &&
@@ -201,14 +203,30 @@ export default function ProductFeaturePlan({ children }) {
                               listData[tableData[planId + ',' + item.featureId]]
                                 .limit +
                               ' ' +
-                              featureUnitMap[
+                              (featureUnitMap[
                                 listData[
                                   tableData[planId + ',' + item.featureId]
                                 ].unit
-                              ] +
+                              ] != 'unit'
+                                ? featureUnitMap[
+                                    listData[
+                                      tableData[planId + ',' + item.featureId]
+                                    ].unit
+                                  ]
+                                : direction == 'rtl'
+                                ? listData[
+                                    tableData[planId + ',' + item.featureId]
+                                  ].unitDisplayName?.ar || 'unit'
+                                : listData[
+                                    tableData[planId + ',' + item.featureId]
+                                  ].unitDisplayName?.en || 'unit') +
                               ' / ' +
                               intl.formatMessage({
-                                id: featureResetMap[item.reset],
+                                id: featureResetMap[
+                                  listData[
+                                    tableData[planId + ',' + item.featureId]
+                                  ].reset
+                                ],
                               })
                             ) : (
                               <FormattedMessage id="Yes" />
@@ -335,7 +353,10 @@ export default function ProductFeaturePlan({ children }) {
             <Table hover className="user-table align-items-center">
               <thead>
                 <tr>
-                  <th className="border-bottom"></th>
+                  <th className="border-bottom  table-title-cell">
+                    {' '}
+                    Features / Plans
+                  </th>
                   {planList &&
                     Object.keys(planList)?.map((item, index) => (
                       <th
@@ -354,7 +375,7 @@ export default function ProductFeaturePlan({ children }) {
                             <BsToggleOff />
                           </span>
                         )}
-                        {planList[item].name}
+                        {planList[item].title}
                       </th>
                     ))}
                 </tr>

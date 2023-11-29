@@ -147,4 +147,12 @@ export const Wrapper = styled.div`
   .notes-toggle .show-more-link:hover {
     text-decoration: underline;
   }
+
+  .notes-container .note-label { 
+    font-size: var(--smallFont);
+    font-weight: bold;
+  }
+  .notes-container .note-text { 
+    font-size: var(--smallFont);
+  }
 `

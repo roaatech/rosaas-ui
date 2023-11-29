@@ -10,6 +10,8 @@ import usePlanPriceReq from './Product/planPrice/usePlanPriceReq'
 import usePlanFeatureReq from './Product/planFeature/usePlanFeatureReq'
 import useSettingsReq from './Setting/useSettingReq'
 import useSpecificationReq from './Product/specification/useSpecificationReq'
+import useSubManagementReq from './Tenant/useSubManagementReq'
+import useClientCredentialsReq from './Product/ClientCredentials/useClientCredentialsReq'
 
 const useRequest = () => {
   const { signIn, userData, logOut } = useUserReq()
@@ -23,8 +25,19 @@ const useRequest = () => {
     getProductTenants,
     editTenantStatus,
     getTimeLine,
-    subscriptionDetails,
   } = useTenantReq()
+  const {
+    subscriptionDetails,
+    subscriptionDetailsRenew,
+    subscriptionDetailsResetSub,
+    subscriptionDetailsLimitReset,
+    setAutoRenewal,
+    cancelAutoRenewal,
+    upgradeSubscription,
+    downgradeSubscription,
+    subscriptionFeturesList,
+    subscriptionCycleById,
+  } = useSubManagementReq()
 
   const {
     createProductRequest,
@@ -32,8 +45,16 @@ const useRequest = () => {
     getProduct,
     getProductList,
     deleteProductReq,
+    getProductWarnings,
   } = useProductReq()
-
+  const {
+    createClientSecret,
+    getClientSecrets,
+    DeleteClientSecret,
+    regenerateClientSecret,
+    editClientSecret,
+    getClientId,
+  } = useClientCredentialsReq()
   const {
     getProductPlans,
     createPlanRequest,
@@ -76,6 +97,8 @@ const useRequest = () => {
     putHeathCheckSettings,
     getSubscriptionsSettings,
     putSubscriptionsSettings,
+    getProductWarningsSettings,
+    putProductWarningsSettings,
   } = useSettingsReq()
 
   return {
@@ -125,6 +148,24 @@ const useRequest = () => {
     editTenantSpecificationRequest,
     getSubscriptionsSettings,
     putSubscriptionsSettings,
+    subscriptionDetailsRenew,
+    subscriptionDetailsResetSub,
+    subscriptionDetailsLimitReset,
+    setAutoRenewal,
+    cancelAutoRenewal,
+    upgradeSubscription,
+    downgradeSubscription,
+    subscriptionFeturesList,
+    subscriptionCycleById,
+    getProductWarningsSettings,
+    putProductWarningsSettings,
+    getProductWarnings,
+    createClientSecret,
+    getClientSecrets,
+    DeleteClientSecret,
+    regenerateClientSecret,
+    editClientSecret,
+    getClientId,
   }
 }
 export default useRequest

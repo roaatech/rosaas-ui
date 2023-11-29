@@ -18,8 +18,10 @@ import { useEffect } from 'react'
 import PlanPriceForm from '../../Product/ProductPlansPrice/PlanPriceForm/PlanPriceForm'
 import CustomSpecificationForm from '../../Product/CustomSpecification/CustomSpecificationForm/CustomSpecificationForm'
 import TenantSpecificationForm from '../../tenant/TenantSpecificatifonForm/TenantSpecificationForm'
+import UpDowngradeForm from '../../tenant/SubscriptionManagement/UpgradeForm/UpDowngradeForm'
+import CreateSecretForm from '../../Product/ClientCredentials/CreateSecretForm/CreateSecretForm'
 
-const DynamicButtons = ({ buttons, disableFormButtons }) => {
+const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
   const navigate = useNavigate()
   const productsData = useSelector((state) => state.products.products)
@@ -104,6 +106,23 @@ const DynamicButtons = ({ buttons, disableFormButtons }) => {
         />
       </>
     ),
+    upDowngradeSubscription: () => (
+      <>
+        <UpDowngradeForm
+          popupLabel={
+            <FormattedMessage id={buttons[currentButtonIndex]?.label} />
+          }
+          tenantData={tenantsData[buttons[currentButtonIndex].id]}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+          update={buttons[currentButtonIndex].update}
+          setUpdate={buttons[currentButtonIndex].setUpdate}
+          selectedProduct={buttons[currentButtonIndex].selectedProduct}
+          type={buttons[currentButtonIndex].formType}
+        />
+      </>
+    ),
 
     addFeaturePlan: () => (
       <>
@@ -165,6 +184,18 @@ const DynamicButtons = ({ buttons, disableFormButtons }) => {
         />
       </>
     ),
+    createSecret: () => (
+      <>
+        <CreateSecretForm
+          popupLabel={<FormattedMessage id="Create-New-Secret" />}
+          type={'create'}
+          setVisible={setVisible}
+          clientId={buttons[currentButtonIndex].clientId}
+          update={buttons[currentButtonIndex].update}
+          setUpdate={buttons[currentButtonIndex].setUpdate}
+        />
+      </>
+    ),
   }
   return (
     <Wrapper direction={direction} className="d-flex">
@@ -215,7 +246,7 @@ const DynamicButtons = ({ buttons, disableFormButtons }) => {
                       setVisible(true)
                       setCurrentButtonIndex(index)
                     }}
-                    disabled={disableFormButtons}
+                    disabled={button.disable}
                   >
                     {button.icon} <FormattedMessage id={button.label} />
                   </Button>
@@ -260,6 +291,7 @@ const DynamicButtons = ({ buttons, disableFormButtons }) => {
                           setVisible(true)
                           setCurrentButtonIndex(index)
                         }}
+                        disabled={button.disable}
                       >
                         {button.icon} <FormattedMessage id={button.label} />
                       </Dropdown.Item>
@@ -267,7 +299,11 @@ const DynamicButtons = ({ buttons, disableFormButtons }) => {
                   } else if (button.type == 'action') {
                     if (button.label != 'Delete') {
                       return (
-                        <Dropdown.Item key={index} onClick={button.func}>
+                        <Dropdown.Item
+                          key={index}
+                          onClick={button.func}
+                          disabled={button.disable}
+                        >
                           {button.icon} <FormattedMessage id={button.label} />
                         </Dropdown.Item>
                       )
@@ -278,6 +314,7 @@ const DynamicButtons = ({ buttons, disableFormButtons }) => {
                           <Dropdown.Item
                             onClick={button.func}
                             className="redColor"
+                            disabled={button.disable}
                           >
                             {button.icon} <FormattedMessage id={button.label} />
                           </Dropdown.Item>

@@ -13,7 +13,6 @@ const setAllSpecifications = (state, action) => {
 
 const specificationInfo = (state, action) => {
   const { productId, specificationId, data } = action.payload
-  console.log('Payload received:', action.payload)
 
   const currentProducts = { ...state.products }
 
@@ -24,7 +23,6 @@ const specificationInfo = (state, action) => {
   }
 
   productToUpdate.specifications[specificationId] = data
-  console.log('Updated product:', productToUpdate)
 
   state.products = {
     ...currentProducts,

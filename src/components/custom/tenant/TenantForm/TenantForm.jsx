@@ -18,6 +18,10 @@ import { Wrapper } from './TenantForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
 import { validateSpecifications } from '../validateSpecifications/validateSpecifications.jsx'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
+import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import { setAllPlansPrice } from '../../../../store/slices/products/productsSlice.js'
 
 const TenantForm = ({
   type,
@@ -47,19 +51,20 @@ const TenantForm = ({
   let list = Object.values(listData)
 
   useEffect(() => {
-    let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
-
-    ;(async () => {
-      const productList = await getProductList(query)
-      dispatch(setAllProduct(productList.data.data.items))
-    })()
+    if (!listData) {
+      let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
+      ;(async () => {
+        const productList = await getProductList(query)
+        dispatch(setAllProduct(productList.data.data.items))
+      })()
+    }
   }, [])
 
   const createValidation = {
-    title: Yup.string().max(
-      100,
-      <FormattedMessage id="Must-be-maximum-100-digits" />
-    ),
+    title: Yup.string()
+      .required(<FormattedMessage id="Title-is-required" />)
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+
     product: Yup.string().required(
       <FormattedMessage id="Please-select-a-product" />
     ),
@@ -77,10 +82,9 @@ const TenantForm = ({
       ),
   }
   const editValidation = {
-    title: Yup.string().max(
-      100,
-      <FormattedMessage id="Must-be-maximum-100-digits" />
-    ),
+    title: Yup.string()
+      .required(<FormattedMessage id="Title-is-required" />)
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
   }
   const validationSchema = Yup.object().shape(
     type === 'create' ? createValidation : editValidation
@@ -89,7 +93,7 @@ const TenantForm = ({
   const selectedProduct = tenantData?.subscriptions?.map((product) => {
     return product.productId
   })
-
+  const [titleToUnique, setTitleToUnique] = useState('')
   const specificationValuesObject = (tenantData?.subscriptions || [])
     .flatMap((subscription) => subscription?.specifications || [])
     .reduce((acc, specification) => {
@@ -99,6 +103,7 @@ const TenantForm = ({
 
   const initialValues = {
     title: tenantData ? tenantData.title : '',
+
     uniqueName: tenantData ? tenantData.uniqueName : '',
     plan: tenantData ? tenantData.plan : '',
     price: tenantData ? tenantData.price : '',
@@ -161,13 +166,13 @@ const TenantForm = ({
           )
 
           navigate(`/tenants/${createTenant.data.data.id}`)
+        } else {
+          const editTenant = await editTenantRequest({
+            title: values.title,
+            id: tenantData.id,
+          })
+          updateTenant()
         }
-      } else {
-        const editTenant = await editTenantRequest({
-          title: values.title,
-          id: tenantData.id,
-        })
-        updateTenant()
       }
       setVisible && setVisible(false)
       setVisible && setVisible(false)
@@ -181,7 +186,7 @@ const TenantForm = ({
       .filter((item) => item.isPublished === true)
       .map((item, index) => ({
         value: item.id,
-        label: item.name,
+        label: item.title,
       }))
   } else {
     planOptions = []
@@ -245,24 +250,42 @@ const TenantForm = ({
       formik.setFieldValue('price', '')
 
       if (formik.values.plan) {
-        const planDataRes = await getProductPlanPriceList(formik.values.product)
-        const planData = planDataRes.data.data
-          .filter(
-            (item) =>
-              item.plan.id === formik.values.plan && item.isPublished === true
+        if (!listData[formik.values.product].plansPrice) {
+          const planDataRes = await getProductPlanPriceList(
+            formik.values.product
           )
-          .map((item) => ({
-            value: item.id,
-            label: `${intl.formatMessage({
-              id: cycle[item.cycle],
-            })} (${item.price})`,
-          }))
-        setPriceList(planData)
-      } else {
-        setPriceList([])
+          dispatch(
+            setAllPlansPrice({
+              productId: formik.values.product,
+              data: planDataRes.data.data,
+            })
+          )
+        }
+        const planData = listData?.[formik.values.product]?.plansPrice
+        if (planData) {
+          const planDataArray = Object.values(planData)
+            .filter(
+              (item) =>
+                item.plan.id === formik.values.plan && item.isPublished === true
+            )
+            .map((item) => ({
+              value: item.id,
+              price: item.price,
+              cycle: intl.formatMessage({
+                id: cycle[item.cycle],
+              }),
+            }))
+          setPriceList(planDataArray)
+        } else {
+          setPriceList([])
+        }
       }
     })()
-  }, [formik.values.plan, formik.values.product])
+  }, [
+    formik.values.plan,
+    formik.values.product,
+    listData?.[formik.values.product]?.plansPrice,
+  ])
 
   return (
     <Wrapper>
@@ -279,7 +302,8 @@ const TenantForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Title" />
+                <FormattedMessage id="Title" />{' '}
+                <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 className="form-control"
@@ -300,32 +324,36 @@ const TenantForm = ({
               )}
             </Form.Group>
           </div>
-          {type === 'create' && (
-            <div>
-              <Form.Group className="mb-3">
-                <Form.Label>
-                  <FormattedMessage id="Unique-Name" />{' '}
-                  <span style={{ color: 'red' }}>*</span>
-                </Form.Label>
-                <input
-                  className="form-control"
-                  type="text"
-                  id="uniqueName"
-                  name="uniqueName"
-                  onChange={formik.handleChange}
-                  value={formik.values.uniqueName}
-                />
-                {formik.touched.uniqueName && formik.errors.uniqueName && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.uniqueName}
-                  </Form.Control.Feedback>
-                )}
-              </Form.Group>
-            </div>
-          )}
+
+          <div className="mb-3">
+            {type === 'create' && (
+              <AutoGenerateInput
+                label={<FormattedMessage id="Name" />}
+                id="uniqueName"
+                value={formik.values.title}
+                name={formik.values.uniqueName}
+                onChange={formik.handleChange}
+                onGenerateUniqueName={(generatedUniqueName) => {
+                  formik.setFieldValue('uniqueName', generatedUniqueName)
+                }}
+                onAutoGenerateClick={() => {
+                  formik.setFieldValue(
+                    'isAutoGenerated',
+                    !formik.values.isAutoGenerated
+                  )
+                }}
+                isAutoGenerated={formik.values.isAutoGenerated}
+              />
+            )}
+            {formik.touched.uniqueName && formik.errors.uniqueName && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.uniqueName}
+              </Form.Control.Feedback>
+            )}
+          </div>
           {type === 'create' && (
             <div>
               <Form.Group className="mb-3">
@@ -419,6 +447,9 @@ const TenantForm = ({
                   </option>
                   {priceList.map((option) => (
                     <option key={option.value} value={option.value}>
+                      <span className="dolar">$</span>
+                      <div className="price">{option.price}</div>/
+                      <div className="cycle">{option.cycle}</div>
                       {option.label}
                     </option>
                   ))}

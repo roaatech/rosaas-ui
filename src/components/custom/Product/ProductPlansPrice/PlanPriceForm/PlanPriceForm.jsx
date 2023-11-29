@@ -155,7 +155,7 @@ const PlanPriceForm = ({
     ),
     price: Yup.number()
       .required(<FormattedMessage id="This-field-is-required" />)
-      .min(1, <FormattedMessage id="The-price-must-be-more-than-0" />)
+      .min(0, <FormattedMessage id="The-price-must-be-0-or-more" />)
       .max(999999, <FormattedMessage id="The-value-must-not-exceed-999,999" />),
   })
 
@@ -186,7 +186,7 @@ const PlanPriceForm = ({
             planPriceId: createPlanPrice.data.data.id,
             productId: productId,
             data: {
-              plan: { id: values.plan, name: allPlans[values.plan].name },
+              plan: { id: values.plan, title: allPlans[values.plan].title },
               cycle: values.cycle,
               price: values.price,
               description: values.description,
@@ -217,7 +217,7 @@ const PlanPriceForm = ({
             planPriceId: planPriceData.id,
             productId: productId,
             data: {
-              plan: { id: values.plan, name: allPlans[values.plan].name },
+              plan: { id: values.plan, title: allPlans[values.plan].title },
               cycle: values.cycle,
               price: values.price,
               description: values.description,
@@ -241,7 +241,7 @@ const PlanPriceForm = ({
   let planOptions
   if (allProducts[productId]?.plans) {
     planOptions = Object.values(allPlans).map((item, index) => {
-      return { value: item.id, label: item.name }
+      return { value: item.id, label: item.title }
     })
   } else {
     planOptions = []

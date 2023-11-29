@@ -1,8 +1,13 @@
 import styled, { css } from 'styled-components'
 
 export const Wrapper = styled.span`
+  .lighter {
+    font-weight: lighter !important;
+  }
+  .normal {
+    font-weight: bold !important;
+  }
   .label {
-    font-weight: bold;
     padding: 7px 12px;
     border-radius: 5px;
     font-size: var(--smallFont);

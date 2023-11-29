@@ -32,6 +32,20 @@ export const Wrapper = styled.div`
     padding: 12px 7px;
     border-radius: 10px;
   }
+  .warnings .p-tabview-nav-link {
+    background-color: #ffd90030 !important;
+  }
+
+  .error-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 4px 8px;
+    font-size: 12px;
+  }
   .timeLineCont {
     max-height: calc(100vh - 220px);
     overflow-y: auto;

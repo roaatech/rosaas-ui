@@ -4,8 +4,14 @@ export const Wrapper = styled.div`
     max-width: 410px;
     white-space: normal;
   }
-  .planFeatureButton {
-    font-size: var(--defaultFont);
+  .fw-normal, .fw-normal .planFeatureButton {
+    font-size: var(--smallFont);
+  }
+  .table-title-cell{
+    /*background-color: #f9f9f9;*/
+    text-align: center;
+    font-size: var(--normalFont) !important;
+    font-style: italic;
   }
   .clickable-text,
   .clickable-icon {

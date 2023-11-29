@@ -9,6 +9,11 @@ export const Wrapper = styled.div`
     color: var(--red);
     background: '#eff9f6';
   }
+  .firstTd {
+    width: 145px !important;
+    padding-right: 0 !important;
+    text-align: ${(props) => (props.direction == 'rtl' ? 'right' : 'left')};
+  }
   .label-white {
     font-size: var(--smallFont);
     font-weight: bold;

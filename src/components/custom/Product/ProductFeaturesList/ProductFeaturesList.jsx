@@ -88,7 +88,8 @@ export const ProductFeaturesList = ({ productId }) => {
       name,
       description,
       type,
-      // unit,
+      title,
+      displayOrder,
       reset,
       id,
       createdDate,
@@ -103,6 +104,9 @@ export const ProductFeaturesList = ({ productId }) => {
       <>
         <tr>
           <td>
+            <span className="fw-normal">{title}</span>
+          </td>
+          <td>
             <span className="fw-normal">{name}</span>
           </td>
           <td className="description">
@@ -115,10 +119,13 @@ export const ProductFeaturesList = ({ productId }) => {
           {/* <td>
             <span className="fw-normal">{mappedUnit}</span>
           </td> */}
-          <td>
+          {/* <td>
             <span className="fw-normal">
               <FormattedMessage id={mappedReset} />
             </span>
+          </td> */}
+          <td>
+            <span className="fw-normal">{displayOrder}</span>
           </td>
           <td>
             <span className="fw-normal">
@@ -173,6 +180,9 @@ export const ProductFeaturesList = ({ productId }) => {
               <thead>
                 <tr>
                   <th className="border-bottom">
+                    <FormattedMessage id="Title" />
+                  </th>
+                  <th className="border-bottom">
                     <FormattedMessage id="Name" />
                   </th>
                   <th className="border-bottom description">
@@ -185,8 +195,11 @@ export const ProductFeaturesList = ({ productId }) => {
                   {/* <th className="border-bottom">
                     <FormattedMessage id="Unit" />
                   </th> */}
-                  <th className="border-bottom">
+                  {/* <th className="border-bottom">
                     <FormattedMessage id="Reset" />
+                  </th> */}
+                  <th className="border-bottom">
+                    <FormattedMessage id="Display-Order" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Date" />

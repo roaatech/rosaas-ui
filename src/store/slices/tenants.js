@@ -21,6 +21,7 @@ export const tenantsSlice = createSlice({
       })
       state.tenants = allTenant
     },
+
     tenantInfo: (state, action) => {
       const currentTenants = { ...current(state.tenants) }
       currentTenants[action.payload.id] = action.payload
@@ -60,7 +61,44 @@ export const tenantsSlice = createSlice({
       state.currentTab = action.payload
     },
     subscriptionData: (state, action) => {
-      state.subscriptionData = action.payload
+      const currentTenants = JSON.parse(JSON.stringify(current(state.tenants)))
+      currentTenants[action.payload.id].subscriptionData = { ...action.payload }
+      state.tenants = currentTenants
+    },
+    removeSubscriptionDataByProductId: (state, action) => {
+      const currentTenants = JSON.parse(JSON.stringify(current(state.tenants)))
+      const productIdToRemove = action.payload.productId
+
+      for (const tenantId in currentTenants) {
+        if (currentTenants.hasOwnProperty(tenantId)) {
+          const subscriptionData = currentTenants[tenantId].subscriptionData
+
+          if (
+            subscriptionData &&
+            subscriptionData.data &&
+            subscriptionData.data.productId === productIdToRemove
+          ) {
+            delete currentTenants[tenantId].subscriptionData
+          }
+        }
+      }
+
+      state.tenants = currentTenants
+    },
+    featuresData: (state, action) => {
+      const currentTenants = JSON.parse(JSON.stringify(current(state.tenants)))
+      currentTenants[action.payload.id].subscriptionData.data.features = {
+        ...action.payload,
+      }
+      state.tenants = currentTenants
+    },
+    subHistoryData: (state, action) => {
+      const currentTenants = JSON.parse(JSON.stringify(current(state.tenants)))
+      currentTenants[action.payload.id].subscriptionData.data.subHistoryData = {
+        ...action.payload,
+      }
+
+      state.tenants = currentTenants
     },
   },
 })
@@ -73,5 +111,8 @@ export const {
   history,
   setActiveIndex,
   subscriptionData,
+  featuresData,
+  subHistoryData,
+  removeSubscriptionDataByProductId,
 } = tenantsSlice.actions
 export default tenantsSlice.reducer

@@ -17,6 +17,7 @@ import {
   BsPersonFillDown,
   BsPersonSlash,
   BsPeople,
+  BsExclamationTriangle,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -40,7 +41,11 @@ import { useParams } from 'react-router-dom'
 import { setAllTenant } from '../../store/slices/tenants'
 import { setAllProduct } from '../../store/slices/products/productsSlice.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import {
+  faTimes,
+  faSignOutAlt,
+  faExclamationTriangle,
+} from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
 import QuickActions from './QuickActions/QuickActions'
 
@@ -131,7 +136,7 @@ export default (props = {}) => {
     const classNames = badgeText
       ? 'd-flex justify-content-start align-items-center justify-content-between'
       : ''
-    const navItemClassName = link === pathname || isActive ? 'active' : ''
+    const navItemClassName = pathname.includes(link) || isActive ? 'active' : ''
     const linkProps = external ? { href: link } : { as: Link, to: link }
 
     return (
@@ -380,6 +385,11 @@ export default (props = {}) => {
                   title={<FormattedMessage id="Subscriptions" />}
                   link={`/settings/subscriptions`}
                   icon={BsPeople}
+                />
+                <NavItem
+                  title={<FormattedMessage id="Product-Warnings" />}
+                  link={`/settings/product-warnings`}
+                  icon={BsExclamationTriangle}
                 />
               </CollapsableNavItem>
             </Nav>

@@ -17,10 +17,10 @@ import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCo
 
 import {
   activeIndex,
-  featureResetMap,
   featureTypeMap,
   featureUnitMap,
 } from '../../../../../const/index.js'
+import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 const FeatureForm = ({
   type,
   featureData,
@@ -37,19 +37,33 @@ const FeatureForm = ({
 
   const initialValues = {
     name: featureData ? featureData.name : '',
+    title: featureData ? featureData.title : '',
     description: featureData ? featureData.description : '',
     type: featureData ? featureData.type : '',
     // unit: featureData ? featureData.unit : undefined,
-    reset: featureData ? featureData.reset : '',
+    displayOrder: featureData ? featureData.displayOrder : '0',
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
-    ),
+    title: Yup.string()
+      .required(<FormattedMessage id="Title-is-required" />)
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+    name: Yup.string()
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
+      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .matches(
+        /^[a-zA-Z0-9_-]+$/,
+        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+      ),
     type: Yup.string().required(
       <FormattedMessage id="This-field-is-required" />
     ),
+    displayOrder: Yup.number()
+      .typeError('Display Order must be a number')
+      .integer('Display Order must be an integer')
+      .min(0, 'Display Order must be a positive number')
+      .default(0),
+
     // unit: Yup.string().test(
     //   'unit-validation',
     //   'Unit is required when Type is Number',
@@ -69,10 +83,10 @@ const FeatureForm = ({
       if (type === 'create') {
         const createFeature = await createFeatureRequest(productId, {
           name: values.name,
+          title: values.title,
           description: values.description,
           type: parseInt(values.type),
-          // unit: parseInt(values.unit),
-          reset: parseInt(values.reset) || 1,
+          displayOrder: values.displayOrder || 0,
         })
 
         if (!allProducts[productId].feature) {
@@ -91,10 +105,11 @@ const FeatureForm = ({
             productId: productId,
             data: {
               name: values.name,
+              title: values.title,
               description: values.description,
               type: values.type,
+              displayOrder: values.displayOrder || 0,
               // unit: values.unit,
-              reset: values.reset || 1,
               id: createFeature.data.data.id,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: new Date().toISOString().slice(0, 19),
@@ -109,10 +124,11 @@ const FeatureForm = ({
         const editFeature = await editFeatureRequest(productId, {
           data: {
             name: values.name,
+            title: values.title,
             description: values.description,
             type: parseInt(values.type),
+            displayOrder: values.displayOrder || 0,
             // unit: parseInt(values.unit),
-            reset: parseInt(values.reset) || 1,
           },
           id: featureData.id,
         })
@@ -123,10 +139,11 @@ const FeatureForm = ({
             productId: productId,
             data: {
               name: values.name,
+              title: values.title,
               description: values.description,
               type: values.type,
+              displayOrder: values.displayOrder || 0,
               // unit: values.unit,
-              reset: values.reset || 1,
               id: featureData.id,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: featureData.createdDate,
@@ -153,32 +170,60 @@ const FeatureForm = ({
         </Modal.Header>
 
         <Modal.Body>
-          <div>
-            {/* Name */}
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Name" />{' '}
-                <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                name="name"
-                onChange={formik.handleChange}
-                value={formik.values.name}
-              />
-              {/* Display validation error */}
-              {formik.touched.name && formik.errors.name && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.name}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>
+              <FormattedMessage id="Title" />{' '}
+              <span style={{ color: 'red' }}>*</span>
+            </Form.Label>
+
+            <input
+              className="form-control"
+              type="text"
+              id="title"
+              name="title"
+              onChange={formik.handleChange}
+              value={formik.values.title}
+            />
+
+            {formik.touched.title && formik.errors.title && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.title}
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
+
+          <div className="mb-3">
+            <AutoGenerateInput
+              label={<FormattedMessage id="Name" />}
+              id="name"
+              value={formik.values.title}
+              name={formik.values.name}
+              onChange={formik.handleChange}
+              onGenerateUniqueName={(generatedUniqueName) => {
+                formik.setFieldValue('name', generatedUniqueName)
+              }}
+              onAutoGenerateClick={() => {
+                formik.setFieldValue(
+                  'isAutoGenerated',
+                  !formik.values.isAutoGenerated
+                )
+              }}
+              isAutoGenerated={formik.values.isAutoGenerated}
+            />
+
+            {formik.touched.name && formik.errors.name && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.name}
+              </Form.Control.Feedback>
+            )}
           </div>
+
           <Form.Group className="mb-3">
             <Form.Label>
               <FormattedMessage id="Description" />
@@ -279,35 +324,27 @@ const FeatureForm = ({
                 )}
             </Form.Group>
           </div> */}
+
           <div>
-            {/* Reset */}
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Reset" />
+                <FormattedMessage id="Display-Order" />
               </Form.Label>
-              <select
+              <input
+                type="text"
                 className="form-control"
-                id="reset"
-                name="reset"
+                id="displayOrder"
+                name="displayOrder"
                 onChange={formik.handleChange}
-                value={formik.values.reset}
-              >
-                <option value="">
-                  <FormattedMessage id="Select-Option" />
-                </option>
-                {Object.entries(featureResetMap).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-              {/* Display validation error */}
-              {formik.touched.reset && formik.errors.reset && (
+                value={formik.values.displayOrder}
+              />
+
+              {formik.touched.displayOrder && formik.errors.displayOrder && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.reset}
+                  {formik.errors.displayOrder}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
