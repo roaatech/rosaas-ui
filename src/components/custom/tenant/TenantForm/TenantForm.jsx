@@ -166,13 +166,13 @@ const TenantForm = ({
           )
 
           navigate(`/tenants/${createTenant.data.data.id}`)
+        } else {
+          const editTenant = await editTenantRequest({
+            title: values.title,
+            id: tenantData.id,
+          })
+          updateTenant()
         }
-      } else {
-        const editTenant = await editTenantRequest({
-          title: values.title,
-          id: tenantData.id,
-        })
-        updateTenant()
       }
       setVisible && setVisible(false)
       setVisible && setVisible(false)

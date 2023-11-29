@@ -202,6 +202,7 @@ const SubscriptionManagement = (props) => {
                   setUpdate,
                   icon: <BsUpload />,
                   formType: 'upgrade',
+                  disable: !subscriptionData?.isPlanChangeAllowed,
                 },
                 {
                   order: 4,
@@ -214,6 +215,7 @@ const SubscriptionManagement = (props) => {
                   setUpdate,
                   icon: <BsDownload />,
                   formType: 'downgrade',
+                  disable: !subscriptionData?.isPlanChangeAllowed,
                 },
                 {
                   order: 4,
@@ -228,6 +230,7 @@ const SubscriptionManagement = (props) => {
                   label: 'Reset-Limit',
                   func: handleResetLimit,
                   icon: <BsArrowCounterclockwise />,
+                  disable: !hasResetableValue,
                 },
                 {
                   order: 4,
@@ -235,6 +238,7 @@ const SubscriptionManagement = (props) => {
                   label: 'Reset-Subs',
                   func: handleResetSubscription,
                   icon: <BsArrowCounterclockwise />,
+                  disable: !ResettableAllowed,
                 },
               ]}
             />

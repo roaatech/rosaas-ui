@@ -146,7 +146,6 @@ export default function ChildTable({
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
         <DynamicButtons
-          disableFormButtons={!checkSpecificationsArray}
           buttons={
             productData.actions && productData.actions[0]?.status != 13
               ? [
@@ -168,6 +167,7 @@ export default function ChildTable({
                     component: 'editTenantSpecification',
                     updateTenant: updateTenant,
                     selectedProduct: productData.productId,
+                    disable: !checkSpecificationsArray,
                     icon: <AiFillEdit />,
                   },
                   {

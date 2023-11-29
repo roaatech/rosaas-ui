@@ -126,8 +126,10 @@ export default function ProductFeaturePlan({ children }) {
       Feature: data.feature.title,
       Plan: data.plan.title,
       Limit: data.limit,
-      // Reset: data.feature.reset,
-      Unit: data.unit,
+      Unit: featureUnitMap[data.unit],
+      'Unit-Display-Name-En': data.unitDisplayName?.en,
+      'Unit-Display-Name-Ar': data.unitDisplayName?.ar,
+      Reset: featureResetMap[data.reset],
       Description: data.description,
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
@@ -166,7 +168,6 @@ export default function ProductFeaturePlan({ children }) {
         title: item.feature.title,
         name: item.feature.name,
         type: item.feature.type,
-        reset: item.feature.reset,
         index: Object.keys(featuresObj).length,
       }
     }
@@ -198,24 +199,38 @@ export default function ProductFeaturePlan({ children }) {
                             className="text-dark m-0 p-0 planFeatureButton"
                           >
                             {listData[tableData[planId + ',' + item.featureId]]
-                              .limit ? (
-                              listData[tableData[planId + ',' + item.featureId]]
-                                .limit +
+                              .limit || item.type == 1 ? (
+                              (listData[
+                                tableData[planId + ',' + item.featureId]
+                              ].limit ||
+                                intl.formatMessage({
+                                  id: 'Unlimited',
+                                })) +
                               ' ' +
                               (featureUnitMap[
                                 listData[
                                   tableData[planId + ',' + item.featureId]
                                 ].unit
-                              ] != 'none'
+                              ] != 'unit'
                                 ? featureUnitMap[
                                     listData[
                                       tableData[planId + ',' + item.featureId]
                                     ].unit
                                   ]
-                                : 'unit') +
+                                : direction == 'rtl'
+                                ? listData[
+                                    tableData[planId + ',' + item.featureId]
+                                  ].unitDisplayName?.ar || 'unit'
+                                : listData[
+                                    tableData[planId + ',' + item.featureId]
+                                  ].unitDisplayName?.en || 'unit') +
                               ' / ' +
                               intl.formatMessage({
-                                id: featureResetMap[item.reset],
+                                id: featureResetMap[
+                                  listData[
+                                    tableData[planId + ',' + item.featureId]
+                                  ].reset
+                                ],
                               })
                             ) : (
                               <FormattedMessage id="Yes" />

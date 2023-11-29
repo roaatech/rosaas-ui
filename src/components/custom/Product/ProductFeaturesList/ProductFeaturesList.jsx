@@ -119,11 +119,11 @@ export const ProductFeaturesList = ({ productId }) => {
           {/* <td>
             <span className="fw-normal">{mappedUnit}</span>
           </td> */}
-          <td>
+          {/* <td>
             <span className="fw-normal">
               <FormattedMessage id={mappedReset} />
             </span>
-          </td>
+          </td> */}
           <td>
             <span className="fw-normal">{displayOrder}</span>
           </td>
@@ -195,9 +195,9 @@ export const ProductFeaturesList = ({ productId }) => {
                   {/* <th className="border-bottom">
                     <FormattedMessage id="Unit" />
                   </th> */}
-                  <th className="border-bottom">
+                  {/* <th className="border-bottom">
                     <FormattedMessage id="Reset" />
-                  </th>
+                  </th> */}
                   <th className="border-bottom">
                     <FormattedMessage id="Display-Order" />
                   </th>
