@@ -9,4 +9,10 @@ export const Wrapper = styled.div`
     width: fit-content;
     margin-bottom: 1.25rem;
   }
+  .subscribers-active {
+    color: var(--second-color);
+  }
+  .subscribers-passive {
+    color: #929292;
+  }
 `

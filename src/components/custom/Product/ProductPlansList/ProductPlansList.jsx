@@ -50,6 +50,7 @@ import {
 import { PublishStatus } from '../../../../const'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { setActiveIndex } from '../../../../store/slices/tenants'
+import { GiShadowFollower } from 'react-icons/gi'
 
 export const ProductPlansList = ({ productId }) => {
   const { getProductPlans, deletePlanReq, publishPlan } = useRequest()
@@ -132,6 +133,7 @@ export const ProductPlansList = ({ productId }) => {
       createdDate,
       isPublished,
       editedDate,
+      subscribers,
     } = props
     const publishStatus = isPublished ? true : false
 
@@ -147,6 +149,16 @@ export const ProductPlansList = ({ productId }) => {
           <td>
             <span>
               <Label {...PublishStatus[publishStatus]} />
+            </span>
+          </td>
+          <td>
+            <span
+              className={`${
+                subscribers > 0 ? 'subscribers-active' : 'subscribers-passive'
+              }`}
+            >
+              <GiShadowFollower />
+              <span className="ml-1">{subscribers ? subscribers : 0}</span>
             </span>
           </td>
 
@@ -249,6 +261,9 @@ export const ProductPlansList = ({ productId }) => {
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Status" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Subscribers" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Description" />

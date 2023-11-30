@@ -29,7 +29,6 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
     editClientSecret,
     getClientId,
   } = useRequest()
-
   const dispatch = useDispatch()
   const routeParams = useParams()
   const productId = routeParams.id
@@ -97,6 +96,10 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
     }
 
     fetchData()
+  }, [type])
+  const [showClientId, setShowClientId] = useState(false)
+  useEffect(() => {
+    type === 'showClientId' ? setShowClientId(true) : setShowClientId(false)
   }, [type])
 
   const formik = useFormik({
@@ -244,13 +247,15 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
   const ClientIdField = () => {
     return (
       <>
-        <Alert variant={'warning'}>
-          <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
-          <strong>
-            <FormattedMessage id={'Warning'} /> -
-          </strong>{' '}
-          {<FormattedMessage id="warning-messege-secret-copy" />}
-        </Alert>
+        {!showClientId && (
+          <Alert variant={'warning'}>
+            <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
+            <strong>
+              <FormattedMessage id={'Warning'} /> -
+            </strong>{' '}
+            {<FormattedMessage id="warning-messege-secret-copy" />}
+          </Alert>
+        )}
         <Form.Group className="mb-3">
           <Form.Label>
             <FormattedMessage id="Client-ID" />{' '}
@@ -275,36 +280,38 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
             </span>{' '}
           </div>
         </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>
-            <FormattedMessage id="Client-Secret" />{' '}
-          </Form.Label>
-          <div
-            className="input-group border-right-1"
-            style={{ borderRight: '1px solid #ced4da' }}
-          >
-            <input
-              type={showSecret ? 'text' : 'password'}
-              value={showSecret ? clientSecret : '******'}
-              className="form-control"
-              readOnly
-            />
-
-            <span className="input-group-text">
-              <FontAwesomeIcon
-                icon={showSecret ? faEyeSlash : faEye}
-                onClick={handleToggleShowSecret}
-                className="mr-2"
-                style={{ cursor: 'pointer' }}
+        {!showClientId && (
+          <Form.Group className="mb-3">
+            <Form.Label>
+              <FormattedMessage id="Client-Secret" />{' '}
+            </Form.Label>
+            <div
+              className="input-group border-right-1"
+              style={{ borderRight: '1px solid #ced4da' }}
+            >
+              <input
+                type={showSecret ? 'text' : 'password'}
+                value={showSecret ? clientSecret : '******'}
+                className="form-control"
+                readOnly
               />
-              <FontAwesomeIcon
-                icon={faCopy}
-                onClick={() => handleCopyToClipboard(clientSecret)}
-                style={{ cursor: 'pointer' }}
-              />{' '}
-            </span>
-          </div>
-        </Form.Group>
+
+              <span className="input-group-text">
+                <FontAwesomeIcon
+                  icon={showSecret ? faEyeSlash : faEye}
+                  onClick={handleToggleShowSecret}
+                  className="mr-2"
+                  style={{ cursor: 'pointer' }}
+                />
+                <FontAwesomeIcon
+                  icon={faCopy}
+                  onClick={() => handleCopyToClipboard(clientSecret)}
+                  style={{ cursor: 'pointer' }}
+                />{' '}
+              </span>
+            </div>
+          </Form.Group>
+        )}
       </>
     )
   }
@@ -332,8 +339,8 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
         </Modal.Header>
 
         <Modal.Body>
-          {nextPage && <ClientIdField />}
-          {!nextPage && (
+          {(nextPage || showClientId) && <ClientIdField />}
+          {!nextPage && !showClientId && (
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Title" />{' '}
@@ -360,7 +367,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
             </Form.Group>
           )}
 
-          {!nextPage && (
+          {!nextPage && !showClientId && (
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Expiration" />
@@ -428,7 +435,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          {!nextPage && (
+          {!nextPage && !showClientId && (
             <Button variant="secondary" type="submit">
               <FormattedMessage id="Submit" />
             </Button>

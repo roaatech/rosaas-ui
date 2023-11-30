@@ -23,6 +23,12 @@ export const Wrapper = styled.div`
   .clickable-icon {
     cursor: pointer;
   }
+  .subscribers-active {
+    color: var(--second-color);
+  }
+  .subscribers-passive {
+    color: #ccc;
+  }
 
   span.label {
     font-size: var(--normalFont);

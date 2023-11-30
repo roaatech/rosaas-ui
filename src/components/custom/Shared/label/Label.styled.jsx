@@ -7,10 +7,16 @@ export const Wrapper = styled.span`
   .normal {
     font-weight: bold !important;
   }
+
   .label {
     padding: 7px 12px;
     border-radius: 5px;
     font-size: var(--smallFont);
     background-color: var(--primary1);
+  }
+  .small {
+    padding: 3px 5px;
+    border-radius: 5px;
+    font-size: var(--smallFont);
   }
 `

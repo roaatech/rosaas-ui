@@ -187,8 +187,8 @@ const DynamicButtons = ({ buttons }) => {
     createSecret: () => (
       <>
         <CreateSecretForm
-          popupLabel={<FormattedMessage id="Create-New-Secret" />}
-          type={'create'}
+          popupLabel={buttons[currentButtonIndex].popupLabel}
+          type={buttons[currentButtonIndex].formType}
           setVisible={setVisible}
           clientId={buttons[currentButtonIndex].clientId}
           update={buttons[currentButtonIndex].update}

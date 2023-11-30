@@ -11,6 +11,8 @@ import {
   ButtonGroup,
   Dropdown,
   Table,
+  OverlayTrigger,
+  Tooltip,
 } from '@themesberg/react-bootstrap'
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -34,6 +36,8 @@ import { DataTransform } from '../../../../lib/sharedFun/Time'
 import ShowDetails from '../../Shared/ShowDetails/ShowDetails'
 import { toast } from 'react-toastify'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import Label from '../../Shared/label/Label'
+import { GiShadowFollower } from 'react-icons/gi'
 
 export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [currentPlanId, setCurrentPlanId] = useState('')
@@ -395,7 +399,35 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                             <BsToggleOff />
                           </span>
                         )}
-                        {planList[item].title}
+                        <span className="mr-1">{planList[item].title}</span>
+
+                        {planList[item].subscribers && (
+                          <span className="ml-3 ">
+                            <OverlayTrigger
+                              trigger={['hover', 'focus']}
+                              overlay={
+                                <Tooltip>
+                                  {intl.formatMessage({
+                                    id: 'Subscriber',
+                                  })}
+                                </Tooltip>
+                              }
+                            >
+                              <span
+                                className={`${
+                                  planList[item].subscribers > 0
+                                    ? 'subscribers-active'
+                                    : 'subscribers-passive'
+                                }`}
+                              >
+                                <GiShadowFollower />
+                                <span className="ml-1">
+                                  {planList[item].subscribers}
+                                </span>
+                              </span>
+                            </OverlayTrigger>
+                          </span>
+                        )}
                       </th>
                     ))}
                 </tr>

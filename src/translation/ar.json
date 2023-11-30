@@ -374,5 +374,6 @@
   "Unit-Display-Name-En": "اسم العرض للوحدة (إنجليزي)",
   "Unit-Display-Name-Ar": "اسم العرض للوحدة (عربي)",
   "Unit-Display-Name": "اسم العرض للوحدة",
-  "Unlimited": "غير محدود"
+  "Unlimited": "غير محدود",
+  "Show-Client-Id": "إظهار معرف العميل"
 }

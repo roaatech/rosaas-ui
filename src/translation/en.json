@@ -371,5 +371,6 @@
   "Unit-Display-Name-En": "Unit Display Name (En)",
   "Unit-Display-Name-Ar": "Unit Display Name (Ar)",
   "Unit-Display-Name": "Unit Display Name",
-  "Unlimited": "Unlimited"
+  "Unlimited": "Unlimited",
+  "Show-Client-Id": "Show Client ID"
 }

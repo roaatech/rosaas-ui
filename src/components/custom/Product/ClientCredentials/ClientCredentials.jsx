@@ -22,7 +22,7 @@ import {
 import { FormattedMessage } from 'react-intl'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import { Wrapper } from './ClientCredentials.styled'
-import { BsPlusCircleFill } from 'react-icons/bs'
+import { BsEye, BsEyeFill, BsPlusCircleFill } from 'react-icons/bs'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
 import Label from '../../Shared/label/Label'
@@ -185,14 +185,28 @@ const ClientCredentials = ({ data }) => {
         <DynamicButtons
           buttons={[
             {
+              popupLabel: <FormattedMessage id="Create-New-Secret" />,
               order: 1,
               type: 'form',
               label: 'New-Secret',
               component: 'createSecret',
               clientId: client,
               icon: <BsPlusCircleFill />,
+              formType: 'create',
               update,
               setUpdate,
+            },
+            {
+              popupLabel: <FormattedMessage id="Show-Client-Id" />,
+              order: 4,
+              type: 'form',
+              label: 'Show-Client-Id',
+              component: 'createSecret',
+              clientId: client,
+              icon: <BsEyeFill />,
+              update,
+              setUpdate,
+              formType: 'showClientId',
             },
           ]}
         />
