@@ -37,6 +37,9 @@ import { toast } from 'react-toastify'
 import { useIntl } from 'react-intl'
 import ShowDetails from '../../Shared/ShowDetails/ShowDetails'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import { BsCurrencyDollar } from 'react-icons/bs'
+import { setActiveIndex } from '../../../../store/slices/tenants'
 export default function ProductPlansPriceList({ children }) {
   const intl = useIntl()
   const dispatch = useDispatch()
@@ -288,7 +291,22 @@ export default function ProductPlansPriceList({ children }) {
 
   return (
     <Wrapper>
-      <div>
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'form',
+              id: productId,
+              label: 'Add-Plan-Price',
+              component: 'addPlanPrice',
+              icon: <BsCurrencyDollar />,
+              setActiveIndex: setActiveIndex,
+            },
+          ]}
+        />
+      </div>
+      <div className="border-top-1 border-light">
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"

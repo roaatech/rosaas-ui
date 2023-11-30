@@ -163,16 +163,23 @@ const ProductDetails = () => {
           >
             {productData && (
               <TabPanel header={<FormattedMessage id="Details" />}>
-                <ProductDetailsTab data={productData} />
+                <ProductDetailsTab
+                  data={productData}
+                  setActiveIndex={setActiveIndex}
+                />
               </TabPanel>
             )}
             <TabPanel header={<FormattedMessage id="Client-Credentials" />}>
-              <ClientCredentials data={productData} />
+              <ClientCredentials
+                data={productData}
+                setActiveIndex={setActiveIndex}
+              />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
               <ProductCustomSpecificationList
                 productId={productData.id}
                 productName={productData.name}
+                setActiveIndex={setActiveIndex}
               />
             </TabPanel>
 
@@ -180,25 +187,34 @@ const ProductDetails = () => {
               <ProductPlansList
                 productId={productData.id}
                 productName={productData.name}
+                setActiveIndex={setActiveIndex}
               />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Features" />}>
               <ProductFeaturesList
                 productId={productData.id}
                 productName={productData.name}
+                setActiveIndex={setActiveIndex}
               />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Plan's-Features" />}>
-              <ProductFeaturePlan productId={productData.id} />
+              <ProductFeaturePlan
+                productId={productData.id}
+                setActiveIndex={setActiveIndex}
+              />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Plans-Prices" />}>
-              <ProductPlansPriceList productId={productData.id} />
+              <ProductPlansPriceList
+                productId={productData.id}
+                setActiveIndex={setActiveIndex}
+              />
             </TabPanel>
 
             <TabPanel header={<FormattedMessage id="Subscriptions" />}>
               <ProductTenantsList
                 productId={productData.id}
                 productName={productData.name}
+                setActiveIndex={setActiveIndex}
               />
             </TabPanel>
             <TabPanel
@@ -214,7 +230,10 @@ const ProductDetails = () => {
               }
               className={productData?.warningsNum > 0 && 'warnings'}
             >
-              <ProductWarnings productId={productData.id} />
+              <ProductWarnings
+                productId={productData.id}
+                setActiveIndex={setActiveIndex}
+              />
             </TabPanel>
           </TabView>
         </div>

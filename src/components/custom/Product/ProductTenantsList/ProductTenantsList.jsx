@@ -24,6 +24,8 @@ import DateLabel from '../../Shared/DateLabel/DateLabel'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import Label from '../../Shared/label/Label'
 import { subscriptionStatus } from '../../../../const/product'
+import { Wrapper } from './ProductTenantsList.styled'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { getProductTenants } = useRequest()
@@ -167,52 +169,54 @@ export const ProductTenantsList = ({ productId, productName }) => {
   }
 
   return (
-    <Card border="light" className="table-wrapper table-responsive shadow-sm">
-      <Card.Body className="pt-0">
-        <Table hover className="user-table align-items-center">
-          <thead>
-            <tr>
-              <th className="border-bottom">
-                <FormattedMessage id="Title" />
-              </th>
-              <th className="border-bottom">
-                <FormattedMessage id="Unique-Name" />
-              </th>
+    <Wrapper>
+      <Card border="light" className="table-wrapper table-responsive shadow-sm">
+        <Card.Body className="pt-0">
+          <Table hover className="user-table align-items-center">
+            <thead>
+              <tr>
+                <th className="border-bottom">
+                  <FormattedMessage id="Title" />
+                </th>
+                <th className="border-bottom">
+                  <FormattedMessage id="Unique-Name" />
+                </th>
 
-              <th className="border-bottom">
-                <FormattedMessage id="Plan" />
-              </th>
-              <th className="border-bottom">
-                <FormattedMessage id="Subscription-Status" />
-              </th>
-              <th className="border-bottom">
-                <FormattedMessage id="Start-Date" />
-              </th>
-              <th className="border-bottom">
-                <FormattedMessage id="End-Date" />
-              </th>
-              <th className="border-bottom">
-                <FormattedMessage id="Tenant-Status" />
-              </th>
-              <th className="border-bottom">
-                <FormattedMessage id="Created-Date" />
-              </th>
+                <th className="border-bottom">
+                  <FormattedMessage id="Plan" />
+                </th>
+                <th className="border-bottom">
+                  <FormattedMessage id="Subscription-Status" />
+                </th>
+                <th className="border-bottom">
+                  <FormattedMessage id="Start-Date" />
+                </th>
+                <th className="border-bottom">
+                  <FormattedMessage id="End-Date" />
+                </th>
+                <th className="border-bottom">
+                  <FormattedMessage id="Tenant-Status" />
+                </th>
+                <th className="border-bottom">
+                  <FormattedMessage id="Created-Date" />
+                </th>
 
-              <th className="border-bottom">
-                <FormattedMessage id="Actions" />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {list?.subscribe?.length
-              ? list?.subscribe?.map((t, index) => (
-                  <TableRow key={index} {...t} />
-                ))
-              : null}
-          </tbody>
-        </Table>
-      </Card.Body>
-    </Card>
+                <th className="border-bottom">
+                  <FormattedMessage id="Actions" />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {list?.subscribe?.length
+                ? list?.subscribe?.map((t, index) => (
+                    <TableRow key={index} {...t} />
+                  ))
+                : null}
+            </tbody>
+          </Table>
+        </Card.Body>
+      </Card>
+    </Wrapper>
   )
 }
 

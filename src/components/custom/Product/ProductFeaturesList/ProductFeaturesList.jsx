@@ -33,6 +33,9 @@ import {
 } from '../../../../const'
 import { Wrapper } from './ProductFeaturesList.styled'
 import { toast } from 'react-toastify'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import { BsStars } from 'react-icons/bs'
+import { setActiveIndex } from '../../../../store/slices/tenants'
 
 export const ProductFeaturesList = ({ productId }) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
@@ -170,7 +173,22 @@ export const ProductFeaturesList = ({ productId }) => {
 
   return (
     <Wrapper>
-      <>
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'form',
+              id: productId,
+              label: 'Add-Feature',
+              component: 'addFeature',
+              icon: <BsStars />,
+              setActiveIndex: setActiveIndex,
+            },
+          ]}
+        />
+      </div>
+      <div className="border-top-1 border-light">
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -244,7 +262,7 @@ export const ProductFeaturesList = ({ productId }) => {
             />
           </>
         </ThemeDialog>
-      </>
+      </div>
     </Wrapper>
   )
 }

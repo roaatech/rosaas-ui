@@ -37,6 +37,7 @@ import {
   BsFillBagDashFill,
   BsFillCheckCircleFill,
   BsFillXCircleFill,
+  BsPencilSquare,
   BsShare,
 } from 'react-icons/bs'
 import Label from '../../Shared/label/Label'
@@ -47,6 +48,8 @@ import {
 } from 'react-icons/md'
 
 import { PublishStatus } from '../../../../const'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import { setActiveIndex } from '../../../../store/slices/tenants'
 
 export const ProductPlansList = ({ productId }) => {
   const { getProductPlans, deletePlanReq, publishPlan } = useRequest()
@@ -214,7 +217,22 @@ export const ProductPlansList = ({ productId }) => {
 
   return (
     <Wrapper>
-      <>
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'form',
+              id: productId,
+              label: 'Add-Plan',
+              component: 'addPlan',
+              icon: <BsPencilSquare />,
+              setActiveIndex: setActiveIndex,
+            },
+          ]}
+        />
+      </div>
+      <div className="border-top-1 border-light">
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -278,7 +296,7 @@ export const ProductPlansList = ({ productId }) => {
             />
           </>
         </ThemeDialog>
-      </>
+      </div>
     </Wrapper>
   )
 }

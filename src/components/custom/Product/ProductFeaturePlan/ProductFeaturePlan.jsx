@@ -19,7 +19,7 @@ import { useParams } from 'react-router-dom'
 import { FormattedMessage, useIntl } from 'react-intl'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
-import { BsToggleOff, BsToggleOn } from 'react-icons/bs'
+import { BsToggleOff, BsToggleOn, BsUiChecks } from 'react-icons/bs'
 
 import {
   PlansChangeAttr,
@@ -33,8 +33,9 @@ import { featureResetMap, featureUnitMap } from '../../../../const'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 import ShowDetails from '../../Shared/ShowDetails/ShowDetails'
 import { toast } from 'react-toastify'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
-export default function ProductFeaturePlan({ children }) {
+export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [currentPlanId, setCurrentPlanId] = useState('')
   const [currentFeatureId, setCurrentFeatureId] = useState('')
   let direction = useSelector((state) => state.main.direction)
@@ -348,7 +349,22 @@ export default function ProductFeaturePlan({ children }) {
 
   return (
     <Wrapper direction={direction}>
-      <div>
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'form',
+              id: routeParams.id,
+              label: 'Add-Plan-Feature',
+              component: 'addFeaturePlan',
+              icon: <BsUiChecks />,
+              setActiveIndex: setActiveIndex,
+            },
+          ]}
+        />
+      </div>
+      <div className="border-top-1 border-light">
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"

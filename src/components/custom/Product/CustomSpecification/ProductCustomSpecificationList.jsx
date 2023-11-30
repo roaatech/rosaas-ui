@@ -34,11 +34,16 @@ import Label from '../../Shared/label/Label'
 import {
   MdOutlineUnpublished,
   MdOutlinePublishedWithChanges,
+  MdEditNote,
 } from 'react-icons/md'
 
 import { PublishStatus } from '../../../../const'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
-export const ProductCustomSpecificationList = ({ productId }) => {
+export const ProductCustomSpecificationList = (
+  { productId },
+  setActiveIndex
+) => {
   const {
     getProductSpecification,
     deleteSpecificationReq,
@@ -247,7 +252,23 @@ export const ProductCustomSpecificationList = ({ productId }) => {
 
   return (
     <Wrapper>
-      <>
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'form',
+              id: productId,
+              label: 'Add-Specification',
+              component: 'addSpecification',
+              icon: <MdEditNote />,
+              setActiveIndex: setActiveIndex,
+            },
+          ]}
+        />
+      </div>
+
+      <div className="border-top-1 border-light">
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -324,7 +345,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
             />
           </>
         </ThemeDialog>
-      </>
+      </div>
     </Wrapper>
   )
 }
