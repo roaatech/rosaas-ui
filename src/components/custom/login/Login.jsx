@@ -9,8 +9,11 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../axios/apis/useRequest.js'
+import { Routes } from '../../../routes'
+import { useNavigate } from 'react-router-dom'
 const Login = () => {
   const { signIn } = useRequest()
+  const navigate = useNavigate()
   const initialValues = {
     email: '',
     password: '',
@@ -23,6 +26,9 @@ const Login = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     const loginPass = await signIn(values)
+    if (loginPass) {
+      navigate(Routes.Dashboard.path)
+    }
   }
 
   return (

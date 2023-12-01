@@ -67,6 +67,8 @@ export default (props = {}) => {
   const [filteredProducts, setFilteredProducts] = useState(
     Object.values(productsData)
   )
+  let userRole = useSelector((state) => state.auth.userInfo.role)
+  const roles = ['', 'superAdmin', 'productOwner', 'tenantOwner']
 
   let unFilteredProducts = Object.values(productsData)
   const setUnFilteredProducts = (newData) => {
@@ -319,6 +321,7 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
+
               {archived.length ? (
                 <CollapsableNavItem
                   eventKey={archivedIsOpen}
@@ -335,7 +338,8 @@ export default (props = {}) => {
                 </CollapsableNavItem>
               ) : null}
 
-              {Array.isArray(
+              {(userRole == 'productOwner' || userRole == 'superAdmin') &&
+              Array.isArray(
                 searchValue.length ? filteredProducts : unFilteredProducts
               ) &&
               (searchValue.length ? filteredProducts : unFilteredProducts)
@@ -371,27 +375,29 @@ export default (props = {}) => {
                 </CollapsableNavItem>
               ) : null}
 
-              <CollapsableNavItem
-                eventKey={settingIsOpen}
-                title={<FormattedMessage id="Settings" />}
-                icon={<BsGearFill />}
-              >
-                <NavItem
-                  title={<FormattedMessage id="Health-Check-sidebar" />}
-                  link={`/settings/health-check`}
-                  icon={BsFillClipboard2CheckFill}
-                />
-                <NavItem
-                  title={<FormattedMessage id="Subscriptions" />}
-                  link={`/settings/subscriptions`}
-                  icon={BsPeople}
-                />
-                <NavItem
-                  title={<FormattedMessage id="Product-Warnings" />}
-                  link={`/settings/product-warnings`}
-                  icon={BsExclamationTriangle}
-                />
-              </CollapsableNavItem>
+              {userRole == 'superAdmin' && (
+                <CollapsableNavItem
+                  eventKey={settingIsOpen}
+                  title={<FormattedMessage id="Settings" />}
+                  icon={<BsGearFill />}
+                >
+                  <NavItem
+                    title={<FormattedMessage id="Health-Check-sidebar" />}
+                    link={`/settings/health-check`}
+                    icon={BsFillClipboard2CheckFill}
+                  />
+                  <NavItem
+                    title={<FormattedMessage id="Subscriptions" />}
+                    link={`/settings/subscriptions`}
+                    icon={BsPeople}
+                  />
+                  <NavItem
+                    title={<FormattedMessage id="Product-Warnings" />}
+                    link={`/settings/product-warnings`}
+                    icon={BsExclamationTriangle}
+                  />
+                </CollapsableNavItem>
+              )}
             </Nav>
           </div>
         </SimpleBar>

@@ -43,7 +43,7 @@ const useApi = () => {
       dispatch(changePreloader(false))
       res.data?.data?.token?.accessToken &&
         localStorage.setItem('token', res.data?.data?.token?.accessToken)
-      const roles = ['', 'superAdmin']
+      const roles = ['', 'superAdmin', 'productOwner', 'tenantOwner']
       if (res.data?.data?.userAccount?.email) {
         dispatch(
           addUserInfo({

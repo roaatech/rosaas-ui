@@ -32,6 +32,7 @@ import useGlobal from '../../../lib/hocks/global'
 import ThemeDialog from '../../custom/Shared/ThemeDialog/ThemeDialog'
 import TenantForm from '../../custom/tenant/TenantForm/TenantForm'
 import ProductForm from '../../custom/Product/ProductForm/ProductForm'
+import { useSelector } from 'react-redux'
 
 const QuickAction = ({
   label,
@@ -51,6 +52,8 @@ const QuickAction = ({
   const [visibleTenant, setVisibleTenant] = useState(false)
   const [visibleProduct, setVisibleProduct] = useState(false)
   const inputHeight = '56px'
+  let userRole = useSelector((state) => state.auth.userInfo.role)
+
   return (
     <Wrapper>
       <div className="d-flex  py-4 wrapper">
@@ -107,17 +110,18 @@ const QuickAction = ({
                 </span>
                 <FormattedMessage id="Add-Tenant" />
               </Dropdown.Item>
-              <Dropdown.Item
-                onSelect={() => setVisibleProduct(true)}
-                className="text-dark"
-              >
-                <span className=" mx-2 ">
-                  <BsBoxSeam className="product-icon" />
-                  <FontAwesomeIcon icon={faPlus} className="plus icon-dark" />
-                </span>
-                <FormattedMessage id="Add-Product" />
-              </Dropdown.Item>
-
+              {(userRole == 'productOwner' || userRole == 'superAdmin') && (
+                <Dropdown.Item
+                  onSelect={() => setVisibleProduct(true)}
+                  className="text-dark"
+                >
+                  <span className=" mx-2 ">
+                    <BsBoxSeam className="product-icon" />
+                    <FontAwesomeIcon icon={faPlus} className="plus icon-dark" />
+                  </span>
+                  <FormattedMessage id="Add-Product" />
+                </Dropdown.Item>
+              )}
               {/* <Dropdown.Item
               onClick={() => deleteConfirm(id)}
               className="text-danger"
