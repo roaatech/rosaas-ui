@@ -36,7 +36,7 @@ export const Routes = {
   SubscriptionManagement: {
     path: '/tenants/:id/Subscription-Management',
     component: SubscriptionManagement,
-    roles: ['superAdmin', 'tenantOwner'],
+    roles: ['superAdmin', 'tenantOwner', 'productOwner'],
   },
   ProductDetails: {
     path: '/products/:id',
