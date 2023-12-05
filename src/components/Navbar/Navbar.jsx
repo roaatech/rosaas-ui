@@ -23,6 +23,8 @@ import { changeMode, directionFun } from '../../store/slices/main'
 import { useDarkreader } from 'react-darkreader'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './Navbar.styled'
+import { Link } from 'react-router-dom'
+import { Routes } from '../../routes'
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (props) => {
   const dispatch = useDispatch()
@@ -80,87 +82,106 @@ export default (props) => {
           <div className="d-flex justify-content-between w-100">
             <div className="d-flex align-items-center"></div>
             <Nav className="align-items-center">
-              <Dropdown as={Nav.Item} onToggle={markNotificationsAsRead}>
-                <Dropdown.Toggle
-                  as={Nav.Link}
-                  className="text-dark icon-notifications me-lg-3"
-                ></Dropdown.Toggle>
-                <Dropdown.Menu className="dashboard-dropdown notifications-dropdown dropdown-menu-lg dropdown-menu-center mt-2 py-0">
-                  <ListGroup className="list-group-flush">
-                    <Nav.Link
-                      href="#"
-                      className="text-center text-primary fw-bold border-bottom border-light py-3"
-                    >
-                      Notifications
-                    </Nav.Link>
-
-                    {notifications.map((n) => (
-                      <Notification key={`notification-${n.id}`} {...n} />
-                    ))}
-
-                    <Dropdown.Item className="text-center text-primary fw-bold py-3">
-                      View all
-                    </Dropdown.Item>
-                  </ListGroup>
-                </Dropdown.Menu>
-              </Dropdown>
-
-              <Dropdown as={Nav.Item}>
-                <Dropdown.Toggle as={Nav.Link} className="pt-1 px-0 p-info">
-                  <div className="media d-flex align-items-center">
-                    <Image
-                      src={darkMode ? Profile1 : Profile3}
-                      className="user-avatar md-avatar rounded-circle"
-                    />
-                    <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                      <span className="mb-0 font-small fw-bold email">
-                        {userInfo.email}
-                      </span>
-                    </div>
+              {!userInfo.email && (
+                <div className="media d-flex align-items-center">
+                  <Image
+                    src={darkMode ? Profile1 : Profile3}
+                    className="user-avatar md-avatar rounded-circle"
+                  />
+                  <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
+                    <span className="mb-0 font-small fw-bold email">
+                      <Link className="fw-bold" to={Routes.Signin.path}>
+                        <FormattedMessage id="Signin" />
+                      </Link>
+                    </span>
                   </div>
-                </Dropdown.Toggle>
-                <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
-                  <Dropdown.Item
-                    className="fw-bold"
-                    onClick={() => {
-                      dispatch(changeMode(!darkMode))
-                      toggle()
-                    }}
-                  >
-                    {darkMode == false ? (
-                      <FormattedMessage id="Dark-Mode" />
-                    ) : (
-                      <FormattedMessage id="Light-Mode" />
-                    )}
-                  </Dropdown.Item>
+                </div>
+              )}
+              {userInfo.email && (
+                <>
+                  <Dropdown as={Nav.Item} onToggle={markNotificationsAsRead}>
+                    <Dropdown.Toggle
+                      as={Nav.Link}
+                      className="text-dark icon-notifications me-lg-3"
+                    ></Dropdown.Toggle>
+                    <Dropdown.Menu className="dashboard-dropdown notifications-dropdown dropdown-menu-lg dropdown-menu-center mt-2 py-0">
+                      <ListGroup className="list-group-flush">
+                        <Nav.Link
+                          href="#"
+                          className="text-center text-primary fw-bold border-bottom border-light py-3"
+                        >
+                          Notifications
+                        </Nav.Link>
 
-                  <Dropdown.Divider />
+                        {notifications.map((n) => (
+                          <Notification key={`notification-${n.id}`} {...n} />
+                        ))}
 
-                  <Dropdown.Item
-                    className="fw-bold"
-                    onClick={() => {
-                      changeDirection(direction === 'rtl' ? 'ltr' : 'rtl')
-                    }}
-                  >
-                    {direction === 'rtl' ? (
-                      <FormattedMessage id="English" />
-                    ) : (
-                      <FormattedMessage id="Arabic" />
-                    )}
-                  </Dropdown.Item>
+                        <Dropdown.Item className="text-center text-primary fw-bold py-3">
+                          View all
+                        </Dropdown.Item>
+                      </ListGroup>
+                    </Dropdown.Menu>
+                  </Dropdown>
 
-                  <Dropdown.Item
-                    className="fw-bold"
-                    onClick={() => dispatch(logOut())}
-                  >
-                    {/* <FontAwesomeIcon
+                  <Dropdown as={Nav.Item}>
+                    <Dropdown.Toggle as={Nav.Link} className="pt-1 px-0 p-info">
+                      <div className="media d-flex align-items-center">
+                        <Image
+                          src={darkMode ? Profile1 : Profile3}
+                          className="user-avatar md-avatar rounded-circle"
+                        />
+                        <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
+                          <span className="mb-0 font-small fw-bold email">
+                            {userInfo.email}
+                          </span>
+                        </div>
+                      </div>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
+                      <Dropdown.Item
+                        className="fw-bold"
+                        onClick={() => {
+                          dispatch(changeMode(!darkMode))
+                          toggle()
+                        }}
+                      >
+                        {darkMode == false ? (
+                          <FormattedMessage id="Dark-Mode" />
+                        ) : (
+                          <FormattedMessage id="Light-Mode" />
+                        )}
+                      </Dropdown.Item>
+
+                      <Dropdown.Divider />
+
+                      <Dropdown.Item
+                        className="fw-bold"
+                        onClick={() => {
+                          changeDirection(direction === 'rtl' ? 'ltr' : 'rtl')
+                        }}
+                      >
+                        {direction === 'rtl' ? (
+                          <FormattedMessage id="English" />
+                        ) : (
+                          <FormattedMessage id="Arabic" />
+                        )}
+                      </Dropdown.Item>
+
+                      <Dropdown.Item
+                        className="fw-bold"
+                        onClick={() => dispatch(logOut())}
+                      >
+                        {/* <FontAwesomeIcon
                     icon={faSignOutAlt}
                     className="text-danger mx-2"
                   /> */}
-                    <FormattedMessage id="Logout" />
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                        <FormattedMessage id="Logout" />
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </>
+              )}
             </Nav>
           </div>
         </Container>

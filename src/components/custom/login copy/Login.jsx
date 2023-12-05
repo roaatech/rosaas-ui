@@ -1,5 +1,5 @@
 import React from 'react'
-import LoginWrapper from './LoginWrapper.styled'
+import LoginWrapper from './LoginWrapper.styled.jsx'
 import { FormattedMessage } from 'react-intl'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BsFillEnvelopeOpenFill, BsUnlockFill } from 'react-icons/bs'
@@ -9,9 +9,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../axios/apis/useRequest.js'
-import { Routes } from '../../../routes'
+import { Routes } from '../../../routes.js'
 import { useNavigate } from 'react-router-dom'
-import { Link } from 'react-router-dom'
 const Login = () => {
   const { signIn } = useRequest()
   const navigate = useNavigate()
@@ -87,14 +86,6 @@ const Login = () => {
               >
                 <FormattedMessage id="signIn" />
               </Button>
-            </div>
-            <div className="pt-2 text-center">
-              <span>
-                <FormattedMessage id="not-Registered?" />
-              </span>{' '}
-              <Link className="fw-bold" to={Routes.SignUp.path}>
-                <FormattedMessage id="create-Account" />
-              </Link>
             </div>
           </Form>
         )}

@@ -35,7 +35,6 @@ import { Wrapper } from './ProductFeaturesList.styled'
 import { toast } from 'react-toastify'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { BsStars } from 'react-icons/bs'
-import { setActiveIndex } from '../../../../store/slices/tenants'
 
 export const ProductFeaturesList = ({ productId }) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
@@ -183,7 +182,6 @@ export const ProductFeaturesList = ({ productId }) => {
               label: 'Add-Feature',
               component: 'addFeature',
               icon: <BsStars />,
-              setActiveIndex: setActiveIndex,
             },
           ]}
         />

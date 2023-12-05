@@ -1,39 +1,47 @@
-import React from 'react'
-import LoginWrapper from './LoginWrapper.styled'
-import { FormattedMessage } from 'react-intl'
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BsFillEnvelopeOpenFill, BsUnlockFill } from 'react-icons/bs'
-// import { faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
-import { Button } from '@themesberg/react-bootstrap'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import { InputText } from 'primereact/inputtext'
-import * as Yup from 'yup'
-import useRequest from '../../../axios/apis/useRequest.js'
-import { Routes } from '../../../routes'
 import { useNavigate } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-const Login = () => {
-  const { signIn } = useRequest()
+import useRequest from '../../../axios/apis/useRequest'
+import * as Yup from 'yup'
+import Wrapper from './SignUp.styled'
+import { Button } from '@themesberg/react-bootstrap'
+import { FormattedMessage } from 'react-intl'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { InputText } from 'primereact/inputtext'
+import {
+  BsFillEnvelopeOpenFill,
+  BsFillPersonFill,
+  BsUnlockFill,
+} from 'react-icons/bs'
+import { Routes } from '../../../routes'
+
+const SignUp = () => {
+  const { signUp } = useRequest()
   const navigate = useNavigate()
+
   const initialValues = {
+    fullName: '',
     email: '',
     password: '',
+    confirmPassword: '',
   }
 
   const validationSchema = Yup.object().shape({
+    fullName: Yup.string().required('Full Name is required'),
     email: Yup.string().email('Invalid email').required('Email is required'),
     password: Yup.string().required('Password is required'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required'),
   })
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    const loginPass = await signIn(values)
-    if (loginPass) {
+    const signUpSuccess = await signUp(values)
+    if (signUpSuccess) {
       navigate(Routes.Dashboard.path)
     }
   }
 
   return (
-    <LoginWrapper>
+    <Wrapper>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -41,6 +49,27 @@ const Login = () => {
       >
         {({ isSubmitting }) => (
           <Form className="mt-4">
+            <div>
+              <label htmlFor="fullName" className="pb-2">
+                <FormattedMessage id="yourFullName" />
+              </label>
+              <div className="inputContainer">
+                <div className="inputContainerWithIcon">
+                  <BsFillPersonFill />
+                  <Field
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    as={InputText}
+                  />
+                </div>
+                <ErrorMessage
+                  name="fullName"
+                  component="div"
+                  className="error-message"
+                />
+              </div>
+            </div>
             <div>
               <label htmlFor="email" className="pb-2">
                 <FormattedMessage id="yourEmail" />
@@ -78,6 +107,29 @@ const Login = () => {
                 />
               </div>
             </div>
+
+            <div>
+              <label htmlFor="confirmPassword" className="pb-2">
+                <FormattedMessage id="confirmPassword" />
+              </label>
+              <div className="inputContainer">
+                <div className="inputContainerWithIcon">
+                  <BsUnlockFill />
+                  <Field
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    as={InputText}
+                  />
+                </div>
+                <ErrorMessage
+                  name="confirmPassword"
+                  component="div"
+                  className="error-message"
+                />
+              </div>
+            </div>
+            {/* (Existing code) */}
             <div className="pt-1">
               <Button
                 variant="primary"
@@ -85,22 +137,14 @@ const Login = () => {
                 className="w-100"
                 disabled={isSubmitting}
               >
-                <FormattedMessage id="signIn" />
+                <FormattedMessage id="signUp" />
               </Button>
-            </div>
-            <div className="pt-2 text-center">
-              <span>
-                <FormattedMessage id="not-Registered?" />
-              </span>{' '}
-              <Link className="fw-bold" to={Routes.SignUp.path}>
-                <FormattedMessage id="create-Account" />
-              </Link>
             </div>
           </Form>
         )}
       </Formik>
-    </LoginWrapper>
+    </Wrapper>
   )
 }
 
-export default Login
+export default SignUp

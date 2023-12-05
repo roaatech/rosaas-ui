@@ -140,6 +140,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
       'Edited-Date': DataTransform(data.editedDate),
     }
   }
+
   useEffect(() => {
     ;(async () => {
       if (!list || list.length == 0) {
@@ -363,7 +364,6 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
               label: 'Add-Plan-Feature',
               component: 'addFeaturePlan',
               icon: <BsUiChecks />,
-              setActiveIndex: setActiveIndex,
             },
           ]}
         />

@@ -20,6 +20,10 @@ import { generateApiKey } from '../../../../lib/sharedFun/common.js'
 import { useNavigate } from 'react-router-dom'
 import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 import { removeSubscriptionDataByProductId } from '../../../../store/slices/tenants.js'
+import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+import { BsFillQuestionCircleFill } from 'react-icons/bs'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 
 const ProductForm = ({
   type,
@@ -35,7 +39,9 @@ const ProductForm = ({
   const navigate = useNavigate()
   const initialValues = {
     displayName: productData ? productData.displayName : '',
+    description: productData ? productData.description : '',
     name: productData ? productData.name : '',
+    isPublished: productData ? productData.isPublished : '',
     apiKey: productData ? productData.apiKey : '',
     defaultHealthCheckUrl: productData ? productData.defaultHealthCheckUrl : '',
     healthStatusChangeUrl: productData ? productData.healthStatusChangeUrl : '',
@@ -79,6 +85,8 @@ const ProductForm = ({
       if (type == 'create') {
         const createProduct = await createProductRequest({
           displayName: values.displayName,
+          description: values.description,
+          isPublished: values.isPublished || false,
           name: values.name,
           apiKey: values.apiKey,
           defaultHealthCheckUrl: values.defaultHealthCheckUrl,
@@ -100,7 +108,9 @@ const ProductForm = ({
         const editProduct = await editProductRequest({
           data: {
             displayName: values.displayName,
+            description: values.description,
             name: values.name,
+            isPublished: values.isPublished || false,
             apiKey: values.apiKey,
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
             healthStatusChangeUrl: values.healthStatusChangeUrl,
@@ -122,7 +132,9 @@ const ProductForm = ({
           productInfo({
             id: productData.id,
             displayName: values.displayName,
+            description: values.description,
             name: values.name,
+            isPublished: values.isPublished || false,
             apiKey: values.apiKey,
             defaultHealthCheckUrl: values.defaultHealthCheckUrl,
             healthStatusChangeUrl: values.healthStatusChangeUrl,
@@ -212,6 +224,53 @@ const ProductForm = ({
               </Form.Control.Feedback>
             )}
           </div>
+          <div className="card toggle-container p-2 mb-3">
+            <div className="d-flex align-items-center justify-content-between ">
+              <Form.Label className="flex-grow-1">
+                <FormattedMessage id="Is-Published" />{' '}
+              </Form.Label>
+              <span className="me-2">
+                <FontAwesomeIcon
+                  icon={formik.values.isPublished ? faToggleOn : faToggleOff}
+                  className={
+                    formik.values.isPublished
+                      ? 'active-toggle fa-lg'
+                      : 'passive-toggle fa-lg'
+                  }
+                  onClick={() =>
+                    formik.setFieldValue(
+                      'isPublished',
+                      !formik.values.isPublished
+                    )
+                  }
+                />{' '}
+              </span>
+            </div>
+          </div>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Description" />
+              </Form.Label>
+
+              <TextareaAndCounter
+                addTextarea={formik.setFieldValue}
+                maxLength={250}
+                showCharCount
+                inputValue={formik?.values?.description}
+              />
+
+              {formik.touched.description && formik.errors.description && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.description}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+
           <div>
             <Form.Group className="mb-3">
               <Form.Label>

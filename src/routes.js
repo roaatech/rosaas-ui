@@ -11,6 +11,9 @@ import SubscriptionsSettings from './pages/Settings/SubscriptionsSettings/Subscr
 import SubscriptionManagement from './pages/SubscriptionManagement/SubscriptionManagement'
 import ProductWarningsSettings from './pages/Settings/ProductWarningsSettings/ProductWarningsSettings'
 import NotFound from './pages/NotFoundPage/NotFoundPage'
+import SignUpPage from './pages/SignUpPage/SignUpPage'
+import ProductListPage from './pages/ProductListPage/ProductListPage'
+import PricingPage from './pages/PricingPage/PricingPage'
 export const Routes = {
   Dashboard: {
     path: '/Dashboard',
@@ -21,6 +24,12 @@ export const Routes = {
     path: '/products',
     component: Product,
     roles: ['superAdmin', 'productOwner'],
+  },
+  productsList: {
+    path: '/products-list',
+    component: ProductListPage,
+    roles: ['notAuth', 'tenantOwner', 'superAdmin'],
+    type: 'noSidebar',
   },
 
   Tenant: {
@@ -64,7 +73,18 @@ export const Routes = {
     roles: ['notAuth'],
     type: 'noSidebar',
   },
-
+  SignUp: {
+    path: '/sign-up',
+    component: SignUpPage,
+    roles: ['notAuth'],
+    type: 'noSidebar',
+  },
+  Pricing: {
+    path: '/products-list/:id',
+    component: PricingPage,
+    roles: ['notAuth', 'superAdmin'],
+    type: 'noSidebar',
+  },
   redirect: {
     path: '*',
     component: Redirect,

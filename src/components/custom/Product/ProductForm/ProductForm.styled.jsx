@@ -1,5 +1,14 @@
 import styled from 'styled-components'
 export const Wrapper = styled.div`
+  .toggle-container .fa-lg {
+    cursor: pointer;
+  }
+  .active-toggle {
+    color: var(--second-color);
+  }
+  .passive-toggle {
+    color: #ccc;
+  }
   .inputIcon {
     position: relative;
 

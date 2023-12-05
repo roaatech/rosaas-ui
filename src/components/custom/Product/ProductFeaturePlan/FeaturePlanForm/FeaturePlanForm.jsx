@@ -23,6 +23,7 @@ import {
 import { TabPanel, TabView } from 'primereact/tabview'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
+import { activeTab } from '../../../../../const/product.js'
 
 const FeaturePlanForm = ({
   type,
@@ -239,9 +240,8 @@ const FeaturePlanForm = ({
             },
           })
         )
-
         if (setActiveIndex) {
-          setActiveIndex(activeIndex.plansFeatures)
+          setActiveIndex(activeTab.plansFeatures)
         }
       } else {
         const dataDetails = {
@@ -278,7 +278,13 @@ const FeaturePlanForm = ({
       setVisible && setVisible(false)
     },
   })
-  const [availableFeatures, setAvailableFeatures] = useState(featureOptions)
+  const [availableFeatures, setAvailableFeatures] = useState()
+  useEffect(() => {
+    if (!featureOptions) {
+      return
+    }
+    setAvailableFeatures(featureOptions)
+  }, [featureOptions])
 
   useEffect(() => {
     if (!featureOptions) {
