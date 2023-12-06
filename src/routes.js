@@ -14,6 +14,7 @@ import NotFound from './pages/NotFoundPage/NotFoundPage'
 import SignUpPage from './pages/SignUpPage/SignUpPage'
 import ProductListPage from './pages/ProductListPage/ProductListPage'
 import PricingPage from './pages/PricingPage/PricingPage'
+import CheckoutPage from './pages/CheckoutPagePage/CheckoutPage'
 export const Routes = {
   Dashboard: {
     path: '/Dashboard',
@@ -72,6 +73,12 @@ export const Routes = {
     component: signIn,
     roles: ['notAuth'],
     type: 'noSidebar',
+  },
+  CheckOut: {
+    path: '/checkout/:productId/subscribtion/:subscribtionId',
+    component: CheckoutPage,
+    roles: ['notAuth', 'superAdmin'],
+    // type: 'noSidebar',
   },
   SignUp: {
     path: '/sign-up',
