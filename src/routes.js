@@ -15,6 +15,7 @@ import SignUpPage from './pages/SignUpPage/SignUpPage'
 import ProductListPage from './pages/ProductListPage/ProductListPage'
 import PricingPage from './pages/PricingPage/PricingPage'
 import CheckoutPage from './pages/CheckoutPagePage/CheckoutPage'
+import PaymentSuccess from './pages/PaymentSuccess/paymentSuccess'
 export const Routes = {
   Dashboard: {
     path: '/Dashboard',
@@ -91,6 +92,11 @@ export const Routes = {
     component: PricingPage,
     roles: ['notAuth', 'superAdmin'],
     type: 'noSidebar',
+  },
+  PaymentSuccess: {
+    path: '/success',
+    component: PaymentSuccess,
+    roles: ['tenantOwner', 'superAdmin'],
   },
   redirect: {
     path: '*',

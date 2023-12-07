@@ -1,13 +1,13 @@
 import React from 'react'
 import { Col, Row, Container, Button } from '@themesberg/react-bootstrap'
-import { Wrapper } from '../PaymentSuccess/paymentSuccess.styled' // Create a styled component if needed
+import { Wrapper } from './paymentSuccess.styled' // Create a styled component if needed
 import { Link } from 'react-router-dom'
 import { Routes } from '../../routes'
 
-import NotFoundImage from '../../assets/img/pages/404.svg'
+import NotFoundImage from '../../assets/img/pages/paymentSuccess.png'
 import { FormattedMessage } from 'react-intl'
 
-const NotFound = () => {
+const PaymentSuccess = () => {
   const handleButtonClick = () => {
     window.location.href = Routes.Dashboard.path
   }
@@ -17,6 +17,13 @@ const NotFound = () => {
         <Container>
           <Row className="justify-content-center form-bg-image">
             <div className="  cardCont shadow-soft border border-round border-light p-4 p-lg-5 w-100">
+              <h1 className="text-center text-md-center mb-4 mt-md-0">
+                Payment Successful!
+              </h1>
+              <p className="  text-center text-md-center mb-4 mt-md-0">
+                Thank you for your payment. Your order is confirmed.
+              </p>
+
               <img
                 src={NotFoundImage}
                 alt="Not Found"
@@ -43,4 +50,4 @@ const NotFound = () => {
   )
 }
 
-export default NotFound
+export default PaymentSuccess

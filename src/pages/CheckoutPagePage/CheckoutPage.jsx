@@ -26,6 +26,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FormattedMessage } from 'react-intl'
 import { countriesArray } from '../../const/product'
+import TenantForm from '../../components/custom/tenant/TenantForm/TenantForm'
+import CheckoutTenantReg from '../../components/custom/Checkout/CheckoutTenantReg'
 
 const CheckoutPage = () => {
   const { productId, subscribtionId } = useParams()
@@ -53,7 +55,6 @@ const CheckoutPage = () => {
   const plansPriceList = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
-  console.log({ plansPriceList: plansPriceList[subscribtionId] })
   useEffect(() => {
     if (Object.values(listProduct).length > 0) {
       return
@@ -140,6 +141,29 @@ const CheckoutPage = () => {
       }, 2000)
     })
   }
+  const [showTenantForm, setShowTenantForm] = useState(true)
+  const handleTenantCreation = async (values) => {
+    // Handle the creation of a new tenant using the form values
+    // You can use the API request and dispatch actions similar to TenantForm
+
+    // Example:
+    // const createTenant = await createTenantRequest({
+    //   subscriptions: [
+    //     {
+    //       productId: values.product,
+    //       planId: values.plan,
+    //       planPriceId: values.price,
+    //       specifications: specificationsArray, // Add specifications if needed
+    //     },
+    //   ],
+    //   uniqueName: values.uniqueName,
+    //   title: values.title,
+    // });
+
+    // Additional actions based on the API response
+
+    setShowTenantForm(false) // Close the form after submission
+  }
   const renderFeaturePlans = () => {
     const featurePlans =
       listData &&
@@ -160,10 +184,10 @@ const CheckoutPage = () => {
           </span>{' '}
           of Product{' '}
           <span className="fw-bold">
-            {listProduct?.[productId].displayName.toUpperCase()}
+            {listProduct?.[productId]?.displayName.toUpperCase()}
           </span>
         </Card.Header>
-        <Card.Body className="border-bottom">
+        <Card.Body className="border-bottom ">
           {featurePlans?.map((featurePlan) => (
             <div key={featurePlan.id}>
               <p>
@@ -183,53 +207,62 @@ const CheckoutPage = () => {
         <Container className="card">
           <Row>
             <Col md={7}>
-              <Card.Body>{renderFeaturePlans()}</Card.Body>
+              {showTenantForm && (
+                <CheckoutTenantReg
+                  type="create"
+                  updateTenant={() => {}}
+                  setVisible={setShowTenantForm}
+                  popupLabel="Enter Your Info"
+                  currentProduct={productId}
+                  currentPlan={plansPriceList?.[subscribtionId]?.plan.id}
+                />
+              )}
             </Col>
-            <Col md={5} className="border-left-1 border-light ">
+            <Col md={5} className="border-left-1 border-light  ">
               <div>
-                <Card.Body>
-                  <Form>
-                    <Form.Group className="mb-3">
-                      <Card.Header className="mb-3">Payment Method</Card.Header>
-                      <div>
-                        <Form.Check
-                          type="radio"
-                          label={
-                            <>
-                              <FontAwesomeIcon icon={faMoneyBillTransfer} />{' '}
-                              IBAN
-                            </>
-                          }
-                          value="iban"
-                          checked={paymentMethod === 'iban'}
-                          onChange={() => setPaymentMethod('iban')}
-                        />
-                        {paymentMethod === 'iban' && (
-                          <Form.Group className="mb-3">
-                            <Form.Label>Invoice Number</Form.Label>
-                            <Form.Control
-                              type="text"
-                              placeholder="Enter Invoice Number"
-                              value={invoiceNumber}
-                              onChange={(e) => setInvoiceNumber(e.target.value)}
-                            />
-                          </Form.Group>
-                        )}
-                        <Form.Check
-                          type="radio"
-                          label={
-                            <>
-                              <FontAwesomeIcon icon={faCreditCard} /> Stripe
-                            </>
-                          }
-                          value="stripe"
-                          checked={paymentMethod === 'stripe'}
-                          onChange={() => setPaymentMethod('stripe')}
-                        />
-                      </div>
-                    </Form.Group>
-                  </Form>
-                </Card.Body>
+                {renderFeaturePlans()}
+                <Form>
+                  <Form.Group className="mb-3">
+                    <Card.Header className="mb-3 fw-bold">
+                      Payment Method
+                    </Card.Header>
+                    <div>
+                      <Form.Check
+                        type="radio"
+                        label={
+                          <>
+                            <FontAwesomeIcon icon={faMoneyBillTransfer} /> IBAN
+                          </>
+                        }
+                        value="iban"
+                        checked={paymentMethod === 'iban'}
+                        onChange={() => setPaymentMethod('iban')}
+                      />
+                      {paymentMethod === 'iban' && (
+                        <Form.Group className="mb-3">
+                          <Form.Label>Invoice Number</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Enter Invoice Number"
+                            value={invoiceNumber}
+                            onChange={(e) => setInvoiceNumber(e.target.value)}
+                          />
+                        </Form.Group>
+                      )}
+                      <Form.Check
+                        type="radio"
+                        label={
+                          <>
+                            <FontAwesomeIcon icon={faCreditCard} /> Stripe
+                          </>
+                        }
+                        value="stripe"
+                        checked={paymentMethod === 'stripe'}
+                        onChange={() => setPaymentMethod('stripe')}
+                      />
+                    </div>
+                  </Form.Group>
+                </Form>
 
                 {paymentMethod && (
                   <Card.Footer>
