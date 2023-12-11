@@ -16,6 +16,7 @@ import ProductListPage from './pages/ProductListPage/ProductListPage'
 import PricingPage from './pages/PricingPage/PricingPage'
 import CheckoutPage from './pages/CheckoutPagePage/CheckoutPage'
 import PaymentSuccess from './pages/PaymentSuccess/paymentSuccess'
+import TwoStepProcessPage from './pages/TwoStepProcessPage/TwoStepProcessPage'
 export const Routes = {
   Dashboard: {
     path: '/Dashboard',
@@ -77,7 +78,7 @@ export const Routes = {
   },
   CheckOut: {
     path: '/checkout/:productId/subscribtion/:subscribtionId',
-    component: CheckoutPage,
+    component: TwoStepProcessPage,
     roles: ['notAuth', 'superAdmin'],
     // type: 'noSidebar',
   },
@@ -94,7 +95,7 @@ export const Routes = {
     type: 'noSidebar',
   },
   PaymentSuccess: {
-    path: '/success',
+    path: '/checkout/:productId/subscribtion/:subscribtionId/success',
     component: PaymentSuccess,
     roles: ['tenantOwner', 'superAdmin'],
   },

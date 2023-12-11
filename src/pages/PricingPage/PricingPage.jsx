@@ -15,6 +15,8 @@ import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import CheckoutPage from '../CheckoutPagePage/CheckoutPage'
 import { cycle } from '../../const'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBox } from '@fortawesome/free-solid-svg-icons'
 
 const PricingPage = () => {
   const dispatch = useDispatch()
@@ -25,7 +27,6 @@ const PricingPage = () => {
   const plansPriceList = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
-  console.log({ plansPriceList })
   useEffect(() => {
     if (Object.values(listProduct).length > 0) {
       return
@@ -53,9 +54,10 @@ const PricingPage = () => {
     getProductPlanPriceList,
   } = useRequest()
   useEffect(() => {
-    if (Object.values(listProduct).length < 0) {
+    if (!listProduct || Object.keys(listProduct).length === 0) {
       return
     }
+    console.log(listProduct)
     const fetchData = async () => {
       try {
         if (!listData || Object.keys(listData).length === 0) {
@@ -104,18 +106,16 @@ const PricingPage = () => {
     }
 
     fetchData()
-  }, [productId])
+  }, [productId, Object.keys(listProduct).length > 0])
 
   const allCycleTypes = plansPriceList && [
     ...new Set(Object.values(plansPriceList).map((priceObj) => priceObj.cycle)),
   ]
-  console.log({ listData })
   const allFeaturesPlanId = listData && [
     ...new Set(
       Object.values(listData).map((featurePlan) => featurePlan.plan.id)
     ),
   ]
-  console.log({ allFeaturesPlanId })
 
   const handleCycleChange = (cycle) => {
     setSelectedCycle(cycle)
@@ -126,7 +126,6 @@ const PricingPage = () => {
     if (!selectedCycle && sortedCycleTypes?.[0]) {
       setSelectedCycle(sortedCycleTypes?.[0])
     }
-    console.log({ sortedCycleTypes })
     return (
       <div className="mb-4">
         <Card.Header>
@@ -137,6 +136,7 @@ const PricingPage = () => {
                 value={cycleNum}
                 checked={selectedCycle === cycleNum}
                 onChange={() => handleCycleChange(cycleNum)}
+                className="mr-2"
               />
               {cycle[cycleNum]}
             </label>
@@ -161,7 +161,6 @@ const PricingPage = () => {
           priceObj.plan.id === planId && priceObj.cycle === selectedCycle
       )
     const subscribtionId = filteredPrices?.id
-    console.log({ featurePlans })
 
     return (
       <div>
@@ -203,7 +202,7 @@ const PricingPage = () => {
             {}
           </Card.Header>
           <Card.Body>
-            {featurePlans.map((featurePlan) => (
+            {featurePlans?.map((featurePlan) => (
               <div key={featurePlan.id}>
                 <p>
                   <BsCheck2Circle style={{ color: 'var(--second-color)' }} />{' '}
@@ -243,6 +242,15 @@ const PricingPage = () => {
           <Col md={12}>
             <Card>
               <Card.Body>
+                <div className="text-center fw-bold  ">
+                  {' '}
+                  <FontAwesomeIcon
+                    icon={faBox}
+                    style={{ cursor: 'pointer' }}
+                    className="mr-2 product-icon"
+                  />
+                  {listProduct?.[productId]?.displayName.toUpperCase()}
+                </div>
                 <div className="text-center">{renderCycleRadioButtons()}</div>
                 <Row>
                   {planList &&

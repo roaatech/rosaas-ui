@@ -5,6 +5,8 @@ import {
   Button,
   Form,
   Container,
+  OverlayTrigger,
+  Tooltip,
 } from '@themesberg/react-bootstrap'
 import { useEffect } from 'react'
 import { useState } from 'react'
@@ -18,20 +20,32 @@ import {
   setAllProduct,
 } from '../../store/slices/products/productsSlice'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
-import { BsBoxSeam, BsCheck2, BsCheck2Circle } from 'react-icons/bs'
+import {
+  BsBoxSeam,
+  BsCheck2Circle,
+  BsFillQuestionCircleFill,
+} from 'react-icons/bs'
 import {
   faCreditCard,
   faMoneyBillTransfer,
+  faToggleOff,
+  faToggleOn,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FormattedMessage } from 'react-intl'
-import { countriesArray } from '../../const/product'
-import TenantForm from '../../components/custom/tenant/TenantForm/TenantForm'
 import CheckoutTenantReg from '../../components/custom/Checkout/CheckoutTenantReg'
+import { FormattedDate, FormattedMessage, useIntl } from 'react-intl'
+import Label from '../../components/custom/Shared/label/Label'
+import { cycle, subscriptionStatus } from '../../const/product'
+import { formatDate } from '../../lib/sharedFun/Time'
+import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel'
+import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
+import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
+import RenewForm from '../../components/custom/tenant/SubscriptionManagement/RenewForm/RenewForm'
+import { Wrapper } from './CheckoutPage.styled'
 
-const CheckoutPage = () => {
+const CheckoutPage = (data) => {
+  console.log({ xxxxxxxxxxx: data })
   const { productId, subscribtionId } = useParams()
-  console.log(useParams())
   const navigate = useNavigate()
   const [invoiceNumber, setInvoiceNumber] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('')
@@ -42,7 +56,11 @@ const CheckoutPage = () => {
     getProductPlans,
     getProductList,
     getProductPlanPriceList,
+    subscriptionDetails,
+    cancelAutoRenewal,
   } = useRequest()
+  const [update, setUpdate] = useState(0)
+  const intl = useIntl()
 
   const planList = useSelector(
     (state) => state.products.products[productId]?.plans
@@ -55,6 +73,26 @@ const CheckoutPage = () => {
   const plansPriceList = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
+  const [subscriptionData, setsubscriptionData] = useState('')
+  console.log({ subscriptionData })
+  const tenantId = data.currentTenant
+  useEffect(() => {
+    if (subscriptionData && update == 0) {
+      return
+    }
+    ;(async () => {
+      const subscriptionInfo = await subscriptionDetails(productId, tenantId)
+      setsubscriptionData(subscriptionInfo.data.data)
+    })()
+  }, [update])
+  const handleConfirmation = async (data = '', comment) => {
+    await cancelAutoRenewal({
+      subscriptionId: subscriptionData?.subscriptionId,
+      comment,
+    })
+    setUpdate(update + 1)
+    setConfirm(false)
+  }
   useEffect(() => {
     if (Object.values(listProduct).length > 0) {
       return
@@ -107,22 +145,32 @@ const CheckoutPage = () => {
 
     fetchData()
   }, [productId])
+  const [visible, setVisible] = useState(false)
+  const [confirm, setConfirm] = useState(false)
+
+  const handleToggleClick = () => {
+    if (subscriptionData?.autoRenewal !== null) {
+      setConfirm(true)
+    } else {
+      setVisible(true)
+    }
+  }
 
   const handlePayment = async () => {
     if (paymentMethod === 'iban') {
       alert(`Paid with IBAN. Invoice Number: ${invoiceNumber}`)
+      navigate('./success')
     } else if (paymentMethod === 'stripe') {
       const stripePayment = await simulateStripePayment()
       if (stripePayment.success) {
         alert('Payment with Stripe successful!')
-        navigate('/success')
+        navigate('./success')
       } else {
         alert('Payment with Stripe failed!')
       }
     }
   }
   const planPrice = plansPriceList?.[subscribtionId]?.price
-  console.log({ planPrice })
   const calculateTaxes = () => {
     if (paymentMethod === 'iban') {
       return 0.1 * planPrice
@@ -141,29 +189,8 @@ const CheckoutPage = () => {
       }, 2000)
     })
   }
-  const [showTenantForm, setShowTenantForm] = useState(true)
-  const handleTenantCreation = async (values) => {
-    // Handle the creation of a new tenant using the form values
-    // You can use the API request and dispatch actions similar to TenantForm
+  const direction = useSelector((state) => state.main.direction)
 
-    // Example:
-    // const createTenant = await createTenantRequest({
-    //   subscriptions: [
-    //     {
-    //       productId: values.product,
-    //       planId: values.plan,
-    //       planPriceId: values.price,
-    //       specifications: specificationsArray, // Add specifications if needed
-    //     },
-    //   ],
-    //   uniqueName: values.uniqueName,
-    //   title: values.title,
-    // });
-
-    // Additional actions based on the API response
-
-    setShowTenantForm(false) // Close the form after submission
-  }
   const renderFeaturePlans = () => {
     const featurePlans =
       listData &&
@@ -201,92 +228,378 @@ const CheckoutPage = () => {
     )
   }
   return (
-    <div className="main-container">
-      <BreadcrumbComponent breadcrumbInfo={'ProductList'} icon={BsBoxSeam} />{' '}
-      <div className="p-3">
-        <Container className="card">
-          <Row>
-            <Col md={7}>
-              {showTenantForm && (
-                <CheckoutTenantReg
-                  type="create"
-                  updateTenant={() => {}}
-                  setVisible={setShowTenantForm}
-                  popupLabel="Enter Your Info"
-                  currentProduct={productId}
-                  currentPlan={plansPriceList?.[subscribtionId]?.plan.id}
-                />
-              )}
-            </Col>
-            <Col md={5} className="border-left-1 border-light  ">
-              <div>
-                {renderFeaturePlans()}
-                <Form>
-                  <Form.Group className="mb-3">
-                    <Card.Header className="mb-3 fw-bold">
-                      Payment Method
-                    </Card.Header>
-                    <div>
-                      <Form.Check
-                        type="radio"
-                        label={
-                          <>
-                            <FontAwesomeIcon icon={faMoneyBillTransfer} /> IBAN
-                          </>
-                        }
-                        value="iban"
-                        checked={paymentMethod === 'iban'}
-                        onChange={() => setPaymentMethod('iban')}
-                      />
-                      {paymentMethod === 'iban' && (
-                        <Form.Group className="mb-3">
-                          <Form.Label>Invoice Number</Form.Label>
-                          <Form.Control
-                            type="text"
-                            placeholder="Enter Invoice Number"
-                            value={invoiceNumber}
-                            onChange={(e) => setInvoiceNumber(e.target.value)}
-                          />
-                        </Form.Group>
-                      )}
-                      <Form.Check
-                        type="radio"
-                        label={
-                          <>
-                            <FontAwesomeIcon icon={faCreditCard} /> Stripe
-                          </>
-                        }
-                        value="stripe"
-                        checked={paymentMethod === 'stripe'}
-                        onChange={() => setPaymentMethod('stripe')}
-                      />
+    <Wrapper>
+      <div className="main-container">
+        <div className="p-3">
+          {subscriptionData && (
+            <Container className="card">
+              <Row>
+                <Col md={7}>
+                  <Card.Header className="fw-bold">
+                    <FormattedMessage id="Your-Subscribe-Information" />
+                  </Card.Header>
+                  <Card.Body>
+                    {/* product */}
+                    <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-2 ">
+                      <div className=" w-50 fw-bold">
+                        <FormattedMessage id="Product" />
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              <FormattedMessage id="Subscription-Managenent-Product" />
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              style={{ color: '#6c757d' }}
+                              className={
+                                direction == 'rtl'
+                                  ? 'ar-questionCircle mr-2'
+                                  : 'ml-2'
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </div>
+                      <div className=" card-stats">
+                        {listProduct?.[productId].displayName}
+                      </div>
                     </div>
-                  </Form.Group>
-                </Form>
 
-                {paymentMethod && (
-                  <Card.Footer>
-                    {/* Additional checkout information */}
-                    <div>
-                      <p>Total Price: ${planPrice}</p>
-                      <p>Taxes: ${taxes}</p>
-                      <p>Total: ${total}</p>
+                    {/* plan */}
+                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                      <div className=" w-50 fw-bold">
+                        <FormattedMessage id="Plan" />
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              <FormattedMessage id="Subscription-Managenent-Plan" />
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              style={{ color: '#6c757d' }}
+                              className={
+                                direction == 'rtl'
+                                  ? 'ar-questionCircle mr-2'
+                                  : 'ml-2'
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </div>
+                      <div className=" card-stats">
+                        {subscriptionData?.plan?.name}
+                      </div>
                     </div>
-                    <Button
-                      variant="primary"
-                      type="button"
-                      onClick={handlePayment}
-                    >
-                      Pay with {paymentMethod === 'iban' ? 'IBAN' : 'Stripe'}
-                    </Button>
-                  </Card.Footer>
-                )}
-              </div>
-            </Col>
-          </Row>
-        </Container>
+
+                    {/* subsc status */}
+                    <div className="d-flex align-items-center justify-content-between border-bottom  border-light py-3 ">
+                      <div className=" w-50 fw-bold">
+                        <FormattedMessage id="Subscription-Status" />
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              <FormattedMessage id="Subscription-Managenent-Subscription-Status" />
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              style={{ color: '#6c757d' }}
+                              className={
+                                direction == 'rtl'
+                                  ? 'ar-questionCircle mr-2'
+                                  : 'ml-2'
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </div>
+                      <div className=" card-stats">
+                        <Label
+                          {...subscriptionStatus[subscriptionData?.isActive]}
+                        />
+                      </div>
+                    </div>
+
+                    {/* subsc */}
+                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                      <div className=" w-50 fw-bold">
+                        <FormattedMessage id="Subscription" />
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              <FormattedMessage id="Subscription-Managenent-Subscription" />
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              style={{ color: '#6c757d' }}
+                              className={
+                                direction == 'rtl'
+                                  ? 'ar-questionCircle mr-2'
+                                  : 'ml-2'
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </div>
+                      <div className=" card-stats">
+                        ${subscriptionData?.planPrice?.price} /{' '}
+                        <FormattedMessage
+                          id={cycle[subscriptionData?.planPrice?.cycle]}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Auto-Renewal */}
+                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                      <div className="mb-0 w-50 fw-bold">
+                        <FormattedMessage id="Auto-Renewal" />{' '}
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              <FormattedMessage id="Subscription-Managenent-Auto-Renewal" />
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              style={{ color: '#6c757d' }}
+                              className={
+                                direction == 'rtl'
+                                  ? 'ar-questionCircle mr-2'
+                                  : 'ml-2'
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </div>
+                      <div className=" ">
+                        {subscriptionData?.autoRenewal ? (
+                          <Label
+                            {...{
+                              background: 'rgb(239, 249, 246)',
+                              value:
+                                subscriptionData?.autoRenewal &&
+                                `$${subscriptionData?.autoRenewal?.price} / ${
+                                  cycle[subscriptionData?.autoRenewal?.cycle]
+                                }`,
+                              lighter: true,
+                              color: 'rgb(0, 166, 117)',
+                            }}
+                          />
+                        ) : (
+                          <Label
+                            {...{
+                              background: '#ccc',
+                              value: intl.formatMessage({ id: 'disabled' }),
+
+                              lighter: true,
+                              color: '#000000',
+                            }}
+                          />
+                        )}
+
+                        <FontAwesomeIcon
+                          icon={
+                            subscriptionData.autoRenewal
+                              ? faToggleOn
+                              : faToggleOff
+                          }
+                          className={`${
+                            direction == 'rtl'
+                              ? 'mr-2 pr-2 border-right-1 border-light '
+                              : 'ml-2 pl-2 border-left-1 border-light '
+                          }${
+                            subscriptionData.autoRenewal
+                              ? ' active-toggle  '
+                              : ' passive-toggle '
+                          }`}
+                          onClick={handleToggleClick}
+                        />
+                      </div>
+                    </div>
+
+                    {/* start date */}
+                    <div className="d-flex align-items-center justify-content-between  border-bottom border-light py-3 ">
+                      <div className=" w-50 fw-bold">
+                        <FormattedMessage id="Start-Date" />
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              <FormattedMessage id="Subscription-Managenent-Start-Date" />
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              style={{ color: '#6c757d' }}
+                              className={
+                                direction == 'rtl'
+                                  ? 'ar-questionCircle mr-2'
+                                  : 'ml-2'
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </div>
+                      <div className=" card-stats">
+                        <Label
+                          {...{
+                            background: '#cccccc40',
+                            value: formatDate(subscriptionData?.startDate),
+                            lighter: true,
+                          }}
+                        />{' '}
+                      </div>
+                    </div>
+
+                    {/* End Date */}
+                    <div className="d-flex align-items-center justify-content-between py-3 ">
+                      <div className="mb-0 w-50 fw-bold">
+                        <FormattedMessage id="End-Date" />
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              <FormattedMessage id="Subscription-Managenent-End-Date" />
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl'
+                                  ? 'ar-questionCircle mr-2'
+                                  : 'ml-2'
+                              }
+                              style={{ color: '#6c757d' }}
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </div>
+                      <div>
+                        <DateLabel endDate={subscriptionData.endDate} />
+                      </div>
+                    </div>
+                  </Card.Body>
+                </Col>
+                <Col md={5} className="border-left-1 border-light  ">
+                  <div>
+                    {renderFeaturePlans()}
+                    <Form>
+                      <Form.Group className="mb-3">
+                        <Card.Header className="mb-3 fw-bold">
+                          <FormattedMessage id="Payment-Method" />
+                        </Card.Header>
+                        <Card.Body>
+                          <div>
+                            <Form.Check
+                              type="radio"
+                              label={
+                                <>
+                                  <FontAwesomeIcon icon={faMoneyBillTransfer} />{' '}
+                                  IBAN
+                                </>
+                              }
+                              value="iban"
+                              checked={paymentMethod === 'iban'}
+                              onChange={() => setPaymentMethod('iban')}
+                            />
+                            {paymentMethod === 'iban' && (
+                              <Form.Group className="mb-3">
+                                <Form.Label>Invoice Number</Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  placeholder="Enter Invoice Number"
+                                  value={invoiceNumber}
+                                  onChange={(e) =>
+                                    setInvoiceNumber(e.target.value)
+                                  }
+                                />
+                              </Form.Group>
+                            )}
+                            <Form.Check
+                              type="radio"
+                              label={
+                                <>
+                                  <FontAwesomeIcon icon={faCreditCard} /> Stripe
+                                </>
+                              }
+                              value="stripe"
+                              checked={paymentMethod === 'stripe'}
+                              onChange={() => setPaymentMethod('stripe')}
+                            />
+                          </div>
+                        </Card.Body>
+                      </Form.Group>
+                    </Form>
+
+                    {paymentMethod && (
+                      <Card.Footer>
+                        {/* Additional checkout information */}
+                        <div>
+                          <p>Total Price: ${planPrice}</p>
+                          <p>Taxes: ${taxes}</p>
+                          <p>Total: ${total}</p>
+                        </div>
+                        <Button
+                          variant="primary"
+                          type="button"
+                          onClick={handlePayment}
+                        >
+                          Pay with{' '}
+                          {paymentMethod === 'iban' ? 'IBAN' : 'Stripe'}
+                        </Button>
+                      </Card.Footer>
+                    )}
+                  </div>
+                </Col>
+              </Row>
+            </Container>
+          )}
+          {confirm && (
+            <NoteInputConfirmation
+              confirm={confirm}
+              setConfirm={setConfirm}
+              confirmFunction={handleConfirmation}
+              message={intl.formatMessage({
+                id: 'cancel-renew-message',
+              })}
+              placeholder={intl.formatMessage({ id: 'Comment' })}
+            />
+          )}
+          {
+            <ThemeDialog visible={visible} setVisible={setVisible}>
+              <RenewForm
+                popupLabel={<FormattedMessage id="Renew-Subscription" />}
+                type={'edit'}
+                tenantData={subscriptionData}
+                visible={visible}
+                setVisible={setVisible}
+                sideBar={false}
+                selectedProduct={productId}
+                selectedPlan={subscriptionData?.plan?.id}
+                currentSubscription={subscriptionData?.subscriptionId}
+                setUpdate={setUpdate}
+                update={update}
+              />
+            </ThemeDialog>
+          }
+        </div>
       </div>
-    </div>
+    </Wrapper>
   )
 }
 

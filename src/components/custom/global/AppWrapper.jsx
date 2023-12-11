@@ -40,7 +40,6 @@ const AppWrapper = ({ children, customHistory }) => {
       }
 
       const token = localStorage.getItem('token')
-      console.log(token)
       if (token) {
         await userData()
         // send token to get userData then set it in the store
