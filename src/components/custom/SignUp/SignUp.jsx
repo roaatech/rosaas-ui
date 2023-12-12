@@ -12,8 +12,12 @@ import {
   BsUnlockFill,
 } from 'react-icons/bs'
 import { Routes } from '../../../routes'
+import { useSelector } from 'react-redux'
 
 const SignUp = () => {
+  let redirectPath = useSelector(
+    (state) => state.auth.redirectPath.redirectPath
+  )
   const { signUp } = useRequest()
   const navigate = useNavigate()
 
@@ -35,7 +39,7 @@ const SignUp = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     const signUpSuccess = await signUp(values)
     if (signUpSuccess) {
-      navigate(Routes.productsList.path)
+      redirectPath ? navigate(redirectPath) : navigate(Routes.productsList.path)
     }
   }
 

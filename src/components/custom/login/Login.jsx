@@ -12,7 +12,12 @@ import useRequest from '../../../axios/apis/useRequest.js'
 import { Routes } from '../../../routes'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 const Login = () => {
+  let redirectPath = useSelector(
+    (state) => state.auth.redirectPath.redirectPath
+  )
+  console.log({ redirectPath })
   const { signIn } = useRequest()
   const navigate = useNavigate()
   const initialValues = {
@@ -28,7 +33,7 @@ const Login = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     const loginPass = await signIn(values)
     if (loginPass) {
-      navigate(Routes.Dashboard.path)
+      redirectPath ? navigate(redirectPath) : navigate(Routes.Dashboard.path)
     }
   }
 

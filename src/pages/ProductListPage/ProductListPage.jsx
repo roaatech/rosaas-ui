@@ -34,7 +34,7 @@ const ProductListPage = () => {
   const ProductCard = ({ product }) => {
     return (
       <Card className="p-1 m-1">
-        <Link to={`./${product.id}`} className="product-link">
+        <Link to={`./products-list/${product.id}`} className="product-link">
           <Card.Body>
             <Card.Title>
               <FontAwesomeIcon

@@ -29,7 +29,7 @@ export const Routes = {
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
   productsList: {
-    path: '/products-list',
+    path: '/',
     component: ProductListPage,
     roles: ['notAuth', 'tenantAdmin', 'superAdmin'],
     type: 'noSidebar',
@@ -71,7 +71,7 @@ export const Routes = {
     roles: ['superAdmin'],
   },
   Signin: {
-    path: '/',
+    path: '/signin',
     component: signIn,
     roles: ['notAuth'],
     type: 'noSidebar',
@@ -111,3 +111,4 @@ export const Routes = {
     type: 'noSidebar',
   },
 }
+console.log(Routes.Signin.path)

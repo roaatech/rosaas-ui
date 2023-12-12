@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { redirect, useNavigate, useParams } from 'react-router-dom'
 import useRequest from '../../axios/apis/useRequest'
 import { Card, Col, Row, Button, Container } from '@themesberg/react-bootstrap'
 import {
@@ -18,6 +18,7 @@ import { cycle } from '../../const'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBox } from '@fortawesome/free-solid-svg-icons'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
+import { signinRedirectPath } from '../../store/slices/auth'
 
 const PricingPage = () => {
   const dispatch = useDispatch()
@@ -28,7 +29,19 @@ const PricingPage = () => {
   const plansPriceList = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
-  console.log({ plansPriceList })
+  let userRole = useSelector((state) => state.auth.userInfo.role)
+
+  const [redirectPath, setRedirectPath] = useState('')
+  useEffect(() => {
+    if (!redirectPath) {
+      return
+    }
+    dispatch(signinRedirectPath({ redirectPath }))
+  }, [redirectPath])
+
+  if (userRole == undefined) userRole = 'notAuth'
+
+  console.log({ userRole })
   const listData = useSelector(
     (state) => state.products.products[productId]?.featurePlan
   )
@@ -238,9 +251,14 @@ const PricingPage = () => {
                 type="submit"
                 className="w-100"
                 onClick={() =>
-                  navigate(
-                    `/payment/product/${productId}/subscribtion/${subscribtionId}`
-                  )
+                  userRole == 'notAuth'
+                    ? (navigate(`/signin`),
+                      setRedirectPath(
+                        `/payment/product/${productId}/subscribtion/${subscribtionId}`
+                      ))
+                    : navigate(
+                        `/payment/product/${productId}/subscribtion/${subscribtionId}`
+                      )
                 }
               >
                 <FormattedMessage id="Start-With" />{' '}
