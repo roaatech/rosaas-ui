@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 const Login = () => {
   let redirectPath = useSelector(
-    (state) => state.auth.redirectPath.redirectPath
+    (state) => state.auth.redirectPath?.redirectPath
   )
   console.log({ redirectPath })
   const { signIn } = useRequest()
