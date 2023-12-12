@@ -21,12 +21,16 @@ const useTenantReq = () => {
   const getProductList = async (params) => {
     return await Request.get(`management/sadmin/v1/Products${params}`)
   }
+  const getProductListPublic = async (params) => {
+    return await Request.get(`public/v1/Products/Lookup`)
+  }
   const deleteProductReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Products/${data.id}`)
   }
 
   return {
     createProductRequest,
+    getProductListPublic,
     editProductRequest,
     getProduct,
     getProductList,

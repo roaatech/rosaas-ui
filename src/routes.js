@@ -16,44 +16,44 @@ import ProductListPage from './pages/ProductListPage/ProductListPage'
 import PricingPage from './pages/PricingPage/PricingPage'
 import CheckoutPage from './pages/CheckoutPagePage/CheckoutPage'
 import PaymentSuccess from './pages/PaymentSuccess/paymentSuccess'
-import TwoStepProcessPage from './pages/TwoStepProcessPage/TwoStepProcessPage'
+import TwoStepProcessPage from './pages/TwoStepPage/TwoStepPage'
 export const Routes = {
   Dashboard: {
     path: '/Dashboard',
     component: Dashboard,
-    roles: ['superAdmin', 'productOwner', 'tenantOwner'],
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
   },
   products: {
     path: '/products',
     component: Product,
-    roles: ['superAdmin', 'productOwner'],
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
   productsList: {
     path: '/products-list',
     component: ProductListPage,
-    roles: ['notAuth', 'tenantOwner', 'superAdmin'],
+    roles: ['notAuth', 'tenantAdmin', 'superAdmin'],
     type: 'noSidebar',
   },
 
   Tenant: {
     path: '/tenants',
     component: Tenant,
-    roles: ['superAdmin', 'productOwner', 'tenantOwner'],
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
   },
   TenantDetails: {
     path: '/tenants/:id',
     component: TenantDetails,
-    roles: ['superAdmin', 'tenantOwner', 'productOwner'],
+    roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
   },
   SubscriptionManagement: {
     path: '/tenants/:id/Subscription-Management',
     component: SubscriptionManagement,
-    roles: ['superAdmin', 'tenantOwner', 'productOwner'],
+    roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
   },
   ProductDetails: {
     path: '/products/:id',
     component: ProductDetails,
-    roles: ['superAdmin', 'productOwner'],
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
   Settings: {
     path: '/settings/health-check',
@@ -77,9 +77,9 @@ export const Routes = {
     type: 'noSidebar',
   },
   CheckOut: {
-    path: '/checkout/:productId/subscribtion/:subscribtionId',
+    path: '/payment/product/:productId/subscribtion/:subscribtionId',
     component: TwoStepProcessPage,
-    roles: ['notAuth', 'superAdmin'],
+    roles: ['superAdmin', 'tenantAdmin'],
     // type: 'noSidebar',
   },
   SignUp: {
@@ -91,13 +91,13 @@ export const Routes = {
   Pricing: {
     path: '/products-list/:id',
     component: PricingPage,
-    roles: ['notAuth', 'superAdmin'],
+    roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
     type: 'noSidebar',
   },
   PaymentSuccess: {
-    path: '/checkout/:productId/subscribtion/:subscribtionId/success',
+    path: '/success',
     component: PaymentSuccess,
-    roles: ['tenantOwner', 'superAdmin'],
+    roles: ['tenantAdmin', 'superAdmin', 'tenantAdmin'],
   },
   redirect: {
     path: '*',

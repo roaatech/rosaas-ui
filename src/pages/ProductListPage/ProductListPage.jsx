@@ -23,8 +23,10 @@ import {
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBox, faCopy } from '@fortawesome/free-solid-svg-icons'
+import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
+import { FormattedMessage } from 'react-intl'
 const ProductListPage = () => {
-  const { getProductList } = useRequest()
+  const { getProductListPublic } = useRequest()
   const dispatch = useDispatch()
   const listData = useSelector((state) => state.products.products)
   const description =
@@ -40,7 +42,7 @@ const ProductListPage = () => {
                 style={{ cursor: 'pointer' }}
                 className="mr-2 product-icon"
               />
-              <span className="product-name">{product.displayName}</span>
+              <span className="product-name">{product.title}</span>
             </Card.Title>
             <Card.Text>{product.description || description}</Card.Text>
           </Card.Body>
@@ -52,35 +54,36 @@ const ProductListPage = () => {
     if (Object.values(listData).length > 0) {
       return
     }
-    let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
 
     ;(async () => {
-      const productList = await getProductList(query)
-      dispatch(setAllProduct(productList.data.data.items))
+      const productList = await getProductListPublic()
+      dispatch(setAllProduct(productList.data.data))
     })()
-  }, [dispatch, listData])
+  }, [Object.values(listData).length > 0])
 
   return (
     <Wrapper>
-      <BreadcrumbComponent breadcrumbInfo={'ProductList'} icon={BsBoxSeam} />
+      <BreadcrumbComponent
+        breadcrumbInfo={'ProductListPublic'}
+        icon={BsBoxSeam}
+      />
+      <UpperContent>
+        <h4 className="m-0">
+          <FormattedMessage id="Product-List" />
+        </h4>
+      </UpperContent>
       <div className="main-container">
-        <Container>
-          <Row>
-            <Col md={12}>
-              <Card>
-                <Card.Body>
-                  <Row>
-                    {Object.values(listData).map((product) => (
-                      <Col key={product.id} md={4}>
-                        <ProductCard product={product} />
-                      </Col>
-                    ))}
-                  </Row>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
+        <Card>
+          <Card.Body>
+            <Row>
+              {Object.values(listData).map((product) => (
+                <Col key={product.id} md={4}>
+                  <ProductCard product={product} />
+                </Col>
+              ))}
+            </Row>
+          </Card.Body>
+        </Card>
       </div>{' '}
     </Wrapper>
   )

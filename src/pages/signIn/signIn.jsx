@@ -35,12 +35,12 @@ export default () => {
               </div>
             </Col>
           </Row>
+          <div className="copy">
+            COPYRIGHT <span className="yellow">&copy;</span> 2023 ROAA
+            INFORMATION TECHNOLOGY
+          </div>
         </Container>
       </section>
-      <div className="copy">
-        COPYRIGHT <span className="yellow">&copy;</span> 2023 ROAA INFORMATION
-        TECHNOLOGY
-      </div>
     </Wrapper>
   )
 }

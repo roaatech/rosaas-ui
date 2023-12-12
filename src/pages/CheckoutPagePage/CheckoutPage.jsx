@@ -45,6 +45,7 @@ import { Wrapper } from './CheckoutPage.styled'
 
 const CheckoutPage = (data) => {
   console.log({ xxxxxxxxxxx: data })
+  const { orderID } = data
   const { productId, subscribtionId } = useParams()
   const navigate = useNavigate()
   const [invoiceNumber, setInvoiceNumber] = useState('')
@@ -58,6 +59,10 @@ const CheckoutPage = (data) => {
     getProductPlanPriceList,
     subscriptionDetails,
     cancelAutoRenewal,
+    getOrderById,
+    paymentCheckout,
+    paymentSuccess,
+    paymentFailed,
   } = useRequest()
   const [update, setUpdate] = useState(0)
   const intl = useIntl()
@@ -74,7 +79,6 @@ const CheckoutPage = (data) => {
     (state) => state.products.products[productId]?.plansPrice
   )
   const [subscriptionData, setsubscriptionData] = useState('')
-  console.log({ subscriptionData })
   const tenantId = data.currentTenant
   useEffect(() => {
     if (subscriptionData && update == 0) {
@@ -104,6 +108,20 @@ const CheckoutPage = (data) => {
       dispatch(setAllProduct(productList.data.data.items))
     })()
   }, [])
+  console.log({ orderID })
+  const [orderData, setOrderData] = useState()
+  useEffect(() => {
+    if (!orderID) {
+      return
+    }
+
+    ;(async () => {
+      const order = await getOrderById(orderID)
+      console.log({ orderData: order })
+      setOrderData(order.data.data)
+    })()
+  }, [orderID])
+
   useEffect(() => {
     if (Object.values(listProduct).length < 0) {
       return
@@ -157,17 +175,14 @@ const CheckoutPage = (data) => {
   }
 
   const handlePayment = async () => {
-    if (paymentMethod === 'iban') {
-      alert(`Paid with IBAN. Invoice Number: ${invoiceNumber}`)
-      navigate('./success')
-    } else if (paymentMethod === 'stripe') {
-      const stripePayment = await simulateStripePayment()
-      if (stripePayment.success) {
-        alert('Payment with Stripe successful!')
-        navigate('./success')
-      } else {
-        alert('Payment with Stripe failed!')
-      }
+    const payment = await paymentCheckout({ subscribtionId, tenantId, orderID })
+    const navigationUrl = payment?.data.data.navigationUrl
+
+    if (navigationUrl) {
+      const decodedUrl = decodeURIComponent(navigationUrl)
+      console.log(decodedUrl)
+      console.log({ sssssssss: decodedUrl })
+      window.location.href = decodedUrl
     }
   }
   const planPrice = plansPriceList?.[subscribtionId]?.price
@@ -179,10 +194,8 @@ const CheckoutPage = (data) => {
     }
     return 0
   }
-  const taxes = calculateTaxes()
-  const total = planPrice + taxes
 
-  const simulateStripePayment = async () => {
+  const PaymentStripe = async () => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({ success: true })
@@ -196,22 +209,21 @@ const CheckoutPage = (data) => {
       listData &&
       Object.values(listData)
         .filter(
-          (item) => item.plan.id === plansPriceList?.[subscribtionId]?.plan.id
+          (item) => item.plan.id === plansPriceList?.[subscribtionId]?.planId
         )
         .sort((a, b) => {
           return a.feature.id.localeCompare(b.feature.id)
         })
-
     return (
       <>
         <Card.Header>
           Plan{' '}
           <span className="fw-bold">
-            {plansPriceList?.[subscribtionId]?.plan.title.toUpperCase()}
+            {plansPriceList?.[subscribtionId]?.plan.title?.toUpperCase()}
           </span>{' '}
           of Product{' '}
           <span className="fw-bold">
-            {listProduct?.[productId]?.displayName.toUpperCase()}
+            {listProduct?.[productId]?.title?.toUpperCase()}
           </span>
         </Card.Header>
         <Card.Body className="border-bottom ">
@@ -549,10 +561,25 @@ const CheckoutPage = (data) => {
                     {paymentMethod && (
                       <Card.Footer>
                         {/* Additional checkout information */}
-                        <div>
-                          <p>Total Price: ${planPrice}</p>
-                          <p>Taxes: ${taxes}</p>
-                          <p>Total: ${total}</p>
+                        <div className="d-flex align-items-start justify-content-between py-3">
+                          <div className="w-50">
+                            <p className="fw-bold">
+                              Order Subtotal Exclude Tax
+                            </p>
+                            <p className="fw-bold">
+                              Order Subtotal Include Tax
+                            </p>
+                            <p className="total fw-bold py-2 pl-1">
+                              <span>Total</span>
+                            </p>
+                          </div>
+                          <div className="w-50">
+                            <p>${orderData?.orderSubtotalExclTax}</p>
+                            <p>${orderData?.orderSubtotalInclTax}</p>
+                            <p className="total fw-bold py-2">
+                              ${orderData?.orderTotal}
+                            </p>
+                          </div>
                         </div>
                         <Button
                           variant="primary"

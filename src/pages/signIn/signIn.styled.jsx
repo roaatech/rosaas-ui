@@ -5,7 +5,6 @@ export const Wrapper = styled.main`
   background-size: cover;
   /* background-position: center; */
   .copy {
-    position: absolute;
     bottom: 0;
     width: 100%;
     text-align: center;

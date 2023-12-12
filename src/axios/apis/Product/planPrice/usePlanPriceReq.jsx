@@ -8,6 +8,9 @@ const usePlanPriceReq = () => {
       `management/sadmin/v1/Products/${productId}/PlanPrices`
     )
   }
+  const getProductPlanPriceListPublic = async (productName) => {
+    return await Request.get(`public/v1/Product/${productName}/PlanPrices`)
+  }
 
   const createPlanPriceRequest = async (productId, data) => {
     return await Request.post(
@@ -41,6 +44,7 @@ const usePlanPriceReq = () => {
     editPlanPriceRequest,
     deletePlanPriceReq,
     PlansPricePublishedReq,
+    getProductPlanPriceListPublic,
   }
 }
 

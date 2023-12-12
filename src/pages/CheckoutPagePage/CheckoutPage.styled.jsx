@@ -13,4 +13,7 @@ export const Wrapper = styled.div`
     color: #ffab03b4;
     cursor: pointer;
   }
+  p.total {
+    background-color: #ffab032a;
+  }
 `

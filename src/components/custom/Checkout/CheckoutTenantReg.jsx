@@ -37,6 +37,7 @@ const CheckoutTenantReg = ({
   currentPrice,
   setStep,
   setCurrentTenant,
+  setOrderID,
 }) => {
   const {
     createTenantRequest,
@@ -61,7 +62,7 @@ const CheckoutTenantReg = ({
     (state) => state.products.products[productId]?.plansPrice
   )
   const listProduct = useSelector((state) => state.products.products)
-  const currentPlan = plansPriceList?.[subscribtionId]?.plan.id
+  const currentPlan = plansPriceList?.[subscribtionId]?.planId
   useEffect(() => {
     if (Object.values(listProduct).length < 0) {
       return
@@ -182,6 +183,7 @@ const CheckoutTenantReg = ({
             title: values.title,
           })
           setCurrentTenant(createTenant?.data.data.id)
+          setOrderID(createTenant?.data.data.orderId)
 
           dispatch(
             deleteAllPlan({

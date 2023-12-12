@@ -25,7 +25,6 @@ const SignUp = () => {
   }
 
   const validationSchema = Yup.object().shape({
-    fullName: Yup.string().required('Full Name is required'),
     email: Yup.string().email('Invalid email').required('Email is required'),
     password: Yup.string().required('Password is required'),
     confirmPassword: Yup.string()
@@ -36,7 +35,7 @@ const SignUp = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     const signUpSuccess = await signUp(values)
     if (signUpSuccess) {
-      navigate(Routes.Dashboard.path)
+      navigate(Routes.productsList.path)
     }
   }
 
@@ -49,27 +48,6 @@ const SignUp = () => {
       >
         {({ isSubmitting }) => (
           <Form className="mt-4">
-            <div>
-              <label htmlFor="fullName" className="pb-2">
-                <FormattedMessage id="yourFullName" />
-              </label>
-              <div className="inputContainer">
-                <div className="inputContainerWithIcon">
-                  <BsFillPersonFill />
-                  <Field
-                    type="text"
-                    id="fullName"
-                    name="fullName"
-                    as={InputText}
-                  />
-                </div>
-                <ErrorMessage
-                  name="fullName"
-                  component="div"
-                  className="error-message"
-                />
-              </div>
-            </div>
             <div>
               <label htmlFor="email" className="pb-2">
                 <FormattedMessage id="yourEmail" />

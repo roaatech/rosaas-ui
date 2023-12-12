@@ -17,6 +17,7 @@ import CheckoutPage from '../CheckoutPagePage/CheckoutPage'
 import { cycle } from '../../const'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBox } from '@fortawesome/free-solid-svg-icons'
+import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 
 const PricingPage = () => {
   const dispatch = useDispatch()
@@ -27,20 +28,21 @@ const PricingPage = () => {
   const plansPriceList = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
+  console.log({ plansPriceList })
+  const listData = useSelector(
+    (state) => state.products.products[productId]?.featurePlan
+  )
+
   useEffect(() => {
     if (Object.values(listProduct).length > 0) {
       return
     }
-    let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
 
     ;(async () => {
-      const productList = await getProductList(query)
-      dispatch(setAllProduct(productList.data.data.items))
+      const productList = await getProductListPublic()
+      dispatch(setAllProduct(productList.data.data))
     })()
-  }, [])
-  const listData = useSelector(
-    (state) => state.products.products[productId]?.featurePlan
-  )
+  }, [Object.values(listProduct).length > 0])
 
   const planList = useSelector(
     (state) => state.products.products[productId]?.plans
@@ -48,20 +50,22 @@ const PricingPage = () => {
   const [selectedCycle, setSelectedCycle] = useState('')
 
   const {
-    getFeaturePlanList,
-    getProductPlans,
-    getProductList,
-    getProductPlanPriceList,
+    getFeaturePlanListPublic,
+    getProductPlansPublic,
+    getProductListPublic,
+    getProductPlanPriceListPublic,
   } = useRequest()
+
   useEffect(() => {
     if (!listProduct || Object.keys(listProduct).length === 0) {
       return
     }
-    console.log(listProduct)
     const fetchData = async () => {
       try {
         if (!listData || Object.keys(listData).length === 0) {
-          const featurePlanData = await getFeaturePlanList(productId)
+          const featurePlanData = await getFeaturePlanListPublic(
+            listProduct[productId].name
+          )
           if (
             featurePlanData.data.data &&
             Object.keys(featurePlanData.data.data > 0)
@@ -78,7 +82,9 @@ const PricingPage = () => {
         }
 
         if (!planList || Object.keys(planList).length === 0) {
-          const allPlanData = await getProductPlans(productId)
+          const allPlanData = await getProductPlansPublic(
+            listProduct[productId].name
+          )
           if (allPlanData.data.data && Object.keys(allPlanData.data.data > 0))
             dispatch(
               setAllPlans({
@@ -88,7 +94,9 @@ const PricingPage = () => {
             )
         }
         if (!plansPriceList || Object.keys(plansPriceList).length == 0) {
-          const allPlansPrices = await getProductPlanPriceList(productId)
+          const allPlansPrices = await getProductPlanPriceListPublic(
+            listProduct[productId].name
+          )
           if (
             allPlansPrices.data.data &&
             Object.keys(allPlansPrices.data.data > 0)
@@ -111,11 +119,19 @@ const PricingPage = () => {
   const allCycleTypes = plansPriceList && [
     ...new Set(Object.values(plansPriceList).map((priceObj) => priceObj.cycle)),
   ]
-  const allFeaturesPlanId = listData && [
+  const allFeatures = listData && [
     ...new Set(
-      Object.values(listData).map((featurePlan) => featurePlan.plan.id)
+      Object.values(listData).map((featurePlan) => ({
+        id: featurePlan.feature.id,
+        name: featurePlan.feature.title,
+      }))
     ),
   ]
+  // const uniqueFeatures = Array.from(
+  //   new Set(allFeatures.map(JSON.stringify))
+  // ).map(JSON.parse)
+
+  // console.log({ uniqueFeatures })
 
   const handleCycleChange = (cycle) => {
     setSelectedCycle(cycle)
@@ -154,117 +170,123 @@ const PricingPage = () => {
         .sort((a, b) => {
           return a.feature.id.localeCompare(b.feature.id)
         })
+
     const filteredPrices =
       plansPriceList &&
       Object.values(plansPriceList).find(
         (priceObj) =>
-          priceObj.plan.id === planId && priceObj.cycle === selectedCycle
+          priceObj.planId === planId && priceObj.cycle === selectedCycle
       )
     const subscribtionId = filteredPrices?.id
 
     return (
       <div>
-        <Card>
-          <Card.Header className="">
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span
-                  style={{
-                    fontSize: '1.3rem',
-                    // fontWeight: 'bold',
-                    marginRight: '0.5rem',
-                  }}
-                  className="mb-4 mr-1"
-                >
-                  $
-                </span>
-                <span
-                  style={{
-                    fontSize: '2rem',
-                    fontWeight: 'bold',
-                    transition: 'all 0.9s',
-                  }}
-                >
-                  {filteredPrices?.price}
-                </span>
-                <span
-                  className="mt-3 ml-1"
-                  style={{
-                    transition: 'all 0.9s',
-                  }}
-                >
-                  {' '}
-                  /{cycle[filteredPrices?.cycle]}
-                </span>
+        {filteredPrices?.price && (
+          <Card>
+            <Card.Header className="">
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span
+                    style={{
+                      fontSize: '1.3rem',
+                      // fontWeight: 'bold',
+                      marginRight: '0.5rem',
+                    }}
+                    className="mb-4 mr-1"
+                  >
+                    $
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '2rem',
+                      fontWeight: 'bold',
+                      transition: 'all 0.9s',
+                    }}
+                  >
+                    {filteredPrices?.price}
+                  </span>
+                  <span
+                    className="mt-3 ml-1"
+                    style={{
+                      transition: 'all 0.9s',
+                    }}
+                  >
+                    {' '}
+                    /{cycle[filteredPrices?.cycle]}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="fw-bold">{planList[planId].name.toUpperCase()}</div>
-            {}
-          </Card.Header>
-          <Card.Body>
-            {featurePlans?.map((featurePlan) => (
-              <div key={featurePlan.id}>
-                <p>
-                  <BsCheck2Circle style={{ color: 'var(--second-color)' }} />{' '}
-                  {featurePlan.description || featurePlan.feature.title}
-                </p>
+              <div className="fw-bold">
+                {planList[planId].name?.toUpperCase()}
               </div>
-            ))}
-          </Card.Body>
+              {}
+            </Card.Header>
+            <Card.Body>
+              {featurePlans?.map((featurePlan) => (
+                <div key={featurePlan.id}>
+                  <p>
+                    <BsCheck2Circle style={{ color: 'var(--second-color)' }} />{' '}
+                    {featurePlan.description || featurePlan.feature.title}
+                  </p>
+                </div>
+              ))}
+            </Card.Body>
 
-          <Card.Footer>
-            <Button
-              variant="primary"
-              type="submit"
-              className="w-100"
-              onClick={() =>
-                navigate(
-                  `/checkout/${productId}/subscribtion/${subscribtionId}`
-                )
-              }
-            >
-              <FormattedMessage id="Start-With" />{' '}
-              {planList[planId].name.toUpperCase()}
-            </Button>
-          </Card.Footer>
-        </Card>
+            <Card.Footer>
+              <Button
+                variant="primary"
+                type="submit"
+                className="w-100"
+                onClick={() =>
+                  navigate(
+                    `/payment/product/${productId}/subscribtion/${subscribtionId}`
+                  )
+                }
+              >
+                <FormattedMessage id="Start-With" />{' '}
+                {planList[planId].name?.toUpperCase()}
+              </Button>
+            </Card.Footer>
+          </Card>
+        )}
       </div>
     )
   }
   const numPlans = planList && Object.keys(planList)?.length
-  const numCols = numPlans > 4 ? 3 : Math.ceil(12 / numPlans)
+  const numCols =
+    12 % numPlans > 0 ? Math.ceil(12 / numPlans - 1) : Math.ceil(12 / numPlans)
 
   return (
     <div className="main-container">
-      <BreadcrumbComponent breadcrumbInfo={'ProductList'} icon={BsBoxSeam} />
-      <Container>
-        <Row>
-          <Col md={12}>
-            <Card>
-              <Card.Body>
-                <div className="text-center fw-bold  ">
-                  {' '}
-                  <FontAwesomeIcon
-                    icon={faBox}
-                    style={{ cursor: 'pointer' }}
-                    className="mr-2 product-icon"
-                  />
-                  {listProduct?.[productId]?.displayName.toUpperCase()}
-                </div>
-                <div className="text-center">{renderCycleRadioButtons()}</div>
-                <Row>
-                  {planList &&
-                    Object.keys(planList).map((planId) => (
-                      <Col key={planId} md={numCols}>
-                        {renderFeaturePlans(planId)}
-                      </Col>
-                    ))}
-                </Row>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+      <BreadcrumbComponent breadcrumbInfo={'ProductPricing'} icon={BsBoxSeam} />
+      <UpperContent>
+        <h4 className="m-0">
+          <FormattedMessage id="Subscription-Options" />
+        </h4>
+      </UpperContent>
+
+      <Card>
+        <Card.Body>
+          <div className="text-center fw-bold  ">
+            {' '}
+            <FontAwesomeIcon
+              icon={faBox}
+              style={{ cursor: 'pointer' }}
+              className="mr-2 product-icon"
+            />
+            {listProduct?.[productId]?.title?.toUpperCase()}
+          </div>
+          <div className="text-center">{renderCycleRadioButtons()}</div>
+          <Row>
+            {planList &&
+              Object.keys(planList).map((planId) => (
+                <Col key={planId} md={numCols}>
+                  {renderFeaturePlans(planId)}
+                </Col>
+              ))}
+          </Row>
+        </Card.Body>
+      </Card>
     </div>
   )
 }

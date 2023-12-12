@@ -21,14 +21,9 @@ const TwoStepProcessPage = () => {
   const [step, setStep] = useState(1)
   const [showTenantForm, setShowTenantForm] = useState(true)
   const { productId, subscribtionId } = useParams()
-  const handleStep1Submit = (formData) => {
-    // Handle any necessary logic related to the submission of the first step
-
-    // Navigate to step 2 (CheckoutPage)
-    setStep(2)
-  }
 
   const [currentTenant, setCurrentTenant] = useState('')
+  const [orderID, setOrderID] = useState('')
   console.log({ currentTenant })
   return (
     <div className="main-container">
@@ -70,9 +65,12 @@ const TwoStepProcessPage = () => {
                 currentPrice={subscribtionId}
                 setStep={setStep}
                 setCurrentTenant={setCurrentTenant}
+                setOrderID={setOrderID}
               />
             )}
-            {step === 2 && <CheckoutPage currentTenant={currentTenant} />}{' '}
+            {step === 2 && (
+              <CheckoutPage currentTenant={currentTenant} orderID={orderID} />
+            )}{' '}
           </Card.Body>
         </Card>
       </Row>

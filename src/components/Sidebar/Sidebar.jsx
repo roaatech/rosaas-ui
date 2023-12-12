@@ -68,7 +68,7 @@ export default (props = {}) => {
     Object.values(productsData)
   )
   let userRole = useSelector((state) => state.auth.userInfo.role)
-  const roles = ['', 'superAdmin', 'productOwner', 'tenantOwner']
+  const roles = ['', 'superAdmin', 'clientAdmin', 'ProductAdmin', 'tenantAdmin']
 
   let unFilteredProducts = Object.values(productsData)
   const setUnFilteredProducts = (newData) => {

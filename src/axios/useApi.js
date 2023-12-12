@@ -19,7 +19,10 @@ const useApi = () => {
   mainInstance.interceptors.request.use(
     function (config) {
       dispatch(changePreloader(true))
-      const noAuthRoutes = ['identity/sadmin/v1/Auth/Signin']
+      const noAuthRoutes = [
+        'identity/sadmin/v1/Auth/Signin',
+        'identity/tadmin/v1/Auth/Signup',
+      ]
       //* add auth
       if (!noAuthRoutes.includes(config.url)) {
         const localStorageToken = localStorage.getItem('token')
@@ -43,7 +46,13 @@ const useApi = () => {
       dispatch(changePreloader(false))
       res.data?.data?.token?.accessToken &&
         localStorage.setItem('token', res.data?.data?.token?.accessToken)
-      const roles = ['', 'superAdmin', 'productOwner', 'tenantOwner']
+      const roles = [
+        '',
+        'superAdmin',
+        'clientAdmin',
+        'ProductAdmin',
+        'tenantAdmin',
+      ]
       if (res.data?.data?.userAccount?.email) {
         dispatch(
           addUserInfo({

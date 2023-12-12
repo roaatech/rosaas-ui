@@ -6,6 +6,9 @@ const usePlanReq = () => {
   const getProductPlans = async (productId) => {
     return await Request.get(`management/sadmin/v1/Products/${productId}/Plans`)
   }
+  const getProductPlansPublic = async (productName) => {
+    return await Request.get(`/public/v1/Product/${productName}/Plans`)
+  }
 
   const createPlanRequest = async (productId, data) => {
     return await Request.post(
@@ -38,6 +41,7 @@ const usePlanReq = () => {
     publishPlan,
     editPlanRequest,
     deletePlanReq,
+    getProductPlansPublic,
   }
 }
 

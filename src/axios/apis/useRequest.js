@@ -12,9 +12,10 @@ import useSettingsReq from './Setting/useSettingReq'
 import useSpecificationReq from './Product/specification/useSpecificationReq'
 import useSubManagementReq from './Tenant/useSubManagementReq'
 import useClientCredentialsReq from './Product/ClientCredentials/useClientCredentialsReq'
+import usePaymentReq from './Payment/Payment'
 
 const useRequest = () => {
-  const { signIn, userData, logOut } = useUserReq()
+  const { signIn, userData, logOut, signUp } = useUserReq()
   const {
     createTenantRequest,
     editTenantRequest,
@@ -46,6 +47,7 @@ const useRequest = () => {
     getProductList,
     deleteProductReq,
     getProductWarnings,
+    getProductListPublic,
   } = useProductReq()
   const {
     createClientSecret,
@@ -61,6 +63,7 @@ const useRequest = () => {
     publishPlan,
     editPlanRequest,
     deletePlanReq,
+    getProductPlansPublic,
   } = usePlanReq()
   const {
     getProductSpecification,
@@ -82,10 +85,12 @@ const useRequest = () => {
     editPlanPriceRequest,
     deletePlanPriceReq,
     PlansPricePublishedReq,
+    getProductPlanPriceListPublic,
   } = usePlanPriceReq()
 
   const {
     getFeaturePlanList,
+    getFeaturePlanListPublic,
     createFeaturePlanRequest,
     editFeaturePlanRequest,
     getFeaturePlan,
@@ -101,8 +106,12 @@ const useRequest = () => {
     putProductWarningsSettings,
   } = useSettingsReq()
 
+  const { getOrderById, paymentCheckout, paymentSuccess, paymentFailed } =
+    usePaymentReq()
+
   return {
     signIn,
+    signUp,
     userData,
     logOut,
     createTenantRequest,
@@ -166,6 +175,14 @@ const useRequest = () => {
     regenerateClientSecret,
     editClientSecret,
     getClientId,
+    getProductListPublic,
+    getFeaturePlanListPublic,
+    getProductPlansPublic,
+    getProductPlanPriceListPublic,
+    getOrderById,
+    paymentCheckout,
+    paymentSuccess,
+    paymentFailed,
   }
 }
 export default useRequest
