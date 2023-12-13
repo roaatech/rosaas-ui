@@ -111,6 +111,7 @@ const TenantDetails = () => {
           breadcrumbInfo={'TenantDetails'}
           param1={tenantObject.id}
           icon={BsFillPersonLinesFill}
+          data={{ name: tenantObject.title }}
         />
       )}
 

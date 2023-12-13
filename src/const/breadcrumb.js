@@ -1,4 +1,4 @@
-export const breadcrumbFun = (routeParams) => {
+export const breadcrumbFun = (routeParams, data) => {
   const { id } = routeParams
   return {
     HealthCheck: {
@@ -49,9 +49,9 @@ export const breadcrumbFun = (routeParams) => {
     TenantManagement: {
       title: 'Tenants',
       name: 'Subscription-Management',
-      active: 'Subscription Management',
+      active: 'Subscription-Management',
       navigation: `/tenants/${id}/Subscription-Management`,
-      parent: 'Tenant-Details',
+      parent: data?.name,
       parentNavigation: `/tenants/${id}`,
       icon: {},
     },
@@ -98,21 +98,12 @@ export const breadcrumbFun = (routeParams) => {
       icon: {},
     },
     TenantDetails: {
-      title: 'Tenant-Management',
-      name: 'Tenant-Details',
-      active: 'Tenant Details',
-      navigation: `/tenants/${id}`,
-      parent: 'Tenants',
-      // parentNavigation: '/tenant',
-      icon: {},
-    },
-    TenantManagement: {
       title: 'Tenants',
-      name: 'Subscription-Management',
-      active: 'Subscription Management',
-      navigation: `/tenants/${id}/Subscription-Management`,
-      parent: 'Tenant-Details',
-      parentNavigation: `/tenants/${id}`,
+      name: 'Tenant-Management',
+      active: 'Tenant Management',
+      navigation: `/tenants/${id}`,
+      parent: data?.name,
+      // parentNavigation: '/tenant',
       icon: {},
     },
   }

@@ -38,7 +38,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
   const secretItem =
     currentId && allProducts[productId].clientCredentials[currentId]
   const secretList = allProducts[productId].clientCredentials
-  const firstFieldKey = Object.keys(secretList)[0]
+  const firstFieldKey = secretList && Object.keys(secretList)[0]
   const [clientRecordId, setClientRecordId] = useState(
     secretList?.[firstFieldKey]?.clientRecordId || ''
   )
@@ -70,8 +70,8 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
         try {
           const clientData = await getClientId(productId, id)
 
-          setClientRecordId(clientData.data.data.clientRecordId)
-          setClientId(clientData.data.data.clientId)
+          setClientRecordId(clientData.data.data?.clientRecordId)
+          setClientId(clientData.data.data?.clientId)
         } catch (error) {
           console.error('Error:', error)
         }

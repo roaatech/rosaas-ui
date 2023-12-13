@@ -3,6 +3,7 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState: {
     userInfo: {},
+    redirectPath: '',
   },
   reducers: {
     logOut: (state) => {

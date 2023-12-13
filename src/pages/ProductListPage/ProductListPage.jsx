@@ -29,6 +29,17 @@ const ProductListPage = () => {
   const { getProductListPublic } = useRequest()
   const dispatch = useDispatch()
   const listData = useSelector((state) => state.products.products)
+  console.log({ listData: listData })
+  useEffect(() => {
+    if (Object.values(listData).length > 0) {
+      return
+    }
+
+    ;(async () => {
+      const productList = await getProductListPublic()
+      dispatch(setAllProduct(productList.data.data))
+    })()
+  }, [Object.values(listData).length > 0])
   const description =
     'product description product descriptionproduct descriptionproduct descriptionproduct description'
   const ProductCard = ({ product }) => {
@@ -42,7 +53,7 @@ const ProductListPage = () => {
                 style={{ cursor: 'pointer' }}
                 className="mr-2 product-icon"
               />
-              <span className="product-name">{product.title}</span>
+              <span className="product-name">{product?.displayName}</span>
             </Card.Title>
             <Card.Text>{product.description || description}</Card.Text>
           </Card.Body>
@@ -50,16 +61,6 @@ const ProductListPage = () => {
       </Card>
     )
   }
-  useEffect(() => {
-    if (Object.values(listData).length > 0) {
-      return
-    }
-
-    ;(async () => {
-      const productList = await getProductListPublic()
-      dispatch(setAllProduct(productList.data.data))
-    })()
-  }, [Object.values(listData).length > 0])
 
   return (
     <Wrapper>
@@ -76,11 +77,12 @@ const ProductListPage = () => {
         <Card>
           <Card.Body>
             <Row>
-              {Object.values(listData).map((product) => (
-                <Col key={product.id} md={4}>
-                  <ProductCard product={product} />
-                </Col>
-              ))}
+              {Object.values(listData).length > 0 &&
+                Object.values(listData).map((product) => (
+                  <Col key={product.id} md={4}>
+                    <ProductCard product={product} />
+                  </Col>
+                ))}
             </Row>
           </Card.Body>
         </Card>

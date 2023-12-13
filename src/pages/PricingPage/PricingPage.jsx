@@ -68,7 +68,7 @@ const PricingPage = () => {
     getProductListPublic,
     getProductPlanPriceListPublic,
   } = useRequest()
-
+  console.log(listProduct[productId]?.name)
   useEffect(() => {
     if (!listProduct || Object.keys(listProduct).length === 0) {
       return
@@ -188,7 +188,7 @@ const PricingPage = () => {
       plansPriceList &&
       Object.values(plansPriceList).find(
         (priceObj) =>
-          priceObj.planId === planId && priceObj.cycle === selectedCycle
+          priceObj.plan.id === planId && priceObj.cycle === selectedCycle
       )
     const subscribtionId = filteredPrices?.id
 
@@ -292,7 +292,7 @@ const PricingPage = () => {
               style={{ cursor: 'pointer' }}
               className="mr-2 product-icon"
             />
-            {listProduct?.[productId]?.title?.toUpperCase()}
+            {listProduct?.[productId]?.displayName?.toUpperCase()}
           </div>
           <div className="text-center">{renderCycleRadioButtons()}</div>
           <Row>

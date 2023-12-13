@@ -10,13 +10,13 @@ import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { breadcrumbFun } from '../../../../const/breadcrumb'
 
-const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent }) => {
+const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
   const routeParams = useParams()
   let direction = useSelector((state) => state.main.direction)
   const intl = useIntl()
   const hasInfo = breadcrumbInfo ? 'yes' : null
   let navigation = '#'
-  const breadcrumbConst = breadcrumbFun(routeParams)
+  const breadcrumbConst = breadcrumbFun(routeParams, data)
   if (breadcrumbInfo) {
     if (breadcrumbConst[breadcrumbInfo].navigation) {
       navigation = breadcrumbConst[breadcrumbInfo].navigation

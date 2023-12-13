@@ -61,7 +61,7 @@ const ProductDetailsTab = ({ data }) => {
                       <td className="fw-bold">
                         <FormattedMessage id="Client" />
                       </td>
-                      <td>{data.client.name}</td>
+                      <td>{data.client?.name}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">

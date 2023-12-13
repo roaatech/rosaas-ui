@@ -180,6 +180,7 @@ const SubscriptionManagement = (props) => {
         <BreadcrumbComponent
           breadcrumbInfo={'TenantManagement'}
           icon={BsFillPersonLinesFill}
+          data={{ name: tenantsData[routeParams.id]?.title }}
         />
       )}
       {subscriptionDatas && (

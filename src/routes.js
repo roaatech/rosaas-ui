@@ -31,7 +31,7 @@ export const Routes = {
   productsList: {
     path: '/',
     component: ProductListPage,
-    roles: ['notAuth', 'tenantAdmin', 'superAdmin'],
+    roles: ['notAuth', 'tenantAdmin', 'productAdmin', 'superAdmin'],
     type: 'noSidebar',
   },
 

@@ -1,10 +1,10 @@
 import { Card, Container, ProgressBar, Row } from '@themesberg/react-bootstrap'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BsArrowBarDown, BsCheck2Circle, BsPersonFill } from 'react-icons/bs'
 import CheckoutTenantReg from '../../components/custom/Checkout/CheckoutTenantReg'
 import CheckoutPage from '../CheckoutPagePage/CheckoutPage'
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Steps } from 'primereact/steps'
 import {
   faArrowUpShortWide,
@@ -18,13 +18,12 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 import { FormattedMessage } from 'react-intl'
 
 const TwoStepProcessPage = () => {
-  const [step, setStep] = useState(1)
   const [showTenantForm, setShowTenantForm] = useState(true)
   const { productId, subscribtionId } = useParams()
-
+  const dispatch = useDispatch()
+  const [step, setstep] = useState(1)
   const [currentTenant, setCurrentTenant] = useState('')
   const [orderID, setOrderID] = useState('')
-  console.log({ currentTenant })
   return (
     <div className="main-container">
       <BreadcrumbComponent breadcrumbInfo={'ProductList'} />{' '}
@@ -63,9 +62,9 @@ const TwoStepProcessPage = () => {
                 popupLabel="Enter Your Info"
                 currentProduct={productId}
                 currentPrice={subscribtionId}
-                setStep={setStep}
                 setCurrentTenant={setCurrentTenant}
                 setOrderID={setOrderID}
+                setstep={setstep}
               />
             )}
             {step === 2 && (

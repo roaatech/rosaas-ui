@@ -79,16 +79,17 @@ const CheckoutPage = (data) => {
     (state) => state.products.products[productId]?.plansPrice
   )
   const [subscriptionData, setsubscriptionData] = useState('')
-  const tenantId = data.currentTenant
+  const tenantId = data?.currentTenant
+
   useEffect(() => {
-    if (subscriptionData && update == 0) {
+    if ((subscriptionData && update == 0) || !tenantId) {
       return
     }
     ;(async () => {
       const subscriptionInfo = await subscriptionDetails(productId, tenantId)
       setsubscriptionData(subscriptionInfo.data.data)
     })()
-  }, [update])
+  }, [update, tenantId])
   const handleConfirmation = async (data = '', comment) => {
     await cancelAutoRenewal({
       subscriptionId: subscriptionData?.subscriptionId,
@@ -175,14 +176,18 @@ const CheckoutPage = (data) => {
   }
 
   const handlePayment = async () => {
-    const payment = await paymentCheckout({ subscribtionId, tenantId, orderID })
-    const navigationUrl = payment?.data.data.navigationUrl
+    if (paymentMethod === 'stripe') {
+      const payment = await paymentCheckout({
+        subscribtionId,
+        tenantId,
+        orderID,
+      })
+      const navigationUrl = payment?.data.data.navigationUrl
 
-    if (navigationUrl) {
-      const decodedUrl = decodeURIComponent(navigationUrl)
-      console.log(decodedUrl)
-      console.log({ sssssssss: decodedUrl })
-      window.location.href = decodedUrl
+      if (navigationUrl) {
+        const decodedUrl = decodeURIComponent(navigationUrl)
+        window.location.href = decodedUrl
+      }
     }
   }
   const planPrice = plansPriceList?.[subscribtionId]?.price
