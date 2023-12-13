@@ -16,12 +16,14 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import { FormattedMessage } from 'react-intl'
+import { setStep } from '../../store/slices/tenants'
 
 const TwoStepProcessPage = () => {
   const [showTenantForm, setShowTenantForm] = useState(true)
   const { productId, subscribtionId } = useParams()
   const dispatch = useDispatch()
-  const [step, setstep] = useState(1)
+
+  const step = useSelector((state) => state.tenants.currentStep)
   const [currentTenant, setCurrentTenant] = useState('')
   const [orderID, setOrderID] = useState('')
   return (
@@ -64,7 +66,6 @@ const TwoStepProcessPage = () => {
                 currentPrice={subscribtionId}
                 setCurrentTenant={setCurrentTenant}
                 setOrderID={setOrderID}
-                setstep={setstep}
               />
             )}
             {step === 2 && (

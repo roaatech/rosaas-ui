@@ -33,6 +33,7 @@ import ThemeDialog from '../../custom/Shared/ThemeDialog/ThemeDialog'
 import TenantForm from '../../custom/tenant/TenantForm/TenantForm'
 import ProductForm from '../../custom/Product/ProductForm/ProductForm'
 import { useSelector } from 'react-redux'
+import TenantFormOnboarding from '../../custom/tenant/TenantFormOnboarding/TenantFormOnboarding'
 
 const QuickAction = ({
   label,
@@ -50,6 +51,7 @@ const QuickAction = ({
   const [inputValue, setInputValue] = useState('')
   const intl = useIntl()
   const [visibleTenant, setVisibleTenant] = useState(false)
+  const [visibleTenantAndPay, setVisibleTenantAndPay] = useState(false)
   const [visibleProduct, setVisibleProduct] = useState(false)
   const inputHeight = '56px'
   let userRole = useSelector((state) => state.auth.userInfo.role)
@@ -110,6 +112,18 @@ const QuickAction = ({
                 </span>
                 <FormattedMessage id="Add-Tenant" />
               </Dropdown.Item>
+
+              <Dropdown.Item
+                onSelect={() => setVisibleTenantAndPay(true)}
+                className="text-dark"
+              >
+                <span className="mx-2 ">
+                  <BsFillPersonPlusFill className="product-icon" />
+                  {/* <FontAwesomeIcon icon={faPlus} className="plus icon-dark" /> */}
+                </span>
+                <FormattedMessage id="Tenant-Onboard" />
+              </Dropdown.Item>
+
               {(userRole == 'productOwner' || userRole == 'superAdmin') && (
                 <Dropdown.Item
                   onSelect={() => setVisibleProduct(true)}
@@ -138,6 +152,19 @@ const QuickAction = ({
                 type={'create'}
                 visible={visibleTenant}
                 setVisible={setVisibleTenant}
+              />
+            </ThemeDialog>
+          )}
+          {visibleTenantAndPay && (
+            <ThemeDialog
+              visible={visibleTenantAndPay}
+              setVisible={setVisibleTenantAndPay}
+            >
+              <TenantFormOnboarding
+                popupLabel={<FormattedMessage id="Tenant-Onboard" />}
+                type={'create'}
+                visible={visibleTenantAndPay}
+                setVisible={setVisibleTenantAndPay}
               />
             </ThemeDialog>
           )}

@@ -42,10 +42,12 @@ import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfi
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import RenewForm from '../../components/custom/tenant/SubscriptionManagement/RenewForm/RenewForm'
 import { Wrapper } from './CheckoutPage.styled'
+import { setStep } from '../../store/slices/tenants'
 
 const CheckoutPage = (data) => {
-  console.log({ xxxxxxxxxxx: data })
-  const { orderID } = data
+  const createdTenantData = useSelector((state) => state.tenants?.createdTenant)
+
+  const orderID = data.orderID || createdTenantData?.orderId
   const { productId, subscribtionId } = useParams()
   const navigate = useNavigate()
   const [invoiceNumber, setInvoiceNumber] = useState('')
@@ -79,8 +81,7 @@ const CheckoutPage = (data) => {
     (state) => state.products.products[productId]?.plansPrice
   )
   const [subscriptionData, setsubscriptionData] = useState('')
-  const tenantId = data?.currentTenant
-
+  const tenantId = data?.currentTenant || createdTenantData?.id
   useEffect(() => {
     if ((subscriptionData && update == 0) || !tenantId) {
       return
@@ -109,7 +110,6 @@ const CheckoutPage = (data) => {
       dispatch(setAllProduct(productList.data.data.items))
     })()
   }, [])
-  console.log({ orderID })
   const [orderData, setOrderData] = useState()
   useEffect(() => {
     if (!orderID) {
@@ -118,7 +118,6 @@ const CheckoutPage = (data) => {
 
     ;(async () => {
       const order = await getOrderById(orderID)
-      console.log({ orderData: order })
       setOrderData(order.data.data)
     })()
   }, [orderID])
@@ -187,9 +186,12 @@ const CheckoutPage = (data) => {
       if (navigationUrl) {
         const decodedUrl = decodeURIComponent(navigationUrl)
         window.location.href = decodedUrl
+
+        dispatch(setStep(1))
       }
     }
   }
+
   const planPrice = plansPriceList?.[subscribtionId]?.price
   const calculateTaxes = () => {
     if (paymentMethod === 'iban') {
@@ -214,7 +216,7 @@ const CheckoutPage = (data) => {
       listData &&
       Object.values(listData)
         .filter(
-          (item) => item.plan.id === plansPriceList?.[subscribtionId]?.planId
+          (item) => item.plan.id === plansPriceList?.[subscribtionId]?.plan.id
         )
         .sort((a, b) => {
           return a.feature.id.localeCompare(b.feature.id)

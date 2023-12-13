@@ -34,16 +34,16 @@ export const breadcrumbFun = (routeParams, data) => {
       icon: {},
     },
     ProductListPublic: {
-      name: 'Products List',
+      name: 'Products-List',
       navigation: '/products',
-      active: 'Products List',
+      active: 'Products-List',
       icon: {},
     },
     ProductPricing: {
-      name: 'Subscription Options',
-      parent: 'Products List',
+      name: 'Subscription-Options',
+      parent: 'Products-List',
       parentNavigation: `./`,
-      active: 'Subscription Options',
+      active: 'Subscription-Options',
       icon: {},
     },
     TenantManagement: {

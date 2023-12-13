@@ -8,7 +8,6 @@ const usePaymentReq = () => {
   }
 
   const paymentCheckout = async (data) => {
-    console.log({ data })
     return await Request.post(`payment/v1/Checkout`, data)
   }
   const paymentSuccess = async (data) => {

@@ -373,5 +373,12 @@
   "Unit-Display-Name": "Unit Display Name",
   "Unlimited": "Unlimited",
   "Show-Client-Id": "Show Client ID",
-  "Go-Back-Home": "Go Back Home"
+  "Go-Back-Home": "Go Back Home",
+  "Subscribtion-Info": "Subscription Info",
+  "Check-Out": "Check Out",
+  "Start-With": "Start With",
+  "Products-List": "Products List",
+  "Your-Subscribe-Information": "Your Subscription Information",
+  "Payment-Method": "Payment Method",
+  "Tenant-Onboard": "Tenant Onboard"
 }

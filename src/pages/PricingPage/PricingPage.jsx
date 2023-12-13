@@ -19,6 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBox } from '@fortawesome/free-solid-svg-icons'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { signinRedirectPath } from '../../store/slices/auth'
+import { setStep } from '../../store/slices/tenants'
 
 const PricingPage = () => {
   const dispatch = useDispatch()
@@ -39,9 +40,12 @@ const PricingPage = () => {
     dispatch(signinRedirectPath({ redirectPath }))
   }, [redirectPath])
 
+  useEffect(() => {
+    dispatch(setStep(1))
+  }, [])
+
   if (userRole == undefined) userRole = 'notAuth'
 
-  console.log({ userRole })
   const listData = useSelector(
     (state) => state.products.products[productId]?.featurePlan
   )
@@ -68,7 +72,6 @@ const PricingPage = () => {
     getProductListPublic,
     getProductPlanPriceListPublic,
   } = useRequest()
-  console.log(listProduct[productId]?.name)
   useEffect(() => {
     if (!listProduct || Object.keys(listProduct).length === 0) {
       return

@@ -12,7 +12,6 @@ const setAllFeaturePlan = (state, action) => {
     currentProduct.featurePlan = featurePlan
     state.products = allProduct
   } else {
-    console.log({ currentProduct, allProduct }, action.payload.productId)
     return
   }
 }

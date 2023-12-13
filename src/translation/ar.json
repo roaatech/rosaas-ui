@@ -376,5 +376,12 @@
   "Unit-Display-Name": "اسم العرض للوحدة",
   "Unlimited": "غير محدود",
   "Show-Client-Id": "إظهار معرف العميل",
-  "Go-Back-Home": "عودة للصفحة الرئيسية"
+  "Go-Back-Home": "عودة للصفحة الرئيسية",
+  "Subscribtion-Info": "معلومات الاشتراك",
+  "Check-Out": "الدفع",
+  "Start-With": "ابدأ بـ",
+  "Products-List": "قائمة المنتجات",
+  "Your-Subscribe-Information": "معلومات اشتراكك",
+  "Payment-Method": "طريقة الدفع",
+  "Tenant-Onboard": "إنشاء مستأجر"
 }

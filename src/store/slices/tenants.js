@@ -5,6 +5,7 @@ export const tenantsSlice = createSlice({
   name: 'tenants',
   initialState: {
     tenants: {},
+    createdTenant: {},
     subscriptionData: {},
     currentTab: 0,
     currentStep: 1,
@@ -64,6 +65,9 @@ export const tenantsSlice = createSlice({
     setStep: (state, action) => {
       state.currentStep = action.payload
     },
+    setTenantCreateData: (state, action) => {
+      state.createdTenant = action.payload
+    },
     subscriptionData: (state, action) => {
       const currentTenants = JSON.parse(JSON.stringify(current(state.tenants)))
       currentTenants[action.payload.id].subscriptionData = { ...action.payload }
@@ -119,5 +123,6 @@ export const {
   subHistoryData,
   removeSubscriptionDataByProductId,
   setStep,
+  setTenantCreateData,
 } = tenantsSlice.actions
 export default tenantsSlice.reducer

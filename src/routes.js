@@ -111,4 +111,3 @@ export const Routes = {
     type: 'noSidebar',
   },
 }
-console.log(Routes.Signin.path)

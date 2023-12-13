@@ -29,7 +29,6 @@ const ProductListPage = () => {
   const { getProductListPublic } = useRequest()
   const dispatch = useDispatch()
   const listData = useSelector((state) => state.products.products)
-  console.log({ listData: listData })
   useEffect(() => {
     if (Object.values(listData).length > 0) {
       return

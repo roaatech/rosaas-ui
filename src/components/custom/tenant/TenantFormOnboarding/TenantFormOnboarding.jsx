@@ -14,7 +14,7 @@ import {
   setAllSpecifications,
   setAllProduct,
 } from '../../../../store/slices/products/productsSlice.js'
-import { Wrapper } from './TenantForm.styled.jsx'
+import { Wrapper } from './TenantFormOnboarding.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
 import { validateSpecifications } from '../validateSpecifications/validateSpecifications.jsx'
@@ -22,8 +22,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 import { setAllPlansPrice } from '../../../../store/slices/products/productsSlice.js'
+import {
+  setStep,
+  setTenantCreateData,
+} from '../../../../store/slices/tenants.js'
 
-const TenantForm = ({
+const TenantFormOnboarding = ({
   type,
   tenantData,
   update,
@@ -153,7 +157,7 @@ const TenantForm = ({
             uniqueName: values.uniqueName,
             title: values.title,
           })
-
+          dispatch(setTenantCreateData(createTenant.data.data))
           dispatch(
             deleteAllPlan({
               productId: values.product,
@@ -165,7 +169,11 @@ const TenantForm = ({
             })
           )
 
-          navigate(`/tenants/${createTenant.data.data.id}`)
+          dispatch(setStep(2))
+
+          navigate(
+            `/payment/product/${values.product}/subscribtion/${values.price}`
+          )
         } else {
           const editTenant = await editTenantRequest({
             title: values.title,
@@ -501,4 +509,4 @@ const TenantForm = ({
   )
 }
 
-export default TenantForm
+export default TenantFormOnboarding

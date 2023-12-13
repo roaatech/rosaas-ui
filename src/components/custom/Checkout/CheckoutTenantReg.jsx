@@ -26,6 +26,7 @@ import {
 } from '@themesberg/react-bootstrap'
 import AutoGenerateInput from '../Shared/AutoGenerateInput/AutoGenerateInput'
 import SpecificationInput from '../Product/CustomSpecification/SpecificationInput/SpecificationInput'
+import { setStep } from '../../../store/slices/tenants'
 
 const CheckoutTenantReg = ({
   type,
@@ -37,18 +38,14 @@ const CheckoutTenantReg = ({
   currentPrice,
   setCurrentTenant,
   setOrderID,
-  setStep,
 }) => {
   const {
     createTenantRequest,
     editTenantRequest,
-    getProductPlans,
     getProductPlanPriceList,
     getProductSpecification,
   } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
-  const [priceList, setPriceList] = useState([])
-  const navigate = useNavigate()
   const [specValidationErrors, setSpecValidationErrors] = useState({})
 
   const dispatch = useDispatch()
@@ -62,9 +59,8 @@ const CheckoutTenantReg = ({
     (state) => state.products.products[productId]?.plansPrice
   )
   const listProduct = useSelector((state) => state.products.products)
-  const currentPlan = plansPriceList?.[subscribtionId]?.plan.id
   useEffect(() => {
-    if (Object.values(listProduct).length < 0) {
+    if (Object.values(listProduct).length < 0 || !listProduct) {
       return
     }
     const fetchData = async () => {
@@ -85,6 +81,8 @@ const CheckoutTenantReg = ({
 
     fetchData()
   }, [productId])
+  const currentPlan = plansPriceList?.[subscribtionId]?.plan?.id
+
   useEffect(() => {
     if (!listData) {
       let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
@@ -116,17 +114,6 @@ const CheckoutTenantReg = ({
   const validationSchema = Yup.object().shape(
     type === 'create' ? createValidation : editValidation
   )
-
-  const selectedProduct = tenantData?.subscriptions?.map((product) => {
-    return product.productId
-  })
-  const [titleToUnique, setTitleToUnique] = useState('')
-  const specificationValuesObject = (tenantData?.subscriptions || [])
-    .flatMap((subscription) => subscription?.specifications || [])
-    .reduce((acc, specification) => {
-      acc[specification.id] = specification.value
-      return acc
-    }, {})
 
   const initialValues = {
     title: tenantData ? tenantData.title : '',
@@ -195,7 +182,7 @@ const CheckoutTenantReg = ({
               productId: values.product,
             })
           )
-          setStep(2)
+          dispatch(setStep(2))
         } else {
           const editTenant = await editTenantRequest({
             title: values.title,
@@ -232,15 +219,6 @@ const CheckoutTenantReg = ({
       formik.setFieldValue('plan', '')
       formik.setFieldValue('price', '')
       if (listData[productId]) {
-        if (!listData[productId].plans) {
-          const planData = await getProductPlans(productId)
-          dispatch(
-            setAllPlans({
-              productId: productId,
-              data: planData.data.data,
-            })
-          )
-        }
         if (!listData[productId].specifications) {
           const specifications = await getProductSpecification(productId)
 
@@ -275,46 +253,6 @@ const CheckoutTenantReg = ({
       [specificationId]: newValue,
     }))
   }
-
-  useEffect(() => {
-    ;(async () => {
-      formik.setFieldValue('price', '')
-
-      if (currentPlan) {
-        if (!listData[productId].plansPrice) {
-          const planDataRes = await getProductPlanPriceList(productId)
-          dispatch(
-            setAllPlansPrice({
-              productId: productId,
-              data: planDataRes.data.data,
-            })
-          )
-        }
-        const planData = listData?.[formik.values.product]?.plansPrice
-        if (planData) {
-          const planDataArray = Object.values(planData)
-            .filter(
-              (item) =>
-                item.plan.id === formik.values.plan && item.isPublished === true
-            )
-            .map((item) => ({
-              value: item.id,
-              price: item.price,
-              cycle: intl.formatMessage({
-                id: cycle[item.cycle],
-              }),
-            }))
-          setPriceList(planDataArray)
-        } else {
-          setPriceList([])
-        }
-      }
-    })()
-  }, [
-    formik.values.plan,
-    formik.values.product,
-    listData?.[formik.values.product]?.plansPrice,
-  ])
 
   return (
     <Wrapper>

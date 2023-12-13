@@ -17,7 +17,6 @@ const Login = () => {
   let redirectPath = useSelector(
     (state) => state.auth.redirectPath?.redirectPath
   )
-  console.log({ redirectPath })
   const { signIn } = useRequest()
   const navigate = useNavigate()
   const initialValues = {
