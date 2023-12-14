@@ -139,6 +139,7 @@ const PlanPriceForm = ({
 
   const initialValues = {
     plan: plan || (planPriceData ? planPriceData.plan.id : ''),
+    name: planPriceData ? planPriceData.name : '',
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
     price: planPriceData ? planPriceData.price : '',
     description: planPriceData ? planPriceData.description : '',
@@ -154,6 +155,13 @@ const PlanPriceForm = ({
     cycle: Yup.number().required(
       <FormattedMessage id="Please-Select-a-Option" />
     ),
+    name: Yup.string()
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
+      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .matches(
+        /^[a-zA-Z0-9_-]+$/,
+        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+      ),
     price: Yup.number()
       .required(<FormattedMessage id="This-field-is-required" />)
       .min(0, <FormattedMessage id="The-price-must-be-0-or-more" />)
@@ -166,6 +174,7 @@ const PlanPriceForm = ({
     onSubmit: async (values, { setSubmitting }) => {
       if (type === 'create') {
         const createPlanPrice = await createPlanPriceRequest(productId, {
+          name: values.name,
           planId: values.plan,
           cycle: parseInt(values.cycle),
           price: parseInt(values.price),
@@ -190,6 +199,8 @@ const PlanPriceForm = ({
               plan: { id: values.plan, title: allPlans[values.plan].title },
               cycle: values.cycle,
               price: values.price,
+              name: values.name,
+
               description: values.description,
               id: createPlanPrice.data.data.id,
               isPublished: false,
@@ -219,6 +230,7 @@ const PlanPriceForm = ({
             productId: productId,
             data: {
               plan: { id: values.plan, title: allPlans[values.plan].title },
+              name: values.name,
               cycle: values.cycle,
               price: values.price,
               description: values.description,
