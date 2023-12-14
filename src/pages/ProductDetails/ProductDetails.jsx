@@ -42,8 +42,6 @@ import ClientCredentials from '../../components/custom/Product/ClientCredentials
 const ProductDetails = () => {
   const routeParams = useParams()
 
-  const listData = useSelector((state) => state.products.products)
-  let productData = listData[routeParams.id]
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
   const [activeIndex, setActiveIndex] = useState(0)
@@ -58,7 +56,9 @@ const ProductDetails = () => {
       dispatch(productInfo(productData.data.data))
     })()
   }, [visible, routeParams?.id])
-
+  const listData = useSelector((state) => state.products.products)
+  let productData = listData[routeParams.id]
+  console.log({ productData })
   const deleteProduct = async () => {
     await deleteProductReq({ id: routeParams?.id })
     dispatch(removeProductStore(routeParams?.id))

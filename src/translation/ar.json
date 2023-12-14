@@ -383,5 +383,9 @@
   "Products-List": "قائمة المنتجات",
   "Your-Subscribe-Information": "معلومات اشتراكك",
   "Payment-Method": "طريقة الدفع",
-  "Tenant-Onboard": "إنشاء مستأجر"
+  "Tenant-Onboard": "إنشاء مستأجر",
+  "Tenants-Users-Management": "إدارة مستخدمي المستأجرين",
+  "New-User": "مستخدم جديد",
+  "Create-New-User": "إنشاء مستخدم جديد",
+  "Email-ar": "البريد الإلكتروني"
 }

@@ -26,6 +26,7 @@ import { featureUnitMap, statusConst } from '../../const'
 import { featureResetMap } from '../../const'
 import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { MdFactCheck } from 'react-icons/md'
+import TenantsUsersManagement from '../../components/custom/tenant/TenantsUsersManagement/TenantsUsersManagement'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -248,6 +249,13 @@ const TenantDetails = () => {
                         />
                       </TabPanel>
                     ))}
+                    <TabPanel
+                      header={
+                        <FormattedMessage id="Tenants-Users-Management" />
+                      }
+                    >
+                      <TenantsUsersManagement />
+                    </TabPanel>
                   </TabView>
                   <DeleteConfirmation
                     message="Do you want to delete this Tenant?"

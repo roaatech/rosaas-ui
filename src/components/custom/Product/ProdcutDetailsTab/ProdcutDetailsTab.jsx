@@ -67,13 +67,13 @@ const ProductDetailsTab = ({ data }) => {
                       <td className="fw-bold">
                         <FormattedMessage id="Created-Date" />
                       </td>
-                      <td>{DataTransform(data.createdDate)}</td>
+                      <td>{DataTransform(data?.createdDate)}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">
                         <FormattedMessage id="Last-Updated-Date" />
                       </td>
-                      <td>{DataTransform(data.editedDate)}</td>
+                      <td>{DataTransform(data?.editedDate)}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">

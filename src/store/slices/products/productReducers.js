@@ -15,7 +15,7 @@ const setAllProduct = (state, action) => {
 
 const productInfo = (state, action) => {
   const currentProducts = { ...current(state.products) }
-
+  console.log({ ssssssssss: currentProducts[action.payload.id] })
   const mergedObject = _.mergeWith(
     {},
     currentProducts[action.payload.id],

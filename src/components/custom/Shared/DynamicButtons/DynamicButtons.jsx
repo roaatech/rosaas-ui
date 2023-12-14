@@ -20,6 +20,7 @@ import CustomSpecificationForm from '../../Product/CustomSpecification/CustomSpe
 import TenantSpecificationForm from '../../tenant/TenantSpecificatifonForm/TenantSpecificationForm'
 import UpDowngradeForm from '../../tenant/SubscriptionManagement/UpgradeForm/UpDowngradeForm'
 import CreateSecretForm from '../../Product/ClientCredentials/CreateSecretForm/CreateSecretForm'
+import CreateUserForm from '../../tenant/TenantsUsersManagement/CreateUserForm/CreateUserForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -187,6 +188,18 @@ const DynamicButtons = ({ buttons }) => {
     createSecret: () => (
       <>
         <CreateSecretForm
+          popupLabel={buttons[currentButtonIndex].popupLabel}
+          type={buttons[currentButtonIndex].formType}
+          setVisible={setVisible}
+          clientId={buttons[currentButtonIndex].clientId}
+          update={buttons[currentButtonIndex].update}
+          setUpdate={buttons[currentButtonIndex].setUpdate}
+        />
+      </>
+    ),
+    createUser: () => (
+      <>
+        <CreateUserForm
           popupLabel={buttons[currentButtonIndex].popupLabel}
           type={buttons[currentButtonIndex].formType}
           setVisible={setVisible}

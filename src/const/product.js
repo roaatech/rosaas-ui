@@ -76,6 +76,18 @@ export const expirationStatus = {
     color: '#d26b4e',
   },
 }
+export const isMajorStatus = {
+  true: {
+    background: '#eff9f6',
+    value: <FormattedMessage id="true" />,
+    color: '#00a675',
+  },
+  false: {
+    background: '#f5e8e4',
+    value: <FormattedMessage id="false" />,
+    color: '#d26b4e',
+  },
+}
 
 export const cycle = {
   2: 'Week',
