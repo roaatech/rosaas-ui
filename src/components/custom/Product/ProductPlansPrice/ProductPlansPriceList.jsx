@@ -174,6 +174,7 @@ export default function ProductPlansPriceList({ children }) {
   const handleData = (data) => {
     // console.log({ data })
     return {
+      Name: data.name,
       Plan: data.plan.title,
       cycle: cycle[data.cycle],
       Published: data.isPublished ? 'Yes' : 'No',
