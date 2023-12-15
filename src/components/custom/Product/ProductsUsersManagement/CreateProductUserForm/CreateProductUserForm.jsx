@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl'
 
 import { useParams } from 'react-router-dom'
 
-import { Wrapper } from './CreateUserForm.styled.jsx'
+import { Wrapper } from './CreateProductUserForm.styled.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCopy,
@@ -21,18 +21,18 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import { BsCheckCircleFill } from 'react-icons/bs'
-import { AdminPrivileges } from '../../../../../store/slices/tenants.js'
-const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
-  const { createTenantAdmin, validateEmail, tenantAdminPrivileges } =
+import { AdminPrivileges } from '../../../../../store/slices/products/productsSlice.js'
+const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
+  const { createProductAdmin, validateEmail, productAdminPrivileges } =
     useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
-  const tenantId = routeParams.id
-  const allTenants = useSelector((state) => state.tenants.tenants)
+  const productId = routeParams.id
+  const allProducts = useSelector((state) => state.products.products)
 
   const userAdmins =
-    currentId && allTenants[tenantId].AdminPrivileges[currentId]
-  const adminPrivilegesList = allTenants[tenantId]?.AdminPrivileges
+    currentId && allProducts[productId].AdminPrivileges[currentId]
+  const adminPrivilegesList = allProducts[productId]?.AdminPrivileges
   const initialValues = {
     email: userAdmins ? userAdmins?.email : '',
   }
@@ -75,14 +75,14 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
     onSubmit: async (values, { setSubmitting }) => {
       if (type === 'create') {
         if (validEmail) {
-          let TenantUser = await createTenantAdmin({
+          let productUser = await createProductAdmin({
             email: formik.values.email,
             password: formik.values.password,
-            tenantId,
+            productId,
           })
           dispatch(
             AdminPrivileges({
-              id: tenantId,
+              id: productId,
               data: {
                 ...adminPrivilegesList,
                 ...[
@@ -96,16 +96,16 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
             })
           )
         } else {
-          let TenantUser = await tenantAdminPrivileges(
+          let productUser = await productAdminPrivileges(
             {
               email: formik.values.email,
               isMajor: true,
             },
-            tenantId
+            productId
           )
           dispatch(
             AdminPrivileges({
-              id: tenantId,
+              id: productId,
               data: {
                 ...adminPrivilegesList,
                 ...[
@@ -316,4 +316,4 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
   )
 }
 
-export default CreateTenantUserForm
+export default CreateProductUserForm

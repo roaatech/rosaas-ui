@@ -53,7 +53,37 @@ export const tenantsSlice = createSlice({
       currentTenants[action.payload.tenantId] = tenant
       state.tenants = currentTenants
     },
+    AdminPrivileges: (state, action) => {
+      const currentTenants = JSON.parse(JSON.stringify(state.tenants))
+      const { id, data } = action.payload
+      if (currentTenants[id]) {
+        Object.keys(data).forEach((key) => {
+          const item = data[key]
+          currentTenants[id].AdminPrivileges = {
+            ...currentTenants[id].AdminPrivileges,
+            [item.id]: {
+              ...item,
+            },
+          }
+        })
+      }
 
+      state.tenants = currentTenants
+    },
+    deleteTenantAdminPrivileges: (state, action) => {
+      const { tenantId, itemId } = action.payload
+      const currentTenants = JSON.parse(JSON.stringify(state.tenants))
+      const tenantToUpdate = currentTenants[tenantId]
+      if (tenantToUpdate && tenantToUpdate.AdminPrivileges) {
+        const updatedAdminPrivileges = {
+          ...tenantToUpdate.AdminPrivileges,
+        }
+        delete updatedAdminPrivileges[itemId]
+        tenantToUpdate.AdminPrivileges = updatedAdminPrivileges
+      }
+
+      state.tenants = currentTenants
+    },
     removeTenant: (state, action) => {
       const currentTenants = { ...current(state.tenants) }
       delete currentTenants[action.payload]
@@ -124,5 +154,7 @@ export const {
   removeSubscriptionDataByProductId,
   setStep,
   setTenantCreateData,
+  AdminPrivileges,
+  deleteTenantAdminPrivileges,
 } = tenantsSlice.actions
 export default tenantsSlice.reducer

@@ -383,5 +383,9 @@
   "Tenant-Onboard": "Tenant Onboard",
   "Tenants-Users-Management": "Tenants Users Management",
   "New-User": "New User",
-  "Create-New-User": "Create New User"
+  "Create-New-User": "Create New User",
+  "remove-user-message": "Are you sure you want to remove this user?",
+  "Admin-created-successfully": "Admin created successfully",
+  "warning-messege-password-copy": "make sure you copy the Password now. We don't store it and you will not be able to see it again.",
+  "warning-message-account-already-exists": "The account already exists. You cannot set the password; you can only set privileges."
 }

@@ -387,5 +387,8 @@
   "Tenants-Users-Management": "إدارة مستخدمي المستأجرين",
   "New-User": "مستخدم جديد",
   "Create-New-User": "إنشاء مستخدم جديد",
-  "Email-ar": "البريد الإلكتروني"
+  "Email": "البريد الإلكتروني",
+  "remove-user-message": "هل أنت متأكد أنك تريد إزالة هذا المستخدم؟",
+  "Admin-created-successfully": "تم إنشاء المسؤول بنجاح",
+  "warning-message-account-already-exists": "الحساب موجود بالفعل. لا يمكنك تعيين كلمة المرور؛ يمكنك فقط تحديد الامتيازات."
 }

@@ -38,6 +38,7 @@ import ProductWarnings from '../../components/custom/Product/ProductWarnings/Pro
 import { productWarningsStore } from '../../store/slices/products/productsSlice'
 import { WarningVariant } from '../../const/WarningsSettings'
 import ClientCredentials from '../../components/custom/Product/ClientCredentials/ClientCredentials'
+import ProductsUsersManagement from '../../components/custom/Product/ProductsUsersManagement/ProductsUsersManagement.jsx'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -174,6 +175,10 @@ const ProductDetails = () => {
                 data={productData}
                 setActiveIndex={setActiveIndex}
               />
+            </TabPanel>
+
+            <TabPanel header={<FormattedMessage id="User-Management" />}>
+              <ProductsUsersManagement />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
               <ProductCustomSpecificationList

@@ -13,6 +13,8 @@ import useSpecificationReq from './Product/specification/useSpecificationReq'
 import useSubManagementReq from './Tenant/useSubManagementReq'
 import useClientCredentialsReq from './Product/ClientCredentials/useClientCredentialsReq'
 import usePaymentReq from './Payment/Payment'
+import useUsersManagementReq from './UsersManagement/useUsersManagementReq'
+import useAdminPrivileges from './UsersManagement/useAdminPrivileges'
 
 const useRequest = () => {
   const { signIn, userData, logOut, signUp } = useUserReq()
@@ -41,6 +43,19 @@ const useRequest = () => {
   } = useSubManagementReq()
 
   const {
+    createTenantAdmin,
+    createProductAdmin,
+    createClientAdmin,
+    validateEmail,
+  } = useUsersManagementReq()
+  const {
+    tenantAdminPrivileges,
+    productAdminPrivileges,
+    clientAdminPrivileges,
+    EntityAdminPrivileges,
+    deleteAdminPrivileges,
+  } = useAdminPrivileges()
+  const {
     createProductRequest,
     editProductRequest,
     getProduct,
@@ -57,6 +72,7 @@ const useRequest = () => {
     editClientSecret,
     getClientId,
   } = useClientCredentialsReq()
+  const {} = useUsersManagementReq()
   const {
     getProductPlans,
     createPlanRequest,
@@ -183,6 +199,15 @@ const useRequest = () => {
     paymentCheckout,
     paymentSuccess,
     paymentFailed,
+    createTenantAdmin,
+    createProductAdmin,
+    createClientAdmin,
+    validateEmail,
+    tenantAdminPrivileges,
+    productAdminPrivileges,
+    clientAdminPrivileges,
+    EntityAdminPrivileges,
+    deleteAdminPrivileges,
   }
 }
 export default useRequest

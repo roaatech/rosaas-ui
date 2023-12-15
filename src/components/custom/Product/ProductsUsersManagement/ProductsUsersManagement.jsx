@@ -16,7 +16,7 @@ import {
 } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
-import { Wrapper } from './TenantsUsersManagement.styled'
+import { Wrapper } from './ProductsUsersManagement.styled'
 import { BsPlusCircleFill } from 'react-icons/bs'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
@@ -30,11 +30,11 @@ import { formatDate } from '../../../../lib/sharedFun/Time'
 import { useParams } from 'react-router-dom'
 import {
   AdminPrivileges,
-  deleteTenantAdminPrivileges,
-} from '../../../../store/slices/tenants'
+  deleteProductAdminPrivileges,
+} from '../../../../store/slices/products/productsSlice'
 
-const TenantsUsersManagement = () => {
-  const tenantData = useSelector((state) => state.tenants.tenants)
+const ProductsUsersManagement = () => {
+  const productData = useSelector((state) => state.products.products)
 
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
@@ -49,23 +49,23 @@ const TenantsUsersManagement = () => {
 
   const [update, setUpdate] = useState(0)
   const params = useParams()
-  const tenantId = params.id
-  const data = tenantData[tenantId]?.AdminPrivileges
+  const prouductId = params.id
+  const data = productData[prouductId]?.AdminPrivileges
   useEffect(() => {
     ;(async () => {
-      const listData = await EntityAdminPrivileges(tenantId)
+      const listData = await EntityAdminPrivileges(prouductId)
       dispatch(
         AdminPrivileges({
-          id: tenantId,
+          id: prouductId,
           data: listData?.data.data,
         })
       )
     })()
-  }, [update, tenantId])
+  }, [update, prouductId])
 
   const handleDeleteSecret = async () => {
     await deleteAdminPrivileges({ id: currentId })
-    dispatch(deleteTenantAdminPrivileges({ tenantId, itemId: currentId }))
+    dispatch(deleteProductAdminPrivileges({ prouductId, itemId: currentId }))
   }
   const TableRow = (props) => {
     const { email, isMajor, createdDate, id } = props
@@ -125,7 +125,7 @@ const TenantsUsersManagement = () => {
               order: 1,
               type: 'form',
               label: 'New-User',
-              component: 'createUser',
+              component: 'createProductUser',
               icon: <BsPlusCircleFill />,
               formType: 'create',
               update,
@@ -177,4 +177,4 @@ const TenantsUsersManagement = () => {
   )
 }
 
-export default TenantsUsersManagement
+export default ProductsUsersManagement
