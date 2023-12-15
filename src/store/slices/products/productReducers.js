@@ -114,7 +114,7 @@ const AdminPrivileges = (state, action) => {
 }
 const deleteProductAdminPrivileges = (state, action) => {
   const { productId, itemId } = action.payload
-  const currentProducts = JSON.parse(JSON.stringify(state.tenants))
+  const currentProducts = JSON.parse(JSON.stringify(state.products))
   const productToUpdate = currentProducts[productId]
   if (productToUpdate && productToUpdate.AdminPrivileges) {
     const updatedAdminPrivileges = {

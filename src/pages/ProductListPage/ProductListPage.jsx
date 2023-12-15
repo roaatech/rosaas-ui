@@ -7,19 +7,9 @@ import { setAllProduct } from '../../store/slices/products/productsSlice'
 import useRequest from '../../axios/apis/useRequest'
 import { Wrapper } from './ProductListPage.styled'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
-import {
-  BsFillPersonLinesFill,
-  BsBoxSeam,
-  BsFillPersonFill,
-  BsGearFill,
-  BsFillClipboard2CheckFill,
-  BsBoxes,
-  BsSubscript,
-  BsPersonFillDown,
-  BsPersonSlash,
-  BsPeople,
-  BsExclamationTriangle,
-} from 'react-icons/bs'
+import { BsBoxSeam } from 'react-icons/bs'
+import logoEn from '../../assets/img/brand/rosas.svg'
+import logoAr from '../../assets/img/brand/rosas-ar.svg'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBox, faCopy } from '@fortawesome/free-solid-svg-icons'
@@ -29,6 +19,14 @@ const ProductListPage = () => {
   const { getProductListPublic } = useRequest()
   const dispatch = useDispatch()
   const listData = useSelector((state) => state.products.products)
+  let direction = useSelector((state) => state.main.direction)
+  let selectedLogo
+
+  if (direction === 'rtl') {
+    selectedLogo = logoAr
+  } else {
+    selectedLogo = logoEn
+  }
   useEffect(() => {
     if (Object.values(listData).length > 0) {
       return
@@ -64,14 +62,32 @@ const ProductListPage = () => {
   return (
     <Wrapper>
       <BreadcrumbComponent
-        breadcrumbInfo={'ProductListPublic'}
+        // breadcrumbInfo={'ProductListPublic'}
         icon={BsBoxSeam}
       />
-      <UpperContent>
-        <h4 className="m-0">
-          <FormattedMessage id="Product-List" />
-        </h4>
-      </UpperContent>
+      <section class=" mt-4 mb-4 pb-3">
+        <div class="row justify-content-center">
+          <div class="col-lg-12 text-center mb-3">
+            <h1 class="mt-0">
+              <img src={selectedLogo} alt="Logo" width="100" height="100" />
+            </h1>
+          </div>
+          <div class="col-lg-12 text-center mb-1">
+            <h2 class="mt-0">
+              <FormattedMessage id="Seamless-SaaS-Transformation" />
+            </h2>
+          </div>{' '}
+          <div
+            class="col-lg-7 col-xl-6 text-center"
+            style={{ fontSize: 'var(--largeFont)' }}
+          >
+            <FormattedMessage id="Rosaas-Description" />
+          </div>
+          <div class="col-lg-9 col-xl-8 text-center">
+            {/* <p class="lead">{{ .Params.lead | safeHTML }}</p> */}
+          </div>
+        </div>
+      </section>
       <div className="main-container">
         <Card>
           <Card.Body>

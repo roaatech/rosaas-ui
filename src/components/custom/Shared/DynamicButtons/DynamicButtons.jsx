@@ -20,7 +20,7 @@ import CustomSpecificationForm from '../../Product/CustomSpecification/CustomSpe
 import TenantSpecificationForm from '../../tenant/TenantSpecificatifonForm/TenantSpecificationForm'
 import UpDowngradeForm from '../../tenant/SubscriptionManagement/UpgradeForm/UpDowngradeForm'
 import CreateSecretForm from '../../Product/ClientCredentials/CreateSecretForm/CreateSecretForm'
-import CreateTenantUserForm from '../../tenant/TenantsUsersManagement/CreateUserForm/CreateUserForm'
+import CreateTenantUserForm from '../../tenant/TenantsUsersManagement/CreateTenantUserForm/CreateTenantUserForm'
 import CreateProductUserForm from '../../Product/ProductsUsersManagement/CreateProductUserForm/CreateProductUserForm'
 
 const DynamicButtons = ({ buttons }) => {

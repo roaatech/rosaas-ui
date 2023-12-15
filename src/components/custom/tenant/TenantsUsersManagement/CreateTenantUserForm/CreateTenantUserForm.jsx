@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl'
 
 import { useParams } from 'react-router-dom'
 
-import { Wrapper } from './CreateUserForm.styled.jsx'
+import { Wrapper } from './CreateTenantUserForm.styled.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCopy,

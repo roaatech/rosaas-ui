@@ -49,23 +49,23 @@ const ProductsUsersManagement = () => {
 
   const [update, setUpdate] = useState(0)
   const params = useParams()
-  const prouductId = params.id
-  const data = productData[prouductId]?.AdminPrivileges
+  const productId = params.id
+  const data = productData[productId]?.AdminPrivileges
   useEffect(() => {
     ;(async () => {
-      const listData = await EntityAdminPrivileges(prouductId)
+      const listData = await EntityAdminPrivileges(productId)
       dispatch(
         AdminPrivileges({
-          id: prouductId,
+          id: productId,
           data: listData?.data.data,
         })
       )
     })()
-  }, [update, prouductId])
+  }, [update, productId])
 
   const handleDeleteSecret = async () => {
     await deleteAdminPrivileges({ id: currentId })
-    dispatch(deleteProductAdminPrivileges({ prouductId, itemId: currentId }))
+    dispatch(deleteProductAdminPrivileges({ productId, itemId: currentId }))
   }
   const TableRow = (props) => {
     const { email, isMajor, createdDate, id } = props

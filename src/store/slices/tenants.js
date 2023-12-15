@@ -74,6 +74,7 @@ export const tenantsSlice = createSlice({
       const { tenantId, itemId } = action.payload
       const currentTenants = JSON.parse(JSON.stringify(state.tenants))
       const tenantToUpdate = currentTenants[tenantId]
+
       if (tenantToUpdate && tenantToUpdate.AdminPrivileges) {
         const updatedAdminPrivileges = {
           ...tenantToUpdate.AdminPrivileges,

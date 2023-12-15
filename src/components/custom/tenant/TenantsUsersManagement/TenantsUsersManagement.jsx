@@ -125,7 +125,7 @@ const TenantsUsersManagement = () => {
               order: 1,
               type: 'form',
               label: 'New-User',
-              component: 'createUser',
+              component: 'createTenantUser',
               icon: <BsPlusCircleFill />,
               formType: 'create',
               update,

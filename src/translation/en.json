@@ -387,5 +387,14 @@
   "remove-user-message": "Are you sure you want to remove this user?",
   "Admin-created-successfully": "Admin created successfully",
   "warning-messege-password-copy": "make sure you copy the Password now. We don't store it and you will not be able to see it again.",
-  "warning-message-account-already-exists": "The account already exists. You cannot set the password; you can only set privileges."
+  "warning-message-account-already-exists": "The account already exists. You cannot set the password; you can only set privileges.",
+  "User-Management": "User Management",
+  "create-Account": "Create Account",
+  "not-Registered?": "Not Registered?",
+  "confirmPassword": "Confirm Password",
+  "signUp": "Sign Up",
+  "signUpTo": "Sign Up to",
+  "Signin": "Sign In",
+  "Rosaas-Description": "Rosaas is a cutting-edge SaaS facilitator designed to simplify and streamline the process of converting your cloud-based product into a successful Software as a Service (SaaS) offering.",
+  "Seamless-SaaS-Transformation": "Your Pathway to Seamless SaaS Transformation!"
 }
