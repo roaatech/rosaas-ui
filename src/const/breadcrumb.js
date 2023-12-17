@@ -8,6 +8,12 @@ export const breadcrumbFun = (routeParams, data) => {
       active: 'Settings',
       icon: {},
     },
+    Home: {
+      title: 'Home',
+
+      active: 'Home',
+      icon: {},
+    },
     SubscriptionSettings: {
       title: 'Settings',
       name: 'Subscriptions',

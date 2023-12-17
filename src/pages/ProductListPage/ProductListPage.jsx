@@ -61,47 +61,50 @@ const ProductListPage = () => {
 
   return (
     <Wrapper>
-      <BreadcrumbComponent
-        // breadcrumbInfo={'ProductListPublic'}
-        icon={BsBoxSeam}
-      />
-      <section class=" mt-4 mb-4 pb-3">
-        <div class="row justify-content-center">
-          <div class="col-lg-12 text-center mb-3">
-            <h1 class="mt-0">
-              <img src={selectedLogo} alt="Logo" width="100" height="100" />
-            </h1>
-          </div>
-          <div class="col-lg-12 text-center mb-1">
-            <h2 class="mt-0">
-              <FormattedMessage id="Seamless-SaaS-Transformation" />
-            </h2>
-          </div>{' '}
-          <div
-            class="col-lg-7 col-xl-6 text-center"
-            style={{ fontSize: 'var(--largeFont)' }}
-          >
-            <FormattedMessage id="Rosaas-Description" />
-          </div>
-          <div class="col-lg-9 col-xl-8 text-center">
-            {/* <p class="lead">{{ .Params.lead | safeHTML }}</p> */}
-          </div>
-        </div>
+      <BreadcrumbComponent breadcrumbInfo={'Home'} icon={BsBoxSeam} />
+      <section
+        className="d-flex align-items-center"
+        style={{ minHeight: '100vh' }}
+      >
+        <div className="main-container">
+          <section class=" mt-4 mb-4 pb-3">
+            <div class="row justify-content-center">
+              <div class="col-lg-12 text-center mb-3">
+                <h1 class="mt-0">
+                  <img src={selectedLogo} alt="Logo" width="100" height="100" />
+                </h1>
+              </div>
+              <div class="col-lg-12 text-center mb-1">
+                <h2 class="mt-0">
+                  <FormattedMessage id="Seamless-SaaS-Transformation" />
+                </h2>
+              </div>{' '}
+              <div
+                class="col-lg-7 col-xl-6 text-center"
+                style={{ fontSize: 'var(--largeFont)' }}
+              >
+                <FormattedMessage id="Rosaas-Description" />
+              </div>
+              <div class="col-lg-9 col-xl-8 text-center">
+                {/* <p class="lead">{{ .Params.lead | safeHTML }}</p> */}
+              </div>
+            </div>
+          </section>
+
+          <Card>
+            <Card.Body>
+              <Row>
+                {Object.values(listData).length > 0 &&
+                  Object.values(listData).map((product) => (
+                    <Col key={product.id} md={4}>
+                      <ProductCard product={product} />
+                    </Col>
+                  ))}
+              </Row>
+            </Card.Body>
+          </Card>
+        </div>{' '}
       </section>
-      <div className="main-container">
-        <Card>
-          <Card.Body>
-            <Row>
-              {Object.values(listData).length > 0 &&
-                Object.values(listData).map((product) => (
-                  <Col key={product.id} md={4}>
-                    <ProductCard product={product} />
-                  </Col>
-                ))}
-            </Row>
-          </Card.Body>
-        </Card>
-      </div>{' '}
     </Wrapper>
   )
 }

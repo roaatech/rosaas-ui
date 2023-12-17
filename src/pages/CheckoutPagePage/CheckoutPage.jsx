@@ -32,7 +32,6 @@ import {
   faToggleOn,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import CheckoutTenantReg from '../../components/custom/Checkout/CheckoutTenantReg'
 import { FormattedDate, FormattedMessage, useIntl } from 'react-intl'
 import Label from '../../components/custom/Shared/label/Label'
 import { cycle, subscriptionStatus } from '../../const/product'
@@ -63,8 +62,6 @@ const CheckoutPage = (data) => {
     cancelAutoRenewal,
     getOrderById,
     paymentCheckout,
-    paymentSuccess,
-    paymentFailed,
   } = useRequest()
   const [update, setUpdate] = useState(0)
   const intl = useIntl()
@@ -192,23 +189,6 @@ const CheckoutPage = (data) => {
     }
   }
 
-  const planPrice = plansPriceList?.[subscribtionId]?.price
-  const calculateTaxes = () => {
-    if (paymentMethod === 'iban') {
-      return 0.1 * planPrice
-    } else if (paymentMethod === 'stripe') {
-      return 0.15 * planPrice
-    }
-    return 0
-  }
-
-  const PaymentStripe = async () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ success: true })
-      }, 2000)
-    })
-  }
   const direction = useSelector((state) => state.main.direction)
 
   const renderFeaturePlans = () => {

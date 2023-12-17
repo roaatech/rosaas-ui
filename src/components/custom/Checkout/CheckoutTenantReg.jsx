@@ -44,21 +44,20 @@ const CheckoutTenantReg = ({
     editTenantRequest,
     getProductPlanPriceList,
     getProductSpecification,
+    getProductList,
   } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
   const [specValidationErrors, setSpecValidationErrors] = useState({})
 
   const dispatch = useDispatch()
-  const { getProductList } = useRequest()
 
-  const listData = useSelector((state) => state.products.products)
   const { productId, subscribtionId } = useParams()
+  const listProduct = useSelector((state) => state.products.products)
 
-  let list = Object.values(listData)
+  let list = Object.values(listProduct)
   const plansPriceList = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
-  const listProduct = useSelector((state) => state.products.products)
   useEffect(() => {
     if (Object.values(listProduct).length < 0 || !listProduct) {
       return
@@ -84,7 +83,7 @@ const CheckoutTenantReg = ({
   const currentPlan = plansPriceList?.[subscribtionId]?.plan?.id
 
   useEffect(() => {
-    if (!listData) {
+    if (!listProduct) {
       let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
       ;(async () => {
         const productList = await getProductList(query)
@@ -129,8 +128,8 @@ const CheckoutTenantReg = ({
     validationSchema: validationSchema,
 
     onSubmit: async (values) => {
-      const specificationsArray = listData?.[productId]?.specifications
-        ? Object.values(listData?.[productId].specifications).map(
+      const specificationsArray = listProduct?.[productId]?.specifications
+        ? Object.values(listProduct?.[productId].specifications).map(
             (specification) => {
               const specificationId = specification.id
               const value =
@@ -198,8 +197,8 @@ const CheckoutTenantReg = ({
 
   const intl = useIntl()
   let planOptions
-  if (listData[formik.values.product]?.plans) {
-    planOptions = Object.values(listData[formik.values.product].plans)
+  if (listProduct[formik.values.product]?.plans) {
+    planOptions = Object.values(listProduct[formik.values.product].plans)
       .filter((item) => item.isPublished === true)
       .map((item, index) => ({
         value: item.id,
@@ -218,8 +217,8 @@ const CheckoutTenantReg = ({
     ;(async () => {
       formik.setFieldValue('plan', '')
       formik.setFieldValue('price', '')
-      if (listData[productId]) {
-        if (!listData[productId].specifications) {
+      if (listProduct[productId]) {
+        if (!listProduct[productId].specifications) {
           const specifications = await getProductSpecification(productId)
 
           dispatch(
@@ -231,12 +230,12 @@ const CheckoutTenantReg = ({
         }
       }
     })()
-  }, [productId, listData])
+  }, [productId, listProduct])
 
   const [filteredSpecificationsArray, setFilteredSpecificationsArray] =
     useState()
   useEffect(() => {
-    const productData = listData[productId]
+    const productData = listProduct[productId]
 
     const allSpecificationsArray = productData?.specifications
       ? Object.values(productData.specifications)
@@ -244,7 +243,7 @@ const CheckoutTenantReg = ({
     setFilteredSpecificationsArray(
       allSpecificationsArray.filter((spec) => spec.isPublished === true)
     )
-  }, [productId, listData])
+  }, [productId, listProduct])
 
   const handleSpecificationChange = (specificationId, event) => {
     const newValue = event.target.value
@@ -256,104 +255,94 @@ const CheckoutTenantReg = ({
 
   return (
     <Wrapper>
-      <Container className="card ">
-        <Row>
-          {listData?.[productId] && (
-            <Form onSubmit={formik.handleSubmit}>
-              <Card.Header>
-                <Modal.Title className="h6">{popupLabel}</Modal.Title>
-              </Card.Header>
-              <Card.Body>
-                <div>
-                  <Form.Group className="mb-3">
-                    <Form.Label>
-                      <FormattedMessage id="Title" />{' '}
-                      <span style={{ color: 'red' }}>*</span>
-                    </Form.Label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      id="title"
-                      name="title"
-                      onChange={formik.handleChange}
-                      value={formik.values.title}
-                    />
+      {listProduct?.[productId] && (
+        <Form onSubmit={formik.handleSubmit}>
+          <Card.Header>
+            <Modal.Title className="h6">{popupLabel}</Modal.Title>
+          </Card.Header>
+          <Card.Body>
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <FormattedMessage id="Title" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="title"
+                  name="title"
+                  onChange={formik.handleChange}
+                  value={formik.values.title}
+                />
 
-                    {formik.touched.title && formik.errors.title && (
-                      <Form.Control.Feedback
-                        type="invalid"
-                        style={{ display: 'block' }}
-                      >
-                        {formik.errors.title}
-                      </Form.Control.Feedback>
-                    )}
-                  </Form.Group>
-                </div>
-
-                <div className="mb-3">
-                  {type === 'create' && (
-                    <AutoGenerateInput
-                      label={<FormattedMessage id="Name" />}
-                      id="uniqueName"
-                      value={formik.values.title}
-                      name={formik.values.uniqueName}
-                      onChange={formik.handleChange}
-                      onGenerateUniqueName={(generatedUniqueName) => {
-                        formik.setFieldValue('uniqueName', generatedUniqueName)
-                      }}
-                      onAutoGenerateClick={() => {
-                        formik.setFieldValue(
-                          'isAutoGenerated',
-                          !formik.values.isAutoGenerated
-                        )
-                      }}
-                      isAutoGenerated={formik.values.isAutoGenerated}
-                    />
-                  )}
-                  {formik.touched.uniqueName && formik.errors.uniqueName && (
-                    <Form.Control.Feedback
-                      type="invalid"
-                      style={{ display: 'block' }}
-                    >
-                      {formik.errors.uniqueName}
-                    </Form.Control.Feedback>
-                  )}
-                </div>
-
-                {type === 'create' &&
-                  Array.isArray(filteredSpecificationsArray) &&
-                  filteredSpecificationsArray.length > 0 && (
-                    <>
-                      <SpecificationInput
-                        specifications={filteredSpecificationsArray}
-                        specificationValues={specificationValues}
-                        handleSpecificationChange={handleSpecificationChange}
-                        tenantData={tenantData}
-                        intl={intl}
-                        specValidationErrors={specValidationErrors}
-                      />
-                    </>
-                  )}
-
-                {formik.errors.specifications && (
-                  <div className="text-danger">
-                    {formik.errors.specifications}
-                  </div>
+                {formik.touched.title && formik.errors.title && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.title}
+                  </Form.Control.Feedback>
                 )}
-              </Card.Body>
-              <Card.Footer>
-                <Button
-                  variant="secondary"
-                  type="submit"
-                  disabled={submitLoading}
+              </Form.Group>
+            </div>
+
+            <div className="mb-3">
+              {type === 'create' && (
+                <AutoGenerateInput
+                  label={<FormattedMessage id="Name" />}
+                  id="uniqueName"
+                  value={formik.values.title}
+                  name={formik.values.uniqueName}
+                  onChange={formik.handleChange}
+                  onGenerateUniqueName={(generatedUniqueName) => {
+                    formik.setFieldValue('uniqueName', generatedUniqueName)
+                  }}
+                  onAutoGenerateClick={() => {
+                    formik.setFieldValue(
+                      'isAutoGenerated',
+                      !formik.values.isAutoGenerated
+                    )
+                  }}
+                  isAutoGenerated={formik.values.isAutoGenerated}
+                />
+              )}
+              {formik.touched.uniqueName && formik.errors.uniqueName && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
                 >
-                  <FormattedMessage id="Submit" />
-                </Button>
-              </Card.Footer>
-            </Form>
-          )}
-        </Row>
-      </Container>
+                  {formik.errors.uniqueName}
+                </Form.Control.Feedback>
+              )}
+            </div>
+
+            {type === 'create' &&
+              Array.isArray(filteredSpecificationsArray) &&
+              filteredSpecificationsArray.length > 0 && (
+                <>
+                  <SpecificationInput
+                    specifications={filteredSpecificationsArray}
+                    specificationValues={specificationValues}
+                    handleSpecificationChange={handleSpecificationChange}
+                    tenantData={tenantData}
+                    intl={intl}
+                    specValidationErrors={specValidationErrors}
+                  />
+                </>
+              )}
+
+            {formik.errors.specifications && (
+              <div className="text-danger">{formik.errors.specifications}</div>
+            )}
+          </Card.Body>
+          <Card.Footer>
+            <Button variant="secondary" type="submit" disabled={submitLoading}>
+              <FormattedMessage id="Submit" />
+            </Button>
+          </Card.Footer>
+        </Form>
+      )}
     </Wrapper>
   )
 }
