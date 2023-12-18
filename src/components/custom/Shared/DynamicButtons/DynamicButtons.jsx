@@ -202,6 +202,7 @@ const DynamicButtons = ({ buttons }) => {
       <>
         <CreateTenantUserForm
           popupLabel={buttons[currentButtonIndex].popupLabel}
+          currentUser={buttons[currentButtonIndex].currentUser}
           type={buttons[currentButtonIndex].formType}
           setVisible={setVisible}
           clientId={buttons[currentButtonIndex].clientId}

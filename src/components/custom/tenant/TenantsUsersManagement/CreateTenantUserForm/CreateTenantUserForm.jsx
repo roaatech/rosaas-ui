@@ -22,7 +22,17 @@ import {
 
 import { BsCheckCircleFill } from 'react-icons/bs'
 import { AdminPrivileges } from '../../../../../store/slices/tenants.js'
-const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
+import { Link } from 'react-router-dom'
+const CreateTenantUserForm = ({
+  type,
+  setVisible,
+  popupLabel,
+  currentId,
+  currentUser,
+}) => {
+  const [currentType, setCurrentType] = useState(type)
+  console.log(currentType)
+  const [currentPopupLabel, setCurrentPopupLabel] = useState(popupLabel)
   const { createTenantAdmin, validateEmail, tenantAdminPrivileges } =
     useRequest()
   const dispatch = useDispatch()
@@ -36,33 +46,27 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
   const initialValues = {
     email: userAdmins ? userAdmins?.email : '',
   }
-  const [validEmail, setValidEmail] = useState(true)
-  const getValidationSchema = () => {
-    if (validEmail) {
-      return Yup.object().shape({
-        email: Yup.string()
-          .email('Invalid email')
-          .required('Email is required'),
-        password: Yup.string()
-          .min(6, 'Password must be at least 6 characters')
-          .required('Password is required'),
-      })
-    } else {
-      return Yup.object().shape({
-        email: Yup.string()
-          .email('Invalid email')
-          .required('Email is required'),
-      })
-    }
-  }
-  const validationSchema = getValidationSchema()
+  const [validEmail, setValidEmail] = useState(currentUser)
+  const validationSchema = Yup.object().shape({
+    // email: Yup.string().when([], {
+    //   is: () => validEmail,
+    //   then: Yup.string().test(
+    //     'account-exists',
+    //     'The account already exists.',
+    //     () => false
+    //   ),
+    //   otherwise: Yup.string().email().notRequired(),
+    // }),
+    // password: Yup.string().required('Password is required'),
+  })
 
   const [nextPage, setNexPage] = useState(false)
 
   const handleEmailBlur = async () => {
     const response = await validateEmail(formik.values.email)
+    console.log({ response })
 
-    if (response && response.data.metadata.success === true) {
+    if (response && response.data.data.result === true) {
       setValidEmail(true)
     } else {
       setValidEmail(false)
@@ -73,13 +77,15 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
     validationSchema: validationSchema,
 
     onSubmit: async (values, { setSubmitting }) => {
-      if (type === 'create') {
+      if (currentType === 'create') {
         if (validEmail) {
           let TenantUser = await createTenantAdmin({
             email: formik.values.email,
             password: formik.values.password,
             tenantId,
           })
+          console.log({ TenantUser })
+
           dispatch(
             AdminPrivileges({
               id: tenantId,
@@ -90,6 +96,7 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
                     createdDate: new Date().toISOString().slice(0, 19),
                     email: formik.values.email,
                     isMajor: false,
+                    id: TenantUser.data.data,
                   },
                 ],
               },
@@ -103,6 +110,7 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
             },
             tenantId
           )
+          console.log({ TenantUser })
           dispatch(
             AdminPrivileges({
               id: tenantId,
@@ -113,6 +121,7 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
                     createdDate: new Date().toISOString().slice(0, 19),
                     email: formik.values.email,
                     isMajor: true,
+                    id: TenantUser.data.data,
                   },
                 ],
               },
@@ -121,6 +130,32 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
         }
 
         setNexPage(true)
+      } else {
+        let TenantUser = await tenantAdminPrivileges(
+          {
+            email: formik.values.email,
+            isMajor: true,
+          },
+          tenantId
+        )
+        console.log({ TenantUser })
+        dispatch(
+          AdminPrivileges({
+            id: tenantId,
+            itemId: TenantUser.data.data,
+            data: {
+              ...adminPrivilegesList,
+              ...[
+                {
+                  createdDate: new Date().toISOString().slice(0, 19),
+                  email: formik.values.email,
+                  isMajor: true,
+                },
+              ],
+            },
+          })
+        )
+        setVisible(false)
       }
 
       setSubmitting(false)
@@ -128,7 +163,7 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
   })
 
   const [showSecret, setShowSecret] = useState(false)
-
+  const [changing, setChanging] = useState(false)
   const handleToggleShowSecret = () => {
     setShowSecret(!showSecret)
   }
@@ -136,6 +171,7 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
   const handleCopyToClipboard = (value) => {
     navigator.clipboard.writeText(value)
   }
+  console.log({ sssslll: formik.errors.email })
 
   const UserData = () => {
     return (
@@ -173,7 +209,7 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
           </div>
         </Form.Group>
 
-        {validEmail && (
+        {currentType === 'create' && validEmail == true && (
           <Form.Group className="mb-3">
             <Form.Label>
               <FormattedMessage id="Password" />{' '}
@@ -214,7 +250,7 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
         <Modal.Header>
           <Modal.Title className="h6">
             {!nextPage ? (
-              popupLabel
+              currentPopupLabel
             ) : (
               <>
                 <FormattedMessage id="Admin-created-successfully" />{' '}
@@ -245,9 +281,15 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
                 type="text"
                 id="email"
                 name="email"
-                onChange={formik.handleChange}
+                onChange={(e) => {
+                  formik.handleChange(e)
+                  setChanging(true)
+                }}
                 value={formik.values.email}
-                onBlur={handleEmailBlur}
+                onBlur={(e) => {
+                  handleEmailBlur()
+                  setChanging(false)
+                }}
               />
 
               {formik.touched.email && formik.errors.email && (
@@ -261,7 +303,7 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
             </Form.Group>
           )}
 
-          {validEmail && !nextPage && (
+          {!nextPage && currentType == 'create' && (
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Password" />{' '}
@@ -287,19 +329,62 @@ const CreateTenantUserForm = ({ type, setVisible, popupLabel, currentId }) => {
               )}
             </Form.Group>
           )}
-          {!validEmail && !nextPage && (
+          {formik.values.email &&
+            validEmail === false &&
+            !nextPage &&
+            currentType == 'create' &&
+            changing === false && (
+              <Alert variant={'info'}>
+                <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
+                <strong>
+                  <FormattedMessage id={'info'} /> -
+                </strong>{' '}
+                {
+                  <FormattedMessage id="warning-message-account-already-exists" />
+                }
+                <span
+                  onClick={() => {
+                    setCurrentType('add')
+                    setCurrentPopupLabel(<FormattedMessage id="Add-User" />)
+                  }}
+                  className="link-style"
+                >
+                  <FormattedMessage id="Navigate" />{' '}
+                </span>
+                <FormattedMessage id="to the appropriate section to manage privileges." />
+              </Alert>
+            )}
+          {validEmail && currentType != 'create' && (
             <Alert variant={'info'}>
               <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
               <strong>
                 <FormattedMessage id={'info'} /> -
-              </strong>{' '}
-              {<FormattedMessage id="warning-message-account-already-exists" />}
+              </strong>
+              {<FormattedMessage id="warning-message-account-does'nt-exist" />}{' '}
+              <FormattedMessage id="click-here-to-designate-major" />{' '}
+              <span
+                onClick={() => {
+                  setCurrentType('create')
+                  setCurrentPopupLabel(<FormattedMessage id="New-User" />)
+                }}
+              >
+                {' '}
+                <FormattedMessage id="click-here" />
+              </span>
+              <Link></Link>
             </Alert>
           )}
         </Modal.Body>
         <Modal.Footer>
           {!nextPage && (
-            <Button variant="secondary" type="submit">
+            <Button
+              variant="secondary"
+              type="submit"
+              disabled={
+                (currentType == 'create' && !validEmail) ||
+                (validEmail && currentType != 'create')
+              }
+            >
               <FormattedMessage id="Submit" />
             </Button>
           )}
