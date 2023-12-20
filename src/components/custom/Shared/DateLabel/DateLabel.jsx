@@ -16,8 +16,7 @@ const DateLabel = ({ endDate }) => {
       background: 'rgb(239, 249, 246)',
     },
   }
-
-  const expired = isDateExpired(endDate)
+  const expired = !endDate ? false : isDateExpired(endDate)
 
   return (
     <Wrapper>
@@ -28,7 +27,7 @@ const DateLabel = ({ endDate }) => {
           background: DateStatus[expired].background,
         }}
       >
-        {endDate === 'Unlimited' ? 'Unlimited' : formatDate(endDate)}
+        {endDate ? formatDate(endDate) : 'Unlimited'}
       </span>
     </Wrapper>
   )
