@@ -175,11 +175,35 @@ export default function ProductPlansPriceList({ children }) {
   })
 
   const handleCreatePlanPrice = (plan, cycle) => {
-    setCurrentPlanId(plan)
-    setCurrentCycle(cycle)
-    setVisible(true)
-    setPopUpLable('Add-Plan-Price')
-    setType('create')
+    console.log({ list: plansData?.[plan].tenancyType, cycle })
+    console.log(
+      plansData?.[plan].tenancyType == 3 && (cycle == 10 || cycle == 11)
+    )
+    if (plansData?.[plan].tenancyType == 3 && (cycle == 10 || cycle == 11)) {
+      toast.error(
+        intl.formatMessage({
+          id: 'Cannot-add-to-this-type-of-cycle',
+        }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+    } else if (plansData?.[plan].tenancyType != 1) {
+      setCurrentPlanId(plan)
+      setCurrentCycle(cycle)
+      setVisible(true)
+      setPopUpLable('Add-Plan-Price')
+      setType('create')
+    } else {
+      toast.error(
+        intl.formatMessage({
+          id: 'Cannot-add-to-this-type-of-plan',
+        }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+    }
   }
 
   const handleData = (data) => {
@@ -217,7 +241,7 @@ export default function ProductPlansPriceList({ children }) {
                         variant="link"
                         className="text-dark m-0 p-0 planFeatureButton"
                       >
-                        {listData[tableData[planItem + ',' + item]]?.price}{' '}
+                        {listData[tableData[planItem + ',' + item]]?.price} ${' '}
                         {listData[tableData[planItem + ',' + item]]
                           ?.isPublished ? (
                           <span className="label green">
@@ -274,14 +298,8 @@ export default function ProductPlansPriceList({ children }) {
                           )}
                         </Dropdown.Item>
                         <Dropdown.Item
-                          onClick={
-                            (() =>
-                              deleteConfirm(tableData[planItem + ',' + item]),
-                            console.log({
-                              xxxxx:
-                                listData[tableData[planItem + ',' + item]].plan
-                                  .name,
-                            }))
+                          onClick={() =>
+                            deleteConfirm(tableData[planItem + ',' + item])
                           }
                           className="text-danger"
                         >
@@ -293,18 +311,7 @@ export default function ProductPlansPriceList({ children }) {
                   ) : (
                     <span
                       className="clickable-text cursor-pointer"
-                      onClick={() =>
-                        listData[tableData[planItem + ',' + item]].plan?.name
-                          ? toast.error(
-                              intl.formatMessage({
-                                id: 'subscribed-plan-price-cannot-be-deleted',
-                              }),
-                              {
-                                position: toast.POSITION.TOP_CENTER,
-                              }
-                            )
-                          : handleCreatePlanPrice(planItem, item)
-                      }
+                      onClick={() => handleCreatePlanPrice(planItem, item)}
                     >
                       ـــ
                     </span>

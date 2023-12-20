@@ -417,5 +417,7 @@
   "click-here": "انقر هنا",
   "Cannot-delete-a-locked-plan": "لا يمكن حذف خطة مغلقة.",
   "Cannot-edit-a-locked-plan": "لا يمكن تحرير خطة مغلقة.",
-  "Tenancy-Type": "نوع التأجير"
+  "Tenancy-Type": "نوع التأجير",
+  "Cannot-add-to-this-type-of-plan": "لا يمكن إضافة إلى هذا النوع من الخطط.",
+  "Cannot-add-to-this-type-of-cycle": "لا يمكن إضافة إلى هذا النوع من الدورة."
 }
