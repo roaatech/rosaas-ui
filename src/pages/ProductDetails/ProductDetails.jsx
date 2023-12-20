@@ -12,6 +12,7 @@ import { TabView, TabPanel } from 'primereact/tabview'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   productInfo,
+  productsChangeAttr,
   removeProductStore,
 } from '../../store/slices/products/productsSlice.js'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
@@ -32,13 +33,19 @@ import ProductFeaturesList from '../../components/custom/Product/ProductFeatures
 import ProductPlansList from '../../components/custom/Product/ProductPlansList/ProductPlansList'
 import ProductPlansPriceList from '../../components/custom/Product/ProductPlansPrice/ProductPlansPriceList'
 import ProductCustomSpecificationList from '../../components/custom/Product/CustomSpecification/ProductCustomSpecificationList'
-import { MdEditNote } from 'react-icons/md'
-import { activeTab } from '../../const/product'
+import {
+  MdEditNote,
+  MdFactCheck,
+  MdOutlinePublishedWithChanges,
+  MdOutlineUnpublished,
+} from 'react-icons/md'
+import { PublishStatus, activeTab } from '../../const/product'
 import ProductWarnings from '../../components/custom/Product/ProductWarnings/ProductWarnings'
 import { productWarningsStore } from '../../store/slices/products/productsSlice'
 import { WarningVariant } from '../../const/WarningsSettings'
 import ClientCredentials from '../../components/custom/Product/ClientCredentials/ClientCredentials'
 import ProductsUsersManagement from '../../components/custom/Product/ProductsUsersManagement/ProductsUsersManagement.jsx'
+import Label from '../../components/custom/Shared/label/Label.jsx'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -59,12 +66,27 @@ const ProductDetails = () => {
   }, [visible, routeParams?.id])
   const listData = useSelector((state) => state.products.products)
   let productData = listData[routeParams.id]
-  console.log({ productData })
+
   const deleteProduct = async () => {
     await deleteProductReq({ id: routeParams?.id })
     dispatch(removeProductStore(routeParams?.id))
   }
   let [errorNums, setErrorNums] = useState(0)
+  const togglePublishProduct = async (isPublished) => {
+    // await publishPlan(productId, {
+    //   id,
+    //   isPublished: !isPublished,
+    // })
+
+    dispatch(
+      productsChangeAttr({
+        productId: routeParams.id,
+        attr: 'isPublished',
+        value: !isPublished,
+      })
+    )
+    console.log({ productData })
+  }
 
   return (
     <Wrapper>
@@ -80,10 +102,24 @@ const ProductDetails = () => {
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Product-Details" /> : {productData.name}
+              <FormattedMessage id="Product-Details" /> : {productData.name}{' '}
+              <span className="ml-2">
+                <Label {...PublishStatus[productData?.isPublished]} />
+              </span>
             </h4>
             <DynamicButtons
               buttons={[
+                {
+                  order: 4,
+                  type: 'action',
+                  label: productData?.isPublished ? 'Unpublished' : 'Published',
+                  func: () => togglePublishProduct(productData?.isPublished),
+                  icon: productData?.isPublished ? (
+                    <MdOutlineUnpublished className="mx-2" />
+                  ) : (
+                    <MdOutlinePublishedWithChanges className="mx-2" />
+                  ),
+                },
                 {
                   order: 4,
                   type: 'form',

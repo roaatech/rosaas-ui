@@ -23,6 +23,9 @@ import {
 import { BsCheckCircleFill } from 'react-icons/bs'
 import { AdminPrivileges } from '../../../../../store/slices/products/productsSlice.js'
 const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
+  const [currentPopupLabel, setCurrentPopupLabel] = useState(popupLabel)
+  const [currentType, setCurrentType] = useState(type)
+
   const { createProductAdmin, validateEmail, productAdminPrivileges } =
     useRequest()
   const dispatch = useDispatch()
@@ -73,7 +76,7 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
     validationSchema: validationSchema,
 
     onSubmit: async (values, { setSubmitting }) => {
-      if (type === 'create') {
+      if (currentType === 'create') {
         if (validEmail) {
           let productUser = await createProductAdmin({
             email: formik.values.email,
@@ -83,6 +86,7 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
           dispatch(
             AdminPrivileges({
               id: productId,
+
               data: {
                 ...adminPrivilegesList,
                 ...[
@@ -90,29 +94,7 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
                     createdDate: new Date().toISOString().slice(0, 19),
                     email: formik.values.email,
                     isMajor: false,
-                  },
-                ],
-              },
-            })
-          )
-        } else {
-          let productUser = await productAdminPrivileges(
-            {
-              email: formik.values.email,
-              isMajor: true,
-            },
-            productId
-          )
-          dispatch(
-            AdminPrivileges({
-              id: productId,
-              data: {
-                ...adminPrivilegesList,
-                ...[
-                  {
-                    createdDate: new Date().toISOString().slice(0, 19),
-                    email: formik.values.email,
-                    isMajor: true,
+                    id: productUser.data.data,
                   },
                 ],
               },
@@ -121,6 +103,31 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
         }
 
         setNexPage(true)
+      } else {
+        let productUser = await productAdminPrivileges(
+          {
+            email: formik.values.email,
+            itemId: productUser.data.data,
+
+            isMajor: true,
+          },
+          productId
+        )
+        dispatch(
+          AdminPrivileges({
+            id: productId,
+            data: {
+              ...adminPrivilegesList,
+              ...[
+                {
+                  createdDate: new Date().toISOString().slice(0, 19),
+                  email: formik.values.email,
+                  isMajor: true,
+                },
+              ],
+            },
+          })
+        )
       }
 
       setSubmitting(false)
@@ -214,7 +221,7 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
         <Modal.Header>
           <Modal.Title className="h6">
             {!nextPage ? (
-              popupLabel
+              currentPopupLabel
             ) : (
               <>
                 <FormattedMessage id="Admin-created-successfully" />{' '}

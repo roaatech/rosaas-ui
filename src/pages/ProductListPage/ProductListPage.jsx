@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBox, faCopy } from '@fortawesome/free-solid-svg-icons'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
+import DescriptionCell from '../../components/custom/Shared/DescriptionCell/DescriptionCell'
 const ProductListPage = () => {
   const { getProductListPublic } = useRequest()
   const dispatch = useDispatch()
@@ -52,7 +53,9 @@ const ProductListPage = () => {
               />
               <span className="product-name">{product?.displayName}</span>
             </Card.Title>
-            <Card.Text>{product.description || description}</Card.Text>
+            <Card.Text className="product-description">
+              {product.description || description}
+            </Card.Text>{' '}
           </Card.Body>
         </Link>{' '}
       </Card>

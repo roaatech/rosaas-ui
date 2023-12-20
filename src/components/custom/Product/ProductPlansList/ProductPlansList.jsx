@@ -51,6 +51,7 @@ import { PublishStatus } from '../../../../const'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { setActiveIndex } from '../../../../store/slices/tenants'
 import { GiShadowFollower } from 'react-icons/gi'
+import { systemLockStatus, tenancyTypeEnum } from '../../../../const/product.js'
 
 export const ProductPlansList = ({ productId }) => {
   const { getProductPlans, deletePlanReq, publishPlan } = useRequest()
@@ -73,6 +74,12 @@ export const ProductPlansList = ({ productId }) => {
       )
       return
     }
+    if (list?.plans[currentId]?.isLockedBySystem) {
+      toast.error(intl.formatMessage({ id: 'Cannot-delete-a-locked-plan' }), {
+        position: toast.POSITION.TOP_CENTER,
+      })
+      return
+    }
     await deletePlanReq(productId, { id: currentId })
     dispatch(deletePlan({ productId, PlanId: currentId }))
   }
@@ -90,6 +97,12 @@ export const ProductPlansList = ({ productId }) => {
           position: toast.POSITION.TOP_CENTER,
         }
       )
+      return
+    }
+    if (list?.plans[id]?.isLockedBySystem) {
+      toast.error(intl.formatMessage({ id: 'Cannot-edit-a-locked-plan' }), {
+        position: toast.POSITION.TOP_CENTER,
+      })
       return
     }
     setPopUpLable('Edit-Plan')
@@ -134,6 +147,8 @@ export const ProductPlansList = ({ productId }) => {
       isPublished,
       editedDate,
       subscribers,
+      isLockedBySystem,
+      tenancyType,
     } = props
     const publishStatus = isPublished ? true : false
 
@@ -151,6 +166,15 @@ export const ProductPlansList = ({ productId }) => {
               <Label {...PublishStatus[publishStatus]} />
             </span>
           </td>
+          <td>
+            <span>{tenancyTypeEnum[tenancyType]}</span>
+          </td>
+          <td>
+            <span>
+              <Label {...systemLockStatus[isLockedBySystem]} />
+            </span>
+          </td>
+
           <td>
             <span
               className={`${
@@ -261,6 +285,12 @@ export const ProductPlansList = ({ productId }) => {
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Status" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Tenancy-Type" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="System-Lock-Status" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Subscribers" />

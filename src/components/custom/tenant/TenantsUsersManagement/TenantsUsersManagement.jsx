@@ -30,8 +30,11 @@ import { formatDate } from '../../../../lib/sharedFun/Time'
 import { useParams } from 'react-router-dom'
 import {
   AdminPrivileges,
+  AdminPrivilegesChangeAttr,
   deleteTenantAdminPrivileges,
 } from '../../../../store/slices/tenants'
+import { Owner } from '../../../../const'
+import { MdPersonAdd, MdPersonAddDisabled } from 'react-icons/md'
 
 const TenantsUsersManagement = () => {
   const tenantData = useSelector((state) => state.tenants.tenants)
@@ -39,7 +42,8 @@ const TenantsUsersManagement = () => {
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
 
-  const { EntityAdminPrivileges, deleteAdminPrivileges } = useRequest()
+  const { EntityAdminPrivileges, deleteAdminPrivileges, userIsMajor } =
+    useRequest()
   const dispatch = useDispatch()
 
   const deleteConfirm = (id) => {
@@ -67,14 +71,35 @@ const TenantsUsersManagement = () => {
     await deleteAdminPrivileges({ id: currentId })
     dispatch(deleteTenantAdminPrivileges({ tenantId, itemId: currentId }))
   }
+  const toggleIsMajor = async (id, isMajor) => {
+    // await userIsMajor(tenantId, {
+    //   id,
+    //   isMajor: !isMajor,
+    // })
+
+    dispatch(
+      AdminPrivilegesChangeAttr({
+        tenantId,
+        itemId: id,
+        attr: 'isMajor',
+        value: !isMajor,
+      })
+    )
+  }
+
   const TableRow = (props) => {
-    const { email, isMajor, createdDate, id } = props
+    const { email, isMajor, createdDate, id, userType } = props
 
     return (
       <>
         <tr>
           <td>
             <span className="fw-normal">{email}</span>
+          </td>
+          <td>
+            <span className="fw-normal">
+              {Owner?.[userType] && <FormattedMessage id={Owner[userType]} />}
+            </span>
           </td>
 
           <td>
@@ -101,6 +126,19 @@ const TenantsUsersManagement = () => {
                 </span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
+                <Dropdown.Item onClick={() => toggleIsMajor(id, isMajor)}>
+                  {isMajor ? (
+                    <span className=" ">
+                      <MdPersonAddDisabled className="mx-2" />{' '}
+                      <FormattedMessage id="Deauthorize" />
+                    </span>
+                  ) : (
+                    <span className=" ">
+                      <MdPersonAdd className="mx-2" />
+                      <FormattedMessage id="Authorize" />
+                    </span>
+                  )}
+                </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => deleteConfirm(id)}
                   className="text-danger"
@@ -154,6 +192,9 @@ const TenantsUsersManagement = () => {
           <tr>
             <th className="border-bottom">
               <FormattedMessage id="Email" />
+            </th>
+            <th className="border-bottom">
+              <FormattedMessage id="User-Type" />
             </th>
             <th className="border-bottom">
               <FormattedMessage id="Status" />

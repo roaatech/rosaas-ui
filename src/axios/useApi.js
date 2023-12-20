@@ -78,7 +78,7 @@ const useApi = () => {
           })
         })
       }
-      // return Promise.reject(err)
+      return Promise.reject(err)
     }
   )
   return mainInstance

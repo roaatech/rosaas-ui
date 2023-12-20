@@ -11,6 +11,8 @@ import {
   ButtonGroup,
   Dropdown,
   Table,
+  OverlayTrigger,
+  Tooltip,
 } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
@@ -38,8 +40,13 @@ import { useIntl } from 'react-intl'
 import ShowDetails from '../../Shared/ShowDetails/ShowDetails'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
-import { BsCurrencyDollar } from 'react-icons/bs'
+import {
+  BsCurrencyDollar,
+  BsFillLockFill,
+  BsFillUnlockFill,
+} from 'react-icons/bs'
 import { setActiveIndex } from '../../../../store/slices/tenants'
+import { GiShadowFollower } from 'react-icons/gi'
 export default function ProductPlansPriceList({ children }) {
   const intl = useIntl()
   const dispatch = useDispatch()
@@ -108,7 +115,11 @@ export default function ProductPlansPriceList({ children }) {
       setConfirm(true)
     }
   }
-
+  const toastError = (message) => {
+    return toast.error(intl.formatMessage({ id: message }), {
+      position: toast.POSITION.TOP_CENTER,
+    })
+  }
   const editForm = async (id) => {
     if (listData[id].isSubscribed == true) {
       toast.error(
@@ -263,8 +274,14 @@ export default function ProductPlansPriceList({ children }) {
                           )}
                         </Dropdown.Item>
                         <Dropdown.Item
-                          onClick={() =>
-                            deleteConfirm(tableData[planItem + ',' + item])
+                          onClick={
+                            (() =>
+                              deleteConfirm(tableData[planItem + ',' + item]),
+                            console.log({
+                              xxxxx:
+                                listData[tableData[planItem + ',' + item]].plan
+                                  .name,
+                            }))
                           }
                           className="text-danger"
                         >
@@ -276,7 +293,18 @@ export default function ProductPlansPriceList({ children }) {
                   ) : (
                     <span
                       className="clickable-text cursor-pointer"
-                      onClick={() => handleCreatePlanPrice(planItem, item)}
+                      onClick={() =>
+                        listData[tableData[planItem + ',' + item]].plan?.name
+                          ? toast.error(
+                              intl.formatMessage({
+                                id: 'subscribed-plan-price-cannot-be-deleted',
+                              }),
+                              {
+                                position: toast.POSITION.TOP_CENTER,
+                              }
+                            )
+                          : handleCreatePlanPrice(planItem, item)
+                      }
                     >
                       ـــ
                     </span>
@@ -318,9 +346,44 @@ export default function ProductPlansPriceList({ children }) {
                 <tr>
                   <th className="border-bottom"></th>
                   {Object.values(plansData).map((item, index) => (
-                    <th key={index} className="border-bottom">
-                      {item.title}
-                    </th>
+                    <>
+                      <th key={index} className="border-bottom">
+                        {item.title}
+                        <span className="ml-2 ">
+                          <OverlayTrigger
+                            trigger={['hover', 'focus']}
+                            overlay={
+                              <Tooltip>
+                                {item.isLockedBySystem
+                                  ? intl.formatMessage({
+                                      id: 'Locked-by-system',
+                                    })
+                                  : intl.formatMessage({
+                                      id: 'Not-locked-by-system',
+                                    })}
+                              </Tooltip>
+                            }
+                          >
+                            <span
+                              className={`${
+                                item.isLockedBySystem
+                                  ? 'lock-active'
+                                  : 'lock-passive'
+                              }`}
+                            >
+                              {item.isLockedBySystem ? (
+                                <BsFillLockFill />
+                              ) : (
+                                <BsFillUnlockFill />
+                              )}
+                              <span className="ml-1">
+                                {item.isLockedBySystem}
+                              </span>
+                            </span>
+                          </OverlayTrigger>
+                        </span>
+                      </th>
+                    </>
                   ))}
                 </tr>
               </thead>

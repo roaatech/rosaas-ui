@@ -233,7 +233,13 @@ const TenantDetails = () => {
                         </Card.Body>
                       </Card>
                     </TabPanel>
-
+                    <TabPanel
+                      header={
+                        <FormattedMessage id="Tenants-Users-Management" />
+                      }
+                    >
+                      <TenantsUsersManagement />
+                    </TabPanel>
                     {tenantObject?.subscriptions?.map((product, index) => (
                       <TabPanel
                         header={product?.product.name.toUpperCase()}
@@ -249,13 +255,6 @@ const TenantDetails = () => {
                         />
                       </TabPanel>
                     ))}
-                    <TabPanel
-                      header={
-                        <FormattedMessage id="Tenants-Users-Management" />
-                      }
-                    >
-                      <TenantsUsersManagement />
-                    </TabPanel>
                   </TabView>
                   <DeleteConfirmation
                     message="Do you want to delete this Tenant?"

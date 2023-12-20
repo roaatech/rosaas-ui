@@ -1,12 +1,16 @@
 import {
   BsFillCheckCircleFill,
   BsFillExclamationCircleFill,
+  BsFillLockFill,
+  BsFillUnlockFill,
 } from 'react-icons/bs'
+import { FiLock, FiUnlock } from 'react-icons/fi'
 import {
   MdOutlineUnpublished,
   MdOutlinePublishedWithChanges,
   MdPayments,
   MdOutlinePayments,
+  MdOutlineLock,
 } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
 
@@ -52,6 +56,20 @@ export const PublishStatus = {
     icon: <MdOutlineUnpublished />,
   },
 }
+export const systemLockStatus = {
+  true: {
+    background: '#eff9f6',
+    value: <FormattedMessage id="Locked" />,
+    color: '#00a675',
+    icon: <BsFillLockFill />,
+  },
+  false: {
+    background: '#f5e8e4',
+    value: <FormattedMessage id="Unlocked" />,
+    color: '#d26b4e',
+    icon: <BsFillUnlockFill />,
+  },
+}
 export const subscriptionStatus = {
   true: {
     background: '#eff9f6',
@@ -95,11 +113,18 @@ export const cycle = {
   4: 'Year',
   5: 'One-Day',
   6: 'Three-Day',
+  10: 'Custom',
+  11: 'Unlimited',
 }
 
 export const urlIsOverridden = {
   true: { background: '#eee5ff', value: 'Yes' },
   false: { background: '#e1f0ff', value: 'No' },
+}
+export const tenancyTypeEnum = {
+  1: 'Unlimited',
+  2: 'Limited',
+  3: 'Planed',
 }
 export const featureTypeMap = {
   1: 'Number',
@@ -151,52 +176,3 @@ export const urlStyle = {
     lightColor: '#fae7e7',
   },
 }
-
-export const countriesArray = [
-  { code: 'AF', name: 'Afghanistan' },
-  { code: 'AL', name: 'Albania' },
-  { code: 'DZ', name: 'Algeria' },
-  { code: 'AR', name: 'Argentina' },
-  { code: 'AU', name: 'Australia' },
-  { code: 'AT', name: 'Austria' },
-  { code: 'BD', name: 'Bangladesh' },
-  { code: 'BR', name: 'Brazil' },
-  { code: 'CA', name: 'Canada' },
-  { code: 'CN', name: 'China' },
-  { code: 'CO', name: 'Colombia' },
-  { code: 'EG', name: 'Egypt' },
-  { code: 'FR', name: 'France' },
-  { code: 'DE', name: 'Germany' },
-  { code: 'IN', name: 'India' },
-  { code: 'ID', name: 'Indonesia' },
-  { code: 'IT', name: 'Italy' },
-  { code: 'JP', name: 'Japan' },
-  { code: 'MX', name: 'Mexico' },
-  { code: 'NG', name: 'Nigeria' },
-  { code: 'RU', name: 'Russia' },
-  { code: 'ZA', name: 'South Africa' },
-  { code: 'ES', name: 'Spain' },
-  { code: 'SE', name: 'Sweden' },
-  { code: 'CH', name: 'Switzerland' },
-  { code: 'TR', name: 'Turkey' },
-  { code: 'GB', name: 'United Kingdom' },
-  { code: 'US', name: 'United States' },
-  { code: 'UY', name: 'Uruguay' },
-  { code: 'VE', name: 'Venezuela' },
-  { code: 'VN', name: 'Vietnam' },
-  { code: 'ZA', name: 'Zambia' },
-  { code: 'ZW', name: 'Zimbabwe' },
-  { code: 'SA', name: 'Saudi Arabia' },
-  { code: 'AE', name: 'United Arab Emirates' },
-  { code: 'EG', name: 'Egypt' },
-  { code: 'IQ', name: 'Iraq' },
-  { code: 'JO', name: 'Jordan' },
-  { code: 'LB', name: 'Lebanon' },
-  { code: 'MA', name: 'Morocco' },
-  { code: 'OM', name: 'Oman' },
-  { code: 'PS', name: 'Palestine' },
-  { code: 'QA', name: 'Qatar' },
-  { code: 'SY', name: 'Syria' },
-  { code: 'TN', name: 'Tunisia' },
-  { code: 'YE', name: 'Yemen' },
-]

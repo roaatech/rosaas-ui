@@ -18,4 +18,10 @@ export const Wrapper = styled.div`
     width: fit-content;
     margin-bottom: 1.25rem;
   }
+  .lock-active {
+    color: var(--second-color);
+  }
+  .lock-passive {
+    color: #ccc;
+  }
 `

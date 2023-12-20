@@ -30,8 +30,11 @@ import { formatDate } from '../../../../lib/sharedFun/Time'
 import { useParams } from 'react-router-dom'
 import {
   AdminPrivileges,
+  AdminPrivilegesChangeAttr,
   deleteProductAdminPrivileges,
 } from '../../../../store/slices/products/productsSlice'
+import { Owner } from '../../../../const'
+import { MdPersonAdd, MdPersonAddDisabled } from 'react-icons/md'
 
 const ProductsUsersManagement = () => {
   const productData = useSelector((state) => state.products.products)
@@ -39,7 +42,8 @@ const ProductsUsersManagement = () => {
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
 
-  const { EntityAdminPrivileges, deleteAdminPrivileges } = useRequest()
+  const { EntityAdminPrivileges, deleteAdminPrivileges, userIsMajor } =
+    useRequest()
   const dispatch = useDispatch()
 
   const deleteConfirm = (id) => {
@@ -52,6 +56,9 @@ const ProductsUsersManagement = () => {
   const productId = params.id
   const data = productData[productId]?.AdminPrivileges
   useEffect(() => {
+    if (data) {
+      return
+    }
     ;(async () => {
       const listData = await EntityAdminPrivileges(productId)
       dispatch(
@@ -67,8 +74,24 @@ const ProductsUsersManagement = () => {
     await deleteAdminPrivileges({ id: currentId })
     dispatch(deleteProductAdminPrivileges({ productId, itemId: currentId }))
   }
+  const toggleIsMajor = async (id, isMajor) => {
+    // await userIsMajor(tenantId, {
+    //   id,
+    //   isMajor: !isMajor,
+    // })
+
+    dispatch(
+      AdminPrivilegesChangeAttr({
+        productId,
+        itemId: id,
+        attr: 'isMajor',
+        value: !isMajor,
+      })
+    )
+  }
+
   const TableRow = (props) => {
-    const { email, isMajor, createdDate, id } = props
+    const { email, isMajor, createdDate, id, userType } = props
 
     return (
       <>
@@ -76,7 +99,11 @@ const ProductsUsersManagement = () => {
           <td>
             <span className="fw-normal">{email}</span>
           </td>
-
+          <td>
+            <span className="fw-normal">
+              {Owner?.[userType] && <FormattedMessage id={Owner[userType]} />}
+            </span>
+          </td>
           <td>
             <span className="fw-normal">
               {<Label {...isMajorStatus[isMajor]} />}
@@ -101,6 +128,19 @@ const ProductsUsersManagement = () => {
                 </span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
+                <Dropdown.Item onClick={() => toggleIsMajor(id, isMajor)}>
+                  {isMajor ? (
+                    <span className=" ">
+                      <MdPersonAddDisabled className="mx-2" />{' '}
+                      <FormattedMessage id="Deauthorize" />
+                    </span>
+                  ) : (
+                    <span className=" ">
+                      <MdPersonAdd className="mx-2" />
+                      <FormattedMessage id="Authorize" />
+                    </span>
+                  )}
+                </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => deleteConfirm(id)}
                   className="text-danger"
@@ -141,6 +181,9 @@ const ProductsUsersManagement = () => {
           <tr>
             <th className="border-bottom">
               <FormattedMessage id="Email" />
+            </th>
+            <th className="border-bottom">
+              <FormattedMessage id="User-Type" />
             </th>
             <th className="border-bottom">
               <FormattedMessage id="Status" />

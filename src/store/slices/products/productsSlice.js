@@ -64,5 +64,7 @@ export const {
   clientCredentialsInfo,
   AdminPrivileges,
   deleteProductAdminPrivileges,
+  AdminPrivilegesChangeAttr,
+  productsChangeAttr,
 } = productsSlice.actions
 export default productsSlice.reducer

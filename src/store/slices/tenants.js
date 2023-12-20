@@ -71,6 +71,13 @@ export const tenantsSlice = createSlice({
 
       state.tenants = currentTenants
     },
+    AdminPrivilegesChangeAttr: (state, action) => {
+      const { tenantId, itemId, attr, value } = action.payload
+      const currentTenants = JSON.parse(JSON.stringify(state.tenants))
+      currentTenants[tenantId].AdminPrivileges[itemId][attr] = value
+      state.tenants = currentTenants
+    },
+
     deleteTenantAdminPrivileges: (state, action) => {
       const { tenantId, itemId } = action.payload
       const currentTenants = JSON.parse(JSON.stringify(state.tenants))
@@ -158,5 +165,6 @@ export const {
   setTenantCreateData,
   AdminPrivileges,
   deleteTenantAdminPrivileges,
+  AdminPrivilegesChangeAttr,
 } = tenantsSlice.actions
 export default tenantsSlice.reducer
