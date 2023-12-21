@@ -90,7 +90,7 @@ export default function SubsFeaturesHistory(data) {
                 {Object.keys(groupedFeatures).map((featureId, index) => (
                   <Nav.Item key={`feature-nav-${index}`}>
                     <Nav.Link eventKey={featureId}>
-                      {groupedFeatures[featureId][0].feature.name}
+                      {groupedFeatures[featureId][0].feature.systemName}
                     </Nav.Link>
                   </Nav.Item>
                 ))}
@@ -137,7 +137,7 @@ export default function SubsFeaturesHistory(data) {
                                 (cycle, cycleIndex) => (
                                   <tr key={`cycle-${cycleIndex}`}>
                                     {/* Feature */}
-                                    <td>{cycle.feature.name}</td>
+                                    <td>{cycle.feature.systemName}</td>
 
                                     {/* Reset */}
                                     <td>

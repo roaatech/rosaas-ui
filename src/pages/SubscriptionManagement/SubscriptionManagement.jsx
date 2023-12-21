@@ -180,7 +180,7 @@ const SubscriptionManagement = (props) => {
         <BreadcrumbComponent
           breadcrumbInfo={'TenantManagement'}
           icon={BsFillPersonLinesFill}
-          data={{ name: tenantsData[routeParams.id]?.title }}
+          data={{ name: tenantsData[routeParams.id]?.displayName }}
         />
       )}
       {subscriptionDatas && (
@@ -188,7 +188,7 @@ const SubscriptionManagement = (props) => {
           <UpperContent>
             <h4 className="m-0">
               <FormattedMessage id="Subscription-Management" />:{' '}
-              {tenantsData[routeParams.id]?.uniqueName}
+              {tenantsData[routeParams.id]?.systemName}
             </h4>
             <DynamicButtons
               buttons={[

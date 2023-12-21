@@ -158,11 +158,11 @@ export default function Tenant({ children }) {
               size={'small'}
             >
               <Column
-                field="title"
+                field="displayName"
                 header={
                   <ColumnSortHeader
-                    text="Title"
-                    field="uniqueName"
+                    text="Display Name"
+                    field="displayName"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -174,11 +174,11 @@ export default function Tenant({ children }) {
                 }
               ></Column>
               <Column
-                field="uniqueName"
+                field="systemName"
                 header={
                   <ColumnSortHeader
-                    text="Unique Name"
-                    field="uniqueName"
+                    text="System Name"
+                    field="systemName"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}

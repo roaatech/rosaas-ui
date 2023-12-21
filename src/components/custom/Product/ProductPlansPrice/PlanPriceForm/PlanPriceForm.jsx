@@ -195,7 +195,7 @@ const PlanPriceForm = ({
             planPriceId: createPlanPrice.data.data.id,
             productId: productId,
             data: {
-              plan: { id: values.plan, title: allPlans[values.plan].displayName },
+              plan: { id: values.plan, displayName: allPlans[values.plan].displayName },
               cycle: values.cycle,
               price: values.price,
               systemName: values.systemName,
@@ -228,7 +228,7 @@ const PlanPriceForm = ({
             planPriceId: planPriceData.id,
             productId: productId,
             data: {
-              plan: { id: values.plan, title: allPlans[values.plan].displayName },
+              plan: { id: values.plan, displayName: allPlans[values.plan].displayName },
               systemName: values.systemName,
               cycle: values.cycle,
               price: values.price,
@@ -330,12 +330,12 @@ const PlanPriceForm = ({
                 }
               />
 
-              {formik.touched.name && formik.errors.name && (
+              {formik.touched.systemName && formik.errors.systemName && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.name}
+                  {formik.errors.systemName}
                 </Form.Control.Feedback>
               )}
             </div>

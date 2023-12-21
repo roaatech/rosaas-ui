@@ -87,7 +87,7 @@ export default function SubsFeatures(data) {
               subscriptionFeatures?.map((subscription, index) => (
                 <tr key={`subscription-${index}`}>
                   {/* Feature */}
-                  <td>{subscription.feature.name}</td>
+                  <td>{subscription.feature.systemName}</td>
 
                   {/* Reset */}
                   <td>{featureResetMap[subscription.reset]}</td>

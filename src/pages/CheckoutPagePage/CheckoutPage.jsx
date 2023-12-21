@@ -206,11 +206,11 @@ const CheckoutPage = (data) => {
         <Card.Header>
           Plan{' '}
           <span className="fw-bold">
-            {plansPriceList?.[subscribtionId]?.plan.title?.toUpperCase()}
+            {plansPriceList?.[subscribtionId]?.plan.displayName?.toUpperCase()}
           </span>{' '}
           of Product{' '}
           <span className="fw-bold">
-            {listProduct?.[productId]?.title?.toUpperCase()}
+            {listProduct?.[productId]?.displayName?.toUpperCase()}
           </span>
         </Card.Header>
         <Card.Body className="border-bottom ">
@@ -218,7 +218,7 @@ const CheckoutPage = (data) => {
             <div key={featurePlan.id}>
               <p>
                 <BsCheck2Circle style={{ color: 'var(--second-color)' }} />{' '}
-                {featurePlan.description || featurePlan.feature.title}
+                {featurePlan.description || featurePlan.feature.displayName}
               </p>
             </div>
           ))}
@@ -292,7 +292,7 @@ const CheckoutPage = (data) => {
                         </OverlayTrigger>
                       </div>
                       <div className=" card-stats">
-                        {subscriptionData?.plan?.name}
+                        {subscriptionData?.plan?.systemName}
                       </div>
                     </div>
 

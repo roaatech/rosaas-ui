@@ -105,7 +105,7 @@ const UpDownGradeForm = ({
           .filter((item) => idsWithValues.includes(item.id))
           .map((item, index) => ({
             value: item.id,
-            label: item.title,
+            label: item.displayName,
           }))
       )
     }

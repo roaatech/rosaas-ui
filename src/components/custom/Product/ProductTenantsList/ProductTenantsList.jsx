@@ -69,8 +69,8 @@ export const ProductTenantsList = ({ productId, productName }) => {
 
   const TableRow = (props) => {
     const {
-      title,
-      uniqueName,
+      displayName,
+      systemName,
       status,
       createdDate,
       editedDate,
@@ -85,10 +85,10 @@ export const ProductTenantsList = ({ productId, productName }) => {
     return (
       <tr>
         <td>
-          <span className="fw-normal">{title}</span>
+          <span className="fw-normal">{displayName}</span>
         </td>
         <td>
-          <span className="fw-normal">{uniqueName}</span>
+          <span className="fw-normal">{systemName}</span>
         </td>
 
         {/* <td>
@@ -112,7 +112,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
 
         <td>
           <span className={`fw-normal`}>
-            <DataLabelWhite text={plan.name} />
+            <DataLabelWhite text={plan.systemName} />
           </span>
         </td>
         <td>

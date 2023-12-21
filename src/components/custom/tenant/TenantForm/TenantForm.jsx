@@ -73,9 +73,9 @@ const TenantForm = ({
       <FormattedMessage id="Please-select-a-price" />
     ),
 
-    uniqueName: Yup.string()
+    systemName: Yup.string()
       .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .required(<FormattedMessage id="System-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
         <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
@@ -104,7 +104,7 @@ const TenantForm = ({
   const initialValues = {
     displayName: tenantData ? tenantData.displayName : '',
 
-    uniqueName: tenantData ? tenantData.uniqueName : '',
+    systemName: tenantData ? tenantData.systemName : '',
     plan: tenantData ? tenantData.plan : '',
     price: tenantData ? tenantData.price : '',
     product: tenantData ? selectedProduct : '',
@@ -150,7 +150,7 @@ const TenantForm = ({
                 specifications: specificationsArray,
               },
             ],
-            uniqueName: values.uniqueName,
+            systemName: values.systemName,
             displayName: values.displayName,
           })
 

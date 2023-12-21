@@ -76,7 +76,7 @@ const TwoStepProcessPage = () => {
 
     fetchData()
   }, [productId])
-  const currentPlan = plansPriceList?.[subscribtionId]?.plan?.title
+  const currentPlan = plansPriceList?.[subscribtionId]?.plan?.displayName
   const currentPriceData = plansPriceList?.[subscribtionId]
   console.log({ currentprice: currentPriceData })
 

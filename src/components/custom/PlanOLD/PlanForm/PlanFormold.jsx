@@ -24,13 +24,13 @@ const PlanForm = ({
   const navigate = useNavigate()
 
   const initialValues = {
-    name: planData ? planData.name : '',
+    systemName: planData ? planData.systemName : '',
     description: planData ? planData.description : '',
     displayOrder: planData ? planData.displayOrder : '0',
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string()
+    systemName: Yup.string()
       .required('Plan Name is required')
       .max(15, 'Name must be at most 15 characters'),
     description: Yup.string().max(
@@ -53,7 +53,7 @@ const PlanForm = ({
       }
       if (type == 'create') {
         const createPlan = await createPlanRequest({
-          name: values.name,
+          systemName: values.systemName,
 
           description: values.description,
           displayOrder: values.displayOrder,
@@ -63,7 +63,7 @@ const PlanForm = ({
       } else {
         const editPlan = await editPlanRequest({
           data: {
-            name: values.name,
+            systemName: values.systemName,
             description: values.description,
             displayOrder: values.displayOrder,
           },
@@ -73,7 +73,7 @@ const PlanForm = ({
         dispatch()
         // planInfo({
         //   id: planData.id,
-        //   name: values.name,
+        //   systemName: values.systemName,
         //   description: values.description,
         //   displayOrder: values.displayOrder,
         // })
@@ -98,24 +98,24 @@ const PlanForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Name" />
+                <FormattedMessage id="System-Name" />
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 type="text"
                 className="form-control"
-                id="name"
-                name="name"
+                id="systemName"
+                name="systemName"
                 onChange={formik.handleChange}
-                value={formik.values.name}
+                value={formik.values.systemName}
               />
 
-              {formik.touched.name && formik.errors.name && (
+              {formik.touched.systemName && formik.errors.systemName && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.name}
+                  {formik.errors.systemName}
                 </Form.Control.Feedback>
               )}
             </Form.Group>

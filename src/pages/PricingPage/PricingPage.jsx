@@ -80,7 +80,7 @@ const PricingPage = () => {
       try {
         if (!listData || Object.keys(listData).length === 0) {
           const featurePlanData = await getFeaturePlanListPublic(
-            listProduct[productId].name
+            listProduct[productId].systemName
           )
           if (
             featurePlanData.data.data &&
@@ -99,7 +99,7 @@ const PricingPage = () => {
 
         if (!planList || Object.keys(planList).length === 0) {
           const allPlanData = await getProductPlansPublic(
-            listProduct[productId].name
+            listProduct[productId].systemName
           )
           if (allPlanData.data.data && Object.keys(allPlanData.data.data > 0))
             dispatch(
@@ -111,7 +111,7 @@ const PricingPage = () => {
         }
         if (!plansPriceList || Object.keys(plansPriceList).length == 0) {
           const allPlansPrices = await getProductPlanPriceListPublic(
-            listProduct[productId].name
+            listProduct[productId].systemName
           )
           if (
             allPlansPrices.data.data &&
@@ -139,7 +139,7 @@ const PricingPage = () => {
     ...new Set(
       Object.values(listData).map((featurePlan) => ({
         id: featurePlan.feature.id,
-        name: featurePlan.feature.title,
+        displayName: featurePlan.feature.displayName,
       }))
     ),
   ]
@@ -233,7 +233,7 @@ const PricingPage = () => {
                 </div>
               </div>
               <div className="fw-bold">
-                {planList[planId].name?.toUpperCase()}
+                {planList[planId].displayName?.toUpperCase()}
               </div>
               {}
             </Card.Header>
@@ -242,7 +242,7 @@ const PricingPage = () => {
                 <div key={featurePlan.id}>
                   <p>
                     <BsCheck2Circle style={{ color: 'var(--second-color)' }} />{' '}
-                    {featurePlan.description || featurePlan.feature.title}
+                    {featurePlan.description || featurePlan.feature.displayName}
                   </p>
                 </div>
               ))}
@@ -265,7 +265,7 @@ const PricingPage = () => {
                 }
               >
                 <FormattedMessage id="Start-With" />{' '}
-                {planList[planId].name?.toUpperCase()}
+                {planList[planId].displayName?.toUpperCase()}
               </Button>
             </Card.Footer>
           </Card>

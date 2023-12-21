@@ -54,12 +54,12 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
   }, [secretItem])
   const [customExpirationDate, setCustomExpirationDate] = useState(null)
   const initialValues = {
-    title: secretItem ? secretItem.description : '',
+    displayName: secretItem ? secretItem.description : '',
   }
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string()
-      .required(<FormattedMessage id="Title-is-required" />)
+    displayName: Yup.string()
+      .required(<FormattedMessage id="Display-Name-is-required" />)
       .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
   })
   const [nextPage, setNexPage] = useState(false)
@@ -111,7 +111,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
         let clientSecret
         if (customExpirationDate) {
           clientSecret = await createClientSecret(productId, id, {
-            description: values.title,
+            description: values.displayName,
             expiration: customExpirationDate,
           })
           dispatch(
@@ -122,7 +122,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
                 ...[
                   {
                     id: clientSecret.data.data.id,
-                    description: values.title,
+                    description: values.displayName,
                     expiration: customExpirationDate,
                     clientRecordId,
                     clientId,
@@ -134,7 +134,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
           )
         } else {
           clientSecret = await createClientSecret(productId, id, {
-            description: values.title,
+            description: values.displayName,
           })
           dispatch(
             clientCredentials({
@@ -144,7 +144,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
                 ...[
                   {
                     id: clientSecret.data.data.id,
-                    description: values.title,
+                    description: values.displayName,
                     expiration: customExpirationDate,
                     clientId,
                     clientRecordId,
@@ -165,7 +165,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
             secretItem.clientRecordId,
             currentId,
             {
-              description: values.title,
+              description: values.displayName,
               expiration: customExpirationDate,
             }
           )
@@ -176,7 +176,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
               productId,
               data: {
                 ...secretItem,
-                description: values.title,
+                description: values.displayName,
                 expiration: customExpirationDate,
               },
             })
@@ -186,7 +186,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
             secretItem.clientRecordId,
             currentId,
             {
-              description: values.title,
+              description: values.displayName,
             }
           )
 
@@ -196,7 +196,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
               productId,
               data: {
                 ...secretItem,
-                description: values.title,
+                description: values.displayName,
                 expiration: customExpirationDate,
               },
             })
@@ -343,25 +343,25 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
           {!nextPage && !showClientId && (
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Title" />{' '}
+                <FormattedMessage id="Display-Name" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
 
               <input
                 className="form-control"
                 type="text"
-                id="title"
-                name="title"
+                id="displayName"
+                name="displayName"
                 onChange={formik.handleChange}
-                value={formik.values.title}
+                value={formik.values.displayName}
               />
 
-              {formik.touched.name && formik.errors.name && (
+              {formik.touched.displayName && formik.errors.displayName && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.name}
+                  {formik.errors.displayName}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
