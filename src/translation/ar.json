@@ -419,5 +419,7 @@
   "Cannot-edit-a-locked-plan": "لا يمكن تحرير خطة مغلقة.",
   "Tenancy-Type": "نوع التأجير",
   "Cannot-add-to-this-type-of-plan": "لا يمكن إضافة إلى هذا النوع من الخطط.",
-  "Cannot-add-to-this-type-of-cycle": "لا يمكن إضافة إلى هذا النوع من الدورة."
+  "Cannot-add-to-this-type-of-cycle": "لا يمكن إضافة إلى هذا النوع من الدورات.",
+  "Secret-Display-Name": "اسم العرض",
+  "System-Name": "الاسم التابع للنظام"
 }

@@ -75,7 +75,7 @@ const FeaturePlanForm = ({
       ? allFeatureArray.map((item) => {
           return {
             value: item.id,
-            label: item.title,
+            label: item.displayName,
             type: item.type == 1 ? 'Number' : 'Boolean',
           }
         })
@@ -85,7 +85,7 @@ const FeaturePlanForm = ({
 
   const planOptions = allPlans
     ? allPlansArray.map((item) => {
-        return { value: item.id, label: item.title }
+        return { value: item.id, label: item.displayName }
       })
     : []
 
@@ -225,14 +225,15 @@ const FeaturePlanForm = ({
               },
               feature: {
                 id: values.feature,
-                title: featureOptions.find(
+                displayName: featureOptions.find(
                   (item) => item.value === values.feature
                 ).label,
               },
               plan: {
                 id: values.plan,
-                title: planOptions.find((item) => item.value === values.plan)
-                  .label,
+                displayName: planOptions.find(
+                  (item) => item.value === values.plan
+                ).label,
               },
               id: createFeaturePlan.data.data.id,
               editedDate: new Date().toISOString().slice(0, 19),

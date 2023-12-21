@@ -102,7 +102,8 @@ const ProductDetails = () => {
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Product-Details" /> : {productData.name}{' '}
+              <FormattedMessage id="Product-Details" /> :{' '}
+              {productData.systemName}{' '}
               <span className="ml-2">
                 <Label {...PublishStatus[productData?.isPublished]} />
               </span>
@@ -213,13 +214,13 @@ const ProductDetails = () => {
               />
             </TabPanel>
 
-            <TabPanel header={<FormattedMessage id="User-Management" />}>
+            {/* <TabPanel header={<FormattedMessage id="User-Management" />}>
               <ProductsUsersManagement />
-            </TabPanel>
+            </TabPanel> */}
             <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
               <ProductCustomSpecificationList
                 productId={productData.id}
-                productName={productData.name}
+                productName={productData.systemName}
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>
@@ -227,14 +228,14 @@ const ProductDetails = () => {
             <TabPanel header={<FormattedMessage id="Plans" />}>
               <ProductPlansList
                 productId={productData.id}
-                productName={productData.name}
+                productName={productData.systemName}
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Features" />}>
               <ProductFeaturesList
                 productId={productData.id}
-                productName={productData.name}
+                productName={productData.systemName}
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>
@@ -254,7 +255,7 @@ const ProductDetails = () => {
             <TabPanel header={<FormattedMessage id="Subscriptions" />}>
               <ProductTenantsList
                 productId={productData.id}
-                productName={productData.name}
+                productName={productData.systemName}
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>

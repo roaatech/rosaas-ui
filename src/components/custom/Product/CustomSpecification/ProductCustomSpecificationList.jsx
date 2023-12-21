@@ -122,7 +122,7 @@ export const ProductCustomSpecificationList = (
 
   const TableRow = (props) => {
     const {
-      name,
+      systemName,
       displayName,
       description,
       id,
@@ -141,7 +141,7 @@ export const ProductCustomSpecificationList = (
       <>
         <tr>
           <td>
-            <span className="fw-normal">{name}</span>
+            <span className="fw-normal">{systemName}</span>
           </td>
           <td>
             <span className="fw-normal">
@@ -278,7 +278,7 @@ export const ProductCustomSpecificationList = (
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Name" />
+                    <FormattedMessage id="System-Name" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Display-Name" />

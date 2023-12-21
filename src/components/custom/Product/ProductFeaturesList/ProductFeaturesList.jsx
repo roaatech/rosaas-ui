@@ -87,10 +87,10 @@ export const ProductFeaturesList = ({ productId }) => {
 
   const TableRow = (props) => {
     const {
-      name,
+      systemName,
       description,
       type,
-      title,
+      displayName,
       displayOrder,
       reset,
       id,
@@ -106,10 +106,10 @@ export const ProductFeaturesList = ({ productId }) => {
       <>
         <tr>
           <td>
-            <span className="fw-normal">{title}</span>
+            <span className="fw-normal">{displayName}</span>
           </td>
           <td>
-            <span className="fw-normal">{name}</span>
+            <span className="fw-normal">{systemName}</span>
           </td>
           <td className="description">
             <DescriptionCell data={{ description }} />
@@ -196,10 +196,10 @@ export const ProductFeaturesList = ({ productId }) => {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Title" />
+                    <FormattedMessage id="Display-Name" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Name" />
+                    <FormattedMessage id="System-Name" />
                   </th>
                   <th className="border-bottom description">
                     <FormattedMessage id="Description" />

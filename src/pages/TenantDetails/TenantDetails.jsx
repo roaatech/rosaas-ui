@@ -76,6 +76,7 @@ const TenantDetails = () => {
   }
 
   let tenantObject = tenantsData[routeParams.id]
+  console.log({ tenantObject })
   let tenantStatus = tenantObject?.subscriptions[0]?.actions
     ? tenantObject?.subscriptions
         ?.flatMap((item) => item?.actions?.map((action) => action))
@@ -87,10 +88,11 @@ const TenantDetails = () => {
 
   tenantObject?.subscriptions.map((item, index) => {
     if (firstLoad == 0 && item?.name == window.location.href.split('#')[1]) {
-      dispatch(setActiveIndex(index + 2))
+      dispatch(setActiveIndex(index + 1))
       firstLoad++
     }
   })
+
   const intl = useIntl()
 
   useEffect(() => {
@@ -101,6 +103,7 @@ const TenantDetails = () => {
       }
     })()
   }, [visible, routeParams.id, updateDetails])
+
   useEffect(() => {
     return () => dispatch(setActiveIndex(0))
   }, [routeParams.id, dispatch])
@@ -112,7 +115,7 @@ const TenantDetails = () => {
           breadcrumbInfo={'TenantDetails'}
           param1={tenantObject.id}
           icon={BsFillPersonLinesFill}
-          data={{ name: tenantObject.title }}
+          data={{ name: tenantObject.systemName }}
         />
       )}
 
@@ -121,7 +124,7 @@ const TenantDetails = () => {
           <UpperContent>
             <h4 className="m-0">
               <FormattedMessage id="Tenant-Details" />:{' '}
-              {tenantObject.uniqueName}
+              {tenantObject.systemName}
             </h4>
           </UpperContent>
         )}
@@ -182,17 +185,17 @@ const TenantDetails = () => {
                             <tbody>
                               <tr>
                                 <td className="fw-bold line-cell">
-                                  <FormattedMessage id="Title" />
+                                  <FormattedMessage id="Display-Name" />
                                 </td>
                                 <td className=" line-cell">
-                                  {tenantObject.title}
+                                  {tenantObject.displayName}
                                 </td>
                               </tr>
                               <tr>
                                 <td className="fw-bold">
-                                  <FormattedMessage id="Unique-Name" />
+                                  <FormattedMessage id="System-Name" />
                                 </td>
-                                <td>{tenantObject.uniqueName}</td>
+                                <td>{tenantObject.systemName}</td>
                               </tr>
                               <tr>
                                 <td className="fw-bold">
@@ -205,7 +208,7 @@ const TenantDetails = () => {
                                         key={index}
                                         className="p-1 border-round border-1 border-400 mx-2"
                                       >
-                                        {subscription?.product.name}
+                                        {subscription?.product.systemName}
                                       </span>
                                     )
                                   )}
@@ -233,16 +236,16 @@ const TenantDetails = () => {
                         </Card.Body>
                       </Card>
                     </TabPanel>
-                    <TabPanel
+                    {/* <TabPanel
                       header={
                         <FormattedMessage id="Tenants-Users-Management" />
                       }
                     >
                       <TenantsUsersManagement />
-                    </TabPanel>
+                    </TabPanel> */}
                     {tenantObject?.subscriptions?.map((product, index) => (
                       <TabPanel
-                        header={product?.product.name.toUpperCase()}
+                        header={product?.product.systemName?.toUpperCase()}
                         key={index}
                       >
                         <ChildTable

@@ -128,8 +128,8 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
 
   const handleData = (data) => {
     return {
-      Feature: data.feature.title,
-      Plan: data.plan.title,
+      Feature: data.feature.displayName,
+      Plan: data.plan.displayName,
       Limit: data.limit,
       Unit: featureUnitMap[data.unit],
       'Unit-Display-Name-En': data.unitDisplayName?.en,
@@ -171,8 +171,8 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         featureId: item.feature.id,
-        title: item.feature.title,
-        name: item.feature.name,
+        displayName: item.feature.displayName,
+        systemName: item.feature.systemName,
         type: item.feature.type,
         index: Object.keys(featuresObj).length,
       }
@@ -188,7 +188,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
           Object.values(featuresObj).map((item) => (
             <tr key={item.featureId}>
               <td>
-                <span className="fw-bolder">{item.title}</span>
+                <span className="fw-bolder">{item.displayName}</span>
               </td>
 
               {planList &&
@@ -399,7 +399,9 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                             <BsToggleOff />
                           </span>
                         )}
-                        <span className="mr-1">{planList[item].title}</span>
+                        <span className="mr-1">
+                          {planList[item].displayName}
+                        </span>
 
                         {planList[item].subscribers && (
                           <span className="ml-3 ">

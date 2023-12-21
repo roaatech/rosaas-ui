@@ -217,7 +217,6 @@ export default (props = {}) => {
       dispatch(setAllTenant(listData.data.data.items))
     })()
   }, [first, searchValue, update, paramsID])
-
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
@@ -298,7 +297,7 @@ export default (props = {}) => {
                   {active.map((item, index) => (
                     <NavItem
                       key={index}
-                      title={item.uniqueName}
+                      title={item.systemName}
                       link={`/tenants/${item.id}`}
                       icon={BsFillPersonFill}
                     />
@@ -314,7 +313,7 @@ export default (props = {}) => {
                   {inactive.map((item, index) => (
                     <NavItem
                       key={index}
-                      title={item.uniqueName}
+                      title={item.systemName}
                       link={`/tenants/${item.id}`}
                       icon={BsFillPersonFill}
                     />
@@ -331,7 +330,7 @@ export default (props = {}) => {
                   {archived.map((item, index) => (
                     <NavItem
                       key={index}
-                      title={item.uniqueName}
+                      title={item.systemName}
                       link={`/tenants/${item.id}`}
                     />
                   ))}
@@ -364,7 +363,7 @@ export default (props = {}) => {
                   ).map((product, index) => (
                     <NavItem
                       key={index}
-                      title={product.name}
+                      title={product.systemName}
                       link={`/products/${product.id}`}
                       icon={BsBoxSeam}
                       isActive={location.pathname.includes(

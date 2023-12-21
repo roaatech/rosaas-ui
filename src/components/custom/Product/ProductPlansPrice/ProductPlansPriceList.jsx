@@ -22,6 +22,7 @@ import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 
 import {
+  PlansChangeAttr,
   PlansPriceChangeAttr,
   deletePlanPrice,
   setAllPlans,
@@ -44,6 +45,8 @@ import {
   BsCurrencyDollar,
   BsFillLockFill,
   BsFillUnlockFill,
+  BsToggleOff,
+  BsToggleOn,
 } from 'react-icons/bs'
 import { setActiveIndex } from '../../../../store/slices/tenants'
 import { GiShadowFollower } from 'react-icons/gi'
@@ -55,6 +58,7 @@ export default function ProductPlansPriceList({ children }) {
     getProductPlanPriceList,
     deletePlanPriceReq,
     PlansPricePublishedReq,
+    publishPlan,
   } = useRequest()
   const [visible, setVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
@@ -175,10 +179,6 @@ export default function ProductPlansPriceList({ children }) {
   })
 
   const handleCreatePlanPrice = (plan, cycle) => {
-    console.log({ list: plansData?.[plan].tenancyType, cycle })
-    console.log(
-      plansData?.[plan].tenancyType == 3 && (cycle == 10 || cycle == 11)
-    )
     if (plansData?.[plan].tenancyType == 3 && (cycle == 10 || cycle == 11)) {
       toast.error(
         intl.formatMessage({
@@ -207,17 +207,34 @@ export default function ProductPlansPriceList({ children }) {
   }
 
   const handleData = (data) => {
-    // console.log({ data })
+    console.log({ data })
     return {
-      Name: data.name,
-      Plan: data.plan.title,
+      'System-Name': data.systemName,
+      'System-Lock-Status': data.isLockedBySystem ? 'Yes' : 'No',
+      Plan: data.plan.displayName,
       cycle: cycle[data.cycle],
       Published: data.isPublished ? 'Yes' : 'No',
       Subscribed: data.isSubscribed ? 'Yes' : 'No',
       Description: data.description,
+
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
     }
+  }
+  const togglePublishPlan = async (id, isPublished) => {
+    await publishPlan(productId, {
+      id,
+      isPublished: !isPublished,
+    })
+
+    dispatch(
+      PlansChangeAttr({
+        productId,
+        planId: id,
+        attr: 'isPublished',
+        value: !isPublished,
+      })
+    )
   }
 
   const TableRow = () => {
@@ -352,16 +369,33 @@ export default function ProductPlansPriceList({ children }) {
               <thead>
                 <tr>
                   <th className="border-bottom"></th>
-                  {Object.values(plansData).map((item, index) => (
+                  {Object.keys(plansData).map((item, index) => (
                     <>
-                      <th key={index} className="border-bottom">
-                        {item.title}
+                      <th
+                        className="clickable-icon"
+                        key={index}
+                        onClick={() =>
+                          togglePublishPlan(item, plansData[item].isPublished)
+                        }
+                      >
+                        <span className="mr-2">
+                          {plansData[item].isPublished ? (
+                            <span className="label green">
+                              <BsToggleOn />
+                            </span>
+                          ) : (
+                            <span className="label grey">
+                              <BsToggleOff />
+                            </span>
+                          )}
+                        </span>
+                        {plansData[item].displayName}
                         <span className="ml-2 ">
                           <OverlayTrigger
                             trigger={['hover', 'focus']}
                             overlay={
                               <Tooltip>
-                                {item.isLockedBySystem
+                                {plansData[item].isLockedBySystem
                                   ? intl.formatMessage({
                                       id: 'Locked-by-system',
                                     })
@@ -373,18 +407,18 @@ export default function ProductPlansPriceList({ children }) {
                           >
                             <span
                               className={`${
-                                item.isLockedBySystem
+                                plansData[item].isLockedBySystem
                                   ? 'lock-active'
                                   : 'lock-passive'
                               }`}
                             >
-                              {item.isLockedBySystem ? (
+                              {plansData[item].isLockedBySystem ? (
                                 <BsFillLockFill />
                               ) : (
                                 <BsFillUnlockFill />
                               )}
                               <span className="ml-1">
-                                {item.isLockedBySystem}
+                                {plansData[item].isLockedBySystem}
                               </span>
                             </span>
                           </OverlayTrigger>

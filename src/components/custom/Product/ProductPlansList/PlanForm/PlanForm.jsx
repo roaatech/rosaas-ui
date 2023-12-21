@@ -29,15 +29,15 @@ const PlanForm = ({
   const routeParams = useParams()
   const productId = routeParams.id
   const initialValues = {
-    title: planData ? planData.title : '',
-    name: planData ? planData.name : '',
+    displayName: planData ? planData.displayName : '',
+    systemName: planData ? planData.systemName : '',
     description: planData ? planData.description : '',
     displayOrder: planData ? planData.displayOrder : '0',
   }
   const allProducts = useSelector((state) => state.products.products)
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string()
+    systemName: Yup.string()
       .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
       .required(<FormattedMessage id="Unique-Name-is-required" />)
       .matches(
@@ -45,8 +45,8 @@ const PlanForm = ({
         <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
 
-    title: Yup.string()
-      .required(<FormattedMessage id="Title-is-required" />)
+    displayName: Yup.string()
+      .required(<FormattedMessage id="displayName-is-required" />)
       .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
 
     displayOrder: Yup.number()
@@ -62,8 +62,8 @@ const PlanForm = ({
     onSubmit: async (values, { setSubmitting }) => {
       if (type === 'create') {
         const createPlan = await createPlanRequest(productId, {
-          name: values.name,
-          title: values.title,
+          systemName: values.systemName,
+          displayName: values.displayName,
           productId: productId,
           description: values.description,
           displayOrder: values.displayOrder || 0,
@@ -83,8 +83,8 @@ const PlanForm = ({
             planId: createPlan.data.data.id,
             productId: productId,
             data: {
-              name: values.name,
-              title: values.title,
+              systemName: values.systemName,
+              displayName: values.displayName,
               description: values.description,
               displayOrder: values.displayOrder || 0,
               editedDate: new Date().toISOString().slice(0, 19),
@@ -100,8 +100,8 @@ const PlanForm = ({
       } else {
         const editPlan = await editPlanRequest(productId, {
           data: {
-            name: values.name,
-            title: values.title,
+            systemName: values.systemName,
+            displayName: values.displayName,
             description: values.description,
             displayOrder: values.displayOrder || 0,
           },
@@ -113,8 +113,8 @@ const PlanForm = ({
             planId: planData.id,
             productId: productId,
             data: {
-              name: values.name,
-              title: values.title,
+              systemName: values.systemName,
+              displayName: values.displayName,
               description: values.description,
               displayOrder: values.displayOrder || 0,
               editedDate: new Date().toISOString().slice(0, 19),
@@ -146,24 +146,24 @@ const PlanForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Title" />{' '}
+                <FormattedMessage id="Display-Name" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 className="form-control"
                 type="text"
-                id="title"
-                name="title"
+                id="displayName"
+                name="displayName"
                 onChange={formik.handleChange}
-                value={formik.values.title}
+                value={formik.values.displayName}
               />
 
-              {formik.touched.title && formik.errors.title && (
+              {formik.touched.displayName && formik.errors.displayName && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.title}
+                  {formik.errors.displayName}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
@@ -171,13 +171,13 @@ const PlanForm = ({
           <div className="mb-3">
             {type === 'create' && (
               <AutoGenerateInput
-                label={<FormattedMessage id="Name" />}
-                id="name"
-                value={formik.values.title}
-                name={formik.values.name}
+                label={<FormattedMessage id="System-Name" />}
+                id="systemName"
+                value={formik.values.displayName}
+                name={formik.values.systemName}
                 onChange={formik.handleChange}
                 onGenerateUniqueName={(generatedUniqueName) => {
-                  formik.setFieldValue('name', generatedUniqueName)
+                  formik.setFieldValue('systemName', generatedUniqueName)
                 }}
                 onAutoGenerateClick={() => {
                   formik.setFieldValue(
@@ -188,12 +188,12 @@ const PlanForm = ({
                 isAutoGenerated={formik.values.isAutoGenerated}
               />
             )}
-            {formik.touched.name && formik.errors.name && (
+            {formik.touched.systemName && formik.errors.systemName && (
               <Form.Control.Feedback
                 type="invalid"
                 style={{ display: 'block' }}
               >
-                {formik.errors.name}
+                {formik.errors.systemName}
               </Form.Control.Feedback>
             )}
           </div>

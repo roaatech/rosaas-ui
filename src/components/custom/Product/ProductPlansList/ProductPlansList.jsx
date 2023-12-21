@@ -138,8 +138,8 @@ export const ProductPlansList = ({ productId }) => {
 
   const TableRow = (props) => {
     const {
-      title,
-      name,
+      displayName,
+      systemName,
       description,
       id,
       displayOrder,
@@ -156,10 +156,10 @@ export const ProductPlansList = ({ productId }) => {
       <>
         <tr>
           <td>
-            <span className="fw-normal">{title}</span>
+            <span className="fw-normal">{displayName}</span>
           </td>
           <td>
-            <span className="fw-normal">{name}</span>
+            <span className="fw-normal">{systemName}</span>
           </td>
           <td>
             <span>
@@ -278,10 +278,10 @@ export const ProductPlansList = ({ productId }) => {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Title" />
+                    <FormattedMessage id="Display-Name" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Name" />
+                    <FormattedMessage id="System-Name" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Status" />

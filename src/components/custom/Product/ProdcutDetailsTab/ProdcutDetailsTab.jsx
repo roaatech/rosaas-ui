@@ -47,9 +47,9 @@ const ProductDetailsTab = ({ data }) => {
 
                     <tr>
                       <td className="fw-bold">
-                        <FormattedMessage id="Name" />
+                        <FormattedMessage id="System-Name" />
                       </td>
-                      <td>{data.name}</td>
+                      <td>{data.systemName}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">

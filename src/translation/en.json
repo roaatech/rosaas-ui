@@ -417,5 +417,7 @@
   "Cannot-delete-a-locked-plan": "Cannot delete a locked plan.",
   "Tenancy-Type": "Tenancy Type",
   "Cannot-add-to-this-type-of-plan": "Cannot add to this type of plan.",
-  "Cannot-add-to-this-type-of-cycle": "Cannot add to this type of cycle."
+  "Cannot-add-to-this-type-of-cycle": "Cannot add to this type of cycle.",
+  "Secret-Display-Name": "Secret Display Name",
+  "System-Name": "System Name"
 }

@@ -222,7 +222,7 @@ const ClientCredentials = ({ data }) => {
             <thead>
               <tr>
                 <th className="border-bottom">
-                  <FormattedMessage id="Secret-Title" />
+                  <FormattedMessage id="Secret-Display-Name" />
                 </th>
                 <th className="border-bottom">
                   <FormattedMessage id="Status" />
