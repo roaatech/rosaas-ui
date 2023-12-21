@@ -138,7 +138,7 @@ const PlanPriceForm = ({
   }, [])
   const initialValues = {
     plan: plan || (planPriceData ? planPriceData.plan.id : ''),
-    name: planPriceData ? planPriceData.name : '',
+    systemName: planPriceData ? planPriceData.systemName : '',
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
     price: planPriceData ? planPriceData.price : '',
     description: planPriceData ? planPriceData.description : '',
@@ -154,9 +154,9 @@ const PlanPriceForm = ({
     cycle: Yup.number().required(
       <FormattedMessage id="Please-Select-a-Option" />
     ),
-    name: Yup.string()
+    systemName: Yup.string()
       .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .required(<FormattedMessage id="System-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
         <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
@@ -173,7 +173,7 @@ const PlanPriceForm = ({
     onSubmit: async (values, { setSubmitting }) => {
       if (type === 'create') {
         const createPlanPrice = await createPlanPriceRequest(productId, {
-          name: values.name,
+          systemName: values.systemName,
           planId: values.plan,
           cycle: parseInt(values.cycle),
           price: parseInt(values.price),
@@ -195,10 +195,10 @@ const PlanPriceForm = ({
             planPriceId: createPlanPrice.data.data.id,
             productId: productId,
             data: {
-              plan: { id: values.plan, title: allPlans[values.plan].title },
+              plan: { id: values.plan, title: allPlans[values.plan].displayName },
               cycle: values.cycle,
               price: values.price,
-              name: values.name,
+              systemName: values.systemName,
 
               description: values.description,
               id: createPlanPrice.data.data.id,
@@ -228,8 +228,8 @@ const PlanPriceForm = ({
             planPriceId: planPriceData.id,
             productId: productId,
             data: {
-              plan: { id: values.plan, title: allPlans[values.plan].title },
-              name: values.name,
+              plan: { id: values.plan, title: allPlans[values.plan].displayName },
+              systemName: values.systemName,
               cycle: values.cycle,
               price: values.price,
               description: values.description,
@@ -258,7 +258,7 @@ const PlanPriceForm = ({
       .filter((option) => option.tenancyType !== 1)
       .map((item, index) => ({
         value: item.id,
-        label: item.title,
+        label: item.displayName,
       }))
   } else {
     planOptions = []
@@ -298,10 +298,10 @@ const PlanPriceForm = ({
           {type !== 'edit' && (
             <div className="mb-3">
               <AutoGenerateInput
-                label={<FormattedMessage id="Name" />}
-                id="name"
+                label={<FormattedMessage id="System-Name" />}
+                id="systemName"
                 value={`${
-                  formik.values.plan ? allPlans?.[formik.values.plan]?.name : ''
+                  formik.values.plan ? allPlans?.[formik.values.plan]?.systemName : ''
                 } ${formik.values.cycle ? cycle[formik.values.cycle] : ''} ${
                   formik.values.price ? formik.values.price : ''
                 }`}
@@ -309,12 +309,12 @@ const PlanPriceForm = ({
                   formik.values.plan &&
                   formik.values.cycle &&
                   formik.values.price
-                    ? formik.values.name
+                    ? formik.values.systemName
                     : ''
                 }
                 onChange={formik.handleChange}
                 onGenerateUniqueName={(generatedUniqueName) => {
-                  formik.setFieldValue('name', generatedUniqueName)
+                  formik.setFieldValue('systemName', generatedUniqueName)
                 }}
                 onAutoGenerateClick={() => {
                   formik.setFieldValue(

@@ -216,6 +216,7 @@
   "Edit-Specification": "Edit Specification",
   "Permissions": "Permissions",
   "Display-Name-is-required": "Display Name is required",
+  "System-Name-is-required": "System Name is required",
   "Add-Specification": "Add Specification",
   "English-Validation-Failure": "Enter English Validation Failure Description",
   "Arabic-Validation-Failure": "Enter Arabic Validation Failure Description",
