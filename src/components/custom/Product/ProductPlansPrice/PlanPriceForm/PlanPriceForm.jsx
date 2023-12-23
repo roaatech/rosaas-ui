@@ -195,7 +195,10 @@ const PlanPriceForm = ({
             planPriceId: createPlanPrice.data.data.id,
             productId: productId,
             data: {
-              plan: { id: values.plan, displayName: allPlans[values.plan].displayName },
+              plan: {
+                id: values.plan,
+                displayName: allPlans[values.plan].displayName,
+              },
               cycle: values.cycle,
               price: values.price,
               systemName: values.systemName,
@@ -228,7 +231,10 @@ const PlanPriceForm = ({
             planPriceId: planPriceData.id,
             productId: productId,
             data: {
-              plan: { id: values.plan, displayName: allPlans[values.plan].displayName },
+              plan: {
+                id: values.plan,
+                displayName: allPlans[values.plan].displayName,
+              },
               systemName: values.systemName,
               cycle: values.cycle,
               price: values.price,
@@ -251,7 +257,6 @@ const PlanPriceForm = ({
   const allPlans = allProducts[productId].plans
   const tenancyType = allPlans?.[formik.values.plan]?.tenancyType
 
-  console.log({ allPlans })
   let planOptions
   if (allProducts[productId]?.plans) {
     planOptions = Object.values(allPlans)
@@ -267,7 +272,6 @@ const PlanPriceForm = ({
   const filteredPlanOptions = planOptions.filter(
     (option) => !plansWithAllCyclesAssigned.includes(option.value)
   )
-  console.log({ filteredPlanOptions })
   useEffect(() => {
     ;(async () => {
       if (!allPlans) {
@@ -301,7 +305,9 @@ const PlanPriceForm = ({
                 label={<FormattedMessage id="System-Name" />}
                 id="systemName"
                 value={`${
-                  formik.values.plan ? allPlans?.[formik.values.plan]?.systemName : ''
+                  formik.values.plan
+                    ? allPlans?.[formik.values.plan]?.systemName
+                    : ''
                 } ${formik.values.cycle ? cycle[formik.values.cycle] : ''} ${
                   formik.values.price ? formik.values.price : ''
                 }`}

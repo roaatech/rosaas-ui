@@ -80,7 +80,13 @@ const CheckoutTenantReg = ({
 
     fetchData()
   }, [productId])
-  const currentPlan = plansPriceList?.[subscribtionId]?.plan?.id
+  const [currentPlan, setCurrentPlan] = useState('')
+  useEffect(() => {
+    if (!plansPriceList) {
+      return
+    }
+    setCurrentPlan(plansPriceList?.[subscribtionId]?.plan?.id)
+  }, [plansPriceList?.[subscribtionId]])
 
   useEffect(() => {
     if (!listProduct) {
@@ -91,20 +97,22 @@ const CheckoutTenantReg = ({
       })()
     }
   }, [])
+  function generateNamesFromEmail(email) {
+    const [localPart] = email.split('@')
+    const uniName = `${localPart}${
+      listProduct?.[productId]?.systemName
+    }${Math.floor(1000 + Math.random() * 9000)}`
 
-  const createValidation = {
-    displayName: Yup.string()
-      .required(<FormattedMessage id="Display-Name-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+    const uniqueName = uniName.replace(/[^a-zA-Z0-9_-]/g, '')
 
-    systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="System-Name-is-required" />)
-      .matches(
-        /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
-      ),
+    const title = localPart
+
+    return { uniqueName, title }
   }
+  const userInfo = useSelector((state) => state.auth.userInfo)
+
+  const { uniqueName, title } = generateNamesFromEmail(userInfo?.email)
+  const createValidation = {}
   const editValidation = {
     displayName: Yup.string()
       .required(<FormattedMessage id="Display-Name-is-required" />)
@@ -118,7 +126,7 @@ const CheckoutTenantReg = ({
     displayName: tenantData ? tenantData.displayName : '',
 
     systemName: tenantData ? tenantData.systemName : '',
-    plan: currentPlan || '',
+    plan: currentPlan,
     price: tenantData ? tenantData.price : '',
     product: productId || '',
   }
@@ -165,8 +173,8 @@ const CheckoutTenantReg = ({
                 specifications: specificationsArray,
               },
             ],
-            systemName: values.systemName,
-            displayName: values.displayName,
+            systemName: uniqueName,
+            displayName: title,
           })
           setCurrentTenant(createTenant?.data.data.id)
           setOrderID(createTenant?.data.data.orderId)
@@ -261,7 +269,7 @@ const CheckoutTenantReg = ({
             <Modal.Title className="h6">{popupLabel}</Modal.Title>
           </Card.Header>
           <Card.Body>
-            <div>
+            {/* <div>
               <Form.Group className="mb-3">
                 <Form.Label>
                   <FormattedMessage id="Display-Name" />{' '}
@@ -285,9 +293,9 @@ const CheckoutTenantReg = ({
                   </Form.Control.Feedback>
                 )}
               </Form.Group>
-            </div>
+            </div> */}
 
-            <div className="mb-3">
+            {/* <div className="mb-3">
               {type === 'create' && (
                 <AutoGenerateInput
                   label={<FormattedMessage id="System-Name" />}
@@ -315,7 +323,7 @@ const CheckoutTenantReg = ({
                   {formik.errors.systemName}
                 </Form.Control.Feedback>
               )}
-            </div>
+            </div> */}
 
             {type === 'create' &&
               Array.isArray(filteredSpecificationsArray) &&

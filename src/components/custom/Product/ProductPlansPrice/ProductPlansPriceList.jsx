@@ -207,7 +207,6 @@ export default function ProductPlansPriceList({ children }) {
   }
 
   const handleData = (data) => {
-    console.log({ data })
     return {
       'System-Name': data.systemName,
       'System-Lock-Status': data.isLockedBySystem ? 'Yes' : 'No',

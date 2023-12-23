@@ -10,7 +10,7 @@ import {
   setAllPlansPrice,
 } from '../../store/slices/products/productsSlice'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
-import { BsBoxSeam, BsCheck2, BsCheck2Circle } from 'react-icons/bs'
+import { BsBoxSeam, BsCheck2, BsCheck2Circle, BsXCircle } from 'react-icons/bs'
 import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import CheckoutPage from '../CheckoutPagePage/CheckoutPage'
@@ -30,6 +30,36 @@ const PricingPage = () => {
   const plansPriceList = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
+  const planList = useSelector(
+    (state) => state.products.products[productId]?.plans
+  )
+  console.log({ plansPriceList })
+  const groupedByCycle =
+    plansPriceList &&
+    Object.values(plansPriceList)
+      .filter(
+        (plansPrice) =>
+          plansPrice?.isPublished === true &&
+          planList?.[plansPrice?.plan?.id].isPublished === true
+      )
+      .reduce((acc, currentObj) => {
+        const { id, cycle, ...rest } = currentObj
+        const cycleNumber = parseInt(cycle, 10)
+
+        acc[cycleNumber] = acc[cycleNumber] || {}
+        acc[cycleNumber][id] = { id, ...rest }
+
+        return acc
+      }, {})
+  groupedByCycle &&
+    Object.keys(groupedByCycle).forEach((cycle) => {
+      groupedByCycle[cycle] = Object.fromEntries(
+        Object.entries(groupedByCycle[cycle]).sort(
+          ([, a], [, b]) => a.price - b.price
+        )
+      )
+    })
+
   let userRole = useSelector((state) => state.auth.userInfo.role)
 
   const [redirectPath, setRedirectPath] = useState('')
@@ -61,9 +91,6 @@ const PricingPage = () => {
     })()
   }, [Object.values(listProduct).length > 0])
 
-  const planList = useSelector(
-    (state) => state.products.products[productId]?.plans
-  )
   const [selectedCycle, setSelectedCycle] = useState('')
 
   const {
@@ -133,21 +160,23 @@ const PricingPage = () => {
   }, [productId, Object.keys(listProduct).length > 0])
 
   const allCycleTypes = plansPriceList && [
-    ...new Set(Object.values(plansPriceList).map((priceObj) => priceObj.cycle)),
+    ...new Set(
+      Object.values(plansPriceList)
+        .filter((plansPrice) => plansPrice?.isPublished === true)
+        .map((priceObj) => priceObj.cycle)
+    ),
   ]
   const allFeatures = listData && [
     ...new Set(
       Object.values(listData).map((featurePlan) => ({
         id: featurePlan.feature.id,
-        displayName: featurePlan.feature.displayName,
+        displayName: featurePlan.feature?.displayName,
       }))
     ),
   ]
-  // const uniqueFeatures = Array.from(
-  //   new Set(allFeatures.map(JSON.stringify))
-  // ).map(JSON.parse)
-
-  // console.log({ uniqueFeatures })
+  const uniqueFeatures =
+    allFeatures &&
+    Array.from(new Set(allFeatures.map(JSON.stringify))).map(JSON.parse)
 
   const handleCycleChange = (cycle) => {
     setSelectedCycle(cycle)
@@ -191,13 +220,20 @@ const PricingPage = () => {
       plansPriceList &&
       Object.values(plansPriceList).find(
         (priceObj) =>
-          priceObj.plan.id === planId && priceObj.cycle === selectedCycle
+          priceObj.plan.id === planId &&
+          priceObj.cycle === selectedCycle &&
+          priceObj.price
       )
-    const subscribtionId = filteredPrices?.id
 
+    const subscribtionId = filteredPrices?.id
+    const featureStatusMap = {}
+    featurePlans &&
+      featurePlans.forEach((featurePlan) => {
+        featureStatusMap[featurePlan?.feature?.id] = true
+      })
     return (
       <div>
-        {filteredPrices?.price && (
+        {
           <Card>
             <Card.Header className="">
               <div>
@@ -233,16 +269,27 @@ const PricingPage = () => {
                 </div>
               </div>
               <div className="fw-bold">
-                {planList[planId].displayName?.toUpperCase()}
+                {planList[planId]?.displayName?.toUpperCase()}
               </div>
               {}
             </Card.Header>
             <Card.Body>
-              {featurePlans?.map((featurePlan) => (
+              {uniqueFeatures?.map((featurePlan) => (
                 <div key={featurePlan.id}>
                   <p>
-                    <BsCheck2Circle style={{ color: 'var(--second-color)' }} />{' '}
-                    {featurePlan.description || featurePlan.feature.displayName}
+                    {featureStatusMap[featurePlan.id] ? (
+                      <span>
+                        <BsCheck2Circle
+                          style={{ color: 'var(--second-color)' }}
+                        />{' '}
+                        {featurePlan.description || featurePlan.displayName}{' '}
+                      </span>
+                    ) : (
+                      <span>
+                        <BsXCircle style={{ color: '#a3a3a3' }} />{' '}
+                        {featurePlan.displayName}
+                      </span>
+                    )}{' '}
                   </p>
                 </div>
               ))}
@@ -265,17 +312,14 @@ const PricingPage = () => {
                 }
               >
                 <FormattedMessage id="Start-With" />{' '}
-                {planList[planId].displayName?.toUpperCase()}
+                {planList[planId]?.displayName?.toUpperCase()}
               </Button>
             </Card.Footer>
           </Card>
-        )}
+        }
       </div>
     )
   }
-  const numPlans = planList && Object.keys(planList)?.length
-  const numCols =
-    12 % numPlans > 0 ? Math.ceil(12 / numPlans - 1) : Math.ceil(12 / numPlans)
 
   return (
     <div className="main-container">
@@ -299,12 +343,24 @@ const PricingPage = () => {
           </div>
           <div className="text-center">{renderCycleRadioButtons()}</div>
           <Row>
-            {planList &&
-              Object.keys(planList).map((planId) => (
-                <Col key={planId} md={numCols}>
-                  {renderFeaturePlans(planId)}
-                </Col>
-              ))}
+            {groupedByCycle &&
+              groupedByCycle[selectedCycle] &&
+              Object.keys(groupedByCycle[selectedCycle]).map((plansPrice) => {
+                const renderedPlans = renderFeaturePlans(
+                  groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
+                )
+
+                return (
+                  renderedPlans && (
+                    <Col
+                      key={groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id}
+                      md={groupedByCycle[selectedCycle].length}
+                    >
+                      {renderedPlans}
+                    </Col>
+                  )
+                )
+              })}
           </Row>
         </Card.Body>
       </Card>

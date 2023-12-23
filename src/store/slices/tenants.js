@@ -56,7 +56,6 @@ export const tenantsSlice = createSlice({
     AdminPrivileges: (state, action) => {
       const currentTenants = JSON.parse(JSON.stringify(state.tenants))
       const { id, data } = action.payload
-      console.log({ sssssssssss: action.payload })
       if (currentTenants[id]) {
         Object.keys(data).forEach((key) => {
           const item = data[key]

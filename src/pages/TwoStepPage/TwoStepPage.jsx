@@ -78,7 +78,6 @@ const TwoStepProcessPage = () => {
   }, [productId])
   const currentPlan = plansPriceList?.[subscribtionId]?.plan?.displayName
   const currentPriceData = plansPriceList?.[subscribtionId]
-  console.log({ currentprice: currentPriceData })
 
   return (
     <Wrapper>

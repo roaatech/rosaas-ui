@@ -85,7 +85,6 @@ const ProductDetails = () => {
         value: !isPublished,
       })
     )
-    console.log({ productData })
   }
 
   return (

@@ -71,7 +71,6 @@ const CreateTenantUserForm = ({
 
   const handleEmailBlur = async () => {
     const response = await validateEmail(formik.values.email)
-    console.log({ response })
 
     if (response && response.data.data.result === true) {
       setValidEmail(true)
@@ -91,7 +90,6 @@ const CreateTenantUserForm = ({
             password: formik.values.password,
             tenantId,
           })
-          console.log({ TenantUser: tenantUser })
 
           dispatch(
             AdminPrivileges({

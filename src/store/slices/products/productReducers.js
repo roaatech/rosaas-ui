@@ -135,8 +135,6 @@ const deleteProductAdminPrivileges = (state, action) => {
 const productsChangeAttr = (state, action) => {
   const { productId, attr, value } = action.payload
   const currentProducts = JSON.parse(JSON.stringify(current(state.products)))
-  console.log(currentProducts[productId][attr])
-  console.log(value)
   currentProducts[productId][attr] = value
   state.products[productId] = currentProducts[productId]
 }

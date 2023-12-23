@@ -76,7 +76,6 @@ const TenantDetails = () => {
   }
 
   let tenantObject = tenantsData[routeParams.id]
-  console.log({ tenantObject })
   let tenantStatus = tenantObject?.subscriptions[0]?.actions
     ? tenantObject?.subscriptions
         ?.flatMap((item) => item?.actions?.map((action) => action))
