@@ -420,5 +420,12 @@
   "Cannot-add-to-this-type-of-plan": "Cannot add to this type of plan.",
   "Cannot-add-to-this-type-of-cycle": "Cannot add to this type of cycle.",
   "Secret-Display-Name": "Secret Display Name",
-  "System-Name": "System Name"
+  "System-Name": "System Name",
+  "Pay-Manual": "Pay Manual",
+  "Pay-With-Stripe": "Pay With Stripe",
+  "Complete": "Complete",
+  "Manual": "Manual",
+  "Order-Subtotal-Exclude-Tax": "Order Subtotal Exclude Tax",
+  "Order-Subtotal-Include-Tax": "Order Subtotal Include Tax",
+  "Total": "Total"
 }

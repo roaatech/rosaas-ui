@@ -47,10 +47,18 @@ const CheckoutPage = (data) => {
   const createdTenantData = useSelector((state) => state.tenants?.createdTenant)
 
   const orderID = data.orderID || createdTenantData?.orderId
+  const { hasToPay, setHasToPay } = data
+  useEffect(() => {
+    if (!createdTenantData) {
+      return
+    }
+    createdTenantData.hasToPay && setHasToPay(createdTenantData.hasToPay)
+  }, [])
+
   const { productId, subscribtionId } = useParams()
   const navigate = useNavigate()
   const [invoiceNumber, setInvoiceNumber] = useState('')
-  const [paymentMethod, setPaymentMethod] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState(null)
 
   const dispatch = useDispatch()
   const {
@@ -172,12 +180,11 @@ const CheckoutPage = (data) => {
   }
 
   const handlePayment = async () => {
-    if (paymentMethod === 'stripe') {
-      const payment = await paymentCheckout({
-        subscribtionId,
-        tenantId,
-        orderID,
-      })
+    const payment = await paymentCheckout({
+      orderID,
+      paymentMethod,
+    })
+    if (paymentMethod === 2) {
       const navigationUrl = payment?.data.data.navigationUrl
 
       if (navigationUrl) {
@@ -186,11 +193,14 @@ const CheckoutPage = (data) => {
 
         dispatch(setStep(1))
       }
+    } else {
+      payment && navigate('/success')
+      dispatch(setStep(1))
     }
   }
 
   const direction = useSelector((state) => state.main.direction)
-
+  const currenPlanPrice = plansPriceList?.[subscribtionId]
   const renderFeaturePlans = () => {
     const featurePlans =
       listData &&
@@ -230,273 +240,249 @@ const CheckoutPage = (data) => {
     <Wrapper>
       <div className="main-container">
         <div className="p-3">
-          {subscriptionData && (
-            <Container className="card">
-              <Row>
-                <Col md={7}>
-                  <Card.Header className="fw-bold">
-                    <FormattedMessage id="Your-Subscribe-Information" />
-                  </Card.Header>
-                  <Card.Body>
-                    {/* product */}
-                    <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-2 ">
-                      <div className=" w-50 fw-bold">
-                        <FormattedMessage id="Product" />
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              <FormattedMessage id="Subscription-Managenent-Product" />
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              style={{ color: '#6c757d' }}
-                              className={
-                                direction == 'rtl'
-                                  ? 'ar-questionCircle mr-2'
-                                  : 'ml-2'
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
-                      <div className=" card-stats">
-                        {listProduct?.[productId].displayName}
-                      </div>
-                    </div>
-
-                    {/* plan */}
-                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
-                      <div className=" w-50 fw-bold">
-                        <FormattedMessage id="Plan" />
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              <FormattedMessage id="Subscription-Managenent-Plan" />
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              style={{ color: '#6c757d' }}
-                              className={
-                                direction == 'rtl'
-                                  ? 'ar-questionCircle mr-2'
-                                  : 'ml-2'
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
-                      <div className=" card-stats">
-                        {subscriptionData?.plan?.systemName}
-                      </div>
-                    </div>
-
-                    {/* subsc status */}
-                    <div className="d-flex align-items-center justify-content-between border-bottom  border-light py-3 ">
-                      <div className=" w-50 fw-bold">
-                        <FormattedMessage id="Subscription-Status" />
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              <FormattedMessage id="Subscription-Managenent-Subscription-Status" />
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              style={{ color: '#6c757d' }}
-                              className={
-                                direction == 'rtl'
-                                  ? 'ar-questionCircle mr-2'
-                                  : 'ml-2'
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
-                      <div className=" card-stats">
-                        <Label
-                          {...subscriptionStatus[subscriptionData?.isActive]}
-                        />
-                      </div>
-                    </div>
-
-                    {/* subsc */}
-                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
-                      <div className=" w-50 fw-bold">
-                        <FormattedMessage id="Subscription" />
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              <FormattedMessage id="Subscription-Managenent-Subscription" />
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              style={{ color: '#6c757d' }}
-                              className={
-                                direction == 'rtl'
-                                  ? 'ar-questionCircle mr-2'
-                                  : 'ml-2'
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
-                      <div className=" card-stats">
-                        ${subscriptionData?.planPrice?.price} /{' '}
-                        <FormattedMessage
-                          id={cycle[subscriptionData?.planPrice?.cycle]}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Auto-Renewal */}
-                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
-                      <div className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="Auto-Renewal" />{' '}
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              <FormattedMessage id="Subscription-Managenent-Auto-Renewal" />
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              style={{ color: '#6c757d' }}
-                              className={
-                                direction == 'rtl'
-                                  ? 'ar-questionCircle mr-2'
-                                  : 'ml-2'
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
-                      <div className=" ">
-                        {subscriptionData?.autoRenewal ? (
-                          <Label
-                            {...{
-                              background: 'rgb(239, 249, 246)',
-                              value:
-                                subscriptionData?.autoRenewal &&
-                                `$${subscriptionData?.autoRenewal?.price} / ${
-                                  cycle[subscriptionData?.autoRenewal?.cycle]
-                                }`,
-                              lighter: true,
-                              color: 'rgb(0, 166, 117)',
-                            }}
+          <Container className="card">
+            <Row>
+              <Col md={7}>
+                <Card.Header className="fw-bold">
+                  <FormattedMessage id="Your-Subscribe-Information" />
+                </Card.Header>
+                <Card.Body>
+                  {/* product */}
+                  <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-2 ">
+                    <div className=" w-50 fw-bold">
+                      <FormattedMessage id="Product" />
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            <FormattedMessage id="Subscription-Managenent-Product" />
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          <BsFillQuestionCircleFill
+                            style={{ color: '#6c757d' }}
+                            className={
+                              direction == 'rtl'
+                                ? 'ar-questionCircle mr-2'
+                                : 'ml-2'
+                            }
                           />
-                        ) : (
-                          <Label
-                            {...{
-                              background: '#ccc',
-                              value: intl.formatMessage({ id: 'disabled' }),
-
-                              lighter: true,
-                              color: '#000000',
-                            }}
-                          />
-                        )}
-
-                        <FontAwesomeIcon
-                          icon={
-                            subscriptionData.autoRenewal
-                              ? faToggleOn
-                              : faToggleOff
-                          }
-                          className={`${
-                            direction == 'rtl'
-                              ? 'mr-2 pr-2 border-right-1 border-light '
-                              : 'ml-2 pl-2 border-left-1 border-light '
-                          }${
-                            subscriptionData.autoRenewal
-                              ? ' active-toggle  '
-                              : ' passive-toggle '
-                          }`}
-                          onClick={handleToggleClick}
-                        />
-                      </div>
+                        </span>
+                      </OverlayTrigger>
                     </div>
+                    <div className=" card-stats">
+                      {listProduct?.[productId].displayName}
+                    </div>
+                  </div>
 
-                    {/* start date */}
-                    <div className="d-flex align-items-center justify-content-between  border-bottom border-light py-3 ">
-                      <div className=" w-50 fw-bold">
-                        <FormattedMessage id="Start-Date" />
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              <FormattedMessage id="Subscription-Managenent-Start-Date" />
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              style={{ color: '#6c757d' }}
-                              className={
-                                direction == 'rtl'
-                                  ? 'ar-questionCircle mr-2'
-                                  : 'ml-2'
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
-                      <div className=" card-stats">
+                  {/* plan */}
+                  <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                    <div className=" w-50 fw-bold">
+                      <FormattedMessage id="Plan" />
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            <FormattedMessage id="Subscription-Managenent-Plan" />
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          <BsFillQuestionCircleFill
+                            style={{ color: '#6c757d' }}
+                            className={
+                              direction == 'rtl'
+                                ? 'ar-questionCircle mr-2'
+                                : 'ml-2'
+                            }
+                          />
+                        </span>
+                      </OverlayTrigger>
+                    </div>
+                    <div className=" card-stats">
+                      {currenPlanPrice?.plan?.displayName}
+                    </div>
+                  </div>
+
+                  {/* subsc */}
+                  <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                    <div className=" w-50 fw-bold">
+                      <FormattedMessage id="Subscription" />
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            <FormattedMessage id="Subscription-Managenent-Subscription" />
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          <BsFillQuestionCircleFill
+                            style={{ color: '#6c757d' }}
+                            className={
+                              direction == 'rtl'
+                                ? 'ar-questionCircle mr-2'
+                                : 'ml-2'
+                            }
+                          />
+                        </span>
+                      </OverlayTrigger>
+                    </div>
+                    <div className=" card-stats">
+                      ${currenPlanPrice?.price} /{' '}
+                      {cycle[currenPlanPrice?.cycle] && (
+                        <FormattedMessage id={cycle[currenPlanPrice?.cycle]} />
+                      )}{' '}
+                    </div>
+                  </div>
+
+                  {/* Auto-Renewal */}
+                  {/* <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                    <div className="mb-0 w-50 fw-bold">
+                      <FormattedMessage id="Auto-Renewal" />{' '}
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            <FormattedMessage id="Subscription-Managenent-Auto-Renewal" />
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          <BsFillQuestionCircleFill
+                            style={{ color: '#6c757d' }}
+                            className={
+                              direction == 'rtl'
+                                ? 'ar-questionCircle mr-2'
+                                : 'ml-2'
+                            }
+                          />
+                        </span>
+                      </OverlayTrigger>
+                    </div>
+                    <div className=" ">
+                      {subscriptionData?.autoRenewal ? (
                         <Label
                           {...{
-                            background: '#cccccc40',
-                            value: formatDate(subscriptionData?.startDate),
+                            background: 'rgb(239, 249, 246)',
+                            value:
+                              subscriptionData?.autoRenewal &&
+                              `$${subscriptionData?.autoRenewal?.price} / ${
+                                cycle[subscriptionData?.autoRenewal?.cycle]
+                              }`,
                             lighter: true,
+                            color: 'rgb(0, 166, 117)',
                           }}
-                        />{' '}
-                      </div>
-                    </div>
+                        />
+                      ) : (
+                        <Label
+                          {...{
+                            background: '#ccc',
+                            value: intl.formatMessage({ id: 'disabled' }),
 
-                    {/* End Date */}
-                    <div className="d-flex align-items-center justify-content-between py-3 ">
-                      <div className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="End-Date" />
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              <FormattedMessage id="Subscription-Managenent-End-Date" />
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              className={
-                                direction == 'rtl'
-                                  ? 'ar-questionCircle mr-2'
-                                  : 'ml-2'
-                              }
-                              style={{ color: '#6c757d' }}
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
-                      <div>
-                        <DateLabel endDate={subscriptionData.endDate} />
-                      </div>
+                            lighter: true,
+                            color: '#000000',
+                          }}
+                        />
+                      )}
+
+                      <FontAwesomeIcon
+                        icon={
+                          subscriptionData.autoRenewal
+                            ? faToggleOn
+                            : faToggleOff
+                        }
+                        className={`${
+                          direction == 'rtl'
+                            ? 'mr-2 pr-2 border-right-1 border-light '
+                            : 'ml-2 pl-2 border-left-1 border-light '
+                        }${
+                          subscriptionData.autoRenewal
+                            ? ' active-toggle  '
+                            : ' passive-toggle '
+                        }`}
+                        onClick={handleToggleClick}
+                      />
                     </div>
-                  </Card.Body>
-                </Col>
-                <Col md={5} className="border-left-1 border-light  ">
-                  <div>
-                    {renderFeaturePlans()}
+                  </div> */}
+
+                  {/* start date */}
+                  {/* <div className="d-flex align-items-center justify-content-between  border-bottom border-light py-3 ">
+                    <div className=" w-50 fw-bold">
+                      <FormattedMessage id="Start-Date" />
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            <FormattedMessage id="Subscription-Managenent-Start-Date" />
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          <BsFillQuestionCircleFill
+                            style={{ color: '#6c757d' }}
+                            className={
+                              direction == 'rtl'
+                                ? 'ar-questionCircle mr-2'
+                                : 'ml-2'
+                            }
+                          />
+                        </span>
+                      </OverlayTrigger>
+                    </div>
+                    <div className=" card-stats">
+                      <Label
+                        {...{
+                          background: '#cccccc40',
+                          value: formatDate(subscriptionData?.startDate),
+                          lighter: true,
+                        }}
+                      />{' '}
+                    </div>
+                  </div> */}
+
+                  {/* End Date */}
+                  {/* <div className="d-flex align-items-center justify-content-between py-3 ">
+                    <div className="mb-0 w-50 fw-bold">
+                      <FormattedMessage id="End-Date" />
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            <FormattedMessage id="Subscription-Managenent-End-Date" />
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          <BsFillQuestionCircleFill
+                            className={
+                              direction == 'rtl'
+                                ? 'ar-questionCircle mr-2'
+                                : 'ml-2'
+                            }
+                            style={{ color: '#6c757d' }}
+                          />
+                        </span>
+                      </OverlayTrigger>
+                    </div>
+                    <div>
+                      <DateLabel endDate={subscriptionData.endDate} />
+                    </div>
+                  </div> */}
+                </Card.Body>
+              </Col>
+              <Col
+                md={5}
+                className={
+                  direction == 'rtl'
+                    ? 'border-right-1 border-light  '
+                    : 'border-left-1 border-light  '
+                }
+              >
+                <div>
+                  {renderFeaturePlans()}
+                  {hasToPay && (
                     <Form>
                       <Form.Group className="mb-3">
                         <Card.Header className="mb-3 fw-bold">
@@ -509,14 +495,14 @@ const CheckoutPage = (data) => {
                               label={
                                 <>
                                   <FontAwesomeIcon icon={faMoneyBillTransfer} />{' '}
-                                  IBAN
+                                  <FormattedMessage id="Manual" />
                                 </>
                               }
-                              value="iban"
-                              checked={paymentMethod === 'iban'}
-                              onChange={() => setPaymentMethod('iban')}
+                              value={1}
+                              checked={paymentMethod === 1}
+                              onChange={() => setPaymentMethod(1)}
                             />
-                            {paymentMethod === 'iban' && (
+                            {paymentMethod === 1 && (
                               <Form.Group className="mb-3">
                                 <Form.Label>Invoice Number</Form.Label>
                                 <Form.Control
@@ -536,53 +522,66 @@ const CheckoutPage = (data) => {
                                   <FontAwesomeIcon icon={faCreditCard} /> Stripe
                                 </>
                               }
-                              value="stripe"
-                              checked={paymentMethod === 'stripe'}
-                              onChange={() => setPaymentMethod('stripe')}
+                              value={2}
+                              checked={paymentMethod === 2}
+                              onChange={() => setPaymentMethod(2)}
                             />
                           </div>
                         </Card.Body>
                       </Form.Group>
                     </Form>
+                  )}
 
-                    {paymentMethod && (
-                      <Card.Footer>
-                        {/* Additional checkout information */}
-                        <div className="d-flex align-items-start justify-content-between py-3">
-                          <div className="w-50">
-                            <p className="fw-bold">
-                              Order Subtotal Exclude Tax
-                            </p>
-                            <p className="fw-bold">
-                              Order Subtotal Include Tax
-                            </p>
-                            <p className="total fw-bold py-2 pl-1">
-                              <span>Total</span>
-                            </p>
-                          </div>
-                          <div className="w-50">
-                            <p>${orderData?.orderSubtotalExclTax}</p>
-                            <p>${orderData?.orderSubtotalInclTax}</p>
-                            <p className="total fw-bold py-2">
-                              ${orderData?.orderTotal}
-                            </p>
-                          </div>
+                  <Card.Footer>
+                    {/* Additional checkout information */}
+                    {paymentMethod && hasToPay && (
+                      <div className="d-flex align-items-start justify-content-between py-3">
+                        <div className="w-50">
+                          <p className="fw-bold">
+                            <FormattedMessage id="Order-Subtotal-Exclude-Tax" />
+                          </p>
+                          <p className="fw-bold">
+                            <FormattedMessage id="Order-Subtotal-Include-Tax" />
+                          </p>
+                          <p className="total fw-bold py-2 pl-1">
+                            <span>
+                              {' '}
+                              <FormattedMessage id="Total" />
+                            </span>
+                          </p>
                         </div>
-                        <Button
-                          variant="primary"
-                          type="button"
-                          onClick={handlePayment}
-                        >
-                          Pay with{' '}
-                          {paymentMethod === 'iban' ? 'IBAN' : 'Stripe'}
-                        </Button>
-                      </Card.Footer>
+                        <div className="w-50">
+                          <p>${orderData?.orderSubtotalExclTax}</p>
+                          <p>${orderData?.orderSubtotalInclTax}</p>
+                          <p className="total fw-bold py-2">
+                            ${orderData?.orderTotal}
+                          </p>
+                        </div>
+                      </div>
                     )}
-                  </div>
-                </Col>
-              </Row>
-            </Container>
-          )}
+                    {(!hasToPay || paymentMethod) && (
+                      <Button
+                        variant="primary"
+                        type="button"
+                        onClick={handlePayment}
+                      >
+                        {hasToPay ? (
+                          <FormattedMessage
+                            id={`Pay-${
+                              paymentMethod === 1 ? 'Manual' : 'With-Stripe'
+                            }`}
+                          />
+                        ) : (
+                          <FormattedMessage id="Complete" />
+                        )}
+                      </Button>
+                    )}
+                  </Card.Footer>
+                </div>
+              </Col>
+            </Row>
+          </Container>
+
           {confirm && (
             <NoteInputConfirmation
               confirm={confirm}

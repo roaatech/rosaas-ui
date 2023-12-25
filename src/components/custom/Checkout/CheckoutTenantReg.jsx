@@ -6,7 +6,6 @@ import {
   deleteAllPlan,
   deleteAllPlanPrice,
   setAllProduct,
-  setAllPlans,
   setAllPlansPrice,
   setAllSpecifications,
 } from '../../../store/slices/products/productsSlice'
@@ -14,17 +13,8 @@ import * as Yup from 'yup'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useFormik } from 'formik'
 import { validateSpecifications } from '../tenant/validateSpecifications/validateSpecifications'
-import { cycle } from '../../../const'
 import { Wrapper } from './CheckoutTenantReg.styled'
-import {
-  Button,
-  Card,
-  Container,
-  Form,
-  Modal,
-  Row,
-} from '@themesberg/react-bootstrap'
-import AutoGenerateInput from '../Shared/AutoGenerateInput/AutoGenerateInput'
+import { Button, Card, Form, Modal } from '@themesberg/react-bootstrap'
 import SpecificationInput from '../Product/CustomSpecification/SpecificationInput/SpecificationInput'
 import { setStep } from '../../../store/slices/tenants'
 
@@ -38,6 +28,7 @@ const CheckoutTenantReg = ({
   currentPrice,
   setCurrentTenant,
   setOrderID,
+  setHasToPay,
 }) => {
   const {
     createTenantRequest,
@@ -46,7 +37,7 @@ const CheckoutTenantReg = ({
     getProductSpecification,
     getProductList,
   } = useRequest()
-  const [submitLoading, setSubmitLoading] = useState()
+  const [submitLoading] = useState()
   const [specValidationErrors, setSpecValidationErrors] = useState({})
 
   const dispatch = useDispatch()
@@ -82,11 +73,11 @@ const CheckoutTenantReg = ({
   }, [productId])
   const [currentPlan, setCurrentPlan] = useState('')
   useEffect(() => {
-    if (!plansPriceList) {
+    if (!plansPriceList || !subscribtionId) {
       return
     }
     setCurrentPlan(plansPriceList?.[subscribtionId]?.plan?.id)
-  }, [plansPriceList?.[subscribtionId]])
+  }, [plansPriceList, plansPriceList?.[subscribtionId]?.plan])
 
   useEffect(() => {
     if (!listProduct) {
@@ -177,6 +168,7 @@ const CheckoutTenantReg = ({
             displayName: title,
           })
           setCurrentTenant(createTenant?.data.data.id)
+          setHasToPay(createTenant?.data.data.hasToPay)
           setOrderID(createTenant?.data.data.orderId)
 
           dispatch(
@@ -204,21 +196,7 @@ const CheckoutTenantReg = ({
   })
 
   const intl = useIntl()
-  let planOptions
-  if (listProduct[formik.values.product]?.plans) {
-    planOptions = Object.values(listProduct[formik.values.product].plans)
-      .filter((item) => item.isPublished === true)
-      .map((item, index) => ({
-        value: item.id,
-        label: item.displayName,
-      }))
-  } else {
-    planOptions = []
-  }
 
-  const options = list.map((item) => {
-    return { value: item.id, label: item.name }
-  })
   const [specificationValues, setSpecificationValues] = useState({})
 
   useEffect(() => {
@@ -240,6 +218,34 @@ const CheckoutTenantReg = ({
     })()
   }, [productId, listProduct])
 
+  const fetchData = async () => {
+    if (!currentPlan || !currentPrice || !productId) {
+      return
+    }
+    try {
+      const createTenant = await createTenantRequest({
+        subscriptions: [
+          {
+            productId: productId,
+            planId: currentPlan,
+            planPriceId: currentPrice,
+            specifications: [],
+          },
+        ],
+        systemName: uniqueName,
+        displayName: title,
+      })
+
+      setCurrentTenant(createTenant?.data.data.id)
+      setOrderID(createTenant?.data.data.orderId)
+      setHasToPay(createTenant?.data.data.hasToPay)
+
+      dispatch(setStep(2))
+    } catch (error) {
+      console.error('Error in createTenantRequest:', error)
+    }
+  }
+
   const [filteredSpecificationsArray, setFilteredSpecificationsArray] =
     useState()
   useEffect(() => {
@@ -251,6 +257,13 @@ const CheckoutTenantReg = ({
     setFilteredSpecificationsArray(
       allSpecificationsArray.filter((spec) => spec.isPublished === true)
     )
+
+    if (
+      allSpecificationsArray.filter((spec) => spec.isPublished === true)
+        .length <= 0
+    ) {
+      fetchData()
+    }
   }, [productId, listProduct])
 
   const handleSpecificationChange = (specificationId, event) => {

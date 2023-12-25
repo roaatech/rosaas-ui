@@ -78,7 +78,7 @@ const TwoStepProcessPage = () => {
   }, [productId])
   const currentPlan = plansPriceList?.[subscribtionId]?.plan?.displayName
   const currentPriceData = plansPriceList?.[subscribtionId]
-
+  const [hasToPay, setHasToPay] = useState()
   return (
     <Wrapper>
       <div className="main-container">
@@ -123,6 +123,7 @@ const TwoStepProcessPage = () => {
                         currentPrice={subscribtionId}
                         setCurrentTenant={setCurrentTenant}
                         setOrderID={setOrderID}
+                        setHasToPay={setHasToPay}
                       />
                     </Col>
                     <Col md={5}>
@@ -168,7 +169,12 @@ const TwoStepProcessPage = () => {
                 </Container>
               )}
               {step === 2 && (
-                <CheckoutPage currentTenant={currentTenant} orderID={orderID} />
+                <CheckoutPage
+                  currentTenant={currentTenant}
+                  orderID={orderID}
+                  hasToPay={hasToPay}
+                  setHasToPay={setHasToPay}
+                />
               )}{' '}
             </Card.Body>
           </Card>

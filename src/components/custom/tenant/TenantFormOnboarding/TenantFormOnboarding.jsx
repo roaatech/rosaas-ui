@@ -201,7 +201,7 @@ const TenantFormOnboarding = ({
   }
 
   const options = list.map((item) => {
-    return { value: item.id, label: item.DisplayName }
+    return { value: item.id, label: item.displayName }
   })
   const [specificationValues, setSpecificationValues] = useState({})
 

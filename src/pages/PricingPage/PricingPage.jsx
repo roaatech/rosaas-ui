@@ -33,7 +33,6 @@ const PricingPage = () => {
   const planList = useSelector(
     (state) => state.products.products[productId]?.plans
   )
-  console.log({ plansPriceList })
   const groupedByCycle =
     plansPriceList &&
     Object.values(plansPriceList)
@@ -222,7 +221,7 @@ const PricingPage = () => {
         (priceObj) =>
           priceObj.plan.id === planId &&
           priceObj.cycle === selectedCycle &&
-          priceObj.price
+          priceObj.price >= 0
       )
 
     const subscribtionId = filteredPrices?.id

@@ -218,7 +218,7 @@
   "Regular-Expression": "تعبير منظم",
   "Validation-Failure-Description": "وصف فشل التحقق من الصحة",
   "Subscription-Options": "خيارات الاشتراك",
-  "Display-Name-is-required": "اسم العرض مطلوب", 
+  "Display-Name-is-required": "اسم العرض مطلوب",
   "System-Name-is-required": "اسم النظام مطلوب",
   "Edit-Specification": "تعديل المواصفات",
   "Permissions": "صلاحيات",
@@ -422,5 +422,12 @@
   "Cannot-add-to-this-type-of-plan": "لا يمكن إضافة إلى هذا النوع من الخطط.",
   "Cannot-add-to-this-type-of-cycle": "لا يمكن إضافة إلى هذا النوع من الدورات.",
   "Secret-Display-Name": "اسم العرض",
-  "System-Name": "الاسم التابع للنظام"
+  "System-Name": "الاسم التابع للنظام",
+  "Pay-Manual": "الدفع يدوي",
+  "Pay-With-Stripe": "الدفع بواسطة Stripe",
+  "Complete": "اكمال العملية",
+  "Manual": "يدوي",
+  "Order-Subtotal-Exclude-Tax": "الإجمالي بدون الضريبة",
+  "Order-Subtotal-Include-Tax": "الإجمالي بما في ذلك الضريبة",
+  "Total": "المجموع"
 }
