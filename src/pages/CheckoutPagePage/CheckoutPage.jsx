@@ -41,7 +41,7 @@ import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfi
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import RenewForm from '../../components/custom/tenant/SubscriptionManagement/RenewForm/RenewForm'
 import { Wrapper } from './CheckoutPage.styled'
-import { setStep } from '../../store/slices/tenants'
+import { setAllTenant, setStep } from '../../store/slices/tenants'
 
 const CheckoutPage = (data) => {
   const createdTenantData = useSelector((state) => state.tenants?.createdTenant)
@@ -70,6 +70,7 @@ const CheckoutPage = (data) => {
     cancelAutoRenewal,
     getOrderById,
     paymentCheckout,
+    getTenantList,
   } = useRequest()
   const [update, setUpdate] = useState(0)
   const intl = useIntl()
@@ -196,6 +197,10 @@ const CheckoutPage = (data) => {
     } else {
       payment && navigate('/success')
       dispatch(setStep(1))
+      ;(async () => {
+        const listData = await getTenantList()
+        dispatch(setAllTenant(listData.data.data.items))
+      })()
     }
   }
 
