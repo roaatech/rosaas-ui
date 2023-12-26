@@ -63,13 +63,13 @@ const ProductForm = ({
       .required(<FormattedMessage id="This-field-is-required" />)
       .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
 
-    // name: Yup.string()
-    //   .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-    //   .required(<FormattedMessage id="Unique-Name-is-required" />)
-    //   .matches(
-    //     /^[a-zA-Z0-9_-]+$/,
-    //     <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
-    //   ),
+    systemName: Yup.string()
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
+      .required(<FormattedMessage id="System-Name-is-required" />)
+      .matches(
+        /^[a-zA-Z0-9_-]+$/,
+        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+      ),
 
     defaultHealthCheckUrl: Yup.string(),
     healthStatusChangeUrl: Yup.string(),
