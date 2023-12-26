@@ -427,5 +427,8 @@
   "Manual": "Manual",
   "Order-Subtotal-Exclude-Tax": "Order Subtotal Exclude Tax",
   "Order-Subtotal-Include-Tax": "Order Subtotal Include Tax",
-  "Total": "Total"
+  "Total": "Total",
+  "No-Trial": "No Trial",
+  "Product-Has-Trial-Plan": "Product Has Trial Plan",
+  "Each-Plan-Has-Optional-Trial-Period": "Each Plan Has Optional Trial Period"
 }

@@ -26,6 +26,7 @@ import {
   BsStars,
   BsUiChecks,
   BsCurrencyDollar,
+  BsRecycle,
 } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
 import ProductFeaturePlan from '../../components/custom/Product/ProductFeaturePlan/ProductFeaturePlan'
@@ -124,6 +125,15 @@ const ProductDetails = () => {
                   order: 4,
                   type: 'form',
                   id: routeParams.id,
+                  label: 'Trial-Period',
+                  component: 'addTrial',
+                  icon: <BsRecycle />,
+                  setActiveIndex: setActiveIndex,
+                },
+                {
+                  order: 4,
+                  type: 'form',
+                  id: routeParams.id,
                   label: 'Add-Specification',
                   component: 'addSpecification',
                   icon: <MdEditNote />,
@@ -138,6 +148,7 @@ const ProductDetails = () => {
                   icon: <BsPencilSquare />,
                   setActiveIndex: setActiveIndex,
                 },
+
                 {
                   order: 4,
                   type: 'form',

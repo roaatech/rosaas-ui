@@ -429,5 +429,8 @@
   "Manual": "يدوي",
   "Order-Subtotal-Exclude-Tax": "الإجمالي بدون الضريبة",
   "Order-Subtotal-Include-Tax": "الإجمالي بما في ذلك الضريبة",
-  "Total": "المجموع"
+  "Total": "المجموع",
+  "No-Trial": "بدون تجربة",
+  "Product-Has-Trial-Plan": "المنتج لديه خطة تجريبية",
+  "Each-Plan-Has-Optional-Trial-Period": "كل خطة لديها فترة تجربة اختيارية"
 }

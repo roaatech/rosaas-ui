@@ -116,6 +116,11 @@ export const cycle = {
   10: 'Custom',
   11: 'Unlimited',
 }
+export const ProductTrialType = {
+  1: 'No-Trial',
+  2: 'Product-Has-Trial-Plan',
+  3: 'Each-Plan-Has-Optional-Trial-Period',
+}
 
 export const urlIsOverridden = {
   true: { background: '#eee5ff', value: 'Yes' },
