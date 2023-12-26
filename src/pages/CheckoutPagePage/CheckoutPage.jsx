@@ -58,7 +58,8 @@ const CheckoutPage = (data) => {
   const { productId, subscribtionId } = useParams()
   const navigate = useNavigate()
   const [invoiceNumber, setInvoiceNumber] = useState('')
-  const [paymentMethod, setPaymentMethod] = useState(null)
+  console.log({ hasToPay })
+  const [paymentMethod, setPaymentMethod] = useState(2)
 
   const dispatch = useDispatch()
   const {
@@ -183,9 +184,9 @@ const CheckoutPage = (data) => {
   const handlePayment = async () => {
     const payment = await paymentCheckout({
       orderID,
-      paymentMethod,
+      paymentMethod: hasToPay ? paymentMethod : null,
     })
-    if (paymentMethod === 2) {
+    if (hasToPay && paymentMethod === 2) {
       const navigationUrl = payment?.data.data.navigationUrl
 
       if (navigationUrl) {
@@ -197,10 +198,11 @@ const CheckoutPage = (data) => {
     } else {
       payment && navigate('/success')
       dispatch(setStep(1))
-      ;(async () => {
-        const listData = await getTenantList()
-        dispatch(setAllTenant(listData.data.data.items))
-      })()
+      // let query = `?pageSize=${100}&filters[0].Field=SearchTerm`
+      // ;(async () => {
+      //   const listData = await getTenantList(query)
+      //   dispatch(setAllTenant(listData.data.data.items))
+      // })()
     }
   }
 
@@ -495,7 +497,7 @@ const CheckoutPage = (data) => {
                         </Card.Header>
                         <Card.Body>
                           <div>
-                            <Form.Check
+                            {/* <Form.Check
                               type="radio"
                               label={
                                 <>
@@ -519,7 +521,7 @@ const CheckoutPage = (data) => {
                                   }
                                 />
                               </Form.Group>
-                            )}
+                            )} */}
                             <Form.Check
                               type="radio"
                               label={
@@ -564,7 +566,7 @@ const CheckoutPage = (data) => {
                         </div>
                       </div>
                     )}
-                    {(!hasToPay || paymentMethod) && (
+                    {
                       <Button
                         variant="primary"
                         type="button"
@@ -580,7 +582,7 @@ const CheckoutPage = (data) => {
                           <FormattedMessage id="Complete" />
                         )}
                       </Button>
-                    )}
+                    }
                   </Card.Footer>
                 </div>
               </Col>

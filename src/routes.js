@@ -98,6 +98,7 @@ export const Routes = {
     path: '/success',
     component: PaymentSuccess,
     roles: ['tenantAdmin', 'superAdmin', 'tenantAdmin'],
+    type: 'noSidebar',
   },
   redirect: {
     path: '*',

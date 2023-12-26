@@ -88,21 +88,23 @@ const CheckoutTenantReg = ({
       })()
     }
   }, [])
-  function generateNamesFromEmail(email) {
-    const [localPart] = email.split('@')
-    const uniName = `${localPart}${
+
+  function generateNames() {
+    const uniName = `${
       listProduct?.[productId]?.systemName
-    }${Math.floor(1000 + Math.random() * 9000)}`
+    }-tenant-${new Date().valueOf()}`
 
     const uniqueName = uniName.replace(/[^a-zA-Z0-9_-]/g, '')
 
-    const title = localPart
+    const title = `${
+      listProduct?.[productId]?.displayName
+    } Tenant ${new Date().valueOf()}`
 
     return { uniqueName, title }
   }
-  const userInfo = useSelector((state) => state.auth.userInfo)
 
-  const { uniqueName, title } = generateNamesFromEmail(userInfo?.email)
+  const { uniqueName, title } = generateNames()
+
   const createValidation = {}
   const editValidation = {
     displayName: Yup.string()
