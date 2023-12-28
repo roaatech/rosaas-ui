@@ -2,26 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../axios/apis/useRequest.js'
-import { cycle } from '../../../../const/index.js'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Form } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import {
-  deleteAllPlan,
-  deleteAllPlanPrice,
   setAllPlans,
-  setAllSpecifications,
   setAllProduct,
 } from '../../../../store/slices/products/productsSlice.js'
 import { Wrapper } from './TrialForm.styled.jsx'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { ProductTrialType } from '../../../../const/product.js'
 
-const TrialForm = ({ type, update, updateTenant, setVisible, popupLabel }) => {
+const TrialForm = ({ updateTenant, setVisible, popupLabel }) => {
   const { changeProductTrialType, getProductList, getProductPlans } =
     useRequest()
-  const [submitLoading, setSubmitLoading] = useState()
+  const [submitLoading] = useState()
 
   const dispatch = useDispatch()
   const params = useParams()
@@ -30,7 +26,6 @@ const TrialForm = ({ type, update, updateTenant, setVisible, popupLabel }) => {
   const listData = useSelector((state) => state.products.products)
 
   const trialData = listData[productId]
-  console.log(trialData.trialType)
   useEffect(() => {
     if (!listData) {
       let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
