@@ -26,6 +26,7 @@ const TrialForm = ({ updateTenant, setVisible, popupLabel }) => {
   const listData = useSelector((state) => state.products.products)
 
   const trialData = listData[productId]
+
   useEffect(() => {
     if (!listData) {
       let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`

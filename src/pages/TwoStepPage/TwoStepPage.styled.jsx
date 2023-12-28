@@ -16,8 +16,8 @@ export const Wrapper = styled.div`
     color: var(--second-color) !important;
   }
   .p-steps-current .p-steps-number {
-    background-color: #ffe8bb !important;
-    color: #676668 !important;
+    background-color: var(--second-color) !important;
+    color: var(--primary4) !important;
   }
   /* .p-steps-current .p-menuitem-link {
     margin-right: 90px;
