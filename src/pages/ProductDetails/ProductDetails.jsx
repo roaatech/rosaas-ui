@@ -2,7 +2,6 @@ import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import useRequest from '../../axios/apis/useRequest'
 import { Wrapper } from './ProductDetails.styled'
@@ -42,10 +41,7 @@ import {
 } from 'react-icons/md'
 import { PublishStatus, activeTab } from '../../const/product'
 import ProductWarnings from '../../components/custom/Product/ProductWarnings/ProductWarnings'
-import { productWarningsStore } from '../../store/slices/products/productsSlice'
-import { WarningVariant } from '../../const/WarningsSettings'
 import ClientCredentials from '../../components/custom/Product/ClientCredentials/ClientCredentials'
-import ProductsUsersManagement from '../../components/custom/Product/ProductsUsersManagement/ProductsUsersManagement.jsx'
 import Label from '../../components/custom/Shared/label/Label.jsx'
 
 const ProductDetails = () => {
@@ -57,7 +53,7 @@ const ProductDetails = () => {
   useEffect(() => {
     setActiveIndex(activeTab.details)
   }, [routeParams.id])
-  const { getProduct, deleteProductReq } = useRequest()
+  const { getProduct, deleteProductReq, publishProduct } = useRequest()
 
   useEffect(() => {
     ;(async () => {
@@ -72,12 +68,10 @@ const ProductDetails = () => {
     await deleteProductReq({ id: routeParams?.id })
     dispatch(removeProductStore(routeParams?.id))
   }
-  let [errorNums, setErrorNums] = useState(0)
   const togglePublishProduct = async (isPublished) => {
-    // await publishPlan(productId, {
-    //   id,
-    //   isPublished: !isPublished,
-    // })
+    await publishProduct(routeParams.id, {
+      isPublished: !isPublished,
+    })
 
     dispatch(
       productsChangeAttr({

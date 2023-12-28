@@ -27,7 +27,7 @@ export const Wrapper = styled.div`
     color: var(--second-color);
   }
   .subscribers-passive {
-    color: #ccc;
+    color: var(--passive-color);
   }
 
   span.label {
@@ -39,6 +39,6 @@ export const Wrapper = styled.div`
     color: var(--green);
   }
   .grey {
-    color: '# ccc';
+    color: var(--passive-color);
   }
 `

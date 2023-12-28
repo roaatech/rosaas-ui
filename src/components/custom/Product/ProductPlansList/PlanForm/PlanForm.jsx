@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
@@ -28,13 +28,18 @@ const PlanForm = ({
   const dispatch = useDispatch()
   const routeParams = useParams()
   const productId = routeParams.id
+  const allProducts = useSelector((state) => state.products.products)
+
+  const ProductTrialType = allProducts[productId].trialType
+
   const initialValues = {
     displayName: planData ? planData.displayName : '',
     systemName: planData ? planData.systemName : '',
     description: planData ? planData.description : '',
     displayOrder: planData ? planData.displayOrder : '0',
+    alternativePlanID: planData ? planData.alternativePlanID : '',
+    trialPeriodInDays: planData ? planData.trialPeriodInDays : '0',
   }
-  const allProducts = useSelector((state) => state.products.products)
 
   const validationSchema = Yup.object().shape({
     systemName: Yup.string()
@@ -54,7 +59,28 @@ const PlanForm = ({
       .integer(<FormattedMessage id="Display-Order-must-be-an-integer" />)
       .min(0, <FormattedMessage id="Display-Order-must-be-a-positive-number" />)
       .default(0),
+    alternativePlanID: Yup.string(),
+    trialPeriodInDays: Yup.number(),
   })
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!allProducts[productId].plan) {
+        try {
+          const plan = await getProductPlans(productId)
+          dispatch(
+            setAllPlans({
+              productId: productId,
+              data: plan.data.data,
+            })
+          )
+        } catch (error) {
+          console.error('Error fetching product plans:', error)
+        }
+      }
+    }
+
+    fetchData()
+  }, [])
 
   const formik = useFormik({
     initialValues,
@@ -67,6 +93,8 @@ const PlanForm = ({
           productId: productId,
           description: values.description,
           displayOrder: values.displayOrder || 0,
+          alternativePlanID: values.alternativePlanID,
+          trialPeriodInDays: values.trialPeriodInDays || 0,
         })
 
         if (!allProducts[productId].plan) {
@@ -87,6 +115,8 @@ const PlanForm = ({
               displayName: values.displayName,
               description: values.description,
               displayOrder: values.displayOrder || 0,
+              alternativePlanID: values.alternativePlanID,
+              trialPeriodInDays: values.trialPeriodInDays || 0,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: new Date().toISOString().slice(0, 19),
               id: createPlan.data.data.id,
@@ -104,6 +134,8 @@ const PlanForm = ({
             displayName: values.displayName,
             description: values.description,
             displayOrder: values.displayOrder || 0,
+            alternativePlanID: values.alternativePlanID,
+            trialPeriodInDays: values.trialPeriodInDays || 0,
           },
           id: planData.id,
         })
@@ -117,6 +149,8 @@ const PlanForm = ({
               displayName: values.displayName,
               description: values.description,
               displayOrder: values.displayOrder || 0,
+              alternativePlanID: values.alternativePlanID,
+              trialPeriodInDays: values.trialPeriodInDays || 0,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: planData.createdDate,
               id: planData.id,
@@ -129,7 +163,18 @@ const PlanForm = ({
       setSubmitting(false)
     },
   })
+  let alternativePlanIDOptions
 
+  if (allProducts[productId]?.plans) {
+    alternativePlanIDOptions = Object.values(allProducts[productId].plans)
+      .filter((item) => item.isPublished === true && planData?.id != item.id)
+      .map((item, index) => ({
+        value: item.id,
+        label: item.displayName,
+      }))
+  } else {
+    alternativePlanIDOptions = []
+  }
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
@@ -242,6 +287,67 @@ const PlanForm = ({
                   {formik.errors.displayOrder}
                 </Form.Control.Feedback>
               )}
+            </Form.Group>
+          </div>
+          {ProductTrialType == 3 && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <FormattedMessage id="Trial-Period-In-Days" />
+                </Form.Label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="trialPeriodInDays"
+                  name="trialPeriodInDays"
+                  onChange={formik.handleChange}
+                  value={formik.values.trialPeriodInDays}
+                />
+
+                {formik.touched.trialPeriodInDays &&
+                  formik.errors.trialPeriodInDays && (
+                    <Form.Control.Feedback
+                      type="invalid"
+                      style={{ display: 'block' }}
+                    >
+                      {formik.errors.trialPeriodInDays}
+                    </Form.Control.Feedback>
+                  )}
+              </Form.Group>
+            </div>
+          )}
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Alternative-Plan" />{' '}
+              </Form.Label>
+              <select
+                className="form-control"
+                name="alternativePlanID"
+                id="alternativePlanID"
+                value={formik.values.alternativePlanID}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                disabled={!productId}
+              >
+                <option value="">
+                  <FormattedMessage id="Select-Option" />
+                </option>
+                {alternativePlanIDOptions?.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.alternativePlanID &&
+                formik.errors.alternativePlanID && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.alternativePlanID}
+                  </Form.Control.Feedback>
+                )}
             </Form.Group>
           </div>
         </Modal.Body>

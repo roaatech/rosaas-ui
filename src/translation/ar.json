@@ -432,5 +432,9 @@
   "Total": "المجموع",
   "No-Trial": "بدون تجربة",
   "Product-Has-Trial-Plan": "المنتج لديه خطة تجريبية",
-  "Each-Plan-Has-Optional-Trial-Period": "كل خطة لديها فترة تجربة اختيارية"
+  "Each-Plan-Has-Optional-Trial-Period": "كل خطة لديها فترة تجربة اختيارية",
+  "Alternative-Plan": "خطة بديلة",
+  "Trial-Period-In-Days": "فترة تجربة بالأيام",
+  "Trial-Period-In-Days-Required-Number": "فترة التجربة بالأيام مطلوبة عندما يكون النوع رقمي",
+  "Trial-Plan": "خطة التجربة"
 }

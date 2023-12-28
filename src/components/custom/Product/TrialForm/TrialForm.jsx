@@ -16,41 +16,21 @@ import {
 } from '../../../../store/slices/products/productsSlice.js'
 import { Wrapper } from './TrialForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
-import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
-import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
-import { setAllPlansPrice } from '../../../../store/slices/products/productsSlice.js'
 import { ProductTrialType } from '../../../../const/product.js'
 
-const TrialForm = ({
-  type,
-  trialData,
-  update,
-  updateTenant,
-  setVisible,
-  popupLabel,
-}) => {
-  const {
-    createTenantRequest,
-    editTenantRequest,
-    getProductPlans,
-    getProductPlanPriceList,
-    getProductSpecification,
-  } = useRequest()
+const TrialForm = ({ type, update, updateTenant, setVisible, popupLabel }) => {
+  const { changeProductTrialType, getProductList, getProductPlans } =
+    useRequest()
   const [submitLoading, setSubmitLoading] = useState()
-  const [priceList, setPriceList] = useState([])
-  const navigate = useNavigate()
 
   const dispatch = useDispatch()
-  const { getProductList } = useRequest()
   const params = useParams()
   const productId = params.id
 
   const listData = useSelector((state) => state.products.products)
 
-  let list = Object.values(listData)
-
+  const trialData = listData[productId]
+  console.log(trialData.trialType)
   useEffect(() => {
     if (!listData) {
       let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
@@ -62,26 +42,42 @@ const TrialForm = ({
   }, [])
 
   const createValidation = {
-    trialType: Yup.number().required(),
-    plan: Yup.string().required(<FormattedMessage id="Please-select-a-plan" />),
+    trialType: Yup.number().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
+    trialPlanId: Yup.string().test(
+      'unit-validation',
+      <FormattedMessage id="This-field-is-required" />,
+      function (value) {
+        const trialType = this.resolve(Yup.ref('trialType'))
+        console.log(trialType)
+        if (trialType == '2') {
+          console.log('*****')
+          return value !== undefined && value !== ''
+        }
+        return true
+      }
+    ),
+    trialPeriodInDays: Yup.number().test(
+      'unit-validation',
+      <FormattedMessage id="Trial-Period-In-Days-Required-Number" />,
+      function (value) {
+        const trialType = this.resolve(Yup.ref('trialType'))
+        if (trialType == '2') {
+          console.log('*****')
+          return value !== undefined && value !== ''
+        }
+        return true
+      }
+    ),
   }
-  const editValidation = {
-    trialType: Yup.number().required(),
-    plan: Yup.string().required(<FormattedMessage id="Please-select-a-plan" />),
-  }
-  const validationSchema = Yup.object().shape(
-    type === 'create' ? createValidation : editValidation
-  )
 
-  const selectedProduct = trialData?.subscriptions?.map((product) => {
-    return product.productId
-  })
+  const validationSchema = Yup.object().shape(createValidation)
 
   const initialValues = {
     trialType: trialData ? trialData.trialType : '',
     plan: trialData ? trialData.plan : '',
-    price: trialData ? trialData.price : '',
-    product: trialData ? selectedProduct : '',
+    trialPeriodInDays: trialData ? trialData.trialPeriodInDays : '',
   }
 
   const formik = useFormik({
@@ -89,60 +85,19 @@ const TrialForm = ({
     validationSchema: validationSchema,
 
     onSubmit: async (values) => {
-      const specificationsArray = productData?.specifications
-        ? Object.values(productData.specifications).map((specification) => {
-            const specificationId = specification.id
-            const value =
-              specificationValues[specificationId] !== undefined
-                ? specificationValues[specificationId]
-                : ''
-            return {
-              specificationId,
-              value,
-              productId: values.product,
-            }
-          })
-        : []
+      const productTrialType = await changeProductTrialType(productId, {
+        trialType: values.trialType,
+        trialPlanId: values.trialPlanId,
+        trialPeriodInDays: values.trialPeriodInDays,
+      })
 
-      if (type == 'create') {
-        const createTenant = await createTenantRequest({
-          subscriptions: [
-            {
-              productId: values.product,
-              planId: values.plan,
-              planPriceId: values.price,
-              specifications: specificationsArray,
-            },
-          ],
-          systemName: values.systemName,
-          displayName: values.displayName,
-        })
+      updateTenant()
 
-        dispatch(
-          deleteAllPlan({
-            productId: values.product,
-          })
-        )
-        dispatch(
-          deleteAllPlanPrice({
-            productId: values.product,
-          })
-        )
-
-        navigate(`/tenants/${createTenant.data.data.id}`)
-      } else {
-        const editTenant = await editTenantRequest({
-          displayName: values.displayName,
-          id: trialData.id,
-        })
-        updateTenant()
-      }
       setVisible && setVisible(false)
       setVisible && setVisible(false)
     },
   })
 
-  const intl = useIntl()
   let planOptions
   if (listData[productId]?.plans) {
     planOptions = Object.values(listData[productId].plans)
@@ -154,11 +109,6 @@ const TrialForm = ({
   } else {
     planOptions = []
   }
-
-  const options = list.map((item) => {
-    return { value: item.id, label: item.systemName }
-  })
-  const [specificationValues, setSpecificationValues] = useState({})
 
   useEffect(() => {
     ;(async () => {
@@ -177,16 +127,6 @@ const TrialForm = ({
       }
     })()
   }, [productId])
-
-  const productData = listData[productId]
-
-  const allSpecificationsArray = productData?.specifications
-    ? Object.values(productData.specifications)
-    : []
-
-  const filteredSpecificationsArray = allSpecificationsArray.filter(
-    (spec) => spec.isPublished === true
-  )
 
   return (
     <Wrapper>
@@ -234,40 +174,70 @@ const TrialForm = ({
             </Form.Group>
           </div>
 
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Plan" />{' '}
-                <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <select
-                className="form-control"
-                name="plan"
-                id="plan"
-                value={formik.values.plan}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                disabled={!productId}
-              >
-                <option value="">
-                  <FormattedMessage id="Select-Option" />
-                </option>
-                {planOptions?.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.plan && formik.errors.plan && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
+          {formik.values.trialType == 2 && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <FormattedMessage id="Trial-Plan" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <select
+                  className="form-control"
+                  name="trialPlanId"
+                  id="trialPlanId"
+                  value={formik.values.trialPlanId}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  disabled={!productId}
                 >
-                  {formik.errors.plan}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
+                  <option value="">
+                    <FormattedMessage id="Select-Option" />
+                  </option>
+                  {planOptions?.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.trialPlanId && formik.errors.trialPlanId && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.trialPlanId}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          )}
+          {formik.values.trialType == 2 && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <FormattedMessage id="Trial-Period-In-Days" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="trialPeriodInDays"
+                  name="trialPeriodInDays"
+                  onChange={formik.handleChange}
+                  value={formik.values.trialPeriodInDays}
+                />
+
+                {formik.touched.trialPeriodInDays &&
+                  formik.errors.trialPeriodInDays && (
+                    <Form.Control.Feedback
+                      type="invalid"
+                      style={{ display: 'block' }}
+                    >
+                      {formik.errors.trialPeriodInDays}
+                    </Form.Control.Feedback>
+                  )}
+              </Form.Group>
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>

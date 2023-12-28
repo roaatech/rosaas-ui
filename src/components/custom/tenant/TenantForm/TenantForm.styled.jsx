@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 export const Wrapper = styled.div`
   .passive-toggle {
-    color: #ccc;
+    color: var(--passive-color);
     cursor: pointer;
   }
   .active-toggle {

@@ -22,6 +22,6 @@ export const Wrapper = styled.div`
     color: var(--second-color);
   }
   .lock-passive {
-    color: #ccc;
+    color: var(--passive-color);
   }
 `
