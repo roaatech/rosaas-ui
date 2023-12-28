@@ -255,7 +255,7 @@ export default function ChildTable({
                   </td>
                   <td>
                     <span>
-                      <DataLabelWhite text={productData.plan.name} />
+                      <DataLabelWhite text={productData.plan.systemName} />
                     </span>
                     {'   '}
                     <FormattedMessage id="From" />{' '}

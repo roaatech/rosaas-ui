@@ -33,8 +33,7 @@ const GlobalStyles = createGlobalStyle`
   --green2:#eff9f6;
   --red2:#f5e8e4;
   --primary-color:#414042;
- 
-
+  --passive-color:#ccc;
   --primary0:#fdfdfd;
   --primary1:#ECECEC;
   --primary2:#DCDCDC;

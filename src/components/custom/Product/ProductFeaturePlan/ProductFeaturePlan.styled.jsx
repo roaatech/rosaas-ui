@@ -4,10 +4,16 @@ export const Wrapper = styled.div`
     max-width: 410px;
     white-space: normal;
   }
-  .fw-normal, .fw-normal .planFeatureButton {
+  .dynamicButtons {
+    margin-left: auto;
+    width: fit-content;
+    margin-bottom: 1.25rem;
+  }
+  .fw-normal,
+  .fw-normal .planFeatureButton {
     font-size: var(--smallFont);
   }
-  .table-title-cell{
+  .table-title-cell {
     /*background-color: #f9f9f9;*/
     text-align: center;
     font-size: var(--normalFont) !important;
@@ -16,6 +22,12 @@ export const Wrapper = styled.div`
   .clickable-text,
   .clickable-icon {
     cursor: pointer;
+  }
+  .subscribers-active {
+    color: var(--second-color);
+  }
+  .subscribers-passive {
+    color: var(--passive-color);
   }
 
   span.label {
@@ -27,6 +39,6 @@ export const Wrapper = styled.div`
     color: var(--green);
   }
   .grey {
-    color: '# ccc';
+    color: var(--passive-color);
   }
 `

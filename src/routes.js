@@ -10,37 +10,50 @@ import HealthCheckSettings from './pages/Settings/HealthCheckSettings/HealthChec
 import SubscriptionsSettings from './pages/Settings/SubscriptionsSettings/SubscriptionsSettings'
 import SubscriptionManagement from './pages/SubscriptionManagement/SubscriptionManagement'
 import ProductWarningsSettings from './pages/Settings/ProductWarningsSettings/ProductWarningsSettings'
+import NotFound from './pages/NotFoundPage/NotFoundPage'
+import SignUpPage from './pages/SignUpPage/SignUpPage'
+import ProductListPage from './pages/ProductListPage/ProductListPage'
+import PricingPage from './pages/PricingPage/PricingPage'
+import CheckoutPage from './pages/CheckoutPagePage/CheckoutPage'
+import PaymentSuccess from './pages/PaymentSuccess/paymentSuccess'
+import TwoStepProcessPage from './pages/TwoStepPage/TwoStepPage'
 export const Routes = {
   Dashboard: {
     path: '/Dashboard',
     component: Dashboard,
-    roles: ['superAdmin'],
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
   },
   products: {
     path: '/products',
     component: Product,
-    roles: ['superAdmin'],
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+  },
+  productsList: {
+    path: '/',
+    component: ProductListPage,
+    roles: ['notAuth', 'tenantAdmin', 'productAdmin', 'superAdmin'],
+    type: 'noSidebar',
   },
 
   Tenant: {
     path: '/tenants',
     component: Tenant,
-    roles: ['superAdmin'],
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
   },
   TenantDetails: {
     path: '/tenants/:id',
     component: TenantDetails,
-    roles: ['superAdmin'],
+    roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
   },
   SubscriptionManagement: {
     path: '/tenants/:id/Subscription-Management',
     component: SubscriptionManagement,
-    roles: ['superAdmin'],
+    roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
   },
   ProductDetails: {
     path: '/products/:id',
     component: ProductDetails,
-    roles: ['superAdmin'],
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
   Settings: {
     path: '/settings/health-check',
@@ -58,15 +71,44 @@ export const Routes = {
     roles: ['superAdmin'],
   },
   Signin: {
-    path: '/',
+    path: '/signin',
     component: signIn,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
-
+  CheckOut: {
+    path: '/payment/product/:productId/subscribtion/:subscribtionId',
+    component: TwoStepProcessPage,
+    roles: ['superAdmin', 'tenantAdmin'],
+    // type: 'noSidebar',
+  },
+  SignUp: {
+    path: '/sign-up',
+    component: SignUpPage,
+    roles: ['notAuth'],
+    type: 'noSidebar',
+  },
+  Pricing: {
+    path: '/products-list/:id',
+    component: PricingPage,
+    roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
+    type: 'noSidebar',
+  },
+  PaymentSuccess: {
+    path: '/success',
+    component: PaymentSuccess,
+    roles: ['tenantAdmin', 'superAdmin', 'tenantAdmin'],
+    type: 'noSidebar',
+  },
   redirect: {
     path: '*',
     component: Redirect,
     roles: '*',
+  },
+  NotFound: {
+    path: '/not-found',
+    component: NotFound,
+    roles: '*',
+    type: 'noSidebar',
   },
 }

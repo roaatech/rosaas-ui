@@ -7,9 +7,13 @@ const setAllFeaturePlan = (state, action) => {
   action.payload.data.map((item) => {
     featurePlan[item.id] = item
   })
-
-  allProduct[action.payload.productId].featurePlan = featurePlan
-  state.products = allProduct
+  const currentProduct = allProduct[action.payload.productId]
+  if (currentProduct) {
+    currentProduct.featurePlan = featurePlan
+    state.products = allProduct
+  } else {
+    return
+  }
 }
 const featurePlanInfo = (state, action) => {
   const { productId, data } = action.payload

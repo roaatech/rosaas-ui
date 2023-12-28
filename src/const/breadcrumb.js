@@ -1,4 +1,4 @@
-export const breadcrumbFun = (routeParams) => {
+export const breadcrumbFun = (routeParams, data) => {
   const { id } = routeParams
   return {
     HealthCheck: {
@@ -6,6 +6,12 @@ export const breadcrumbFun = (routeParams) => {
       name: 'Health-Check-Settings',
       navigation: '/settings/health-check',
       active: 'Settings',
+      icon: {},
+    },
+    Home: {
+      title: 'Home',
+
+      active: 'Home',
       icon: {},
     },
     SubscriptionSettings: {
@@ -31,6 +37,28 @@ export const breadcrumbFun = (routeParams) => {
       name: 'Products',
       navigation: '/products',
       active: 'Products',
+      icon: {},
+    },
+    ProductListPublic: {
+      name: 'Products-List',
+      navigation: '/products',
+      active: 'Products-List',
+      icon: {},
+    },
+    ProductPricing: {
+      name: 'Subscription-Options',
+      parent: 'Products-List',
+      parentNavigation: `./`,
+      active: 'Subscription-Options',
+      icon: {},
+    },
+    TenantManagement: {
+      title: 'Tenants',
+      name: 'Subscription-Management',
+      active: 'Subscription-Management',
+      navigation: `/tenants/${id}/Subscription-Management`,
+      parent: data?.name,
+      parentNavigation: `/tenants/${id}`,
       icon: {},
     },
     PlanList: {
@@ -76,21 +104,12 @@ export const breadcrumbFun = (routeParams) => {
       icon: {},
     },
     TenantDetails: {
-      title: 'Tenant-Management',
-      name: 'Tenant-Details',
-      active: 'Tenant Details',
-      navigation: `/tenants/${id}`,
-      parent: 'Tenants',
-      // parentNavigation: '/tenant',
-      icon: {},
-    },
-    TenantManagement: {
       title: 'Tenants',
-      name: 'Subscription-Management',
-      active: 'Subscription Management',
-      navigation: `/tenants/${id}/Subscription-Management`,
-      parent: 'Tenant-Details',
-      parentNavigation: `/tenants/${id}`,
+      name: 'Tenant-Management',
+      active: 'Tenant Management',
+      navigation: `/tenants/${id}`,
+      parent: data?.name,
+      // parentNavigation: '/tenant',
       icon: {},
     },
   }

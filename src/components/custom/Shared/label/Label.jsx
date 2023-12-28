@@ -1,11 +1,13 @@
 import React from 'react'
 import { Wrapper } from './Label.styled'
 import { statusConst } from '../../../../const'
-const Label = ({ color, background, value, icon, lighter }) => {
+const Label = ({ color, background, value, icon, lighter, small }) => {
   return (
     <Wrapper>
       <span
-        className={lighter ? 'lighter label' : 'normal label'}
+        className={`${lighter ? 'lighter label' : 'normal label'} ${
+          small ? 'small' : ''
+        }  `}
         style={{
           color,
           background,

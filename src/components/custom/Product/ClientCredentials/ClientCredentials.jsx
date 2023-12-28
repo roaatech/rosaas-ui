@@ -22,14 +22,12 @@ import {
 import { FormattedMessage } from 'react-intl'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import { Wrapper } from './ClientCredentials.styled'
-import { BsPlusCircle, BsPlusCircleFill } from 'react-icons/bs'
+import { BsEye, BsEyeFill, BsPlusCircleFill } from 'react-icons/bs'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
-import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
-import TableDate from '../../Shared/TableDate/TableDate'
 import Label from '../../Shared/label/Label'
 import { expirationStatus } from '../../../../const/product'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
 import {
   clientCredentials,
@@ -100,7 +98,6 @@ const ClientCredentials = ({ data }) => {
   }, [update])
   const [clientRecordId, setClientRecordId] = useState()
   const [visible, setVisible] = useState(false)
-  const [visibleEdit, setVisibleEdit] = useState(false)
 
   const handleDeleteSecret = async () => {
     await DeleteClientSecretReq(clientRecordId, currentId)
@@ -188,14 +185,28 @@ const ClientCredentials = ({ data }) => {
         <DynamicButtons
           buttons={[
             {
+              popupLabel: <FormattedMessage id="Create-New-Secret" />,
               order: 1,
               type: 'form',
               label: 'New-Secret',
               component: 'createSecret',
               clientId: client,
               icon: <BsPlusCircleFill />,
+              formType: 'create',
               update,
               setUpdate,
+            },
+            {
+              popupLabel: <FormattedMessage id="Show-Client-Id" />,
+              order: 4,
+              type: 'form',
+              label: 'Show-Client-Id',
+              component: 'createSecret',
+              clientId: client,
+              icon: <BsEyeFill />,
+              update,
+              setUpdate,
+              formType: 'showClientId',
             },
           ]}
         />
@@ -211,7 +222,7 @@ const ClientCredentials = ({ data }) => {
             <thead>
               <tr>
                 <th className="border-bottom">
-                  <FormattedMessage id="Secret-Title" />
+                  <FormattedMessage id="Secret-Display-Name" />
                 </th>
                 <th className="border-bottom">
                   <FormattedMessage id="Status" />

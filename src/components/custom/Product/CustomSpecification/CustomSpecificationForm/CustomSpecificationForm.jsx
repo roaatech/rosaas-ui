@@ -45,7 +45,7 @@ const CustomSpecificationForm = ({
 
   const productId = routeParams.id
   const initialValues = {
-    name: specificationData ? specificationData.name : '',
+    systemName: specificationData ? specificationData.systemName : '',
     descriptionEn: specificationData?.description?.en || '',
     descriptionAr: specificationData?.description?.ar || '',
     displayNameAr: specificationData?.displayName?.ar || '',
@@ -63,7 +63,7 @@ const CustomSpecificationForm = ({
   const direction = useSelector((state) => state.main.direction)
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string()
+    systemName: Yup.string()
       .max(100, intl.formatMessage({ id: 'Maximum-Length-100' }))
       .required(intl.formatMessage({ id: 'Name-Required' }))
       .matches(
@@ -96,7 +96,7 @@ const CustomSpecificationForm = ({
       )
       .nullable(),
     validationFailureDescriptionEn: Yup.string().test({
-      name: 'validationFailureDescriptionRequired',
+      systemName: 'validationFailureDescriptionRequired',
       message: intl.formatMessage({
         id: 'This-field-is-required',
       }),
@@ -118,7 +118,7 @@ const CustomSpecificationForm = ({
         const createSpecification = await createSpecificationRequest(
           productId,
           {
-            name: values.name,
+            systemName: values.systemName,
             displayName: { en: values.displayNameEn, ar: values.displayNameAr },
             description: {
               en: values.descriptionEn,
@@ -154,7 +154,7 @@ const CustomSpecificationForm = ({
       } else {
         const editSpecification = await editSpecificationRequest(productId, {
           data: {
-            name: values.name,
+            systemName: values.systemName,
             description: {
               en: values.descriptionEn,
               ar: values.descriptionAr,
@@ -183,7 +183,7 @@ const CustomSpecificationForm = ({
             specificationId: specificationData.id,
             productId: productId,
             data: {
-              name: values.name,
+              systemName: values.systemName,
               description: {
                 en: values.descriptionEn,
                 ar: values.descriptionAr,
@@ -239,7 +239,7 @@ const CustomSpecificationForm = ({
                 >
                   <Form.Group className="mb-3">
                     <Form.Label>
-                      <FormattedMessage id="Name" />{' '}
+                      <FormattedMessage id="System-Name" />{' '}
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
@@ -265,17 +265,17 @@ const CustomSpecificationForm = ({
                     <input
                       type="text"
                       className="form-control"
-                      id="name"
-                      name="name"
+                      id="systemName"
+                      name="systemName"
                       onChange={formik.handleChange}
-                      value={formik.values.name}
+                      value={formik.values.systemName}
                     />
-                    {formik.touched.name && formik.errors.name && (
+                    {formik.touched.systemName && formik.errors.systemName && (
                       <Form.Control.Feedback
                         type="invalid"
                         style={{ display: 'block' }}
                       >
-                        {formik.errors.name}
+                        {formik.errors.systemName}
                       </Form.Control.Feedback>
                     )}
                   </Form.Group>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
@@ -28,16 +28,21 @@ const PlanForm = ({
   const dispatch = useDispatch()
   const routeParams = useParams()
   const productId = routeParams.id
-  const initialValues = {
-    title: planData ? planData.title : '',
-    name: planData ? planData.name : '',
-    description: planData ? planData.description : '',
-    displayOrder: planData ? planData.displayOrder : '0',
-  }
   const allProducts = useSelector((state) => state.products.products)
 
+  const ProductTrialType = allProducts[productId].trialType
+
+  const initialValues = {
+    displayName: planData ? planData.displayName : '',
+    systemName: planData ? planData.systemName : '',
+    description: planData ? planData.description : '',
+    displayOrder: planData ? planData.displayOrder : '0',
+    alternativePlanID: planData ? planData.alternativePlanID : '',
+    trialPeriodInDays: planData ? planData.trialPeriodInDays : '0',
+  }
+
   const validationSchema = Yup.object().shape({
-    name: Yup.string()
+    systemName: Yup.string()
       .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
       .required(<FormattedMessage id="Unique-Name-is-required" />)
       .matches(
@@ -45,8 +50,8 @@ const PlanForm = ({
         <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
 
-    title: Yup.string()
-      .required(<FormattedMessage id="Title-is-required" />)
+    displayName: Yup.string()
+      .required(<FormattedMessage id="displayName-is-required" />)
       .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
 
     displayOrder: Yup.number()
@@ -54,7 +59,28 @@ const PlanForm = ({
       .integer(<FormattedMessage id="Display-Order-must-be-an-integer" />)
       .min(0, <FormattedMessage id="Display-Order-must-be-a-positive-number" />)
       .default(0),
+    alternativePlanID: Yup.string(),
+    trialPeriodInDays: Yup.number(),
   })
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!allProducts[productId].plan) {
+        try {
+          const plan = await getProductPlans(productId)
+          dispatch(
+            setAllPlans({
+              productId: productId,
+              data: plan.data.data,
+            })
+          )
+        } catch (error) {
+          console.error('Error fetching product plans:', error)
+        }
+      }
+    }
+
+    fetchData()
+  }, [])
 
   const formik = useFormik({
     initialValues,
@@ -62,11 +88,13 @@ const PlanForm = ({
     onSubmit: async (values, { setSubmitting }) => {
       if (type === 'create') {
         const createPlan = await createPlanRequest(productId, {
-          name: values.name,
-          title: values.title,
+          systemName: values.systemName,
+          displayName: values.displayName,
           productId: productId,
           description: values.description,
           displayOrder: values.displayOrder || 0,
+          alternativePlanID: values.alternativePlanID,
+          trialPeriodInDays: values.trialPeriodInDays || 0,
         })
 
         if (!allProducts[productId].plan) {
@@ -83,10 +111,12 @@ const PlanForm = ({
             planId: createPlan.data.data.id,
             productId: productId,
             data: {
-              name: values.name,
-              title: values.title,
+              systemName: values.systemName,
+              displayName: values.displayName,
               description: values.description,
               displayOrder: values.displayOrder || 0,
+              alternativePlanID: values.alternativePlanID,
+              trialPeriodInDays: values.trialPeriodInDays || 0,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: new Date().toISOString().slice(0, 19),
               id: createPlan.data.data.id,
@@ -100,10 +130,12 @@ const PlanForm = ({
       } else {
         const editPlan = await editPlanRequest(productId, {
           data: {
-            name: values.name,
-            title: values.title,
+            systemName: values.systemName,
+            displayName: values.displayName,
             description: values.description,
             displayOrder: values.displayOrder || 0,
+            alternativePlanID: values.alternativePlanID,
+            trialPeriodInDays: values.trialPeriodInDays || 0,
           },
           id: planData.id,
         })
@@ -113,10 +145,12 @@ const PlanForm = ({
             planId: planData.id,
             productId: productId,
             data: {
-              name: values.name,
-              title: values.title,
+              systemName: values.systemName,
+              displayName: values.displayName,
               description: values.description,
               displayOrder: values.displayOrder || 0,
+              alternativePlanID: values.alternativePlanID,
+              trialPeriodInDays: values.trialPeriodInDays || 0,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: planData.createdDate,
               id: planData.id,
@@ -129,7 +163,18 @@ const PlanForm = ({
       setSubmitting(false)
     },
   })
+  let alternativePlanIDOptions
 
+  if (allProducts[productId]?.plans) {
+    alternativePlanIDOptions = Object.values(allProducts[productId].plans)
+      .filter((item) => item.isPublished === true && planData?.id != item.id)
+      .map((item, index) => ({
+        value: item.id,
+        label: item.displayName,
+      }))
+  } else {
+    alternativePlanIDOptions = []
+  }
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
@@ -146,24 +191,24 @@ const PlanForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Title" />{' '}
+                <FormattedMessage id="Display-Name" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
                 className="form-control"
                 type="text"
-                id="title"
-                name="title"
+                id="displayName"
+                name="displayName"
                 onChange={formik.handleChange}
-                value={formik.values.title}
+                value={formik.values.displayName}
               />
 
-              {formik.touched.title && formik.errors.title && (
+              {formik.touched.displayName && formik.errors.displayName && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.title}
+                  {formik.errors.displayName}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
@@ -171,13 +216,13 @@ const PlanForm = ({
           <div className="mb-3">
             {type === 'create' && (
               <AutoGenerateInput
-                label={<FormattedMessage id="Name" />}
-                id="name"
-                value={formik.values.title}
-                name={formik.values.name}
+                label={<FormattedMessage id="System-Name" />}
+                id="systemName"
+                value={formik.values.displayName}
+                name={formik.values.systemName}
                 onChange={formik.handleChange}
                 onGenerateUniqueName={(generatedUniqueName) => {
-                  formik.setFieldValue('name', generatedUniqueName)
+                  formik.setFieldValue('systemName', generatedUniqueName)
                 }}
                 onAutoGenerateClick={() => {
                   formik.setFieldValue(
@@ -188,12 +233,12 @@ const PlanForm = ({
                 isAutoGenerated={formik.values.isAutoGenerated}
               />
             )}
-            {formik.touched.name && formik.errors.name && (
+            {formik.touched.systemName && formik.errors.systemName && (
               <Form.Control.Feedback
                 type="invalid"
                 style={{ display: 'block' }}
               >
-                {formik.errors.name}
+                {formik.errors.systemName}
               </Form.Control.Feedback>
             )}
           </div>
@@ -242,6 +287,67 @@ const PlanForm = ({
                   {formik.errors.displayOrder}
                 </Form.Control.Feedback>
               )}
+            </Form.Group>
+          </div>
+          {ProductTrialType == 3 && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <FormattedMessage id="Trial-Period-In-Days" />
+                </Form.Label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="trialPeriodInDays"
+                  name="trialPeriodInDays"
+                  onChange={formik.handleChange}
+                  value={formik.values.trialPeriodInDays}
+                />
+
+                {formik.touched.trialPeriodInDays &&
+                  formik.errors.trialPeriodInDays && (
+                    <Form.Control.Feedback
+                      type="invalid"
+                      style={{ display: 'block' }}
+                    >
+                      {formik.errors.trialPeriodInDays}
+                    </Form.Control.Feedback>
+                  )}
+              </Form.Group>
+            </div>
+          )}
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="Alternative-Plan" />{' '}
+              </Form.Label>
+              <select
+                className="form-control"
+                name="alternativePlanID"
+                id="alternativePlanID"
+                value={formik.values.alternativePlanID}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                disabled={!productId}
+              >
+                <option value="">
+                  <FormattedMessage id="Select-Option" />
+                </option>
+                {alternativePlanIDOptions?.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.alternativePlanID &&
+                formik.errors.alternativePlanID && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.alternativePlanID}
+                  </Form.Control.Feedback>
+                )}
             </Form.Group>
           </div>
         </Modal.Body>

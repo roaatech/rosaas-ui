@@ -33,6 +33,8 @@ import {
 } from '../../../../const'
 import { Wrapper } from './ProductFeaturesList.styled'
 import { toast } from 'react-toastify'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import { BsStars } from 'react-icons/bs'
 
 export const ProductFeaturesList = ({ productId }) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
@@ -85,10 +87,10 @@ export const ProductFeaturesList = ({ productId }) => {
 
   const TableRow = (props) => {
     const {
-      name,
+      systemName,
       description,
       type,
-      title,
+      displayName,
       displayOrder,
       reset,
       id,
@@ -104,10 +106,10 @@ export const ProductFeaturesList = ({ productId }) => {
       <>
         <tr>
           <td>
-            <span className="fw-normal">{title}</span>
+            <span className="fw-normal">{displayName}</span>
           </td>
           <td>
-            <span className="fw-normal">{name}</span>
+            <span className="fw-normal">{systemName}</span>
           </td>
           <td className="description">
             <DescriptionCell data={{ description }} />
@@ -170,7 +172,21 @@ export const ProductFeaturesList = ({ productId }) => {
 
   return (
     <Wrapper>
-      <>
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'form',
+              id: productId,
+              label: 'Add-Feature',
+              component: 'addFeature',
+              icon: <BsStars />,
+            },
+          ]}
+        />
+      </div>
+      <div className="border-top-1 border-light">
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -180,10 +196,10 @@ export const ProductFeaturesList = ({ productId }) => {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Title" />
+                    <FormattedMessage id="Display-Name" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Name" />
+                    <FormattedMessage id="System-Name" />
                   </th>
                   <th className="border-bottom description">
                     <FormattedMessage id="Description" />
@@ -244,7 +260,7 @@ export const ProductFeaturesList = ({ productId }) => {
             />
           </>
         </ThemeDialog>
-      </>
+      </div>
     </Wrapper>
   )
 }

@@ -15,7 +15,6 @@ const setAllProduct = (state, action) => {
 
 const productInfo = (state, action) => {
   const currentProducts = { ...current(state.products) }
-
   const mergedObject = _.mergeWith(
     {},
     currentProducts[action.payload.id],
@@ -96,7 +95,49 @@ const removeProductStore = (state, action) => {
   delete currentProducts[action.payload]
   state.products = currentProducts
 }
+const AdminPrivileges = (state, action) => {
+  const currentProducts = JSON.parse(JSON.stringify(state.products))
+  const { id, data } = action.payload
+  if (currentProducts[id]) {
+    Object.keys(data).forEach((key) => {
+      const item = data[key]
+      currentProducts[id].AdminPrivileges = {
+        ...currentProducts[id].AdminPrivileges,
+        [item.id]: {
+          ...item,
+        },
+      }
+    })
+  }
 
+  state.products = currentProducts
+}
+const AdminPrivilegesChangeAttr = (state, action) => {
+  const { productId, itemId, attr, value } = action.payload
+  const currentProducts = JSON.parse(JSON.stringify(state.products))
+  currentProducts[productId].AdminPrivileges[itemId][attr] = value
+  state.products = currentProducts
+}
+const deleteProductAdminPrivileges = (state, action) => {
+  const { productId, itemId } = action.payload
+  const currentProducts = JSON.parse(JSON.stringify(state.products))
+  const productToUpdate = currentProducts[productId]
+  if (productToUpdate && productToUpdate.AdminPrivileges) {
+    const updatedAdminPrivileges = {
+      ...productToUpdate.AdminPrivileges,
+    }
+    delete updatedAdminPrivileges[itemId]
+    productToUpdate.AdminPrivileges = updatedAdminPrivileges
+  }
+
+  state.products = currentProducts
+}
+const productsChangeAttr = (state, action) => {
+  const { productId, attr, value } = action.payload
+  const currentProducts = JSON.parse(JSON.stringify(current(state.products)))
+  currentProducts[productId][attr] = value
+  state.products[productId] = currentProducts[productId]
+}
 export {
   productWarningsStore,
   setAllProduct,
@@ -106,4 +147,8 @@ export {
   clientCredentials,
   deleteClientSecret,
   clientCredentialsInfo,
+  AdminPrivileges,
+  deleteProductAdminPrivileges,
+  AdminPrivilegesChangeAttr,
+  productsChangeAttr,
 }

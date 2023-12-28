@@ -85,13 +85,13 @@ export default function ProductFeaturePlan({ children }) {
   const x = list?.map((item) => {
     if (!plansObj[item.plan.id]) {
       plansObj[item.plan.id] = {
-        name: item.plan.name,
+        name: item.plan.systemName,
         index: Object.keys(plansObj).length,
       }
     }
     if (!plansObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
-        name: item.feature.name,
+        name: item.feature.systemName,
         index: Object.keys(featuresObj).length,
       }
     }
@@ -107,10 +107,10 @@ export default function ProductFeaturePlan({ children }) {
     return (
       <tr>
         <td>
-          <span className="fw-normal">{feature.name}</span>
+          <span className="fw-normal">{feature.systemName}</span>
         </td>
         <td>
-          <span className="fw-normal">{plan.name}</span>
+          <span className="fw-normal">{plan.systemName}</span>
         </td>
         <td className="description">
           <DescriptionCell data={{ description }} />

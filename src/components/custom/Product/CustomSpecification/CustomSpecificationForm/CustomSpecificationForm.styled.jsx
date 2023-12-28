@@ -31,7 +31,7 @@ export const Wrapper = styled.div`
     color: var(--second-color);
   }
   .passive-toggle {
-    color: #ccc;
+    color: var(--passive-color);
   }
   .Permission {
     font-weight: 400;

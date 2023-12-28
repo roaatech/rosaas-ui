@@ -22,7 +22,7 @@ export const fetchSubscriptionDetails = async (data) => {
         })
       ),
       //plan Info
-      planName: response.data.data.plan.title,
+      planName: response.data.data.plan.displayName,
       planId: response.data.data.plan.id,
       planPrice: response.data.data.planPrice.price,
       planCycle: response.data.data.planPrice.cycle,

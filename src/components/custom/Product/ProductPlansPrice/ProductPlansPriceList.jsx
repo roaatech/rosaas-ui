@@ -11,6 +11,8 @@ import {
   ButtonGroup,
   Dropdown,
   Table,
+  OverlayTrigger,
+  Tooltip,
 } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
@@ -20,6 +22,7 @@ import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 
 import {
+  PlansChangeAttr,
   PlansPriceChangeAttr,
   deletePlanPrice,
   setAllPlans,
@@ -37,6 +40,16 @@ import { toast } from 'react-toastify'
 import { useIntl } from 'react-intl'
 import ShowDetails from '../../Shared/ShowDetails/ShowDetails'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import {
+  BsCurrencyDollar,
+  BsFillLockFill,
+  BsFillUnlockFill,
+  BsToggleOff,
+  BsToggleOn,
+} from 'react-icons/bs'
+import { setActiveIndex } from '../../../../store/slices/tenants'
+import { GiShadowFollower } from 'react-icons/gi'
 export default function ProductPlansPriceList({ children }) {
   const intl = useIntl()
   const dispatch = useDispatch()
@@ -45,6 +58,7 @@ export default function ProductPlansPriceList({ children }) {
     getProductPlanPriceList,
     deletePlanPriceReq,
     PlansPricePublishedReq,
+    publishPlan,
   } = useRequest()
   const [visible, setVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
@@ -105,7 +119,11 @@ export default function ProductPlansPriceList({ children }) {
       setConfirm(true)
     }
   }
-
+  const toastError = (message) => {
+    return toast.error(intl.formatMessage({ id: message }), {
+      position: toast.POSITION.TOP_CENTER,
+    })
+  }
   const editForm = async (id) => {
     if (listData[id].isSubscribed == true) {
       toast.error(
@@ -161,24 +179,61 @@ export default function ProductPlansPriceList({ children }) {
   })
 
   const handleCreatePlanPrice = (plan, cycle) => {
-    setCurrentPlanId(plan)
-    setCurrentCycle(cycle)
-    setVisible(true)
-    setPopUpLable('Add-Plan-Price')
-    setType('create')
+    if (plansData?.[plan].tenancyType == 3 && (cycle == 10 || cycle == 11)) {
+      toast.error(
+        intl.formatMessage({
+          id: 'Cannot-add-to-this-type-of-cycle',
+        }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+    } else if (plansData?.[plan].tenancyType != 1) {
+      setCurrentPlanId(plan)
+      setCurrentCycle(cycle)
+      setVisible(true)
+      setPopUpLable('Add-Plan-Price')
+      setType('create')
+    } else {
+      toast.error(
+        intl.formatMessage({
+          id: 'Cannot-add-to-this-type-of-plan',
+        }),
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      )
+    }
   }
 
   const handleData = (data) => {
-    // console.log({ data })
     return {
-      Plan: data.plan.title,
+      'System-Name': data.systemName,
+      'System-Lock-Status': data.isLockedBySystem ? 'Yes' : 'No',
+      Plan: data.plan.displayName,
       cycle: cycle[data.cycle],
       Published: data.isPublished ? 'Yes' : 'No',
       Subscribed: data.isSubscribed ? 'Yes' : 'No',
       Description: data.description,
+
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
     }
+  }
+  const togglePublishPlan = async (id, isPublished) => {
+    await publishPlan(productId, {
+      id,
+      isPublished: !isPublished,
+    })
+
+    dispatch(
+      PlansChangeAttr({
+        productId,
+        planId: id,
+        attr: 'isPublished',
+        value: !isPublished,
+      })
+    )
   }
 
   const TableRow = () => {
@@ -202,7 +257,7 @@ export default function ProductPlansPriceList({ children }) {
                         variant="link"
                         className="text-dark m-0 p-0 planFeatureButton"
                       >
-                        {listData[tableData[planItem + ',' + item]]?.price}{' '}
+                        {listData[tableData[planItem + ',' + item]]?.price} ${' '}
                         {listData[tableData[planItem + ',' + item]]
                           ?.isPublished ? (
                           <span className="label green">
@@ -288,7 +343,22 @@ export default function ProductPlansPriceList({ children }) {
 
   return (
     <Wrapper>
-      <div>
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'form',
+              id: productId,
+              label: 'Add-Plan-Price',
+              component: 'addPlanPrice',
+              icon: <BsCurrencyDollar />,
+              setActiveIndex: setActiveIndex,
+            },
+          ]}
+        />
+      </div>
+      <div className="border-top-1 border-light">
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -298,10 +368,62 @@ export default function ProductPlansPriceList({ children }) {
               <thead>
                 <tr>
                   <th className="border-bottom"></th>
-                  {Object.values(plansData).map((item, index) => (
-                    <th key={index} className="border-bottom">
-                      {item.title}
-                    </th>
+                  {Object.keys(plansData).map((item, index) => (
+                    <>
+                      <th
+                        className="clickable-icon"
+                        key={index}
+                        onClick={() =>
+                          togglePublishPlan(item, plansData[item].isPublished)
+                        }
+                      >
+                        <span className="mr-2">
+                          {plansData[item].isPublished ? (
+                            <span className="label green">
+                              <BsToggleOn />
+                            </span>
+                          ) : (
+                            <span className="label grey">
+                              <BsToggleOff />
+                            </span>
+                          )}
+                        </span>
+                        {plansData[item].displayName}
+                        <span className="ml-2 ">
+                          <OverlayTrigger
+                            trigger={['hover', 'focus']}
+                            overlay={
+                              <Tooltip>
+                                {plansData[item].isLockedBySystem
+                                  ? intl.formatMessage({
+                                      id: 'Locked-by-system',
+                                    })
+                                  : intl.formatMessage({
+                                      id: 'Not-locked-by-system',
+                                    })}
+                              </Tooltip>
+                            }
+                          >
+                            <span
+                              className={`${
+                                plansData[item].isLockedBySystem
+                                  ? 'lock-active'
+                                  : 'lock-passive'
+                              }`}
+                            >
+                              {plansData[item].isLockedBySystem ? (
+                                <BsFillLockFill />
+                              ) : (
+                                <BsFillUnlockFill />
+                              )}
+                              <span className="ml-1">
+                                {plansData[item].isLockedBySystem}
+                              </span>
+                            </span>
+                          </OverlayTrigger>
+                        </span>
+                      </th>
+                    </>
                   ))}
                 </tr>
               </thead>

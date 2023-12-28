@@ -63,7 +63,7 @@ export default function SubsGeneralHistoryData(data) {
                 <div className="mb-0 w-25 fw-bold">
                   <FormattedMessage id="Plan" />
                 </div>
-                <div className=" card-stats">{subHistory?.plan.title}</div>
+                <div className=" card-stats">{subHistory?.plan.displayName}</div>
               </div>
 
               {/* subsc */}

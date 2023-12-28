@@ -2,7 +2,6 @@ import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import useRequest from '../../axios/apis/useRequest'
 import { Wrapper } from './ProductDetails.styled'
@@ -12,6 +11,7 @@ import { TabView, TabPanel } from 'primereact/tabview'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   productInfo,
+  productsChangeAttr,
   removeProductStore,
 } from '../../store/slices/products/productsSlice.js'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
@@ -25,6 +25,7 @@ import {
   BsStars,
   BsUiChecks,
   BsCurrencyDollar,
+  BsRecycle,
 } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
 import ProductFeaturePlan from '../../components/custom/Product/ProductFeaturePlan/ProductFeaturePlan'
@@ -32,25 +33,27 @@ import ProductFeaturesList from '../../components/custom/Product/ProductFeatures
 import ProductPlansList from '../../components/custom/Product/ProductPlansList/ProductPlansList'
 import ProductPlansPriceList from '../../components/custom/Product/ProductPlansPrice/ProductPlansPriceList'
 import ProductCustomSpecificationList from '../../components/custom/Product/CustomSpecification/ProductCustomSpecificationList'
-import { MdEditNote } from 'react-icons/md'
-import { activeTab } from '../../const/product'
+import {
+  MdEditNote,
+  MdFactCheck,
+  MdOutlinePublishedWithChanges,
+  MdOutlineUnpublished,
+} from 'react-icons/md'
+import { PublishStatus, activeTab } from '../../const/product'
 import ProductWarnings from '../../components/custom/Product/ProductWarnings/ProductWarnings'
-import { productWarningsStore } from '../../store/slices/products/productsSlice'
-import { WarningVariant } from '../../const/WarningsSettings'
 import ClientCredentials from '../../components/custom/Product/ClientCredentials/ClientCredentials'
+import Label from '../../components/custom/Shared/label/Label.jsx'
 
 const ProductDetails = () => {
   const routeParams = useParams()
 
-  const listData = useSelector((state) => state.products.products)
-  let productData = listData[routeParams.id]
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
   const [activeIndex, setActiveIndex] = useState(0)
   useEffect(() => {
     setActiveIndex(activeTab.details)
   }, [routeParams.id])
-  const { getProduct, deleteProductReq } = useRequest()
+  const { getProduct, deleteProductReq, publishProduct } = useRequest()
 
   useEffect(() => {
     ;(async () => {
@@ -58,12 +61,26 @@ const ProductDetails = () => {
       dispatch(productInfo(productData.data.data))
     })()
   }, [visible, routeParams?.id])
+  const listData = useSelector((state) => state.products.products)
+  let productData = listData[routeParams.id]
 
   const deleteProduct = async () => {
     await deleteProductReq({ id: routeParams?.id })
     dispatch(removeProductStore(routeParams?.id))
   }
-  let [errorNums, setErrorNums] = useState(0)
+  const togglePublishProduct = async (isPublished) => {
+    await publishProduct(routeParams.id, {
+      isPublished: !isPublished,
+    })
+
+    dispatch(
+      productsChangeAttr({
+        productId: routeParams.id,
+        attr: 'isPublished',
+        value: !isPublished,
+      })
+    )
+  }
 
   return (
     <Wrapper>
@@ -79,10 +96,34 @@ const ProductDetails = () => {
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Product-Details" /> : {productData.name}
+              <FormattedMessage id="Product-Details" /> :{' '}
+              {productData.systemName}{' '}
+              <span className="ml-2">
+                <Label {...PublishStatus[productData?.isPublished]} />
+              </span>
             </h4>
             <DynamicButtons
               buttons={[
+                {
+                  order: 4,
+                  type: 'action',
+                  label: productData?.isPublished ? 'Unpublished' : 'Published',
+                  func: () => togglePublishProduct(productData?.isPublished),
+                  icon: productData?.isPublished ? (
+                    <MdOutlineUnpublished className="mx-2" />
+                  ) : (
+                    <MdOutlinePublishedWithChanges className="mx-2" />
+                  ),
+                },
+                {
+                  order: 4,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Trial-Period',
+                  component: 'addTrial',
+                  icon: <BsRecycle />,
+                  setActiveIndex: setActiveIndex,
+                },
                 {
                   order: 4,
                   type: 'form',
@@ -101,6 +142,7 @@ const ProductDetails = () => {
                   icon: <BsPencilSquare />,
                   setActiveIndex: setActiveIndex,
                 },
+
                 {
                   order: 4,
                   type: 'form',
@@ -163,42 +205,62 @@ const ProductDetails = () => {
           >
             {productData && (
               <TabPanel header={<FormattedMessage id="Details" />}>
-                <ProductDetailsTab data={productData} />
+                <ProductDetailsTab
+                  data={productData}
+                  setActiveIndex={setActiveIndex}
+                />
               </TabPanel>
             )}
             <TabPanel header={<FormattedMessage id="Client-Credentials" />}>
-              <ClientCredentials data={productData} />
+              <ClientCredentials
+                data={productData}
+                setActiveIndex={setActiveIndex}
+              />
             </TabPanel>
+
+            {/* <TabPanel header={<FormattedMessage id="User-Management" />}>
+              <ProductsUsersManagement />
+            </TabPanel> */}
             <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
               <ProductCustomSpecificationList
                 productId={productData.id}
-                productName={productData.name}
+                productName={productData.systemName}
+                setActiveIndex={setActiveIndex}
               />
             </TabPanel>
 
             <TabPanel header={<FormattedMessage id="Plans" />}>
               <ProductPlansList
                 productId={productData.id}
-                productName={productData.name}
+                productName={productData.systemName}
+                setActiveIndex={setActiveIndex}
               />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Features" />}>
               <ProductFeaturesList
                 productId={productData.id}
-                productName={productData.name}
+                productName={productData.systemName}
+                setActiveIndex={setActiveIndex}
               />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Plan's-Features" />}>
-              <ProductFeaturePlan productId={productData.id} />
+              <ProductFeaturePlan
+                productId={productData.id}
+                setActiveIndex={setActiveIndex}
+              />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Plans-Prices" />}>
-              <ProductPlansPriceList productId={productData.id} />
+              <ProductPlansPriceList
+                productId={productData.id}
+                setActiveIndex={setActiveIndex}
+              />
             </TabPanel>
 
             <TabPanel header={<FormattedMessage id="Subscriptions" />}>
               <ProductTenantsList
                 productId={productData.id}
-                productName={productData.name}
+                productName={productData.systemName}
+                setActiveIndex={setActiveIndex}
               />
             </TabPanel>
             <TabPanel
@@ -214,7 +276,10 @@ const ProductDetails = () => {
               }
               className={productData?.warningsNum > 0 && 'warnings'}
             >
-              <ProductWarnings productId={productData.id} />
+              <ProductWarnings
+                productId={productData.id}
+                setActiveIndex={setActiveIndex}
+              />
             </TabPanel>
           </TabView>
         </div>

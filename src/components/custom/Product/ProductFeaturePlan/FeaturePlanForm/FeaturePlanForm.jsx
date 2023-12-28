@@ -23,6 +23,7 @@ import {
 import { TabPanel, TabView } from 'primereact/tabview'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
+import { activeTab } from '../../../../../const/product.js'
 
 const FeaturePlanForm = ({
   type,
@@ -74,7 +75,7 @@ const FeaturePlanForm = ({
       ? allFeatureArray.map((item) => {
           return {
             value: item.id,
-            label: item.title,
+            label: item.displayName,
             type: item.type == 1 ? 'Number' : 'Boolean',
           }
         })
@@ -84,7 +85,7 @@ const FeaturePlanForm = ({
 
   const planOptions = allPlans
     ? allPlansArray.map((item) => {
-        return { value: item.id, label: item.title }
+        return { value: item.id, label: item.displayName }
       })
     : []
 
@@ -224,14 +225,15 @@ const FeaturePlanForm = ({
               },
               feature: {
                 id: values.feature,
-                title: featureOptions.find(
+                displayName: featureOptions.find(
                   (item) => item.value === values.feature
                 ).label,
               },
               plan: {
                 id: values.plan,
-                title: planOptions.find((item) => item.value === values.plan)
-                  .label,
+                displayName: planOptions.find(
+                  (item) => item.value === values.plan
+                ).label,
               },
               id: createFeaturePlan.data.data.id,
               editedDate: new Date().toISOString().slice(0, 19),
@@ -239,9 +241,8 @@ const FeaturePlanForm = ({
             },
           })
         )
-
         if (setActiveIndex) {
-          setActiveIndex(activeIndex.plansFeatures)
+          setActiveIndex(activeTab.plansFeatures)
         }
       } else {
         const dataDetails = {
@@ -278,7 +279,13 @@ const FeaturePlanForm = ({
       setVisible && setVisible(false)
     },
   })
-  const [availableFeatures, setAvailableFeatures] = useState(featureOptions)
+  const [availableFeatures, setAvailableFeatures] = useState()
+  useEffect(() => {
+    if (!featureOptions) {
+      return
+    }
+    setAvailableFeatures(featureOptions)
+  }, [featureOptions])
 
   useEffect(() => {
     if (!featureOptions) {

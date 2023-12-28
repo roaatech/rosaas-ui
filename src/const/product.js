@@ -1,12 +1,16 @@
 import {
   BsFillCheckCircleFill,
   BsFillExclamationCircleFill,
+  BsFillLockFill,
+  BsFillUnlockFill,
 } from 'react-icons/bs'
+import { FiLock, FiUnlock } from 'react-icons/fi'
 import {
   MdOutlineUnpublished,
   MdOutlinePublishedWithChanges,
   MdPayments,
   MdOutlinePayments,
+  MdOutlineLock,
 } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
 
@@ -52,6 +56,20 @@ export const PublishStatus = {
     icon: <MdOutlineUnpublished />,
   },
 }
+export const systemLockStatus = {
+  true: {
+    background: '#eff9f6',
+    value: <FormattedMessage id="Locked" />,
+    color: '#00a675',
+    icon: <BsFillLockFill />,
+  },
+  false: {
+    background: '#f5e8e4',
+    value: <FormattedMessage id="Unlocked" />,
+    color: '#d26b4e',
+    icon: <BsFillUnlockFill />,
+  },
+}
 export const subscriptionStatus = {
   true: {
     background: '#eff9f6',
@@ -76,6 +94,18 @@ export const expirationStatus = {
     color: '#d26b4e',
   },
 }
+export const isMajorStatus = {
+  true: {
+    background: '#eff9f6',
+    value: <FormattedMessage id="true" />,
+    color: '#00a675',
+  },
+  false: {
+    background: '#f5e8e4',
+    value: <FormattedMessage id="false" />,
+    color: '#d26b4e',
+  },
+}
 
 export const cycle = {
   2: 'Week',
@@ -83,11 +113,23 @@ export const cycle = {
   4: 'Year',
   5: 'One-Day',
   6: 'Three-Day',
+  10: 'Custom',
+  11: 'Unlimited',
+}
+export const ProductTrialType = {
+  1: 'No-Trial',
+  2: 'Product-Has-Trial-Plan',
+  3: 'Each-Plan-Has-Optional-Trial-Period',
 }
 
 export const urlIsOverridden = {
   true: { background: '#eee5ff', value: 'Yes' },
   false: { background: '#e1f0ff', value: 'No' },
+}
+export const tenancyTypeEnum = {
+  1: 'Unlimited',
+  2: 'Limited',
+  3: 'Planed',
 }
 export const featureTypeMap = {
   1: 'Number',
