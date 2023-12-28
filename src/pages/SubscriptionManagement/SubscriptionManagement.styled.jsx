@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-const secondColor = '#ffab03'
 export const Wrapper = styled.div`
   .green {
     color: var(--green);
@@ -105,7 +104,7 @@ export const Wrapper = styled.div`
     background-color: var(--second-color);
   }
   .passive-toggle {
-    color: #ccc;
+    color: var(--passive-color);
     cursor: pointer;
   }
   .active-toggle {
@@ -121,7 +120,7 @@ export const Wrapper = styled.div`
     color: var(--second-color);
   }
   .passive-reset {
-    color: #ccc;
+    color: var(--passive-color);
   }
   .active-reset:hover {
     color: #ffab03b4;

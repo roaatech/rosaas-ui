@@ -64,6 +64,8 @@ export const ProductPlansList = ({ productId }) => {
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
   const intl = useIntl()
+  const ProductTrialType = list[productId]?.trialType
+
   const handleDeletePlan = async () => {
     if (list?.plans[currentId]?.isSubscribed) {
       toast.error(
@@ -149,6 +151,8 @@ export const ProductPlansList = ({ productId }) => {
       subscribers,
       isLockedBySystem,
       tenancyType,
+      alternativePlanID,
+      trialPeriodInDays,
     } = props
     const publishStatus = isPublished ? true : false
 
@@ -169,6 +173,7 @@ export const ProductPlansList = ({ productId }) => {
           <td>
             <span>{tenancyTypeEnum[tenancyType]}</span>
           </td>
+
           <td>
             <span>
               <Label {...systemLockStatus[isLockedBySystem]} />
@@ -193,7 +198,14 @@ export const ProductPlansList = ({ productId }) => {
           <td>
             <span className={`fw-normal`}>{displayOrder}</span>
           </td>
-
+          <td>
+            <span>{list.plans?.[alternativePlanID]?.displayName}</span>
+          </td>
+          {ProductTrialType == 3 && (
+            <td>
+              <span>{trialPeriodInDays}</span>
+            </td>
+          )}
           <td>
             <span className="fw-normal">
               <TableDate createdDate={createdDate} editedDate={editedDate} />
@@ -301,6 +313,14 @@ export const ProductPlansList = ({ productId }) => {
                   <th className="border-bottom">
                     <FormattedMessage id="Display-Order" />
                   </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Alternative-Plan" />
+                  </th>
+                  {ProductTrialType == 3 && (
+                    <th className="border-bottom">
+                      <FormattedMessage id="Trial-Period-In-Days" />
+                    </th>
+                  )}
                   <th className="border-bottom">
                     <FormattedMessage id="Date" />
                   </th>

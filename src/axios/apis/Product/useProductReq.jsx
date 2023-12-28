@@ -27,6 +27,18 @@ const useTenantReq = () => {
   const deleteProductReq = async (data) => {
     return await Request.delete(`management/sadmin/v1/Products/${data.id}`)
   }
+  const changeProductTrialType = async (productId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/Products/${productId}/TrialType`,
+      data
+    )
+  }
+  const publishProduct = async (productId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/Products/${productId}/publish`,
+      data
+    )
+  }
 
   return {
     createProductRequest,
@@ -36,6 +48,8 @@ const useTenantReq = () => {
     getProductList,
     deleteProductReq,
     getProductWarnings,
+    changeProductTrialType,
+    publishProduct,
   }
 }
 

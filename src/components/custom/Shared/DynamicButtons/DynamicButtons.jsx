@@ -22,6 +22,7 @@ import UpDowngradeForm from '../../tenant/SubscriptionManagement/UpgradeForm/UpD
 import CreateSecretForm from '../../Product/ClientCredentials/CreateSecretForm/CreateSecretForm'
 import CreateTenantUserForm from '../../tenant/TenantsUsersManagement/CreateTenantUserForm/CreateTenantUserForm'
 import CreateProductUserForm from '../../Product/ProductsUsersManagement/CreateProductUserForm/CreateProductUserForm'
+import TrialForm from '../../Product/TrialForm/TrialForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -142,6 +143,18 @@ const DynamicButtons = ({ buttons }) => {
       <>
         <PlanForm
           popupLabel={<FormattedMessage id="Add-Plan" />}
+          type={'create'}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+        />
+      </>
+    ),
+    addTrial: () => (
+      <>
+        <TrialForm
+          popupLabel={<FormattedMessage id="Trial-Period" />}
           type={'create'}
           visible={visible}
           setVisible={setVisible}

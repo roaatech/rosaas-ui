@@ -63,6 +63,8 @@ const useRequest = () => {
     deleteProductReq,
     getProductWarnings,
     getProductListPublic,
+    changeProductTrialType,
+    publishProduct,
   } = useProductReq()
   const {
     createClientSecret,
@@ -208,6 +210,8 @@ const useRequest = () => {
     clientAdminPrivileges,
     EntityAdminPrivileges,
     deleteAdminPrivileges,
+    changeProductTrialType,
+    publishProduct,
   }
 }
 export default useRequest
