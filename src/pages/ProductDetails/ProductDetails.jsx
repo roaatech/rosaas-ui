@@ -76,8 +76,9 @@ const ProductDetails = () => {
     dispatch(
       productsChangeAttr({
         productId: routeParams.id,
-        attr: 'isPublished',
-        value: !isPublished,
+        attributes: {
+          isPublished: !isPublished,
+        },
       })
     )
   }

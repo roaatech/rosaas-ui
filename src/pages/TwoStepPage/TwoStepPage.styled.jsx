@@ -19,7 +19,8 @@ export const Wrapper = styled.div`
     background-color: var(--second-color) !important;
     color: var(--primary4) !important;
   }
-  /* .p-steps-current .p-menuitem-link {
-    margin-right: 90px;
-  } */
+  .form-check-input:checked {
+    background-color: var(--second-color);
+    border-color: var(--second-color);
+  }
 `

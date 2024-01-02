@@ -16,7 +16,12 @@ import { FormattedMessage } from 'react-intl'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { ProductTrialType } from '../../../../const/product'
+import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import useRequest from '../../../../axios/apis/useRequest'
+import { setAllPlans } from '../../../../store/slices/products/productsSlice'
 
 const ProductDetailsTab = ({ data }) => {
   const [code, setCode] = useState(data.apiKey)
@@ -29,6 +34,27 @@ const ProductDetailsTab = ({ data }) => {
     }, 2000)
   }
   let direction = useSelector((state) => state.main.direction)
+  const listData = useSelector((state) => state.products.products)
+  const dispatch = useDispatch()
+
+  const params = useParams()
+  const { getProductPlans } = useRequest()
+  const productId = params.id
+  useEffect(() => {
+    ;(async () => {
+      if (listData[productId]) {
+        if (!listData[productId].plans && data?.trialType == 2) {
+          const planData = await getProductPlans(productId)
+          dispatch(
+            setAllPlans({
+              productId: productId,
+              data: planData?.data.data,
+            })
+          )
+        }
+      }
+    })()
+  }, [productId])
 
   return (
     <Wrapper>
@@ -64,6 +90,16 @@ const ProductDetailsTab = ({ data }) => {
                       </td>
                       <td className=" card-stats">{data.client?.systemName}</td>
                     </tr>
+                    {data?.trialType == 2 && (
+                      <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                        <td className="mb-0 w-50 fw-bold">
+                          <FormattedMessage id="Trial-Period-In-Days" />
+                        </td>
+                        <td className=" card-stats">
+                          {data?.trialPeriodInDays}
+                        </td>
+                      </tr>
+                    )}
                   </Card.Body>
                 </Col>
                 <Col
@@ -117,6 +153,30 @@ const ProductDetailsTab = ({ data }) => {
                         </span>
                       </td>
                     </tr>
+                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                      <td className="mb-0 w-50 fw-bold">
+                        <FormattedMessage id="Trial-Type" />
+                      </td>
+                      <td className=" card-stats">
+                        {ProductTrialType[data?.trialType] && (
+                          <FormattedMessage
+                            id={ProductTrialType[data?.trialType]}
+                          />
+                        )}
+                      </td>
+                    </tr>
+                    {data?.trialType == 2 && (
+                      <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                        <td className="mb-0 w-50 fw-bold">
+                          <FormattedMessage id="Trial-Plan" />
+                        </td>
+                        <td className=" card-stats">
+                          {listData[productId].plans &&
+                            listData[productId].plans?.[data?.trialPlanId]
+                              .displayName}
+                        </td>
+                      </tr>
+                    )}
                   </Card.Body>
                 </Col>
               </Row>

@@ -46,19 +46,19 @@ import { setAllTenant, setStep } from '../../store/slices/tenants'
 const CheckoutPage = (data) => {
   const createdTenantData = useSelector((state) => state.tenants?.createdTenant)
 
-  const orderID = data.orderID || createdTenantData?.orderId
-  const { hasToPay, setHasToPay } = data
+  const orderID = data.orderID || createdTenantData?.tenantData?.orderId
+
+  const { hasToPay, setHasToPay, displayName, systemName } = data
   useEffect(() => {
-    if (!createdTenantData) {
+    if (!createdTenantData.tenantData?.hasToPay) {
       return
     }
-    createdTenantData.hasToPay && setHasToPay(createdTenantData.hasToPay)
+    createdTenantData.tenantData?.hasToPay &&
+      setHasToPay(createdTenantData?.tenantData?.hasToPay)
   }, [])
 
   const { productId, subscribtionId } = useParams()
   const navigate = useNavigate()
-  const [invoiceNumber, setInvoiceNumber] = useState('')
-  console.log({ hasToPay })
   const [paymentMethod, setPaymentMethod] = useState(2)
 
   const dispatch = useDispatch()
@@ -88,7 +88,7 @@ const CheckoutPage = (data) => {
     (state) => state.products.products[productId]?.plansPrice
   )
   const [subscriptionData, setsubscriptionData] = useState('')
-  const tenantId = data?.currentTenant || createdTenantData?.id
+  const tenantId = data?.currentTenant || createdTenantData?.tenantData?.id
   useEffect(() => {
     if ((subscriptionData && update == 0) || !tenantId) {
       return
@@ -254,8 +254,68 @@ const CheckoutPage = (data) => {
                   <FormattedMessage id="Your-Subscribe-Information" />
                 </Card.Header>
                 <Card.Body>
-                  {/* product */}
+                  {/* tenant Display name */}
+
                   <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-2 ">
+                    <div className=" w-50 fw-bold">
+                      <FormattedMessage id="Display-Name" />
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            <FormattedMessage id="generated-automatically-by-system" />
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          <BsFillQuestionCircleFill
+                            style={{ color: '#6c757d' }}
+                            className={
+                              direction == 'rtl'
+                                ? 'ar-questionCircle mr-2'
+                                : 'ml-2'
+                            }
+                          />
+                        </span>
+                      </OverlayTrigger>
+                    </div>
+                    <div className=" card-stats">
+                      {displayName || createdTenantData?.displayName}
+                    </div>
+                  </div>
+
+                  {/* Tenant System Name */}
+
+                  <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                    <div className=" w-50 fw-bold">
+                      <FormattedMessage id="System-Name" />
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            <FormattedMessage id="generated-automatically-by-system" />
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          <BsFillQuestionCircleFill
+                            style={{ color: '#6c757d' }}
+                            className={
+                              direction == 'rtl'
+                                ? 'ar-questionCircle mr-2'
+                                : 'ml-2'
+                            }
+                          />
+                        </span>
+                      </OverlayTrigger>
+                    </div>
+                    <div className=" card-stats">
+                      {systemName || createdTenantData?.systemName}
+                    </div>
+                  </div>
+
+                  {/* product */}
+                  <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                     <div className=" w-50 fw-bold">
                       <FormattedMessage id="Product" />
                       <OverlayTrigger

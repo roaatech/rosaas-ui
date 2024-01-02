@@ -29,6 +29,8 @@ const CheckoutTenantReg = ({
   setCurrentTenant,
   setOrderID,
   setHasToPay,
+  setsystemName,
+  setDisplayName,
 }) => {
   const {
     createTenantRequest,
@@ -45,7 +47,6 @@ const CheckoutTenantReg = ({
   const { productId, subscribtionId } = useParams()
   const listProduct = useSelector((state) => state.products.products)
 
-  let list = Object.values(listProduct)
   const plansPriceList = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
@@ -169,8 +170,10 @@ const CheckoutTenantReg = ({
             systemName: uniqueName,
             displayName: title,
           })
+          setsystemName(uniqueName)
+          setDisplayName(title)
           setCurrentTenant(createTenant?.data.data.id)
-          setHasToPay(createTenant?.data.data.hasToPay)
+          setHasToPay(createTenant?.data.data?.hasToPay)
           setOrderID(createTenant?.data.data.orderId)
 
           dispatch(
@@ -237,10 +240,11 @@ const CheckoutTenantReg = ({
         systemName: uniqueName,
         displayName: title,
       })
-
+      setsystemName(uniqueName)
+      setDisplayName(title)
       setCurrentTenant(createTenant?.data.data.id)
       setOrderID(createTenant?.data.data.orderId)
-      setHasToPay(createTenant?.data.data.hasToPay)
+      setHasToPay(createTenant?.data.data?.hasToPay)
 
       dispatch(setStep(2))
     } catch (error) {
@@ -259,14 +263,25 @@ const CheckoutTenantReg = ({
     setFilteredSpecificationsArray(
       allSpecificationsArray.filter((spec) => spec.isPublished === true)
     )
+  }, [productId, listProduct])
+
+  useEffect(() => {
+    if (!filteredSpecificationsArray) {
+      return
+    }
 
     if (
-      allSpecificationsArray.filter((spec) => spec.isPublished === true)
-        .length <= 0
+      filteredSpecificationsArray &&
+      filteredSpecificationsArray.length === 0
     ) {
-      fetchData()
+      const timeoutId = setTimeout(() => {
+        fetchData()
+      }, 1000)
+
+      // Cleanup function to clear the timeout in case the component unmounts or filteredSpecificationsArray changes
+      return () => clearTimeout(timeoutId)
     }
-  }, [productId, listProduct])
+  }, [filteredSpecificationsArray])
 
   const handleSpecificationChange = (specificationId, event) => {
     const newValue = event.target.value
