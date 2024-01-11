@@ -102,16 +102,15 @@ const QuickAction = ({
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu className="dropdown-menu">
-              <Dropdown.Item
+              {/* <Dropdown.Item
                 onSelect={() => setVisibleTenant(true)}
                 className="text-dark"
               >
                 <span className="mx-2 ">
                   <BsFillPersonPlusFill className="product-icon" />
-                  {/* <FontAwesomeIcon icon={faPlus} className="plus icon-dark" /> */}
                 </span>
                 <FormattedMessage id="Add-Tenant" />
-              </Dropdown.Item>
+              </Dropdown.Item> */}
 
               <Dropdown.Item
                 onSelect={() => setVisibleTenantAndPay(true)}
@@ -121,7 +120,7 @@ const QuickAction = ({
                   <BsFillPersonPlusFill className="product-icon" />
                   {/* <FontAwesomeIcon icon={faPlus} className="plus icon-dark" /> */}
                 </span>
-                <FormattedMessage id="Tenant-Onboard" />
+                <FormattedMessage id="Add-Tenant" />
               </Dropdown.Item>
 
               {(userRole == 'productOwner' || userRole == 'superAdmin') && (

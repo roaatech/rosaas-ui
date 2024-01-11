@@ -436,5 +436,6 @@
   "Alternative-Plan": "خطة بديلة",
   "Trial-Period-In-Days": "فترة تجربة بالأيام",
   "Trial-Period-In-Days-Required-Number": "فترة التجربة بالأيام مطلوبة عندما يكون النوع رقمي",
-  "Trial-Plan": "خطة التجربة"
+  "Trial-Plan": "خطة التجربة",
+  "generated-automatically-by-system": "تم إنشاءه تلقائيًا بواسطة النظام"
 }

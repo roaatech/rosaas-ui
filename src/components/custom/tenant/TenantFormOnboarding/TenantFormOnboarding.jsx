@@ -157,7 +157,13 @@ const TenantFormOnboarding = ({
             systemName: values.systemName,
             displayName: values.displayName,
           })
-          dispatch(setTenantCreateData(createTenant.data.data))
+          dispatch(
+            setTenantCreateData({
+              tenantData: createTenant.data.data,
+              systemName: values.systemName,
+              displayName: values.displayName,
+            })
+          )
           dispatch(
             deleteAllPlan({
               productId: values.product,

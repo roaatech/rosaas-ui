@@ -38,8 +38,6 @@ const ProductListPage = () => {
       dispatch(setAllProduct(productList.data.data))
     })()
   }, [Object.values(listData).length > 0])
-  const description =
-    'product description product descriptionproduct descriptionproduct descriptionproduct description'
   const ProductCard = ({ product }) => {
     return (
       <Card className="p-1 m-1">
@@ -54,7 +52,7 @@ const ProductListPage = () => {
               <span className="product-name">{product?.displayName}</span>
             </Card.Title>
             <Card.Text className="product-description">
-              {product.description || description}
+              {product.description || '----'}
             </Card.Text>{' '}
           </Card.Body>
         </Link>{' '}

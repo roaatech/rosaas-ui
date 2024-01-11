@@ -436,5 +436,6 @@
   "Trial-Period": "Trial Period",
   "Trial-Type": "Trial Type",
   "Trial-Period-In-Days-Required-Number": "Trial Period In Days is required when Type is Number",
-  "Trial-Plan": "Trial Plan"
+  "Trial-Plan": "Trial Plan",
+  "generated-automatically-by-system": "Generated automatically by the system"
 }

@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom'
 import { Form } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import {
+  productsChangeAttr,
   setAllPlans,
   setAllProduct,
 } from '../../../../store/slices/products/productsSlice.js'
@@ -14,7 +15,7 @@ import { Wrapper } from './TrialForm.styled.jsx'
 import { FormattedMessage } from 'react-intl'
 import { ProductTrialType } from '../../../../const/product.js'
 
-const TrialForm = ({ updateTenant, setVisible, popupLabel }) => {
+const TrialForm = ({ setVisible, popupLabel }) => {
   const { changeProductTrialType, getProductList, getProductPlans } =
     useRequest()
   const [submitLoading] = useState()
@@ -46,9 +47,7 @@ const TrialForm = ({ updateTenant, setVisible, popupLabel }) => {
       <FormattedMessage id="This-field-is-required" />,
       function (value) {
         const trialType = this.resolve(Yup.ref('trialType'))
-        console.log(trialType)
         if (trialType == '2') {
-          console.log('*****')
           return value !== undefined && value !== ''
         }
         return true
@@ -60,7 +59,6 @@ const TrialForm = ({ updateTenant, setVisible, popupLabel }) => {
       function (value) {
         const trialType = this.resolve(Yup.ref('trialType'))
         if (trialType == '2') {
-          console.log('*****')
           return value !== undefined && value !== ''
         }
         return true
@@ -81,13 +79,40 @@ const TrialForm = ({ updateTenant, setVisible, popupLabel }) => {
     validationSchema: validationSchema,
 
     onSubmit: async (values) => {
-      const productTrialType = await changeProductTrialType(productId, {
-        trialType: values.trialType,
-        trialPlanId: values.trialPlanId,
-        trialPeriodInDays: values.trialPeriodInDays,
-      })
-
-      updateTenant()
+      if (formik.values.trialType == 2) {
+        const productTrialType = await changeProductTrialType(productId, {
+          trialType: parseInt(values.trialType),
+          trialPlanId: formik.values.trialType == 2 ? values.trialPlanId : null,
+          trialPeriodInDays:
+            formik.values.trialType == 2
+              ? parseInt(values.trialPeriodInDays)
+              : null,
+        })
+        dispatch(
+          productsChangeAttr({
+            productId,
+            attributes: {
+              trialType: parseInt(values.trialType),
+              trialPlanId: values.trialPlanId,
+              trialPeriodInDays: parseInt(values.trialPeriodInDays),
+            },
+          })
+        )
+      } else {
+        const productTrialType = await changeProductTrialType(productId, {
+          trialType: parseInt(values.trialType),
+        })
+        dispatch(
+          productsChangeAttr({
+            productId,
+            attributes: {
+              trialType: parseInt(values.trialType),
+              trialPlanId: '',
+              trialPeriodInDays: 0,
+            },
+          })
+        )
+      }
 
       setVisible && setVisible(false)
       setVisible && setVisible(false)
@@ -108,8 +133,6 @@ const TrialForm = ({ updateTenant, setVisible, popupLabel }) => {
 
   useEffect(() => {
     ;(async () => {
-      formik.setFieldValue('plan', '')
-      formik.setFieldValue('price', '')
       if (listData[productId]) {
         if (!listData[productId].plans) {
           const planData = await getProductPlans(productId)
@@ -181,7 +204,11 @@ const TrialForm = ({ updateTenant, setVisible, popupLabel }) => {
                   className="form-control"
                   name="trialPlanId"
                   id="trialPlanId"
-                  value={formik.values.trialPlanId}
+                  value={
+                    formik.values.trialType == 2
+                      ? formik.values.trialPlanId
+                      : ''
+                  }
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   disabled={!productId}
@@ -219,7 +246,11 @@ const TrialForm = ({ updateTenant, setVisible, popupLabel }) => {
                   id="trialPeriodInDays"
                   name="trialPeriodInDays"
                   onChange={formik.handleChange}
-                  value={formik.values.trialPeriodInDays}
+                  value={
+                    formik.values.trialType == 2
+                      ? formik.values.trialPeriodInDays
+                      : ''
+                  }
                 />
 
                 {formik.touched.trialPeriodInDays &&

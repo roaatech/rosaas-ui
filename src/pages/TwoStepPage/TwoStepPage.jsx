@@ -13,16 +13,12 @@ import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Steps } from 'primereact/steps'
 import {
-  faArrowUpShortWide,
-  faInfo,
   faInfoCircle,
   faMoneyCheckDollar,
-  faPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import { FormattedMessage } from 'react-intl'
-import { setStep } from '../../store/slices/tenants'
 import { Wrapper } from './TwoStepPage.styled'
 import {
   setAllPlansPrice,
@@ -32,10 +28,10 @@ import useRequest from '../../axios/apis/useRequest'
 import { cycle } from '../../const'
 
 const TwoStepProcessPage = () => {
-  const [showTenantForm, setShowTenantForm] = useState(true)
   const { productId, subscribtionId } = useParams()
   const dispatch = useDispatch()
-
+  const [displayName, setDisplayName] = useState()
+  const [systemName, setsystemName] = useState()
   const step = useSelector((state) => state.tenants.currentStep)
   const [currentTenant, setCurrentTenant] = useState('')
   const [orderID, setOrderID] = useState('')
@@ -113,17 +109,18 @@ const TwoStepProcessPage = () => {
               {step === 1 && (
                 <Container className="card mt-3">
                   <Row>
-                    <Col md={6} className="pr-3 border-right-1 border-light ">
+                    <Col md={7} className="pr-3 border-right-1 border-light ">
                       <CheckoutTenantReg
                         type="create"
                         updateTenant={() => {}}
-                        setVisible={setShowTenantForm}
                         popupLabel="Enter Your Info"
                         currentProduct={productId}
                         currentPrice={subscribtionId}
                         setCurrentTenant={setCurrentTenant}
                         setOrderID={setOrderID}
                         setHasToPay={setHasToPay}
+                        setsystemName={setsystemName}
+                        setDisplayName={setDisplayName}
                       />
                     </Col>
                     <Col md={5}>
@@ -174,6 +171,8 @@ const TwoStepProcessPage = () => {
                   orderID={orderID}
                   hasToPay={hasToPay}
                   setHasToPay={setHasToPay}
+                  displayName={displayName}
+                  systemName={systemName}
                 />
               )}{' '}
             </Card.Body>

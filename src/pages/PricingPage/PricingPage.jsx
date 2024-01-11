@@ -2,7 +2,14 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { redirect, useNavigate, useParams } from 'react-router-dom'
 import useRequest from '../../axios/apis/useRequest'
-import { Card, Col, Row, Button, Container } from '@themesberg/react-bootstrap'
+import {
+  Card,
+  Col,
+  Row,
+  Button,
+  Container,
+  Form,
+} from '@themesberg/react-bootstrap'
 import {
   setAllProduct,
   setAllPlans,
@@ -20,6 +27,7 @@ import { faBox } from '@fortawesome/free-solid-svg-icons'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { signinRedirectPath } from '../../store/slices/auth'
 import { setStep } from '../../store/slices/tenants'
+import { Wrapper } from './PricingPage.styled'
 
 const PricingPage = () => {
   const dispatch = useDispatch()
@@ -189,18 +197,19 @@ const PricingPage = () => {
     return (
       <div className="mb-4">
         <Card.Header>
-          {sortedCycleTypes?.map((cycleNum, index) => (
-            <label key={cycleNum} className="ml-5">
-              <input
+          <div className="d-flex justify-content-center ">
+            {sortedCycleTypes?.map((cycleNum, index) => (
+              <Form.Check
+                key={index}
                 type="radio"
+                label={cycle[cycleNum]}
                 value={cycleNum}
                 checked={selectedCycle === cycleNum}
                 onChange={() => handleCycleChange(cycleNum)}
-                className="mr-2"
+                className="ml-2 mr-2"
               />
-              {cycle[cycleNum]}
-            </label>
-          ))}
+            ))}
+          </div>
         </Card.Header>
       </div>
     )
@@ -235,7 +244,11 @@ const PricingPage = () => {
         {
           <Card>
             <Card.Header className="">
-              <div>
+              <div
+                style={{
+                  transition: 'all 0.9s',
+                }}
+              >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span
                     style={{
@@ -267,7 +280,13 @@ const PricingPage = () => {
                   </span>
                 </div>
               </div>
-              <div className="fw-bold">
+              <div
+                className="fw-bold mt-2 "
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: 'bold',
+                }}
+              >
                 {planList[planId]?.displayName?.toUpperCase()}
               </div>
               {}
@@ -321,49 +340,67 @@ const PricingPage = () => {
   }
 
   return (
-    <div className="main-container">
-      <BreadcrumbComponent breadcrumbInfo={'ProductPricing'} icon={BsBoxSeam} />
-      <UpperContent>
-        <h4 className="m-0">
-          <FormattedMessage id="Subscription-Options" />
-        </h4>
-      </UpperContent>
+    <Wrapper>
+      <div className="main-container">
+        <BreadcrumbComponent
+          breadcrumbInfo={'ProductPricing'}
+          icon={BsBoxSeam}
+        />
+        <UpperContent>
+          <h4 className="m-0">
+            <FormattedMessage id="Subscription-Options" />
+          </h4>
+        </UpperContent>
 
-      <Card>
-        <Card.Body>
-          <div className="text-center fw-bold  ">
-            {' '}
-            <FontAwesomeIcon
-              icon={faBox}
-              style={{ cursor: 'pointer' }}
-              className="mr-2 product-icon"
-            />
-            {listProduct?.[productId]?.displayName?.toUpperCase()}
-          </div>
-          <div className="text-center">{renderCycleRadioButtons()}</div>
-          <Row>
-            {groupedByCycle &&
-              groupedByCycle[selectedCycle] &&
-              Object.keys(groupedByCycle[selectedCycle]).map((plansPrice) => {
-                const renderedPlans = renderFeaturePlans(
-                  groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
-                )
-
-                return (
-                  renderedPlans && (
-                    <Col
-                      key={groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id}
-                      md={groupedByCycle[selectedCycle].length}
-                    >
-                      {renderedPlans}
-                    </Col>
+        <Card>
+          <Card.Body>
+            <div className="text-center fw-bold  ">
+              {' '}
+              <h4>
+                {' '}
+                <FontAwesomeIcon
+                  icon={faBox}
+                  style={{ cursor: 'pointer' }}
+                  className="mr-2 product-icon"
+                />
+                {listProduct?.[productId]?.displayName?.toUpperCase()}
+              </h4>
+            </div>
+            <div
+              style={{ fontSize: 'var(--largeFont)' }}
+              class="col-lg-12 text-center pb-3 mt-2 border-bottom"
+            >
+              {listProduct?.[productId]?.description}
+            </div>{' '}
+            <div className="text-center">{renderCycleRadioButtons()}</div>
+            <Row className="d-flex justify-content-center ">
+              {groupedByCycle &&
+                groupedByCycle[selectedCycle] &&
+                Object.keys(groupedByCycle[selectedCycle]).map((plansPrice) => {
+                  const renderedPlans = renderFeaturePlans(
+                    groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
                   )
-                )
-              })}
-          </Row>
-        </Card.Body>
-      </Card>
-    </div>
+
+                  return (
+                    renderedPlans && (
+                      <span className="w-3">
+                        <Col
+                          key={
+                            groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
+                          }
+                          md={groupedByCycle[selectedCycle].length}
+                        >
+                          {renderedPlans}
+                        </Col>
+                      </span>
+                    )
+                  )
+                })}
+            </Row>
+          </Card.Body>
+        </Card>
+      </div>
+    </Wrapper>
   )
 }
 

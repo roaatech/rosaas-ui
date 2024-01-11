@@ -133,10 +133,15 @@ const deleteProductAdminPrivileges = (state, action) => {
   state.products = currentProducts
 }
 const productsChangeAttr = (state, action) => {
-  const { productId, attr, value } = action.payload
+  const { productId, attributes } = action.payload
   const currentProducts = JSON.parse(JSON.stringify(current(state.products)))
-  currentProducts[productId][attr] = value
-  state.products[productId] = currentProducts[productId]
+  if (currentProducts[productId]) {
+    for (const [attr, value] of Object.entries(attributes)) {
+      currentProducts[productId][attr] = value
+    }
+
+    state.products[productId] = { ...currentProducts[productId] }
+  }
 }
 export {
   productWarningsStore,

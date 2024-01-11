@@ -64,7 +64,7 @@ export const ProductPlansList = ({ productId }) => {
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
   const intl = useIntl()
-  const ProductTrialType = list[productId]?.trialType
+  const ProductTrialType = list.trialType
 
   const handleDeletePlan = async () => {
     if (list?.plans[currentId]?.isSubscribed) {

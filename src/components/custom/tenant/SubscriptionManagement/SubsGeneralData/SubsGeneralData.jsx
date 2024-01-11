@@ -47,7 +47,7 @@ export default function SubsGeneralData(data) {
   return (
     <div className="info-card">
       <Row>
-        <Col md={7}>
+        <Col md={12}>
           <Card border="light" className="shadow-sm p-3">
             <Row>
               <Col md={6}>
@@ -562,9 +562,9 @@ export default function SubsGeneralData(data) {
             </Row>
           </Card>
         </Col>
-        <Col md={5}>
+        {/* <Col md={5}>
           <PaymentFlow />
-        </Col>
+        </Col> */}
       </Row>
     </div>
   )

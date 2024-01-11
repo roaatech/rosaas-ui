@@ -80,7 +80,7 @@ export const Routes = {
     path: '/payment/product/:productId/subscribtion/:subscribtionId',
     component: TwoStepProcessPage,
     roles: ['superAdmin', 'tenantAdmin'],
-    // type: 'noSidebar',
+    type: 'noSidebar',
   },
   SignUp: {
     path: '/sign-up',
