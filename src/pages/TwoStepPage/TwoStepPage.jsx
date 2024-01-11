@@ -112,8 +112,7 @@ const TwoStepProcessPage = () => {
                     <Col md={7} className="pr-3 border-right-1 border-light ">
                       <CheckoutTenantReg
                         type="create"
-                        updateTenant={() => {}}
-                        popupLabel="Enter Your Info"
+                        popupLabel={<FormattedMessage id="Enter-Your-Info" />}
                         currentProduct={productId}
                         currentPrice={subscribtionId}
                         setCurrentTenant={setCurrentTenant}

@@ -61,7 +61,6 @@ const ClientCredentials = ({ data }) => {
     setVisible(true)
   }
   const productId = data?.id
-  const [update, setUpdate] = useState(0)
 
   const isExpirationValid = (expirationDate, created) => {
     const expiration = expirationDate && new Date(expirationDate)
@@ -84,18 +83,8 @@ const ClientCredentials = ({ data }) => {
         })
       )
     })()
-  }, [update])
-  useEffect(() => {
-    ;(async () => {
-      const listData = await getClientSecrets(productId, data?.client?.id)
-      dispatch(
-        clientCredentials({
-          id: productId,
-          data: listData?.data.data,
-        })
-      )
-    })()
-  }, [update])
+  }, [])
+
   const [clientRecordId, setClientRecordId] = useState()
   const [visible, setVisible] = useState(false)
 
@@ -193,8 +182,6 @@ const ClientCredentials = ({ data }) => {
               clientId: client,
               icon: <BsPlusCircleFill />,
               formType: 'create',
-              update,
-              setUpdate,
             },
             {
               popupLabel: <FormattedMessage id="Show-Client-Id" />,
@@ -204,8 +191,6 @@ const ClientCredentials = ({ data }) => {
               component: 'createSecret',
               clientId: client,
               icon: <BsEyeFill />,
-              update,
-              setUpdate,
               formType: 'showClientId',
             },
           ]}

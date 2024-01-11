@@ -21,8 +21,6 @@ import { setStep } from '../../../store/slices/tenants'
 const CheckoutTenantReg = ({
   type,
   tenantData,
-  update,
-  updateTenant,
   setVisible,
   popupLabel,
   currentPrice,
@@ -192,7 +190,6 @@ const CheckoutTenantReg = ({
             displayName: values.displayName,
             id: tenantData.id,
           })
-          updateTenant()
         }
       }
       setVisible && setVisible(false)

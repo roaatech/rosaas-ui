@@ -180,16 +180,16 @@ const TenantFormOnboarding = ({
           navigate(
             `/payment/product/${values.product}/subscribtion/${values.price}`
           )
+          setVisible && setVisible(false)
         } else {
           const editTenant = await editTenantRequest({
             displayName: values.displayName,
             id: tenantData.id,
           })
           updateTenant()
+          setVisible && setVisible(false)
         }
       }
-      setVisible && setVisible(false)
-      setVisible && setVisible(false)
     },
   })
 
