@@ -98,7 +98,7 @@ export default function SubsFeatures(data) {
                     {subscription.reset != 1 ? (
                       <Label
                         {...{
-                          background: '#cccccc40',
+                          background: 'var(--misty-gray)',
                           value: formatDate(subscription.startDate),
                           lighter: true,
                         }}

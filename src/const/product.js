@@ -22,15 +22,15 @@ export const Client_id = 'spa_rosas_admin_panel'
 
 export const HealthStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Healthy" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: <BsFillCheckCircleFill />,
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="Unavailable" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
     icon: <BsFillExclamationCircleFill />,
   },
 }
@@ -46,55 +46,55 @@ export const DateStatus = {
 }
 export const PublishStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Published" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: <MdOutlinePublishedWithChanges />,
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="Unpublished" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
     icon: <MdOutlineUnpublished />,
   },
 }
 export const systemLockStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Locked" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: <BsFillLockFill />,
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="Unlocked" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
     icon: <BsFillUnlockFill />,
   },
 }
 export const activeStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Active" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="Inactive" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
   },
 }
 
 export const isMajorStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="true" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="false" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
   },
 }
 export const clientTypeLable = {
@@ -105,9 +105,9 @@ export const clientTypeLable = {
   },
 
   102: {
-    background: '#f0f8ff',
+    background: 'var(--misty-blue)',
     value: <FormattedMessage id="External-System-Client" />,
-    color: '#336699',
+    color: 'var(--midnight-blue)',
   },
 }
 

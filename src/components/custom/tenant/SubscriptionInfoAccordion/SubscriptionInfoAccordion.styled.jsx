@@ -2,15 +2,15 @@ import styled from 'styled-components'
 export const Wrapper = styled.div`
   .label {
     margin-right: 0.25rem;
-    background: '#eff9f6';
+    background: 'var(--green2)';
   }
   .green {
     color: var(--green);
-    background: '#eff9f6';
+    background: 'var(--green2)';
   }
   .red {
     color: var(--red);
-    background: '#eff9f6';
+    background: 'var(--green2)';
   }
   .label-white {
     font-size: var(--smallFont);

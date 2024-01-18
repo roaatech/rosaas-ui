@@ -138,9 +138,9 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                             item.healthCheckStatus.healthyCount == 0 ? null : (
                               <Label
                                 className="mr-2"
-                                background="#eff9f6"
+                                background="var(--green2)"
                                 value={item.healthCheckStatus.healthyCount}
-                                color="#00a675"
+                                color="var(--teal-green)"
                                 icon={<BsFillCheckCircleFill />}
                               />
                             )}{' '}
@@ -151,7 +151,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                                 className="mr-2"
                                 background="#f5e8e4"
                                 value={item.healthCheckStatus.unhealthyCount}
-                                color="#d26b4e"
+                                color="var(--orange-brown)"
                                 icon={<BsFillExclamationCircleFill />}
                               />
                             )}

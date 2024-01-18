@@ -204,7 +204,7 @@ export default function SubsGeneralData(data) {
                     <div className=" card-stats">
                       <Label
                         {...{
-                          background: '#cccccc40',
+                          background: 'var(--misty-gray)',
                           value: formatDate(subscriptionDatas.startDate),
                           lighter: true,
                         }}

@@ -23,7 +23,7 @@ const DateLabel = ({ endDate }) => {
       <span
         className="label"
         style={{
-          color: expired ? 'rgb(255, 104, 104)' : '#00a675',
+          color: expired ? 'rgb(255, 104, 104)' : 'var(--teal-green)',
           background: DateStatus[expired].background,
         }}
       >

@@ -20,26 +20,26 @@ export const statusConst = {
   4: {
     string: 'Created-As-Active',
     opacity: '35',
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: 'pi-check-circle',
   },
   5: {
     string: 'Active-request-is-sent',
     opacity: '10',
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: 'pi-check-circle',
     message: 'Activate-Tenant-Confirmation',
   },
   6: {
     string: 'Activating',
     opacity: '15',
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: 'pi-check-circle',
   },
   7: {
     string: 'Active',
     opacity: '35',
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: 'pi-check-circle',
   },
   8: {

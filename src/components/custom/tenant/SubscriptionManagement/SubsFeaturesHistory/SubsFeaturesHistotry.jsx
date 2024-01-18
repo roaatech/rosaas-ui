@@ -150,7 +150,7 @@ export default function SubsFeaturesHistory(data) {
                                     <td>
                                       {cycle.reset != 1 ? (
                                         <Label
-                                          background="#cccccc40"
+                                          background="var(--misty-gray)"
                                           value={formatDate(cycle.startDate)}
                                           lighter={true}
                                         />

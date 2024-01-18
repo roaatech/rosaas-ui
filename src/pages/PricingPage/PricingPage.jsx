@@ -311,7 +311,7 @@ const PricingPage = () => {
                       </span>
                     ) : (
                       <span>
-                        <BsXCircle style={{ color: '#a3a3a3' }} />{' '}
+                        <BsXCircle style={{ color: 'var(--silver-gray)' }} />{' '}
                         {feature.displayName}
                       </span>
                     )}{' '}

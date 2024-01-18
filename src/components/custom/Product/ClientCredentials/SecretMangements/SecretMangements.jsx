@@ -126,7 +126,7 @@ const SecretMangements = ({ data, currentClientId }) => {
             <span className="fw-normal">
               <Label
                 {...{
-                  background: '#cccccc40',
+                  background: 'var(--misty-gray)',
                   value: formatDate(createdDate),
                   lighter: true,
                 }}

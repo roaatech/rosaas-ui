@@ -63,7 +63,9 @@ export default function SubsGeneralHistoryData(data) {
                 <div className="mb-0 w-25 fw-bold">
                   <FormattedMessage id="Plan" />
                 </div>
-                <div className=" card-stats">{subHistory?.plan.displayName}</div>
+                <div className=" card-stats">
+                  {subHistory?.plan.displayName}
+                </div>
               </div>
 
               {/* subsc */}
@@ -91,7 +93,7 @@ export default function SubsGeneralHistoryData(data) {
                   {subHistory?.startDate && (
                     <Label
                       {...{
-                        background: '#cccccc40',
+                        background: 'var(--misty-gray)',
                         value: formatDate(subHistory?.startDate),
                         lighter: true,
                       }}
