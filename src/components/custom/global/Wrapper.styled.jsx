@@ -63,6 +63,7 @@ const GlobalStyles = createGlobalStyle`
 --teal-green:#00a675;
 --misty-blue:#f0f8ff;
 --midnight-blue:#336699;
+--silver-gray:#a3a3a3;
 
 
 
