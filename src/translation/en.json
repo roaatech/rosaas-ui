@@ -439,5 +439,15 @@
   "Trial-Plan": "Trial Plan",
   "generated-automatically-by-system": "Generated automatically by the system",
   "Enter-Your-Info": "Enter Your Info",
-  "of-Product": "of Product"
+  "of-Product": "of Product",
+  "External-System-Client": "External System Client",
+  "Hour": "Hour",
+  "Access-Token-Life-Time": "Access Token Life Time",
+  "Client-Type": "Client Type",
+  "Client-Id": "Client ID",
+  "Client-Name": "Client Name",
+  "New-Client": "New Client",
+  "Access-Token-Lifetime-In-Hour": "Access Token Lifetime in Hour",
+  "Create-New-Client": "Create New Client",
+  "add-secret": "Add Secret"
 }

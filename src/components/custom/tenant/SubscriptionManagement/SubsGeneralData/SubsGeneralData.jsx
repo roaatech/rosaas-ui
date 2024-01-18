@@ -21,12 +21,11 @@ import {
   PlanChangingType,
   SubscriptionPlanChangeStatus,
   SubscriptionResetStatus,
+  subscriptionStatus,
 } from '../../../../../const/subscriptionManagement'
 import DateLabel from '../../../Shared/DateLabel/DateLabel'
-import { subscriptionStatus } from '../../../../../const/product'
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import PaymentFlow from './PaymentFlow/PaymentFlow'
-import useRequest from '../../../../../axios/apis/useRequest'
 
 export default function SubsGeneralData(data) {
   const {
@@ -47,7 +46,7 @@ export default function SubsGeneralData(data) {
   return (
     <div className="info-card">
       <Row>
-        <Col md={12}>
+        <Col md={8}>
           <Card border="light" className="shadow-sm p-3">
             <Row>
               <Col md={6}>
@@ -562,9 +561,9 @@ export default function SubsGeneralData(data) {
             </Row>
           </Card>
         </Col>
-        {/* <Col md={5}>
+        <Col md={4}>
           <PaymentFlow />
-        </Col> */}
+        </Col>
       </Row>
     </div>
   )

@@ -11,6 +11,8 @@ import {
   MdPayments,
   MdOutlinePayments,
   MdOutlineLock,
+  MdMicExternalOff,
+  MdMicExternalOn,
 } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
 
@@ -70,7 +72,7 @@ export const systemLockStatus = {
     icon: <BsFillUnlockFill />,
   },
 }
-export const subscriptionStatus = {
+export const activeStatus = {
   true: {
     background: '#eff9f6',
     value: <FormattedMessage id="Active" />,
@@ -82,18 +84,7 @@ export const subscriptionStatus = {
     color: '#d26b4e',
   },
 }
-export const expirationStatus = {
-  true: {
-    background: '#eff9f6',
-    value: <FormattedMessage id="Valid" />,
-    color: '#00a675',
-  },
-  false: {
-    background: '#f5e8e4',
-    value: <FormattedMessage id="Expired" />,
-    color: '#d26b4e',
-  },
-}
+
 export const isMajorStatus = {
   true: {
     background: '#eff9f6',
@@ -104,6 +95,19 @@ export const isMajorStatus = {
     background: '#f5e8e4',
     value: <FormattedMessage id="false" />,
     color: '#d26b4e',
+  },
+}
+export const clientTypeLable = {
+  101: {
+    background: 'rgba(255, 201, 102, 0.4)',
+    value: <FormattedMessage id="External-System" />,
+    color: '#5c472e',
+  },
+
+  102: {
+    background: '#f0f8ff',
+    value: <FormattedMessage id="External-System-Client" />,
+    color: '#336699',
   },
 }
 

@@ -242,7 +242,6 @@ const PricingPage = () => {
           description: featurePlan?.description,
         }
       })
-    console.log({ featureStatusMap })
     return (
       <div>
         {
@@ -387,11 +386,7 @@ const PricingPage = () => {
                   const renderedPlans = renderFeaturePlans(
                     groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
                   )
-                  console.log({
-                    sssssssssssssssssssss: Object.keys(
-                      groupedByCycle[selectedCycle]
-                    ).length,
-                  })
+
                   return (
                     renderedPlans && (
                       <Col

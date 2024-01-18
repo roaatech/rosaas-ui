@@ -93,7 +93,7 @@ const CheckoutTenantReg = ({
       listProduct?.[productId]?.systemName
     }-tenant-${new Date().valueOf()}`
 
-    const uniqueName = uniName.replace(/[^a-zA-Z0-9_-]/g, '')
+    const uniqueName = uniName.replace(/[^a-z0-9_-]/g, '')
 
     const title = `${
       listProduct?.[productId]?.displayName

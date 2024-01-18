@@ -440,5 +440,15 @@
   "generated-automatically-by-system": "تم إنشاءه تلقائيًا بواسطة النظام",
   "Enter-Your-Info": "أدخل معلوماتك",
   "of-Product": "من المنتج",
-  "Trial-Type": "نوع التجربة"
+  "Trial-Type": "نوع التجربة",
+  "External-System-Client": "عميل النظام الخارجي",
+  "Hour": "ساعة",
+  "Access-Token-Life-Time": "مدة حياة رمز الوصول",
+  "Client-Type": "نوع العميل",
+  "Client-Id": "معرف العميل",
+  "Client-Name": "اسم العميل",
+  "New-Client": "عميل جديد",
+  "Access-Token-Lifetime-In-Hour": "مدة حياة رمز الوصول في الساعة",
+  "Create-New-Client": "إنشاء عميل جديد",
+  "add-secret": "إضافة سر"
 }

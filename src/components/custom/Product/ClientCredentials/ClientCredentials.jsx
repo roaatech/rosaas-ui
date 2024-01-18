@@ -1,81 +1,90 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faEye,
-  faEyeSlash,
-  faCopy,
-  faEllipsisH,
-  faEdit,
-  faTrashAlt,
-  faSyncAlt,
-  faBan,
-} from '@fortawesome/free-solid-svg-icons'
+import { faEllipsisH, faEdit, faBan } from '@fortawesome/free-solid-svg-icons'
 import {
   ButtonGroup,
   Card,
-  Col,
-  Row,
   Table,
   Button,
   Dropdown,
 } from '@themesberg/react-bootstrap'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import { Wrapper } from './ClientCredentials.styled'
-import { BsEye, BsEyeFill, BsPlusCircleFill } from 'react-icons/bs'
+import { BsHourglassSplit, BsPlusCircleFill } from 'react-icons/bs'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
 import Label from '../../Shared/label/Label'
-import { expirationStatus } from '../../../../const/product'
+import {
+  Product_Client_id,
+  activeStatus,
+  clientTypeLable,
+} from '../../../../const/product'
 import { useDispatch } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
 import {
   clientCredentials,
-  deleteClientSecret,
+  deleteClientCredentials,
+  updateClientCredentialAttr,
 } from '../../../../store/slices/products/productsSlice'
 import { formatDate } from '../../../../lib/sharedFun/Time'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
-import CreateSecretForm from './CreateSecretForm/CreateSecretForm'
+import CreateClientForm from './CreateClientForm/CreateClientForm'
+import SecretMangements from './SecretMangements/SecretMangements'
+import { GiThreeKeys } from 'react-icons/gi'
+import CreateSecretForm from './SecretMangements/CreateSecretForm/CreateSecretForm'
+import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
+import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai'
 
 const ClientCredentials = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
-  const [currentId, setCurrentId] = useState('')
+  const [currentClientId, setCurrentClientId] = useState('')
+  const [currentClientIdManagement, setCurrentClientIdManagement] = useState('')
   const [type, setType] = useState('')
-
-  const { getClientSecrets, DeleteClientSecret: DeleteClientSecretReq } =
-    useRequest()
+  const intl = useIntl()
+  const { deleteClient, getClientsListByProduct, activateClient } = useRequest()
   const dispatch = useDispatch()
 
   const deleteConfirm = (id) => {
-    setCurrentId(id)
+    setCurrentClientId(id)
     setConfirm(true)
   }
   const editForm = (id) => {
     setType('edit')
-    setCurrentId(id)
+    setCurrentClientId(id)
     setVisible(true)
   }
-  const regenerateClientSecret = (id) => {
-    setType('regenerate')
-    setCurrentId(id)
-    setVisible(true)
+  const createNewSecret = (id) => {
+    setType('create')
+    setCurrentClientId(id)
+    setvisibleSecret(true)
+  }
+
+  const manageClientSecret = (id) => {
+    setCurrentClientIdManagement(id)
+    setSecretManagementVisible((prevVisibility) => {
+      const updatedVisibility = {}
+
+      Object.keys(prevVisibility).forEach((key) => {
+        updatedVisibility[key] = false
+      })
+
+      updatedVisibility[id] = !prevVisibility[id]
+
+      return updatedVisibility
+    })
   }
   const productId = data?.id
 
-  const isExpirationValid = (expirationDate, created) => {
-    const expiration = expirationDate && new Date(expirationDate)
-
-    const currentDate = new Date()
-    if (expiration >= currentDate || expirationDate == null) {
-      return true
-    } else return false
-  }
   useEffect(() => {
     if (!data || data.clientCredentials) {
       return
     }
     ;(async () => {
-      const listData = await getClientSecrets(productId, data?.client?.id)
+      const listData = await getClientsListByProduct(
+        productId,
+        Product_Client_id
+      )
       dispatch(
         clientCredentials({
           id: productId,
@@ -85,48 +94,84 @@ const ClientCredentials = ({ data }) => {
     })()
   }, [])
 
-  const [clientRecordId, setClientRecordId] = useState()
-  const [visible, setVisible] = useState(false)
+  const toggleActiveClient = async (id, isActive) => {
+    await activateClient(productId, id, {
+      isActive: !isActive,
+    })
 
-  const handleDeleteSecret = async () => {
-    await DeleteClientSecretReq(clientRecordId, currentId)
-    dispatch(deleteClientSecret({ productId, itemId: currentId }))
+    dispatch(
+      updateClientCredentialAttr({
+        productId,
+        itemId: id,
+        attributeName: 'isActive',
+        attributeValue: !isActive,
+      })
+    )
   }
-  const [client, setClient] = useState()
+
+  const [visible, setVisible] = useState(false)
+  const [visibleSecret, setvisibleSecret] = useState(false)
+  const [SecretManagementVisible, setSecretManagementVisible] = useState(false)
+  const handleDeleteSecret = async () => {
+    await deleteClient(productId, currentClientId)
+    dispatch(deleteClientCredentials({ productId, itemId: currentClientId }))
+  }
   const TableRow = (props) => {
-    const { clientId, description, id, created, clientRecordId, expiration } =
-      props
-    const createdDate = new Date(created)
-    const expirationDate = expiration && new Date(expiration)
-    useEffect(() => {
-      setClient(clientId)
-      setClientRecordId(clientRecordId)
-    }, [clientId, clientRecordId])
+    const {
+      id,
+      clientId,
+      displayName,
+      description,
+      isActive,
+      accessTokenLifetimeInHour,
+      clientType,
+      createdDate,
+      className,
+    } = props
 
     return (
       <>
-        <tr>
+        <tr className={className}>
           <td>
-            <span className="fw-normal">{description}</span>
+            <Button variant="primary" onClick={() => manageClientSecret(id)}>
+              <GiThreeKeys />
+            </Button>
+          </td>
+          <td>
+            <span className="fw-normal">{displayName}</span>
+          </td>
+          <td>
+            <span className="fw-normal">{clientId}</span>
           </td>
 
           <td>
             <span className="fw-normal">
-              {
-                <Label
-                  {...expirationStatus[isExpirationValid(expiration, created)]}
-                />
-              }
+              <Label {...activeStatus[isActive ? isActive : false]} />
+            </span>
+          </td>
+
+          <td>
+            <span className="fw-normal">
+              <Label {...clientTypeLable[clientType]} />
+            </span>
+          </td>
+          <td>
+            <span className="fw-normal">
+              <Label
+                icon={<BsHourglassSplit />}
+                value={` ${accessTokenLifetimeInHour}
+                  ${intl.formatMessage({ id: 'Hour' })}`}
+              />{' '}
+            </span>
+          </td>
+          <td className="description">
+            <span className="fw-normal">
+              <DescriptionCell data={{ description }} />
             </span>
           </td>
           <td>
             <span className="fw-normal">
               {createdDate && formatDate(createdDate)}
-            </span>
-          </td>
-          <td>
-            <span className="fw-normal">
-              {expirationDate && formatDate(expirationDate)}
             </span>
           </td>
           <td>
@@ -142,6 +187,19 @@ const ClientCredentials = ({ data }) => {
                 </span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
+                <Dropdown.Item onClick={() => toggleActiveClient(id, isActive)}>
+                  {!isActive ? (
+                    <span className=" ">
+                      <AiOutlineCheckCircle className="mx-2" />
+                      <FormattedMessage id="Activate" />
+                    </span>
+                  ) : (
+                    <span className=" ">
+                      <AiOutlineCloseCircle className="mx-2" />
+                      <FormattedMessage id="Deactivate" />
+                    </span>
+                  )}
+                </Dropdown.Item>
                 <Dropdown.Item
                   onSelect={() => {
                     editForm(id)
@@ -157,9 +215,9 @@ const ClientCredentials = ({ data }) => {
                   <FontAwesomeIcon icon={faBan} className="mx-2" />
                   <FormattedMessage id="Revoke" />
                 </Dropdown.Item>
-                <Dropdown.Item onClick={() => regenerateClientSecret(id)}>
-                  <FontAwesomeIcon icon={faSyncAlt} className="mx-2" />
-                  <FormattedMessage id="Regenerate-Secret" />
+                <Dropdown.Item onClick={() => createNewSecret(id)}>
+                  <BsPlusCircleFill className="mx-2" />{' '}
+                  <FormattedMessage id="New-Secret" />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -174,24 +232,14 @@ const ClientCredentials = ({ data }) => {
         <DynamicButtons
           buttons={[
             {
-              popupLabel: <FormattedMessage id="Create-New-Secret" />,
+              popupLabel: <FormattedMessage id="Create-New-Client" />,
               order: 1,
               type: 'form',
-              label: 'New-Secret',
-              component: 'createSecret',
-              clientId: client,
+              label: 'New-Client',
+              component: 'createClient',
+              clientId: currentClientId,
               icon: <BsPlusCircleFill />,
               formType: 'create',
-            },
-            {
-              popupLabel: <FormattedMessage id="Show-Client-Id" />,
-              order: 4,
-              type: 'form',
-              label: 'Show-Client-Id',
-              component: 'createSecret',
-              clientId: client,
-              icon: <BsEyeFill />,
-              formType: 'showClientId',
             },
           ]}
         />
@@ -206,18 +254,28 @@ const ClientCredentials = ({ data }) => {
           <Table hover className="user-table align-items-center">
             <thead>
               <tr>
+                <th className="border-bottom"></th>
                 <th className="border-bottom">
-                  <FormattedMessage id="Secret-Display-Name" />
+                  <FormattedMessage id="Client-Name" />
+                </th>
+                <th className="border-bottom">
+                  <FormattedMessage id="Client-Id" />
                 </th>
                 <th className="border-bottom">
                   <FormattedMessage id="Status" />
                 </th>
 
                 <th className="border-bottom">
-                  <FormattedMessage id="Created-Date" />
+                  <FormattedMessage id="Client-Type" />
                 </th>
                 <th className="border-bottom">
-                  <FormattedMessage id="expiration-date" />
+                  <FormattedMessage id="Access-Token-Life-Time" />
+                </th>
+                <th className="border-bottom">
+                  <FormattedMessage id="Description" />
+                </th>
+                <th className="border-bottom">
+                  <FormattedMessage id="Created-Date" />
                 </th>
                 <th className="border-bottom">
                   <FormattedMessage id="Actions" />
@@ -229,12 +287,36 @@ const ClientCredentials = ({ data }) => {
               Object.values(data?.clientCredentials).length
                 ? Object.values(data?.clientCredentials).map((t, index) => {
                     if (t != undefined) {
-                      return <TableRow key={index} {...t} />
+                      return (
+                        <React.Fragment key={index}>
+                          {/* Client credential details */}
+                          <TableRow
+                            className={
+                              SecretManagementVisible[t.id] &&
+                              `SecretMangements`
+                            }
+                            {...t}
+                          />
+
+                          {/* SecretMangements component */}
+                          <tr className="SecretMangements">
+                            {SecretManagementVisible[t.id] && (
+                              <td colSpan="9">
+                                <SecretMangements
+                                  data={data}
+                                  currentClientId={currentClientIdManagement}
+                                />
+                              </td>
+                            )}
+                          </tr>
+                        </React.Fragment>
+                      )
                     }
                   })
-                : null}
+                : null}{' '}
             </tbody>
           </Table>
+
           <DeleteConfirmation
             message="Are you sure you want to revoke this secret?"
             icon="pi pi-exclamation-triangle"
@@ -248,7 +330,7 @@ const ClientCredentials = ({ data }) => {
 
       <ThemeDialog visible={visible} setVisible={setVisible}>
         <>
-          <CreateSecretForm
+          <CreateClientForm
             popupLabel={
               type == 'edit' ? (
                 <FormattedMessage id="Edit" />
@@ -258,10 +340,17 @@ const ClientCredentials = ({ data }) => {
             }
             type={type}
             setVisible={setVisible}
-            clientId={client}
-            currentId={currentId}
+            currentId={currentClientId}
           />
         </>
+      </ThemeDialog>
+      <ThemeDialog visible={visibleSecret} setVisible={setvisibleSecret}>
+        <CreateSecretForm
+          popupLabel={<FormattedMessage id="Create-New-Secret" />}
+          type={'create'}
+          currentClientId={currentClientId}
+          setVisible={setvisibleSecret}
+        />
       </ThemeDialog>
     </Wrapper>
   )

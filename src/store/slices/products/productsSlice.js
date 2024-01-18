@@ -60,11 +60,16 @@ export const {
   productWarningsStore,
   removeProductWarningsStore,
   clientCredentials,
+  clientCredentialsSecrets,
   deleteClientSecret,
   clientCredentialsInfo,
   AdminPrivileges,
   deleteProductAdminPrivileges,
   AdminPrivilegesChangeAttr,
   productsChangeAttr,
+  deleteClientCredentials,
+  clientSecretInfo,
+  clientSecretAttr,
+  updateClientCredentialAttr,
 } = productsSlice.actions
 export default productsSlice.reducer
