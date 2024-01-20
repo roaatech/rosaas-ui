@@ -32,6 +32,7 @@ import SubsGeneralData from '../../components/custom/tenant/SubscriptionManageme
 import SubsFeatures from '../../components/custom/tenant/SubscriptionManagement/SubsFeatures/SubsFeatures'
 import SubsFeaturesHistory from '../../components/custom/tenant/SubscriptionManagement/SubsFeaturesHistory/SubsFeaturesHistotry'
 import SubsGeneralHistoryData from '../../components/custom/tenant/SubscriptionManagement/SubsGeneralHistoryData/SubsGeneralHistoryData'
+import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 
 const SubscriptionManagement = (props) => {
   const routeParams = useParams()
@@ -63,7 +64,7 @@ const SubscriptionManagement = (props) => {
     subscriptionFeturesList,
   } = useRequest()
   const [currentProduct, setCurrentProduct] = useState('')
-  const [currentTab, setCurrentTab] = useState(0)
+  const [currentTab, setCurrentTab] = useState('')
   const [hasResetableValue, setHasResetableValue] = useState()
   const [currentTabCycle, setCurrentTabCycle] = useState()
   const [currentTabFeatures, setCurrentTabFeatures] = useState(0)
@@ -248,7 +249,14 @@ const SubscriptionManagement = (props) => {
           {subscriptionDatas.startDate && (
             <div>
               <TabView
-                activeIndex={currentTab}
+                activeIndex={
+                  currentTab ||
+                  subscriptionDatas.subscriptionCycles.findIndex(
+                    (cyc) =>
+                      subscriptionDatas.currentSubscriptionCycleId ===
+                      cyc.subscriptionCycleId
+                  )
+                }
                 className="card "
                 onTabChange={(e) => {
                   setCurrentTabCycle(
@@ -263,9 +271,18 @@ const SubscriptionManagement = (props) => {
                     key={subscriptionDatas?.currentSubscriptionCycleId}
                     header={
                       subscriptionDatas?.currentSubscriptionCycleId ===
-                      cyc?.subscriptionCycleId
-                        ? `${formatDate(cyc.startDate)} (current)`
-                        : formatDate(cyc.startDate)
+                      cyc?.subscriptionCycleId ? (
+                        <div className="tab-header">
+                          {formatDate(cyc.startDate)}
+                          {'(current)'}
+                          {cyc.cycleType == 2 && <TrialLabel />}
+                        </div>
+                      ) : (
+                        <div className="tab-header">
+                          {formatDate(cyc.startDate)}
+                          {cyc.cycleType == 2 && <TrialLabel />}
+                        </div>
+                      )
                     }
                   >
                     <div className="pr-2 pl-2">

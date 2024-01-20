@@ -1,5 +1,11 @@
-import { AiFillPayCircle, AiOutlinePayCircle } from 'react-icons/ai'
-import { MdHourglassEmpty } from 'react-icons/md'
+import {
+  AiFillDollarCircle,
+  AiFillPayCircle,
+  AiOutlineCheckCircle,
+  AiOutlineIssuesClose,
+  AiOutlinePayCircle,
+} from 'react-icons/ai'
+import { MdHourglassEmpty, MdPayment, MdUndo } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
 
 export const PlanChangingType = {
@@ -53,28 +59,59 @@ export const SubscriptionResetStatus = {
 }
 
 export const paymentStatus = {
-  1: {
-    background: '#5cb85c40',
-    value: <FormattedMessage id="Paid-successfully" />,
+  100: {
+    background: 'var(--primary-color)',
+    value: <FormattedMessage id="Pending" />,
     icon: <MdHourglassEmpty />,
+    color: '#fff',
+  },
+  200: {
+    background: 'var(--orange-brown)',
+    value: <FormattedMessage id="Authorized" />,
+    icon: <MdPayment />,
+    color: 'var(--orange-brown)',
+  },
+  300: {
+    background: 'var(--green2)',
+    value: <FormattedMessage id="Paid" />,
+    icon: <AiFillDollarCircle />,
     color: 'var(--teal-green)',
   },
+  400: {
+    background: 'var(--red2)',
+    value: <FormattedMessage id="Refunded" />,
+    icon: <MdUndo />,
+    color: '#5c472e',
+  },
+  500: {
+    background: 'var(--primary-color)',
+    value: <FormattedMessage id="Voided" />,
+    icon: <AiOutlineIssuesClose />,
+    color: '#fff',
+  },
+  600: {
+    background: 'var(--primary-color)',
+    value: <FormattedMessage id="Partially-Refunded" />,
+    icon: <AiOutlineCheckCircle />,
+    color: '#fff',
+  },
+}
+export const orderStatus = {
+  1: {
+    value: 'Pending',
+    color: 'var(--second-color)',
+  },
   2: {
-    background: '#ffa50040',
-    value: <FormattedMessage id="Payment-Failed" />,
-    icon: <AiOutlinePayCircle />,
+    value: 'Processing',
     color: 'var(--orange-brown)',
   },
   3: {
-    background: '#d9534f40',
-    value: <FormattedMessage id="Unpaid" />,
-    icon: <MdHourglassEmpty />,
-    color: '#5c472e',
+    value: 'Complete',
+    color: 'var(--teal-green)',
   },
   4: {
-    background: 'var(--primary-color)',
-    value: <FormattedMessage id="Pay-Now" />,
-    color: '#fff',
+    value: 'Cancelled',
+    color: '#5c472e',
   },
 }
 
@@ -86,7 +123,7 @@ export const subscriptionStatus = {
     // icon: <MdPayments />,
   },
   false: {
-    background: '#f5e8e4',
+    background: 'var(--red2)',
     value: <FormattedMessage id="Inactive" />,
     color: 'var(--orange-brown)',
     // icon: <MdOutlinePayments />,

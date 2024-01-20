@@ -24,10 +24,8 @@ import { setAllSpecifications } from '../../../../store/slices/products/products
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { statusConst } from '../../../../const'
 import { MdFactCheck } from 'react-icons/md'
-import { subscriptionData } from '../../../../store/slices/tenants'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
-import { fetchSubscriptionDetails } from '../SubscriptionManagement/fetchSubscriptionDetails/fetchSubscriptionDetails'
 export default function ChildTable({
   productData,
   tenantId,
@@ -36,7 +34,7 @@ export default function ChildTable({
   productIndex,
   tenantObject,
 }) {
-  const { getProductSpecification, subscriptionDetails } = useRequest()
+  const { getProductSpecification } = useRequest()
   const dispatch = useDispatch()
 
   const listProducts = useSelector((state) => state.products.products)
@@ -112,36 +110,7 @@ export default function ChildTable({
       description: metadata ? rowExpansionTemplate(JSON.parse(metadata)) : null,
     },
   ])
-  const subscriptionDatas = useSelector(
-    (state) => state.tenants.tenants[routeParams.id]?.subscriptionData?.data
-  )
-  const [formattedSubscriptionData, setFormattedSubscriptionData] =
-    useState(null)
 
-  useEffect(() => {
-    if (!currentProduct || !routeParams.id || subscriptionDatas) {
-      return
-    }
-
-    fetchSubscriptionDetails({
-      currentProduct: currentProduct.id,
-      intl,
-      tenantId: routeParams.id,
-      setFormattedSubscriptionData,
-      formattedSubscriptionData,
-      subscriptionDetails,
-    })
-  }, [routeParams.id, currentProduct])
-  useEffect(() => {
-    if (formattedSubscriptionData) {
-      dispatch(
-        subscriptionData({
-          id: routeParams.id,
-          data: formattedSubscriptionData,
-        })
-      )
-    }
-  }, [formattedSubscriptionData])
   return (
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
@@ -202,6 +171,24 @@ export default function ChildTable({
             className="table-centered table-nowrap rounded mb-0 accordions "
           >
             <tbody>
+              {productData.subscriptionMode == 2 && (
+                <tr>
+                  <td className="fw-bold firstTd line-cell">
+                    <FormattedMessage id="Subscription-Mode" />
+                  </td>
+                  <td className=" line-cell">
+                    <Label
+                      className="mr-2 fs-7"
+                      {...{
+                        background: 'var(--red2)',
+                        value: intl.formatMessage({ id: 'Trial' }),
+
+                        color: 'red',
+                      }}
+                    />
+                  </td>
+                </tr>
+              )}
               <tr>
                 <td className="fw-bold firstTd line-cell">
                   <FormattedMessage id="Status" />

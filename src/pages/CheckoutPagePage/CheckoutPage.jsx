@@ -45,10 +45,12 @@ import { setAllTenant, setStep } from '../../store/slices/tenants'
 
 const CheckoutPage = (data) => {
   const createdTenantData = useSelector((state) => state.tenants?.createdTenant)
+  const orderID =
+    data.orderID ||
+    createdTenantData?.tenantData?.orderId ||
+    createdTenantData?.tenantData?.id
 
-  const orderID = data.orderID || createdTenantData?.tenantData?.orderId
-
-  const { hasToPay, setHasToPay, displayName, systemName } = data
+  const { hasToPay, setHasToPay, displayName, systemName, currentTenant } = data
   useEffect(() => {
     if (!createdTenantData.tenantData?.hasToPay) {
       return
@@ -88,7 +90,8 @@ const CheckoutPage = (data) => {
     (state) => state.products.products[productId]?.plansPrice
   )
   const [subscriptionData, setsubscriptionData] = useState('')
-  const tenantId = data?.currentTenant || createdTenantData?.tenantData?.id
+  const tenantId =
+    data?.currentTenant || createdTenantData?.tenantData?.tenantId
   useEffect(() => {
     if ((subscriptionData && update == 0) || !tenantId) {
       return
@@ -121,6 +124,8 @@ const CheckoutPage = (data) => {
   useEffect(() => {
     if (!orderID) {
       return
+    } else if (createdTenantData?.tenantData) {
+      return setOrderData(createdTenantData.tenantData)
     }
 
     ;(async () => {

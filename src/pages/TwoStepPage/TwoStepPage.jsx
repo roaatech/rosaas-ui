@@ -116,8 +116,10 @@ const TwoStepProcessPage = () => {
                         currentProduct={productId}
                         currentPrice={subscribtionId}
                         setCurrentTenant={setCurrentTenant}
+                        currentTenant={currentTenant}
                         setOrderID={setOrderID}
                         setHasToPay={setHasToPay}
+                        hasToPay={hasToPay}
                         setsystemName={setsystemName}
                         setDisplayName={setDisplayName}
                       />

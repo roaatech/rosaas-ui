@@ -43,6 +43,8 @@ export default function SubsGeneralData(data) {
   const subscriptionDatas = useSelector(
     (state) => state.tenants.tenants[routeParams.id]?.subscriptionData?.data
   )
+  const price = subscriptionDatas.subscriptionId
+  const product = tenantsData[routeParams.id].subscriptions[0].productId
   return (
     <div className="info-card">
       <Row>
@@ -562,7 +564,10 @@ export default function SubsGeneralData(data) {
           </Card>
         </Col>
         <Col md={4}>
-          <PaymentFlow />
+          <PaymentFlow
+            price={subscriptionDatas.planPriceId}
+            product={product}
+          />
         </Col>
       </Row>
     </div>

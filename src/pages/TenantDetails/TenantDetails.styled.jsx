@@ -108,4 +108,8 @@ export const Wrapper = styled.div`
   .p-tabview .p-tabview-nav .p-tabview-ink-bar {
     background-color: var(--second-color);
   }
+  .tab-header {
+    display: flex;
+    align-items: center;
+  }
 `

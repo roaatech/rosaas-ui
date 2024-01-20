@@ -19,12 +19,14 @@ export const fetchSubscriptionDetails = async (data) => {
           startDate: cycle.startDate,
           endDate: cycle.endDate,
           subscriptionCycleId: cycle.id,
+          cycleType: cycle.cycleType,
         })
       ),
       //plan Info
       planName: response.data.data.plan.displayName,
       planId: response.data.data.plan.id,
       planPrice: response.data.data.planPrice.price,
+      planPriceId: response.data.data.planPrice.id,
       planCycle: response.data.data.planPrice.cycle,
 
       startDate: response.data.data.startDate,

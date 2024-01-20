@@ -39,7 +39,7 @@ const CheckoutTenantReg = ({
   } = useRequest()
   const [submitLoading] = useState()
   const [specValidationErrors, setSpecValidationErrors] = useState({})
-
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const { productId, subscribtionId } = useParams()
@@ -93,7 +93,7 @@ const CheckoutTenantReg = ({
       listProduct?.[productId]?.systemName
     }-tenant-${new Date().valueOf()}`
 
-    const uniqueName = uniName.replace(/[^a-z0-9_-]/g, '')
+    const uniqueName = uniName.toLowerCase().replace(/[^a-z0-9_-]/g, '-')
 
     const title = `${
       listProduct?.[productId]?.displayName
@@ -168,11 +168,19 @@ const CheckoutTenantReg = ({
             systemName: uniqueName,
             displayName: title,
           })
-          setsystemName(uniqueName)
-          setDisplayName(title)
-          setCurrentTenant(createTenant?.data.data.id)
-          setHasToPay(createTenant?.data.data?.hasToPay)
-          setOrderID(createTenant?.data.data.orderId)
+
+          if (
+            !createTenant?.data.data?.hasToPay &&
+            createTenant?.data.data.tenantId
+          ) {
+            navigate(`/tenants/${createTenant?.data.data.tenantId}`)
+          } else {
+            setsystemName(uniqueName)
+            setDisplayName(title)
+            setCurrentTenant(createTenant?.data.data.tenantId)
+            setHasToPay(createTenant?.data.data?.hasToPay)
+            setOrderID(createTenant?.data.data.orderId)
+          }
 
           dispatch(
             deleteAllPlan({

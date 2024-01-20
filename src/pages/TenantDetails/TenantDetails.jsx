@@ -27,6 +27,8 @@ import { featureResetMap } from '../../const'
 import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { MdFactCheck } from 'react-icons/md'
 import TenantsUsersManagement from '../../components/custom/tenant/TenantsUsersManagement/TenantsUsersManagement'
+import Label from '../../components/custom/Shared/label/Label'
+import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -244,8 +246,26 @@ const TenantDetails = () => {
                     </TabPanel> */}
                     {tenantObject?.subscriptions?.map((product, index) => (
                       <TabPanel
-                        header={product?.product.systemName?.toUpperCase()}
                         key={index}
+                        header={
+                          <>
+                            {/* <Label
+                              className="mr-2 fs-7"
+                              {...{
+                                background: 'var(--red2)',
+                                value: intl.formatMessage({ id: 'Trial' }),
+
+                                color: 'red',
+                              }}
+                            /> */}
+                            <div className="tab-header">
+                              {product?.product.systemName?.toUpperCase()}
+                              {product?.subscriptionMode === 2 && (
+                                <TrialLabel />
+                              )}
+                            </div>
+                          </>
+                        }
                       >
                         <ChildTable
                           tenantDetails={tenantObject}

@@ -28,7 +28,7 @@ export const HealthStatus = {
     icon: <BsFillCheckCircleFill />,
   },
   false: {
-    background: '#f5e8e4',
+    background: 'var(--red2)',
     value: <FormattedMessage id="Unavailable" />,
     color: 'var(--orange-brown)',
     icon: <BsFillExclamationCircleFill />,
@@ -52,7 +52,7 @@ export const PublishStatus = {
     icon: <MdOutlinePublishedWithChanges />,
   },
   false: {
-    background: '#f5e8e4',
+    background: 'var(--red2)',
     value: <FormattedMessage id="Unpublished" />,
     color: 'var(--orange-brown)',
     icon: <MdOutlineUnpublished />,
@@ -66,7 +66,7 @@ export const systemLockStatus = {
     icon: <BsFillLockFill />,
   },
   false: {
-    background: '#f5e8e4',
+    background: 'var(--red2)',
     value: <FormattedMessage id="Unlocked" />,
     color: 'var(--orange-brown)',
     icon: <BsFillUnlockFill />,
@@ -79,7 +79,7 @@ export const activeStatus = {
     color: 'var(--teal-green)',
   },
   false: {
-    background: '#f5e8e4',
+    background: 'var(--red2)',
     value: <FormattedMessage id="Inactive" />,
     color: 'var(--orange-brown)',
   },
@@ -92,7 +92,7 @@ export const isMajorStatus = {
     color: 'var(--teal-green)',
   },
   false: {
-    background: '#f5e8e4',
+    background: 'var(--red2)',
     value: <FormattedMessage id="false" />,
     color: 'var(--orange-brown)',
   },
