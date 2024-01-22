@@ -178,7 +178,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
                 </option>
                 {Object.entries(ProductTrialType).map(([value, label]) => (
                   <option key={value} value={value}>
-                    {label && <FormattedMessage id={label} />}
+                    {label && label.value}
                   </option>
                 ))}
               </select>

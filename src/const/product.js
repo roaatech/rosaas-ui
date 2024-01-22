@@ -121,9 +121,21 @@ export const cycle = {
   11: 'Unlimited',
 }
 export const ProductTrialType = {
-  1: 'No-Trial',
-  2: 'Product-Has-Trial-Plan',
-  3: 'Each-Plan-Has-Optional-Trial-Period',
+  1: {
+    value: <FormattedMessage id="No-Trial" />,
+    color: 'var(--primary-color)',
+    background: 'var(--primary0)',
+  },
+  2: {
+    value: <FormattedMessage id="Product-Has-Trial-Plan" />,
+    color: 'var(--orange-brown)',
+    background: 'var(--misty-blue)',
+  },
+  3: {
+    value: <FormattedMessage id="Each-Plan-Has-Optional-Trial-Period" />,
+    color: 'var(--teal-green)',
+    background: 'var(--misty-gray)',
+  },
 }
 
 export const urlIsOverridden = {

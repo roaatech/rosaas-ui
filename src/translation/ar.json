@@ -450,5 +450,16 @@
   "New-Client": "عميل جديد",
   "Access-Token-Lifetime-In-Hour": "مدة حياة رمز الوصول في الساعة",
   "Create-New-Client": "إنشاء عميل جديد",
-  "add-secret": "إضافة سر"
+  "add-secret": "إضافة سر",
+  "Trial": "تجريبي",
+  "Pay-Now": "ادفع الآن",
+  "Subscription-Mode": "وضع الاشتراك",
+  "Authorized": "تم التفويض",
+  "Refunded": "مرتجع",
+  "Voided": "تم الإلغاء",
+  "Partially-Refunded": "مرتجع جزئيًا",
+  "Processing": "قيد المعالجة",
+  "Cancelled": "تم الإلغاء",
+  "Order-History": "تاريخ الطلب",
+  "Manage-Billing-Information-and-View-Receipts": "إدارة معلومات الفواتير وعرض الإيصالات"
 }

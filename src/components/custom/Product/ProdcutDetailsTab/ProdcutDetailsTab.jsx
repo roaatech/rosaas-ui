@@ -22,6 +22,7 @@ import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import useRequest from '../../../../axios/apis/useRequest'
 import { setAllPlans } from '../../../../store/slices/products/productsSlice'
+import Label from '../../Shared/label/Label'
 
 const ProductDetailsTab = ({ data }) => {
   const [code, setCode] = useState(data.apiKey)
@@ -159,9 +160,7 @@ const ProductDetailsTab = ({ data }) => {
                       </td>
                       <td className=" card-stats">
                         {ProductTrialType[data?.trialType] && (
-                          <FormattedMessage
-                            id={ProductTrialType[data?.trialType]}
-                          />
+                          <Label {...ProductTrialType[data?.trialType]} />
                         )}
                       </td>
                     </tr>

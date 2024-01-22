@@ -66,8 +66,12 @@ function PaymentFlow({ price, product }) {
       <Card.Body className="py-0 px-0 ">
         <div className="timeLineCont card p-2">
           <div className="p-2 border-bottom mb-1 border-light">
-            <label htmlFor="">Order History</label>
-            <div>Manage billing information and view receipts</div>
+            <label htmlFor="">
+              <FormattedMessage id="Order-History" />
+            </label>
+            <div>
+              <FormattedMessage id="Manage-Billing-Information-and-View-Receipts" />
+            </div>
           </div>
           {ordersList &&
             Object.values(ordersList).map((item, index) => (
@@ -105,7 +109,11 @@ function PaymentFlow({ price, product }) {
                         className="time mb-2 small"
                         style={{ color: orderStatus[item?.orderStatus]?.color }}
                       >
-                        {orderStatus[item?.orderStatus]?.value}
+                        {orderStatus[item?.orderStatus]?.value && (
+                          <FormattedMessage
+                            id={orderStatus[item?.orderStatus]?.value}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
