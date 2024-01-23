@@ -460,5 +460,6 @@
   "Processing": "Processing",
   "Cancelled": "Cancelled",
   "Order-History": "Order History",
-  "Manage-Billing-Information-and-View-Receipts": "Manage billing information and view receipts"
+  "Manage-Billing-Information-and-View-Receipts": "Manage billing information and view receipts",
+  "Start-With-Trial": "Start With Trial"
 }

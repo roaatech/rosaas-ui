@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Card, Row, Col, Container } from '@themesberg/react-bootstrap'
+import { Card, Row, Col, Container, Button } from '@themesberg/react-bootstrap'
 import { setAllProduct } from '../../store/slices/products/productsSlice'
 import useRequest from '../../axios/apis/useRequest'
 import { Wrapper } from './ProductListPage.styled'
@@ -10,15 +10,17 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 import { BsBoxSeam } from 'react-icons/bs'
 import logoEn from '../../assets/img/brand/rosas.svg'
 import logoAr from '../../assets/img/brand/rosas-ar.svg'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBox, faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faBox, faCopy, faStopwatch } from '@fortawesome/free-solid-svg-icons'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
 import DescriptionCell from '../../components/custom/Shared/DescriptionCell/DescriptionCell'
 const ProductListPage = () => {
   const { getProductListPublic } = useRequest()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const listData = useSelector((state) => state.products.products)
   let direction = useSelector((state) => state.main.direction)
   let selectedLogo
@@ -39,25 +41,54 @@ const ProductListPage = () => {
     })()
   }, [Object.values(listData).length > 0])
   const ProductCard = ({ product }) => {
+    console.log({
+      product: `/payment/product/${product.id}/subscription/${product.trialPlanPriceId}`,
+    })
     return (
       <Card className="p-1 m-1">
-        <Link to={`./products-list/${product.id}`} className="product-link">
-          <Card.Body>
-            <Card.Title>
-              <FontAwesomeIcon
-                icon={faBox}
-                style={{ cursor: 'pointer' }}
-                className=" product-icon "
-              />
-              <span className="product-name ml-2  mr-2">
-                {product?.displayName}
-              </span>
-            </Card.Title>
+        <Card.Body>
+          <Card.Title>
+            <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+              <Link
+                to={`./products-list/${product.id}`}
+                className="product-link mb-0 w-50 fw-bold"
+              >
+                <FontAwesomeIcon
+                  icon={faBox}
+                  style={{ cursor: 'pointer' }}
+                  className="product-icon"
+                />
+                <span className="product-name ml-2 mr-2">
+                  {product?.displayName}
+                </span>
+              </Link>
+              {product?.trialType == 2 && (
+                <div className="text-small">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() =>
+                      navigate(
+                        `/payment/product/${product.id}/subscribtion/${product.trialPlanPriceId}`
+                      )
+                    }
+                  >
+                    <FontAwesomeIcon icon={faStopwatch} className="mr-2" />
+
+                    <span style={{ fontSize: 'smaller' }}>
+                      <FormattedMessage id="Start-With-Trial" />
+                    </span>
+                  </Button>
+                </div>
+              )}
+            </div>
+          </Card.Title>
+          <Link to={`./products-list/${product.id}`} className="product-link ">
             <Card.Text className="product-description">
               {product.description || '----'}
-            </Card.Text>{' '}
-          </Card.Body>
-        </Link>{' '}
+            </Card.Text>
+          </Link>
+        </Card.Body>
       </Card>
     )
   }

@@ -461,5 +461,6 @@
   "Processing": "قيد المعالجة",
   "Cancelled": "تم الإلغاء",
   "Order-History": "تاريخ الطلب",
-  "Manage-Billing-Information-and-View-Receipts": "إدارة معلومات الفواتير وعرض الإيصالات"
+  "Manage-Billing-Information-and-View-Receipts": "إدارة معلومات الفواتير وعرض الإيصالات",
+  "Start-With-Trial": "ابدأ بالتجربة"
 }

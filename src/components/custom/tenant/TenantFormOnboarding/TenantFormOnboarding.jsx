@@ -73,8 +73,27 @@ const TenantFormOnboarding = ({
       <FormattedMessage id="Please-select-a-product" />
     ),
     plan: Yup.string().required(<FormattedMessage id="Please-select-a-plan" />),
-    price: Yup.string().required(
-      <FormattedMessage id="Please-select-a-price" />
+    price: Yup.string().when(['product', 'plan'], {
+      is: () =>
+        listData[formik.values.product]?.trialPlanId != formik.values.plan,
+      then: Yup.string().required(
+        <FormattedMessage id="Please-select-a-price" />
+      ),
+    }),
+    price: Yup.string().test(
+      'price-validation',
+      <FormattedMessage id="Please-select-a-price" />,
+      function (value) {
+        const product = this.resolve(Yup.ref('product'))
+        const plan = this.resolve(Yup.ref('plan'))
+
+        // Replace 'listData' and adjust the condition based on your data
+        if (listData[product]?.trialPlanId !== plan) {
+          return value !== undefined && value !== ''
+        }
+
+        return true
+      }
     ),
 
     systemName: Yup.string()
@@ -150,7 +169,11 @@ const TenantFormOnboarding = ({
               {
                 productId: values.product,
                 planId: values.plan,
-                planPriceId: values.price,
+                planPriceId:
+                  listData[formik.values.product]?.trialPlanId ==
+                  formik.values?.plan
+                    ? listData[formik.values.product]?.trialPlanPriceId
+                    : formik.values.price,
                 specifications: specificationsArray,
               },
             ],
@@ -219,7 +242,12 @@ const TenantFormOnboarding = ({
       .filter((item) => item.isPublished === true)
       .map((item, index) => ({
         value: item.id,
-        label: item.displayName,
+        label:
+          listData[formik.values.product]?.trialPlanId != item.id
+            ? item.displayName
+            : `${item.displayName} (${intl.formatMessage({
+                id: 'Start-With-Trial',
+              })})`,
       }))
   } else {
     planOptions = []
@@ -459,45 +487,54 @@ const TenantFormOnboarding = ({
               </Form.Group>
             </div>
           )}
-          {type === 'create' && (
-            <div>
-              <Form.Group className="mb-3">
-                <Form.Label>
-                  <FormattedMessage id="Subscription-Options" />{' '}
-                  <span style={{ color: 'red' }}>*</span>
-                </Form.Label>
-                <select
-                  className="form-control"
-                  name="price"
-                  id="price"
-                  value={formik.values.price}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  disabled={!formik.values.plan || !formik.values.product}
-                >
-                  <option value="">
-                    <FormattedMessage id="Select-Option" />{' '}
-                  </option>
-                  {priceList.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      <span className="dolar">$</span>
-                      <div className="price">{option.price}</div>/
-                      <div className="cycle">{option.cycle}</div>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                {formik.touched.price && formik.errors.price && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
+          {type === 'create' &&
+            (formik.values?.plan
+              ? listData[formik.values.product]?.trialPlanId !=
+                formik.values?.plan
+              : '') && (
+              <div>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <FormattedMessage id="Subscription-Options" />{' '}
+                    <span style={{ color: 'red' }}>*</span>
+                  </Form.Label>
+                  <select
+                    className="form-control"
+                    name="price"
+                    id="price"
+                    value={
+                      listData[formik.values.product]?.trialPlanId ==
+                      formik.values?.plan
+                        ? listData[formik.values.product]?.trialPlanPriceId
+                        : formik.values.price
+                    }
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    disabled={!formik.values.plan || !formik.values.product}
                   >
-                    {formik.errors.price}
-                  </Form.Control.Feedback>
-                )}
-              </Form.Group>
-            </div>
-          )}
+                    <option value="">
+                      <FormattedMessage id="Select-Option" />{' '}
+                    </option>
+                    {priceList.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        <span className="dolar">$</span>
+                        <div className="price">{option.price}</div>/
+                        <div className="cycle">{option.cycle}</div>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  {formik.touched.price && formik.errors.price && (
+                    <Form.Control.Feedback
+                      type="invalid"
+                      style={{ display: 'block' }}
+                    >
+                      {formik.errors.price}
+                    </Form.Control.Feedback>
+                  )}
+                </Form.Group>
+              </div>
+            )}
           {type === 'create' &&
             Array.isArray(filteredSpecificationsArray) &&
             filteredSpecificationsArray.length > 0 && (

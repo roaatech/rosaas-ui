@@ -28,6 +28,7 @@ import UpperContent from '../../components/custom/Shared/UpperContent/UpperConte
 import { signinRedirectPath } from '../../store/slices/auth'
 import { setStep } from '../../store/slices/tenants'
 import { Wrapper } from './PricingPage.styled'
+import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 
 const PricingPage = () => {
   const dispatch = useDispatch()
@@ -35,6 +36,7 @@ const PricingPage = () => {
   const routeParams = useParams()
   const productId = routeParams.id
   const listProduct = useSelector((state) => state.products.products)
+  console.log(listProduct?.[productId].trialPlanId)
   const plansPriceList = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
@@ -251,8 +253,12 @@ const PricingPage = () => {
                 style={{
                   transition: 'all 0.9s',
                 }}
+                className="d-flex align-items-center justify-content-between "
               >
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div
+                  className="mb-0 w-50 "
+                  style={{ display: 'flex', alignItems: 'center' }}
+                >
                   <span
                     style={{
                       fontSize: '1.3rem',
@@ -285,6 +291,11 @@ const PricingPage = () => {
                     )}
                   </span>
                 </div>
+                {planId == listProduct?.[productId]?.trialPlanId && (
+                  <div className="tab-header">
+                    <TrialLabel />
+                  </div>
+                )}
               </div>
               <div
                 className="fw-bold mt-2 "

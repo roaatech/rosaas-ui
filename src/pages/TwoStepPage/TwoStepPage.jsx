@@ -148,19 +148,21 @@ const TwoStepProcessPage = () => {
                         </div>
 
                         {/* subsc */}
-                        <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
-                          <div className=" w-50 fw-bold">
-                            <FormattedMessage id="Subscription" />
-                          </div>
-                          {currentPriceData && (
-                            <div className=" card-stats">
-                              ${currentPriceData?.price} /{' '}
-                              <FormattedMessage
-                                id={cycle[currentPriceData?.cycle]}
-                              />
+                        {listProduct?.[productId]?.trialType != 2 && (
+                          <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                            <div className=" w-50 fw-bold">
+                              <FormattedMessage id="Subscription" />
                             </div>
-                          )}
-                        </div>
+                            {currentPriceData && (
+                              <div className=" card-stats">
+                                ${currentPriceData?.price} /{' '}
+                                <FormattedMessage
+                                  id={cycle[currentPriceData?.cycle]}
+                                />
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </Card.Body>
                     </Col>
                   </Row>

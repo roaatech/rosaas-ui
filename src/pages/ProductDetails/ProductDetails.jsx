@@ -43,6 +43,8 @@ import { PublishStatus, activeTab } from '../../const/product'
 import ProductWarnings from '../../components/custom/Product/ProductWarnings/ProductWarnings'
 import ClientCredentials from '../../components/custom/Product/ClientCredentials/ClientCredentials'
 import Label from '../../components/custom/Shared/label/Label.jsx'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faStopwatch } from '@fortawesome/free-solid-svg-icons'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -111,9 +113,9 @@ const ProductDetails = () => {
                   label: productData?.isPublished ? 'Unpublished' : 'Published',
                   func: () => togglePublishProduct(productData?.isPublished),
                   icon: productData?.isPublished ? (
-                    <MdOutlineUnpublished className="mx-2" />
+                    <MdOutlineUnpublished />
                   ) : (
-                    <MdOutlinePublishedWithChanges className="mx-2" />
+                    <MdOutlinePublishedWithChanges />
                   ),
                 },
                 {
@@ -122,7 +124,7 @@ const ProductDetails = () => {
                   id: routeParams.id,
                   label: 'Trial-Period',
                   component: 'addTrial',
-                  icon: <BsRecycle />,
+                  icon: <FontAwesomeIcon icon={faStopwatch} />,
                   setActiveIndex: setActiveIndex,
                 },
                 {
