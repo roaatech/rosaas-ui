@@ -225,7 +225,7 @@ const ProductForm = ({
               </Form.Control.Feedback>
             )}
           </div>
-          <div className="card toggle-container p-2 mb-3">
+          {/* <div className="card toggle-container p-2 mb-3">
             <div className="d-flex align-items-center justify-content-between ">
               <Form.Label className="flex-grow-1">
                 <FormattedMessage id="Is-Published" />{' '}
@@ -247,7 +247,7 @@ const ProductForm = ({
                 />{' '}
               </span>
             </div>
-          </div>
+          </div> */}
           <div>
             <Form.Group className="mb-3">
               <Form.Label>

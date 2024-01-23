@@ -173,7 +173,7 @@ const CheckoutTenantReg = ({
             !createTenant?.data.data?.hasToPay &&
             createTenant?.data.data.tenantId
           ) {
-            navigate(`/tenants/${createTenant?.data.data.tenantId}`)
+            return navigate(`/tenants/${createTenant?.data.data.tenantId}`)
           } else {
             setsystemName(uniqueName)
             setDisplayName(title)

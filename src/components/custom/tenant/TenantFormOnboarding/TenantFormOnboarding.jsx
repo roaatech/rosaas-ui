@@ -157,6 +157,25 @@ const TenantFormOnboarding = ({
             systemName: values.systemName,
             displayName: values.displayName,
           })
+          if (
+            !createTenant?.data.data?.hasToPay &&
+            createTenant?.data.data.tenantId
+          ) {
+            return (
+              navigate(`/tenants/${createTenant?.data.data.tenantId}`),
+              setVisible && setVisible(false),
+              dispatch(
+                deleteAllPlan({
+                  productId: values.product,
+                })
+              ),
+              dispatch(
+                deleteAllPlanPrice({
+                  productId: values.product,
+                })
+              )
+            )
+          }
           dispatch(
             setTenantCreateData({
               tenantData: createTenant.data.data,

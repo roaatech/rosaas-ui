@@ -49,8 +49,10 @@ const CheckoutPage = (data) => {
     data.orderID ||
     createdTenantData?.tenantData?.orderId ||
     createdTenantData?.tenantData?.id
+  console.log({ orderID })
 
   const { hasToPay, setHasToPay, displayName, systemName, currentTenant } = data
+  console.log({ createdTenantData })
   useEffect(() => {
     if (!createdTenantData.tenantData?.hasToPay) {
       return
@@ -121,10 +123,11 @@ const CheckoutPage = (data) => {
     })()
   }, [])
   const [orderData, setOrderData] = useState()
+
   useEffect(() => {
     if (!orderID) {
       return
-    } else if (createdTenantData?.tenantData) {
+    } else if (createdTenantData?.tenantData && orderData?.orderStatus == 2) {
       return setOrderData(createdTenantData.tenantData)
     }
 
@@ -285,7 +288,9 @@ const CheckoutPage = (data) => {
                       </OverlayTrigger>
                     </div>
                     <div className=" card-stats">
-                      {displayName || createdTenantData?.displayName}
+                      {displayName ||
+                        createdTenantData?.displayName ||
+                        createdTenantData?.tenantInfo?.displayName}
                     </div>
                   </div>
 
@@ -315,7 +320,9 @@ const CheckoutPage = (data) => {
                       </OverlayTrigger>
                     </div>
                     <div className=" card-stats">
-                      {systemName || createdTenantData?.systemName}
+                      {systemName ||
+                        createdTenantData?.systemName ||
+                        createdTenantData?.tenantInfo?.systemName}
                     </div>
                   </div>
 
