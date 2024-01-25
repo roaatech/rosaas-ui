@@ -136,6 +136,7 @@ const useRequest = () => {
     paymentCheckout,
     paymentSuccess,
     paymentFailed,
+    changeOrderPlan,
   } = usePaymentReq()
 
   return {
@@ -229,6 +230,7 @@ const useRequest = () => {
     updateClient,
     deleteClient,
     activateClient,
+    changeOrderPlan,
   }
 }
 export default useRequest

@@ -274,13 +274,17 @@ const SubscriptionManagement = (props) => {
                       cyc?.subscriptionCycleId ? (
                         <div className="tab-header">
                           {formatDate(cyc.startDate)}
-                          {'(current)'}
+                          {` (${intl.formatMessage({ id: 'Current' })})`}
                           {cyc.cycleType == 2 && <TrialLabel />}
                         </div>
                       ) : (
                         <div className="tab-header">
-                          {formatDate(cyc.startDate)}
-                          {cyc.cycleType == 2 && <TrialLabel />}
+                          {cyc.cycleType == 2 ? (
+                            <FormattedMessage id="Trial" />
+                          ) : (
+                            formatDate(cyc.startDate)
+                          )}
+                          {/* {cyc.cycleType == 2 && <TrialLabel />} */}
                         </div>
                       )
                     }

@@ -48,6 +48,38 @@ export const tenantsSlice = createSlice({
       }
     },
 
+    changeOrderAttribute: (state, action) => {
+      const { tenantId, orderId, updatedAttributes } = action.payload
+
+      // Ensure the tenant and order exist
+      if (state.tenants[tenantId] && state.tenants[tenantId].orders[orderId]) {
+        const existingOrder = state.tenants[tenantId].orders[orderId]
+
+        const updatedOrder = {
+          ...existingOrder,
+          orderItems: existingOrder.orderItems.map((item, index) => {
+            // Check if the item at the specified index exists and should be updated
+            if (
+              updatedAttributes.orderItems &&
+              updatedAttributes.orderItems[index]
+            ) {
+              return {
+                ...item,
+                ...updatedAttributes.orderItems[index], // Update all attributes in orderItems
+              }
+            }
+            return item // If the item at the index doesn't need to be updated, return it as is
+          }),
+        }
+
+        // Update the order in the state
+        state.tenants[tenantId].orders = {
+          ...state.tenants[tenantId].orders,
+          [orderId]: updatedOrder,
+        }
+      }
+    },
+
     history: (state, action) => {
       const currentTenants = { ...current(state.tenants) }
       const tenant = JSON.parse(
@@ -184,5 +216,6 @@ export const {
   deleteTenantAdminPrivileges,
   AdminPrivilegesChangeAttr,
   setAllOrders,
+  changeOrderAttribute,
 } = tenantsSlice.actions
 export default tenantsSlice.reducer

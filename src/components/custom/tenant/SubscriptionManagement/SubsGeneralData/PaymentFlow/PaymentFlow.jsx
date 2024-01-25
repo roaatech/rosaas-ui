@@ -19,15 +19,27 @@ import {
   setStep,
   setTenantCreateData,
 } from '../../../../../../store/slices/tenants'
+import UpDownGradeForm from '../../UpgradeForm/UpDowngradeForm'
+import ThemeDialog from '../../../../Shared/ThemeDialog/ThemeDialog'
 
 function PaymentFlow({ price, product }) {
   const { getOrdersListByTenantId } = useRequest()
   let tenantsData = useSelector((state) => state.tenants.tenants)
+  let productsData = useSelector((state) => state.products.products)
   const tenantId = useParams().id
   const currentTenantData = tenantsData[tenantId]
   let ordersList = tenantsData[tenantId]?.orders
+  console.log({ orders: tenantsData[tenantId]?.orders })
+  const trialPlanId =
+    productsData[product]?.trialType == 2 && productsData[product]?.trialPlanId
+
+  console.log({ trialPlanId })
+  const [visible, setVisible] = useState()
   const dispatch = useDispatch()
   useEffect(() => {
+    if (tenantsData[tenantId]?.orders) {
+      return
+    }
     ;(async () => {
       const orders = await getOrdersListByTenantId(tenantId)
 
@@ -39,26 +51,25 @@ function PaymentFlow({ price, product }) {
       )
     })()
   }, [tenantId])
-  const [first, setFirst] = useState(0)
-  const [rows, setRows] = useState(10)
-  let direction = useSelector((state) => state.main.direction)
 
-  const onPageChange = (event) => {
-    setFirst(event.first)
-    setRows(event.rows)
-  }
+  let direction = useSelector((state) => state.main.direction)
 
   const navigate = useNavigate()
 
-  const handleButtonClick = (id) => {
+  const handleButtonClick = (id, planPriceId) => {
     dispatch(setStep(2))
-    navigate(`/payment/product/${product}/subscribtion/${price}`)
+    navigate(`/payment/product/${product}/subscribtion/${planPriceId}`)
     dispatch(
       setTenantCreateData({
         tenantData: ordersList[id],
         tenantInfo: currentTenantData,
       })
     )
+  }
+  const [currentOrderId, setCurrentOrderId] = useState('')
+  const changeOrderPlanForm = (id) => {
+    setVisible(true)
+    setCurrentOrderId(id)
   }
 
   return (
@@ -83,18 +94,33 @@ function PaymentFlow({ price, product }) {
                         <FormattedMessage id="Order" /> #{item?.orderNumber}
                       </div>
 
-                      {!item?.hasToPay ? (
-                        <div className="author mb-2">
-                          <Label {...paymentStatus[item?.paymentStatus]} />
-                        </div>
-                      ) : (
-                        <Button
-                          variant="primary"
-                          onClick={() => handleButtonClick(item.id)}
-                          className="font-small"
-                        >
-                          <FormattedMessage id="Pay-Now" />
-                        </Button>
+                      {
+                        !item?.hasToPay ? (
+                          <div className="author mb-2">
+                            <Label {...paymentStatus[item?.paymentStatus]} />
+                          </div>
+                        ) : item.orderItems[0].planId != trialPlanId ? (
+                          <Button
+                            variant="primary"
+                            onClick={() =>
+                              handleButtonClick(
+                                item.orderId,
+                                item.orderItems[0].planPriceId
+                              )
+                            }
+                            className="font-small"
+                          >
+                            <FormattedMessage id="Pay-Now" />
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="primary"
+                            onClick={() => changeOrderPlanForm(item.orderId)}
+                            className="font-small"
+                          >
+                            <FormattedMessage id="Change-Plan" />
+                          </Button>
+                        )
                         // <div
                         //   onClick={handleButtonClick}
                         //   style={{ cursor: 'pointer' }}
@@ -102,7 +128,7 @@ function PaymentFlow({ price, product }) {
                         // >
                         //   <Label {...paymentStatus[item?.type]} />
                         // </div>
-                      )}
+                      }
                     </div>
                     <div className="flex justify-content-between flex-wrap">
                       <div
@@ -121,6 +147,18 @@ function PaymentFlow({ price, product }) {
               </div>
             ))}
         </div>
+        <ThemeDialog visible={visible} setVisible={setVisible}>
+          <UpDownGradeForm
+            popupLabel={<FormattedMessage id={'Change-Order-Plan'} />}
+            tenantData={currentTenantData}
+            visible={visible}
+            setVisible={setVisible}
+            sideBar={false}
+            selectedProduct={product}
+            type={'changeOrderPlan'}
+            currentOrderId={currentOrderId}
+          />
+        </ThemeDialog>
       </Card.Body>
     </Wrapper>
   )

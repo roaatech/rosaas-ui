@@ -19,6 +19,12 @@ const usePaymentReq = () => {
   const paymentFailed = async (data) => {
     return await Request.get(`payment/v1/failed`)
   }
+  const changeOrderPlan = async (orderId, data) => {
+    return await Request.put(
+      `management/sadmin/v1/orders/${orderId}/plan`,
+      data
+    )
+  }
 
   return {
     getOrderById,
@@ -26,6 +32,7 @@ const usePaymentReq = () => {
     paymentSuccess,
     paymentFailed,
     getOrdersListByTenantId,
+    changeOrderPlan,
   }
 }
 

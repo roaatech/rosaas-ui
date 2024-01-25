@@ -462,5 +462,9 @@
   "Cancelled": "تم الإلغاء",
   "Order-History": "تاريخ الطلب",
   "Manage-Billing-Information-and-View-Receipts": "إدارة معلومات الفواتير وعرض الإيصالات",
-  "Start-With-Trial": "ابدأ بالتجربة"
+  "Start-With-Trial": "ابدأ بالتجربة",
+  "Initial": "تحت المراجعة",
+  "Pending-To-Pay": "في انتظار الدفع",
+  "Change-Plan": "تغيير الخطة",
+  "Change-Order-Plan": "تغيير خطة الطلب"
 }

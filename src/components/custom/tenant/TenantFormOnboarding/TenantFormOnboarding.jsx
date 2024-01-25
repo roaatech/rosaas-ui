@@ -347,6 +347,20 @@ const TenantFormOnboarding = ({
     formik.values.product,
     listData?.[formik.values.product]?.plansPrice,
   ])
+  useEffect(() => {
+    if (listData[formik.values.product]?.trialType != 2) {
+      return
+    }
+    if (formik.values.product) {
+      formik.setValues((values) => ({
+        ...values,
+        plan:
+          formik.values.plan ||
+          listData[formik.values.product]?.trialPlanId ||
+          '',
+      }))
+    }
+  }, [formik.values.product])
 
   return (
     <Wrapper>
@@ -462,7 +476,13 @@ const TenantFormOnboarding = ({
                   className="form-control"
                   name="plan"
                   id="plan"
-                  value={formik.values.plan}
+                  value={
+                    formik.values.plan ||
+                    (formik.values.product &&
+                      listData[formik.values.product]?.trialType == 2 &&
+                      listData[formik.values.product]?.trialPlanId) ||
+                    ''
+                  }
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   disabled={!formik.values.product}

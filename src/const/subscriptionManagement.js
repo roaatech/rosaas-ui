@@ -61,7 +61,13 @@ export const SubscriptionResetStatus = {
 export const paymentStatus = {
   100: {
     background: 'var(--primary-color)',
-    value: <FormattedMessage id="Pending" />,
+    value: <FormattedMessage id="Initial" />,
+    icon: <MdHourglassEmpty />,
+    color: '#fff',
+  },
+  150: {
+    background: 'var(--primary-color)',
+    value: <FormattedMessage id="Pending-To-Pay" />,
     icon: <MdHourglassEmpty />,
     color: '#fff',
   },
@@ -98,11 +104,11 @@ export const paymentStatus = {
 }
 export const orderStatus = {
   1: {
-    value: 'Pending',
+    value: 'Initial',
     color: 'var(--second-color)',
   },
   2: {
-    value: 'Processing',
+    value: 'Pending-To-Pay',
     color: 'var(--orange-brown)',
   },
   3: {

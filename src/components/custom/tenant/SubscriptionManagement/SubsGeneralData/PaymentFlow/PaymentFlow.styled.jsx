@@ -5,6 +5,7 @@ export const Wrapper = styled.div`
     max-height: calc(238px);
     overflow-y: auto;
     margin-bottom: 10px;
+    min-height: 239px;
 
     @media (max-height: 600px) {
       max-height: 350px;
@@ -38,6 +39,7 @@ export const Wrapper = styled.div`
       }
 
       .timeLineItemCont {
+        margin-top: 10px;
         padding: 10px;
         border-radius: 5px;
         .processType {

@@ -16,6 +16,7 @@ import {
 import { setAllSpecifications } from '../../../../../store/slices/products/specificationReducers.js'
 import { cycle } from '../../../../../const/product.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+import { changeOrderAttribute } from '../../../../../store/slices/tenants.js'
 
 const UpDownGradeForm = ({
   tenantData,
@@ -24,10 +25,13 @@ const UpDownGradeForm = ({
   type,
   setUpdate,
   update,
+  currentOrderId,
 }) => {
+  console.log({ tenantData, setVisible, popupLabel, type, setUpdate, update })
   const { editTenantRequest, getProductPlans, getProductPlanPriceList } =
     useRequest()
   const selectedProduct = tenantData?.subscriptions[0]?.productId
+  console.log({ selectedProduct })
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
   const subscriptionDatas = useSelector(
@@ -35,12 +39,17 @@ const UpDownGradeForm = ({
   )
 
   const dispatch = useDispatch()
-  const { getProductList, upgradeSubscription, downgradeSubscription } =
-    useRequest()
+  const {
+    getProductList,
+    upgradeSubscription,
+    downgradeSubscription,
+    changeOrderPlan,
+  } = useRequest()
 
   const listData = useSelector((state) => state.products.products)
   const currentPlanPrice = subscriptionDatas?.planPrice
   const currentPlanCycle = subscriptionDatas?.planCycle
+  console.log({ currentPlanCycle, currentPlanPrice })
   const currentPlanId = subscriptionDatas?.planId
   const [idsWithValues, setIdsWithValues] = useState()
 
@@ -78,6 +87,27 @@ const UpDownGradeForm = ({
           subscriptionId: currentSubscriptionId,
           comment: values.comment,
         })
+      } else if (type == 'changeOrderPlan') {
+        const changeOrderPlanReq = await changeOrderPlan(currentOrderId, {
+          planPriceId: values.price,
+          planId: values.plan,
+          comment: values.comment,
+        })
+        dispatch(
+          changeOrderAttribute({
+            tenantId: tenantData.id,
+            orderId: currentOrderId,
+            updatedAttributes: {
+              orderItems: [
+                {
+                  planId: values.plan,
+                  planPriceId: values.price,
+                },
+              ],
+            },
+          })
+        )
+        setVisible && setVisible(false)
       } else {
         const downgradeSubscriptionReq = await downgradeSubscription({
           planPriceId: values.price,
@@ -89,12 +119,12 @@ const UpDownGradeForm = ({
       setUpdate(update + 1)
 
       setVisible && setVisible(false)
-      setVisible && setVisible(false)
     },
   })
 
   const intl = useIntl()
   let [planOptions, setPlanOptions] = useState([])
+  console.log({ idsWithValues })
   useEffect(() => {
     if (listData[selectedProduct]?.plans && idsWithValues) {
       setPlanOptions(
@@ -168,17 +198,23 @@ const UpDownGradeForm = ({
           }))
 
         const hidePlanData = planDataArray
-          .filter(
-            (item) =>
+          .filter((item) => {
+            if (
               item.isPublished === true &&
-              (type == 'upgrade'
-                ? item.cycle == currentPlanCycle
+              (type === 'upgrade'
+                ? item.cycle === currentPlanCycle
                   ? item.price > currentPlanPrice
                   : item.price > otherCurrentCycle.price
-                : item.cycle == currentPlanCycle
-                ? item.price < currentPlanPrice
-                : item.price < otherCurrentCycle.price)
-          )
+                : type === 'downgrade'
+                ? item.cycle === currentPlanCycle
+                  ? item.price < currentPlanPrice
+                  : item.price < otherCurrentCycle.price
+                : type === 'changePlan')
+            ) {
+              return false
+            }
+            return true
+          })
           .map((item) => ({
             value: item.id,
             planId: item.plan.id,
