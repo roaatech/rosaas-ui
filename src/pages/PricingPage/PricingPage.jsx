@@ -202,7 +202,7 @@ const PricingPage = () => {
               <Form.Check
                 key={index}
                 type="radio"
-                label={cycle[cycleNum]}
+                label={<FormattedMessage id={cycle[cycleNum]} />}
                 value={cycleNum}
                 checked={selectedCycle === cycleNum}
                 onChange={() => handleCycleChange(cycleNum)}
@@ -237,7 +237,10 @@ const PricingPage = () => {
     const featureStatusMap = {}
     featurePlans &&
       featurePlans.forEach((featurePlan) => {
-        featureStatusMap[featurePlan?.feature?.id] = true
+        featureStatusMap[featurePlan?.feature?.id] = {
+          status: true,
+          description: featurePlan?.description,
+        }
       })
     return (
       <div>
@@ -276,7 +279,10 @@ const PricingPage = () => {
                     }}
                   >
                     {' '}
-                    /{cycle[filteredPrices?.cycle]}
+                    /
+                    {filteredPrices?.cycle && (
+                      <FormattedMessage id={cycle[filteredPrices?.cycle]} />
+                    )}
                   </span>
                 </div>
               </div>
@@ -292,20 +298,21 @@ const PricingPage = () => {
               {}
             </Card.Header>
             <Card.Body>
-              {uniqueFeatures?.map((featurePlan) => (
-                <div key={featurePlan.id}>
+              {uniqueFeatures?.map((feature) => (
+                <div key={feature.id}>
                   <p>
-                    {featureStatusMap[featurePlan.id] ? (
+                    {featureStatusMap?.[feature.id]?.status ? (
                       <span>
                         <BsCheck2Circle
                           style={{ color: 'var(--second-color)' }}
                         />{' '}
-                        {featurePlan.description || featurePlan.displayName}{' '}
+                        {featureStatusMap?.[feature.id]?.description ||
+                          feature.displayName}{' '}
                       </span>
                     ) : (
                       <span>
-                        <BsXCircle style={{ color: '#a3a3a3' }} />{' '}
-                        {featurePlan.displayName}
+                        <BsXCircle style={{ color: 'var(--silver-gray)' }} />{' '}
+                        {feature.displayName}
                       </span>
                     )}{' '}
                   </p>
@@ -360,8 +367,7 @@ const PricingPage = () => {
                 {' '}
                 <FontAwesomeIcon
                   icon={faBox}
-                  style={{ cursor: 'pointer' }}
-                  className="mr-2 product-icon"
+                  className="mr-2 product-icon ml-2"
                 />
                 {listProduct?.[productId]?.displayName?.toUpperCase()}
               </h4>
@@ -383,16 +389,18 @@ const PricingPage = () => {
 
                   return (
                     renderedPlans && (
-                      <span className="w-3">
-                        <Col
-                          key={
-                            groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
-                          }
-                          md={groupedByCycle[selectedCycle].length}
-                        >
-                          {renderedPlans}
-                        </Col>
-                      </span>
+                      <Col
+                        key={
+                          groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
+                        }
+                        md={
+                          Object.keys(groupedByCycle[selectedCycle]).length >= 3
+                            ? groupedByCycle[selectedCycle].length
+                            : 3
+                        }
+                      >
+                        {renderedPlans}
+                      </Col>
                     )
                   )
                 })}

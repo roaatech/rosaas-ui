@@ -19,10 +19,11 @@ import PlanPriceForm from '../../Product/ProductPlansPrice/PlanPriceForm/PlanPri
 import CustomSpecificationForm from '../../Product/CustomSpecification/CustomSpecificationForm/CustomSpecificationForm'
 import TenantSpecificationForm from '../../tenant/TenantSpecificatifonForm/TenantSpecificationForm'
 import UpDowngradeForm from '../../tenant/SubscriptionManagement/UpgradeForm/UpDowngradeForm'
-import CreateSecretForm from '../../Product/ClientCredentials/CreateSecretForm/CreateSecretForm'
+import CreateClientForm from '../../Product/ClientCredentials/CreateClientForm/CreateClientForm'
 import CreateTenantUserForm from '../../tenant/TenantsUsersManagement/CreateTenantUserForm/CreateTenantUserForm'
 import CreateProductUserForm from '../../Product/ProductsUsersManagement/CreateProductUserForm/CreateProductUserForm'
 import TrialForm from '../../Product/TrialForm/TrialForm'
+import CreateSecretForm from '../../Product/ClientCredentials/SecretMangements/CreateSecretForm/CreateSecretForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -227,6 +228,18 @@ const DynamicButtons = ({ buttons }) => {
     createProductUser: () => (
       <>
         <CreateProductUserForm
+          popupLabel={buttons[currentButtonIndex].popupLabel}
+          type={buttons[currentButtonIndex].formType}
+          setVisible={setVisible}
+          clientId={buttons[currentButtonIndex].clientId}
+          update={buttons[currentButtonIndex].update}
+          setUpdate={buttons[currentButtonIndex].setUpdate}
+        />
+      </>
+    ),
+    createClient: () => (
+      <>
+        <CreateClientForm
           popupLabel={buttons[currentButtonIndex].popupLabel}
           type={buttons[currentButtonIndex].formType}
           setVisible={setVisible}

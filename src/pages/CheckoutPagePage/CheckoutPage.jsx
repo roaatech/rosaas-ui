@@ -221,11 +221,11 @@ const CheckoutPage = (data) => {
     return (
       <>
         <Card.Header>
-          Plan{' '}
+          <FormattedMessage id={'Plan'} />{' '}
           <span className="fw-bold">
             {plansPriceList?.[subscribtionId]?.plan.displayName?.toUpperCase()}
           </span>{' '}
-          of Product{' '}
+          <FormattedMessage id={'of-Product'} />{' '}
           <span className="fw-bold">
             {listProduct?.[productId]?.displayName?.toUpperCase()}
           </span>

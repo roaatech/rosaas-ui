@@ -93,7 +93,7 @@ const PlanForm = ({
           productId: productId,
           description: values.description,
           displayOrder: values.displayOrder || 0,
-          alternativePlanID: values.alternativePlanID,
+          alternativePlanID: values.alternativePlanID || null,
           trialPeriodInDays: values.trialPeriodInDays || 0,
         })
 
@@ -134,7 +134,7 @@ const PlanForm = ({
             displayName: values.displayName,
             description: values.description,
             displayOrder: values.displayOrder || 0,
-            alternativePlanID: values.alternativePlanID,
+            alternativePlanID: values.alternativePlanID || null,
             trialPeriodInDays: values.trialPeriodInDays || 0,
           },
           id: planData.id,

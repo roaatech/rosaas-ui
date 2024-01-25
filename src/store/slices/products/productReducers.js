@@ -33,7 +33,6 @@ const productInfo = (state, action) => {
 const clientCredentials = (state, action) => {
   const currentProducts = JSON.parse(JSON.stringify(state.products))
   const { id, data } = action.payload
-
   if (currentProducts[id]) {
     Object.keys(data).forEach((key) => {
       const item = data[key]
@@ -43,6 +42,31 @@ const clientCredentials = (state, action) => {
           ...item,
         },
       }
+    })
+  }
+
+  state.products = currentProducts
+}
+const clientCredentialsSecrets = (state, action) => {
+  const currentProducts = JSON.parse(JSON.stringify(state.products))
+  const { productId, clientId, data } = action.payload
+  if (
+    currentProducts[productId] &&
+    currentProducts[productId].clientCredentials
+  ) {
+    if (!currentProducts[productId].clientCredentials[clientId]) {
+      currentProducts[productId].clientCredentials[clientId] = {}
+    }
+
+    currentProducts[productId].clientCredentials[
+      clientId
+    ].clientCredentialsSecrets = {}
+
+    Object.keys(data).forEach((key) => {
+      const item = data[key]
+      currentProducts[productId].clientCredentials[
+        clientId
+      ].clientCredentialsSecrets[item.id] = { ...item }
     })
   }
 
@@ -63,7 +87,110 @@ const clientCredentialsInfo = (state, action) => {
 
   state.products = currentProducts
 }
+const clientSecretInfo = (state, action) => {
+  const { data, productId, itemId, clientId } = action.payload
+  const currentProducts = JSON.parse(JSON.stringify(state.products))
+  const productToUpdate = currentProducts[productId]
+
+  if (productToUpdate && productToUpdate.clientCredentials) {
+    currentProducts[productId] = {
+      ...productToUpdate,
+      clientCredentials: {
+        ...productToUpdate.clientCredentials,
+        [clientId]: {
+          ...productToUpdate.clientCredentials?.[clientId],
+          clientCredentialsSecrets: {
+            ...(productToUpdate.clientCredentials?.[clientId]
+              ?.clientCredentialsSecrets || {}),
+            [itemId]: { ...data },
+          },
+        },
+      },
+    }
+  }
+
+  state.products = currentProducts
+}
+
+const clientSecretAttr = (state, action) => {
+  const { productId, clientId, itemId, attributeName, attributeValue } =
+    action.payload
+
+  const currentProducts = { ...state.products }
+  const productToUpdate = currentProducts[productId]
+
+  if (productToUpdate && productToUpdate.clientCredentials) {
+    currentProducts[productId] = {
+      ...productToUpdate,
+      clientCredentials: {
+        ...productToUpdate.clientCredentials,
+        [clientId]: {
+          ...productToUpdate.clientCredentials[clientId],
+          clientCredentialsSecrets: {
+            ...(productToUpdate.clientCredentials[clientId]
+              ?.clientCredentialsSecrets || {}),
+            [itemId]: {
+              ...productToUpdate.clientCredentials[clientId]
+                ?.clientCredentialsSecrets?.[itemId],
+              [attributeName]: attributeValue,
+            },
+          },
+        },
+      },
+    }
+
+    state.products = currentProducts
+  }
+}
+const updateClientCredentialAttr = (state, action) => {
+  const { productId, itemId, attributeName, attributeValue } = action.payload
+
+  const currentProducts = JSON.parse(JSON.stringify(state.products))
+  const productToUpdate = currentProducts[productId]
+  if (productToUpdate && productToUpdate.clientCredentials) {
+    currentProducts[productId] = {
+      ...productToUpdate,
+      clientCredentials: {
+        ...productToUpdate.clientCredentials,
+        [itemId]: {
+          ...productToUpdate.clientCredentials[itemId],
+          [attributeName]: attributeValue,
+        },
+      },
+    }
+
+    state.products = currentProducts
+  }
+}
 const deleteClientSecret = (state, action) => {
+  const { productId, itemId, clientId } = action.payload
+
+  const currentProducts = { ...state.products }
+  const productToUpdate = currentProducts[productId]
+
+  if (productToUpdate && productToUpdate.clientCredentials) {
+    const updatedClientCredentials = {
+      ...(productToUpdate.clientCredentials[clientId]
+        ?.clientCredentialsSecrets || {}),
+    }
+
+    delete updatedClientCredentials[itemId]
+
+    currentProducts[productId] = {
+      ...productToUpdate,
+      clientCredentials: {
+        ...productToUpdate.clientCredentials,
+        [clientId]: {
+          ...productToUpdate.clientCredentials?.[clientId],
+          clientCredentialsSecrets: updatedClientCredentials,
+        },
+      },
+    }
+  }
+
+  state.products = currentProducts
+}
+const deleteClientCredentials = (state, action) => {
   const { productId, itemId } = action.payload
   const currentProducts = JSON.parse(JSON.stringify(state.products))
   const productToUpdate = currentProducts[productId]
@@ -156,4 +283,9 @@ export {
   deleteProductAdminPrivileges,
   AdminPrivilegesChangeAttr,
   productsChangeAttr,
+  clientCredentialsSecrets,
+  deleteClientCredentials,
+  clientSecretInfo,
+  clientSecretAttr,
+  updateClientCredentialAttr,
 }

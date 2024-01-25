@@ -47,9 +47,11 @@ const ProductListPage = () => {
               <FontAwesomeIcon
                 icon={faBox}
                 style={{ cursor: 'pointer' }}
-                className="mr-2 product-icon"
+                className=" product-icon "
               />
-              <span className="product-name">{product?.displayName}</span>
+              <span className="product-name ml-2  mr-2">
+                {product?.displayName}
+              </span>
             </Card.Title>
             <Card.Text className="product-description">
               {product.description || '----'}

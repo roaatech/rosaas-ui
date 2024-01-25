@@ -396,7 +396,7 @@
   "signUp": "Sign Up",
   "signUpTo": "Sign Up to",
   "Signin": "Sign In",
-  "Rosaas-Description": "Rosaas is a cutting-edge SaaS facilitator designed to simplify and streamline the process of converting your cloud-based product into a successful Software as a Service (SaaS) offering.",
+  "Rosaas-Description": "RoSaaS is a cutting-edge SaaS facilitator designed to simplify and streamline the process of converting your cloud-based product into a successful Software as a Service (SaaS) offering.",
   "Seamless-SaaS-Transformation": "Your Pathway to Seamless SaaS Transformation!",
   "Client-Admin": "Client Admin",
   "Product-Admin": "Product Admin",
@@ -437,5 +437,17 @@
   "Trial-Type": "Trial Type",
   "Trial-Period-In-Days-Required-Number": "Trial Period In Days is required when Type is Number",
   "Trial-Plan": "Trial Plan",
-  "generated-automatically-by-system": "Generated automatically by the system"
+  "generated-automatically-by-system": "Generated automatically by the system",
+  "Enter-Your-Info": "Enter Your Info",
+  "of-Product": "of Product",
+  "External-System-Client": "External System Client",
+  "Hour": "Hour",
+  "Access-Token-Life-Time": "Access Token Life Time",
+  "Client-Type": "Client Type",
+  "Client-Id": "Client ID",
+  "Client-Name": "Client Name",
+  "New-Client": "New Client",
+  "Access-Token-Lifetime-In-Hour": "Access Token Lifetime in Hour",
+  "Create-New-Client": "Create New Client",
+  "add-secret": "Add Secret"
 }

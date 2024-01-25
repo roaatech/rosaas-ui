@@ -444,7 +444,7 @@ const SubscriptionManagement = (props) => {
                                   <div className=" card-stats">
                                     <Label
                                       {...{
-                                        background: '#cccccc40',
+                                        background: 'var(--misty-gray)',
                                         value: formatDate(
                                           subscriptionDatas.startDate
                                         ),
@@ -635,7 +635,8 @@ const SubscriptionManagement = (props) => {
                                                   'Non Resettable' ? (
                                                     <Label
                                                       {...{
-                                                        background: '#cccccc40',
+                                                        background:
+                                                          'var(--misty-gray)',
                                                         value: formatDate(
                                                           subscription.featureStartDate
                                                         ),
@@ -797,7 +798,7 @@ const SubscriptionManagement = (props) => {
                                                                       <Label
                                                                         {...{
                                                                           background:
-                                                                            '#cccccc40',
+                                                                            'var(--misty-gray)',
                                                                           value:
                                                                             formatDate(
                                                                               cycle.startDate

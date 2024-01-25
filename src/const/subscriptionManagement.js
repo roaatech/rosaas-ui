@@ -8,9 +8,9 @@ export const PlanChangingType = {
 }
 export const SubscriptionPlanChangeStatus = {
   1: {
-    background: '#f0f8ff',
+    background: 'var(--misty-blue)',
     value: <FormattedMessage id="Pending" />,
-    color: '#336699',
+    color: 'var(--midnight-blue)',
   },
   2: {
     background: 'rgba(255, 201, 102, 0.4)',
@@ -18,22 +18,22 @@ export const SubscriptionPlanChangeStatus = {
     color: '#5c472e',
   },
   3: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Done" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
   },
   4: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Failure" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
   },
 }
 
 export const SubscriptionResetStatus = {
   1: {
-    background: '#f0f8ff',
+    background: 'var(--misty-blue)',
     value: <FormattedMessage id="Pending" />,
-    color: '#336699',
+    color: 'var(--midnight-blue)',
   },
   2: {
     background: 'rgba(255, 201, 102, 0.4)',
@@ -41,14 +41,14 @@ export const SubscriptionResetStatus = {
     color: '#5c472e',
   },
   3: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Done" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
   },
   4: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Failure" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
   },
 }
 
@@ -57,13 +57,13 @@ export const paymentStatus = {
     background: '#5cb85c40',
     value: <FormattedMessage id="Paid-successfully" />,
     icon: <MdHourglassEmpty />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
   },
   2: {
     background: '#ffa50040',
     value: <FormattedMessage id="Payment-Failed" />,
     icon: <AiOutlinePayCircle />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
   },
   3: {
     background: '#d9534f40',
@@ -80,15 +80,15 @@ export const paymentStatus = {
 
 export const subscriptionStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Active" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
     // icon: <MdPayments />,
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="Inactive" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
     // icon: <MdOutlinePayments />,
   },
 }

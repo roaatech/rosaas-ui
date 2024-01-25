@@ -21,8 +21,6 @@ import { setStep } from '../../../store/slices/tenants'
 const CheckoutTenantReg = ({
   type,
   tenantData,
-  update,
-  updateTenant,
   setVisible,
   popupLabel,
   currentPrice,
@@ -95,7 +93,7 @@ const CheckoutTenantReg = ({
       listProduct?.[productId]?.systemName
     }-tenant-${new Date().valueOf()}`
 
-    const uniqueName = uniName.replace(/[^a-zA-Z0-9_-]/g, '')
+    const uniqueName = uniName.replace(/[^a-z0-9_-]/g, '')
 
     const title = `${
       listProduct?.[productId]?.displayName
@@ -192,7 +190,6 @@ const CheckoutTenantReg = ({
             displayName: values.displayName,
             id: tenantData.id,
           })
-          updateTenant()
         }
       }
       setVisible && setVisible(false)

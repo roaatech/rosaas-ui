@@ -11,6 +11,8 @@ import {
   MdPayments,
   MdOutlinePayments,
   MdOutlineLock,
+  MdMicExternalOff,
+  MdMicExternalOn,
 } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
 
@@ -20,15 +22,15 @@ export const Client_id = 'spa_rosas_admin_panel'
 
 export const HealthStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Healthy" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: <BsFillCheckCircleFill />,
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="Unavailable" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
     icon: <BsFillExclamationCircleFill />,
   },
 }
@@ -44,66 +46,68 @@ export const DateStatus = {
 }
 export const PublishStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Published" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: <MdOutlinePublishedWithChanges />,
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="Unpublished" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
     icon: <MdOutlineUnpublished />,
   },
 }
 export const systemLockStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Locked" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: <BsFillLockFill />,
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="Unlocked" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
     icon: <BsFillUnlockFill />,
   },
 }
-export const subscriptionStatus = {
+export const activeStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Active" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="Inactive" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
   },
 }
-export const expirationStatus = {
-  true: {
-    background: '#eff9f6',
-    value: <FormattedMessage id="Valid" />,
-    color: '#00a675',
-  },
-  false: {
-    background: '#f5e8e4',
-    value: <FormattedMessage id="Expired" />,
-    color: '#d26b4e',
-  },
-}
+
 export const isMajorStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="true" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
   },
   false: {
     background: '#f5e8e4',
     value: <FormattedMessage id="false" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
+  },
+}
+export const clientTypeLable = {
+  101: {
+    background: 'rgba(255, 201, 102, 0.4)',
+    value: <FormattedMessage id="External-System" />,
+    color: '#5c472e',
+  },
+
+  102: {
+    background: 'var(--misty-blue)',
+    value: <FormattedMessage id="External-System-Client" />,
+    color: 'var(--midnight-blue)',
   },
 }
 

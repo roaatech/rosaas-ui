@@ -23,7 +23,7 @@ import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import Label from '../../Shared/label/Label'
-import { subscriptionStatus } from '../../../../const/product'
+import { activeStatus } from '../../../../const/product'
 import { Wrapper } from './ProductTenantsList.styled'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
@@ -117,7 +117,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
         </td>
         <td>
           <span>
-            <Label {...subscriptionStatus[subscribtionStatus]} />
+            <Label {...activeStatus[subscribtionStatus]} />
           </span>
         </td>
         <td>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import useRequest from '../../../../../axios/apis/useRequest.js'
+import useRequest from '../../../../../../axios/apis/useRequest.js'
 import { Modal, Button, Alert } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl'
 
 import { useParams } from 'react-router-dom'
 
-import { Wrapper } from '../ClientCredentials.styled.jsx'
+import { Wrapper } from '../../ClientCredentials.styled.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCopy,
@@ -18,11 +18,17 @@ import {
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons'
 import {
-  clientCredentialsInfo,
-  clientCredentials,
-} from '../../../../../store/slices/products/productsSlice.js'
+  clientCredentialsSecrets,
+  clientSecretInfo,
+} from '../../../../../../store/slices/products/productsSlice.js'
 import { BsCheckCircleFill } from 'react-icons/bs'
-const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
+const CreateSecretForm = ({
+  type,
+  setVisible,
+  popupLabel,
+  currentClientId,
+  currentId,
+}) => {
   const {
     createClientSecret,
     regenerateClientSecret,
@@ -36,8 +42,13 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
 
   const id = allProducts[productId]?.client.id
   const secretItem =
-    currentId && allProducts[productId].clientCredentials[currentId]
-  const secretList = allProducts[productId].clientCredentials
+    currentClientId &&
+    allProducts[productId]?.clientCredentials?.[currentClientId]
+      ?.clientCredentialsSecrets?.[currentId]
+  const secretList =
+    allProducts[productId]?.clientCredentials?.[currentClientId]
+      ?.clientCredentialsSecrets
+
   const firstFieldKey = secretList && Object.keys(secretList)[0]
   const [clientRecordId, setClientRecordId] = useState(
     secretList?.[firstFieldKey]?.clientRecordId || ''
@@ -68,7 +79,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
     const fetchData = async () => {
       if (!clientRecordId || !clientId) {
         try {
-          const clientData = await getClientId(productId, id)
+          const clientData = await getClientId(productId, currentClientId)
 
           setClientRecordId(clientData.data.data?.clientRecordId)
           setClientId(clientData.data.data?.clientId)
@@ -85,7 +96,8 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
         setNexPage(true)
         try {
           const clientSecretRegenerate = await regenerateClientSecret(
-            secretItem.clientRecordId,
+            currentClientId,
+            productId,
             currentId
           )
           setClientSecret(clientSecretRegenerate.data.data)
@@ -110,17 +122,18 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
       if (type === 'create') {
         let clientSecret
         if (customExpirationDate) {
-          clientSecret = await createClientSecret(productId, id, {
+          clientSecret = await createClientSecret(productId, currentClientId, {
             description: values.displayName,
             expiration: customExpirationDate,
           })
           dispatch(
-            clientCredentials({
-              id: productId,
+            clientCredentialsSecrets({
+              productId,
+              clientId: currentClientId,
               data: {
                 ...secretList,
-                ...[
-                  {
+                ...{
+                  [clientSecret.data.data.id]: {
                     id: clientSecret.data.data.id,
                     description: values.displayName,
                     expiration: customExpirationDate,
@@ -128,17 +141,18 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
                     clientId,
                     created: new Date().toISOString().slice(0, 19),
                   },
-                ],
+                },
               },
             })
           )
         } else {
-          clientSecret = await createClientSecret(productId, id, {
+          clientSecret = await createClientSecret(productId, currentClientId, {
             description: values.displayName,
           })
           dispatch(
-            clientCredentials({
-              id: productId,
+            clientCredentialsSecrets({
+              productId,
+              clientId: currentClientId,
               data: {
                 ...secretList,
                 ...[
@@ -162,7 +176,8 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
         let clientSecret
         if (customExpirationDate) {
           clientSecret = await editClientSecret(
-            secretItem.clientRecordId,
+            productId,
+            currentClientId,
             currentId,
             {
               description: values.displayName,
@@ -171,8 +186,9 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
           )
 
           dispatch(
-            clientCredentialsInfo({
+            clientSecretInfo({
               itemId: currentId,
+              clientId: currentClientId,
               productId,
               data: {
                 ...secretItem,
@@ -183,7 +199,8 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
           )
         } else {
           clientSecret = await editClientSecret(
-            secretItem.clientRecordId,
+            productId,
+            currentClientId,
             currentId,
             {
               description: values.displayName,
@@ -191,8 +208,9 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
           )
 
           dispatch(
-            clientCredentialsInfo({
+            clientSecretInfo({
               itemId: currentId,
+              clientId: currentClientId,
               productId,
               data: {
                 ...secretItem,

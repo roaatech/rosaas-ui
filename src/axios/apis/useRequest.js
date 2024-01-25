@@ -66,7 +66,13 @@ const useRequest = () => {
     changeProductTrialType,
     publishProduct,
   } = useProductReq()
+
   const {
+    getClientsListByProduct,
+    createClient,
+    updateClient,
+    deleteClient,
+    activateClient,
     createClientSecret,
     getClientSecrets,
     DeleteClientSecret,
@@ -74,7 +80,7 @@ const useRequest = () => {
     editClientSecret,
     getClientId,
   } = useClientCredentialsReq()
-  const {} = useUsersManagementReq()
+
   const {
     getProductPlans,
     createPlanRequest,
@@ -212,6 +218,11 @@ const useRequest = () => {
     deleteAdminPrivileges,
     changeProductTrialType,
     publishProduct,
+    getClientsListByProduct,
+    createClient,
+    updateClient,
+    deleteClient,
+    activateClient,
   }
 }
 export default useRequest
