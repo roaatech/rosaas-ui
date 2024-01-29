@@ -92,6 +92,7 @@ const ProductDetails = () => {
           breadcrumbInfo={'ProductDetails'}
           param1={productData.id}
           icon={BsBoxSeam}
+          data={{ name: productData.systemName }}
         />
       )}
 

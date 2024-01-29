@@ -1,6 +1,6 @@
 import { Card, Col, Row } from '@themesberg/react-bootstrap'
 import { useEffect } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { cycle } from '../../../../../const'
@@ -12,11 +12,11 @@ import useRequest from '../../../../../axios/apis/useRequest'
 import { subHistoryData } from '../../../../../store/slices/tenants'
 
 export default function SubsGeneralHistoryData(data) {
-  const { tenantsData, currentTabCycle } = data
+  const { tenantsData, currentTabCycle, isTrial } = data
   const routeParams = useParams()
   const { subscriptionCycleById } = useRequest()
   const dispatch = useDispatch()
-
+  const intl = useIntl()
   const subscriptionDatas = useSelector(
     (state) => state.tenants.tenants[routeParams.id]?.subscriptionData?.data
   )
@@ -69,17 +69,31 @@ export default function SubsGeneralHistoryData(data) {
               </div>
 
               {/* subsc */}
-              <div className="d-flex align-items-center justify-content-between py-2 ">
-                <div className="mb-0 w-25 fw-bold">
-                  <FormattedMessage id="Subscription" />
-                </div>
-                <div className=" card-stats">
-                  ${subHistory?.price} /{' '}
-                  {subHistory?.cycle && (
-                    <FormattedMessage id={cycle[subHistory?.cycle]} />
+              {
+                <div className="d-flex align-items-center justify-content-between py-2 ">
+                  <div className="mb-0 w-25 fw-bold">
+                    <FormattedMessage id="Subscription" />
+                  </div>
+                  {!isTrial ? (
+                    <div className=" card-stats">
+                      ${subHistory?.price} /{' '}
+                      {subHistory?.cycle && (
+                        <FormattedMessage id={cycle[subHistory?.cycle]} />
+                      )}
+                    </div>
+                  ) : (
+                    <Label
+                      className=" card-stats"
+                      {...{
+                        background: 'var(--red2)',
+                        value: intl.formatMessage({ id: 'Trial' }),
+
+                        color: 'red',
+                      }}
+                    />
                   )}
                 </div>
-              </div>
+              }
             </Card.Body>
           </Col>
           <Col md={6}>

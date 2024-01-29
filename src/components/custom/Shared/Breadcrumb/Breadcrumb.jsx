@@ -80,9 +80,11 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                     breadcrumbConst[breadcrumbInfo].parent
                   }
                 >
-                  {intl.formatMessage({
-                    id: breadcrumbConst[breadcrumbInfo].parent,
-                  })}{' '}
+                  {breadcrumbConst[breadcrumbInfo].changableParent
+                    ? breadcrumbConst[breadcrumbInfo].parent
+                    : intl.formatMessage({
+                        id: breadcrumbConst[breadcrumbInfo].parent,
+                      })}{' '}
                 </Breadcrumb.Item>
               )}
 

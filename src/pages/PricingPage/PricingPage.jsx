@@ -36,7 +36,6 @@ const PricingPage = () => {
   const routeParams = useParams()
   const productId = routeParams.id
   const listProduct = useSelector((state) => state.products.products)
-  console.log(listProduct?.[productId].trialPlanId)
   const plansPriceList = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )

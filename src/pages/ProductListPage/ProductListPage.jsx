@@ -41,9 +41,6 @@ const ProductListPage = () => {
     })()
   }, [Object.values(listData).length > 0])
   const ProductCard = ({ product }) => {
-    console.log({
-      product: `/payment/product/${product.id}/subscription/${product.trialPlanPriceId}`,
-    })
     return (
       <Card className="p-1 m-1">
         <Card.Body>

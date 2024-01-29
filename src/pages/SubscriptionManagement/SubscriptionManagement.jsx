@@ -61,7 +61,6 @@ const SubscriptionManagement = (props) => {
     subscriptionDetailsLimitReset,
     subscriptionDetailsResetSub,
     cancelAutoRenewal,
-    subscriptionFeturesList,
   } = useRequest()
   const [currentProduct, setCurrentProduct] = useState('')
   const [currentTab, setCurrentTab] = useState('')
@@ -69,7 +68,6 @@ const SubscriptionManagement = (props) => {
   const [currentTabCycle, setCurrentTabCycle] = useState()
   const [currentTabFeatures, setCurrentTabFeatures] = useState(0)
   const intl = useIntl()
-
   const handleTabChange = (index) => {
     setCurrentTab(index)
   }
@@ -131,6 +129,9 @@ const SubscriptionManagement = (props) => {
 
   const [formattedSubscriptionData, setFormattedSubscriptionData] =
     useState(null)
+
+  const productslist = useSelector((state) => state.products.products)
+  const productDetails = currentProduct && productslist[currentProduct]
   useEffect(() => {
     if (!currentProduct || !routeParams.id || subscriptionDatas) {
       return
@@ -270,8 +271,9 @@ const SubscriptionManagement = (props) => {
                   <TabPanel
                     key={subscriptionDatas?.currentSubscriptionCycleId}
                     header={
+                      productDetails?.trialType == 2 &&
                       subscriptionDatas?.currentSubscriptionCycleId ===
-                      cyc?.subscriptionCycleId ? (
+                        cyc?.subscriptionCycleId ? (
                         <div className="tab-header">
                           {formatDate(cyc.startDate)}
                           {` (${intl.formatMessage({ id: 'Current' })})`}
@@ -284,7 +286,6 @@ const SubscriptionManagement = (props) => {
                           ) : (
                             formatDate(cyc.startDate)
                           )}
-                          {/* {cyc.cycleType == 2 && <TrialLabel />} */}
                         </div>
                       )
                     }
@@ -301,6 +302,7 @@ const SubscriptionManagement = (props) => {
                           handleResetLimit={handleResetLimit}
                           currentTabCycle={currentTabCycle}
                           hasResetableValue={hasResetableValue}
+                          isTrial={cyc.cycleType == 2}
                         />
                       ) : (
                         <SubsGeneralHistoryData
@@ -309,6 +311,7 @@ const SubscriptionManagement = (props) => {
                           ResettableAllowed={ResettableAllowed}
                           handleResetSubscription={handleResetSubscription}
                           handleResetLimit={handleResetLimit}
+                          isTrial={cyc.cycleType == 2}
                         />
                       )}
 

@@ -27,11 +27,9 @@ const UpDownGradeForm = ({
   update,
   currentOrderId,
 }) => {
-  console.log({ tenantData, setVisible, popupLabel, type, setUpdate, update })
   const { editTenantRequest, getProductPlans, getProductPlanPriceList } =
     useRequest()
   const selectedProduct = tenantData?.subscriptions[0]?.productId
-  console.log({ selectedProduct })
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
   const subscriptionDatas = useSelector(
@@ -49,7 +47,6 @@ const UpDownGradeForm = ({
   const listData = useSelector((state) => state.products.products)
   const currentPlanPrice = subscriptionDatas?.planPrice
   const currentPlanCycle = subscriptionDatas?.planCycle
-  console.log({ currentPlanCycle, currentPlanPrice })
   const currentPlanId = subscriptionDatas?.planId
   const [idsWithValues, setIdsWithValues] = useState()
 
@@ -124,7 +121,6 @@ const UpDownGradeForm = ({
 
   const intl = useIntl()
   let [planOptions, setPlanOptions] = useState([])
-  console.log({ idsWithValues })
   useEffect(() => {
     if (listData[selectedProduct]?.plans && idsWithValues) {
       setPlanOptions(

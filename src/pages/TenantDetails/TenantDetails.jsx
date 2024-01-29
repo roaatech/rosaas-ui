@@ -249,15 +249,6 @@ const TenantDetails = () => {
                         key={index}
                         header={
                           <>
-                            {/* <Label
-                              className="mr-2 fs-7"
-                              {...{
-                                background: 'var(--red2)',
-                                value: intl.formatMessage({ id: 'Trial' }),
-
-                                color: 'red',
-                              }}
-                            /> */}
                             <div className="tab-header">
                               {product?.product.systemName?.toUpperCase()}
                               {product?.subscriptionMode === 2 && (

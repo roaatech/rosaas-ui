@@ -75,6 +75,7 @@ const TwoStepProcessPage = () => {
   const currentPlan = plansPriceList?.[subscribtionId]?.plan?.displayName
   const currentPriceData = plansPriceList?.[subscribtionId]
   const [hasToPay, setHasToPay] = useState()
+
   return (
     <Wrapper>
       <div className="main-container">
@@ -148,7 +149,10 @@ const TwoStepProcessPage = () => {
                         </div>
 
                         {/* subsc */}
-                        {listProduct?.[productId]?.trialType != 2 && (
+                        {((listProduct?.[productId]?.trialType == 2 &&
+                          listProduct?.[productId]?.trialPlanId !=
+                            plansPriceList[subscribtionId]?.plan?.id) ||
+                          listProduct?.[productId]?.trialType != 2) && (
                           <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                             <div className=" w-50 fw-bold">
                               <FormattedMessage id="Subscription" />

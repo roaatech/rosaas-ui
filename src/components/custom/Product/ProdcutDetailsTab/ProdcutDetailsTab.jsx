@@ -23,6 +23,7 @@ import { useParams } from 'react-router-dom'
 import useRequest from '../../../../axios/apis/useRequest'
 import { setAllPlans } from '../../../../store/slices/products/productsSlice'
 import Label from '../../Shared/label/Label'
+import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 
 const ProductDetailsTab = ({ data }) => {
   const [code, setCode] = useState(data.apiKey)
@@ -72,7 +73,6 @@ const ProductDetailsTab = ({ data }) => {
                       </td>
                       <td className=" card-stats">{data.displayName}</td>
                     </tr>
-
                     <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                       <td className="mb-0 w-50 fw-bold">
                         <FormattedMessage id="System-Name" />
@@ -81,15 +81,17 @@ const ProductDetailsTab = ({ data }) => {
                     </tr>
                     <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                       <td className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="Description" />
-                      </td>
-                      <td className=" card-stats">{data.description}</td>
-                    </tr>
-                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                      <td className="mb-0 w-50 fw-bold">
                         <FormattedMessage id="Client" />
                       </td>
                       <td className=" card-stats">{data.client?.systemName}</td>
+                    </tr>{' '}
+                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                      <td className="mb-0 w-50 fw-bold">
+                        <FormattedMessage id="Description" />
+                      </td>
+                      <td className="card-stats">
+                        {data.description && <DescriptionCell data={data} />}
+                      </td>
                     </tr>
                     {data?.trialType == 2 && (
                       <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">

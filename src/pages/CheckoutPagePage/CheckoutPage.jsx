@@ -49,10 +49,8 @@ const CheckoutPage = (data) => {
     data.orderID ||
     createdTenantData?.tenantData?.orderId ||
     createdTenantData?.tenantData?.id
-  console.log({ orderID })
 
   const { hasToPay, setHasToPay, displayName, systemName, currentTenant } = data
-  console.log({ createdTenantData })
   useEffect(() => {
     if (!createdTenantData.tenantData?.hasToPay) {
       return

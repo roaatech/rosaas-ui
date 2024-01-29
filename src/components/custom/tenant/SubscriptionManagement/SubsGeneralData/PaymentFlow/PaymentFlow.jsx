@@ -29,11 +29,9 @@ function PaymentFlow({ price, product }) {
   const tenantId = useParams().id
   const currentTenantData = tenantsData[tenantId]
   let ordersList = tenantsData[tenantId]?.orders
-  console.log({ orders: tenantsData[tenantId]?.orders })
   const trialPlanId =
     productsData[product]?.trialType == 2 && productsData[product]?.trialPlanId
 
-  console.log({ trialPlanId })
   const [visible, setVisible] = useState()
   const dispatch = useDispatch()
   useEffect(() => {
