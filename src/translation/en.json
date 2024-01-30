@@ -465,5 +465,8 @@
   "Initial": "Initial",
   "Pending-To-Pay": "Pending To Pay",
   "Change-Plan": "Change Plan",
-  "Change-Order-Plan": "Change Order Plan"
+  "Change-Order-Plan": "Change Order Plan",
+  "Order": "Order",
+  "Current": "Current",
+  "Select-Your-Plan": "Select Your Plan"
 }

@@ -108,7 +108,7 @@ function PaymentFlow({ price, product }) {
                           onClick={() => changeOrderPlanForm(item.orderId)}
                           className="font-small"
                         >
-                          <FormattedMessage id="Change-Plan" />
+                          <FormattedMessage id="Select-Your-Plan" />
                         </Button>
                       )}
                     </div>

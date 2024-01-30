@@ -466,5 +466,8 @@
   "Initial": "تحت المراجعة",
   "Pending-To-Pay": "في انتظار الدفع",
   "Change-Plan": "تغيير الخطة",
-  "Change-Order-Plan": "تغيير خطة الطلب"
+  "Change-Order-Plan": "تغيير خطة الطلب",
+  "Order": "الطلب",
+  "Current": "الحالي",
+  "Select-Your-Plan": "حدد خطتك"
 }

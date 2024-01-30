@@ -70,7 +70,7 @@ export const tenantsSlice = createSlice({
             return item
           }),
         }
-        console.log({ updatedOrder })
+
         state.tenants[tenantId].orders = {
           ...state.tenants[tenantId].orders,
           [orderId]: updatedOrder,
