@@ -124,6 +124,7 @@ const DynamicButtons = ({ buttons }) => {
           setUpdate={buttons[currentButtonIndex].setUpdate}
           selectedProduct={buttons[currentButtonIndex].selectedProduct}
           type={buttons[currentButtonIndex].formType}
+          currentOrderId={buttons[currentButtonIndex].currentOrderId}
         />
       </>
     ),

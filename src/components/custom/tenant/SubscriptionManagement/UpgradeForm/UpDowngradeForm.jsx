@@ -101,6 +101,7 @@ const UpDownGradeForm = ({
                   planPriceId: values.price,
                 },
               ],
+              else: { isMustChangePlan: false },
             },
           })
         )
@@ -205,7 +206,7 @@ const UpDownGradeForm = ({
                 ? item.cycle === currentPlanCycle
                   ? item.price < currentPlanPrice
                   : item.price < otherCurrentCycle.price
-                : type === 'changePlan')
+                : type !== 'changeOrderPlan')
             ) {
               return false
             }

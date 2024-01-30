@@ -1,14 +1,10 @@
-import { Button, Card, Container, Row } from '@themesberg/react-bootstrap'
-import CustomPaginator from '../../../../Shared/CustomPaginator/CustomPaginator'
+import { Button, Card } from '@themesberg/react-bootstrap'
 import { useEffect, useState } from 'react'
 import { Wrapper } from './PaymentFlow.styled'
 import { useDispatch, useSelector } from 'react-redux'
-import { DataTransform } from '../../../../../../lib/sharedFun/Time'
 import { FormattedMessage } from 'react-intl'
-import { HealthStatus, Owner, processType } from '../../../../../../const'
 import Label from '../../../../Shared/label/Label'
-import MetaDataAccordion from '../../../MetaDataAccordion/MetaDataAccordion'
-import { Routes, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   orderStatus,
   paymentStatus,
@@ -25,12 +21,9 @@ import ThemeDialog from '../../../../Shared/ThemeDialog/ThemeDialog'
 function PaymentFlow({ price, product }) {
   const { getOrdersListByTenantId } = useRequest()
   let tenantsData = useSelector((state) => state.tenants.tenants)
-  let productsData = useSelector((state) => state.products.products)
   const tenantId = useParams().id
   const currentTenantData = tenantsData[tenantId]
   let ordersList = tenantsData[tenantId]?.orders
-  const trialPlanId =
-    productsData[product]?.trialType == 2 && productsData[product]?.trialPlanId
 
   const [visible, setVisible] = useState()
   const dispatch = useDispatch()
@@ -92,41 +85,32 @@ function PaymentFlow({ price, product }) {
                         <FormattedMessage id="Order" /> #{item?.orderNumber}
                       </div>
 
-                      {
-                        !item?.hasToPay ? (
-                          <div className="author mb-2">
-                            <Label {...paymentStatus[item?.paymentStatus]} />
-                          </div>
-                        ) : item.orderItems[0].planId != trialPlanId ? (
-                          <Button
-                            variant="primary"
-                            onClick={() =>
-                              handleButtonClick(
-                                item.orderId,
-                                item.orderItems[0].planPriceId
-                              )
-                            }
-                            className="font-small"
-                          >
-                            <FormattedMessage id="Pay-Now" />
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="primary"
-                            onClick={() => changeOrderPlanForm(item.orderId)}
-                            className="font-small"
-                          >
-                            <FormattedMessage id="Change-Plan" />
-                          </Button>
-                        )
-                        // <div
-                        //   onClick={handleButtonClick}
-                        //   style={{ cursor: 'pointer' }}
-                        //   className="hoverable-div"
-                        // >
-                        //   <Label {...paymentStatus[item?.type]} />
-                        // </div>
-                      }
+                      {!item?.hasToPay ? (
+                        <div className="author mb-2">
+                          <Label {...paymentStatus[item?.paymentStatus]} />
+                        </div>
+                      ) : !item.isMustChangePlan ? (
+                        <Button
+                          variant="primary"
+                          onClick={() =>
+                            handleButtonClick(
+                              item.orderId,
+                              item.orderItems[0].planPriceId
+                            )
+                          }
+                          className="font-small"
+                        >
+                          <FormattedMessage id="Pay-Now" />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="primary"
+                          onClick={() => changeOrderPlanForm(item.orderId)}
+                          className="font-small"
+                        >
+                          <FormattedMessage id="Change-Plan" />
+                        </Button>
+                      )}
                     </div>
                     <div className="flex justify-content-between flex-wrap">
                       <div

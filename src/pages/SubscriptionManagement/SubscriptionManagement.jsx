@@ -8,7 +8,12 @@ import { Wrapper } from './SubscriptionManagement.styled'
 import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel'
 import { TabPanel, TabView } from 'primereact/tabview'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
-import { MdOutlineAutorenew } from 'react-icons/md'
+import {
+  MdChangeCircle,
+  MdOutlineAutorenew,
+  MdPublishedWithChanges,
+  MdTrackChanges,
+} from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import {
   BsArrowCounterclockwise,
@@ -20,7 +25,11 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { useEffect } from 'react'
 import useRequest from '../../axios/apis/useRequest'
-import { subscriptionData, tenantInfo } from '../../store/slices/tenants'
+import {
+  setAllOrders,
+  subscriptionData,
+  tenantInfo,
+} from '../../store/slices/tenants'
 
 import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
 import RenewForm from '../../components/custom/tenant/SubscriptionManagement/RenewForm/RenewForm'
@@ -36,8 +45,11 @@ import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 
 const SubscriptionManagement = (props) => {
   const routeParams = useParams()
+  const tenantId = routeParams.id
   let direction = useSelector((state) => state.main.direction)
   const tenantsData = useSelector((state) => state.tenants.tenants)
+  const lastOrderId = tenantsData?.[tenantId]?.lastOrderId
+
   useEffect(() => {
     ;(async () => {
       if (!tenantsData[routeParams.id]?.subscriptions[0]) {
@@ -61,6 +73,7 @@ const SubscriptionManagement = (props) => {
     subscriptionDetailsLimitReset,
     subscriptionDetailsResetSub,
     cancelAutoRenewal,
+    getOrdersListByTenantId,
   } = useRequest()
   const [currentProduct, setCurrentProduct] = useState('')
   const [currentTab, setCurrentTab] = useState('')
@@ -174,6 +187,24 @@ const SubscriptionManagement = (props) => {
       )
     }
   }, [formattedSubscriptionData])
+  const orderStatus = tenantsData[tenantId]?.orders?.[lastOrderId]?.orderStatus
+  const isChangablePlan = [1, 2].includes(orderStatus)
+
+  useEffect(() => {
+    if (tenantsData[tenantId]?.orders) {
+      return
+    }
+    ;(async () => {
+      const orders = await getOrdersListByTenantId(tenantId)
+
+      dispatch(
+        setAllOrders({
+          tenantId,
+          data: orders.data.data,
+        })
+      )
+    })()
+  }, [tenantId])
 
   const [confirm, setConfirm] = useState(false)
   return (
@@ -194,19 +225,33 @@ const SubscriptionManagement = (props) => {
             </h4>
             <DynamicButtons
               buttons={[
-                {
-                  order: 1,
-                  type: 'form',
-                  id: routeParams.id,
-                  label: 'Upgrade-Subscription',
-                  component: 'upDowngradeSubscription',
-                  selectedProduct: currentProduct,
-                  update,
-                  setUpdate,
-                  icon: <BsUpload />,
-                  formType: 'upgrade',
-                  disable: !subscriptionData?.isPlanChangeAllowed,
-                },
+                isChangablePlan
+                  ? {
+                      order: 1,
+                      type: 'form',
+                      id: routeParams.id,
+                      label: 'Change-Plan',
+                      component: 'upDowngradeSubscription',
+                      selectedProduct: currentProduct,
+                      update,
+                      setUpdate,
+                      icon: <MdChangeCircle />,
+                      formType: 'changeOrderPlan',
+                      currentOrderId: lastOrderId,
+                    }
+                  : {
+                      order: 1,
+                      type: 'form',
+                      id: routeParams.id,
+                      label: 'Upgrade-Subscription',
+                      component: 'upDowngradeSubscription',
+                      selectedProduct: currentProduct,
+                      update,
+                      setUpdate,
+                      icon: <BsUpload />,
+                      formType: 'upgrade',
+                      disable: !subscriptionData?.isPlanChangeAllowed,
+                    },
                 {
                   order: 4,
                   type: 'form',
@@ -271,9 +316,8 @@ const SubscriptionManagement = (props) => {
                   <TabPanel
                     key={subscriptionDatas?.currentSubscriptionCycleId}
                     header={
-                      productDetails?.trialType == 2 &&
                       subscriptionDatas?.currentSubscriptionCycleId ===
-                        cyc?.subscriptionCycleId ? (
+                      cyc?.subscriptionCycleId ? (
                         <div className="tab-header">
                           {formatDate(cyc.startDate)}
                           {` (${intl.formatMessage({ id: 'Current' })})`}

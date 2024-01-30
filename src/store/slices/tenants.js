@@ -51,28 +51,26 @@ export const tenantsSlice = createSlice({
     changeOrderAttribute: (state, action) => {
       const { tenantId, orderId, updatedAttributes } = action.payload
 
-      // Ensure the tenant and order exist
       if (state.tenants[tenantId] && state.tenants[tenantId].orders[orderId]) {
         const existingOrder = state.tenants[tenantId].orders[orderId]
 
         const updatedOrder = {
           ...existingOrder,
+          ...updatedAttributes.else,
           orderItems: existingOrder.orderItems.map((item, index) => {
-            // Check if the item at the specified index exists and should be updated
             if (
               updatedAttributes.orderItems &&
               updatedAttributes.orderItems[index]
             ) {
               return {
                 ...item,
-                ...updatedAttributes.orderItems[index], // Update all attributes in orderItems
+                ...updatedAttributes.orderItems[index],
               }
             }
-            return item // If the item at the index doesn't need to be updated, return it as is
+            return item
           }),
         }
-
-        // Update the order in the state
+        console.log({ updatedOrder })
         state.tenants[tenantId].orders = {
           ...state.tenants[tenantId].orders,
           [orderId]: updatedOrder,
