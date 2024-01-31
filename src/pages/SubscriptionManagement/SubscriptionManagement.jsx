@@ -76,7 +76,7 @@ const SubscriptionManagement = (props) => {
     getOrdersListByTenantId,
   } = useRequest()
   const [currentProduct, setCurrentProduct] = useState('')
-  const [currentTab, setCurrentTab] = useState('')
+  const [currentTab, setCurrentTab] = useState()
   const [hasResetableValue, setHasResetableValue] = useState()
   const [currentTabCycle, setCurrentTabCycle] = useState()
   const [currentTabFeatures, setCurrentTabFeatures] = useState(0)
@@ -296,25 +296,36 @@ const SubscriptionManagement = (props) => {
             <div>
               <TabView
                 activeIndex={
-                  currentTab ||
-                  subscriptionDatas.subscriptionCycles.findIndex(
-                    (cyc) =>
-                      subscriptionDatas.currentSubscriptionCycleId ===
-                      cyc.subscriptionCycleId
-                  )
+                  currentTab >= 0
+                    ? currentTab
+                    : handleTabChange(
+                        subscriptionDatas.subscriptionCycles.findIndex(
+                          (cyc) =>
+                            subscriptionDatas.currentSubscriptionCycleId ===
+                            cyc.subscriptionCycleId
+                        )
+                      )
                 }
                 className="card "
                 onTabChange={(e) => {
+                  console.log(subscriptionDatas?.subscriptionCycles)
                   setCurrentTabCycle(
                     subscriptionDatas?.subscriptionCycles[e.index]
                       ?.subscriptionCycleId
                   )
                   handleTabChange(e.index)
+                  console.log(
+                    subscriptionDatas.subscriptionCycles.findIndex(
+                      (cyc) =>
+                        subscriptionDatas.currentSubscriptionCycleId ===
+                        cyc.subscriptionCycleId
+                    )
+                  )
                 }}
               >
                 {subscriptionDatas?.subscriptionCycles?.map((cyc, index) => (
                   <TabPanel
-                    key={subscriptionDatas?.currentSubscriptionCycleId}
+                    key={cyc?.subscriptionCycleId}
                     header={
                       subscriptionDatas?.currentSubscriptionCycleId ===
                       cyc?.subscriptionCycleId ? (
