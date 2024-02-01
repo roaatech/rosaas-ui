@@ -1,6 +1,6 @@
 // ProductListPage.jsx
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Card, Row, Col, Container, Button } from '@themesberg/react-bootstrap'
 import { setAllProduct } from '../../store/slices/products/productsSlice'
@@ -16,6 +16,7 @@ import { faBox, faCopy, faStopwatch } from '@fortawesome/free-solid-svg-icons'
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
 import DescriptionCell from '../../components/custom/Shared/DescriptionCell/DescriptionCell'
+import { signinRedirectPath } from '../../store/slices/auth'
 const ProductListPage = () => {
   const { getProductListPublic } = useRequest()
   const dispatch = useDispatch()
@@ -40,7 +41,18 @@ const ProductListPage = () => {
       dispatch(setAllProduct(productList.data.data))
     })()
   }, [Object.values(listData).length > 0])
+  const [redirectPath, setRedirectPath] = useState('')
+  useEffect(() => {
+    if (!redirectPath) {
+      return
+    }
+    dispatch(signinRedirectPath({ redirectPath }))
+  }, [redirectPath])
+  let userRole = useSelector((state) => state.auth.userInfo.role)
+
   const ProductCard = ({ product }) => {
+    console.log(product)
+    console.log(userRole)
     return (
       <Card className="p-1 m-1">
         <Card.Body>
@@ -65,9 +77,14 @@ const ProductListPage = () => {
                     variant="secondary"
                     size="sm"
                     onClick={() =>
-                      navigate(
-                        `/payment/product/${product.id}/subscribtion/${product.trialPlanPriceId}`
-                      )
+                      !userRole
+                        ? (navigate(`/signin`),
+                          setRedirectPath(
+                            `/payment/product/${product.id}/subscribtion/${product.trialPlanPriceId}`
+                          ))
+                        : navigate(
+                            `/payment/product/${product.id}/subscribtion/${product.trialPlanPriceId}`
+                          )
                     }
                   >
                     <FontAwesomeIcon icon={faStopwatch} className="mr-2" />

@@ -21,6 +21,8 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './TwoStepPage.styled'
 import {
+  setAllFeaturePlan,
+  setAllPlans,
   setAllPlansPrice,
   setAllProduct,
 } from '../../store/slices/products/productsSlice'
@@ -38,32 +40,81 @@ const TwoStepProcessPage = () => {
   const plansPriceList = useSelector(
     (state) => state.products.products[productId]?.plansPrice
   )
-  const { getProductPlanPriceList, getProductList } = useRequest()
+  const {
+    getProductPlanPriceListPublic,
+    getProductListPublic,
+    getFeaturePlanListPublic,
+    getProductPlansPublic,
+  } = useRequest()
   const listProduct = useSelector((state) => state.products.products)
+  const listData = useSelector(
+    (state) => state.products.products[productId]?.featurePlan
+  )
+  const planList = useSelector(
+    (state) => state.products.products[productId]?.plans
+  )
   useEffect(() => {
-    if (!listProduct) {
-      let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
-      ;(async () => {
-        const productList = await getProductList(query)
-        dispatch(setAllProduct(productList.data.data.items))
-      })()
-    }
-  }, [])
-  useEffect(() => {
-    if (Object.values(listProduct).length < 0 || !listProduct) {
+    if (Object.values(listProduct).length > 0) {
       return
     }
 
+    ;(async () => {
+      const productList = await getProductListPublic()
+      dispatch(setAllProduct(productList.data.data))
+    })()
+  }, [Object.values(listProduct).length > 0])
+
+  useEffect(() => {
+    if (!listProduct || Object.keys(listProduct).length === 0) {
+      return
+    }
     const fetchData = async () => {
       try {
-        if (!plansPriceList || Object.keys(plansPriceList).length == 0) {
-          const allPlansPrices = await getProductPlanPriceList(productId)
-          dispatch(
-            setAllPlansPrice({
-              productId: productId,
-              data: allPlansPrices.data.data,
-            })
+        if (!listData || Object.keys(listData).length === 0) {
+          const featurePlanData = await getFeaturePlanListPublic(
+            listProduct[productId].systemName
           )
+          if (
+            featurePlanData.data.data &&
+            Object.keys(featurePlanData.data.data > 0)
+          ) {
+            dispatch(
+              setAllFeaturePlan({
+                productId: productId,
+                data: featurePlanData.data.data,
+              })
+            )
+          } else {
+            console.error('Feature plan data is undefined:', featurePlanData)
+          }
+        }
+
+        if (!planList || Object.keys(planList).length === 0) {
+          const allPlanData = await getProductPlansPublic(
+            listProduct[productId].systemName
+          )
+          if (allPlanData.data.data && Object.keys(allPlanData.data.data > 0))
+            dispatch(
+              setAllPlans({
+                productId: productId,
+                data: allPlanData.data.data,
+              })
+            )
+        }
+        if (!plansPriceList || Object.keys(plansPriceList).length == 0) {
+          const allPlansPrices = await getProductPlanPriceListPublic(
+            listProduct[productId].systemName
+          )
+          if (
+            allPlansPrices.data.data &&
+            Object.keys(allPlansPrices.data.data > 0)
+          )
+            dispatch(
+              setAllPlansPrice({
+                productId: productId,
+                data: allPlansPrices.data.data,
+              })
+            )
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -71,9 +122,11 @@ const TwoStepProcessPage = () => {
     }
 
     fetchData()
-  }, [productId])
+  }, [productId, Object.keys(listProduct).length > 0])
+
   const currentPlan = plansPriceList?.[subscribtionId]?.plan?.displayName
   const currentPriceData = plansPriceList?.[subscribtionId]
+  console.log({ currentPlan, currentPriceData })
   const [hasToPay, setHasToPay] = useState()
 
   return (
@@ -151,7 +204,7 @@ const TwoStepProcessPage = () => {
                         {/* subsc */}
                         {((listProduct?.[productId]?.trialType == 2 &&
                           listProduct?.[productId]?.trialPlanId !=
-                            plansPriceList[subscribtionId]?.plan?.id) ||
+                            plansPriceList?.[subscribtionId]?.plan?.id) ||
                           listProduct?.[productId]?.trialType != 2) && (
                           <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                             <div className=" w-50 fw-bold">

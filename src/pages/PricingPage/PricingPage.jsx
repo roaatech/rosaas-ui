@@ -69,7 +69,6 @@ const PricingPage = () => {
     })
 
   let userRole = useSelector((state) => state.auth.userInfo.role)
-
   const [redirectPath, setRedirectPath] = useState('')
   useEffect(() => {
     if (!redirectPath) {

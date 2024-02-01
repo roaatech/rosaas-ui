@@ -45,6 +45,7 @@ import ClientCredentials from '../../components/custom/Product/ClientCredentials
 import Label from '../../components/custom/Shared/label/Label.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStopwatch } from '@fortawesome/free-solid-svg-icons'
+import ProductTrialPeriod from '../../components/custom/Product/ProductTrialPeriod/ProductTrialPeriod.jsx'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -215,6 +216,12 @@ const ProductDetails = () => {
                 />
               </TabPanel>
             )}
+            <TabPanel header={<FormattedMessage id="Trial-Period" />}>
+              <ProductTrialPeriod
+                data={productData}
+                setActiveIndex={setActiveIndex}
+              />
+            </TabPanel>
             <TabPanel header={<FormattedMessage id="Client-Credentials" />}>
               <ClientCredentials
                 data={productData}
