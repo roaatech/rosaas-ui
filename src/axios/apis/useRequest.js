@@ -130,8 +130,14 @@ const useRequest = () => {
     putProductWarningsSettings,
   } = useSettingsReq()
 
-  const { getOrderById, paymentCheckout, paymentSuccess, paymentFailed } =
-    usePaymentReq()
+  const {
+    getOrderById,
+    getOrdersListByTenantId,
+    paymentCheckout,
+    paymentSuccess,
+    paymentFailed,
+    changeOrderPlan,
+  } = usePaymentReq()
 
   return {
     signIn,
@@ -204,6 +210,7 @@ const useRequest = () => {
     getProductPlansPublic,
     getProductPlanPriceListPublic,
     getOrderById,
+    getOrdersListByTenantId,
     paymentCheckout,
     paymentSuccess,
     paymentFailed,
@@ -223,6 +230,7 @@ const useRequest = () => {
     updateClient,
     deleteClient,
     activateClient,
+    changeOrderPlan,
   }
 }
 export default useRequest

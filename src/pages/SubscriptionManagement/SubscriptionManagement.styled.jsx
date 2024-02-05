@@ -20,7 +20,10 @@ export const Wrapper = styled.div`
   .info-card .card {
     background-color: transparent;
   }
-
+  .tab-header {
+    display: flex;
+    align-items: center;
+  }
   .custom-nav-link .nav-link.active {
     border-bottom: 0px;
 

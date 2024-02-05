@@ -1,71 +1,66 @@
-import { Button, Card, Container, Row } from '@themesberg/react-bootstrap'
-import CustomPaginator from '../../../../Shared/CustomPaginator/CustomPaginator'
-import { useState } from 'react'
+import { Button, Card } from '@themesberg/react-bootstrap'
+import { useEffect, useState } from 'react'
 import { Wrapper } from './PaymentFlow.styled'
-import { useSelector } from 'react-redux'
-import { DataTransform } from '../../../../../../lib/sharedFun/Time'
+import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { HealthStatus, Owner, processType } from '../../../../../../const'
 import Label from '../../../../Shared/label/Label'
-import MetaDataAccordion from '../../../MetaDataAccordion/MetaDataAccordion'
-import { Routes, useNavigate } from 'react-router-dom'
-import { paymentStatus } from '../../../../../../const/subscriptionManagement'
+import { useNavigate, useParams } from 'react-router-dom'
+import {
+  orderStatus,
+  paymentStatus,
+} from '../../../../../../const/subscriptionManagement'
+import useRequest from '../../../../../../axios/apis/useRequest'
+import {
+  setAllOrders,
+  setStep,
+  setTenantCreateData,
+} from '../../../../../../store/slices/tenants'
+import UpDownGradeForm from '../../UpgradeForm/UpDowngradeForm'
+import ThemeDialog from '../../../../Shared/ThemeDialog/ThemeDialog'
 
-function PaymentFlow() {
-  const [first, setFirst] = useState(0)
-  const [rows, setRows] = useState(10)
+function PaymentFlow({ price, product }) {
+  const { getOrdersListByTenantId } = useRequest()
+  let tenantsData = useSelector((state) => state.tenants.tenants)
+  const tenantId = useParams().id
+  const currentTenantData = tenantsData[tenantId]
+  let ordersList = tenantsData[tenantId]?.orders
+
+  const [visible, setVisible] = useState()
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (tenantsData[tenantId]?.orders) {
+      return
+    }
+    ;(async () => {
+      const orders = await getOrdersListByTenantId(tenantId)
+
+      dispatch(
+        setAllOrders({
+          tenantId,
+          data: orders.data.data,
+        })
+      )
+    })()
+  }, [tenantId])
+
   let direction = useSelector((state) => state.main.direction)
 
-  const onPageChange = (event) => {
-    setFirst(event.first)
-    setRows(event.rows)
-  }
   const navigate = useNavigate()
 
-  const handleButtonClick = () => {
-    navigate('../dashboard')
+  const handleButtonClick = (id, planPriceId) => {
+    dispatch(setStep(2))
+    navigate(`/payment/product/${product}/subscribtion/${planPriceId}`)
+    dispatch(
+      setTenantCreateData({
+        tenantData: ordersList[id],
+        tenantInfo: currentTenantData,
+      })
+    )
   }
-  const paymentData = {
-    items: {
-      0: {
-        type: 4,
-        invoice: {
-          number: 'INV001',
-          billedDate: '2023-11-29T05:36:40.3238557',
-        },
-      },
-      1: {
-        type: 2,
-        invoice: {
-          number: 'INV002',
-          billedDate: '2023-11-29T05:36:40.3238557',
-        },
-      },
-      2: {
-        type: 3,
-        invoice: {
-          number: 'INV003',
-          billedDate: '2023-11-29T05:36:40.3238557',
-        },
-      },
-
-      3: {
-        type: 1,
-        invoice: {
-          number: 'INV004',
-          billedDate: '2023-11-29T05:36:40.3238557',
-        },
-      },
-    },
-    totalCount: 4,
-  }
-
-  const allItems = () => {
-    let items = []
-    for (let i = first; i < first + rows; i++) {
-      if (paymentData?.items[i]) items = [...items, paymentData.items[i]]
-    }
-    return items
+  const [currentOrderId, setCurrentOrderId] = useState('')
+  const changeOrderPlanForm = (id) => {
+    setVisible(true)
+    setCurrentOrderId(id)
   }
 
   return (
@@ -73,51 +68,79 @@ function PaymentFlow() {
       <Card.Body className="py-0 px-0 ">
         <div className="timeLineCont card p-2">
           <div className="p-2 border-bottom mb-1 border-light">
-            <label htmlFor="">Order History</label>
-            <div>Manage billing information and view receipts</div>
+            <label htmlFor="">
+              <FormattedMessage id="Order-History" />
+            </label>
+            <div>
+              <FormattedMessage id="Manage-Billing-Information-and-View-Receipts" />
+            </div>
           </div>
-          {allItems().map((item, index) => (
-            <div key={index} className="border-bottom  border-light">
-              <div className="time-line-item-container" key={index}>
-                <div className="timeLineItemCont" key={index}>
-                  <div className="flex justify-content-between flex-wrap">
-                    <div className="mb-2 fw-bold">
-                      <FormattedMessage id="Invoice" /> {item?.invoice?.number}
-                    </div>
+          {ordersList &&
+            Object.values(ordersList).map((item, index) => (
+              <div key={index} className="border-bottom  border-light">
+                <div className="time-line-item-container" key={index}>
+                  <div className="timeLineItemCont" key={index}>
+                    <div className="flex justify-content-between flex-wrap">
+                      <div className="mb-2 fw-bold">
+                        <FormattedMessage id="Order" /> #{item?.orderNumber}
+                      </div>
 
-                    {item?.type != 4 ? (
-                      <div className="author mb-2 small">
-                        <Label {...paymentStatus[item?.type]} />
-                      </div>
-                    ) : (
+                      {!item?.hasToPay ? (
+                        <div className="author mb-2">
+                          <Label {...paymentStatus[item?.paymentStatus]} />
+                        </div>
+                      ) : !item.isMustChangePlan ? (
+                        <Button
+                          variant="primary"
+                          onClick={() =>
+                            handleButtonClick(
+                              item.orderId,
+                              item.orderItems[0].planPriceId
+                            )
+                          }
+                          className="font-small"
+                        >
+                          <FormattedMessage id="Pay-Now" />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="primary"
+                          onClick={() => changeOrderPlanForm(item.orderId)}
+                          className="font-small"
+                        >
+                          <FormattedMessage id="Select-Your-Plan" />
+                        </Button>
+                      )}
+                    </div>
+                    <div className="flex justify-content-between flex-wrap">
                       <div
-                        onClick={handleButtonClick}
-                        style={{ cursor: 'pointer' }}
-                        className="hoverable-div"
+                        className="time mb-2 small"
+                        style={{ color: orderStatus[item?.orderStatus]?.color }}
                       >
-                        <Label {...paymentStatus[item?.type]} />
+                        {orderStatus[item?.orderStatus]?.value && (
+                          <FormattedMessage
+                            id={orderStatus[item?.orderStatus]?.value}
+                          />
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="flex justify-content-between flex-wrap">
-                    <div className="time mb-2">
-                      <FormattedMessage id="Billed" />{' '}
-                      {item?.invoice?.billedDate &&
-                        DataTransform(item?.invoice?.billedDate)}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-          <CustomPaginator
-            first={first}
-            rows={rows}
-            totalCount={paymentData?.totalCount}
-            onPageChange={onPageChange}
-            rowsPerPageOptions={[10, 20, 9]}
-          />
+            ))}
         </div>
+        <ThemeDialog visible={visible} setVisible={setVisible}>
+          <UpDownGradeForm
+            popupLabel={<FormattedMessage id={'Change-Order-Plan'} />}
+            tenantData={currentTenantData}
+            visible={visible}
+            setVisible={setVisible}
+            sideBar={false}
+            selectedProduct={product}
+            type={'changeOrderPlan'}
+            currentOrderId={currentOrderId}
+          />
+        </ThemeDialog>
       </Card.Body>
     </Wrapper>
   )

@@ -5,6 +5,7 @@ export const Owner = {
   4: 'Tenant-Admin',
   100: 'Rosas-System',
   101: 'External-System',
+  102: 'External-System-Client',
 }
 
 export const processType = {

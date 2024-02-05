@@ -36,6 +36,7 @@ export default function SubsGeneralData(data) {
     hasSubsFeatsLimitsResettable,
     handleResetLimit,
     hasResetableValue,
+    isTrial,
   } = data
   const routeParams = useParams()
   const intl = useIntl()
@@ -43,6 +44,8 @@ export default function SubsGeneralData(data) {
   const subscriptionDatas = useSelector(
     (state) => state.tenants.tenants[routeParams.id]?.subscriptionData?.data
   )
+  const price = subscriptionDatas.subscriptionId
+  const product = tenantsData[routeParams.id].subscriptions[0].productId
   return (
     <div className="info-card">
       <Row>
@@ -146,37 +149,50 @@ export default function SubsGeneralData(data) {
                   </div>
 
                   {/* subsc */}
-                  <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                    <div className="mb-0 w-50 fw-bold">
-                      <FormattedMessage id="Subscription" />
-                      <OverlayTrigger
-                        trigger={['hover', 'focus']}
-                        overlay={
-                          <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Subscription" />
-                          </Tooltip>
-                        }
-                      >
-                        <span>
-                          <BsFillQuestionCircleFill
-                            style={{ color: '#6c757d' }}
-                            className={
-                              direction == 'rtl'
-                                ? 'ar-questionCircle mr-2'
-                                : 'ml-2'
-                            }
+                  {
+                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                      <div className="mb-0 w-50 fw-bold">
+                        <FormattedMessage id="Subscription" />
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              <FormattedMessage id="Subscription-Managenent-Subscription" />
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              style={{ color: '#6c757d' }}
+                              className={
+                                direction == 'rtl'
+                                  ? 'ar-questionCircle mr-2'
+                                  : 'ml-2'
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </div>
+                      {!isTrial ? (
+                        <div className=" card-stats">
+                          ${subscriptionDatas.planPrice} /{' '}
+                          <FormattedMessage
+                            id={cycle[subscriptionDatas.planCycle]}
                           />
-                        </span>
-                      </OverlayTrigger>
-                    </div>
-                    <div className=" card-stats">
-                      ${subscriptionDatas.planPrice} /{' '}
-                      <FormattedMessage
-                        id={cycle[subscriptionDatas.planCycle]}
-                      />
-                    </div>
-                  </div>
+                        </div>
+                      ) : (
+                        <Label
+                          className=" card-stats"
+                          {...{
+                            background: 'var(--red2)',
+                            value: intl.formatMessage({ id: 'Trial' }),
 
+                            color: 'red',
+                          }}
+                        />
+                      )}
+                    </div>
+                  }
                   {/* start date */}
                   <div className="d-flex align-items-center justify-content-between  py-2 ">
                     <div className="mb-0 w-50 fw-bold">
@@ -562,7 +578,10 @@ export default function SubsGeneralData(data) {
           </Card>
         </Col>
         <Col md={4}>
-          <PaymentFlow />
+          <PaymentFlow
+            price={subscriptionDatas.planPriceId}
+            product={product}
+          />
         </Col>
       </Row>
     </div>

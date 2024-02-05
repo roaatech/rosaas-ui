@@ -8,7 +8,12 @@ import { Wrapper } from './SubscriptionManagement.styled'
 import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel'
 import { TabPanel, TabView } from 'primereact/tabview'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
-import { MdOutlineAutorenew } from 'react-icons/md'
+import {
+  MdChangeCircle,
+  MdOutlineAutorenew,
+  MdPublishedWithChanges,
+  MdTrackChanges,
+} from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import {
   BsArrowCounterclockwise,
@@ -20,7 +25,11 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
 import { useEffect } from 'react'
 import useRequest from '../../axios/apis/useRequest'
-import { subscriptionData, tenantInfo } from '../../store/slices/tenants'
+import {
+  setAllOrders,
+  subscriptionData,
+  tenantInfo,
+} from '../../store/slices/tenants'
 
 import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
 import RenewForm from '../../components/custom/tenant/SubscriptionManagement/RenewForm/RenewForm'
@@ -32,11 +41,15 @@ import SubsGeneralData from '../../components/custom/tenant/SubscriptionManageme
 import SubsFeatures from '../../components/custom/tenant/SubscriptionManagement/SubsFeatures/SubsFeatures'
 import SubsFeaturesHistory from '../../components/custom/tenant/SubscriptionManagement/SubsFeaturesHistory/SubsFeaturesHistotry'
 import SubsGeneralHistoryData from '../../components/custom/tenant/SubscriptionManagement/SubsGeneralHistoryData/SubsGeneralHistoryData'
+import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 
 const SubscriptionManagement = (props) => {
   const routeParams = useParams()
+  const tenantId = routeParams.id
   let direction = useSelector((state) => state.main.direction)
   const tenantsData = useSelector((state) => state.tenants.tenants)
+  const lastOrderId = tenantsData?.[tenantId]?.lastOrderId
+
   useEffect(() => {
     ;(async () => {
       if (!tenantsData[routeParams.id]?.subscriptions[0]) {
@@ -60,15 +73,14 @@ const SubscriptionManagement = (props) => {
     subscriptionDetailsLimitReset,
     subscriptionDetailsResetSub,
     cancelAutoRenewal,
-    subscriptionFeturesList,
+    getOrdersListByTenantId,
   } = useRequest()
   const [currentProduct, setCurrentProduct] = useState('')
-  const [currentTab, setCurrentTab] = useState(0)
+  const [currentTab, setCurrentTab] = useState()
   const [hasResetableValue, setHasResetableValue] = useState()
   const [currentTabCycle, setCurrentTabCycle] = useState()
   const [currentTabFeatures, setCurrentTabFeatures] = useState(0)
   const intl = useIntl()
-
   const handleTabChange = (index) => {
     setCurrentTab(index)
   }
@@ -130,6 +142,9 @@ const SubscriptionManagement = (props) => {
 
   const [formattedSubscriptionData, setFormattedSubscriptionData] =
     useState(null)
+
+  const productslist = useSelector((state) => state.products.products)
+  const productDetails = currentProduct && productslist[currentProduct]
   useEffect(() => {
     if (!currentProduct || !routeParams.id || subscriptionDatas) {
       return
@@ -172,6 +187,24 @@ const SubscriptionManagement = (props) => {
       )
     }
   }, [formattedSubscriptionData])
+  const orderStatus = tenantsData[tenantId]?.orders?.[lastOrderId]?.orderStatus
+  const isChangablePlan = [1, 2].includes(orderStatus)
+
+  useEffect(() => {
+    if (tenantsData[tenantId]?.orders) {
+      return
+    }
+    ;(async () => {
+      const orders = await getOrdersListByTenantId(tenantId)
+
+      dispatch(
+        setAllOrders({
+          tenantId,
+          data: orders.data.data,
+        })
+      )
+    })()
+  }, [tenantId])
 
   const [confirm, setConfirm] = useState(false)
   return (
@@ -192,19 +225,33 @@ const SubscriptionManagement = (props) => {
             </h4>
             <DynamicButtons
               buttons={[
-                {
-                  order: 1,
-                  type: 'form',
-                  id: routeParams.id,
-                  label: 'Upgrade-Subscription',
-                  component: 'upDowngradeSubscription',
-                  selectedProduct: currentProduct,
-                  update,
-                  setUpdate,
-                  icon: <BsUpload />,
-                  formType: 'upgrade',
-                  disable: !subscriptionData?.isPlanChangeAllowed,
-                },
+                isChangablePlan
+                  ? {
+                      order: 1,
+                      type: 'form',
+                      id: routeParams.id,
+                      label: 'Change-Plan',
+                      component: 'upDowngradeSubscription',
+                      selectedProduct: currentProduct,
+                      update,
+                      setUpdate,
+                      icon: <MdChangeCircle />,
+                      formType: 'changeOrderPlan',
+                      currentOrderId: lastOrderId,
+                    }
+                  : {
+                      order: 1,
+                      type: 'form',
+                      id: routeParams.id,
+                      label: 'Upgrade-Subscription',
+                      component: 'upDowngradeSubscription',
+                      selectedProduct: currentProduct,
+                      update,
+                      setUpdate,
+                      icon: <BsUpload />,
+                      formType: 'upgrade',
+                      disable: !subscriptionData?.isPlanChangeAllowed,
+                    },
                 {
                   order: 4,
                   type: 'form',
@@ -248,7 +295,17 @@ const SubscriptionManagement = (props) => {
           {subscriptionDatas.startDate && (
             <div>
               <TabView
-                activeIndex={currentTab}
+                activeIndex={
+                  currentTab >= 0
+                    ? currentTab
+                    : handleTabChange(
+                        subscriptionDatas.subscriptionCycles.findIndex(
+                          (cyc) =>
+                            subscriptionDatas.currentSubscriptionCycleId ===
+                            cyc.subscriptionCycleId
+                        )
+                      )
+                }
                 className="card "
                 onTabChange={(e) => {
                   setCurrentTabCycle(
@@ -260,12 +317,24 @@ const SubscriptionManagement = (props) => {
               >
                 {subscriptionDatas?.subscriptionCycles?.map((cyc, index) => (
                   <TabPanel
-                    key={subscriptionDatas?.currentSubscriptionCycleId}
+                    key={cyc?.subscriptionCycleId}
                     header={
                       subscriptionDatas?.currentSubscriptionCycleId ===
-                      cyc?.subscriptionCycleId
-                        ? `${formatDate(cyc.startDate)} (current)`
-                        : formatDate(cyc.startDate)
+                      cyc?.subscriptionCycleId ? (
+                        <div className="tab-header">
+                          {formatDate(cyc.startDate)}
+                          {` (${intl.formatMessage({ id: 'Current' })})`}
+                          {cyc.cycleType == 2 && <TrialLabel />}
+                        </div>
+                      ) : (
+                        <div className="tab-header">
+                          {cyc.cycleType == 2 ? (
+                            <FormattedMessage id="Trial" />
+                          ) : (
+                            formatDate(cyc.startDate)
+                          )}
+                        </div>
+                      )
                     }
                   >
                     <div className="pr-2 pl-2">
@@ -280,6 +349,7 @@ const SubscriptionManagement = (props) => {
                           handleResetLimit={handleResetLimit}
                           currentTabCycle={currentTabCycle}
                           hasResetableValue={hasResetableValue}
+                          isTrial={cyc.cycleType == 2}
                         />
                       ) : (
                         <SubsGeneralHistoryData
@@ -288,6 +358,7 @@ const SubscriptionManagement = (props) => {
                           ResettableAllowed={ResettableAllowed}
                           handleResetSubscription={handleResetSubscription}
                           handleResetLimit={handleResetLimit}
+                          isTrial={cyc.cycleType == 2}
                         />
                       )}
 

@@ -43,6 +43,9 @@ import { PublishStatus, activeTab } from '../../const/product'
 import ProductWarnings from '../../components/custom/Product/ProductWarnings/ProductWarnings'
 import ClientCredentials from '../../components/custom/Product/ClientCredentials/ClientCredentials'
 import Label from '../../components/custom/Shared/label/Label.jsx'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faStopwatch } from '@fortawesome/free-solid-svg-icons'
+import ProductTrialPeriod from '../../components/custom/Product/ProductTrialPeriod/ProductTrialPeriod.jsx'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -90,6 +93,7 @@ const ProductDetails = () => {
           breadcrumbInfo={'ProductDetails'}
           param1={productData.id}
           icon={BsBoxSeam}
+          data={{ name: productData.systemName }}
         />
       )}
 
@@ -111,9 +115,9 @@ const ProductDetails = () => {
                   label: productData?.isPublished ? 'Unpublished' : 'Published',
                   func: () => togglePublishProduct(productData?.isPublished),
                   icon: productData?.isPublished ? (
-                    <MdOutlineUnpublished className="mx-2" />
+                    <MdOutlineUnpublished />
                   ) : (
-                    <MdOutlinePublishedWithChanges className="mx-2" />
+                    <MdOutlinePublishedWithChanges />
                   ),
                 },
                 {
@@ -122,7 +126,7 @@ const ProductDetails = () => {
                   id: routeParams.id,
                   label: 'Trial-Period',
                   component: 'addTrial',
-                  icon: <BsRecycle />,
+                  icon: <FontAwesomeIcon icon={faStopwatch} />,
                   setActiveIndex: setActiveIndex,
                 },
                 {
@@ -212,6 +216,12 @@ const ProductDetails = () => {
                 />
               </TabPanel>
             )}
+            <TabPanel header={<FormattedMessage id="Trial-Period" />}>
+              <ProductTrialPeriod
+                data={productData}
+                setActiveIndex={setActiveIndex}
+              />
+            </TabPanel>
             <TabPanel header={<FormattedMessage id="Client-Credentials" />}>
               <ClientCredentials
                 data={productData}

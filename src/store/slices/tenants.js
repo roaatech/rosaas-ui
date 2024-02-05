@@ -30,6 +30,54 @@ export const tenantsSlice = createSlice({
       state.tenants = currentTenants
     },
 
+    setAllOrders: (state, action) => {
+      const allTenants = JSON.parse(JSON.stringify(state.tenants))
+      const { tenantId, data } = action.payload
+
+      if (allTenants[tenantId]) {
+        const allOrders = {}
+
+        data.forEach((item) => {
+          allOrders[item.id] = {
+            ...item,
+          }
+        })
+
+        allTenants[tenantId].orders = allOrders
+        state.tenants = allTenants
+      }
+    },
+
+    changeOrderAttribute: (state, action) => {
+      const { tenantId, orderId, updatedAttributes } = action.payload
+
+      if (state.tenants[tenantId] && state.tenants[tenantId].orders[orderId]) {
+        const existingOrder = state.tenants[tenantId].orders[orderId]
+
+        const updatedOrder = {
+          ...existingOrder,
+          ...updatedAttributes.else,
+          orderItems: existingOrder.orderItems.map((item, index) => {
+            if (
+              updatedAttributes.orderItems &&
+              updatedAttributes.orderItems[index]
+            ) {
+              return {
+                ...item,
+                ...updatedAttributes.orderItems[index],
+              }
+            }
+            return item
+          }),
+        }
+
+        state.tenants[tenantId].orders = {
+          ...state.tenants[tenantId].orders,
+          [orderId]: updatedOrder,
+        }
+      }
+    },
+
     history: (state, action) => {
       const currentTenants = { ...current(state.tenants) }
       const tenant = JSON.parse(
@@ -165,5 +213,7 @@ export const {
   AdminPrivileges,
   deleteTenantAdminPrivileges,
   AdminPrivilegesChangeAttr,
+  setAllOrders,
+  changeOrderAttribute,
 } = tenantsSlice.actions
 export default tenantsSlice.reducer
