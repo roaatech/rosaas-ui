@@ -126,7 +126,6 @@ const TwoStepProcessPage = () => {
 
   const currentPlan = plansPriceList?.[subscribtionId]?.plan?.displayName
   const currentPriceData = plansPriceList?.[subscribtionId]
-  console.log({ currentPlan, currentPriceData })
   const [hasToPay, setHasToPay] = useState()
 
   return (

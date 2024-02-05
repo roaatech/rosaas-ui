@@ -308,19 +308,11 @@ const SubscriptionManagement = (props) => {
                 }
                 className="card "
                 onTabChange={(e) => {
-                  console.log(subscriptionDatas?.subscriptionCycles)
                   setCurrentTabCycle(
                     subscriptionDatas?.subscriptionCycles[e.index]
                       ?.subscriptionCycleId
                   )
                   handleTabChange(e.index)
-                  console.log(
-                    subscriptionDatas.subscriptionCycles.findIndex(
-                      (cyc) =>
-                        subscriptionDatas.currentSubscriptionCycleId ===
-                        cyc.subscriptionCycleId
-                    )
-                  )
                 }}
               >
                 {subscriptionDatas?.subscriptionCycles?.map((cyc, index) => (

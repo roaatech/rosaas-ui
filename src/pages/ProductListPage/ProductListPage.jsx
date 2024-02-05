@@ -51,8 +51,6 @@ const ProductListPage = () => {
   let userRole = useSelector((state) => state.auth.userInfo.role)
 
   const ProductCard = ({ product }) => {
-    console.log(product)
-    console.log(userRole)
     return (
       <Card className="p-1 m-1">
         <Card.Body>
