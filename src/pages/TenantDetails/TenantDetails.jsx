@@ -237,13 +237,13 @@ const TenantDetails = () => {
                         </Card.Body>
                       </Card>
                     </TabPanel>
-                    {/* <TabPanel
+                    <TabPanel
                       header={
                         <FormattedMessage id="Tenants-Users-Management" />
                       }
                     >
                       <TenantsUsersManagement />
-                    </TabPanel> */}
+                    </TabPanel>
                     {tenantObject?.subscriptions?.map((product, index) => (
                       <TabPanel
                         key={index}
