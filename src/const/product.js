@@ -165,16 +165,25 @@ export const featureResetMap = {
   3: 'Monthly',
   4: 'Annual',
 }
-export const activeTab = {
-  details: 0,
-  clientCredintials: 1,
-  customSpecification: 2,
-  plans: 3,
-  features: 4,
-  plansFeatures: 5,
-  plansPrice: 6,
-  subscriptions: 7,
-}
+
+const activeTabKeys = [
+  'details',
+  'trialPeriod',
+  'clientCredintials',
+  'userManagement',
+  'customSpecification',
+  'plans',
+  'features',
+  'plansFeatures',
+  'plansPrice',
+  'subscriptions',
+]
+
+export const activeTab = activeTabKeys.reduce((acc, key, index) => {
+  acc[key] = index
+  return acc
+}, {})
+
 export const urlStyle = {
   GET: {
     method: 'GET',
