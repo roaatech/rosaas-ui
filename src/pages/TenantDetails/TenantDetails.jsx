@@ -89,7 +89,7 @@ const TenantDetails = () => {
 
   tenantObject?.subscriptions.map((item, index) => {
     if (firstLoad == 0 && item?.name == window.location.href.split('#')[1]) {
-      dispatch(setActiveIndex(index + 1))
+      dispatch(setActiveIndex(index + 2))
       firstLoad++
     }
   })
