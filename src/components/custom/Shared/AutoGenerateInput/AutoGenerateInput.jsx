@@ -11,12 +11,15 @@ const AutoGenerateInput = ({
   id,
   name,
   onGenerateUniqueName,
+  disabled,
 }) => {
   useEffect(() => {
-    let uniqueNameTitle = value
-      .toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[^a-zA-Z0-9_-]/g, '')
+    let uniqueNameTitle =
+      value &&
+      value
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-zA-Z0-9_-]/g, '')
     if (uniqueNameTitle) {
       const trimmedValue = uniqueNameTitle.replace(/^-+|-+$/g, '')
       onGenerateUniqueName(trimmedValue)
@@ -33,11 +36,11 @@ const AutoGenerateInput = ({
   return (
     <Wrapper>
       <div>
-        <strong>
+        <strong className="mb-2">
           {' '}
           {label} <span style={{ color: 'red' }}>*</span>
         </strong>
-        <div className="inputIcon">
+        <div className="inputIcon mt-2">
           <span className="buttonCont">
             <OverlayTrigger
               style={{ minWidth: '150px' }}
@@ -61,6 +64,7 @@ const AutoGenerateInput = ({
             name={id}
             onChange={onChange}
             value={name}
+            disabled={disabled}
           />
         </div>
       </div>

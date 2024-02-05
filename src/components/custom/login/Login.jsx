@@ -9,8 +9,16 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../axios/apis/useRequest.js'
+import { Routes } from '../../../routes'
+import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 const Login = () => {
+  let redirectPath = useSelector(
+    (state) => state.auth.redirectPath?.redirectPath
+  )
   const { signIn } = useRequest()
+  const navigate = useNavigate()
   const initialValues = {
     email: '',
     password: '',
@@ -23,6 +31,9 @@ const Login = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     const loginPass = await signIn(values)
+    if (loginPass) {
+      redirectPath ? navigate(redirectPath) : navigate(Routes.Dashboard.path)
+    }
   }
 
   return (
@@ -80,6 +91,14 @@ const Login = () => {
               >
                 <FormattedMessage id="signIn" />
               </Button>
+            </div>
+            <div className="pt-2 text-center">
+              <span>
+                <FormattedMessage id="not-Registered?" />
+              </span>{' '}
+              <Link className="fw-bold" to={Routes.SignUp.path}>
+                <FormattedMessage id="create-Account" />
+              </Link>
             </div>
           </Form>
         )}

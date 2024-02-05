@@ -10,7 +10,7 @@ const UrlItemList = ({ data }) => {
       {
         method: 'GET',
         path: data.defaultHealthCheckUrl,
-        title: <FormattedMessage id="Default-Health-Check-Url" />,
+        displayName: <FormattedMessage id="Default-Health-Check-Url" />,
         description: (
           <FormattedMessage id="Default-Health-Check-Url-description" />
         ),
@@ -18,7 +18,7 @@ const UrlItemList = ({ data }) => {
       {
         method: 'POST',
         path: data.healthStatusChangeUrl,
-        title: <FormattedMessage id="Health-Status-Change-Url" />,
+        displayName: <FormattedMessage id="Health-Status-Change-Url" />,
         description: (
           <FormattedMessage id="Health-Status-Change-Url-Description" />
         ),
@@ -26,7 +26,7 @@ const UrlItemList = ({ data }) => {
       {
         method: 'POST',
         path: data.subscriptionResetUrl,
-        title: <FormattedMessage id="Subscription-Reset-Url" />,
+        displayName: <FormattedMessage id="Subscription-Reset-Url" />,
         description: (
           <FormattedMessage id="Subscription-Reset-Url-Description" />
         ),
@@ -34,13 +34,13 @@ const UrlItemList = ({ data }) => {
       {
         method: 'POST',
         path: data.subscriptionUpgradeUrl,
-        title: <FormattedMessage id="Subscription-Upgrade" />,
+        displayName: <FormattedMessage id="Subscription-Upgrade" />,
         description: <FormattedMessage id="Subscription-Upgrade-Description" />,
       },
       {
         method: 'POST',
         path: data.subscriptionDowngradeUrl,
-        title: <FormattedMessage id="Subscription-Downgrade-Url" />,
+        displayName: <FormattedMessage id="Subscription-Downgrade-Url" />,
         description: (
           <FormattedMessage id="Subscription-Downgrade-Url-Description" />
         ),
@@ -48,25 +48,25 @@ const UrlItemList = ({ data }) => {
       {
         method: 'POST',
         path: data.creationEndpoint,
-        title: <FormattedMessage id="Creation-Url" />,
+        displayName: <FormattedMessage id="Creation-Url" />,
         description: <FormattedMessage id="Creation-Url-description" />,
       },
       {
         method: 'POST',
         path: data.activationEndpoint,
-        title: <FormattedMessage id="Activation-Url" />,
+        displayName: <FormattedMessage id="Activation-Url" />,
         description: <FormattedMessage id="Activation-Url-description" />,
       },
       {
         method: 'POST',
         path: data.deactivationEndpoint,
-        title: <FormattedMessage id="Deactivation-Url" />,
+        displayName: <FormattedMessage id="Deactivation-Url" />,
         description: <FormattedMessage id="Deactivation-Url-description" />,
       },
       {
         method: 'POST',
         path: data.deletionEndpoint,
-        title: <FormattedMessage id="Deletion-Url" />,
+        displayName: <FormattedMessage id="Deletion-Url" />,
         description: <FormattedMessage id="Deletion-Url-description" />,
       },
     ])
@@ -75,7 +75,7 @@ const UrlItemList = ({ data }) => {
   return UrlItemList.map((url, index) => (
     <tr key={index}>
       <td className="fw-bold">
-        {url.title}{' '}
+        {url.displayName}{' '}
         <span className="fw-normal">
           <OverlayTrigger
             trigger={['hover', 'focus']}

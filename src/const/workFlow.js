@@ -1,8 +1,11 @@
 export const Owner = {
   1: 'Super-Admin',
-  2: 'Product-Owner',
+  2: 'Client-Admin',
+  3: 'Product-Admin',
+  4: 'Tenant-Admin',
   100: 'Rosas-System',
   101: 'External-System',
+  102: 'External-System-Client',
 }
 
 export const processType = {

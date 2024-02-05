@@ -11,6 +11,8 @@ import {
   ButtonGroup,
   Dropdown,
   Table,
+  OverlayTrigger,
+  Tooltip,
 } from '@themesberg/react-bootstrap'
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -19,7 +21,7 @@ import { useParams } from 'react-router-dom'
 import { FormattedMessage, useIntl } from 'react-intl'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
-import { BsToggleOff, BsToggleOn } from 'react-icons/bs'
+import { BsToggleOff, BsToggleOn, BsUiChecks } from 'react-icons/bs'
 
 import {
   PlansChangeAttr,
@@ -33,8 +35,11 @@ import { featureResetMap, featureUnitMap } from '../../../../const'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 import ShowDetails from '../../Shared/ShowDetails/ShowDetails'
 import { toast } from 'react-toastify'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import Label from '../../Shared/label/Label'
+import { GiShadowFollower } from 'react-icons/gi'
 
-export default function ProductFeaturePlan({ children }) {
+export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [currentPlanId, setCurrentPlanId] = useState('')
   const [currentFeatureId, setCurrentFeatureId] = useState('')
   let direction = useSelector((state) => state.main.direction)
@@ -123,8 +128,8 @@ export default function ProductFeaturePlan({ children }) {
 
   const handleData = (data) => {
     return {
-      Feature: data.feature.title,
-      Plan: data.plan.title,
+      Feature: data.feature.displayName,
+      Plan: data.plan.displayName,
       Limit: data.limit,
       Unit: featureUnitMap[data.unit],
       'Unit-Display-Name-En': data.unitDisplayName?.en,
@@ -135,6 +140,7 @@ export default function ProductFeaturePlan({ children }) {
       'Edited-Date': DataTransform(data.editedDate),
     }
   }
+
   useEffect(() => {
     ;(async () => {
       if (!list || list.length == 0) {
@@ -165,8 +171,8 @@ export default function ProductFeaturePlan({ children }) {
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         featureId: item.feature.id,
-        title: item.feature.title,
-        name: item.feature.name,
+        displayName: item.feature.displayName,
+        systemName: item.feature.systemName,
         type: item.feature.type,
         index: Object.keys(featuresObj).length,
       }
@@ -182,7 +188,7 @@ export default function ProductFeaturePlan({ children }) {
           Object.values(featuresObj).map((item) => (
             <tr key={item.featureId}>
               <td>
-                <span className="fw-bolder">{item.title}</span>
+                <span className="fw-bolder">{item.displayName}</span>
               </td>
 
               {planList &&
@@ -199,9 +205,13 @@ export default function ProductFeaturePlan({ children }) {
                             className="text-dark m-0 p-0 planFeatureButton"
                           >
                             {listData[tableData[planId + ',' + item.featureId]]
-                              .limit ? (
-                              listData[tableData[planId + ',' + item.featureId]]
-                                .limit +
+                              .limit || item.type == 1 ? (
+                              (listData[
+                                tableData[planId + ',' + item.featureId]
+                              ].limit ||
+                                intl.formatMessage({
+                                  id: 'Unlimited',
+                                })) +
                               ' ' +
                               (featureUnitMap[
                                 listData[
@@ -344,7 +354,21 @@ export default function ProductFeaturePlan({ children }) {
 
   return (
     <Wrapper direction={direction}>
-      <div>
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'form',
+              id: routeParams.id,
+              label: 'Add-Plan-Feature',
+              component: 'addFeaturePlan',
+              icon: <BsUiChecks />,
+            },
+          ]}
+        />
+      </div>
+      <div className="border-top-1 border-light">
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -375,7 +399,37 @@ export default function ProductFeaturePlan({ children }) {
                             <BsToggleOff />
                           </span>
                         )}
-                        {planList[item].title}
+                        <span className="mr-1">
+                          {planList[item].displayName}
+                        </span>
+
+                        {planList[item].subscribers && (
+                          <span className="ml-3 ">
+                            <OverlayTrigger
+                              trigger={['hover', 'focus']}
+                              overlay={
+                                <Tooltip>
+                                  {intl.formatMessage({
+                                    id: 'Subscriber',
+                                  })}
+                                </Tooltip>
+                              }
+                            >
+                              <span
+                                className={`${
+                                  planList[item].subscribers > 0
+                                    ? 'subscribers-active'
+                                    : 'subscribers-passive'
+                                }`}
+                              >
+                                <GiShadowFollower />
+                                <span className="ml-1">
+                                  {planList[item].subscribers}
+                                </span>
+                              </span>
+                            </OverlayTrigger>
+                          </span>
+                        )}
                       </th>
                     ))}
                 </tr>

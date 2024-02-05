@@ -1,5 +1,11 @@
 import styled from 'styled-components'
 export const Wrapper = styled.div`
+  .active-toggle {
+    color: var(--second-color);
+  }
+  .passive-toggle {
+    color: #929292;
+  }
   .p-tabview .p-tabview-nav .p-tabview-title {
     font-size: 12px;
     margin-bottom: -28px;
@@ -12,6 +18,7 @@ export const Wrapper = styled.div`
   .p-tabview-nav-content {
     margin-bottom: -20px;
   }
+
   .p-tabview .p-tabview-nav .p-tabview-ink-bar {
     background-color: var(--second-color);
   }

@@ -1,9 +1,11 @@
 import { styled } from 'styled-components'
 export const Wrapper = styled.div`
-  .p-tabview-panels .card {
+  /* .p-tabview-panels .card .table-wrapper {
+    border: 0;
+  } */
+  .table-wrapper.table-responsive.shadow-sm.card {
     border: 0;
   }
-
   .p-tabview.p-component {
     /* border: 10px solid var(--themeSecColor);
     background: var(--themeBackground); */

@@ -1,12 +1,18 @@
 import {
   BsFillCheckCircleFill,
   BsFillExclamationCircleFill,
+  BsFillLockFill,
+  BsFillUnlockFill,
 } from 'react-icons/bs'
+import { FiLock, FiUnlock } from 'react-icons/fi'
 import {
   MdOutlineUnpublished,
   MdOutlinePublishedWithChanges,
   MdPayments,
   MdOutlinePayments,
+  MdOutlineLock,
+  MdMicExternalOff,
+  MdMicExternalOn,
 } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
 
@@ -16,15 +22,15 @@ export const Client_id = 'spa_rosas_admin_panel'
 
 export const HealthStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Healthy" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: <BsFillCheckCircleFill />,
   },
   false: {
-    background: '#f5e8e4',
+    background: 'var(--red2)',
     value: <FormattedMessage id="Unavailable" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
     icon: <BsFillExclamationCircleFill />,
   },
 }
@@ -40,40 +46,68 @@ export const DateStatus = {
 }
 export const PublishStatus = {
   true: {
-    background: '#eff9f6',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Published" />,
-    color: '#00a675',
+    color: 'var(--teal-green)',
     icon: <MdOutlinePublishedWithChanges />,
   },
   false: {
-    background: '#f5e8e4',
+    background: 'var(--red2)',
     value: <FormattedMessage id="Unpublished" />,
-    color: '#d26b4e',
+    color: 'var(--orange-brown)',
     icon: <MdOutlineUnpublished />,
   },
 }
-export const subscriptionStatus = {
+export const systemLockStatus = {
   true: {
-    background: '#eff9f6',
-    value: <FormattedMessage id="Active" />,
-    color: '#00a675',
+    background: 'var(--green2)',
+    value: <FormattedMessage id="Locked" />,
+    color: 'var(--teal-green)',
+    icon: <BsFillLockFill />,
   },
   false: {
-    background: '#f5e8e4',
-    value: <FormattedMessage id="Inactive" />,
-    color: '#d26b4e',
+    background: 'var(--red2)',
+    value: <FormattedMessage id="Unlocked" />,
+    color: 'var(--orange-brown)',
+    icon: <BsFillUnlockFill />,
   },
 }
-export const expirationStatus = {
+export const activeStatus = {
   true: {
-    background: '#eff9f6',
-    value: <FormattedMessage id="Valid" />,
-    color: '#00a675',
+    background: 'var(--green2)',
+    value: <FormattedMessage id="Active" />,
+    color: 'var(--teal-green)',
   },
   false: {
-    background: '#f5e8e4',
-    value: <FormattedMessage id="Expired" />,
-    color: '#d26b4e',
+    background: 'var(--red2)',
+    value: <FormattedMessage id="Inactive" />,
+    color: 'var(--orange-brown)',
+  },
+}
+
+export const isMajorStatus = {
+  true: {
+    background: 'var(--green2)',
+    value: <FormattedMessage id="true" />,
+    color: 'var(--teal-green)',
+  },
+  false: {
+    background: 'var(--red2)',
+    value: <FormattedMessage id="false" />,
+    color: 'var(--orange-brown)',
+  },
+}
+export const clientTypeLable = {
+  101: {
+    background: 'rgba(255, 201, 102, 0.4)',
+    value: <FormattedMessage id="External-System" />,
+    color: '#5c472e',
+  },
+
+  102: {
+    background: 'var(--misty-blue)',
+    value: <FormattedMessage id="External-System-Client" />,
+    color: 'var(--midnight-blue)',
   },
 }
 
@@ -83,11 +117,35 @@ export const cycle = {
   4: 'Year',
   5: 'One-Day',
   6: 'Three-Day',
+  10: 'Custom',
+  11: 'Unlimited',
+}
+export const ProductTrialType = {
+  1: {
+    value: <FormattedMessage id="No-Trial" />,
+    color: 'var(--primary-color)',
+    background: 'var(--primary0)',
+  },
+  2: {
+    value: <FormattedMessage id="Product-Has-Trial-Plan" />,
+    color: 'var(--orange-brown)',
+    background: 'var(--misty-blue)',
+  },
+  3: {
+    value: <FormattedMessage id="Each-Plan-Has-Optional-Trial-Period" />,
+    color: 'var(--teal-green)',
+    background: 'var(--misty-gray)',
+  },
 }
 
 export const urlIsOverridden = {
   true: { background: '#eee5ff', value: 'Yes' },
   false: { background: '#e1f0ff', value: 'No' },
+}
+export const tenancyTypeEnum = {
+  1: 'Unlimited',
+  2: 'Limited',
+  3: 'Planed',
 }
 export const featureTypeMap = {
   1: 'Number',

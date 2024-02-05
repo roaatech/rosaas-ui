@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import useRequest from '../../../../../axios/apis/useRequest.js'
+import useRequest from '../../../../../../axios/apis/useRequest.js'
 import { Modal, Button, Alert } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl'
 
 import { useParams } from 'react-router-dom'
 
-import { Wrapper } from '../ClientCredentials.styled.jsx'
+import { Wrapper } from '../../ClientCredentials.styled.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCopy,
@@ -18,18 +18,23 @@ import {
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons'
 import {
-  clientCredentialsInfo,
-  clientCredentials,
-} from '../../../../../store/slices/products/productsSlice.js'
+  clientCredentialsSecrets,
+  clientSecretInfo,
+} from '../../../../../../store/slices/products/productsSlice.js'
 import { BsCheckCircleFill } from 'react-icons/bs'
-const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
+const CreateSecretForm = ({
+  type,
+  setVisible,
+  popupLabel,
+  currentClientId,
+  currentId,
+}) => {
   const {
     createClientSecret,
     regenerateClientSecret,
     editClientSecret,
     getClientId,
   } = useRequest()
-
   const dispatch = useDispatch()
   const routeParams = useParams()
   const productId = routeParams.id
@@ -37,9 +42,14 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
 
   const id = allProducts[productId]?.client.id
   const secretItem =
-    currentId && allProducts[productId].clientCredentials[currentId]
-  const secretList = allProducts[productId].clientCredentials
-  const firstFieldKey = Object.keys(secretList)[0]
+    currentClientId &&
+    allProducts[productId]?.clientCredentials?.[currentClientId]
+      ?.clientCredentialsSecrets?.[currentId]
+  const secretList =
+    allProducts[productId]?.clientCredentials?.[currentClientId]
+      ?.clientCredentialsSecrets
+
+  const firstFieldKey = secretList && Object.keys(secretList)[0]
   const [clientRecordId, setClientRecordId] = useState(
     secretList?.[firstFieldKey]?.clientRecordId || ''
   )
@@ -55,12 +65,12 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
   }, [secretItem])
   const [customExpirationDate, setCustomExpirationDate] = useState(null)
   const initialValues = {
-    title: secretItem ? secretItem.description : '',
+    displayName: secretItem ? secretItem.description : '',
   }
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string()
-      .required(<FormattedMessage id="Title-is-required" />)
+    displayName: Yup.string()
+      .required(<FormattedMessage id="Display-Name-is-required" />)
       .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
   })
   const [nextPage, setNexPage] = useState(false)
@@ -69,10 +79,10 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
     const fetchData = async () => {
       if (!clientRecordId || !clientId) {
         try {
-          const clientData = await getClientId(productId, id)
+          const clientData = await getClientId(productId, currentClientId)
 
-          setClientRecordId(clientData.data.data.clientRecordId)
-          setClientId(clientData.data.data.clientId)
+          setClientRecordId(clientData.data.data?.clientRecordId)
+          setClientId(clientData.data.data?.clientId)
         } catch (error) {
           console.error('Error:', error)
         }
@@ -86,7 +96,8 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
         setNexPage(true)
         try {
           const clientSecretRegenerate = await regenerateClientSecret(
-            secretItem.clientRecordId,
+            currentClientId,
+            productId,
             currentId
           )
           setClientSecret(clientSecretRegenerate.data.data)
@@ -98,6 +109,10 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
 
     fetchData()
   }, [type])
+  const [showClientId, setShowClientId] = useState(false)
+  useEffect(() => {
+    type === 'showClientId' ? setShowClientId(true) : setShowClientId(false)
+  }, [type])
 
   const formik = useFormik({
     initialValues,
@@ -107,41 +122,43 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
       if (type === 'create') {
         let clientSecret
         if (customExpirationDate) {
-          clientSecret = await createClientSecret(productId, id, {
-            description: values.title,
+          clientSecret = await createClientSecret(productId, currentClientId, {
+            description: values.displayName,
             expiration: customExpirationDate,
           })
           dispatch(
-            clientCredentials({
-              id: productId,
+            clientCredentialsSecrets({
+              productId,
+              clientId: currentClientId,
               data: {
                 ...secretList,
-                ...[
-                  {
+                ...{
+                  [clientSecret.data.data.id]: {
                     id: clientSecret.data.data.id,
-                    description: values.title,
+                    description: values.displayName,
                     expiration: customExpirationDate,
                     clientRecordId,
                     clientId,
                     created: new Date().toISOString().slice(0, 19),
                   },
-                ],
+                },
               },
             })
           )
         } else {
-          clientSecret = await createClientSecret(productId, id, {
-            description: values.title,
+          clientSecret = await createClientSecret(productId, currentClientId, {
+            description: values.displayName,
           })
           dispatch(
-            clientCredentials({
-              id: productId,
+            clientCredentialsSecrets({
+              productId,
+              clientId: currentClientId,
               data: {
                 ...secretList,
                 ...[
                   {
                     id: clientSecret.data.data.id,
-                    description: values.title,
+                    description: values.displayName,
                     expiration: customExpirationDate,
                     clientId,
                     clientRecordId,
@@ -159,41 +176,45 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
         let clientSecret
         if (customExpirationDate) {
           clientSecret = await editClientSecret(
-            secretItem.clientRecordId,
+            productId,
+            currentClientId,
             currentId,
             {
-              description: values.title,
+              description: values.displayName,
               expiration: customExpirationDate,
             }
           )
 
           dispatch(
-            clientCredentialsInfo({
+            clientSecretInfo({
               itemId: currentId,
+              clientId: currentClientId,
               productId,
               data: {
                 ...secretItem,
-                description: values.title,
+                description: values.displayName,
                 expiration: customExpirationDate,
               },
             })
           )
         } else {
           clientSecret = await editClientSecret(
-            secretItem.clientRecordId,
+            productId,
+            currentClientId,
             currentId,
             {
-              description: values.title,
+              description: values.displayName,
             }
           )
 
           dispatch(
-            clientCredentialsInfo({
+            clientSecretInfo({
               itemId: currentId,
+              clientId: currentClientId,
               productId,
               data: {
                 ...secretItem,
-                description: values.title,
+                description: values.displayName,
                 expiration: customExpirationDate,
               },
             })
@@ -244,13 +265,15 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
   const ClientIdField = () => {
     return (
       <>
-        <Alert variant={'warning'}>
-          <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
-          <strong>
-            <FormattedMessage id={'Warning'} /> -
-          </strong>{' '}
-          {<FormattedMessage id="warning-messege-secret-copy" />}
-        </Alert>
+        {!showClientId && (
+          <Alert variant={'warning'}>
+            <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
+            <strong>
+              <FormattedMessage id={'Warning'} /> -
+            </strong>{' '}
+            {<FormattedMessage id="warning-messege-secret-copy" />}
+          </Alert>
+        )}
         <Form.Group className="mb-3">
           <Form.Label>
             <FormattedMessage id="Client-ID" />{' '}
@@ -275,36 +298,38 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
             </span>{' '}
           </div>
         </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>
-            <FormattedMessage id="Client-Secret" />{' '}
-          </Form.Label>
-          <div
-            className="input-group border-right-1"
-            style={{ borderRight: '1px solid #ced4da' }}
-          >
-            <input
-              type={showSecret ? 'text' : 'password'}
-              value={showSecret ? clientSecret : '******'}
-              className="form-control"
-              readOnly
-            />
-
-            <span className="input-group-text">
-              <FontAwesomeIcon
-                icon={showSecret ? faEyeSlash : faEye}
-                onClick={handleToggleShowSecret}
-                className="mr-2"
-                style={{ cursor: 'pointer' }}
+        {!showClientId && (
+          <Form.Group className="mb-3">
+            <Form.Label>
+              <FormattedMessage id="Client-Secret" />{' '}
+            </Form.Label>
+            <div
+              className="input-group border-right-1"
+              style={{ borderRight: '1px solid #ced4da' }}
+            >
+              <input
+                type={showSecret ? 'text' : 'password'}
+                value={showSecret ? clientSecret : '******'}
+                className="form-control"
+                readOnly
               />
-              <FontAwesomeIcon
-                icon={faCopy}
-                onClick={() => handleCopyToClipboard(clientSecret)}
-                style={{ cursor: 'pointer' }}
-              />{' '}
-            </span>
-          </div>
-        </Form.Group>
+
+              <span className="input-group-text">
+                <FontAwesomeIcon
+                  icon={showSecret ? faEyeSlash : faEye}
+                  onClick={handleToggleShowSecret}
+                  className="mr-2"
+                  style={{ cursor: 'pointer' }}
+                />
+                <FontAwesomeIcon
+                  icon={faCopy}
+                  onClick={() => handleCopyToClipboard(clientSecret)}
+                  style={{ cursor: 'pointer' }}
+                />{' '}
+              </span>
+            </div>
+          </Form.Group>
+        )}
       </>
     )
   }
@@ -332,35 +357,35 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
         </Modal.Header>
 
         <Modal.Body>
-          {nextPage && <ClientIdField />}
-          {!nextPage && (
+          {(nextPage || showClientId) && <ClientIdField />}
+          {!nextPage && !showClientId && (
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Title" />{' '}
+                <FormattedMessage id="Display-Name" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
 
               <input
                 className="form-control"
                 type="text"
-                id="title"
-                name="title"
+                id="displayName"
+                name="displayName"
                 onChange={formik.handleChange}
-                value={formik.values.title}
+                value={formik.values.displayName}
               />
 
-              {formik.touched.name && formik.errors.name && (
+              {formik.touched.displayName && formik.errors.displayName && (
                 <Form.Control.Feedback
                   type="invalid"
                   style={{ display: 'block' }}
                 >
-                  {formik.errors.name}
+                  {formik.errors.displayName}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
           )}
 
-          {!nextPage && (
+          {!nextPage && !showClientId && (
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Expiration" />
@@ -428,7 +453,7 @@ const CreateSecretForm = ({ type, setVisible, popupLabel, currentId }) => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          {!nextPage && (
+          {!nextPage && !showClientId && (
             <Button variant="secondary" type="submit">
               <FormattedMessage id="Submit" />
             </Button>

@@ -32,6 +32,8 @@ import useGlobal from '../../../lib/hocks/global'
 import ThemeDialog from '../../custom/Shared/ThemeDialog/ThemeDialog'
 import TenantForm from '../../custom/tenant/TenantForm/TenantForm'
 import ProductForm from '../../custom/Product/ProductForm/ProductForm'
+import { useSelector } from 'react-redux'
+import TenantFormOnboarding from '../../custom/tenant/TenantFormOnboarding/TenantFormOnboarding'
 
 const QuickAction = ({
   label,
@@ -49,8 +51,11 @@ const QuickAction = ({
   const [inputValue, setInputValue] = useState('')
   const intl = useIntl()
   const [visibleTenant, setVisibleTenant] = useState(false)
+  const [visibleTenantAndPay, setVisibleTenantAndPay] = useState(false)
   const [visibleProduct, setVisibleProduct] = useState(false)
   const inputHeight = '56px'
+  let userRole = useSelector((state) => state.auth.userInfo.role)
+
   return (
     <Wrapper>
       <div className="d-flex  py-4 wrapper">
@@ -97,8 +102,18 @@ const QuickAction = ({
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu className="dropdown-menu">
-              <Dropdown.Item
+              {/* <Dropdown.Item
                 onSelect={() => setVisibleTenant(true)}
+                className="text-dark"
+              >
+                <span className="mx-2 ">
+                  <BsFillPersonPlusFill className="product-icon" />
+                </span>
+                <FormattedMessage id="Add-Tenant" />
+              </Dropdown.Item> */}
+
+              <Dropdown.Item
+                onSelect={() => setVisibleTenantAndPay(true)}
                 className="text-dark"
               >
                 <span className="mx-2 ">
@@ -107,17 +122,19 @@ const QuickAction = ({
                 </span>
                 <FormattedMessage id="Add-Tenant" />
               </Dropdown.Item>
-              <Dropdown.Item
-                onSelect={() => setVisibleProduct(true)}
-                className="text-dark"
-              >
-                <span className=" mx-2 ">
-                  <BsBoxSeam className="product-icon" />
-                  <FontAwesomeIcon icon={faPlus} className="plus icon-dark" />
-                </span>
-                <FormattedMessage id="Add-Product" />
-              </Dropdown.Item>
 
+              {(userRole == 'productOwner' || userRole == 'superAdmin') && (
+                <Dropdown.Item
+                  onSelect={() => setVisibleProduct(true)}
+                  className="text-dark"
+                >
+                  <span className=" mx-2 ">
+                    <BsBoxSeam className="product-icon" />
+                    <FontAwesomeIcon icon={faPlus} className="plus icon-dark" />
+                  </span>
+                  <FormattedMessage id="Add-Product" />
+                </Dropdown.Item>
+              )}
               {/* <Dropdown.Item
               onClick={() => deleteConfirm(id)}
               className="text-danger"
@@ -134,6 +151,19 @@ const QuickAction = ({
                 type={'create'}
                 visible={visibleTenant}
                 setVisible={setVisibleTenant}
+              />
+            </ThemeDialog>
+          )}
+          {visibleTenantAndPay && (
+            <ThemeDialog
+              visible={visibleTenantAndPay}
+              setVisible={setVisibleTenantAndPay}
+            >
+              <TenantFormOnboarding
+                popupLabel={<FormattedMessage id="Tenant-Onboard" />}
+                type={'create'}
+                visible={visibleTenantAndPay}
+                setVisible={setVisibleTenantAndPay}
               />
             </ThemeDialog>
           )}

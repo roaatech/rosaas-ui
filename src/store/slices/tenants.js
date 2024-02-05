@@ -5,8 +5,10 @@ export const tenantsSlice = createSlice({
   name: 'tenants',
   initialState: {
     tenants: {},
+    createdTenant: {},
     subscriptionData: {},
     currentTab: 0,
+    currentStep: 1,
   },
 
   reducers: {
@@ -26,6 +28,54 @@ export const tenantsSlice = createSlice({
       const currentTenants = { ...current(state.tenants) }
       currentTenants[action.payload.id] = action.payload
       state.tenants = currentTenants
+    },
+
+    setAllOrders: (state, action) => {
+      const allTenants = JSON.parse(JSON.stringify(state.tenants))
+      const { tenantId, data } = action.payload
+
+      if (allTenants[tenantId]) {
+        const allOrders = {}
+
+        data.forEach((item) => {
+          allOrders[item.id] = {
+            ...item,
+          }
+        })
+
+        allTenants[tenantId].orders = allOrders
+        state.tenants = allTenants
+      }
+    },
+
+    changeOrderAttribute: (state, action) => {
+      const { tenantId, orderId, updatedAttributes } = action.payload
+
+      if (state.tenants[tenantId] && state.tenants[tenantId].orders[orderId]) {
+        const existingOrder = state.tenants[tenantId].orders[orderId]
+
+        const updatedOrder = {
+          ...existingOrder,
+          ...updatedAttributes.else,
+          orderItems: existingOrder.orderItems.map((item, index) => {
+            if (
+              updatedAttributes.orderItems &&
+              updatedAttributes.orderItems[index]
+            ) {
+              return {
+                ...item,
+                ...updatedAttributes.orderItems[index],
+              }
+            }
+            return item
+          }),
+        }
+
+        state.tenants[tenantId].orders = {
+          ...state.tenants[tenantId].orders,
+          [orderId]: updatedOrder,
+        }
+      }
     },
 
     history: (state, action) => {
@@ -51,7 +101,45 @@ export const tenantsSlice = createSlice({
       currentTenants[action.payload.tenantId] = tenant
       state.tenants = currentTenants
     },
+    AdminPrivileges: (state, action) => {
+      const currentTenants = JSON.parse(JSON.stringify(state.tenants))
+      const { id, data } = action.payload
+      if (currentTenants[id]) {
+        Object.keys(data).forEach((key) => {
+          const item = data[key]
+          currentTenants[id].AdminPrivileges = {
+            ...currentTenants[id].AdminPrivileges,
+            [item.id]: {
+              ...item,
+            },
+          }
+        })
+      }
 
+      state.tenants = currentTenants
+    },
+    AdminPrivilegesChangeAttr: (state, action) => {
+      const { tenantId, itemId, attr, value } = action.payload
+      const currentTenants = JSON.parse(JSON.stringify(state.tenants))
+      currentTenants[tenantId].AdminPrivileges[itemId][attr] = value
+      state.tenants = currentTenants
+    },
+
+    deleteTenantAdminPrivileges: (state, action) => {
+      const { tenantId, itemId } = action.payload
+      const currentTenants = JSON.parse(JSON.stringify(state.tenants))
+      const tenantToUpdate = currentTenants[tenantId]
+
+      if (tenantToUpdate && tenantToUpdate.AdminPrivileges) {
+        const updatedAdminPrivileges = {
+          ...tenantToUpdate.AdminPrivileges,
+        }
+        delete updatedAdminPrivileges[itemId]
+        tenantToUpdate.AdminPrivileges = updatedAdminPrivileges
+      }
+
+      state.tenants = currentTenants
+    },
     removeTenant: (state, action) => {
       const currentTenants = { ...current(state.tenants) }
       delete currentTenants[action.payload]
@@ -59,6 +147,12 @@ export const tenantsSlice = createSlice({
     },
     setActiveIndex: (state, action) => {
       state.currentTab = action.payload
+    },
+    setStep: (state, action) => {
+      state.currentStep = action.payload
+    },
+    setTenantCreateData: (state, action) => {
+      state.createdTenant = action.payload
     },
     subscriptionData: (state, action) => {
       const currentTenants = JSON.parse(JSON.stringify(current(state.tenants)))
@@ -114,5 +208,12 @@ export const {
   featuresData,
   subHistoryData,
   removeSubscriptionDataByProductId,
+  setStep,
+  setTenantCreateData,
+  AdminPrivileges,
+  deleteTenantAdminPrivileges,
+  AdminPrivilegesChangeAttr,
+  setAllOrders,
+  changeOrderAttribute,
 } = tenantsSlice.actions
 export default tenantsSlice.reducer

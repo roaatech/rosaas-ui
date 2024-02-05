@@ -16,19 +16,18 @@ const DateLabel = ({ endDate }) => {
       background: 'rgb(239, 249, 246)',
     },
   }
-
-  const expired = isDateExpired(endDate)
+  const expired = !endDate ? false : isDateExpired(endDate)
 
   return (
     <Wrapper>
       <span
         className="label"
         style={{
-          color: expired ? 'rgb(255, 104, 104)' : '#00a675',
+          color: expired ? 'rgb(255, 104, 104)' : 'var(--teal-green)',
           background: DateStatus[expired].background,
         }}
       >
-        {endDate === 'Unlimited' ? 'Unlimited' : formatDate(endDate)}
+        {endDate ? formatDate(endDate) : 'Unlimited'}
       </span>
     </Wrapper>
   )

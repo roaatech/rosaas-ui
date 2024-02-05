@@ -12,9 +12,12 @@ import useSettingsReq from './Setting/useSettingReq'
 import useSpecificationReq from './Product/specification/useSpecificationReq'
 import useSubManagementReq from './Tenant/useSubManagementReq'
 import useClientCredentialsReq from './Product/ClientCredentials/useClientCredentialsReq'
+import usePaymentReq from './Payment/Payment'
+import useUsersManagementReq from './UsersManagement/useUsersManagementReq'
+import useAdminPrivileges from './UsersManagement/useAdminPrivileges'
 
 const useRequest = () => {
-  const { signIn, userData, logOut } = useUserReq()
+  const { signIn, userData, logOut, signUp } = useUserReq()
   const {
     createTenantRequest,
     editTenantRequest,
@@ -40,14 +43,36 @@ const useRequest = () => {
   } = useSubManagementReq()
 
   const {
+    createTenantAdmin,
+    createProductAdmin,
+    createClientAdmin,
+    validateEmail,
+  } = useUsersManagementReq()
+  const {
+    tenantAdminPrivileges,
+    productAdminPrivileges,
+    clientAdminPrivileges,
+    EntityAdminPrivileges,
+    deleteAdminPrivileges,
+  } = useAdminPrivileges()
+  const {
     createProductRequest,
     editProductRequest,
     getProduct,
     getProductList,
     deleteProductReq,
     getProductWarnings,
+    getProductListPublic,
+    changeProductTrialType,
+    publishProduct,
   } = useProductReq()
+
   const {
+    getClientsListByProduct,
+    createClient,
+    updateClient,
+    deleteClient,
+    activateClient,
     createClientSecret,
     getClientSecrets,
     DeleteClientSecret,
@@ -55,12 +80,14 @@ const useRequest = () => {
     editClientSecret,
     getClientId,
   } = useClientCredentialsReq()
+
   const {
     getProductPlans,
     createPlanRequest,
     publishPlan,
     editPlanRequest,
     deletePlanReq,
+    getProductPlansPublic,
   } = usePlanReq()
   const {
     getProductSpecification,
@@ -82,10 +109,12 @@ const useRequest = () => {
     editPlanPriceRequest,
     deletePlanPriceReq,
     PlansPricePublishedReq,
+    getProductPlanPriceListPublic,
   } = usePlanPriceReq()
 
   const {
     getFeaturePlanList,
+    getFeaturePlanListPublic,
     createFeaturePlanRequest,
     editFeaturePlanRequest,
     getFeaturePlan,
@@ -101,8 +130,18 @@ const useRequest = () => {
     putProductWarningsSettings,
   } = useSettingsReq()
 
+  const {
+    getOrderById,
+    getOrdersListByTenantId,
+    paymentCheckout,
+    paymentSuccess,
+    paymentFailed,
+    changeOrderPlan,
+  } = usePaymentReq()
+
   return {
     signIn,
+    signUp,
     userData,
     logOut,
     createTenantRequest,
@@ -166,6 +205,32 @@ const useRequest = () => {
     regenerateClientSecret,
     editClientSecret,
     getClientId,
+    getProductListPublic,
+    getFeaturePlanListPublic,
+    getProductPlansPublic,
+    getProductPlanPriceListPublic,
+    getOrderById,
+    getOrdersListByTenantId,
+    paymentCheckout,
+    paymentSuccess,
+    paymentFailed,
+    createTenantAdmin,
+    createProductAdmin,
+    createClientAdmin,
+    validateEmail,
+    tenantAdminPrivileges,
+    productAdminPrivileges,
+    clientAdminPrivileges,
+    EntityAdminPrivileges,
+    deleteAdminPrivileges,
+    changeProductTrialType,
+    publishProduct,
+    getClientsListByProduct,
+    createClient,
+    updateClient,
+    deleteClient,
+    activateClient,
+    changeOrderPlan,
   }
 }
 export default useRequest

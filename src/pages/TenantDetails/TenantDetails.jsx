@@ -26,6 +26,9 @@ import { featureUnitMap, statusConst } from '../../const'
 import { featureResetMap } from '../../const'
 import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { MdFactCheck } from 'react-icons/md'
+import TenantsUsersManagement from '../../components/custom/tenant/TenantsUsersManagement/TenantsUsersManagement'
+import Label from '../../components/custom/Shared/label/Label'
+import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -90,6 +93,7 @@ const TenantDetails = () => {
       firstLoad++
     }
   })
+
   const intl = useIntl()
 
   useEffect(() => {
@@ -100,6 +104,7 @@ const TenantDetails = () => {
       }
     })()
   }, [visible, routeParams.id, updateDetails])
+
   useEffect(() => {
     return () => dispatch(setActiveIndex(0))
   }, [routeParams.id, dispatch])
@@ -111,6 +116,7 @@ const TenantDetails = () => {
           breadcrumbInfo={'TenantDetails'}
           param1={tenantObject.id}
           icon={BsFillPersonLinesFill}
+          data={{ name: tenantObject.systemName }}
         />
       )}
 
@@ -119,7 +125,7 @@ const TenantDetails = () => {
           <UpperContent>
             <h4 className="m-0">
               <FormattedMessage id="Tenant-Details" />:{' '}
-              {tenantObject.uniqueName}
+              {tenantObject.systemName}
             </h4>
           </UpperContent>
         )}
@@ -180,17 +186,17 @@ const TenantDetails = () => {
                             <tbody>
                               <tr>
                                 <td className="fw-bold line-cell">
-                                  <FormattedMessage id="Title" />
+                                  <FormattedMessage id="Display-Name" />
                                 </td>
                                 <td className=" line-cell">
-                                  {tenantObject.title}
+                                  {tenantObject.displayName}
                                 </td>
                               </tr>
                               <tr>
                                 <td className="fw-bold">
-                                  <FormattedMessage id="Unique-Name" />
+                                  <FormattedMessage id="System-Name" />
                                 </td>
-                                <td>{tenantObject.uniqueName}</td>
+                                <td>{tenantObject.systemName}</td>
                               </tr>
                               <tr>
                                 <td className="fw-bold">
@@ -203,7 +209,7 @@ const TenantDetails = () => {
                                         key={index}
                                         className="p-1 border-round border-1 border-400 mx-2"
                                       >
-                                        {subscription?.product.name}
+                                        {subscription?.product.systemName}
                                       </span>
                                     )
                                   )}
@@ -231,11 +237,26 @@ const TenantDetails = () => {
                         </Card.Body>
                       </Card>
                     </TabPanel>
-
+                    {/* <TabPanel
+                      header={
+                        <FormattedMessage id="Tenants-Users-Management" />
+                      }
+                    >
+                      <TenantsUsersManagement />
+                    </TabPanel> */}
                     {tenantObject?.subscriptions?.map((product, index) => (
                       <TabPanel
-                        header={product?.product.name.toUpperCase()}
                         key={index}
+                        header={
+                          <>
+                            <div className="tab-header">
+                              {product?.product.systemName?.toUpperCase()}
+                              {product?.subscriptionMode === 2 && (
+                                <TrialLabel />
+                              )}
+                            </div>
+                          </>
+                        }
                       >
                         <ChildTable
                           tenantDetails={tenantObject}

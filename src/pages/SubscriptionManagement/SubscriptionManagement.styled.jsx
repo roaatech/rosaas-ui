@@ -1,13 +1,12 @@
 import styled from 'styled-components'
-const secondColor = '#ffab03'
 export const Wrapper = styled.div`
   .green {
     color: var(--green);
-    background: '#eff9f6';
+    background: 'var(--green2)';
   }
   .red {
     color: var(--red);
-    background: '#eff9f6';
+    background: 'var(--green2)';
   }
   .label-white {
     font-size: var(--smallFont);
@@ -21,7 +20,10 @@ export const Wrapper = styled.div`
   .info-card .card {
     background-color: transparent;
   }
-
+  .tab-header {
+    display: flex;
+    align-items: center;
+  }
   .custom-nav-link .nav-link.active {
     border-bottom: 0px;
 
@@ -105,7 +107,7 @@ export const Wrapper = styled.div`
     background-color: var(--second-color);
   }
   .passive-toggle {
-    color: #ccc;
+    color: var(--passive-color);
     cursor: pointer;
   }
   .active-toggle {
@@ -121,7 +123,7 @@ export const Wrapper = styled.div`
     color: var(--second-color);
   }
   .passive-reset {
-    color: #ccc;
+    color: var(--passive-color);
   }
   .active-reset:hover {
     color: #ffab03b4;

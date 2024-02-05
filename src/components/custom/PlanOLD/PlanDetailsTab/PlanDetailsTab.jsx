@@ -72,16 +72,16 @@ const PlanDetailsTab = ({ data }) => {
                   <tbody>
                     <tr>
                       <td className="fw-bold">
-                        <FormattedMessage id="Name" />
+                        <FormattedMessage id="System-Name" />
                       </td>
-                      <td>{data.name}</td>
+                      <td>{data.systemName}</td>
                     </tr>
 
                     {/* <tr>
                       <td className="fw-bold">
                         <FormattedMessage id="Description" />
                       </td>
-                      <td>{data.client.name}</td>
+                      <td>{data.client.systemName}</td>
                     </tr> */}
                     <tr>
                       <td className="fw-bold">

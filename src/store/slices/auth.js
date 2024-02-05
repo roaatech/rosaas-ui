@@ -3,6 +3,7 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState: {
     userInfo: {},
+    redirectPath: '',
   },
   reducers: {
     logOut: (state) => {
@@ -13,10 +14,13 @@ export const authSlice = createSlice({
     addUserInfo: (state, action) => {
       state.userInfo = action.payload
     },
+    signinRedirectPath: (state, action) => {
+      state.redirectPath = action.payload
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { logOut, addUserInfo } = authSlice.actions
+export const { logOut, addUserInfo, signinRedirectPath } = authSlice.actions
 
 export default authSlice.reducer

@@ -34,11 +34,16 @@ import Label from '../../Shared/label/Label'
 import {
   MdOutlineUnpublished,
   MdOutlinePublishedWithChanges,
+  MdEditNote,
 } from 'react-icons/md'
 
 import { PublishStatus } from '../../../../const'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
-export const ProductCustomSpecificationList = ({ productId }) => {
+export const ProductCustomSpecificationList = (
+  { productId },
+  setActiveIndex
+) => {
   const {
     getProductSpecification,
     deleteSpecificationReq,
@@ -117,7 +122,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
 
   const TableRow = (props) => {
     const {
-      name,
+      systemName,
       displayName,
       description,
       id,
@@ -136,7 +141,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
       <>
         <tr>
           <td>
-            <span className="fw-normal">{name}</span>
+            <span className="fw-normal">{systemName}</span>
           </td>
           <td>
             <span className="fw-normal">
@@ -247,7 +252,23 @@ export const ProductCustomSpecificationList = ({ productId }) => {
 
   return (
     <Wrapper>
-      <>
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'form',
+              id: productId,
+              label: 'Add-Specification',
+              component: 'addSpecification',
+              icon: <MdEditNote />,
+              setActiveIndex: setActiveIndex,
+            },
+          ]}
+        />
+      </div>
+
+      <div className="border-top-1 border-light">
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -257,7 +278,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Name" />
+                    <FormattedMessage id="System-Name" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Display-Name" />
@@ -324,7 +345,7 @@ export const ProductCustomSpecificationList = ({ productId }) => {
             />
           </>
         </ThemeDialog>
-      </>
+      </div>
     </Wrapper>
   )
 }

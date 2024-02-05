@@ -142,11 +142,11 @@ export default function Product({ children }) {
               size={'small'}
             >
               <Column
-                field="name"
+                field="displayName"
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Name" />}
-                    field="name"
+                    text={<FormattedMessage id="Display-Name" />}
+                    field="displayName"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -158,11 +158,11 @@ export default function Product({ children }) {
                 }
               ></Column>
               <Column
-                field="defaultHealthCheckUrl"
+                field="systemName"
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Default-Health-Check-Url" />}
-                    field="defaultHealthCheckUrl"
+                    text={<FormattedMessage id="System-Name" />}
+                    field="systemName"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -175,7 +175,7 @@ export default function Product({ children }) {
               ></Column>
 
               <Column
-                field={'client.name'}
+                field={'client.systemName'}
                 header={
                   <ColumnSortHeader
                     text={<FormattedMessage id="Client" />}

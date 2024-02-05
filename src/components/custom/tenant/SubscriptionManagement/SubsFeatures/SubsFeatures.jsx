@@ -87,7 +87,7 @@ export default function SubsFeatures(data) {
               subscriptionFeatures?.map((subscription, index) => (
                 <tr key={`subscription-${index}`}>
                   {/* Feature */}
-                  <td>{subscription.feature.name}</td>
+                  <td>{subscription.feature.systemName}</td>
 
                   {/* Reset */}
                   <td>{featureResetMap[subscription.reset]}</td>
@@ -98,7 +98,7 @@ export default function SubsFeatures(data) {
                     {subscription.reset != 1 ? (
                       <Label
                         {...{
-                          background: '#cccccc40',
+                          background: 'var(--misty-gray)',
                           value: formatDate(subscription.startDate),
                           lighter: true,
                         }}

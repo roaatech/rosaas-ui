@@ -67,6 +67,8 @@ export default (props = {}) => {
   const [filteredProducts, setFilteredProducts] = useState(
     Object.values(productsData)
   )
+  let userRole = useSelector((state) => state.auth.userInfo.role)
+  const roles = ['', 'superAdmin', 'clientAdmin', 'ProductAdmin', 'tenantAdmin']
 
   let unFilteredProducts = Object.values(productsData)
   const setUnFilteredProducts = (newData) => {
@@ -215,7 +217,6 @@ export default (props = {}) => {
       dispatch(setAllTenant(listData.data.data.items))
     })()
   }, [first, searchValue, update, paramsID])
-
   useEffect(() => {
     let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
@@ -296,7 +297,7 @@ export default (props = {}) => {
                   {active.map((item, index) => (
                     <NavItem
                       key={index}
-                      title={item.uniqueName}
+                      title={item.systemName}
                       link={`/tenants/${item.id}`}
                       icon={BsFillPersonFill}
                     />
@@ -312,13 +313,14 @@ export default (props = {}) => {
                   {inactive.map((item, index) => (
                     <NavItem
                       key={index}
-                      title={item.uniqueName}
+                      title={item.systemName}
                       link={`/tenants/${item.id}`}
                       icon={BsFillPersonFill}
                     />
                   ))}
                 </CollapsableNavItem>
               ) : null}
+
               {archived.length ? (
                 <CollapsableNavItem
                   eventKey={archivedIsOpen}
@@ -328,14 +330,15 @@ export default (props = {}) => {
                   {archived.map((item, index) => (
                     <NavItem
                       key={index}
-                      title={item.uniqueName}
+                      title={item.systemName}
                       link={`/tenants/${item.id}`}
                     />
                   ))}
                 </CollapsableNavItem>
               ) : null}
 
-              {Array.isArray(
+              {(userRole == 'productOwner' || userRole == 'superAdmin') &&
+              Array.isArray(
                 searchValue.length ? filteredProducts : unFilteredProducts
               ) &&
               (searchValue.length ? filteredProducts : unFilteredProducts)
@@ -360,7 +363,7 @@ export default (props = {}) => {
                   ).map((product, index) => (
                     <NavItem
                       key={index}
-                      title={product.name}
+                      title={product.systemName}
                       link={`/products/${product.id}`}
                       icon={BsBoxSeam}
                       isActive={location.pathname.includes(
@@ -371,27 +374,29 @@ export default (props = {}) => {
                 </CollapsableNavItem>
               ) : null}
 
-              <CollapsableNavItem
-                eventKey={settingIsOpen}
-                title={<FormattedMessage id="Settings" />}
-                icon={<BsGearFill />}
-              >
-                <NavItem
-                  title={<FormattedMessage id="Health-Check-sidebar" />}
-                  link={`/settings/health-check`}
-                  icon={BsFillClipboard2CheckFill}
-                />
-                <NavItem
-                  title={<FormattedMessage id="Subscriptions" />}
-                  link={`/settings/subscriptions`}
-                  icon={BsPeople}
-                />
-                <NavItem
-                  title={<FormattedMessage id="Product-Warnings" />}
-                  link={`/settings/product-warnings`}
-                  icon={BsExclamationTriangle}
-                />
-              </CollapsableNavItem>
+              {userRole == 'superAdmin' && (
+                <CollapsableNavItem
+                  eventKey={settingIsOpen}
+                  title={<FormattedMessage id="Settings" />}
+                  icon={<BsGearFill />}
+                >
+                  <NavItem
+                    title={<FormattedMessage id="Health-Check-sidebar" />}
+                    link={`/settings/health-check`}
+                    icon={BsFillClipboard2CheckFill}
+                  />
+                  <NavItem
+                    title={<FormattedMessage id="Subscriptions" />}
+                    link={`/settings/subscriptions`}
+                    icon={BsPeople}
+                  />
+                  <NavItem
+                    title={<FormattedMessage id="Product-Warnings" />}
+                    link={`/settings/product-warnings`}
+                    icon={BsExclamationTriangle}
+                  />
+                </CollapsableNavItem>
+              )}
             </Nav>
           </div>
         </SimpleBar>

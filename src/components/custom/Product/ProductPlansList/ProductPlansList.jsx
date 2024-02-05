@@ -37,6 +37,7 @@ import {
   BsFillBagDashFill,
   BsFillCheckCircleFill,
   BsFillXCircleFill,
+  BsPencilSquare,
   BsShare,
 } from 'react-icons/bs'
 import Label from '../../Shared/label/Label'
@@ -47,6 +48,10 @@ import {
 } from 'react-icons/md'
 
 import { PublishStatus } from '../../../../const'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import { setActiveIndex } from '../../../../store/slices/tenants'
+import { GiShadowFollower } from 'react-icons/gi'
+import { systemLockStatus, tenancyTypeEnum } from '../../../../const/product.js'
 
 export const ProductPlansList = ({ productId }) => {
   const { getProductPlans, deletePlanReq, publishPlan } = useRequest()
@@ -59,6 +64,8 @@ export const ProductPlansList = ({ productId }) => {
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
   const intl = useIntl()
+  const ProductTrialType = list.trialType
+
   const handleDeletePlan = async () => {
     if (list?.plans[currentId]?.isSubscribed) {
       toast.error(
@@ -67,6 +74,12 @@ export const ProductPlansList = ({ productId }) => {
           position: toast.POSITION.TOP_CENTER,
         }
       )
+      return
+    }
+    if (list?.plans[currentId]?.isLockedBySystem) {
+      toast.error(intl.formatMessage({ id: 'Cannot-delete-a-locked-plan' }), {
+        position: toast.POSITION.TOP_CENTER,
+      })
       return
     }
     await deletePlanReq(productId, { id: currentId })
@@ -86,6 +99,12 @@ export const ProductPlansList = ({ productId }) => {
           position: toast.POSITION.TOP_CENTER,
         }
       )
+      return
+    }
+    if (list?.plans[id]?.isLockedBySystem) {
+      toast.error(intl.formatMessage({ id: 'Cannot-edit-a-locked-plan' }), {
+        position: toast.POSITION.TOP_CENTER,
+      })
       return
     }
     setPopUpLable('Edit-Plan')
@@ -121,14 +140,19 @@ export const ProductPlansList = ({ productId }) => {
 
   const TableRow = (props) => {
     const {
-      title,
-      name,
+      displayName,
+      systemName,
       description,
       id,
       displayOrder,
       createdDate,
       isPublished,
       editedDate,
+      subscribers,
+      isLockedBySystem,
+      tenancyType,
+      alternativePlanID,
+      trialPeriodInDays,
     } = props
     const publishStatus = isPublished ? true : false
 
@@ -136,14 +160,34 @@ export const ProductPlansList = ({ productId }) => {
       <>
         <tr>
           <td>
-            <span className="fw-normal">{title}</span>
+            <span className="fw-normal">{displayName}</span>
           </td>
           <td>
-            <span className="fw-normal">{name}</span>
+            <span className="fw-normal">{systemName}</span>
           </td>
           <td>
             <span>
               <Label {...PublishStatus[publishStatus]} />
+            </span>
+          </td>
+          <td>
+            <span>{tenancyTypeEnum[tenancyType]}</span>
+          </td>
+
+          <td>
+            <span>
+              <Label {...systemLockStatus[isLockedBySystem]} />
+            </span>
+          </td>
+
+          <td>
+            <span
+              className={`${
+                subscribers > 0 ? 'subscribers-active' : 'subscribers-passive'
+              }`}
+            >
+              <GiShadowFollower />
+              <span className="ml-1">{subscribers ? subscribers : 0}</span>
             </span>
           </td>
 
@@ -154,7 +198,14 @@ export const ProductPlansList = ({ productId }) => {
           <td>
             <span className={`fw-normal`}>{displayOrder}</span>
           </td>
-
+          <td>
+            <span>{list.plans?.[alternativePlanID]?.displayName}</span>
+          </td>
+          {ProductTrialType == 3 && (
+            <td>
+              <span>{trialPeriodInDays}</span>
+            </td>
+          )}
           <td>
             <span className="fw-normal">
               <TableDate createdDate={createdDate} editedDate={editedDate} />
@@ -214,7 +265,22 @@ export const ProductPlansList = ({ productId }) => {
 
   return (
     <Wrapper>
-      <>
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'form',
+              id: productId,
+              label: 'Add-Plan',
+              component: 'addPlan',
+              icon: <BsPencilSquare />,
+              setActiveIndex: setActiveIndex,
+            },
+          ]}
+        />
+      </div>
+      <div className="border-top-1 border-light">
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -224,13 +290,22 @@ export const ProductPlansList = ({ productId }) => {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Title" />
+                    <FormattedMessage id="Display-Name" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Name" />
+                    <FormattedMessage id="System-Name" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Status" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Tenancy-Type" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="System-Lock-Status" />
+                  </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Subscribers" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Description" />
@@ -238,6 +313,14 @@ export const ProductPlansList = ({ productId }) => {
                   <th className="border-bottom">
                     <FormattedMessage id="Display-Order" />
                   </th>
+                  <th className="border-bottom">
+                    <FormattedMessage id="Alternative-Plan" />
+                  </th>
+                  {ProductTrialType == 3 && (
+                    <th className="border-bottom">
+                      <FormattedMessage id="Trial-Period-In-Days" />
+                    </th>
+                  )}
                   <th className="border-bottom">
                     <FormattedMessage id="Date" />
                   </th>
@@ -278,7 +361,7 @@ export const ProductPlansList = ({ productId }) => {
             />
           </>
         </ThemeDialog>
-      </>
+      </div>
     </Wrapper>
   )
 }
