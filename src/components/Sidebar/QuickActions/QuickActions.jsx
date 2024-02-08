@@ -55,7 +55,6 @@ const QuickAction = ({
   const [visibleProduct, setVisibleProduct] = useState(false)
   const inputHeight = '56px'
   let userRole = useSelector((state) => state.auth.userInfo.role)
-
   return (
     <Wrapper>
       <div className="d-flex  py-4 wrapper">

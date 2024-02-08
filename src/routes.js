@@ -77,9 +77,15 @@ export const Routes = {
     type: 'noSidebar',
   },
   CheckOut: {
-    path: '/payment/product/:productId/subscribtion/:subscribtionId',
+    path: '/checkout/product/:systemName/plan-price/:priceName',
     component: TwoStepProcessPage,
-    roles: ['superAdmin', 'tenantAdmin'],
+    roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
+    type: 'noSidebar',
+  },
+  CheckOutOrder: {
+    path: '/checkout/product/:systemName/plan-price/:priceName/order/:orderIDParam',
+    component: TwoStepProcessPage,
+    roles: ['superAdmin', 'tenantAdmin', 'notAuth'],
     type: 'noSidebar',
   },
   SignUp: {
@@ -89,7 +95,7 @@ export const Routes = {
     type: 'noSidebar',
   },
   Pricing: {
-    path: '/products-list/:id',
+    path: '/products-list/:systemName',
     component: PricingPage,
     roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
     type: 'noSidebar',
@@ -97,7 +103,7 @@ export const Routes = {
   PaymentSuccess: {
     path: '/success',
     component: PaymentSuccess,
-    roles: ['tenantAdmin', 'superAdmin', 'tenantAdmin'],
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
     type: 'noSidebar',
   },
   redirect: {

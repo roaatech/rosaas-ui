@@ -6,6 +6,9 @@ const usePaymentReq = () => {
   const getOrderById = async (orderId) => {
     return await Request.get(`management/sadmin/v1/Orders/${orderId}`)
   }
+  const getOrderByIdPublic = async (orderId) => {
+    return await Request.get(`/public/v1/${orderId}`)
+  }
   const getOrdersListByTenantId = async (tenantId) => {
     return await Request.get(`management/sadmin/v1/tenants/${tenantId}/orders`)
   }
@@ -33,6 +36,7 @@ const usePaymentReq = () => {
     paymentFailed,
     getOrdersListByTenantId,
     changeOrderPlan,
+    getOrderByIdPublic,
   }
 }
 

@@ -28,6 +28,7 @@ const useRequest = () => {
     getProductTenants,
     editTenantStatus,
     getTimeLine,
+    createTenantRequestPublic,
   } = useTenantReq()
   const {
     subscriptionDetails,
@@ -95,6 +96,7 @@ const useRequest = () => {
     publishSpecification,
     editSpecificationRequest,
     deleteSpecificationReq,
+    publicSpecificationByProductName,
   } = useSpecificationReq()
   const {
     getProductFeatures,
@@ -110,6 +112,8 @@ const useRequest = () => {
     deletePlanPriceReq,
     PlansPricePublishedReq,
     getProductPlanPriceListPublic,
+    getProductPlanPricePublic,
+    getProductPlanPricePublicbyId,
   } = usePlanPriceReq()
 
   const {
@@ -119,6 +123,7 @@ const useRequest = () => {
     editFeaturePlanRequest,
     getFeaturePlan,
     deleteFeaturePlanReq,
+    getFeaturePlanPublic,
   } = usePlanFeatureReq()
 
   const {
@@ -137,6 +142,7 @@ const useRequest = () => {
     paymentSuccess,
     paymentFailed,
     changeOrderPlan,
+    getOrderByIdPublic,
   } = usePaymentReq()
 
   return {
@@ -231,6 +237,12 @@ const useRequest = () => {
     deleteClient,
     activateClient,
     changeOrderPlan,
+    publicSpecificationByProductName,
+    getProductPlanPricePublic,
+    getProductPlanPricePublicbyId,
+    createTenantRequestPublic,
+    getFeaturePlanPublic,
+    getOrderByIdPublic,
   }
 }
 export default useRequest

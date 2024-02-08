@@ -220,7 +220,11 @@ const TenantFormOnboarding = ({
           dispatch(setStep(2))
 
           navigate(
-            `/payment/product/${values.product}/subscribtion/${values.price}`
+            `/checkout/product/${
+              listData[values.product].systemName
+            }/plan-price/${
+              listData[values.product].plansPrice[values.price].systemName
+            }`
           )
           setVisible && setVisible(false)
         } else {

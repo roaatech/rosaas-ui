@@ -11,6 +11,14 @@ const usePlanPriceReq = () => {
   const getProductPlanPriceListPublic = async (productName) => {
     return await Request.get(`public/v1/Product/${productName}/PlanPrices`)
   }
+  const getProductPlanPricePublic = async (productName, priceName) => {
+    return await Request.get(
+      `public/v1/Product/${productName}/PlanPrices/${priceName}`
+    )
+  }
+  const getProductPlanPricePublicbyId = async (priceId) => {
+    return await Request.get(`public/v1/PlanPrices/${priceId}`)
+  }
 
   const createPlanPriceRequest = async (productId, data) => {
     return await Request.post(
@@ -45,6 +53,8 @@ const usePlanPriceReq = () => {
     deletePlanPriceReq,
     PlansPricePublishedReq,
     getProductPlanPriceListPublic,
+    getProductPlanPricePublic,
+    getProductPlanPricePublicbyId,
   }
 }
 

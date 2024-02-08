@@ -18,7 +18,7 @@ import { FormattedMessage } from 'react-intl'
 import DescriptionCell from '../../components/custom/Shared/DescriptionCell/DescriptionCell'
 import { signinRedirectPath } from '../../store/slices/auth'
 const ProductListPage = () => {
-  const { getProductListPublic } = useRequest()
+  const { getProductListPublic, getProductPlanPricePublicbyId } = useRequest()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -49,7 +49,16 @@ const ProductListPage = () => {
     dispatch(signinRedirectPath({ redirectPath }))
   }, [redirectPath])
   let userRole = useSelector((state) => state.auth.userInfo.role)
-
+  async function getPlanPriceName(id) {
+    try {
+      const planPrice = await getProductPlanPricePublicbyId(id)
+      console.log({ planPrice: planPrice.data.data.systemName })
+      return planPrice.data.data.systemName
+    } catch (error) {
+      console.error('Error fetching plan price:', error)
+      return null
+    }
+  }
   const ProductCard = ({ product }) => {
     return (
       <Card className="p-1 m-1">
@@ -57,7 +66,7 @@ const ProductListPage = () => {
           <Card.Title>
             <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
               <Link
-                to={`./products-list/${product.id}`}
+                to={`./products-list/${product.systemName}`}
                 className="product-link mb-0 w-50 fw-bold"
               >
                 <FontAwesomeIcon
@@ -74,16 +83,21 @@ const ProductListPage = () => {
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() =>
-                      !userRole
-                        ? (navigate(`/signin`),
-                          setRedirectPath(
-                            `/payment/product/${product.id}/subscribtion/${product.trialPlanPriceId}`
-                          ))
-                        : navigate(
-                            `/payment/product/${product.id}/subscribtion/${product.trialPlanPriceId}`
-                          )
-                    }
+                    onClick={async () => {
+                      const planPriceNamePromise = getPlanPriceName(
+                        product.trialPlanPriceId
+                      )
+                      const planPriceName = await planPriceNamePromise
+                      const path = `/checkout/product/${product.systemName}/plan-price/${planPriceName}`
+
+                      if (!userRole) {
+                        // navigate(`/signin`)
+                        // setRedirectPath(path)
+                        navigate(path)
+                      } else {
+                        navigate(path)
+                      }
+                    }}
                   >
                     <FontAwesomeIcon icon={faStopwatch} className="mr-2" />
 
@@ -95,7 +109,10 @@ const ProductListPage = () => {
               )}
             </div>
           </Card.Title>
-          <Link to={`./products-list/${product.id}`} className="product-link ">
+          <Link
+            to={`./products-list/${product.systemName}`}
+            className="product-link "
+          >
             <Card.Text className="product-description">
               {product.description || '----'}
             </Card.Text>

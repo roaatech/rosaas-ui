@@ -6,6 +6,9 @@ const useTenantReq = () => {
   const createTenantRequest = async (data) => {
     return await Request.post('management/sadmin/v1/Tenants', data)
   }
+  const createTenantRequestPublic = async (data) => {
+    return await Request.post('public/v1/Tenants', data)
+  }
   const editTenantRequest = async (data) => {
     return await Request.put('management/sadmin/v1/Tenants', data)
   }
@@ -50,6 +53,7 @@ const useTenantReq = () => {
     editTenantStatus,
     getTimeLine,
     editTenantSpecificationRequest,
+    createTenantRequestPublic,
   }
 }
 

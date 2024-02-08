@@ -2,107 +2,66 @@ import { useEffect, useState } from 'react'
 import useRequest from '../../../axios/apis/useRequest'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  deleteAllPlan,
-  deleteAllPlanPrice,
-  setAllProduct,
-  setAllPlansPrice,
-  setAllSpecifications,
-} from '../../../store/slices/products/productsSlice'
 import * as Yup from 'yup'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useFormik } from 'formik'
 import { validateSpecifications } from '../tenant/validateSpecifications/validateSpecifications'
 import { Wrapper } from './CheckoutTenantReg.styled'
-import { Button, Card, Form, Modal } from '@themesberg/react-bootstrap'
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Modal,
+  Row,
+} from '@themesberg/react-bootstrap'
 import SpecificationInput from '../Product/CustomSpecification/SpecificationInput/SpecificationInput'
 import { setStep } from '../../../store/slices/tenants'
+import { cycle } from '../../../const'
 
 const CheckoutTenantReg = ({
   type,
   tenantData,
   setVisible,
   popupLabel,
-  currentPrice,
   setCurrentTenant,
   setOrderID,
   setHasToPay,
-  setsystemName,
   setDisplayName,
+  priceData,
+  setPriceData,
 }) => {
   const {
-    createTenantRequest,
+    createTenantRequestPublic,
     editTenantRequest,
-    getProductPlanPriceList,
-    getProductSpecification,
-    getProductList,
+    publicSpecificationByProductName,
   } = useRequest()
   const [submitLoading] = useState()
   const [specValidationErrors, setSpecValidationErrors] = useState({})
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { productId, subscribtionId } = useParams()
-  const listProduct = useSelector((state) => state.products.products)
+  const { systemName, priceName } = useParams()
+  const step = useSelector((state) => state.tenants.currentStep)
 
-  const plansPriceList = useSelector(
-    (state) => state.products.products[productId]?.plansPrice
-  )
+  const productId = priceData?.product?.id
+
+  const currentPrice = priceData?.id
+
+  const [uniqueName, setUniqueName] = useState('')
+  const [title, setTitle] = useState('')
   useEffect(() => {
-    if (Object.values(listProduct).length < 0 || !listProduct) {
+    if (!systemName || !priceName || !priceData) {
       return
     }
-    const fetchData = async () => {
-      try {
-        if (!plansPriceList || Object.keys(plansPriceList).length == 0) {
-          const allPlansPrices = await getProductPlanPriceList(productId)
-          dispatch(
-            setAllPlansPrice({
-              productId: productId,
-              data: allPlansPrices.data.data,
-            })
-          )
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
-    }
 
-    fetchData()
-  }, [productId])
-  const [currentPlan, setCurrentPlan] = useState('')
-  useEffect(() => {
-    if (!plansPriceList || !subscribtionId) {
-      return
-    }
-    setCurrentPlan(plansPriceList?.[subscribtionId]?.plan?.id)
-  }, [plansPriceList, plansPriceList?.[subscribtionId]?.plan])
+    const uniName = `${systemName}-tenant-${new Date().valueOf()}`
 
-  useEffect(() => {
-    if (!listProduct) {
-      let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
-      ;(async () => {
-        const productList = await getProductList(query)
-        dispatch(setAllProduct(productList.data.data.items))
-      })()
-    }
-  }, [])
+    setUniqueName(uniName.toLowerCase().replace(/[^a-z0-9_-]/g, '-'))
 
-  function generateNames() {
-    const uniName = `${
-      listProduct?.[productId]?.systemName
-    }-tenant-${new Date().valueOf()}`
-
-    const uniqueName = uniName.toLowerCase().replace(/[^a-z0-9_-]/g, '-')
-
-    const title = `${
-      listProduct?.[productId]?.displayName
-    } Tenant ${new Date().valueOf()}`
-
-    return { uniqueName, title }
-  }
-
-  const { uniqueName, title } = generateNames()
+    setTitle(`${priceData?.product.displayName} Tenant ${new Date().valueOf()}`)
+  }, [systemName, priceName, priceData])
 
   const createValidation = {}
   const editValidation = {
@@ -118,7 +77,7 @@ const CheckoutTenantReg = ({
     displayName: tenantData ? tenantData.displayName : '',
 
     systemName: tenantData ? tenantData.systemName : '',
-    plan: currentPlan,
+    plan: priceData?.plan?.id,
     price: tenantData ? tenantData.price : '',
     product: productId || '',
   }
@@ -128,21 +87,19 @@ const CheckoutTenantReg = ({
     validationSchema: validationSchema,
 
     onSubmit: async (values) => {
-      const specificationsArray = listProduct?.[productId]?.specifications
-        ? Object.values(listProduct?.[productId].specifications).map(
-            (specification) => {
-              const specificationId = specification.id
-              const value =
-                specificationValues[specificationId] !== undefined
-                  ? specificationValues[specificationId]
-                  : ''
-              return {
-                specificationId,
-                value,
-                productId: values.product,
-              }
+      const specificationsArray = priceData?.specifications
+        ? Object.values(priceData?.specifications).map((specification) => {
+            const specificationId = specification.id
+            const value =
+              specificationValues[specificationId] !== undefined
+                ? specificationValues[specificationId]
+                : ''
+            return {
+              specificationId,
+              value,
+              productId: values.product,
             }
-          )
+          })
         : []
       const specErrors = validateSpecifications(
         filteredSpecificationsArray,
@@ -156,11 +113,11 @@ const CheckoutTenantReg = ({
         Object.keys(specErrors.errors).length === 0
       ) {
         if (type == 'create') {
-          const createTenant = await createTenantRequest({
+          const createTenant = await createTenantRequestPublic({
             subscriptions: [
               {
                 productId: productId,
-                planId: currentPlan,
+                planId: priceData?.plan?.id,
                 planPriceId: currentPrice,
                 specifications: specificationsArray,
               },
@@ -175,23 +132,12 @@ const CheckoutTenantReg = ({
           ) {
             return navigate(`/tenants/${createTenant?.data.data.tenantId}`)
           } else {
-            setsystemName(uniqueName)
             setDisplayName(title)
             setCurrentTenant(createTenant?.data.data.tenantId)
             setHasToPay(createTenant?.data.data?.hasToPay)
             setOrderID(createTenant?.data.data.orderId)
           }
 
-          dispatch(
-            deleteAllPlan({
-              productId: values.product,
-            })
-          )
-          dispatch(
-            deleteAllPlanPrice({
-              productId: values.product,
-            })
-          )
           dispatch(setStep(2))
         } else {
           const editTenant = await editTenantRequest({
@@ -208,36 +154,34 @@ const CheckoutTenantReg = ({
   const intl = useIntl()
 
   const [specificationValues, setSpecificationValues] = useState({})
+  const [specifications, setSpecifications] = useState({})
 
   useEffect(() => {
+    if (!priceData || !systemName) {
+      return
+    }
+    console.log({ systemName })
     ;(async () => {
       formik.setFieldValue('plan', '')
       formik.setFieldValue('price', '')
-      if (listProduct[productId]) {
-        if (!listProduct[productId].specifications) {
-          const specifications = await getProductSpecification(productId)
+      if (priceData) {
+        if (!priceData.specifications) {
+          const specifications =
+            await publicSpecificationByProductName(systemName)
 
-          dispatch(
-            setAllSpecifications({
-              productId: productId,
-              data: specifications.data.data,
-            })
-          )
+          setSpecifications(specifications.data.data)
         }
       }
     })()
-  }, [productId, listProduct])
+  }, [priceData, systemName])
 
   const fetchData = async () => {
-    if (!currentPlan || !currentPrice || !productId) {
-      return
-    }
     try {
-      const createTenant = await createTenantRequest({
+      const createTenant = await createTenantRequestPublic({
         subscriptions: [
           {
             productId: productId,
-            planId: currentPlan,
+            planId: priceData?.plan?.id,
             planPriceId: currentPrice,
             specifications: [],
           },
@@ -245,7 +189,6 @@ const CheckoutTenantReg = ({
         systemName: uniqueName,
         displayName: title,
       })
-      setsystemName(uniqueName)
       setDisplayName(title)
       setCurrentTenant(createTenant?.data.data.id)
       setOrderID(createTenant?.data.data.orderId)
@@ -260,21 +203,18 @@ const CheckoutTenantReg = ({
   const [filteredSpecificationsArray, setFilteredSpecificationsArray] =
     useState()
   useEffect(() => {
-    const productData = listProduct[productId]
-
-    const allSpecificationsArray = productData?.specifications
-      ? Object.values(productData.specifications)
+    if (!priceData || specifications.length <= 0) {
+      return
+    }
+    const allSpecificationsArray = specifications
+      ? Object.values(specifications)
       : []
     setFilteredSpecificationsArray(
       allSpecificationsArray.filter((spec) => spec.isPublished === true)
     )
-  }, [productId, listProduct])
+  }, [specifications, priceData, currentPrice])
 
   useEffect(() => {
-    if (!filteredSpecificationsArray) {
-      return
-    }
-
     if (
       filteredSpecificationsArray &&
       filteredSpecificationsArray.length === 0
@@ -297,94 +237,91 @@ const CheckoutTenantReg = ({
 
   return (
     <Wrapper>
-      {listProduct?.[productId] && (
-        <Form onSubmit={formik.handleSubmit}>
-          <Card.Header>
-            <Modal.Title className="h6">{popupLabel}</Modal.Title>
-          </Card.Header>
-          <Card.Body>
-            {/* <div>
-              <Form.Group className="mb-3">
-                <Form.Label>
-                  <FormattedMessage id="Display-Name" />{' '}
-                  <span style={{ color: 'red' }}>*</span>
-                </Form.Label>
-                <input
-                  className="form-control"
-                  type="text"
-                  id="displayName"
-                  name="displayName"
-                  onChange={formik.handleChange}
-                  value={formik.values.displayName}
-                />
+      <Container className="card mt-3">
+        <Row>
+          <Col md={7} className="pr-3 border-right-1 border-light ">
+            {priceData && (
+              <Form onSubmit={formik.handleSubmit}>
+                <Card.Header>
+                  <Modal.Title className="h6">{popupLabel}</Modal.Title>
+                </Card.Header>
+                <Card.Body>
+                  {type === 'create' &&
+                    Array.isArray(filteredSpecificationsArray) &&
+                    filteredSpecificationsArray.length > 0 && (
+                      <>
+                        <SpecificationInput
+                          specifications={filteredSpecificationsArray}
+                          specificationValues={specificationValues}
+                          handleSpecificationChange={handleSpecificationChange}
+                          tenantData={tenantData}
+                          intl={intl}
+                          specValidationErrors={specValidationErrors}
+                        />
+                      </>
+                    )}
 
-                {formik.touched.displayName && formik.errors.displayName && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
+                  {formik.errors.specifications && (
+                    <div className="text-danger">
+                      {formik.errors.specifications}
+                    </div>
+                  )}
+                </Card.Body>
+                <Card.Footer>
+                  <Button
+                    variant="secondary"
+                    type="submit"
+                    disabled={submitLoading}
                   >
-                    {formik.errors.displayName}
-                  </Form.Control.Feedback>
-                )}
-              </Form.Group>
-            </div> */}
-
-            {/* <div className="mb-3">
-              {type === 'create' && (
-                <AutoGenerateInput
-                  label={<FormattedMessage id="System-Name" />}
-                  id="systemName"
-                  value={formik.values.displayName}
-                  name={formik.values.systemName}
-                  onChange={formik.handleChange}
-                  onGenerateUniqueName={(generatedUniqueName) => {
-                    formik.setFieldValue('systemName', generatedUniqueName)
-                  }}
-                  onAutoGenerateClick={() => {
-                    formik.setFieldValue(
-                      'isAutoGenerated',
-                      !formik.values.isAutoGenerated
-                    )
-                  }}
-                  isAutoGenerated={formik.values.isAutoGenerated}
-                />
-              )}
-              {formik.touched.systemName && formik.errors.systemName && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.systemName}
-                </Form.Control.Feedback>
-              )}
-            </div> */}
-
-            {type === 'create' &&
-              Array.isArray(filteredSpecificationsArray) &&
-              filteredSpecificationsArray.length > 0 && (
-                <>
-                  <SpecificationInput
-                    specifications={filteredSpecificationsArray}
-                    specificationValues={specificationValues}
-                    handleSpecificationChange={handleSpecificationChange}
-                    tenantData={tenantData}
-                    intl={intl}
-                    specValidationErrors={specValidationErrors}
-                  />
-                </>
-              )}
-
-            {formik.errors.specifications && (
-              <div className="text-danger">{formik.errors.specifications}</div>
+                    <FormattedMessage id="Submit" />
+                  </Button>
+                </Card.Footer>
+              </Form>
             )}
-          </Card.Body>
-          <Card.Footer>
-            <Button variant="secondary" type="submit" disabled={submitLoading}>
-              <FormattedMessage id="Submit" />
-            </Button>
-          </Card.Footer>
-        </Form>
-      )}
+          </Col>
+          <Col md={5}>
+            <Card.Header className="fw-bold">
+              <FormattedMessage id="Your-Subscribe-Information" />
+            </Card.Header>
+            <Card.Body>
+              {/* product */}
+              <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-2 ">
+                <div className=" w-50 fw-bold">
+                  <FormattedMessage id="Product" />
+                </div>
+                <div className=" card-stats">
+                  {priceData?.product?.displayName}
+                </div>
+              </div>
+
+              {/* plan */}
+              <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                <div className=" w-50 fw-bold">
+                  <FormattedMessage id="Plan" />
+                </div>
+                <div className=" card-stats">{priceData?.plan?.systemName}</div>
+              </div>
+
+              {/* subsc */}
+              {((priceData?.product?.trialType == 2 &&
+                priceData?.product?.trialPlanId != priceData?.plan?.id) ||
+                priceData?.product?.trialType != 2) && (
+                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                  <div className=" w-50 fw-bold">
+                    <FormattedMessage id="Subscription" />
+                  </div>
+                  {priceData && (
+                    <div className=" card-stats">
+                      ${priceData?.price} /{' '}
+                      <FormattedMessage id={cycle[priceData?.cycle]} />
+                    </div>
+                  )}
+                </div>
+              )}
+            </Card.Body>
+          </Col>
+        </Row>
+      </Container>
     </Wrapper>
   )
 }

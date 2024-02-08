@@ -9,6 +9,11 @@ const usePlanFeatureReq = () => {
   const getFeaturePlanListPublic = async (name) => {
     return await Request.get(`public/v1/Product/${name}/PlanFeatures`)
   }
+  const getFeaturePlanPublic = async (name, planName) => {
+    return await Request.get(
+      `public/v1/Product/${name}/plan/${planName}/PlanFeatures`
+    )
+  }
   const createFeaturePlanRequest = async (data) => {
     return await Request.post(
       `management/sadmin/v1/Products/${data.productId}/PlanFeatures`,
@@ -38,6 +43,7 @@ const usePlanFeatureReq = () => {
     getFeaturePlan,
     deleteFeaturePlanReq,
     getFeaturePlanListPublic,
+    getFeaturePlanPublic,
   }
 }
 

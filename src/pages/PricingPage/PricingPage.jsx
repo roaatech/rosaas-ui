@@ -34,14 +34,25 @@ const PricingPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const routeParams = useParams()
-  const productId = routeParams.id
+
+  const systemName = routeParams.systemName
+
   const listProduct = useSelector((state) => state.products.products)
-  const plansPriceList = useSelector(
-    (state) => state.products.products[productId]?.plansPrice
-  )
-  const planList = useSelector(
-    (state) => state.products.products[productId]?.plans
-  )
+
+  const productData = Object.values(
+    Object.fromEntries(
+      Object.entries(listProduct).filter(
+        ([key, value]) => value.systemName === systemName
+      )
+    )
+  )[0]
+
+  const productId = productData?.id
+
+  const plansPriceList = productData?.plansPrice
+
+  const planList = productData?.plans
+
   const groupedByCycle =
     plansPriceList &&
     Object.values(plansPriceList)
@@ -83,9 +94,7 @@ const PricingPage = () => {
 
   if (userRole == undefined) userRole = 'notAuth'
 
-  const listData = useSelector(
-    (state) => state.products.products[productId]?.featurePlan
-  )
+  const listData = productData?.featurePlan
 
   useEffect(() => {
     if (Object.values(listProduct).length > 0) {
@@ -113,9 +122,7 @@ const PricingPage = () => {
     const fetchData = async () => {
       try {
         if (!listData || Object.keys(listData).length === 0) {
-          const featurePlanData = await getFeaturePlanListPublic(
-            listProduct[productId].systemName
-          )
+          const featurePlanData = await getFeaturePlanListPublic(systemName)
           if (
             featurePlanData.data.data &&
             Object.keys(featurePlanData.data.data > 0)
@@ -132,9 +139,7 @@ const PricingPage = () => {
         }
 
         if (!planList || Object.keys(planList).length === 0) {
-          const allPlanData = await getProductPlansPublic(
-            listProduct[productId].systemName
-          )
+          const allPlanData = await getProductPlansPublic(systemName)
           if (allPlanData.data.data && Object.keys(allPlanData.data.data > 0))
             dispatch(
               setAllPlans({
@@ -144,9 +149,7 @@ const PricingPage = () => {
             )
         }
         if (!plansPriceList || Object.keys(plansPriceList).length == 0) {
-          const allPlansPrices = await getProductPlanPriceListPublic(
-            listProduct[productId].systemName
-          )
+          const allPlansPrices = await getProductPlanPriceListPublic(systemName)
           if (
             allPlansPrices.data.data &&
             Object.keys(allPlansPrices.data.data > 0)
@@ -336,12 +339,15 @@ const PricingPage = () => {
                 className="w-100"
                 onClick={() =>
                   userRole == 'notAuth'
-                    ? (navigate(`/signin`),
-                      setRedirectPath(
-                        `/payment/product/${productId}/subscribtion/${subscribtionId}`
-                      ))
+                    ? // (navigate(`/signin`),
+                      //   setRedirectPath(
+                      //     `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
+                      //   ))
+                      navigate(
+                        `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
+                      )
                     : navigate(
-                        `/payment/product/${productId}/subscribtion/${subscribtionId}`
+                        `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
                       )
                 }
               >

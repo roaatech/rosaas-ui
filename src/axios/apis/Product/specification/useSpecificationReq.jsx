@@ -33,6 +33,9 @@ const useSpecificationReq = () => {
       `management/sadmin/v1/Products/${productId}/Specifications/${data.id}`
     )
   }
+  const publicSpecificationByProductName = async (productName) => {
+    return await Request.get(`/public/v1/Product/${productName}/Specifications`)
+  }
 
   return {
     getProductSpecification,
@@ -40,6 +43,7 @@ const useSpecificationReq = () => {
     publishSpecification,
     editSpecificationRequest,
     deleteSpecificationReq,
+    publicSpecificationByProductName,
   }
 }
 
