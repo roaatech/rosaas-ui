@@ -130,7 +130,9 @@ const CheckoutTenantReg = ({
             !createTenant?.data.data?.hasToPay &&
             createTenant?.data.data.tenantId
           ) {
-            return navigate(`/tenants/${createTenant?.data.data.tenantId}`)
+            return userRole != 'notAuth'
+              ? navigate(`/tenants/${createTenant?.data.data.tenantId}`)
+              : navigate(`/created-successfully`)
           } else {
             setDisplayName(title)
             setCurrentTenant(createTenant?.data.data.tenantId)
@@ -155,12 +157,13 @@ const CheckoutTenantReg = ({
 
   const [specificationValues, setSpecificationValues] = useState({})
   const [specifications, setSpecifications] = useState({})
+  let userRole = useSelector((state) => state.auth.userInfo.role)
+  if (userRole == undefined) userRole = 'notAuth'
 
   useEffect(() => {
     if (!priceData || !systemName) {
       return
     }
-    console.log({ systemName })
     ;(async () => {
       formik.setFieldValue('plan', '')
       formik.setFieldValue('price', '')

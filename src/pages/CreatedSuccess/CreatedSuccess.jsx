@@ -1,14 +1,13 @@
 import React from 'react'
 import { Col, Row, Container, Button, Card } from '@themesberg/react-bootstrap'
-import { Wrapper } from './paymentSuccess.styled' // Create a styled component if needed
+import { Wrapper } from './CreatedSuccess.styled'
 import { Routes } from '../../routes'
-
-import successImage from '../../assets/img/pages/success.svg'
+import successImage from '../../assets/img/pages/createdSuccess.svg'
 import { FormattedMessage } from 'react-intl'
 import rosasLogo from '../../assets/img/brand/rosas.svg'
 import { BsCheckCircleFill } from 'react-icons/bs'
 
-const PaymentSuccess = () => {
+const CreatedSuccess = () => {
   const handleButtonClick = () => {
     window.location.href = Routes.Dashboard.path
   }
@@ -38,7 +37,7 @@ const PaymentSuccess = () => {
                             style={{ color: 'green', marginLeft: '5px' }}
                           />
                           <span style={{ color: 'green', marginLeft: '5px' }}>
-                            Payment Successfull.{' '}
+                            Tenant Created Successfully.{' '}
                           </span>
                         </h2>
                       </div>{' '}
@@ -46,7 +45,8 @@ const PaymentSuccess = () => {
                         class="col-lg-7 col-xl-6 text-center"
                         style={{ fontSize: 'var(--largeFont)' }}
                       >
-                        <span>Thank you for your payment.</span>
+                        {/* <span>Thank you for your payment.</span> */}
+
                         <span> Your order is</span>
                         <span
                           className="fw-bold"
@@ -89,4 +89,4 @@ const PaymentSuccess = () => {
   )
 }
 
-export default PaymentSuccess
+export default CreatedSuccess

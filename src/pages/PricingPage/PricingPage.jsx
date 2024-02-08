@@ -364,10 +364,12 @@ const PricingPage = () => {
   return (
     <Wrapper>
       <div className="main-container">
-        <BreadcrumbComponent
-          breadcrumbInfo={'ProductPricing'}
-          icon={BsBoxSeam}
-        />
+        {userRole != 'notAuth' && (
+          <BreadcrumbComponent
+            breadcrumbInfo={'ProductPricing'}
+            icon={BsBoxSeam}
+          />
+        )}
         <UpperContent>
           <h4 className="m-0">
             <FormattedMessage id="Subscription-Options" />

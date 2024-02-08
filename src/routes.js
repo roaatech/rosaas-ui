@@ -17,6 +17,8 @@ import PricingPage from './pages/PricingPage/PricingPage'
 import CheckoutPage from './pages/CheckoutPagePage/CheckoutPage'
 import PaymentSuccess from './pages/PaymentSuccess/paymentSuccess'
 import TwoStepProcessPage from './pages/TwoStepPage/TwoStepPage'
+import CreatedSuccess from './pages/CreatedSuccess/CreatedSuccess'
+import PaymentFailed from './pages/PaymentFailed/PaymentFailed'
 export const Routes = {
   Dashboard: {
     path: '/Dashboard',
@@ -106,6 +108,19 @@ export const Routes = {
     roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
     type: 'noSidebar',
   },
+  PaymentFailed: {
+    path: '/failed',
+    component: PaymentFailed,
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
+    type: 'noSidebar',
+  },
+  CreatedSuccess: {
+    path: '/created-successfully',
+    component: CreatedSuccess,
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
+    type: 'noSidebar',
+  },
+
   redirect: {
     path: '*',
     component: Redirect,

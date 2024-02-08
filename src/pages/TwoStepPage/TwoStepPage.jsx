@@ -34,6 +34,8 @@ const TwoStepProcessPage = () => {
     }
     dispatch(setStep(2))
   }, [orderIDParam])
+  let userRole = useSelector((state) => state.auth.userInfo.role)
+  if (userRole == undefined) userRole = 'notAuth'
 
   const [hasToPay, setHasToPay] = useState()
   const [priceData, setPriceData] = useState()
@@ -49,7 +51,9 @@ const TwoStepProcessPage = () => {
   return (
     <Wrapper>
       <div className="main-container">
-        <BreadcrumbComponent breadcrumbInfo={'ProductList'} />{' '}
+        {userRole != 'notAuth' && (
+          <BreadcrumbComponent breadcrumbInfo={'ProductList'} />
+        )}{' '}
         <Row>
           <Card>
             <Card.Body>
