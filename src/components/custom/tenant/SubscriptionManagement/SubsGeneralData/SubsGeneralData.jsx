@@ -515,7 +515,7 @@ export default function SubsGeneralData(data) {
                             )}
                             <Label
                               {...{
-                                background: 'rgba(255, 201, 102, 0.4)',
+                                background: 'var(--orange-yellow-blend)',
                                 value: (
                                   <>
                                     {
@@ -536,7 +536,7 @@ export default function SubsGeneralData(data) {
                                     }
                                   </>
                                 ),
-                                color: '#5c472e',
+                                color: 'var(--mocha-brown)',
                               }}
                             />
                           </>

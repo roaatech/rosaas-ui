@@ -57,16 +57,14 @@ const GlobalStyles = createGlobalStyle`
 /// theme override
 --bs-btn-border-color:#ffab03;
 --bs-btn-bg:#ffab03;
-
 --misty-gray:#cccccc40;
 --orange-brown:#d26b4e;
 --teal-green:#00a675;
 --misty-blue:#f0f8ff;
 --midnight-blue:#336699;
 --silver-gray:#a3a3a3;
-
-
-
+--orange-yellow-blend : #FFC966FF;
+--mocha-brown:#5c472e;
 }
  
  

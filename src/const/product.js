@@ -99,9 +99,9 @@ export const isMajorStatus = {
 }
 export const clientTypeLable = {
   101: {
-    background: 'rgba(255, 201, 102, 0.4)',
+    background: 'var(--orange-yellow-blend)',
     value: <FormattedMessage id="External-System" />,
-    color: '#5c472e',
+    color: 'var(--mocha-brown)',
   },
 
   102: {
