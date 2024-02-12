@@ -21,6 +21,9 @@ import { FormattedMessage } from 'react-intl'
 import { cycle } from '../../const/product'
 import { Wrapper } from './CheckoutPage.styled'
 import { setStep } from '../../store/slices/tenants'
+import { Elements } from '@stripe/react-stripe-js'
+import { loadStripe } from '@stripe/stripe-js'
+import CheckoutForm from '../../components/custom/global/CheckoutForm/CheckoutForm'
 
 const CheckoutPage = (data) => {
   const createdTenantData = useSelector((state) => state.tenants?.createdTenant)
@@ -155,9 +158,19 @@ const CheckoutPage = (data) => {
       </>
     )
   }
+  const stripePromise = loadStripe(
+    'pk_test_51OI5l1E1TtPRg7paL6pZ1M5xR3X1QqSEtLXRI4sg8GjIeIW3RnF57IVAkGUqSQBJFayzcVXffgwOWmKyNjPUGIW900I49qQyNN'
+  )
+
   return (
     <Wrapper>
       <div className="main-container">
+        <div className="App">
+          <h1>Stripe Checkout</h1>
+          <Elements stripe={stripePromise}>
+            <CheckoutForm />
+          </Elements>
+        </div>
         <div className="p-3">
           <Container className="card">
             <Row>
