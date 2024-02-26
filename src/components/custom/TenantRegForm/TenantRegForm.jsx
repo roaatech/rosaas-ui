@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { useFormik } from 'formik'
 import { validateSpecifications } from '../tenant/validateSpecifications/validateSpecifications'
-import { Wrapper } from './CheckoutTenantReg.styled'
+import { Wrapper } from './TenantRegForm.styled'
 import {
   Button,
   Card,

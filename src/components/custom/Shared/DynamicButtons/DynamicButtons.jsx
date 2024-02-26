@@ -24,6 +24,7 @@ import CreateTenantUserForm from '../../tenant/TenantsUsersManagement/CreateTena
 import CreateProductUserForm from '../../Product/ProductsUsersManagement/CreateProductUserForm/CreateProductUserForm'
 import TrialForm from '../../Product/TrialForm/TrialForm'
 import CreateSecretForm from '../../Product/ClientCredentials/SecretMangements/CreateSecretForm/CreateSecretForm'
+import CardSaveFormWithStripe from '../../CardSaveForm/CardSaveForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -162,6 +163,18 @@ const DynamicButtons = ({ buttons }) => {
           setVisible={setVisible}
           sideBar={false}
           setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+        />
+      </>
+    ),
+    addCard: () => (
+      <>
+        <CardSaveFormWithStripe
+          popupLabel={<FormattedMessage id="Add-Card" />}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+          setCards={buttons[currentButtonIndex].setCards}
+          cards={buttons[currentButtonIndex].cards}
         />
       </>
     ),

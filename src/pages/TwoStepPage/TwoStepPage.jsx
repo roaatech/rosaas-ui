@@ -1,7 +1,7 @@
 import { Card, Row } from '@themesberg/react-bootstrap'
 import { useEffect, useState } from 'react'
-import CheckoutTenantReg from '../../components/custom/Checkout/CheckoutTenantReg'
-import CheckoutPage from '../CheckoutPagePage/CheckoutPage'
+import CheckoutTenantReg from '../../components/custom/TenantRegForm/TenantRegForm'
+import CheckoutPage from '../../components/custom/CheckoutStep/CheckoutStep'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Steps } from 'primereact/steps'
@@ -16,6 +16,7 @@ import { Wrapper } from './TwoStepPage.styled'
 
 import { setStep } from '../../store/slices/tenants'
 import useRequest from '../../axios/apis/useRequest'
+import PaymentForm from '../../components/custom/PaymentForm/PaymentForm'
 
 const TwoStepProcessPage = () => {
   const params = useParams()

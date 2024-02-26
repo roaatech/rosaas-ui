@@ -470,5 +470,21 @@
   "Order": "الطلب",
   "Current": "الحالي",
   "Select-Your-Plan": "حدد خطتك",
-  "Tenant-Info": "معلومات المستأجر"
+  "Tenant-Info": "معلومات المستأجر",
+  "Your-Full-Name": "الاسم الكامل الخاص بك",
+  "Your-Phone": "رقم الهاتف الخاص بك",
+  "name-required": "الاسم مطلوب",
+  "card-saved-successfully": "تم حفظ بطاقة الدفع بنجاح",
+  "name": "الاسم",
+  "enter-your-name": "ادخل اسمك",
+  "card-details": "تفاصيل البطاقة",
+  "processing": "جاري المعالجة",
+  "pay": "ادفع",
+  "Card-Management": "إدارة البطاقات",
+  "Card-Info": "معلومات البطاقة",
+  "Full-Name": "الاسم الكامل",
+  "Expiration-Date": "تاريخ الانتهاء",
+  "Add-Card": "إضافة بطاقة",
+  "Days": "أيام",
+  "Free-Trial": "تجريبية مجانية"
 }

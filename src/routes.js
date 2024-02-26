@@ -14,11 +14,13 @@ import NotFound from './pages/NotFoundPage/NotFoundPage'
 import SignUpPage from './pages/SignUpPage/SignUpPage'
 import ProductListPage from './pages/ProductListPage/ProductListPage'
 import PricingPage from './pages/PricingPage/PricingPage'
-import CheckoutPage from './pages/CheckoutPagePage/CheckoutPage'
+import CheckoutPage from './components/custom/CheckoutStep/CheckoutStep'
 import PaymentSuccess from './pages/PaymentSuccess/paymentSuccess'
 import TwoStepProcessPage from './pages/TwoStepPage/TwoStepPage'
 import CreatedSuccess from './pages/CreatedSuccess/CreatedSuccess'
 import PaymentFailed from './pages/PaymentFailed/PaymentFailed'
+import CardPaymentManagement from './pages/Settings/CardPaymentManagement/CardPaymentManagement'
+import TenantWelcomePage from './pages/TenantWelcomePage/TenantWelcomePage'
 export const Routes = {
   Dashboard: {
     path: '/Dashboard',
@@ -60,6 +62,11 @@ export const Routes = {
   Settings: {
     path: '/settings/health-check',
     component: HealthCheckSettings,
+    roles: ['superAdmin'],
+  },
+  CardSettings: {
+    path: '/settings/cards-management',
+    component: CardPaymentManagement,
     roles: ['superAdmin'],
   },
   SubscriptionsSettings: {
@@ -130,6 +137,12 @@ export const Routes = {
     path: '/not-found',
     component: NotFound,
     roles: '*',
+    type: 'noSidebar',
+  },
+  TenantDashboard: {
+    path: '/welcome',
+    component: TenantWelcomePage,
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
     type: 'noSidebar',
   },
 }

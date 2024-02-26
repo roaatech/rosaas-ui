@@ -18,6 +18,7 @@ import {
   BsPersonSlash,
   BsPeople,
   BsExclamationTriangle,
+  BsBank,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -394,6 +395,11 @@ export default (props = {}) => {
                     title={<FormattedMessage id="Product-Warnings" />}
                     link={`/settings/product-warnings`}
                     icon={BsExclamationTriangle}
+                  />
+                  <NavItem
+                    title={<FormattedMessage id="Card-Management" />}
+                    link={`/settings/cards-management`}
+                    icon={BsBank}
                   />
                 </CollapsableNavItem>
               )}

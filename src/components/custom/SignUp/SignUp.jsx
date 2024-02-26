@@ -8,7 +8,8 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import {
   BsFillEnvelopeOpenFill,
-  BsFillPersonFill,
+  BsPerson,
+  BsPhoneFill,
   BsUnlockFill,
 } from 'react-icons/bs'
 import { Routes } from '../../../routes'
@@ -23,14 +24,17 @@ const SignUp = () => {
 
   const initialValues = {
     fullName: '',
+    mobileNumber: '',
     email: '',
     password: '',
     confirmPassword: '',
   }
 
   const validationSchema = Yup.object().shape({
+    fullName: Yup.string().required('fullName is required'),
     email: Yup.string().email('Invalid email').required('Email is required'),
     password: Yup.string().required('Password is required'),
+    mobileNumber: Yup.string().required('Phone number is required'),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Confirm Password is required'),
@@ -53,6 +57,48 @@ const SignUp = () => {
         {({ isSubmitting }) => (
           <Form className="mt-4">
             <div>
+              <label htmlFor="fullName" className="pb-2">
+                <FormattedMessage id="Your-Full-Name" />
+              </label>
+              <div className="inputContainer">
+                <div className="inputContainerWithIcon">
+                  <BsPerson />
+                  <Field
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    as={InputText}
+                  />
+                </div>
+                <ErrorMessage
+                  name="fullName"
+                  component="div"
+                  className="error-message"
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="mobileNumber" className="pb-2">
+                <FormattedMessage id="Your-Phone" />
+              </label>
+              <div className="inputContainer">
+                <div className="inputContainerWithIcon">
+                  <BsPhoneFill />
+                  <Field
+                    type="tel"
+                    id="mobileNumber"
+                    name="mobileNumber"
+                    as={InputText}
+                  />{' '}
+                </div>
+                <ErrorMessage
+                  name="mobileNumber"
+                  component="div"
+                  className="error-message"
+                />
+              </div>
+            </div>
+            <div>
               <label htmlFor="email" className="pb-2">
                 <FormattedMessage id="yourEmail" />
               </label>
@@ -68,6 +114,7 @@ const SignUp = () => {
                 />
               </div>
             </div>
+
             <div>
               <label htmlFor="password" className="pb-2">
                 <FormattedMessage id="yourPassword" />

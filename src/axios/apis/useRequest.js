@@ -15,6 +15,7 @@ import useClientCredentialsReq from './Product/ClientCredentials/useClientCreden
 import usePaymentReq from './Payment/Payment'
 import useUsersManagementReq from './UsersManagement/useUsersManagementReq'
 import useAdminPrivileges from './UsersManagement/useAdminPrivileges'
+import useAccountReq from './Account/Account'
 
 const useRequest = () => {
   const { signIn, userData, logOut, signUp } = useUserReq()
@@ -30,6 +31,7 @@ const useRequest = () => {
     getTimeLine,
     createTenantRequestPublic,
   } = useTenantReq()
+  const { updateProfile, getCurrentProfile, changePassword } = useAccountReq()
   const {
     subscriptionDetails,
     subscriptionDetailsRenew,
@@ -143,6 +145,12 @@ const useRequest = () => {
     paymentFailed,
     changeOrderPlan,
     getOrderByIdPublic,
+    getPaymentCardsList,
+    detachPaymentMethodCard,
+    attachPaymentMethodCard,
+    markCardAsDefault,
+    getConfig,
+    fetchPaymentIntent,
   } = usePaymentReq()
 
   return {
@@ -243,6 +251,15 @@ const useRequest = () => {
     createTenantRequestPublic,
     getFeaturePlanPublic,
     getOrderByIdPublic,
+    getPaymentCardsList,
+    detachPaymentMethodCard,
+    attachPaymentMethodCard,
+    markCardAsDefault,
+    getConfig,
+    fetchPaymentIntent,
+    updateProfile,
+    getCurrentProfile,
+    changePassword,
   }
 }
 export default useRequest

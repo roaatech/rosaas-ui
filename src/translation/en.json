@@ -469,5 +469,22 @@
   "Order": "Order",
   "Current": "Current",
   "Select-Your-Plan": "Select Your Plan",
-  "Tenant-Info": "Tenant Info"
+  "Tenant-Info": "Tenant Info",
+  "Your-Full-Name": "Your Full Name",
+  "Your-Phone": "Your Phone",
+  "name-required": "Name is required",
+  "card-saved-successfully": "Card saved successfully",
+  "name": "Name",
+  "enter-your-name": "Enter your name",
+  "card-details": "Card Details",
+  "processing": "Processing",
+  "pay": "Pay",
+  "Card-Management": "Card Management",
+  "Card-Info": "Card Information",
+  "Full-Name": "Full Name",
+  "Expiration-Date": "Expiration Date",
+  "Add-Card": "Add Card",
+
+  "Days": "Days",
+  "Free-Trial": "Free Trial"
 }

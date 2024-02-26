@@ -52,7 +52,6 @@ const ProductListPage = () => {
   async function getPlanPriceName(id) {
     try {
       const planPrice = await getProductPlanPricePublicbyId(id)
-      console.log({ planPrice: planPrice.data.data.systemName })
       return planPrice.data.data.systemName
     } catch (error) {
       console.error('Error fetching plan price:', error)

@@ -1,0 +1,95 @@
+{
+  /* <UpperContent>
+        <h4 className="m-0">
+          <FormattedMessage id="Dashboard" />
+        </h4>
+      </UpperContent>
+      <div className="px-4  align-items-center d-flex flex-wrap flex-md-nowrap align-items-center  mb-5">
+        <h6 className="mx-2">
+          <FormattedMessage id="Tenant" />{' '}
+        </h6>
+        <select
+          className="form-control custom-container  "
+          name="plan"
+          id="plan"
+          onChange={handleTenantChange}
+        >
+          <option value="">
+            <FormattedMessage id="Select-Tenant" />
+          </option>
+          {Object.entries(tenantsData).map(([key, value]) => (
+            <option key={key} value={key}>
+              {value.displayName}
+            </option>
+          ))}
+        </select>
+        {selectedTenant && (
+          <>
+            {' '}
+            <span className="mx-2">
+              <FormattedMessage id="Of" />
+            </span>
+            <Label
+              {...{
+                className: 'py-2',
+                background: 'var(--orange-yellow-blend)',
+                value: subscriptionData?.productName,
+                color: 'var(--mocha-brown)',
+              }}
+            />
+          </>
+        )}
+      </div>
+      {selectedTenant && (
+        <section className="px-4">
+          <Row>
+            <Col md={5}>
+              <Card>
+                <Card.Header>
+                  {' '}
+                  <DataDisplayRow
+                    label="Tenant-Info"
+                    value={
+                      <DynamicButtons
+                        buttons={[
+                          {
+                            order: 2,
+                            type: 'action',
+                            label: 'Details',
+                            func: () => navigate(`/tenants/${selectedTenant}`),
+                            icon: <MdInfoOutline />,
+                          },
+                        ]}
+                      />
+                    }
+                    hideBorderBottom={true}
+                  />
+                </Card.Header>
+                <Card.Body>
+                  <DataDisplayRow
+                    label="Product"
+                    value={subscriptionData?.productName}
+                    hideBorderBottom={true}
+                  />
+                  <DataDisplayRow
+                    label="Tenant-Status"
+                    value={
+                      subscriptionData?.status && (
+                        <TenantStatus statusValue={subscriptionData?.status} />
+                      )
+                    }
+                    hideBorderBottom={true}
+                  />
+
+                  <DataDisplayRow
+                    label="Plan"
+                    value={subscriptionData?.plan?.systemName}
+                    hideBorderBottom={true}
+                  />
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </section>
+      )} */
+}

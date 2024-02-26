@@ -8,6 +8,13 @@ export const breadcrumbFun = (routeParams, data) => {
       active: 'Settings',
       icon: {},
     },
+    CardManagement: {
+      title: 'Settings',
+      name: 'Card-Management',
+      navigation: '/settings/Card-Management',
+      active: 'Card-Management',
+      icon: {},
+    },
     Home: {
       title: 'Home',
 

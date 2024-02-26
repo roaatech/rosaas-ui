@@ -20,7 +20,7 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 import { BsBoxSeam, BsCheck2, BsCheck2Circle, BsXCircle } from 'react-icons/bs'
 import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import CheckoutPage from '../CheckoutPagePage/CheckoutPage'
+import CheckoutPage from '../../components/custom/CheckoutStep/CheckoutStep'
 import { cycle } from '../../const'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBox } from '@fortawesome/free-solid-svg-icons'
@@ -292,11 +292,20 @@ const PricingPage = () => {
                     )}
                   </span>
                 </div>
-                {planId == listProduct?.[productId]?.trialPlanId && (
-                  <div className="tab-header">
-                    <TrialLabel />
-                  </div>
-                )}
+                {listProduct?.[productId]?.trialType == 3 &&
+                  planList[planId]?.trialPeriodInDays > 0 && (
+                    <div className="tab-header">
+                      <TrialLabel days={planList[planId]?.trialPeriodInDays} />
+                    </div>
+                  )}
+                {listProduct?.[productId]?.trialType == 2 &&
+                  planId == listProduct?.[productId]?.trialPlanId && (
+                    <div className="tab-header">
+                      <TrialLabel
+                        days={listProduct?.[productId]?.trialPeriodInDays}
+                      />
+                    </div>
+                  )}
               </div>
               <div
                 className="fw-bold mt-2 "
