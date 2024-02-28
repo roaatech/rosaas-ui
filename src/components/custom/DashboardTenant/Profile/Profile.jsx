@@ -1,5 +1,6 @@
 import {
   Card,
+  Col,
   Container,
   Form,
   InputGroup,
@@ -110,115 +111,116 @@ const Profile = () => {
             }
           />
         </UpperContent>
-        {/* <Card className="m-3 p-3 mt-0"> */}
-        <Container>
+        <Card className="m-3 p-3 mt-0">
+          {/* <Container> */}
+          {/* <Card border="light" className="m-3 p-3 mt-0"> */}
+          {/* <div className="p-d-flex p-flex-column p-ai-center"> */}
           <Row>
-            <Card border="light" className="m-3 p-3 mt-0">
-              <div className="p-d-flex p-flex-column p-ai-center">
-                <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formik.values.email}
-                    disabled={true}
-                    onChange={formik.handleChange}
-                  />
-                  {formik.touched.email && formik.errors.email && (
-                    <Form.Control.Feedback
-                      type="invalid"
-                      style={{ display: 'block' }}
-                    >
-                      {formik.errors.email}
-                    </Form.Control.Feedback>
-                  )}
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Full Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    id="fullName"
-                    name="fullName"
-                    disabled={!edit}
-                    value={formik.values.fullName}
-                    onChange={formik.handleChange}
-                  />
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formik.values.email}
+                  disabled={true}
+                  onChange={formik.handleChange}
+                />
+                {formik.touched.email && formik.errors.email && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.email}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Full Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  id="fullName"
+                  name="fullName"
+                  disabled={!edit}
+                  value={formik.values.fullName}
+                  onChange={formik.handleChange}
+                />
 
-                  {formik.touched.fullName && formik.errors.fullName && (
-                    <Form.Control.Feedback
-                      type="invalid"
-                      style={{ display: 'block' }}
-                    >
-                      {formik.errors.fullName}
-                    </Form.Control.Feedback>
-                  )}
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Address</Form.Label>
-                  <Form.Control
-                    type="text"
-                    id="address"
-                    name="address"
-                    disabled={!edit}
-                    value={formik.values.address}
-                    onChange={formik.handleChange}
-                  />
-                  {formik.touched.address && formik.errors.address && (
-                    <Form.Control.Feedback
-                      type="invalid"
-                      style={{ display: 'block' }}
-                    >
-                      {formik.errors.address}
-                    </Form.Control.Feedback>
-                  )}
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Organization</Form.Label>
-                  <Form.Control
-                    type="text"
-                    id="organization"
-                    name="organization"
-                    disabled={!edit}
-                    value={formik.values.organization}
-                    onChange={formik.handleChange}
-                  />
-                  {formik.touched.organization &&
-                    formik.errors.organization && (
-                      <Form.Control.Feedback
-                        type="invalid"
-                        style={{ display: 'block' }}
-                      >
-                        {formik.errors.organization}
-                      </Form.Control.Feedback>
-                    )}
-                </Form.Group>
+                {formik.touched.fullName && formik.errors.fullName && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.fullName}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  type="text"
+                  id="address"
+                  name="address"
+                  disabled={!edit}
+                  value={formik.values.address}
+                  onChange={formik.handleChange}
+                />
+                {formik.touched.address && formik.errors.address && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.address}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Organization</Form.Label>
+                <Form.Control
+                  type="text"
+                  id="organization"
+                  name="organization"
+                  disabled={!edit}
+                  value={formik.values.organization}
+                  onChange={formik.handleChange}
+                />
+                {formik.touched.organization && formik.errors.organization && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.organization}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Mobile Phone</Form.Label>
-                  <Form.Control
-                    type="text"
-                    id="mobileNumber"
-                    name="mobileNumber"
-                    value={formik.values.mobileNumber}
-                    disabled={!edit}
-                    onChange={formik.handleChange}
-                  />
-                  {formik.touched.mobileNumber &&
-                    formik.errors.mobileNumber && (
-                      <Form.Control.Feedback
-                        type="invalid"
-                        style={{ display: 'block' }}
-                      >
-                        {formik.errors.mobileNumber}
-                      </Form.Control.Feedback>
-                    )}
-                </Form.Group>
-              </div>
-            </Card>
+              <Form.Group className="mb-3">
+                <Form.Label>Mobile Phone</Form.Label>
+                <Form.Control
+                  type="text"
+                  id="mobileNumber"
+                  name="mobileNumber"
+                  value={formik.values.mobileNumber}
+                  disabled={!edit}
+                  onChange={formik.handleChange}
+                />
+                {formik.touched.mobileNumber && formik.errors.mobileNumber && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.mobileNumber}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </Col>
           </Row>
-        </Container>
-        {/* </Card> */}
+        </Card>
+        {/* </Container>
+        </Card> */}
       </Form>
     </Wrapper>
   )

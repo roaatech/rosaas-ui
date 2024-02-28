@@ -17,10 +17,14 @@ import { faCcMastercard } from '@fortawesome/free-brands-svg-icons'
 import UpperContent from '../Shared/UpperContent/UpperContent'
 import DynamicButtons from '../Shared/DynamicButtons/DynamicButtons'
 import { BsPlusCircleFill } from 'react-icons/bs'
+import { MdOutlineStar, MdOutlineStarBorder } from 'react-icons/md'
+import Label from '../Shared/label/Label'
 
 const PaymentCardsList = () => {
-  const { getPaymentCardsList, detachPaymentMethodCard } = useRequest()
+  const { getPaymentCardsList, detachPaymentMethodCard, markCardAsDefault } =
+    useRequest()
   const [cards, setCards] = useState([])
+  console.log({ cards })
   const [confirm, setConfirm] = useState(false)
   const [update, setUpdate] = useState(1)
   const [selectedCardId, setSelectedCardId] = useState(null)
@@ -48,6 +52,20 @@ const PaymentCardsList = () => {
     try {
       await detachPaymentMethodCard(selectedCardId)
       // setCards(cards.filter((card) => card.id !== selectedCardId))
+    } catch (error) {
+      console.error('Error deleting payment card:', error)
+    }
+  }
+  const defaultCard = async (id) => {
+    const updatedCards = cards.map((card) => ({
+      ...card,
+      default: card.stripeCardId === id,
+    }))
+
+    setCards(updatedCards)
+
+    try {
+      await markCardAsDefault(id)
     } catch (error) {
       console.error('Error deleting payment card:', error)
     }
@@ -131,16 +149,16 @@ const PaymentCardsList = () => {
               <tbody>
                 {cards.map((card) => (
                   <tr key={card.stripeCardId}>
-                    <td style={{ width: '' }}>
+                    <td>
                       <div className="d-flex flex-row">
                         <div
-                          className="d-flex justify-content-between w-60"
-                          style={{ width: '33%' }}
+                          className="d-flex justify-content-between w-20"
+                          style={{ width: '22%' }}
                         >
                           <div className="mb-0">
                             {' '}
                             <span className="px- 1 ">
-                              {cardInfo[card.brand].icon}
+                              {cardInfo?.[card.brand]?.icon}
                             </span>{' '}
                             {card.brand}
                           </div>
@@ -151,6 +169,16 @@ const PaymentCardsList = () => {
                             {card.last4Digits}
                           </div>
                         </div>
+                        {card.default && (
+                          <div className="px-3">
+                            <Label
+                              {...{
+                                background: '#ffab032b',
+                                value: <FormattedMessage id="Default" />,
+                              }}
+                            />
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td>{card.cardholderName}</td>
@@ -176,6 +204,12 @@ const PaymentCardsList = () => {
                           </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
+                          <Dropdown.Item
+                            onClick={() => defaultCard(card.stripeCardId)}
+                          >
+                            <MdOutlineStarBorder />
+                            <FormattedMessage id="Set-As-Default" />
+                          </Dropdown.Item>
                           <Dropdown.Item
                             className="text-danger"
                             onClick={() => deleteConfirm(card.stripeCardId)}
