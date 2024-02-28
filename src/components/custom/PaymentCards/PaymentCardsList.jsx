@@ -10,7 +10,11 @@ import {
   Table,
 } from '@themesberg/react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisH, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import {
+  faEllipsisH,
+  faMoneyCheckDollar,
+  faTrashAlt,
+} from '@fortawesome/free-solid-svg-icons'
 import { cardInfo } from '../../../const/cardPayment'
 import { Wrapper } from './PaymentCardsList.styled'
 import { faCcMastercard } from '@fortawesome/free-brands-svg-icons'
@@ -24,7 +28,6 @@ const PaymentCardsList = () => {
   const { getPaymentCardsList, detachPaymentMethodCard, markCardAsDefault } =
     useRequest()
   const [cards, setCards] = useState([])
-  console.log({ cards })
   const [confirm, setConfirm] = useState(false)
   const [update, setUpdate] = useState(1)
   const [selectedCardId, setSelectedCardId] = useState(null)
@@ -153,12 +156,16 @@ const PaymentCardsList = () => {
                       <div className="d-flex flex-row">
                         <div
                           className="d-flex justify-content-between w-20"
-                          style={{ width: '22%' }}
+                          style={{ width: '33%' }}
                         >
                           <div className="mb-0">
                             {' '}
                             <span className="px- 1 ">
-                              {cardInfo?.[card.brand]?.icon}
+                              {cardInfo?.[card.brand] ? (
+                                cardInfo?.[card.brand]?.icon
+                              ) : (
+                                <FontAwesomeIcon icon={faMoneyCheckDollar} />
+                              )}
                             </span>{' '}
                             {card.brand}
                           </div>
