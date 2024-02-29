@@ -20,7 +20,10 @@ import PaymentForm from '../../components/custom/PaymentForm/PaymentForm'
 
 const TwoStepProcessPage = () => {
   const params = useParams()
-  const { orderIDParam } = params
+
+  const hash = window.location.hash
+
+  const orderIDParam = hash.substring(1)
 
   const dispatch = useDispatch()
   const [displayName, setDisplayName] = useState()
@@ -87,7 +90,6 @@ const TwoStepProcessPage = () => {
                   type="create"
                   popupLabel={<FormattedMessage id="Enter-Your-Info" />}
                   setCurrentTenant={setCurrentTenant}
-                  setOrderID={setOrderID}
                   setHasToPay={setHasToPay}
                   setDisplayName={setDisplayName}
                   priceData={priceData}
@@ -97,7 +99,6 @@ const TwoStepProcessPage = () => {
               {step === 2 && (
                 <CheckoutPage
                   currentTenant={currentTenant}
-                  orderID={orderID || orderIDParam}
                   hasToPay={hasToPay}
                   setHasToPay={setHasToPay}
                   displayName={displayName}

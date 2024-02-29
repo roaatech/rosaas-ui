@@ -26,7 +26,6 @@ const CheckoutTenantReg = ({
   setVisible,
   popupLabel,
   setCurrentTenant,
-  setOrderID,
   setHasToPay,
   setDisplayName,
   priceData,
@@ -137,10 +136,13 @@ const CheckoutTenantReg = ({
             setDisplayName(title)
             setCurrentTenant(createTenant?.data.data.tenantId)
             setHasToPay(createTenant?.data.data?.hasToPay)
-            setOrderID(createTenant?.data.data.orderId)
           }
 
           dispatch(setStep(2))
+          const id = createTenant?.data?.data?.orderId
+          if (id) {
+            navigate(`#${id}`)
+          }
         } else {
           const editTenant = await editTenantRequest({
             displayName: values.displayName,
@@ -194,7 +196,6 @@ const CheckoutTenantReg = ({
       })
       setDisplayName(title)
       setCurrentTenant(createTenant?.data.data.id)
-      setOrderID(createTenant?.data.data.orderId)
       setHasToPay(createTenant?.data.data?.hasToPay)
 
       dispatch(setStep(2))

@@ -128,7 +128,7 @@ const CardSaveForm = ({ setVisible, popupLabel, setCards, cards }) => {
               {isSubmitting ? (
                 <FormattedMessage id="processing" />
               ) : (
-                <FormattedMessage id="pay" />
+                <FormattedMessage id="Submit" />
               )}
             </Button>
           </Modal.Body>

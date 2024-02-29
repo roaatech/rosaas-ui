@@ -18,8 +18,6 @@ import { Wrapper } from './TenantFormOnboarding.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
 import { validateSpecifications } from '../validateSpecifications/validateSpecifications.jsx'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 import { setAllPlansPrice } from '../../../../store/slices/products/productsSlice.js'
 import {
@@ -87,7 +85,6 @@ const TenantFormOnboarding = ({
         const product = this.resolve(Yup.ref('product'))
         const plan = this.resolve(Yup.ref('plan'))
 
-        // Replace 'listData' and adjust the condition based on your data
         if (listData[product]?.trialPlanId !== plan) {
           return value !== undefined && value !== ''
         }
@@ -116,13 +113,6 @@ const TenantFormOnboarding = ({
   const selectedProduct = tenantData?.subscriptions?.map((product) => {
     return product.productId
   })
-  const [titleToUnique, setTitleToUnique] = useState('')
-  const specificationValuesObject = (tenantData?.subscriptions || [])
-    .flatMap((subscription) => subscription?.specifications || [])
-    .reduce((acc, specification) => {
-      acc[specification.id] = specification.value
-      return acc
-    }, {})
 
   const initialValues = {
     displayName: tenantData ? tenantData.displayName : '',
@@ -199,6 +189,8 @@ const TenantFormOnboarding = ({
               )
             )
           }
+          const id = createTenant?.data?.data?.orderId
+
           dispatch(
             setTenantCreateData({
               tenantData: createTenant.data.data,
@@ -221,10 +213,16 @@ const TenantFormOnboarding = ({
 
           navigate(
             `/checkout/product/${
-              listData[values.product].systemName
+              listData[values.product]?.systemName
             }/plan-price/${
-              listData[values.product].plansPrice[values.price].systemName
-            }`
+              values?.plan &&
+              listData[values.product]?.trialPlanId != values?.plan
+                ? listData[values.product]?.plansPrice?.[values.price]
+                    ?.systemName
+                : listData[values.product]?.plansPrice?.[
+                    listData[values.product]?.trialPlanPriceId
+                  ]?.systemName
+            }#${id}`
           )
           setVisible && setVisible(false)
         } else {
@@ -238,7 +236,15 @@ const TenantFormOnboarding = ({
       }
     },
   })
-
+  console.log(
+    formik.values?.plan &&
+      listData[formik.values.product]?.trialPlanId != formik.values?.plan
+      ? listData[formik.values.product].plansPrice?.[formik.values.price]
+          ?.systemName
+      : listData[formik.values.product]?.plansPrice?.[
+          listData[formik.values.product]?.trialPlanPriceId
+        ]?.systemName
+  )
   const intl = useIntl()
   let planOptions
   if (listData[formik.values.product]?.plans) {

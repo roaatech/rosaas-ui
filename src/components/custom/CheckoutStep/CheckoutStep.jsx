@@ -14,47 +14,44 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import useRequest from '../../../axios/apis/useRequest'
 
-import { BsCheck2Circle, BsFillQuestionCircleFill } from 'react-icons/bs'
+import {
+  BsCheck2Circle,
+  BsCheckCircle,
+  BsFillQuestionCircleFill,
+} from 'react-icons/bs'
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FormattedMessage } from 'react-intl'
 import { cycle } from '../../../const/product'
 import { Wrapper } from './CheckoutStep.styled'
 import { setStep } from '../../../store/slices/tenants'
+import { da } from 'date-fns/locale'
 
 const CheckoutPage = (data) => {
-  const createdTenantData = useSelector((state) => state.tenants?.createdTenant)
-  const orderID =
-    data.orderID ||
-    createdTenantData?.tenantData?.orderId ||
-    createdTenantData?.tenantData?.id
+  const {
+    hasToPay,
+    setHasToPay,
+    displayName: tenantDisplayName,
+    priceData,
+  } = data
 
-  const { hasToPay, setHasToPay, displayName, priceData, setPriceData } = data
-
-  useEffect(() => {
-    if (!createdTenantData.tenantData?.hasToPay) {
-      return
-    }
-    createdTenantData.tenantData?.hasToPay &&
-      setHasToPay(createdTenantData?.tenantData?.hasToPay)
-  }, [])
   const [orderData, setOrderData] = useState()
 
-  const params = useParams()
-  const { orderIDParam } = useParams()
-  const [systemName, setSystemName] = useState(params.systemName)
-  const [priceName, setPriceName] = useState(params.priceName)
+  const { systemName, priceName } = useParams()
+
+  const hash = window.location.hash
+
+  const orderID = hash.substring(1)
 
   const navigate = useNavigate()
   const [paymentMethod, setPaymentMethod] = useState(2)
+  const [rememberCardInfo, setRememberCardInfo] = useState(false)
+  const [autoRenewal, setAutoRenewal] = useState(false)
 
   const dispatch = useDispatch()
-  const {
-    getOrderById,
-    paymentCheckout,
-    getFeaturePlanPublic,
-    getOrderByIdPublic,
-  } = useRequest()
+
+  const { paymentCheckout, getFeaturePlanPublic, getOrderByIdPublic } =
+    useRequest()
 
   const listProduct = useSelector((state) => state.products.products)
 
@@ -67,13 +64,9 @@ const CheckoutPage = (data) => {
   )[0]
   const [productId, setProductId] = useState(productData?.id)
 
-  const listData = productData?.featurePlan
-
   useEffect(() => {
     if (!orderID) {
       return
-    } else if (createdTenantData?.tenantData && orderData?.orderStatus == 2) {
-      return setOrderData(createdTenantData.tenantData)
     }
 
     ;(async () => {
@@ -96,32 +89,76 @@ const CheckoutPage = (data) => {
   }, [priceData, systemName])
 
   useEffect(() => {
-    if (!orderData || !orderIDParam) {
+    if (!orderData) {
       return
     }
     setHasToPay(orderData?.hasToPay)
     setProductId(orderData?.orderItems[0]?.productId)
   }, [orderData])
+  const handleAutoRenewalChange = () => {
+    const newValue = !autoRenewal
+
+    setAutoRenewal(newValue)
+
+    if (newValue) {
+      setRememberCardInfo(true)
+    }
+  }
+
+  const handleRememberCardInfoChange = () => {
+    const newValue = !rememberCardInfo
+    if (autoRenewal) {
+      setRememberCardInfo(true)
+    } else {
+      setRememberCardInfo(newValue)
+    }
+  }
 
   const handlePayment = async () => {
     const payment = await paymentCheckout({
       orderID,
       paymentMethod: hasToPay ? paymentMethod : null,
+      allowStoringCardInfo: rememberCardInfo,
+      enableAutoRenewal: autoRenewal,
     })
     if (hasToPay && paymentMethod === 2) {
       const navigationUrl = payment?.data.data.navigationUrl
 
-      if (navigationUrl) {
-        const decodedUrl = decodeURIComponent(navigationUrl)
-        window.location.href = decodedUrl
+      // if (navigationUrl) {
+      //   const decodedUrl = decodeURIComponent(navigationUrl)
+      //   window.location.href = decodedUrl
 
-        dispatch(setStep(1))
-      }
+      //   dispatch(setStep(1))
+      // }
     } else {
       payment && navigate('/success')
       dispatch(setStep(1))
     }
   }
+
+  const [trialEndDate, setTrialEndDate] = useState(null)
+  useEffect(() => {
+    if (orderData?.orderItems[0]?.trialPeriodInDays) {
+      const today = new Date()
+      const newTrialEndDate = new Date(
+        today.setDate(
+          today.getDate() + orderData?.orderItems[0]?.trialPeriodInDays
+        )
+      )
+
+      const options = {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+      }
+
+      const formattedTrialEndDate = newTrialEndDate.toLocaleDateString(
+        'en-US',
+        options
+      )
+      setTrialEndDate(formattedTrialEndDate)
+    }
+  }, [orderData])
 
   const direction = useSelector((state) => state.main.direction)
   const renderFeaturePlans = () => {
@@ -192,16 +229,12 @@ const CheckoutPage = (data) => {
                         </span>
                       </OverlayTrigger>
                     </div>
-                    <div className=" card-stats">
-                      {displayName ||
-                        createdTenantData?.displayName ||
-                        createdTenantData?.tenantInfo?.displayName}
-                    </div>
+                    <div className=" card-stats">{tenantDisplayName}</div>
                   </div>
 
                   {/* Tenant System Name */}
 
-                  <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                  {/* <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                     <div className=" w-50 fw-bold">
                       <FormattedMessage id="System-Name" />
                       <OverlayTrigger
@@ -224,12 +257,8 @@ const CheckoutPage = (data) => {
                         </span>
                       </OverlayTrigger>
                     </div>
-                    <div className=" card-stats">
-                      {systemName ||
-                        createdTenantData?.systemName ||
-                        createdTenantData?.tenantInfo?.systemName}
-                    </div>
-                  </div>
+                    <div className=" card-stats">{systemName}</div>
+                  </div> */}
 
                   {/* product */}
                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
@@ -332,7 +361,7 @@ const CheckoutPage = (data) => {
               >
                 <div>
                   {renderFeaturePlans()}
-                  {hasToPay && (
+                  {/* {hasToPay && (
                     <Form>
                       <Form.Group className="mb-3">
                         <Card.Header className="mb-3 fw-bold">
@@ -355,9 +384,8 @@ const CheckoutPage = (data) => {
                         </Card.Body>
                       </Form.Group>
                     </Form>
-                  )}
-
-                  <Card.Footer>
+                  )} */}
+                  <Card.Body>
                     {/* Additional checkout information */}
                     {paymentMethod && hasToPay && (
                       <div className="d-flex align-items-start justify-content-between py-3">
@@ -368,21 +396,75 @@ const CheckoutPage = (data) => {
                           <p className="fw-bold">
                             <FormattedMessage id="Order-Subtotal-Include-Tax" />
                           </p>
-                          <p className="total fw-bold py-2 pl-1">
-                            <span>
-                              {' '}
+                          {orderData?.orderItems[0]?.trialPeriodInDays ? (
+                            <>
+                              <p className="fw-bold">
+                                <FormattedMessage id="Due-Now" />
+                              </p>
+                              <p className="fw-bold">
+                                <span className="p-0 mb-0">
+                                  <FormattedMessage id="After-Trial-Ends-On" />
+                                </span>
+                                <br />
+                                <span className="normal-text font-small">
+                                  ({trialEndDate})
+                                </span>
+                              </p>
+                            </>
+                          ) : (
+                            <p className="fw-bold">
                               <FormattedMessage id="Total" />
-                            </span>
-                          </p>
+                            </p>
+                          )}
                         </div>
                         <div className="w-50">
-                          <p>${orderData?.orderSubtotalExclTax}</p>
-                          <p>${orderData?.orderSubtotalInclTax}</p>
-                          <p className="total fw-bold py-2">
-                            ${orderData?.orderTotal}
-                          </p>
+                          <span className=" d-flex flex-column align-items-center">
+                            <p>${orderData?.orderSubtotalExclTax}</p>
+                            <p>${orderData?.orderSubtotalInclTax}</p>
+                            {orderData?.orderItems[0]?.trialPeriodInDays ? (
+                              <p>
+                                $0.00 /{' '}
+                                {orderData?.orderItems[0]?.trialPeriodInDays}{' '}
+                                <FormattedMessage id="Days" />
+                              </p>
+                            ) : (
+                              ''
+                            )}
+                            <p className="total fw-bold py-2 px-8">
+                              ${orderData?.orderTotal}
+                            </p>
+                          </span>
                         </div>
                       </div>
+                    )}
+                    {paymentMethod && hasToPay && (
+                      <Form>
+                        {/* Remember Card Information */}
+                        <Form.Group className="mb-3">
+                          <Form.Check
+                            type="checkbox"
+                            label={
+                              <FormattedMessage id="Remember-Card-Information" />
+                            }
+                            checked={rememberCardInfo}
+                            onChange={handleRememberCardInfoChange}
+                            value={rememberCardInfo}
+                            disabled={autoRenewal}
+                            className="font-small"
+                          />
+                        </Form.Group>
+                        {/* Auto Renewal */}
+                        <Form.Group className="mb-3">
+                          <Form.Check
+                            type="checkbox"
+                            label={<FormattedMessage id="Auto-Renewal" />}
+                            checked={autoRenewal}
+                            onChange={handleAutoRenewalChange}
+                            value={autoRenewal}
+                            className="font-small"
+                          />
+                        </Form.Group>
+                      </Form>
                     )}
                     {
                       <Button
@@ -391,17 +473,44 @@ const CheckoutPage = (data) => {
                         onClick={handlePayment}
                       >
                         {hasToPay ? (
-                          <FormattedMessage
-                            id={`Pay-${
-                              paymentMethod === 1 ? 'Manual' : 'With-Stripe'
-                            }`}
-                          />
+                          // <FormattedMessage
+                          //   id={`Pay-${
+                          //     paymentMethod === 1 ? 'Manual' : 'With-Stripe'
+                          //   }`}
+                          // />
+                          <FormattedMessage id={`Checkout`} />
                         ) : (
                           <FormattedMessage id="Complete" />
                         )}
                       </Button>
                     }
-                  </Card.Footer>
+                  </Card.Body>
+                  {orderData?.orderItems[0]?.trialPeriodInDays ? (
+                    <Card.Footer>
+                      <div className="free-trial-terms">
+                        <p className="fw-bold">
+                          <FormattedMessage id="Free-Trial-Terms" />
+                        </p>
+                        <div className="d-flex align-items-center">
+                          <p>
+                            <BsCheckCircle />{' '}
+                            <FormattedMessage id="Auto-Start-Billing-After-Trial" />
+                          </p>
+                        </div>
+                        <div className="d-flex align-items-center">
+                          <p>
+                            <BsCheckCircle />{' '}
+                            <FormattedMessage
+                              id="Cancel-Before-Billing-Starts"
+                              values={{ trialEndDate }}
+                            />
+                          </p>
+                        </div>
+                      </div>
+                    </Card.Footer>
+                  ) : (
+                    ''
+                  )}
                 </div>
               </Col>
             </Row>

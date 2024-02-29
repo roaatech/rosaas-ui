@@ -49,7 +49,7 @@ function PaymentFlow({ price, product }) {
 
   const handleButtonClick = (id, planPriceId) => {
     dispatch(setStep(2))
-    navigate(`/payment/product/${product}/subscribtion/${planPriceId}`)
+    navigate(`/payment/product/${product}/subscribtion/${planPriceId}#${id}`)
     dispatch(
       setTenantCreateData({
         tenantData: ordersList[id],

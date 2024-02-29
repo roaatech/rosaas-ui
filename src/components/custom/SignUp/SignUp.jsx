@@ -31,10 +31,10 @@ const SignUp = () => {
   }
 
   const validationSchema = Yup.object().shape({
-    fullName: Yup.string().required('fullName is required'),
+    fullName: Yup.string(),
     email: Yup.string().email('Invalid email').required('Email is required'),
     password: Yup.string().required('Password is required'),
-    mobileNumber: Yup.string().required('Phone number is required'),
+    mobileNumber: Yup.string(),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Confirm Password is required'),
@@ -101,6 +101,7 @@ const SignUp = () => {
             <div>
               <label htmlFor="email" className="pb-2">
                 <FormattedMessage id="yourEmail" />
+                <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -118,6 +119,7 @@ const SignUp = () => {
             <div>
               <label htmlFor="password" className="pb-2">
                 <FormattedMessage id="yourPassword" />
+                <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -140,6 +142,7 @@ const SignUp = () => {
             <div>
               <label htmlFor="confirmPassword" className="pb-2">
                 <FormattedMessage id="confirmPassword" />
+                <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">

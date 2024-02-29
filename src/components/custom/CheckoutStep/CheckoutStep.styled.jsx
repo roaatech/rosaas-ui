@@ -15,4 +15,8 @@ export const Wrapper = styled.div`
   p.total {
     background-color: #ffab032a;
   }
+  .normal-text {
+    font-weight: normal;
+    padding-top: 10px;
+  }
 `

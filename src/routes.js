@@ -142,7 +142,7 @@ export const Routes = {
   TenantDashboard: {
     path: '/welcome',
     component: TenantWelcomePage,
-    roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
+    roles: ['tenantAdmin', 'superAdmin'],
     type: 'noSidebar',
   },
 }

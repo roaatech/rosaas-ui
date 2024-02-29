@@ -123,7 +123,7 @@ const ProductListPage = () => {
 
   return (
     <Wrapper>
-      <BreadcrumbComponent breadcrumbInfo={'Home'} icon={BsBoxSeam} />
+      {/* <BreadcrumbComponent breadcrumbInfo={'Home'} icon={BsBoxSeam} /> */}
       <section
         className="d-flex align-items-center"
         style={{ minHeight: '100vh' }}
