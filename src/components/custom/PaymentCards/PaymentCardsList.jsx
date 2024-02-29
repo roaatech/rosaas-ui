@@ -176,7 +176,7 @@ const PaymentCardsList = () => {
                             {card.last4Digits}
                           </div>
                         </div>
-                        {card.default && (
+                        {card.isDefault && (
                           <div className="px-3">
                             <Label
                               {...{
@@ -217,7 +217,7 @@ const PaymentCardsList = () => {
                               {
                                 name: 'offset',
                                 options: {
-                                  offset: [0, 10], 
+                                  offset: [0, 10],
                                 },
                               },
                               {
