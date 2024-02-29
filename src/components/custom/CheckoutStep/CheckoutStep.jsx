@@ -17,6 +17,7 @@ import useRequest from '../../../axios/apis/useRequest'
 import {
   BsCheck2Circle,
   BsCheckCircle,
+  BsCheckCircleFill,
   BsFillQuestionCircleFill,
 } from 'react-icons/bs'
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons'
@@ -124,12 +125,12 @@ const CheckoutPage = (data) => {
     if (hasToPay && paymentMethod === 2) {
       const navigationUrl = payment?.data.data.navigationUrl
 
-      // if (navigationUrl) {
-      //   const decodedUrl = decodeURIComponent(navigationUrl)
-      //   window.location.href = decodedUrl
+      if (navigationUrl) {
+        const decodedUrl = decodeURIComponent(navigationUrl)
+        window.location.href = decodedUrl
 
-      //   dispatch(setStep(1))
-      // }
+        dispatch(setStep(1))
+      }
     } else {
       payment && navigate('/success')
       dispatch(setStep(1))
@@ -401,13 +402,14 @@ const CheckoutPage = (data) => {
                               <p className="fw-bold">
                                 <FormattedMessage id="Due-Now" />
                               </p>
-                              <p className="fw-bold">
+                              <p className="fw-bold ">
                                 <span className="p-0 mb-0">
-                                  <FormattedMessage id="After-Trial-Ends-On" />
+                                  <FormattedMessage id="After-Trial" />
                                 </span>
                                 <br />
-                                <span className="normal-text font-small">
-                                  ({trialEndDate})
+                                <span className="normal-text font-small fw-bold">
+                                  <FormattedMessage id="Ends-On" /> (
+                                  {trialEndDate})
                                 </span>
                               </p>
                             </>
@@ -422,7 +424,7 @@ const CheckoutPage = (data) => {
                             <p>${orderData?.orderSubtotalExclTax}</p>
                             <p>${orderData?.orderSubtotalInclTax}</p>
                             {orderData?.orderItems[0]?.trialPeriodInDays ? (
-                              <p>
+                              <p className="trial">
                                 $0.00 /{' '}
                                 {orderData?.orderItems[0]?.trialPeriodInDays}{' '}
                                 <FormattedMessage id="Days" />
@@ -491,21 +493,22 @@ const CheckoutPage = (data) => {
                         <p className="fw-bold">
                           <FormattedMessage id="Free-Trial-Terms" />
                         </p>
-                        <div className="d-flex align-items-center">
-                          <p>
-                            <BsCheckCircle />{' '}
-                            <FormattedMessage id="Auto-Start-Billing-After-Trial" />
-                          </p>
-                        </div>
-                        <div className="d-flex align-items-center">
-                          <p>
-                            <BsCheckCircle />{' '}
-                            <FormattedMessage
-                              id="Cancel-Before-Billing-Starts"
-                              values={{ trialEndDate }}
-                            />
-                          </p>
-                        </div>
+
+                        <p className="font-small">
+                          <BsCheckCircleFill className="check-circle" />{' '}
+                          <FormattedMessage id="Auto-Start-Billing-After-Trial" />
+                          <br />
+                          <BsCheckCircleFill className="check-circle" />{' '}
+                          <FormattedMessage
+                            id="Cancel-Before"
+                            values={{ trialEndDate }}
+                          />{' '}
+                          {trialEndDate}{' '}
+                          <FormattedMessage
+                            id="Billing-Starts"
+                            values={{ trialEndDate }}
+                          />
+                        </p>
                       </div>
                     </Card.Footer>
                   ) : (

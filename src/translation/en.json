@@ -488,6 +488,12 @@
 
   "Days": "Days",
   "Free-Trial": "Free Trial",
-  "After-Trial-Ends-On": "After Trial Ends On",
-  "Remember-Card-Information": "Remember Card Information"
+  "Ends-On": "Ends On",
+  "After-Trial": "After Trial",
+  "Remember-Card-Information": "Save your card details for future transactions",
+  "Auto-Start-Billing-After-Trial": "Billing automatically starts after the free trial ends",
+  "Cancel-Before": "Cancel before",
+  "Billing-Starts": "to avoid getting billed",
+  "Free-Trial-Terms": "Free Trial Terms",
+  "Due-Now": "Due Now"
 }

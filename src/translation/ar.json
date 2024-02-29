@@ -489,5 +489,10 @@
   "Free-Trial": "تجريبية مجانية",
   "Set-As-Default": "تعيين كافتراضي",
   "After-Trial-Ends-On": "بعد انتهاء الفترة التجريبية في",
-  "Remember-Card-Information": "تذكر معلومات البطاقة"
+  "Remember-Card-Information": "احفظ تفاصيل بطاقتك للمعاملات المستقبلية",
+  "Auto-Start-Billing-After-Trial": "يبدأ الفوترة تلقائيًا بعد انتهاء الفترة التجريبية المجانية",
+  "Cancel-Before": "إلغاء قبل",
+  "Billing-Starts": "لتجنب الفوترة",
+  "Free-Trial-Terms": "شروط الفترة التجريبية المجانية",
+  "Due-Now": "المستحق الآن"
 }

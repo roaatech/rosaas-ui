@@ -19,4 +19,11 @@ export const Wrapper = styled.div`
     font-weight: normal;
     padding-top: 10px;
   }
+  .check-circle {
+    color: green;
+  }
+  .trial {
+    color: var(--second-color);
+    font-weight: bold;
+  }
 `

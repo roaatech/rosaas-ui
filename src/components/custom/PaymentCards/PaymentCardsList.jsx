@@ -210,7 +210,25 @@ const PaymentCardsList = () => {
                             />
                           </span>
                         </Dropdown.Toggle>
-                        <Dropdown.Menu>
+                        <Dropdown.Menu
+                          popperConfig={{
+                            strategy: 'fixed',
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, 10], 
+                                },
+                              },
+                              {
+                                name: 'preventOverflow',
+                                options: {
+                                  boundary: 'viewport',
+                                },
+                              },
+                            ],
+                          }}
+                        >
                           <Dropdown.Item
                             onClick={() => defaultCard(card.stripeCardId)}
                           >
