@@ -29,6 +29,7 @@ import { MdFactCheck } from 'react-icons/md'
 import TenantsUsersManagement from '../../components/custom/tenant/TenantsUsersManagement/TenantsUsersManagement'
 import Label from '../../components/custom/Shared/label/Label'
 import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
+import { Routes } from '../../routes'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -74,7 +75,7 @@ const TenantDetails = () => {
   const deleteTenant = async () => {
     await deleteTenantReq({ id: currentId })
     dispatch(removeTenant(routeParams.id))
-    navigate(`/Dashboard`)
+    navigate(Routes.Dashboard.path)
   }
 
   let tenantObject = tenantsData[routeParams.id]

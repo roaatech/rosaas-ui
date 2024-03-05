@@ -107,6 +107,14 @@ const Profile = () => {
                       func: () => setEdit(true),
                       icon: <AiFillEdit />,
                     },
+                    {
+                      order: 1,
+                      type: 'form',
+                      component: 'changePassword',
+                      label: 'Change-Password',
+                      icon: <AiFillEdit />,
+                      variant: 'primary',
+                    },
                   ]
             }
           />

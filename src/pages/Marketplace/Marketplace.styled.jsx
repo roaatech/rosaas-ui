@@ -20,4 +20,37 @@ export const Wrapper = styled.div`
     text-overflow: ellipsis;
     max-width: 100%; /* optional, depends on your layout */
   }
+
+  .product-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .product-sentence {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .product-section {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+    text-align: center;
+  }
+
+  .product-section-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .copy {
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    color: var(--primary5);
+
+    .yellow {
+      color: var(--second-color);
+    }
+  }
 `

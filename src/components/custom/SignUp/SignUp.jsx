@@ -43,7 +43,11 @@ const SignUp = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     const signUpSuccess = await signUp(values)
     if (signUpSuccess) {
-      redirectPath ? navigate(redirectPath) : navigate(Routes.productsList.path)
+      redirectPath
+        ? navigate(redirectPath)
+        : signUpSuccess.data.data.userAccount.userType == 4
+        ? navigate(Routes.workSpace.path)
+        : navigate(Routes.Dashboard.path)
     }
   }
 

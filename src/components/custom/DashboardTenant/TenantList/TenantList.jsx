@@ -31,6 +31,7 @@ import { FormattedMessage } from 'react-intl'
 import UpperContent from '../../Shared/UpperContent/UpperContent.jsx'
 import Label from '../../Shared/label/Label.jsx'
 import { BsBox2Fill } from 'react-icons/bs'
+import { Routes } from '../../../../routes.js'
 export default function TenantList({ children }) {
   const { getTenant, getTenantList, deleteTenantReq } = useRequest()
   const [visible, setVisible] = useState(false)
@@ -136,7 +137,9 @@ export default function TenantList({ children }) {
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <Dropdown.Item
-                            onSelect={() => navigate(`/tenants/${tenant.id}`)}
+                            onSelect={() =>
+                              navigate(`${Routes.Tenant.path}/${tenant.id}`)
+                            }
                           >
                             <FontAwesomeIcon icon={faEye} className="mx-2" />{' '}
                             View Details

@@ -9,6 +9,7 @@ import { useIntl, FormattedMessage } from 'react-intl'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { breadcrumbFun } from '../../../../const/breadcrumb'
+import { Routes } from '../../../../routes'
 
 const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
   const routeParams = useParams()
@@ -51,7 +52,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                 className: 'breadcrumb-dark breadcrumb-transparent',
               }}
             >
-              <Breadcrumb.Item href="/Dashboard">
+              <Breadcrumb.Item href={Routes.Dashboard.path}>
                 <BsFillHouseDoorFill />
               </Breadcrumb.Item>
 

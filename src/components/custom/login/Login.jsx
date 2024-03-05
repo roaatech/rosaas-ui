@@ -17,6 +17,9 @@ const Login = () => {
   let redirectPath = useSelector(
     (state) => state.auth.redirectPath?.redirectPath
   )
+  let userRole = useSelector((state) => state.auth.userInfo.role)
+  console.log({ userRole })
+
   const { signIn } = useRequest()
   const navigate = useNavigate()
   const initialValues = {
@@ -32,7 +35,11 @@ const Login = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     const loginPass = await signIn(values)
     if (loginPass) {
-      redirectPath ? navigate(redirectPath) : navigate(Routes.Dashboard.path)
+      redirectPath
+        ? navigate(redirectPath)
+        : loginPass.data.data.userAccount.userType == 4
+        ? navigate(Routes.workSpace.path)
+        : navigate(Routes.Dashboard.path)
     }
   }
 

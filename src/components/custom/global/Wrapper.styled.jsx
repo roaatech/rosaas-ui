@@ -65,6 +65,7 @@ const GlobalStyles = createGlobalStyle`
 --silver-gray:#a3a3a3;
 --orange-yellow-blend : #FFC966FF;
 --mocha-brown:#5c472e;
+--pale-moonlight-gray: #f8f9faea;
 }
  
  

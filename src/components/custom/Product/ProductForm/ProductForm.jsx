@@ -24,6 +24,7 @@ import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCount
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
+import { Routes } from '../../../../routes.js'
 
 const ProductForm = ({
   type,
@@ -102,7 +103,7 @@ const ProductForm = ({
           clientId: Product_Client_id,
         })
         if (sideBar) {
-          navigate(`/products/${createProduct.data.data.id}`)
+          navigate(`${Routes.products.path}/${createProduct.data.data.id}`)
         }
         setUpdate(update + 1)
       } else {

@@ -19,6 +19,7 @@ import {
 import SpecificationInput from '../Product/CustomSpecification/SpecificationInput/SpecificationInput'
 import { setStep } from '../../../store/slices/tenants'
 import { cycle } from '../../../const'
+import { Routes } from '../../../routes'
 
 const CheckoutTenantReg = ({
   type,
@@ -130,7 +131,9 @@ const CheckoutTenantReg = ({
             createTenant?.data.data.tenantId
           ) {
             return userRole != 'notAuth'
-              ? navigate(`/tenants/${createTenant?.data.data.tenantId}`)
+              ? navigate(
+                  `${Routes.Tenant.path}/${createTenant?.data.data.tenantId}`
+                )
               : navigate(`/created-successfully`)
           } else {
             setDisplayName(title)

@@ -26,6 +26,7 @@ import { statusConst } from '../../../../const'
 import { MdFactCheck } from 'react-icons/md'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
+import { Routes } from '../../../../routes'
 export default function ChildTable({
   productData,
   tenantId,
@@ -144,7 +145,7 @@ export default function ChildTable({
                     type: 'action',
                     label: 'Subscription-Management',
                     func: () => {
-                      navigate('./Subscription-Management')
+                      navigate(Routes.SubscriptionManagement.path)
                     },
                     icon: <MdFactCheck />,
                   },

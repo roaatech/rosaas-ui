@@ -299,7 +299,7 @@ export default (props = {}) => {
                     <NavItem
                       key={index}
                       title={item.systemName}
-                      link={`/tenants/${item.id}`}
+                      link={`${Routes.Tenant.path}/${item.id}`}
                       icon={BsFillPersonFill}
                     />
                   ))}
@@ -315,7 +315,7 @@ export default (props = {}) => {
                     <NavItem
                       key={index}
                       title={item.systemName}
-                      link={`/tenants/${item.id}`}
+                      link={`${Routes.Tenant.path}/${item.id}`}
                       icon={BsFillPersonFill}
                     />
                   ))}
@@ -347,12 +347,12 @@ export default (props = {}) => {
                 <CollapsableNavItem
                   eventKey={productsIsOpen}
                   title={
-                    <span onClick={() => navigate('/products')}>
+                    <span onClick={() => navigate(Routes.products.path)}>
                       <FormattedMessage id="Products" />
                     </span>
                   }
                   icon={
-                    <span onClick={() => navigate('/products')}>
+                    <span onClick={() => navigate(Routes.products.path)}>
                       <BsBoxes />
                     </span>
                   }
@@ -365,10 +365,10 @@ export default (props = {}) => {
                     <NavItem
                       key={index}
                       title={product.systemName}
-                      link={`/products/${product.id}`}
+                      link={`${Routes.products.path}/${product.id}`}
                       icon={BsBoxSeam}
                       isActive={location.pathname.includes(
-                        `/products/${product.id}`
+                        `${Routes.products.path}/${product.id}`
                       )}
                     />
                   ))}
@@ -383,22 +383,22 @@ export default (props = {}) => {
                 >
                   <NavItem
                     title={<FormattedMessage id="Health-Check-sidebar" />}
-                    link={`/settings/health-check`}
+                    link={Routes.Settings.path}
                     icon={BsFillClipboard2CheckFill}
                   />
                   <NavItem
                     title={<FormattedMessage id="Subscriptions" />}
-                    link={`/settings/subscriptions`}
+                    link={Routes.SubscriptionsSettings.path}
                     icon={BsPeople}
                   />
                   <NavItem
                     title={<FormattedMessage id="Product-Warnings" />}
-                    link={`/settings/product-warnings`}
+                    link={Routes.ProductWarningsSettings.path}
                     icon={BsExclamationTriangle}
                   />
                   <NavItem
                     title={<FormattedMessage id="Card-Management" />}
-                    link={`/settings/cards-management`}
+                    link={Routes.CardSettings.path}
                     icon={BsBank}
                   />
                 </CollapsableNavItem>

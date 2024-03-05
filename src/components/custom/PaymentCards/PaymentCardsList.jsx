@@ -6,7 +6,9 @@ import {
   Button,
   ButtonGroup,
   Card,
+  Col,
   Dropdown,
+  Row,
   Table,
 } from '@themesberg/react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -23,11 +25,13 @@ import DynamicButtons from '../Shared/DynamicButtons/DynamicButtons'
 import { BsPlusCircleFill } from 'react-icons/bs'
 import { MdOutlineStar, MdOutlineStarBorder } from 'react-icons/md'
 import Label from '../Shared/label/Label'
+import CreditCard from '../CreditCard/CreditCard'
 
 const PaymentCardsList = () => {
   const { getPaymentCardsList, detachPaymentMethodCard, markCardAsDefault } =
     useRequest()
   const [cards, setCards] = useState([])
+  console.log(cards)
   const [confirm, setConfirm] = useState(false)
   const [update, setUpdate] = useState(1)
   const [selectedCardId, setSelectedCardId] = useState(null)
@@ -47,14 +51,11 @@ const PaymentCardsList = () => {
     setSelectedCardId(id)
     setConfirm(true)
   }
-  // const deleteCard = async () => {
-  //   await detachPaymentMethodCard(selectedCardId)
-  // }
 
   const deleteCard = async () => {
     try {
       await detachPaymentMethodCard(selectedCardId)
-      // setCards(cards.filter((card) => card.id !== selectedCardId))
+      setUpdate((prev) => prev + 1)
     } catch (error) {
       console.error('Error deleting payment card:', error)
     }
@@ -65,37 +66,15 @@ const PaymentCardsList = () => {
       default: card.stripeCardId === id,
     }))
 
-    setCards(updatedCards)
-
     try {
       await markCardAsDefault(id)
+      setCards(updatedCards)
+      setUpdate((prev) => prev + 1)
     } catch (error) {
       console.error('Error deleting payment card:', error)
     }
   }
-  const mockPaymentCards = [
-    {
-      id: 1,
-      cardType: 1,
-      last4Digits: '1234',
-      expireDate: 'Apr 2025',
-      fullName: 'Name Name',
-    },
-    {
-      id: 2,
-      cardType: 2,
-      last4Digits: '5678',
-      expireDate: 'Dec 2023',
-      fullName: 'Name Name',
-    },
-    {
-      id: 3,
-      cardType: 1,
-      last4Digits: '9012',
-      expireDate: 'Jun 2024',
-      fullName: 'Name Name',
-    },
-  ]
+
   function formatExpirationDate(expirationMonth, expirationYear) {
     const expirationDate = new Date(expirationYear, expirationMonth - 1)
 
@@ -127,143 +106,36 @@ const PaymentCardsList = () => {
         />
       </UpperContent>
 
-      <Card className="m-3 mt-0">
+      <Card className=" mt-0">
         <Card.Body>
-          <div className="payment-cards-container">
-            <Table hover className="user-table align-items-center">
-              {' '}
-              <thead>
-                <tr>
-                  <th>
-                    <FormattedMessage id="Card-Info" />
-                  </th>
-                  <th>
-                    <FormattedMessage id="Full-Name" />
-                  </th>
-                  <th>
-                    <FormattedMessage id="Expiration-Date" />
-                  </th>
+          <Row className="g-4">
+            {cards.map((card) => (
+              <Col key={card.stripeCardId} lg={3} sm={4}>
+                <CreditCard
+                  cardTypeIcon={
+                    cardInfo?.[card.brand]?.icon || faMoneyCheckDollar
+                  }
+                  cardNumber={card.last4Digits}
+                  expiryDate={`${card.expirationMonth} / ${card.expirationYear}`}
+                  cardHolder={card.cardholderName}
+                  isDefault={card.isDefault}
+                  onSetAsDefault={() => defaultCard(card.stripeCardId)}
+                  onDelete={() => deleteConfirm(card.stripeCardId)}
+                />
+              </Col>
+            ))}
+          </Row>
 
-                  <th>
-                    <FormattedMessage id="Actions" />
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {cards.map((card) => (
-                  <tr key={card.stripeCardId}>
-                    <td>
-                      <div className="d-flex flex-row">
-                        <div
-                          className="d-flex justify-content-between w-20"
-                          style={{ width: '33%' }}
-                        >
-                          <div className="mb-0">
-                            {' '}
-                            <span className="px- 1 ">
-                              {cardInfo?.[card.brand] ? (
-                                cardInfo?.[card.brand]?.icon
-                              ) : (
-                                <FontAwesomeIcon icon={faMoneyCheckDollar} />
-                              )}
-                            </span>{' '}
-                            {card.brand}
-                          </div>
-
-                          <div className="">
-                            {' '}
-                            <FontAwesomeIcon icon={faEllipsisH} />
-                            {card.last4Digits}
-                          </div>
-                        </div>
-                        {card.isDefault && (
-                          <div className="px-3">
-                            <Label
-                              {...{
-                                background: '#ffab032b',
-                                value: <FormattedMessage id="Default" />,
-                              }}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td>{card.cardholderName}</td>
-                    <td>
-                      {formatExpirationDate(
-                        card.expirationMonth,
-                        card.expirationYear
-                      )}
-                    </td>
-                    <td>
-                      <Dropdown as={ButtonGroup}>
-                        <Dropdown.Toggle
-                          as={Button}
-                          split
-                          variant="link"
-                          className="text-dark m-0 p-0"
-                        >
-                          <span className="icon icon-sm">
-                            <FontAwesomeIcon
-                              icon={faEllipsisH}
-                              className="icon-dark"
-                            />
-                          </span>
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu
-                          popperConfig={{
-                            strategy: 'fixed',
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, 10],
-                                },
-                              },
-                              {
-                                name: 'preventOverflow',
-                                options: {
-                                  boundary: 'viewport',
-                                },
-                              },
-                            ],
-                          }}
-                        >
-                          <Dropdown.Item
-                            onClick={() => defaultCard(card.stripeCardId)}
-                          >
-                            <MdOutlineStarBorder />
-                            <FormattedMessage id="Set-As-Default" />
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            className="text-danger"
-                            onClick={() => deleteConfirm(card.stripeCardId)}
-                          >
-                            <FontAwesomeIcon
-                              icon={faTrashAlt}
-                              className="mx-2"
-                            />
-                            <FormattedMessage id="Delete" />
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-
-            <DeleteConfirmation
-              message="Do you want to delete this Tenant?"
-              icon="pi pi-exclamation-triangle"
-              confirm={confirm}
-              setConfirm={setConfirm}
-              confirmFunction={deleteCard}
-              update={update}
-              setUpdate={setUpdate}
-              sideBar={false}
-            />
-          </div>
+          <DeleteConfirmation
+            message="Do you want to delete this Tenant?"
+            icon="pi pi-exclamation-triangle"
+            confirm={confirm}
+            setConfirm={setConfirm}
+            confirmFunction={deleteCard}
+            update={update}
+            setUpdate={setUpdate}
+            sideBar={false}
+          />
         </Card.Body>
       </Card>
     </Wrapper>

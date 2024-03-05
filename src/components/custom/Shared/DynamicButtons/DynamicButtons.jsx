@@ -25,6 +25,7 @@ import CreateProductUserForm from '../../Product/ProductsUsersManagement/CreateP
 import TrialForm from '../../Product/TrialForm/TrialForm'
 import CreateSecretForm from '../../Product/ClientCredentials/SecretMangements/CreateSecretForm/CreateSecretForm'
 import CardSaveFormWithStripe from '../../CardSaveForm/CardSaveForm'
+import ChangePasswordForm from '../../DashboardTenant/Profile/ChangePasswordForm/ChangePasswordForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -223,6 +224,14 @@ const DynamicButtons = ({ buttons }) => {
           clientId={buttons[currentButtonIndex].clientId}
           update={buttons[currentButtonIndex].update}
           setUpdate={buttons[currentButtonIndex].setUpdate}
+        />
+      </>
+    ),
+    changePassword: () => (
+      <>
+        <ChangePasswordForm
+          popupLabel={buttons[currentButtonIndex].label}
+          setVisible={setVisible}
         />
       </>
     ),

@@ -12,7 +12,10 @@ import DashboardTenant from '../../components/custom/DashboardTenant/DashboardTe
 const TenantWelcomePage = () => {
   return (
     <Wrapper>
-      <BreadcrumbComponent breadcrumbInfo={'Dashboard'} /> <DashboardTenant />
+      <BreadcrumbComponent breadcrumbInfo={'Dashboard'} />
+      <section className="pt-8" style={{ minHeight: '100vh' }}>
+        <DashboardTenant />
+      </section>
     </Wrapper>
   )
 }

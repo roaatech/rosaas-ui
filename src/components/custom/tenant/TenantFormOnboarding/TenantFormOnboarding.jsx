@@ -24,6 +24,7 @@ import {
   setStep,
   setTenantCreateData,
 } from '../../../../store/slices/tenants.js'
+import { Routes } from '../../../../routes.js'
 
 const TenantFormOnboarding = ({
   type,
@@ -175,7 +176,9 @@ const TenantFormOnboarding = ({
             createTenant?.data.data.tenantId
           ) {
             return (
-              navigate(`/tenants/${createTenant?.data.data.tenantId}`),
+              navigate(
+                `${Routes.Tenant.path}/${createTenant?.data.data.tenantId}`
+              ),
               setVisible && setVisible(false),
               dispatch(
                 deleteAllPlan({

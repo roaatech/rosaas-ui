@@ -43,6 +43,7 @@ const useRequest = () => {
     downgradeSubscription,
     subscriptionFeturesList,
     subscriptionCycleById,
+    getSubscriptionsList,
   } = useSubManagementReq()
 
   const {
@@ -260,6 +261,7 @@ const useRequest = () => {
     updateProfile,
     getCurrentProfile,
     changePassword,
+    getSubscriptionsList,
   }
 }
 export default useRequest

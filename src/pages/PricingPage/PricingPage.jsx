@@ -372,22 +372,16 @@ const PricingPage = () => {
 
   return (
     <Wrapper>
-      <div className="main-container">
-        {userRole != 'notAuth' && (
-          <BreadcrumbComponent
-            breadcrumbInfo={'ProductPricing'}
-            icon={BsBoxSeam}
-          />
-        )}
-        <UpperContent>
-          <h4 className="m-0">
-            <FormattedMessage id="Subscription-Options" />
-          </h4>
-        </UpperContent>
-
-        <Card>
-          <Card.Body>
-            <div className="text-center fw-bold  ">
+      {userRole != 'notAuth' && (
+        <BreadcrumbComponent
+          breadcrumbInfo={'ProductPricing'}
+          icon={BsBoxSeam}
+        />
+      )}
+      <section style={{ minHeight: '100vh' }}>
+        <div className="main-container">
+          <section class="  mb-4 pb-3">
+            <div className="pt-8 text-center fw-bold  ">
               {' '}
               <h4>
                 {' '}
@@ -398,42 +392,50 @@ const PricingPage = () => {
                 {listProduct?.[productId]?.displayName?.toUpperCase()}
               </h4>
             </div>
-            <div
-              style={{ fontSize: 'var(--largeFont)' }}
-              class="col-lg-12 text-center pb-3 mt-2 border-bottom"
-            >
-              {listProduct?.[productId]?.description}
-            </div>{' '}
-            <div className="text-center">{renderCycleRadioButtons()}</div>
-            <Row className="d-flex justify-content-center ">
-              {groupedByCycle &&
-                groupedByCycle[selectedCycle] &&
-                Object.keys(groupedByCycle[selectedCycle]).map((plansPrice) => {
-                  const renderedPlans = renderFeaturePlans(
-                    groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
-                  )
+          </section>
+          <Card>
+            <Card.Body>
+              <div
+                style={{ fontSize: 'var(--largeFont)' }}
+                class="col-lg-12 text-center pb-3 mt-2 "
+              >
+                {listProduct?.[productId]?.description}
+              </div>{' '}
+              <div className="text-center">{renderCycleRadioButtons()}</div>
+              <Row className=" ">
+                {groupedByCycle &&
+                  groupedByCycle[selectedCycle] &&
+                  Object.keys(groupedByCycle[selectedCycle]).map(
+                    (plansPrice) => {
+                      const renderedPlans = renderFeaturePlans(
+                        groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
+                      )
 
-                  return (
-                    renderedPlans && (
-                      <Col
-                        key={
-                          groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
-                        }
-                        md={
-                          Object.keys(groupedByCycle[selectedCycle]).length >= 3
-                            ? groupedByCycle[selectedCycle].length
-                            : 3
-                        }
-                      >
-                        {renderedPlans}
-                      </Col>
-                    )
-                  )
-                })}
-            </Row>
-          </Card.Body>
-        </Card>
-      </div>
+                      return (
+                        renderedPlans && (
+                          <Col
+                            key={
+                              groupedByCycle[selectedCycle]?.[plansPrice]?.plan
+                                .id
+                            }
+                            md={
+                              Object.keys(groupedByCycle[selectedCycle])
+                                .length >= 3
+                                ? groupedByCycle[selectedCycle].length
+                                : 3
+                            }
+                          >
+                            {renderedPlans}
+                          </Col>
+                        )
+                      )
+                    }
+                  )}
+              </Row>{' '}
+            </Card.Body>
+          </Card>
+        </div>
+      </section>
     </Wrapper>
   )
 }

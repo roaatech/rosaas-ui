@@ -13,6 +13,9 @@ import Profile from './Profile/Profile'
 import InvoicesList from './InvoicesList/InvoicesList'
 import CardPaymentManagement from '../../../pages/Settings/CardPaymentManagement/CardPaymentManagement'
 import PaymentCardsList from '../PaymentCards/PaymentCardsList'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons'
+import SubscriptionList from './SubscriptionsList/SubscriptionsList'
 
 const DashboardTenant = () => {
   const [selectedCard, setSelectedCard] = useState(null)
@@ -30,7 +33,7 @@ const DashboardTenant = () => {
       title: 'Subscriptions',
       icon: '📦',
       link: '#subscribtions',
-      content: 'Subscriptions content',
+      content: <SubscriptionList />,
     },
     {
       id: 3,
@@ -88,13 +91,27 @@ const DashboardTenant = () => {
   return (
     <Wrapper>
       {' '}
+      <section class=" mt-4 mb-4 pb-3">
+        <div class="row justify-content-center">
+          <div class="col-lg-12 text-center mb-3">
+            <h1>
+              <FontAwesomeIcon icon={faTachometerAlt} className="mr-2" />
+              Dashboard Tenant
+            </h1>
+            <p>
+              Welcome to your dashboard! Explore and manage your account with
+              ease.
+            </p>
+          </div>
+        </div>
+      </section>
       <Carousel
         value={cardData}
         numVisible={5}
         numScroll={3}
         itemTemplate={cardTemplate}
       />
-      <>
+      <div className="pb-2">
         {selectedCard && <>{selectedCard.content}</>}
 
         {/* <Button
@@ -102,7 +119,7 @@ const DashboardTenant = () => {
           label="Close"
           onClick={() => setSelectedCard(null)}
         /> */}
-      </>
+      </div>
     </Wrapper>
   )
 }

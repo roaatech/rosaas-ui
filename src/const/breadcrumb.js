@@ -1,3 +1,5 @@
+import { Routes } from '../routes'
+
 export const breadcrumbFun = (routeParams, data) => {
   const { id } = routeParams
   return {
@@ -42,13 +44,13 @@ export const breadcrumbFun = (routeParams, data) => {
     ProductList: {
       title: 'Products',
       name: 'Product-Management',
-      navigation: '/products',
+      navigation: Routes.products.path,
       active: 'Products',
       icon: {},
     },
     ProductListPublic: {
       name: 'Products-List',
-      navigation: '/products',
+      navigation: Routes.products.path,
       active: 'Products-List',
       icon: {},
     },
@@ -63,7 +65,7 @@ export const breadcrumbFun = (routeParams, data) => {
       title: 'Tenants',
       name: 'Subscription-Management',
       active: 'Subscription-Management',
-      navigation: `/tenants/${id}/Subscription-Management`,
+      navigation: `${Routes.Tenant.path}/${id}/Subscription-Management`,
       parent: data?.name,
       changableParent: true,
       parentNavigation: `/tenants/${id}`,

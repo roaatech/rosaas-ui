@@ -12,7 +12,7 @@ import SubscriptionManagement from './pages/SubscriptionManagement/SubscriptionM
 import ProductWarningsSettings from './pages/Settings/ProductWarningsSettings/ProductWarningsSettings'
 import NotFound from './pages/NotFoundPage/NotFoundPage'
 import SignUpPage from './pages/SignUpPage/SignUpPage'
-import ProductListPage from './pages/ProductListPage/ProductListPage'
+import MainPage from './pages/MainPage/MainPage'
 import PricingPage from './pages/PricingPage/PricingPage'
 import CheckoutPage from './components/custom/CheckoutStep/CheckoutStep'
 import PaymentSuccess from './pages/PaymentSuccess/paymentSuccess'
@@ -21,106 +21,121 @@ import CreatedSuccess from './pages/CreatedSuccess/CreatedSuccess'
 import PaymentFailed from './pages/PaymentFailed/PaymentFailed'
 import CardPaymentManagement from './pages/Settings/CardPaymentManagement/CardPaymentManagement'
 import TenantWelcomePage from './pages/TenantWelcomePage/TenantWelcomePage'
+import Marketplace from './pages/Marketplace/Marketplace'
+const adminPanel = '/admin-panel'
 export const Routes = {
   Dashboard: {
-    path: '/Dashboard',
+    path: `${adminPanel}/dashboard`,
     component: Dashboard,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
   },
   products: {
-    path: '/products',
+    path: `${adminPanel}/products`,
     component: Product,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
-  productsList: {
+  mainPage: {
     path: '/',
-    component: ProductListPage,
+    component: MainPage,
+    roles: ['notAuth', 'tenantAdmin', 'productAdmin', 'superAdmin'],
+    type: 'noSidebar',
+  },
+  marketPlacePage: {
+    path: '/marketplace',
+    component: Marketplace,
     roles: ['notAuth', 'tenantAdmin', 'productAdmin', 'superAdmin'],
     type: 'noSidebar',
   },
 
   Tenant: {
-    path: '/tenants',
+    path: `${adminPanel}/tenants`,
     component: Tenant,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
   },
   TenantDetails: {
-    path: '/tenants/:id',
+    path: `${adminPanel}/tenants/:id`,
     component: TenantDetails,
     roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
   },
   SubscriptionManagement: {
-    path: '/tenants/:id/Subscription-Management',
+    path: `${adminPanel}/tenants/:id/Subscription-Management`,
     component: SubscriptionManagement,
     roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
   },
-  ProductDetails: {
-    path: '/products/:id',
-    component: ProductDetails,
-    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
-  },
+
   Settings: {
-    path: '/settings/health-check',
+    path: `${adminPanel}/settings/health-check`,
     component: HealthCheckSettings,
     roles: ['superAdmin'],
   },
+
   CardSettings: {
-    path: '/settings/cards-management',
+    path: `${adminPanel}/settings/cards-management`,
     component: CardPaymentManagement,
     roles: ['superAdmin'],
   },
+
   SubscriptionsSettings: {
-    path: '/settings/subscriptions',
+    path: `${adminPanel}/settings/subscriptions`,
     component: SubscriptionsSettings,
     roles: ['superAdmin'],
   },
+
   ProductWarningsSettings: {
-    path: '/settings/product-warnings',
+    path: `${adminPanel}/settings/product-warnings`,
     component: ProductWarningsSettings,
     roles: ['superAdmin'],
   },
+
   Signin: {
     path: '/signin',
     component: signIn,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
+
   CheckOut: {
     path: '/checkout/product/:systemName/plan-price/:priceName',
     component: TwoStepProcessPage,
     roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
     type: 'noSidebar',
   },
+
   CheckOutOrder: {
     path: '/checkout/product/:systemName/plan-price/:priceName/order/:orderIDParam',
     component: TwoStepProcessPage,
     roles: ['superAdmin', 'tenantAdmin', 'notAuth'],
     type: 'noSidebar',
   },
+
   SignUp: {
     path: '/sign-up',
     component: SignUpPage,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
+
   Pricing: {
-    path: '/products-list/:systemName',
+    path: '/marketplace/:systemName',
     component: PricingPage,
     roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
     type: 'noSidebar',
   },
+
   PaymentSuccess: {
     path: '/success',
     component: PaymentSuccess,
     roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
     type: 'noSidebar',
   },
+
   PaymentFailed: {
     path: '/failed',
     component: PaymentFailed,
     roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
     type: 'noSidebar',
   },
+
   CreatedSuccess: {
     path: '/created-successfully',
     component: CreatedSuccess,
@@ -133,16 +148,23 @@ export const Routes = {
     component: Redirect,
     roles: '*',
   },
+
   NotFound: {
     path: '/not-found',
     component: NotFound,
     roles: '*',
     type: 'noSidebar',
   },
-  TenantDashboard: {
-    path: '/welcome',
+
+  workSpace: {
+    path: '/work-space',
     component: TenantWelcomePage,
     roles: ['tenantAdmin', 'superAdmin'],
     type: 'noSidebar',
   },
+}
+Routes.ProductDetails = {
+  path: `${Routes.products.path}/:id`,
+  component: ProductDetails,
+  roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
 }
