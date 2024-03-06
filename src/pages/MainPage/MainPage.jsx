@@ -10,7 +10,12 @@ import logoEn from '../../assets/img/brand/rosas.svg'
 import logoAr from '../../assets/img/brand/rosas-ar.svg'
 import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStore, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import {
+  faSignInAlt,
+  faStore,
+  faTachometerAlt,
+  faUserPlus,
+} from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
 import { signinRedirectPath } from '../../store/slices/auth'
 import { Routes } from '../../routes'
@@ -35,7 +40,8 @@ const MainPage = () => {
   }, [redirectPath])
 
   const isRunningInIframe = window.self !== window.top
-
+  let userRole = useSelector((state) => state.auth.userInfo.role)
+  console.log({ userRole })
   return (
     <Wrapper>
       {!isRunningInIframe && (
@@ -81,14 +87,34 @@ const MainPage = () => {
               </Card.Body>
             </Card>
             <Card
-              onClick={() => navigate('/sign-up')}
+              onClick={() =>
+                userRole
+                  ? userRole == 'tenantAdmin'
+                    ? navigate(Routes.workSpace.path)
+                    : navigate(Routes.Dashboard.path)
+                  : navigate('/signin')
+              }
               className="redirect-card"
             >
               <Card.Body>
                 <Row>
                   <span className="redirect-link ">
-                    <FontAwesomeIcon icon={faUserPlus} />
-                    <span>Register</span>
+                    {userRole ? (
+                      <>
+                        <FontAwesomeIcon icon={faTachometerAlt} />
+                        <span>
+                          <FormattedMessage id="Dashboard" />
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <FontAwesomeIcon icon={faSignInAlt} />
+                        <span>
+                          {' '}
+                          <FormattedMessage id="signIn" />
+                        </span>
+                      </>
+                    )}
                   </span>
                 </Row>
               </Card.Body>

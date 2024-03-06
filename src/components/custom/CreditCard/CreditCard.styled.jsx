@@ -6,14 +6,15 @@ export const Wrapper = styled.div`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 10% auto;
     margin-top: 0;
-    background-color: #ffc96627;
+    background-color: #ffc9666a;
+    max-height: 160px;
   }
-  .credit-card:hover {
+  .credit-card-hover:hover {
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 10% auto;
     margin-top: 0;
-    background-color: #ffc96683;
+    background-color: #ffc966bb;
   }
   .right {
     font-size: 26px;

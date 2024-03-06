@@ -13,20 +13,23 @@ import Label from '../Shared/label/Label'
 import { BsArrowRightCircleFill, BsTriangle } from 'react-icons/bs'
 
 const CreditCard = ({
-  cardNumber,
+  cardNumber: last4Digits,
   expiryDate,
   cardHolder,
   isDefault,
   onSetAsDefault,
   onDelete,
   cardTypeIcon,
+  cardView,
 }) => {
-  const numberWithDots = `••••••••••••${cardNumber}`
+  const numberWithDots = `••••••••••••${last4Digits}`
   const digits = numberWithDots.split('')
 
   return (
     <Wrapper>
-      <Card className="credit-card">
+      <Card
+        className={cardView ? 'credit-card' : 'credit-card credit-card-hover'}
+      >
         <Card.Body>
           <div className="top-row d-flex justify-content-between">
             {isDefault && (
@@ -59,46 +62,48 @@ const CreditCard = ({
             </div>
           </div>
           <div className="d-flex justify-content-end pb-0 mb-0 group">
-            <Dropdown as={ButtonGroup}>
-              <Dropdown.Toggle
-                as={Button}
-                split
-                variant="link"
-                className="text-dark m-0 p-0 "
-              >
-                <span className="icon icon-sm">
-                  <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
-                </span>
-              </Dropdown.Toggle>
-              <Dropdown.Menu
-                popperConfig={{
-                  strategy: 'fixed',
-                  modifiers: [
-                    {
-                      name: 'offset',
-                      options: {
-                        offset: [0, 10],
+            {!cardView && (
+              <Dropdown as={ButtonGroup}>
+                <Dropdown.Toggle
+                  as={Button}
+                  split
+                  variant="link"
+                  className="text-dark m-0 p-0 "
+                >
+                  <span className="icon icon-sm">
+                    <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                  </span>
+                </Dropdown.Toggle>
+                <Dropdown.Menu
+                  popperConfig={{
+                    strategy: 'fixed',
+                    modifiers: [
+                      {
+                        name: 'offset',
+                        options: {
+                          offset: [0, 10],
+                        },
                       },
-                    },
-                    {
-                      name: 'preventOverflow',
-                      options: {
-                        boundary: 'viewport',
+                      {
+                        name: 'preventOverflow',
+                        options: {
+                          boundary: 'viewport',
+                        },
                       },
-                    },
-                  ],
-                }}
-              >
-                <Dropdown.Item onClick={onSetAsDefault}>
-                  <MdOutlineStarBorder />
-                  <FormattedMessage id="Set-As-Default" />
-                </Dropdown.Item>
-                <Dropdown.Item className="text-danger" onClick={onDelete}>
-                  <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                  <FormattedMessage id="Delete" />
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                    ],
+                  }}
+                >
+                  <Dropdown.Item onClick={onSetAsDefault}>
+                    <MdOutlineStarBorder />
+                    <FormattedMessage id="Set-As-Default" />
+                  </Dropdown.Item>
+                  <Dropdown.Item className="text-danger" onClick={onDelete}>
+                    <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
+                    <FormattedMessage id="Delete" />
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            )}
           </div>
         </Card.Body>
       </Card>

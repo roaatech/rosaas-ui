@@ -86,18 +86,9 @@ export const breadcrumbFun = (routeParams, data) => {
       navigation: `/products/${id}`,
       parent: data?.name,
       changableParent: true,
-      // parentNavigation: '/products',
       icon: {},
     },
-    // FeatureDetails: {
-    //   title: 'Product-Management',
-    //   name: 'Feature-Details',
-    //   active: 'Product Details',
-    //   navigation: '/products',
-    //   parent: 'Products',
-    //   parentNavigation: '/products',
-    //   icon: {},
-    // },
+
     PlanDetails: {
       title: 'Plan-Management',
       name: 'Plan-Details',
@@ -121,7 +112,6 @@ export const breadcrumbFun = (routeParams, data) => {
       navigation: `/tenants/${id}`,
       parent: data?.name,
       changableParent: true,
-      // parentNavigation: '/tenant',
       icon: {},
     },
   }

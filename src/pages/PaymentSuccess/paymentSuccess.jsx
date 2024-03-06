@@ -7,10 +7,14 @@ import successImage from '../../assets/img/pages/success.svg'
 import { FormattedMessage } from 'react-intl'
 import rosasLogo from '../../assets/img/brand/rosas.svg'
 import { BsCheckCircleFill } from 'react-icons/bs'
+import { useSelector } from 'react-redux'
 
 const PaymentSuccess = () => {
+  let userRole = useSelector((state) => state.auth.userInfo.role)
+
   const handleButtonClick = () => {
-    window.location.href = Routes.Dashboard.path
+    window.location.href =
+      userRole == 'tenantAdmin' ? Routes.workSpace.path : Routes.Dashboard.path
   }
   return (
     <Wrapper>

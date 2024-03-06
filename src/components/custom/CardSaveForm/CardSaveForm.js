@@ -40,18 +40,6 @@ const CardSaveForm = ({ setVisible, popupLabel, setCards, cards }) => {
       },
     })
 
-    setCards([
-      ...cards,
-      {
-        stripeCardId: stripePayment?.paymentMethod?.id,
-        brand: stripePayment?.paymentMethod?.card?.brand,
-        expirationMonth: stripePayment?.paymentMethod?.card?.exp_month,
-        expirationYear: stripePayment?.paymentMethod?.card?.exp_year,
-        cardholderName: stripePayment?.paymentMethod?.billing_details?.name,
-        last4Digits: stripePayment?.paymentMethod?.card?.last4,
-      },
-    ])
-
     if (stripePayment.error) {
       setStatus({ success: false, message: stripePayment.error.message })
       setErrorMessage(stripePayment.error.message)
@@ -60,7 +48,28 @@ const CardSaveForm = ({ setVisible, popupLabel, setCards, cards }) => {
         success: true,
         message: <FormattedMessage id="card-saved-successfully" />,
       })
-      attachPaymentMethodCard(stripePayment?.paymentMethod?.id)
+      const attachPayment = attachPaymentMethodCard(
+        stripePayment?.paymentMethod?.id
+      )
+      attachPayment()
+        .then(() => {
+          setCards([
+            ...cards,
+            {
+              stripeCardId: stripePayment?.paymentMethod?.id,
+              brand: stripePayment?.paymentMethod?.card?.brand,
+              expirationMonth: stripePayment?.paymentMethod?.card?.exp_month,
+              expirationYear: stripePayment?.paymentMethod?.card?.exp_year,
+              cardholderName:
+                stripePayment?.paymentMethod?.billing_details?.name,
+              last4Digits: stripePayment?.paymentMethod?.card?.last4,
+            },
+          ])
+        })
+        .catch((error) => {
+          console.error(error.response.data)
+        })
+
       setVisible(false)
     }
 

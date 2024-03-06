@@ -37,7 +37,7 @@ export const Routes = {
   mainPage: {
     path: '/',
     component: MainPage,
-    roles: ['notAuth', 'tenantAdmin', 'productAdmin', 'superAdmin'],
+    roles: '*',
     type: 'noSidebar',
   },
   marketPlacePage: {
@@ -51,16 +51,6 @@ export const Routes = {
     path: `${adminPanel}/tenants`,
     component: Tenant,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
-  },
-  TenantDetails: {
-    path: `${adminPanel}/tenants/:id`,
-    component: TenantDetails,
-    roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
-  },
-  SubscriptionManagement: {
-    path: `${adminPanel}/tenants/:id/Subscription-Management`,
-    component: SubscriptionManagement,
-    roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
   },
 
   Settings: {
@@ -116,7 +106,7 @@ export const Routes = {
   },
 
   Pricing: {
-    path: '/marketplace/:systemName',
+    path: `/:systemName`,
     component: PricingPage,
     roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
     type: 'noSidebar',
@@ -167,4 +157,20 @@ Routes.ProductDetails = {
   path: `${Routes.products.path}/:id`,
   component: ProductDetails,
   roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+}
+Routes.Pricing = {
+  path: `${Routes.Pricing.path}/:systemName`,
+  component: PricingPage,
+  roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
+  type: 'noSidebar',
+}
+Routes.SubscriptionManagement = {
+  path: `${Routes.Tenant.path}/:id/Subscription-Management`,
+  component: SubscriptionManagement,
+  roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
+}
+Routes.TenantDetails = {
+  path: `${Routes.Tenant.path}/:id`,
+  component: TenantDetails,
+  roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
 }

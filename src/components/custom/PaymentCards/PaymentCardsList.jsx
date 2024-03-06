@@ -2,29 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl' // Assuming you have the react-intl library set up for message formatting
 import useRequest from '../../../axios/apis/useRequest'
 import DeleteConfirmation from '../global/DeleteConfirmation/DeleteConfirmation'
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  Col,
-  Dropdown,
-  Row,
-  Table,
-} from '@themesberg/react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faEllipsisH,
-  faMoneyCheckDollar,
-  faTrashAlt,
-} from '@fortawesome/free-solid-svg-icons'
+import { Card, Col, Row } from '@themesberg/react-bootstrap'
+import { faMoneyCheckDollar } from '@fortawesome/free-solid-svg-icons'
 import { cardInfo } from '../../../const/cardPayment'
 import { Wrapper } from './PaymentCardsList.styled'
-import { faCcMastercard } from '@fortawesome/free-brands-svg-icons'
 import UpperContent from '../Shared/UpperContent/UpperContent'
 import DynamicButtons from '../Shared/DynamicButtons/DynamicButtons'
 import { BsPlusCircleFill } from 'react-icons/bs'
-import { MdOutlineStar, MdOutlineStarBorder } from 'react-icons/md'
-import Label from '../Shared/label/Label'
 import CreditCard from '../CreditCard/CreditCard'
 
 const PaymentCardsList = () => {
@@ -75,16 +59,6 @@ const PaymentCardsList = () => {
     }
   }
 
-  function formatExpirationDate(expirationMonth, expirationYear) {
-    const expirationDate = new Date(expirationYear, expirationMonth - 1)
-
-    const monthName = expirationDate.toLocaleString('en-US', {
-      month: 'short',
-    })
-    const year = expirationDate.getFullYear()
-
-    return `${monthName} ${year}`
-  }
   return (
     <Wrapper>
       <UpperContent>

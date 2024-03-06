@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faEdit,
   faEllipsisH,
+  faEllipsisV,
   faEye,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
@@ -130,7 +131,7 @@ export default function TenantList({ children }) {
                         >
                           <span className="icon icon-sm">
                             <FontAwesomeIcon
-                              icon={faEllipsisH}
+                              icon={faEllipsisV}
                               className="icon-dark"
                             />
                           </span>

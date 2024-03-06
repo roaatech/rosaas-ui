@@ -1,37 +1,39 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Button, Row, Col } from '@themesberg/react-bootstrap'
+import { Card, Row, Col } from '@themesberg/react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisH, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { Routes } from '../../../../routes.js' // Make sure you import your routes
-import useRequest from '../../../../axios/apis/useRequest.js' // Import your API request hook
+import {
+  faCheckCircle,
+  faMoneyCheckDollar,
+  faTimesCircle,
+} from '@fortawesome/free-solid-svg-icons'
+import useRequest from '../../../../axios/apis/useRequest.js'
+import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
+import { FormattedMessage } from 'react-intl'
+import DateLabel from '../../Shared/DateLabel/DateLabel.jsx'
+import { formatDate } from '../../../../lib/sharedFun/Time.js'
+import CreditCard from '../../CreditCard/CreditCard.jsx'
+import { cardInfo } from '../../../../const/cardPayment.js'
+import TableDate from '../../Shared/TableDate/TableDate.jsx'
 
 export default function SubscriptionList() {
-  const { getSubscriptionsList, deleteSubscriptionReq } = useRequest() // Use your API request hook
+  const { getSubscriptionsList } = useRequest()
   const [subscriptions, setSubscriptions] = useState([])
 
   useEffect(() => {
-    // Fetch subscription data when component mounts
     const fetchData = async () => {
       try {
-        const response = await getSubscriptionsList() // You need to implement this function in your API request hook
-        setSubscriptions(response.data.data) // Assuming response.data contains the array of subscriptions
+        const response = await getSubscriptionsList()
+        setSubscriptions(response.data.data)
       } catch (error) {
         console.error('Error fetching subscription data:', error)
       }
     }
     fetchData()
-  }, []) // Empty dependency array ensures the effect runs only once on mount
+  }, [])
 
-  const deleteSubscription = async (id) => {
-    try {
-      await deleteSubscriptionReq({ id }) // Assuming deleteSubscriptionReq is a function to delete subscriptions
-      // Update state after successful deletion
-      setSubscriptions(
-        subscriptions.filter((subscription) => subscription.id !== id)
-      )
-    } catch (error) {
-      console.error('Error deleting subscription:', error)
-    }
+  const activeStatus = {
+    true: { text: 'Active', icon: faCheckCircle, color: 'success' },
+    false: { text: 'Inactive', icon: faTimesCircle, color: 'danger' },
   }
 
   return (
@@ -39,28 +41,108 @@ export default function SubscriptionList() {
       <h4>Subscription List</h4>
       <Row>
         {subscriptions &&
-          subscriptions?.map((subscription) => (
-            <Col key={subscription.id} md={4}>
-              <Card className="mb-3">
+          subscriptions.map((subscription) => (
+            <Col key={subscription.id} md={3}>
+              <Card className="mb-4">
                 <Card.Body>
                   <Card.Title>{subscription.displayName}</Card.Title>
-                  <Card.Text>Plan: {subscription.plan.displayName}</Card.Text>
-                  <Card.Text>
-                    Start Date:{' '}
-                    {new Date(subscription.startDate).toLocaleDateString()}
-                  </Card.Text>
-                  <Card.Text>
-                    End Date:{' '}
-                    {new Date(subscription.endDate).toLocaleDateString()}
-                  </Card.Text>
-                  <div className="d-flex justify-content-end">
-                    <Button
-                      variant="danger"
-                      onClick={() => deleteSubscription(subscription.id)}
+                  {/* Label for isActive */}
+                  <p>
+                    <FontAwesomeIcon
+                      icon={
+                        activeStatus[
+                          subscription.isActive ? subscription.isActive : false
+                        ].icon
+                      }
+                      className={`text-${
+                        activeStatus[
+                          subscription.isActive ? subscription.isActive : false
+                        ].color
+                      } me-2`}
+                    />
+                    <strong>Status</strong>{' '}
+                    <span
+                      className={`text-${
+                        activeStatus[
+                          subscription.isActive ? subscription.isActive : false
+                        ].color
+                      }`}
                     >
-                      <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                      Delete
-                    </Button>
+                      {
+                        activeStatus[
+                          subscription.isActive ? subscription.isActive : false
+                        ].text
+                      }
+                    </span>
+                  </p>
+                  <Card.Text>
+                    <span>
+                      <strong>Plan </strong> {subscription.plan.displayName}
+                    </span>
+                  </Card.Text>
+
+                  <Card.Text>
+                    <div className="d-flex align-items-center">
+                      <strong>Created Date</strong>
+                      <TableDate
+                        className="px-2"
+                        createdDate={subscription.createdDate}
+                        editedDate={subscription.editedDate}
+                      />
+                    </div>
+                  </Card.Text>
+
+                  {subscription.autoRenewalIsEnabled ? (
+                    <p>
+                      <FontAwesomeIcon
+                        icon={faCheckCircle}
+                        className="text-success me-2"
+                      />
+                      <strong>Auto Renewal</strong>
+                      <span className="text-success"> Enabled</span>{' '}
+                      {formatDate(subscription.endDate)}
+                    </p>
+                  ) : (
+                    <p>
+                      <FontAwesomeIcon
+                        icon={faTimesCircle}
+                        className="text-danger me-2"
+                      />
+                      <strong>Auto Renewal</strong>
+                      <strong className="text-danger"> Disabled</strong>
+                    </p>
+                  )}
+                  {/* Label for planChangingIsEnabled */}
+                  {subscription.planChangingIsEnabled && (
+                    <p>
+                      <strong>Plan Changing:</strong>{' '}
+                      {subscription.planChangingType}
+                    </p>
+                  )}
+                  {/* Display payment method card details */}
+                  <div>
+                    <strong> Payment Method</strong>
+                    <div className="p-3">
+                      {subscription.paymentMethodCard && (
+                        <div>
+                          <CreditCard
+                            cardNumber={
+                              subscription.paymentMethodCard.last4Digits
+                            }
+                            expiryDate={`${subscription.paymentMethodCard.expirationMonth}/${subscription.paymentMethodCard.expirationYear}`}
+                            cardHolder={
+                              subscription.paymentMethodCard.cardholderName
+                            }
+                            isDefault={subscription.isDefault}
+                            cardTypeIcon={
+                              cardInfo?.[subscription.paymentMethodCard.brand]
+                                ?.icon || faMoneyCheckDollar
+                            }
+                            cardView={true}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </Card.Body>
               </Card>
