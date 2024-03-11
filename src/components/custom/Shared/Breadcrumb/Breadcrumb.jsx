@@ -47,7 +47,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
         className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2"
       >
         {pathname != '/' && (
-          <div className="d-block mb-xl-0 mt-auto">
+          <div className="d-block mb-xl-0">
             {hasInfo && (
               <Breadcrumb
                 className="d-none d-md-inline-block"
@@ -123,9 +123,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
             )}
           </div>
         )}
-        <div className="ms-auto">
-          <Navbar />
-        </div>
+        <Navbar />
       </Wrapper>
     </>
   )

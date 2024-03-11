@@ -6,8 +6,12 @@ import {
 } from '@themesberg/react-bootstrap'
 import { Wrapper } from './CreditCard.styled'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisH, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { MdOutlineStarBorder } from 'react-icons/md'
+import {
+  faEllipsisH,
+  faEllipsisV,
+  faTrashAlt,
+} from '@fortawesome/free-solid-svg-icons'
+import { MdError, MdOutlineStarBorder } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
 import Label from '../Shared/label/Label'
 import { BsArrowRightCircleFill, BsTriangle } from 'react-icons/bs'
@@ -22,89 +26,126 @@ const CreditCard = ({
   cardTypeIcon,
   cardView,
 }) => {
-  const numberWithDots = `••••••••••••${last4Digits}`
+  const numberWithDots = last4Digits ? `••••••••••••${last4Digits}` : ''
   const digits = numberWithDots.split('')
+
+  const dataAvailable = last4Digits && expiryDate && cardHolder && cardTypeIcon
 
   return (
     <Wrapper>
       <Card
-        className={cardView ? 'credit-card' : 'credit-card credit-card-hover'}
+        className={
+          cardView
+            ? `credit-card-view credit-card${
+                !dataAvailable ? ' not-available' : ''
+              }`
+            : `credit-card credit-card-hover${
+                !dataAvailable ? ' not-available' : ''
+              }`
+        }
       >
         <Card.Body>
-          <div className="top-row d-flex justify-content-between">
-            {isDefault && (
-              <div className="">
-                <Label
-                  {...{
-                    background: '#ffab032b',
-                    value: <FormattedMessage id="Default" />,
-                  }}
-                />
-              </div>
-            )}
-            <div className=" icon ms-auto">{cardTypeIcon}</div>
-          </div>
-          <Card.Text className="card-number">
-            {digits.map((digit, index) => (
-              <span
-                key={index}
-                className={digit === '•' ? 'dot digit' : 'digit'}
-              >
-                {digit}
-              </span>
-            ))}
-          </Card.Text>
-          <div className="bottom-row">
-            <div className="right">{cardHolder}</div>
-            <div className="left">
+          {!dataAvailable ? (
+            <div className="payment-info-not-available py-5">
               {' '}
-              <BsArrowRightCircleFill /> {expiryDate}
+              <MdError />
+              <h3 className="payment-info-not-available">
+                Payment information not available
+              </h3>
             </div>
-          </div>
-          <div className="d-flex justify-content-end pb-0 mb-0 group">
-            {!cardView && (
-              <Dropdown as={ButtonGroup}>
-                <Dropdown.Toggle
-                  as={Button}
-                  split
-                  variant="link"
-                  className="text-dark m-0 p-0 "
-                >
-                  <span className="icon icon-sm">
-                    <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+          ) : (
+            <>
+              <div
+                className={
+                  !cardView
+                    ? 'top-row d-flex justify-content-between'
+                    : 'top-row  top-row-view d-flex justify-content-between'
+                }
+              >
+                {!cardView && (
+                  <Dropdown as={ButtonGroup}>
+                    <Dropdown.Toggle
+                      as={Button}
+                      split
+                      variant="link"
+                      className="text-dark m-0 p-0"
+                    >
+                      <span className="icon icon-sm">
+                        <FontAwesomeIcon
+                          icon={faEllipsisV}
+                          className="icon-dark px-2"
+                        />
+                      </span>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu
+                      popperConfig={{
+                        strategy: 'fixed',
+                        modifiers: [
+                          {
+                            name: 'offset',
+                            options: {
+                              offset: [0, 10],
+                            },
+                          },
+                          {
+                            name: 'preventOverflow',
+                            options: {
+                              boundary: 'viewport',
+                            },
+                          },
+                        ],
+                      }}
+                    >
+                      <Dropdown.Item onClick={onSetAsDefault}>
+                        <MdOutlineStarBorder />
+                        <FormattedMessage id="Set-As-Default" />
+                      </Dropdown.Item>
+                      <Dropdown.Item className="text-danger" onClick={onDelete}>
+                        <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
+                        <FormattedMessage id="Delete" />
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                )}
+                {isDefault && (
+                  <div className="">
+                    <Label
+                      {...{
+                        background: '#ffffffa1',
+                        value: <FormattedMessage id="Default" />,
+                      }}
+                    />
+                  </div>
+                )}
+                <div className="icon ms-auto my-0 py-0">{cardTypeIcon}</div>
+              </div>
+              <Card.Text
+                className={
+                  !cardView ? 'card-number' : 'card-number card-number-view'
+                }
+              >
+                {digits.map((digit, index) => (
+                  <span
+                    key={index}
+                    className={digit === '•' ? 'dot digit' : 'digit'}
+                  >
+                    {digit}
                   </span>
-                </Dropdown.Toggle>
-                <Dropdown.Menu
-                  popperConfig={{
-                    strategy: 'fixed',
-                    modifiers: [
-                      {
-                        name: 'offset',
-                        options: {
-                          offset: [0, 10],
-                        },
-                      },
-                      {
-                        name: 'preventOverflow',
-                        options: {
-                          boundary: 'viewport',
-                        },
-                      },
-                    ],
-                  }}
-                >
-                  <Dropdown.Item onClick={onSetAsDefault}>
-                    <MdOutlineStarBorder />
-                    <FormattedMessage id="Set-As-Default" />
-                  </Dropdown.Item>
-                  <Dropdown.Item className="text-danger" onClick={onDelete}>
-                    <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                    <FormattedMessage id="Delete" />
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            )}
-          </div>
+                ))}
+              </Card.Text>
+              <div
+                className={
+                  !cardView ? 'bottom-row' : 'bottom-row bottom-row-view'
+                }
+              >
+                <div className="right">{cardHolder}</div>
+                <div className="">
+                  {' '}
+                  <BsArrowRightCircleFill /> {expiryDate}
+                </div>
+              </div>
+            </>
+          )}
         </Card.Body>
       </Card>
     </Wrapper>

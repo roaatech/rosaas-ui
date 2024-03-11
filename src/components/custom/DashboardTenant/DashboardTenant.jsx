@@ -14,7 +14,18 @@ import InvoicesList from './InvoicesList/InvoicesList'
 import CardPaymentManagement from '../../../pages/Settings/CardPaymentManagement/CardPaymentManagement'
 import PaymentCardsList from '../PaymentCards/PaymentCardsList'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons'
+import {
+  faBox,
+  faClipboardList,
+  faCreditCard,
+  faHome,
+  faMoneyBill,
+  faSync,
+  faTachometerAlt,
+  faUser,
+  faUsers,
+  faUsersBetweenLines,
+} from '@fortawesome/free-solid-svg-icons'
 import SubscriptionList from './SubscriptionsList/SubscriptionsList'
 
 const DashboardTenant = () => {
@@ -24,42 +35,42 @@ const DashboardTenant = () => {
     {
       id: 1,
       title: 'Profile',
-      icon: '👤',
+      icon: <FontAwesomeIcon icon={faUser} />,
       link: '#profile',
       content: <Profile />,
     },
     {
       id: 2,
       title: 'Subscriptions',
-      icon: '📦',
-      link: '#subscribtions',
+      icon: <FontAwesomeIcon icon={faBox} />,
+      link: '#subscriptions',
       content: <SubscriptionList />,
     },
     {
       id: 3,
       title: 'Tenants',
-      icon: '🏠',
+      icon: <FontAwesomeIcon icon={faClipboardList} />,
       link: '#tenants',
       content: <TenantList />,
     },
     {
       id: 4,
       title: 'AutoRenewal',
-      icon: '🔄',
+      icon: <FontAwesomeIcon icon={faSync} />,
       link: '#autoRenewal',
       content: 'AutoRenewal content',
     },
     {
       id: 5,
       title: 'Invoices',
-      icon: '💰',
+      icon: <FontAwesomeIcon icon={faMoneyBill} />,
       link: '#invoices',
       content: <InvoicesList />,
     },
     {
       id: 6,
       title: 'Payment Methods',
-      icon: '💳',
+      icon: <FontAwesomeIcon icon={faCreditCard} />,
       link: '#paymentMethods',
       content: <PaymentCardsList />,
     },
@@ -91,9 +102,9 @@ const DashboardTenant = () => {
   return (
     <Wrapper>
       {' '}
-      <section class=" mt-4 mb-4 pb-3">
-        <div class="row justify-content-center">
-          <div class="col-lg-12 text-center mb-3">
+      <section className=" mt-4 mb-4 pb-3">
+        <div className="row justify-content-center">
+          <div className="col-lg-12 text-center mb-3">
             <h1>
               <FontAwesomeIcon icon={faTachometerAlt} className="mr-2" />
               Dashboard Tenant

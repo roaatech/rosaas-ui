@@ -350,7 +350,7 @@ export const ProductPlansList = ({ productId }) => {
           </Card.Body>
         </Card>
 
-        <ThemeDialog visible={visible} setVisible={setVisible}>
+        <ThemeDialog visible={visible} setVisible={setVisible} size="lg">
           <>
             <PlanForm
               popupLabel={<FormattedMessage id={popUpLable} />}

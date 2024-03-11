@@ -22,7 +22,7 @@ const SignUpPage = () => {
                   <img src={logo} alt="" className="logo" />
                   <h3 className="mb-0">
                     <FormattedMessage id="signUpTo" />{' '}
-                    <span class="rosaas">RoSaaS</span>
+                    <span className="rosaas">RoSaaS</span>
                   </h3>
                 </div>
 

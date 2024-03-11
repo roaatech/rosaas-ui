@@ -49,26 +49,26 @@ const MainPage = () => {
       )}{' '}
       <section className="" style={{ minHeight: '79vh' }}>
         <div className="main-container ">
-          <section class=" mt-4 mb-4 pb-3">
-            <div class="row justify-content-center">
-              <div class="col-lg-12 text-center mb-3">
-                <h1 class="mt-0">
+          <section className=" mt-4 mb-4 pb-3">
+            <div className="row justify-content-center">
+              <div className="col-lg-12 text-center mb-3">
+                <h1 className="mt-0">
                   <img src={selectedLogo} alt="Logo" width="100" height="100" />
                 </h1>
               </div>
-              <div class="col-lg-12 text-center mb-1">
-                <h2 class="mt-0">
+              <div className="col-lg-12 text-center mb-1">
+                <h2 className="mt-0">
                   <FormattedMessage id="Seamless-SaaS-Transformation" />
                 </h2>
               </div>{' '}
               <div
-                class="col-lg-7 col-xl-6 text-center"
+                className="col-lg-7 col-xl-6 text-center"
                 style={{ fontSize: 'var(--largeFont)' }}
               >
                 <FormattedMessage id="Rosaas-Description" />
               </div>
-              <div class="col-lg-9 col-xl-8 text-center">
-                {/* <p class="lead">{{ .Params.lead | safeHTML }}</p> */}
+              <div className="col-lg-9 col-xl-8 text-center">
+                {/* <p className="lead">{{ .Params.lead | safeHTML }}</p> */}
               </div>
             </div>
           </section>

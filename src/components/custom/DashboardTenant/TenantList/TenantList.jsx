@@ -33,12 +33,16 @@ import UpperContent from '../../Shared/UpperContent/UpperContent.jsx'
 import Label from '../../Shared/label/Label.jsx'
 import { BsBox2Fill } from 'react-icons/bs'
 import { Routes } from '../../../../routes.js'
+import {
+  setTenantsTotalCount,
+  setWorkspaceTenant,
+} from '../../../../store/slices/workSpace'
+import { useDispatch, useSelector } from 'react-redux'
 export default function TenantList({ children }) {
   const { getTenant, getTenantList, deleteTenantReq } = useRequest()
   const [visible, setVisible] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)
-  const [list, setList] = useState([])
   const [rebase, setRebase] = useState(0)
   const [searchValue, setSearchValue] = useState('')
   const [sortField, setSortField] = useState('')
@@ -49,6 +53,12 @@ export default function TenantList({ children }) {
   const [currentId, setCurrentId] = useState('')
   const [update, setUpdate] = useState(1)
   const [selectedProduct, setSelectedProduct] = useState()
+  const tenants = useSelector((state) => state.workspace.tenants)
+  const tenantsTotalCount = useSelector(
+    (state) => state.workspace.tenantsTotalCount
+  )
+  console.log({ tenantsTotalCount })
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const deleteConfirm = (id) => {
     setCurrentId(id)
@@ -59,6 +69,10 @@ export default function TenantList({ children }) {
   }
 
   useEffect(() => {
+    if (Object.keys(tenants).length > 0) {
+      console.log('**********')
+      return
+    }
     let query = `?page=${Math.ceil(
       (first + 1) / rows
     )}&pageSize=${rows}&filters[0].Field=SearchTerm`
@@ -69,8 +83,8 @@ export default function TenantList({ children }) {
       query += `&filters[1].Field=selectedProduct&filters[1].Value=${selectedProduct}`
     ;(async () => {
       const listData = await getTenantList(query)
-      setTotalCount(listData.data.data.totalCount)
-      setList(listData.data.data.items)
+      dispatch(setTenantsTotalCount(listData.data.data.totalCount))
+      dispatch(setWorkspaceTenant(listData.data.data.items))
     })()
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
 
@@ -97,77 +111,81 @@ export default function TenantList({ children }) {
       <Card className="m-3 p-3 mt-0">
         <div className="p-d-flex p-flex-column p-ai-center">
           <Row>
-            {list.map((tenant) => (
-              <Col key={tenant.id} md={3}>
-                <Card className="mb-3">
-                  <Card.Body>
-                    <Card.Title>{tenant.displayName}</Card.Title>
-                    <Card.Text>
-                      {' '}
-                      <Label
-                        className="mr-2"
-                        background="var(--green2)"
-                        value={tenant.subscriptions[0].productName}
-                        color="var(--teal-green)"
-                        icon={<BsBox2Fill />}
-                      />
-                      {/* {tenant.systemName} */}
-                    </Card.Text>
-                    <Card.Text>
-                      <TableDate
-                        className="px-2"
-                        createdDate={tenant.createdDate}
-                        editedDate={tenant.editedDate}
-                      />
-                    </Card.Text>
+            {tenants &&
+              Object.values(tenants).map((tenant) => (
+                <Col key={tenant.id} md={3}>
+                  <Card className="mb-3">
+                    <Card.Body>
+                      <Card.Title>{tenant.displayName}</Card.Title>
+                      <Card.Text>
+                        {' '}
+                        <Label
+                          className="mr-2"
+                          background="var(--green2)"
+                          value={tenant.subscriptions[0].productName}
+                          color="var(--teal-green)"
+                          icon={<BsBox2Fill />}
+                        />
+                        {/* {tenant.systemName} */}
+                      </Card.Text>
+                      <Card.Text>
+                        <TableDate
+                          className="px-2"
+                          createdDate={tenant.createdDate}
+                          editedDate={tenant.editedDate}
+                        />
+                      </Card.Text>
 
-                    <div className="d-flex justify-content-end">
-                      <Dropdown as={ButtonGroup}>
-                        <Dropdown.Toggle
-                          as={Button}
-                          split
-                          variant="link"
-                          className="text-dark m-0 p-0"
-                        >
-                          <span className="icon icon-sm">
-                            <FontAwesomeIcon
-                              icon={faEllipsisV}
-                              className="icon-dark"
-                            />
-                          </span>
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item
-                            onSelect={() =>
-                              navigate(`${Routes.Tenant.path}/${tenant.id}`)
-                            }
+                      <div className="d-flex justify-content-end">
+                        <Dropdown as={ButtonGroup}>
+                          <Dropdown.Toggle
+                            as={Button}
+                            split
+                            variant="link"
+                            className="text-dark m-0 p-0"
                           >
-                            <FontAwesomeIcon icon={faEye} className="mx-2" />{' '}
-                            View Details
-                          </Dropdown.Item>
-                          <Dropdown.Item onSelect={() => editForm(tenant.id)}>
-                            <FontAwesomeIcon icon={faEdit} className="mx-2" />{' '}
-                            Edit
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            className="text-danger"
-                            onSelect={() => deleteConfirm(tenant.id)}
-                          >
-                            <FontAwesomeIcon icon={faTrash} className="mx-2" />{' '}
-                            Delete
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
+                            <span className="icon icon-sm">
+                              <FontAwesomeIcon
+                                icon={faEllipsisV}
+                                className="icon-dark"
+                              />
+                            </span>
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item
+                              onSelect={() =>
+                                navigate(`${Routes.Tenant.path}/${tenant.id}`)
+                              }
+                            >
+                              <FontAwesomeIcon icon={faEye} className="mx-2" />{' '}
+                              View Details
+                            </Dropdown.Item>
+                            <Dropdown.Item onSelect={() => editForm(tenant.id)}>
+                              <FontAwesomeIcon icon={faEdit} className="mx-2" />{' '}
+                              Edit
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              className="text-danger"
+                              onSelect={() => deleteConfirm(tenant.id)}
+                            >
+                              <FontAwesomeIcon
+                                icon={faTrash}
+                                className="mx-2"
+                              />{' '}
+                              Delete
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
           </Row>
           <CustomPaginator
             first={first}
             rows={rows}
-            totalCount={totalCount}
+            totalCount={tenantsTotalCount}
             onPageChange={onPageChange}
           />
           <Dialog

@@ -53,9 +53,9 @@ const Marketplace = () => {
       >
         <div className="main-container">
           {' '}
-          <section class=" mt-4 mb-4 pb-3">
-            <div class="row justify-content-center">
-              <div class="col-lg-12 text-center mb-3">
+          <section className=" mt-4 mb-4 pb-3">
+            <div className="row justify-content-center">
+              <div className="col-lg-12 text-center mb-3">
                 {' '}
                 <h1 className="product-title py-2">
                   <FontAwesomeIcon icon={faStore} className="mr-2" />

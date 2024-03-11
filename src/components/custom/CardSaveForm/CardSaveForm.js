@@ -12,8 +12,16 @@ import { loadStripe } from '@stripe/stripe-js'
 import { FormattedMessage, useIntl } from 'react-intl'
 import useRequest from '../../../axios/apis/useRequest'
 
-const CardSaveForm = ({ setVisible, popupLabel, setCards, cards }) => {
-  const { attachPaymentMethodCard, markCardAsDefault } = useRequest()
+const CardSaveForm = ({
+  setVisible,
+  popupLabel,
+  setCards,
+  cards,
+  autoRenewal,
+  currentSubscription,
+}) => {
+  const { attachPaymentMethodCard, markCardAsDefault, setAutoRenewal } =
+    useRequest()
   const [errorMessage, setErrorMessage] = useState(null)
   const stripe = useStripe()
   const elements = useElements()
@@ -26,7 +34,18 @@ const CardSaveForm = ({ setVisible, popupLabel, setCards, cards }) => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(<FormattedMessage id="name-required" />),
   })
-
+  const handleAutoRenewForm = async (cardReferenceId) => {
+    try {
+      await setAutoRenewal({
+        subscriptionId: currentSubscription,
+        cardReferenceId,
+        paymentPlatform: 2,
+      })
+      setVisible && setVisible(false)
+    } catch (error) {
+      console.error('Error submitting form:', error)
+    }
+  }
   const handleSubmit = async (values, { setSubmitting, setStatus }) => {
     if (!stripe || !elements) {
       return
@@ -48,11 +67,11 @@ const CardSaveForm = ({ setVisible, popupLabel, setCards, cards }) => {
         success: true,
         message: <FormattedMessage id="card-saved-successfully" />,
       })
-      const attachPayment = attachPaymentMethodCard(
-        stripePayment?.paymentMethod?.id
-      )
-      attachPayment()
+      attachPaymentMethodCard(stripePayment?.paymentMethod?.id)
         .then(() => {
+          if (autoRenewal) {
+            handleAutoRenewForm(stripePayment?.paymentMethod?.id)
+          }
           setCards([
             ...cards,
             {
@@ -130,7 +149,7 @@ const CardSaveForm = ({ setVisible, popupLabel, setCards, cards }) => {
             </div>
 
             <Button
-              variant="primary"
+              variant="secondary"
               type="submit"
               disabled={!stripe || isSubmitting || status?.success == false}
             >
@@ -155,6 +174,8 @@ const CardSaveFormWithStripe = ({
   visible,
   setCards,
   cards,
+  autoRenewal,
+  currentSubscription,
 }) => {
   return (
     <Elements stripe={stripePromise}>
@@ -164,6 +185,8 @@ const CardSaveFormWithStripe = ({
           popupLabel={popupLabel}
           setCards={setCards}
           cards={cards}
+          autoRenewal={autoRenewal}
+          currentSubscription={currentSubscription}
         />
       )}
     </Elements>

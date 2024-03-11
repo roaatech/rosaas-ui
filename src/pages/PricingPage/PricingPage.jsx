@@ -380,7 +380,7 @@ const PricingPage = () => {
       )}
       <section style={{ minHeight: '100vh' }}>
         <div className="main-container">
-          <section class="  mb-4 pb-3">
+          <section className="  mb-4 pb-3">
             <div className="pt-8 text-center fw-bold  ">
               {' '}
               <h4>
@@ -397,7 +397,7 @@ const PricingPage = () => {
             <Card.Body>
               <div
                 style={{ fontSize: 'var(--largeFont)' }}
-                class="col-lg-12 text-center pb-3 mt-2 "
+                className="col-lg-12 text-center pb-3 mt-2 "
               >
                 {listProduct?.[productId]?.description}
               </div>{' '}
