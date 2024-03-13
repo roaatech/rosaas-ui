@@ -496,5 +496,15 @@
   "Free-Trial-Terms": "شروط الفترة التجريبية المجانية",
   "Due-Now": "المستحق الآن",
   "Product-Title": "استكشف مجموعتنا من منتجات البرمجيات",
-  "Product-Sentence": "استمتع بالتكامل السلس والوظائف غير المسبوقة مع مجموعة تطبيقات SaaS الخاصة بنا."
+  "Product-Sentence": "استمتع بالتكامل السلس والوظائف غير المسبوقة مع مجموعة تطبيقات SaaS الخاصة بنا.",
+  "tenantsTitle": "المستأجرين",
+  "subscriptionsTitle": "الاشتراكات",
+  "autoRenewalTitle": "التجديد التلقائي",
+  "invoicesTitle": "الفواتير",
+  "paymentMethodsTitle": "طرق الدفع",
+  "profileTitle": "الملف الشخصي",
+  "Invoice-Number": "رقم الفاتورة",
+  "Invoice-Date": "تاريخ الفاتورة",
+  "payment-Info-Not-Available": "معلومات الدفع غير متوفرة",
+  "Enabled": "ممكّن"
 }

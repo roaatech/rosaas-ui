@@ -1,149 +1,129 @@
-import { Button, Card } from '@themesberg/react-bootstrap'
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
-import Label from '../../Shared/label/Label'
-import { useNavigate, useParams } from 'react-router-dom'
-import {
-  orderStatus,
-  paymentStatus,
-} from '../../../../const/subscriptionManagement'
 import useRequest from '../../../../axios/apis/useRequest'
+import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 import {
-  setAllOrders,
-  setStep,
-  setTenantCreateData,
-} from '../../../../store/slices/tenants'
+  Button,
+  ButtonGroup,
+  Card,
+  Dropdown,
+  Table,
+} from '@themesberg/react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEllipsisH, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { FormattedMessage } from 'react-intl'
+import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
+import { Wrapper } from './InvoicesList.styled'
 
-import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
-import { Wrapper } from '../DashboardTenant.styled'
-import UpDownGradeForm from '../../tenant/SubscriptionManagement/UpgradeForm/UpDowngradeForm'
+export const InvoicesList = ({ productId }) => {
+  const { getInvoicesList, deleteInvoice } = useRequest()
+  const [invoices, setInvoices] = useState([])
+  const [currentId, setCurrentId] = useState('')
+  const [confirm, setConfirm] = useState(false)
 
-function InvoicesList({ price, product }) {
-  const { getOrdersListByTenantId } = useRequest()
-  let tenantsData = useSelector((state) => state.tenants.tenants)
-  const tenantId = useParams().id
-  const currentTenantData = tenantsData[tenantId]
-  let ordersList = tenantsData[tenantId]?.orders
-
-  const [visible, setVisible] = useState()
-  const dispatch = useDispatch()
-  useEffect(() => {
-    if (tenantsData[tenantId]?.orders) {
-      return
-    }
-    ;(async () => {
-      const orders = await getOrdersListByTenantId(tenantId)
-
-      dispatch(
-        setAllOrders({
-          tenantId,
-          data: orders.data.data,
-        })
-      )
-    })()
-  }, [tenantId])
-
-  let direction = useSelector((state) => state.main.direction)
-
-  const navigate = useNavigate()
-
-  const handleButtonClick = (id, planPriceId) => {
-    dispatch(setStep(2))
-    navigate(`/payment/product/${product}/subscribtion/${planPriceId}`)
-    dispatch(
-      setTenantCreateData({
-        tenantData: ordersList[id],
-        tenantInfo: currentTenantData,
-      })
-    )
+  const handleDeleteInvoice = async () => {
+    await deleteInvoice(currentId)
+    setInvoices(invoices.filter((invoice) => invoice.id !== currentId))
+    toast.success('Invoice deleted successfully')
   }
-  const [currentOrderId, setCurrentOrderId] = useState('')
-  const changeOrderPlanForm = (id) => {
-    setVisible(true)
-    setCurrentOrderId(id)
+
+  const deleteConfirm = (id) => {
+    setCurrentId(id)
+    setConfirm(true)
+  }
+
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      const invoicesData = await getInvoicesList()
+      setInvoices(invoicesData.data.data)
+      // dispatch(setAllInvoices(invoicesData));
+    }
+    fetchInvoices()
+  }, [])
+
+  const TableRow = ({ id, orderNumber, paidDate, orderTotal }) => {
+    return (
+      <tr>
+        <td>{orderNumber}</td>
+        <td>{new Date(paidDate).toLocaleDateString()}</td>
+        <td>{orderTotal} $</td>
+        {/* <td>
+          <Dropdown as={ButtonGroup}>
+            <Dropdown.Toggle
+              as={Button}
+              split
+              variant="link"
+              className="text-dark m-0 p-0"
+            >
+              <span className="icon icon-sm">
+                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+              </span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={() => deleteConfirm(id)}
+                className="text-danger"
+              >
+                <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
+                <FormattedMessage id="Delete" />
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </td> */}
+      </tr>
+    )
   }
 
   return (
-    <Wrapper direction={direction}>
-      <Card.Body className="py-0 px-0 ">
-        <div className="timeLineCont card p-2">
-          <div className="p-2 border-bottom mb-1 border-light">
-            <label htmlFor="">
-              <FormattedMessage id="Order-History" />
-            </label>
-            <div>
-              <FormattedMessage id="Manage-Billing-Information-and-View-Receipts" />
-            </div>
+    <Wrapper>
+      <Card className="m-3  mt-0">
+        <Card.Body>
+          <div className="border-top-1 border-light">
+            <Card
+              border="light"
+              className="table-wrapper table-responsive shadow-sm"
+            >
+              <Card.Body className="pt-0">
+                <Table hover className="user-table align-items-center">
+                  <thead>
+                    <tr>
+                      <th className="border-bottom">
+                        <FormattedMessage id="Invoice-Number" />
+                      </th>
+                      <th className="border-bottom">
+                        <FormattedMessage id="Invoice-Date" />
+                      </th>
+                      <th className="border-bottom">
+                        <FormattedMessage id="Total" />
+                      </th>
+                      {/* <th className="border-bottom">
+                    <FormattedMessage id="Actions" />
+                  </th> */}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {invoices.map((invoice) => (
+                      <TableRow key={invoice.id} {...invoice} />
+                    ))}
+                  </tbody>
+                </Table>
+                <DeleteConfirmation
+                  message={
+                    <FormattedMessage id="delete-invoice-confirmation-message" />
+                  }
+                  icon="pi pi-exclamation-triangle"
+                  confirm={confirm}
+                  setConfirm={setConfirm}
+                  confirmFunction={handleDeleteInvoice}
+                  sideBar={false}
+                />
+              </Card.Body>
+            </Card>
           </div>
-          {ordersList &&
-            Object.values(ordersList).map((item, index) => (
-              <div key={index} className="border-bottom  border-light">
-                <div className="time-line-item-container" key={index}>
-                  <div className="timeLineItemCont" key={index}>
-                    <div className="flex justify-content-between flex-wrap">
-                      <div className="mb-2 fw-bold">
-                        <FormattedMessage id="Order" /> #{item?.orderNumber}
-                      </div>
-
-                      {!item?.hasToPay ? (
-                        <div className="author mb-2">
-                          <Label {...paymentStatus[item?.paymentStatus]} />
-                        </div>
-                      ) : !item.isMustChangePlan ? (
-                        <Button
-                          variant="primary"
-                          onClick={() =>
-                            handleButtonClick(
-                              item.orderId,
-                              item.orderItems[0].planPriceId
-                            )
-                          }
-                          className="font-small"
-                        >
-                          <FormattedMessage id="Pay-Now" />
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="primary"
-                          onClick={() => changeOrderPlanForm(item.orderId)}
-                          className="font-small"
-                        >
-                          <FormattedMessage id="Select-Your-Plan" />
-                        </Button>
-                      )}
-                    </div>
-                    <div className="flex justify-content-between flex-wrap">
-                      <div
-                        className="time mb-2 small"
-                        style={{ color: orderStatus[item?.orderStatus]?.color }}
-                      >
-                        {orderStatus[item?.orderStatus]?.value && (
-                          <FormattedMessage
-                            id={orderStatus[item?.orderStatus]?.value}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-        </div>
-        <ThemeDialog visible={visible} setVisible={setVisible}>
-          <UpDownGradeForm
-            popupLabel={<FormattedMessage id={'Change-Order-Plan'} />}
-            tenantData={currentTenantData}
-            visible={visible}
-            setVisible={setVisible}
-            sideBar={false}
-            selectedProduct={product}
-            type={'changeOrderPlan'}
-            currentOrderId={currentOrderId}
-          />
-        </ThemeDialog>
-      </Card.Body>
+        </Card.Body>
+      </Card>
     </Wrapper>
   )
 }
+
 export default InvoicesList

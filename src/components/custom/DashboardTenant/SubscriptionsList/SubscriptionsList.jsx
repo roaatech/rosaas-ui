@@ -11,8 +11,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCheckCircle,
   faEllipsisV,
+  faExchangeAlt,
   faMoneyCheckDollar,
   faTimesCircle,
+  faToggleOff,
+  faToggleOn,
 } from '@fortawesome/free-solid-svg-icons'
 import useRequest from '../../../../axios/apis/useRequest.js'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
@@ -27,12 +30,16 @@ import UpperContent from '../../Shared/UpperContent/UpperContent.jsx'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog.jsx'
 import { useDispatch, useSelector } from 'react-redux'
 import RenewForm from '../../tenant/SubscriptionManagement/RenewForm/RenewForm.jsx'
-import { setWorkspaceSubscriptionData } from '../../../../store/slices/workSpace.js'
+import {
+  changeSubscriptionAttribute,
+  setWorkspaceSubscriptionData,
+} from '../../../../store/slices/workSpace.js'
 import CardSaveFormWithStripe from '../../CardSaveForm/CardSaveForm.js'
 import WorkspaceRenewForm from './WorkspaceRenewForm/WorkspaceRenewForm.jsx'
+import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation.js'
 
 export default function SubscriptionList() {
-  const { getSubscriptionsList } = useRequest()
+  const { getSubscriptionsList, cancelAutoRenewal } = useRequest()
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
   const subscriptionData = useSelector(
@@ -55,6 +62,8 @@ export default function SubscriptionList() {
   }, [])
   const [referenceId, setReferenceId] = useState('')
   const [currentSubscription, setCurrentSubscription] = useState('')
+  const [confirm, setConfirm] = useState(false)
+
   function automaticRenew(id) {
     setReferenceId(subscriptionData?.[id].paymentMethodCard?.referenceId)
 
@@ -73,7 +82,29 @@ export default function SubscriptionList() {
       color: 'danger',
     },
   }
+  const handleConfirmation = async (data = '', comment) => {
+    try {
+      await cancelAutoRenewal({
+        subscriptionId: subscriptionData?.[currentSubscription]?.id,
+        comment,
+      })
+      dispatch(
+        changeSubscriptionAttribute({
+          subscriptionId: subscriptionData?.[currentSubscription]?.id,
+          attributeName: 'autoRenewalIsEnabled',
+          attributeValue: false,
+        })
+      )
+      setConfirm(false)
+    } catch (error) {
+      console.error('Error cancelling auto-renewal:', error)
+    }
+  }
 
+  const handleToggleClick = (id) => {
+    setConfirm(true)
+    setCurrentSubscription(id)
+  }
   return (
     <Wrapper>
       <UpperContent>
@@ -108,16 +139,50 @@ export default function SubscriptionList() {
                               </span>
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
-                              {/* Replace edit button with button for auto-renewal */}
-                              <Dropdown.Item
-                                onClick={() => automaticRenew(subscription?.id)}
-                              >
-                                {subscription.autoRenewalIsEnabled ? (
-                                  <FormattedMessage id="Change-Auto-Renewal" />
-                                ) : (
-                                  <FormattedMessage id="Enable-Auto-Renewal" />
-                                )}
-                              </Dropdown.Item>
+                              {!subscription.autoRenewalIsEnabled ? (
+                                <Dropdown.Item
+                                  onClick={() =>
+                                    automaticRenew(subscription?.id)
+                                  }
+                                >
+                                  <>
+                                    <FontAwesomeIcon
+                                      icon={faToggleOff}
+                                      className="me-2"
+                                    />
+                                    <FormattedMessage id="Enable-Auto-Renewal" />
+                                  </>
+                                </Dropdown.Item>
+                              ) : (
+                                <Dropdown.Item
+                                  onClick={() =>
+                                    handleToggleClick(subscription?.id)
+                                  }
+                                  className="text-danger"
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faToggleOn}
+                                    className="me-2"
+                                  />
+                                  <FormattedMessage id="Cancel-Auto-Renewal" />
+                                </Dropdown.Item>
+                              )}
+
+                              {subscription.autoRenewalIsEnabled && (
+                                <Dropdown.Item
+                                  onClick={() =>
+                                    automaticRenew(subscription?.id)
+                                  }
+                                >
+                                  <>
+                                    <FontAwesomeIcon
+                                      icon={faExchangeAlt}
+                                      className="me-2"
+                                    />
+                                    <FormattedMessage id="Change-Auto-Renewal" />
+                                  </>
+                                </Dropdown.Item>
+                              )}
                             </Dropdown.Menu>
                           </Dropdown>
                         </div>
@@ -254,8 +319,15 @@ export default function SubscriptionList() {
           </Row>
         </div>
       </Card>
-
-      {/* Modal for enabling/disabling auto-renewal */}
+      {confirm && (
+        <NoteInputConfirmation
+          confirm={confirm}
+          setConfirm={setConfirm}
+          confirmFunction={handleConfirmation}
+          message={<FormattedMessage id="cancel-renew-message" />}
+          placeholder={'Comment'}
+        />
+      )}
       <ThemeDialog visible={visible} setVisible={setVisible}>
         <>
           <WorkspaceRenewForm

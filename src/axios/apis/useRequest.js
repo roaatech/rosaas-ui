@@ -152,6 +152,7 @@ const useRequest = () => {
     markCardAsDefault,
     getConfig,
     fetchPaymentIntent,
+    getInvoicesList,
   } = usePaymentReq()
 
   return {
@@ -262,6 +263,7 @@ const useRequest = () => {
     getCurrentProfile,
     changePassword,
     getSubscriptionsList,
+    getInvoicesList,
   }
 }
 export default useRequest

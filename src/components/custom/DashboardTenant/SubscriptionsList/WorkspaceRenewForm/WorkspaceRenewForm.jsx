@@ -10,6 +10,8 @@ import { ListBox } from 'primereact/listbox'
 import { cardInfo } from '../../../../../const/cardPayment.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons'
+import { useDispatch } from 'react-redux'
+import { changeSubscriptionAttribute } from '../../../../../store/slices/workSpace.js'
 
 const WorkspaceRenewForm = ({
   setVisible,
@@ -30,6 +32,7 @@ const WorkspaceRenewForm = ({
   const initialValues = {
     card: referenceId ? referenceId : '',
   }
+  const dispatch = useDispatch()
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
@@ -41,6 +44,13 @@ const WorkspaceRenewForm = ({
           cardReferenceId: values.card,
           paymentPlatform: 2,
         })
+        dispatch(
+          changeSubscriptionAttribute({
+            subscriptionId: currentSubscription,
+            attributeName: 'autoRenewalIsEnabled',
+            attributeValue: true,
+          })
+        )
         setVisible && setVisible(false)
       } catch (error) {
         console.error('Error submitting form:', error)

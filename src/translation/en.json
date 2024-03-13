@@ -497,5 +497,15 @@
   "Free-Trial-Terms": "Free Trial Terms",
   "Due-Now": "Due Now",
   "Product-Title": "Explore Our Suite of Software Products",
-  "Product-Sentence": "Experience seamless integration and unparalleled functionality with our suite of SaaS applications."
+  "Product-Sentence": "Experience seamless integration and unparalleled functionality with our suite of SaaS applications.",
+  "tenantsTitle": "Tenants",
+  "subscriptionsTitle": "Subscriptions",
+  "autoRenewalTitle": "AutoRenewal",
+  "invoicesTitle": "Invoices",
+  "paymentMethodsTitle": "Payment Methods",
+  "profileTitle": "Profile",
+  "Invoice-Number": "Invoice Number",
+  "Invoice-Date": "Invoice Date",
+  "payment-Info-Not-Available": "Payment Information Not Available",
+  "Enabled": "Enabled"
 }

@@ -37,6 +37,23 @@ export const workspaceSlice = createSlice({
         console.error('Payload is not an array')
       }
     },
+    changeSubscriptionAttribute: (state, action) => {
+      console.log(state, action)
+      const { subscriptionId, attributeName, attributeValue } = action.payload
+
+      // Check if subscriptionId is provided and subscriptionData exists
+      if (subscriptionId && state.subscriptionData) {
+        // Check if the subscriptionId exists in subscriptionData
+        if (state.subscriptionData[subscriptionId]) {
+          // Update the specified attribute of the subscription
+          state.subscriptionData[subscriptionId][attributeName] = attributeValue
+        } else {
+          console.error(`Subscription with id ${subscriptionId} not found`)
+        }
+      } else {
+        console.error('Invalid payload or subscription data not available')
+      }
+    },
     setTenantsTotalCount: (state, action) => {
       state.tenantsTotalCount = action.payload
     },
@@ -138,6 +155,7 @@ export const {
   setWorkspaceTenant,
   setTenantsTotalCount,
   workspaceTenantInfo,
+  changeSubscriptionAttribute,
   removeTenant,
   history,
   setActiveIndex,

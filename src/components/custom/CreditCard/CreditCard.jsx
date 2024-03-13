@@ -50,7 +50,7 @@ const CreditCard = ({
               {' '}
               <MdError />
               <h3 className="payment-info-not-available">
-                Payment information not available
+                <FormattedMessage id="payment-Info-Not-Available" />
               </h3>
             </div>
           ) : (

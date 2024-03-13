@@ -12,6 +12,9 @@ const usePaymentReq = () => {
   const getOrdersListByTenantId = async (tenantId) => {
     return await Request.get(`management/sadmin/v1/tenants/${tenantId}/orders`)
   }
+  const getInvoicesList = async () => {
+    return await Request.get(`management/sadmin/v1/Orders/invoices`)
+  }
   const getPaymentCardsList = async (tenantId) => {
     return await Request.get(`payment/v1/Cards`)
   }
@@ -61,6 +64,7 @@ const usePaymentReq = () => {
     detachPaymentMethodCard,
     attachPaymentMethodCard,
     markCardAsDefault,
+    getInvoicesList,
   }
 }
 

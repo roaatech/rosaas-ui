@@ -29,53 +29,52 @@ import {
 import SubscriptionList from './SubscriptionsList/SubscriptionsList'
 
 const DashboardTenant = () => {
-  const [selectedCard, setSelectedCard] = useState(null)
   const userInfo = useSelector((state) => state.auth.userInfo)
   const cardData = [
     {
       id: 1,
-      title: 'Profile',
-      icon: <FontAwesomeIcon icon={faUser} />,
-      link: '#profile',
-      content: <Profile />,
+      title: <FormattedMessage id="tenantsTitle" />,
+      icon: <FontAwesomeIcon icon={faClipboardList} />,
+      link: '#tenants',
+      content: <TenantList />,
     },
     {
       id: 2,
-      title: 'Subscriptions',
+      title: <FormattedMessage id="subscriptionsTitle" />,
       icon: <FontAwesomeIcon icon={faBox} />,
       link: '#subscriptions',
       content: <SubscriptionList />,
     },
     {
       id: 3,
-      title: 'Tenants',
-      icon: <FontAwesomeIcon icon={faClipboardList} />,
-      link: '#tenants',
-      content: <TenantList />,
-    },
-    {
-      id: 4,
-      title: 'AutoRenewal',
+      title: <FormattedMessage id="autoRenewalTitle" />,
       icon: <FontAwesomeIcon icon={faSync} />,
       link: '#autoRenewal',
       content: 'AutoRenewal content',
     },
     {
-      id: 5,
-      title: 'Invoices',
+      id: 4,
+      title: <FormattedMessage id="invoicesTitle" />,
       icon: <FontAwesomeIcon icon={faMoneyBill} />,
       link: '#invoices',
       content: <InvoicesList />,
     },
     {
-      id: 6,
-      title: 'Payment Methods',
+      id: 5,
+      title: <FormattedMessage id="paymentMethodsTitle" />,
       icon: <FontAwesomeIcon icon={faCreditCard} />,
       link: '#paymentMethods',
       content: <PaymentCardsList />,
     },
+    {
+      id: 6,
+      title: <FormattedMessage id="profileTitle" />,
+      icon: <FontAwesomeIcon icon={faUser} />,
+      link: '#profile',
+      content: <Profile />,
+    },
   ]
-
+  const [selectedCard, setSelectedCard] = useState(cardData[0])
   const onCardSelect = (card) => {
     setSelectedCard(card)
   }
@@ -91,9 +90,7 @@ const DashboardTenant = () => {
           onClick={() => onCardSelect(card)}
         >
           <span className="icon">{card.icon}</span>
-          <div className="card-content">
-            <span>{card.title}</span>
-          </div>
+          <div className="card-content">{card.title}</div>
         </Card>
       </div>
     )
@@ -107,7 +104,7 @@ const DashboardTenant = () => {
           <div className="col-lg-12 text-center mb-3">
             <h1>
               <FontAwesomeIcon icon={faTachometerAlt} className="mr-2" />
-              Dashboard Tenant
+              <FormattedMessage id="Dashboard Tenant" />
             </h1>
             <p>
               Welcome to your dashboard! Explore and manage your account with
