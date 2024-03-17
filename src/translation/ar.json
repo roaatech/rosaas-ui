@@ -506,5 +506,10 @@
   "Invoice-Number": "رقم الفاتورة",
   "Invoice-Date": "تاريخ الفاتورة",
   "payment-Info-Not-Available": "معلومات الدفع غير متوفرة",
-  "Enabled": "ممكّن"
+  "Enabled": "ممكّن",
+  "Go-to-Marketplace": "انتقل إلى السوق",
+  "Welcome-to-your-dashboard": "مرحبًا بك في لوحة التحكم الخاصة بك! استكشف وأدر حسابك بسهولة.",
+  "Workspace": "مساحة العمل",
+  "Update-Profile": "قم بتحسين ملفك الشخصي",
+  "Change-Password": "تغيير كلمة المرور"
 }

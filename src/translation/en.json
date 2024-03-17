@@ -507,5 +507,9 @@
   "Invoice-Number": "Invoice Number",
   "Invoice-Date": "Invoice Date",
   "payment-Info-Not-Available": "Payment Information Not Available",
-  "Enabled": "Enabled"
+  "Enabled": "Enabled",
+  "Go-to-Marketplace": "Go to Marketplace",
+  "Welcome-to-your-dashboard": "Welcome to your dashboard! Explore and manage your account with ease.",
+  "Update-Profile": "Enhance Your Profile",
+  "Change-Password": "Change Password"
 }

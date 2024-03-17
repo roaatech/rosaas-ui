@@ -23,8 +23,13 @@ const TwoStepProcessPage = () => {
 
   const hash = window.location.hash
 
-  const orderIDParam = hash.substring(1)
-
+  const array = hash.split('#')
+  const orderIDParam = array.find(
+    (element) => element !== '' && element !== 'start-with-trial'
+  )
+  console.log(
+    array.find((element) => element !== '' && element !== 'start-with-trial')
+  )
   const dispatch = useDispatch()
   const [displayName, setDisplayName] = useState()
   const step = useSelector((state) => state.tenants.currentStep)

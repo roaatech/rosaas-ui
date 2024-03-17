@@ -42,7 +42,10 @@ const CheckoutPage = (data) => {
 
   const hash = window.location.hash
 
-  const orderID = hash.substring(1)
+  const array = hash.split('#')
+  const orderID = array.find(
+    (element) => element !== '' && element !== 'start-with-trial'
+  )
 
   const navigate = useNavigate()
   const [paymentMethod, setPaymentMethod] = useState(2)
@@ -201,6 +204,8 @@ const CheckoutPage = (data) => {
           <Container className="card">
             <Row>
               <Col md={7}>
+                {renderFeaturePlans()}
+
                 <Card.Header className="fw-bold">
                   <FormattedMessage id="Your-Subscribe-Information" />
                 </Card.Header>
@@ -361,7 +366,6 @@ const CheckoutPage = (data) => {
                 }
               >
                 <div>
-                  {renderFeaturePlans()}
                   {/* {hasToPay && (
                     <Form>
                       <Form.Group className="mb-3">
@@ -387,7 +391,6 @@ const CheckoutPage = (data) => {
                     </Form>
                   )} */}
                   <Card.Body>
-                    {/* Additional checkout information */}
                     {paymentMethod && hasToPay && (
                       <div className="d-flex align-items-start justify-content-between py-3">
                         <div className="w-50">

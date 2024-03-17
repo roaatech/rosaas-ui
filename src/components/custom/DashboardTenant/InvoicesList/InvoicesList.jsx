@@ -1,129 +1,281 @@
-import { useEffect, useState } from 'react'
-import useRequest from '../../../../axios/apis/useRequest'
-import { useDispatch } from 'react-redux'
-import { toast } from 'react-toastify'
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  Dropdown,
-  Table,
-} from '@themesberg/react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisH, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { FormattedMessage } from 'react-intl'
-import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
+import React, { useState, useEffect } from 'react'
+import { Card, Row, Col } from '@themesberg/react-bootstrap'
+
+import useRequest from '../../../../axios/apis/useRequest.js'
 import { Wrapper } from './InvoicesList.styled'
+import UpperContent from '../../Shared/UpperContent/UpperContent.jsx'
+import { formatDate } from '../../../../lib/sharedFun/Time.js'
 
-export const InvoicesList = ({ productId }) => {
-  const { getInvoicesList, deleteInvoice } = useRequest()
+// const styles = StyleSheet.create({
+//   invoiceContainer: {
+//     width: '100%',
+//     maxWidth: 600,
+//     margin: '0 auto',
+//     padding: 20,
+//     border: '1px solid #ccc',
+//     borderRadius: 5,
+//     boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+//   },
+//   invoiceHeader: {
+//     textAlign: 'center',
+//     marginBottom: 20,
+//   },
+//   invoiceHeaderText: {
+//     fontSize: '2rem',
+//     marginBottom: 5,
+//   },
+//   invoiceHeaderSubText: {
+//     fontSize: '1.2rem',
+//     color: '#666',
+//   },
+//   invoiceInfo: {
+//     display: 'flex',
+//     justifyContent: 'space-between',
+//     marginBottom: 20,
+//   },
+//   invoiceDates: {
+//     display: 'flex',
+//     justifyContent: 'space-between',
+//     marginBottom: 20,
+//   },
+//   invoiceItems: {
+//     display: 'grid',
+//     gridTemplateColumns: 'repeat(4, 1fr)',
+//     gridGap: 10,
+//     marginBottom: 20,
+//   },
+//   invoiceItem: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     alignItems: 'center',
+//   },
+//   invoiceTotal: {
+//     textAlign: 'center',
+//     borderTop: '1px solid #ccc',
+//     padding: '20px 0',
+//     marginTop: 20,
+//   },
+// })
+
+export default function InvoicesList() {
+  const { getInvoicesList } = useRequest()
   const [invoices, setInvoices] = useState([])
-  const [currentId, setCurrentId] = useState('')
-  const [confirm, setConfirm] = useState(false)
-
-  const handleDeleteInvoice = async () => {
-    await deleteInvoice(currentId)
-    setInvoices(invoices.filter((invoice) => invoice.id !== currentId))
-    toast.success('Invoice deleted successfully')
-  }
-
-  const deleteConfirm = (id) => {
-    setCurrentId(id)
-    setConfirm(true)
-  }
 
   useEffect(() => {
     const fetchInvoices = async () => {
-      const invoicesData = await getInvoicesList()
-      setInvoices(invoicesData.data.data)
-      // dispatch(setAllInvoices(invoicesData));
+      try {
+        const response = await getInvoicesList()
+        setInvoices(response.data.data)
+      } catch (error) {
+        console.error('Error fetching invoices:', error)
+      }
     }
     fetchInvoices()
   }, [])
 
-  const TableRow = ({ id, orderNumber, paidDate, orderTotal }) => {
-    return (
-      <tr>
-        <td>{orderNumber}</td>
-        <td>{new Date(paidDate).toLocaleDateString()}</td>
-        <td>{orderTotal} $</td>
-        {/* <td>
-          <Dropdown as={ButtonGroup}>
-            <Dropdown.Toggle
-              as={Button}
-              split
-              variant="link"
-              className="text-dark m-0 p-0"
-            >
-              <span className="icon icon-sm">
-                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
-              </span>
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item
-                onClick={() => deleteConfirm(id)}
-                className="text-danger"
-              >
-                <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                <FormattedMessage id="Delete" />
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </td> */}
-      </tr>
-    )
-  }
+  // const generatePdf = (invoice, extractedData) => (
+  //   <Document>
+  //     <Page size="A4">
+  //       <View style={styles.invoiceContainer}>
+  //         <View style={styles.invoiceHeader}>
+  //           <Text style={styles.invoiceHeaderText}>Invoice</Text>
+  //           <Text style={styles.invoiceHeaderSubText}>
+  //             #{invoice.orderNumber}
+  //           </Text>
+  //         </View>
+  //         <View style={styles.invoiceInfo}>
+  //           <View>
+  //             <Text>Bill to:</Text>
+  //             <Text>{invoice.billingAddress}</Text>
+  //             <Text>
+  //               {invoice.billingCity}, {invoice.billingState}{' '}
+  //               {invoice.billingZip}
+  //             </Text>
+  //           </View>
+  //           <View>
+  //             <Text>Slack</Text>
+  //             <Text>500 Howard Street</Text>
+  //             <Text>San Francisco, CA 94105</Text>
+  //           </View>
+  //         </View>
+  //         <View style={styles.invoiceDates}>
+  //           <View>
+  //             <Text>Date:</Text>
+  //             <Text>{new Date(invoice.paidDate).toLocaleDateString()}</Text>
+  //           </View>
+  //           <View>
+  //             <Text>Due Date:</Text>
+  //             <Text>{new Date(invoice.paidDate).toLocaleDateString()}</Text>
+  //           </View>
+  //         </View>
+  //         <View style={styles.invoiceItems}>
+  //           <View style={styles.invoiceItem}>
+  //             <Text>Item</Text>
+  //             <Text>{invoice.orderItems[0].displayName}</Text>
+  //           </View>
+  //           <View style={styles.invoiceItem}>
+  //             <Text>Quantity</Text>
+  //             <Text>{invoice.orderItems[0].quantity}</Text>
+  //           </View>
+  //           <View style={styles.invoiceItem}>
+  //             <Text>Rate</Text>
+  //             <Text>${invoice.orderItems[0].unitPriceInclTax.toFixed(2)}</Text>
+  //           </View>
+  //           <View style={styles.invoiceItem}>
+  //             <Text>Amount</Text>
+  //             <Text>${invoice.orderTotal.toFixed(2)}</Text>
+  //           </View>
+  //         </View>
+  //         <View style={styles.invoiceTotal}>
+  //           <Text>Total:</Text>
+  //           <Text>${invoice.orderTotal.toFixed(2)}</Text>
+  //         </View>
+  //       </View>
+  //     </Page>
+  //   </Document>
+  // )
+
+  // const handleDownloadPDF = async (invoice) => {
+  //   const sections = invoice?.orderItems[0].displayName.split(', ')
+
+  //   const extractedData = {}
+
+  //   sections.forEach((section) => {
+  //     const matches = section.match(/\[(.*?)\]/)
+  //     if (matches && matches.length > 1) {
+  //       const [key, value] = matches[1].split(':').map((item) => item.trim())
+  //       extractedData[key] = value
+  //     }
+  //   })
+
+  //   const doc = generatePdf(invoice, extractedData)
+  //   const blob = await ReactPDF.pdf(doc).toBlob()
+  //   console.log({ blob })
+  //   const url = URL.createObjectURL(blob)
+  //   const a = document.createElement('a')
+  //   a.href = url
+  //   a.download = `${invoice.orderNumber}.pdf`
+  //   document.body.appendChild(a)
+  //   a.click()
+  //   document.body.removeChild(a)
+  // }
 
   return (
     <Wrapper>
-      <Card className="m-3  mt-0">
-        <Card.Body>
-          <div className="border-top-1 border-light">
-            <Card
-              border="light"
-              className="table-wrapper table-responsive shadow-sm"
-            >
-              <Card.Body className="pt-0">
-                <Table hover className="user-table align-items-center">
-                  <thead>
-                    <tr>
-                      <th className="border-bottom">
-                        <FormattedMessage id="Invoice-Number" />
-                      </th>
-                      <th className="border-bottom">
-                        <FormattedMessage id="Invoice-Date" />
-                      </th>
-                      <th className="border-bottom">
-                        <FormattedMessage id="Total" />
-                      </th>
-                      {/* <th className="border-bottom">
-                    <FormattedMessage id="Actions" />
-                  </th> */}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {invoices.map((invoice) => (
-                      <TableRow key={invoice.id} {...invoice} />
-                    ))}
-                  </tbody>
-                </Table>
-                <DeleteConfirmation
-                  message={
-                    <FormattedMessage id="delete-invoice-confirmation-message" />
-                  }
-                  icon="pi pi-exclamation-triangle"
-                  confirm={confirm}
-                  setConfirm={setConfirm}
-                  confirmFunction={handleDeleteInvoice}
-                  sideBar={false}
-                />
-              </Card.Body>
-            </Card>
-          </div>
-        </Card.Body>
+      <UpperContent>
+        <h4>Invoices List</h4>
+      </UpperContent>
+
+      <Card className="m-3 p-3 mt-0">
+        <div>
+          <Row>
+            {invoices.map((invoice) => {
+              const sections = invoice.orderItems[0].displayName?.split(', ')
+
+              const extractedData = {}
+
+              sections?.forEach((section) => {
+                const matches = section.match(/\[(.*?)\]/)
+                if (matches && matches.length > 1) {
+                  const [key, value] = matches[1]
+                    .split(':')
+                    .map((item) => item.trim())
+                  extractedData[key] = value
+                }
+              })
+              console.log({ extractedData })
+
+              return (
+                <Col key={invoice.id} md={4}>
+                  <Card className="mb-4">
+                    <Card.Header
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                      className="pb-0"
+                    >
+                      <div style={{ flex: 1 }}>
+                        <Card.Title>INVOICE</Card.Title>
+                      </div>
+
+                      <div style={{ flex: 1, textAlign: 'right' }}>
+                        <strong>
+                          <div>
+                            <Card.Title
+                              style={{
+                                color: 'var(--second-color)',
+                              }}
+                            >
+                              {' '}
+                              # {invoice.orderNumber}
+                            </Card.Title>
+                          </div>
+                        </strong>
+                      </div>
+                    </Card.Header>
+
+                    <Card.Body>
+                      {' '}
+                      <Card.Text>
+                        <strong>Product:</strong> {extractedData.Product}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>Tenant:</strong> {extractedData.Tenant}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>Plan:</strong> {extractedData.Plan}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>Invoice Date:</strong>{' '}
+                        {formatDate(invoice.paidDate)}
+                      </Card.Text>
+                      <Card.Footer
+                        className="d-flex justify-content-between "
+                        style={{ backgroundColor: 'var(--primary1)' }}
+                      >
+                        <strong>Total</strong>{' '}
+                        <span style={{ color: 'var(--second-color' }}>
+                          <strong> {invoice.orderTotal} $</strong>
+                        </span>
+                      </Card.Footer>
+                      <div className="d-flex justify-content-end">
+                        {/* <Dropdown as={ButtonGroup}>
+                          <Dropdown.Toggle
+                            as={Button}
+                            split
+                            variant="link"
+                            className="text-dark m-0 p-0"
+                          >
+                            <span className="icon icon-sm">
+                              <FontAwesomeIcon
+                                icon={faEllipsisV}
+                                className="icon-dark"
+                              />
+                            </span>
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item
+                              onClick={() => handleDownloadPDF(invoice)}
+                            >
+                              <FontAwesomeIcon
+                                icon={faFilePdf}
+                                className="me-2"
+                              />
+                              Download as PDF
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown> */}
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              )
+            })}
+          </Row>
+        </div>
       </Card>
     </Wrapper>
   )
 }
-
-export default InvoicesList

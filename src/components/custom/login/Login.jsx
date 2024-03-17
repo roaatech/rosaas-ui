@@ -17,8 +17,6 @@ const Login = () => {
   let redirectPath = useSelector(
     (state) => state.auth.redirectPath?.redirectPath
   )
-  let userRole = useSelector((state) => state.auth.userInfo.role)
-  console.log({ userRole })
 
   const { signIn } = useRequest()
   const navigate = useNavigate()

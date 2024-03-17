@@ -44,10 +44,10 @@ const MainPage = () => {
   console.log({ userRole })
   return (
     <Wrapper>
-      {!isRunningInIframe && (
-        <BreadcrumbComponent breadcrumbInfo={'Home'} icon={BsBoxSeam} />
-      )}{' '}
-      <section className="" style={{ minHeight: '79vh' }}>
+      <section style={{ minHeight: '92vh' }}>
+        {!isRunningInIframe && (
+          <BreadcrumbComponent breadcrumbInfo={'Home'} icon={BsBoxSeam} />
+        )}{' '}
         <div className="main-container ">
           <section className=" mt-4 mb-4 pb-3">
             <div className="row justify-content-center">
@@ -81,7 +81,9 @@ const MainPage = () => {
                 <Row>
                   <span className="redirect-link ">
                     <FontAwesomeIcon icon={faStore} />
-                    <span>Go to Marketplace</span>
+                    <span>
+                      <FormattedMessage id="Go-to-Marketplace" />
+                    </span>
                   </span>
                 </Row>
               </Card.Body>

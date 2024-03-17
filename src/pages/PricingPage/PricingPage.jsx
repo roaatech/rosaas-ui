@@ -115,6 +115,24 @@ const PricingPage = () => {
     getProductListPublic,
     getProductPlanPriceListPublic,
   } = useRequest()
+  const [startWithTrial, setStartWithTrial] = useState(true)
+
+  const handleStartWithTrialChange = (event, planId) => {
+    setStartWithTrial((prevState) => ({
+      ...prevState,
+      [planId]: event.target.checked,
+    }))
+  }
+
+  useEffect(() => {
+    const initialStartWithTrial = {}
+    planList &&
+      Object.keys(planList).forEach((planId) => {
+        initialStartWithTrial[planId] = true
+      })
+    setStartWithTrial(initialStartWithTrial)
+  }, [planList])
+
   useEffect(() => {
     if (!listProduct || Object.keys(listProduct).length === 0) {
       return
@@ -245,6 +263,7 @@ const PricingPage = () => {
           description: featurePlan?.description,
         }
       })
+
     return (
       <div>
         {
@@ -314,7 +333,12 @@ const PricingPage = () => {
                   fontWeight: 'bold',
                 }}
               >
-                {planList[planId]?.displayName?.toUpperCase()}
+                {listProduct?.[productId]?.trialType == 2 &&
+                planId == listProduct?.[productId]?.trialPlanId ? (
+                  <FormattedMessage id="Trial" />
+                ) : (
+                  planList[planId]?.displayName?.toUpperCase()
+                )}
               </div>
               {}
             </Card.Header>
@@ -341,28 +365,81 @@ const PricingPage = () => {
               ))}
             </Card.Body>
 
-            <Card.Footer>
-              <Button
-                variant="primary"
-                type="submit"
-                className="w-100"
-                onClick={() =>
-                  userRole == 'notAuth'
-                    ? // (navigate(`/signin`),
-                      //   setRedirectPath(
-                      //     `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
-                      //   ))
-                      navigate(
-                        `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
-                      )
-                    : navigate(
-                        `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
-                      )
-                }
-              >
-                <FormattedMessage id="Start-With" />{' '}
-                {planList[planId]?.displayName?.toUpperCase()}
-              </Button>
+            <Card.Footer
+              style={{
+                ...(listProduct?.[productId]?.trialType === 2
+                  ? { whiteSpace: 'nowrap', minHeight: '124px' }
+                  : {}),
+              }}
+            >
+              {planId != listProduct?.[productId]?.trialPlanId ? (
+                <>
+                  {listProduct?.[productId]?.trialType == 2 &&
+                    planId !== listProduct?.[productId]?.trialPlanId && (
+                      <Form.Group className="mb-3">
+                        <Form.Check
+                          type="checkbox"
+                          label={
+                            <>
+                              <FormattedMessage id="With" />{' '}
+                              <span style={{ color: 'var(--second-color' }}>
+                                {listProduct?.[productId]?.trialPeriodInDays}{' '}
+                                <FormattedMessage id="Days" />{' '}
+                              </span>
+                              <FormattedMessage id="Free-Trial" />{' '}
+                              <FormattedMessage id="Plan" />
+                            </>
+                          }
+                          checked={startWithTrial[planId] || false}
+                          onChange={(event) =>
+                            handleStartWithTrialChange(event, planId)
+                          }
+                          className="font-small"
+                        />
+                      </Form.Group>
+                    )}
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    className="w-100"
+                    onClick={() =>
+                      startWithTrial[planId]
+                        ? // (navigate(`/signin`),
+                          //   setRedirectPath(
+                          //     `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
+                          //   ))
+                          navigate(
+                            `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}#start-with-trial`
+                          )
+                        : navigate(
+                            `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
+                          )
+                    }
+                  >
+                    <FormattedMessage id="Start-With" />{' '}
+                    {planList[planId]?.displayName?.toUpperCase()}
+                  </Button>
+                </>
+              ) : (
+                listProduct?.[productId]?.trialType == 2 && (
+                  <div className="text-center">
+                    <div>
+                      Start your{' '}
+                      <strong style={{ color: 'var(--second-color)' }}>
+                        trial
+                      </strong>
+                      ,
+                    </div>
+                    <div>
+                      then{' '}
+                      <strong style={{ color: 'var(--second-color)' }}>
+                        switch plans
+                      </strong>{' '}
+                      seamlessly
+                    </div>
+                  </div>
+                )
+              )}
             </Card.Footer>
           </Card>
         }
@@ -390,17 +467,17 @@ const PricingPage = () => {
                   className="mr-2 product-icon ml-2"
                 />
                 {listProduct?.[productId]?.displayName?.toUpperCase()}
+                <div
+                  style={{ fontSize: 'var(--largeFont)' }}
+                  className="col-lg-12 text-center pb-3 mt-2 "
+                >
+                  {listProduct?.[productId]?.description}
+                </div>{' '}
               </h4>
             </div>
           </section>
           <Card>
             <Card.Body>
-              <div
-                style={{ fontSize: 'var(--largeFont)' }}
-                className="col-lg-12 text-center pb-3 mt-2 "
-              >
-                {listProduct?.[productId]?.description}
-              </div>{' '}
               <div className="text-center">{renderCycleRadioButtons()}</div>
               <Row className=" ">
                 {groupedByCycle &&

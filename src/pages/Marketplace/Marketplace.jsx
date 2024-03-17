@@ -44,13 +44,10 @@ const Marketplace = () => {
 
   return (
     <Wrapper>
-      {!isRunningInIframe && (
-        <BreadcrumbComponent breadcrumbInfo={'Home'} icon={BsBoxSeam} />
-      )}
-      <section
-        className="d-flex align-items-center"
-        style={{ minHeight: '100vh' }}
-      >
+      <section style={{ minHeight: '92vh' }}>
+        {!isRunningInIframe && (
+          <BreadcrumbComponent breadcrumbInfo={'Home'} icon={BsBoxSeam} />
+        )}
         <div className="main-container">
           {' '}
           <section className=" mt-4 mb-4 pb-3">

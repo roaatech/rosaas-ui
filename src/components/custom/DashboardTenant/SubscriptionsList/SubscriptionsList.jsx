@@ -16,6 +16,7 @@ import {
   faTimesCircle,
   faToggleOff,
   faToggleOn,
+  faUpload,
 } from '@fortawesome/free-solid-svg-icons'
 import useRequest from '../../../../axios/apis/useRequest.js'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
@@ -37,6 +38,7 @@ import {
 import CardSaveFormWithStripe from '../../CardSaveForm/CardSaveForm.js'
 import WorkspaceRenewForm from './WorkspaceRenewForm/WorkspaceRenewForm.jsx'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation.js'
+import WorkspaceUpDowngradeForm from './WorkspaceUpDowngradeForm/WorkspaceUpDowngradeForm.jsx'
 
 export default function SubscriptionList() {
   const { getSubscriptionsList, cancelAutoRenewal } = useRequest()
@@ -47,7 +49,12 @@ export default function SubscriptionList() {
   )
   const [cards, setCards] = useState([])
   const [showAddCardForm, setShowAddCardForm] = useState(false)
-
+  const [showUpDowngradeForm, setShowUpDowngradeForm] = useState(false)
+  console.log({ setShowUpDowngradeForm })
+  const handleOpenUpDowngradeForm = (id) => {
+    setCurrentSubscription(id)
+    setShowUpDowngradeForm(true)
+  }
   console.log({ subscriptionData })
   useEffect(() => {
     const fetchData = async () => {
@@ -183,6 +190,19 @@ export default function SubscriptionList() {
                                   </>
                                 </Dropdown.Item>
                               )}
+                              <Dropdown.Item
+                                onClick={() =>
+                                  handleOpenUpDowngradeForm(subscription?.id)
+                                }
+                              >
+                                <>
+                                  <FontAwesomeIcon
+                                    icon={faUpload}
+                                    className="me-2"
+                                  />
+                                  <FormattedMessage id="Upgrade-Subscription" />
+                                </>
+                              </Dropdown.Item>
                             </Dropdown.Menu>
                           </Dropdown>
                         </div>
@@ -277,7 +297,6 @@ export default function SubscriptionList() {
                           </strong>
                         </p>
                       )}
-                      {/* Label for planChangingIsEnabled */}
                       {subscription.planChangingIsEnabled && (
                         <p>
                           <strong>
@@ -286,7 +305,6 @@ export default function SubscriptionList() {
                           {subscription.planChangingType}
                         </p>
                       )}
-                      {/* Display payment method card details */}
                       <div>
                         <strong>
                           <FormattedMessage id="Payment-Method" />
@@ -354,6 +372,18 @@ export default function SubscriptionList() {
             popupLabel="Add Card and Set to Auto Renewal"
             currentSubscription={currentSubscription}
           />
+          <ThemeDialog
+            visible={showUpDowngradeForm}
+            setVisible={setShowUpDowngradeForm}
+          >
+            <>
+              <WorkspaceUpDowngradeForm
+                subscriptionData={subscriptionData[currentSubscription]}
+                setVisible={setShowUpDowngradeForm}
+                type="upgrade"
+              />
+            </>
+          </ThemeDialog>
         </>
       </ThemeDialog>
     </Wrapper>
