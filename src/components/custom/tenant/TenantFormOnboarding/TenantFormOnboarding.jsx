@@ -239,15 +239,7 @@ const TenantFormOnboarding = ({
       }
     },
   })
-  console.log(
-    formik.values?.plan &&
-      listData[formik.values.product]?.trialPlanId != formik.values?.plan
-      ? listData[formik.values.product].plansPrice?.[formik.values.price]
-          ?.systemName
-      : listData[formik.values.product]?.plansPrice?.[
-          listData[formik.values.product]?.trialPlanPriceId
-        ]?.systemName
-  )
+
   const intl = useIntl()
   let planOptions
   if (listData[formik.values.product]?.plans) {

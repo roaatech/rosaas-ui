@@ -41,7 +41,6 @@ const MainPage = () => {
 
   const isRunningInIframe = window.self !== window.top
   let userRole = useSelector((state) => state.auth.userInfo.role)
-  console.log({ userRole })
   return (
     <Wrapper>
       <section style={{ minHeight: '92vh' }}>

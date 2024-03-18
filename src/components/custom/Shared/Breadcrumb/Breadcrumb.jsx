@@ -59,7 +59,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                 <BsFillHouseDoorFill />
               </Breadcrumb.Item>
 
-              {pathname != ('/' || '/work-space') &&
+              {pathname != ('/' || Routes.workSpace.path) &&
                 userRole != 'tenantAdmin' && (
                   <>
                     {breadcrumbConst[breadcrumbInfo].title && (

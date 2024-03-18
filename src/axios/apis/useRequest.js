@@ -44,6 +44,7 @@ const useRequest = () => {
     subscriptionFeturesList,
     subscriptionCycleById,
     getSubscriptionsList,
+    getAutoRenewalList,
   } = useSubManagementReq()
 
   const {
@@ -264,6 +265,7 @@ const useRequest = () => {
     changePassword,
     getSubscriptionsList,
     getInvoicesList,
+    getAutoRenewalList,
   }
 }
 export default useRequest

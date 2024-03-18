@@ -50,12 +50,10 @@ export default function SubscriptionList() {
   const [cards, setCards] = useState([])
   const [showAddCardForm, setShowAddCardForm] = useState(false)
   const [showUpDowngradeForm, setShowUpDowngradeForm] = useState(false)
-  console.log({ setShowUpDowngradeForm })
-  const handleOpenUpDowngradeForm = (id) => {
-    setCurrentSubscription(id)
+  const handleOpenUpDowngradeForm = (subscription) => {
+    setCurrentSubscription(subscription)
     setShowUpDowngradeForm(true)
   }
-  console.log({ subscriptionData })
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -68,14 +66,15 @@ export default function SubscriptionList() {
     fetchData()
   }, [])
   const [referenceId, setReferenceId] = useState('')
-  const [currentSubscription, setCurrentSubscription] = useState('')
+  const [currentSubscriptionId, setCurrentSubscriptionId] = useState('')
+  const [currentSubscription, setCurrentSubscription] = useState()
   const [confirm, setConfirm] = useState(false)
 
   function automaticRenew(id) {
     setReferenceId(subscriptionData?.[id].paymentMethodCard?.referenceId)
 
     setVisible(true)
-    setCurrentSubscription(subscriptionData?.[id]?.id)
+    setCurrentSubscriptionId(subscriptionData?.[id]?.id)
   }
   const activeStatus = {
     true: {
@@ -92,12 +91,12 @@ export default function SubscriptionList() {
   const handleConfirmation = async (data = '', comment) => {
     try {
       await cancelAutoRenewal({
-        subscriptionId: subscriptionData?.[currentSubscription]?.id,
+        subscriptionId: subscriptionData?.[currentSubscriptionId]?.id,
         comment,
       })
       dispatch(
         changeSubscriptionAttribute({
-          subscriptionId: subscriptionData?.[currentSubscription]?.id,
+          subscriptionId: subscriptionData?.[currentSubscriptionId]?.id,
           attributeName: 'autoRenewalIsEnabled',
           attributeValue: false,
         })
@@ -110,7 +109,7 @@ export default function SubscriptionList() {
 
   const handleToggleClick = (id) => {
     setConfirm(true)
-    setCurrentSubscription(id)
+    setCurrentSubscriptionId(id)
   }
   return (
     <Wrapper>
@@ -175,7 +174,7 @@ export default function SubscriptionList() {
                                 </Dropdown.Item>
                               )}
 
-                              {subscription.autoRenewalIsEnabled && (
+                              {/* {subscription.autoRenewalIsEnabled && (
                                 <Dropdown.Item
                                   onClick={() =>
                                     automaticRenew(subscription?.id)
@@ -189,10 +188,10 @@ export default function SubscriptionList() {
                                     <FormattedMessage id="Change-Auto-Renewal" />
                                   </>
                                 </Dropdown.Item>
-                              )}
+                              )} */}
                               <Dropdown.Item
                                 onClick={() =>
-                                  handleOpenUpDowngradeForm(subscription?.id)
+                                  handleOpenUpDowngradeForm(subscription)
                                 }
                               >
                                 <>
@@ -353,7 +352,7 @@ export default function SubscriptionList() {
             popupLabel={<FormattedMessage id="Auto-Renewal" />}
             setVisible={setVisible}
             visible={visible}
-            currentSubscription={currentSubscription}
+            currentSubscription={currentSubscriptionId}
             cards={cards}
             setCards={setCards}
             showAddCardForm={showAddCardForm}
@@ -362,28 +361,27 @@ export default function SubscriptionList() {
         </>
       </ThemeDialog>
       <ThemeDialog visible={showAddCardForm} setVisible={setShowAddCardForm}>
+        <CardSaveFormWithStripe
+          setVisible={setShowAddCardForm}
+          visible={showAddCardForm}
+          setCards={setCards}
+          cards={cards}
+          autoRenewal={true}
+          popupLabel="Add Card and Set to Auto Renewal"
+          currentSubscription={currentSubscriptionId}
+        />
+      </ThemeDialog>
+      <ThemeDialog
+        visible={showUpDowngradeForm}
+        setVisible={setShowUpDowngradeForm}
+      >
         <>
-          <CardSaveFormWithStripe
-            setVisible={setShowAddCardForm}
-            visible={showAddCardForm}
-            setCards={setCards}
-            cards={cards}
-            autoRenewal={true}
-            popupLabel="Add Card and Set to Auto Renewal"
-            currentSubscription={currentSubscription}
-          />
-          <ThemeDialog
-            visible={showUpDowngradeForm}
+          <WorkspaceUpDowngradeForm
+            subscriptionData={currentSubscription}
             setVisible={setShowUpDowngradeForm}
-          >
-            <>
-              <WorkspaceUpDowngradeForm
-                subscriptionData={subscriptionData[currentSubscription]}
-                setVisible={setShowUpDowngradeForm}
-                type="upgrade"
-              />
-            </>
-          </ThemeDialog>
+            type="upgrade"
+            popupLabel="Upgarde"
+          />
         </>
       </ThemeDialog>
     </Wrapper>

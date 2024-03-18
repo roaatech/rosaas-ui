@@ -27,9 +27,7 @@ const TwoStepProcessPage = () => {
   const orderIDParam = array.find(
     (element) => element !== '' && element !== 'start-with-trial'
   )
-  console.log(
-    array.find((element) => element !== '' && element !== 'start-with-trial')
-  )
+
   const dispatch = useDispatch()
   const [displayName, setDisplayName] = useState()
   const step = useSelector((state) => state.tenants.currentStep)

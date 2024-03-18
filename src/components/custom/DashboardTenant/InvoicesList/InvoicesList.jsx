@@ -183,7 +183,6 @@ export default function InvoicesList() {
                   extractedData[key] = value
                 }
               })
-              console.log({ extractedData })
 
               return (
                 <Col key={invoice.id} md={4}>

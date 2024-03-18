@@ -28,6 +28,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import SubscriptionList from './SubscriptionsList/SubscriptionsList'
 import { useNavigate } from 'react-router-dom'
+import AutoRenewalList from './AutoRenewalList/AutoRenewalList'
 
 const DashboardTenant = () => {
   const userInfo = useSelector((state) => state.auth.userInfo)
@@ -53,7 +54,7 @@ const DashboardTenant = () => {
         title: <FormattedMessage id="autoRenewalTitle" />,
         icon: <FontAwesomeIcon icon={faSync} />,
         link: '#autoRenewal',
-        content: 'AutoRenewal content',
+        content: <AutoRenewalList />,
       },
       {
         id: 4,
@@ -88,8 +89,8 @@ const DashboardTenant = () => {
   }
   const [activeIndex, setActiveIndex] = useState(0)
 
+  const hash = window.location.hash
   useEffect(() => {
-    const hash = window.location.hash
     const selectedTab = cardData.find((card) => card.link === hash)
     if (selectedTab) {
       setSelectedCard(selectedTab)
@@ -99,7 +100,7 @@ const DashboardTenant = () => {
       setActiveIndex(0)
     }
     setPageNum(Math.floor(activeIndex / numVisible))
-  }, [cardData, activeIndex])
+  }, [cardData, activeIndex, hash])
 
   const cardTemplate = (card) => (
     <div className="p-d-flex p-flex-column p-ai-center mx-2">

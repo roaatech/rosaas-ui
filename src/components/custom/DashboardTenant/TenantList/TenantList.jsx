@@ -57,7 +57,6 @@ export default function TenantList({ children }) {
   const tenantsTotalCount = useSelector(
     (state) => state.workspace.tenantsTotalCount
   )
-  console.log({ tenantsTotalCount })
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const deleteConfirm = (id) => {
@@ -70,7 +69,6 @@ export default function TenantList({ children }) {
 
   useEffect(() => {
     if (Object.keys(tenants).length > 0) {
-      console.log('**********')
       return
     }
     let query = `?page=${Math.ceil(
@@ -135,48 +133,6 @@ export default function TenantList({ children }) {
                           editedDate={tenant.editedDate}
                         />
                       </Card.Text>
-
-                      <div className="d-flex justify-content-end">
-                        <Dropdown as={ButtonGroup}>
-                          <Dropdown.Toggle
-                            as={Button}
-                            split
-                            variant="link"
-                            className="text-dark m-0 p-0"
-                          >
-                            <span className="icon icon-sm">
-                              <FontAwesomeIcon
-                                icon={faEllipsisV}
-                                className="icon-dark"
-                              />
-                            </span>
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu>
-                            <Dropdown.Item
-                              onSelect={() =>
-                                navigate(`${Routes.Tenant.path}/${tenant.id}`)
-                              }
-                            >
-                              <FontAwesomeIcon icon={faEye} className="mx-2" />{' '}
-                              View Details
-                            </Dropdown.Item>
-                            <Dropdown.Item onSelect={() => editForm(tenant.id)}>
-                              <FontAwesomeIcon icon={faEdit} className="mx-2" />{' '}
-                              Edit
-                            </Dropdown.Item>
-                            <Dropdown.Item
-                              className="text-danger"
-                              onSelect={() => deleteConfirm(tenant.id)}
-                            >
-                              <FontAwesomeIcon
-                                icon={faTrash}
-                                className="mx-2"
-                              />{' '}
-                              Delete
-                            </Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </div>
                     </Card.Body>
                   </Card>
                 </Col>

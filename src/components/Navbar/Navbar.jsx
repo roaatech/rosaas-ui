@@ -212,14 +212,6 @@ export default (props) => {
                       </div>
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
-                      <Dropdown.Item
-                        className="fw-bold"
-                        onClick={() => {
-                          navigate(Routes.marketPlacePage.path)
-                        }}
-                      >
-                        <FormattedMessage id="Go-to-Marketplace" />
-                      </Dropdown.Item>
                       {userRole == 'tenantAdmin' && (
                         <Dropdown.Item
                           className="fw-bold"
@@ -230,6 +222,15 @@ export default (props) => {
                           <FormattedMessage id="Update-Profile" />
                         </Dropdown.Item>
                       )}
+                      <Dropdown.Divider />
+                      <Dropdown.Item
+                        className="fw-bold"
+                        onClick={() => {
+                          navigate(Routes.marketPlacePage.path)
+                        }}
+                      >
+                        <FormattedMessage id="Go-to-Marketplace" />
+                      </Dropdown.Item>
                       <Dropdown.Divider />
 
                       <Dropdown.Item

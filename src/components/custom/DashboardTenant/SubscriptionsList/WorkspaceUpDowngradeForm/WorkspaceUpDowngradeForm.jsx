@@ -20,6 +20,12 @@ import { changeOrderAttribute } from '../../../../../store/slices/tenants.js'
 import { ListBox } from 'primereact/listbox'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons'
+import {
+  setWorkspaceAllPlanPrices,
+  wokspaceSetAllPlans,
+  workspaceUpdateProduct,
+} from '../../../../../store/slices/workSpace.js'
+import { cardInfo } from '../../../../../const/cardPayment.js'
 
 const WorkspaceUpDowngradeForm = ({
   setVisible,
@@ -27,9 +33,18 @@ const WorkspaceUpDowngradeForm = ({
   type,
   subscriptionData,
 }) => {
-  const { getProductPlans, getProductPlanPriceList, getPaymentCardsList } =
-    useRequest()
-  useRequest()
+  const products = useSelector((state) => state.workspace.products)
+  useEffect(() => {
+    if (!subscriptionData) {
+      return
+    }
+    if (products[subscriptionData?.product.id]) {
+      return
+    } else {
+      dispatch(workspaceUpdateProduct(subscriptionData?.product))
+    }
+  }, [subscriptionData, products])
+
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
 
@@ -47,41 +62,43 @@ const WorkspaceUpDowngradeForm = ({
   }, [])
 
   const dispatch = useDispatch()
-  const { getProductList, upgradeSubscription, downgradeSubscription } =
-    useRequest()
-  const selectedProduct = subscriptionData?.product?.productId
-  const listData = useSelector((state) => state.products.products)
-  const currentPlanPrice = subscriptionData?.planPrice
-  const currentPlanCycle = subscriptionData?.planCycle
-  const currentPlanId = subscriptionData?.planId
+  const {
+    getProductList,
+    upgradeSubscription,
+    downgradeSubscription,
+    getProductPlansPublic,
+    getPaymentCardsList,
+    getProductPlanPriceListPublic,
+  } = useRequest()
+  const selectedProduct = subscriptionData?.product?.id
+  const currentPlanPrice = subscriptionData?.planPrice.id
+  const currentPlanCycle = subscriptionData?.planPrice.cycle
+  const currentPlanId = subscriptionData?.plan.id
   const [idsWithValues, setIdsWithValues] = useState()
 
-  useEffect(() => {
-    let query = `?page=1&pageSize=50&filters[0].Field=SearchTerm`
-    if (!listData[selectedProduct]) {
-      ;(async () => {
-        const productList = await getProductList(query)
-        dispatch(setAllProduct(productList.data.data.items))
-      })()
-    }
-  }, [])
   const [currentSubscriptionId, setCurrentSubscriptionId] = useState('')
   useEffect(() => {
     setCurrentSubscriptionId(subscriptionData?.subscriptionId)
   }, [subscriptionData?.subscriptionId])
 
   const validationSchema = Yup.object().shape({
-    plan: Yup.string().required(<FormattedMessage id="Please-select-a-plan" />),
-    price: Yup.string().required(
-      <FormattedMessage id="Please-select-a-price" />
+    // plan: Yup.string().required(<FormattedMessage id="Please-select-a-plan" />),
+    // price: Yup.string().required(
+    //   <FormattedMessage id="Please-select-a-price" />
+    // ),
+    card: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
     ),
-    card: Yup.string().required(<FormattedMessage id="Please-select-a-card" />),
+    subscriptionOption: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
   })
 
   const initialValues = {
     plan: '',
     price: '',
     card: '',
+    subscriptionOption: '',
   }
   const formik = useFormik({
     initialValues,
@@ -96,6 +113,8 @@ const WorkspaceUpDowngradeForm = ({
           planId: values.plan,
           subscriptionId: currentSubscriptionId,
           comment: values.comment,
+          cardReferenceId: values.card,
+          paymentPlatform: 2,
         })
       } else {
         const downgradeSubscriptionReq = await downgradeSubscription({
@@ -114,9 +133,9 @@ const WorkspaceUpDowngradeForm = ({
   const intl = useIntl()
   let [planOptions, setPlanOptions] = useState([])
   useEffect(() => {
-    if (listData[selectedProduct]?.plans && idsWithValues) {
+    if (products[selectedProduct]?.plans && idsWithValues) {
       setPlanOptions(
-        Object.values(listData[selectedProduct].plans)
+        Object.values(products[selectedProduct].plans)
           .filter(
             (item) => item.isPublished === true && item.id !== currentPlanId
           )
@@ -133,12 +152,14 @@ const WorkspaceUpDowngradeForm = ({
     ;(async () => {
       formik.setFieldValue('plan', '')
       formik.setFieldValue('price', '')
-      if (listData[selectedProduct]) {
-        if (!listData[selectedProduct].plans) {
-          const planData = await getProductPlans(selectedProduct)
+      if (products[selectedProduct]) {
+        if (!products[selectedProduct].plans) {
+          const planData = await getProductPlansPublic(
+            subscriptionData.product.systemName
+          )
 
           dispatch(
-            setAllPlans({
+            wokspaceSetAllPlans({
               productId: selectedProduct,
               data: planData.data.data,
             })
@@ -146,24 +167,25 @@ const WorkspaceUpDowngradeForm = ({
         }
       }
     })()
-  }, [selectedProduct])
+  }, [products, selectedProduct])
 
   useEffect(() => {
     ;(async () => {
-      formik.setFieldValue('price', '')
-      if (listData[selectedProduct]) {
-        if (!listData[selectedProduct].plansPrice) {
-          const planPriceDataRes =
-            await getProductPlanPriceList(selectedProduct)
+      // formik.setFieldValue('price', '')
+      if (products[selectedProduct]) {
+        if (!products[selectedProduct]?.plansPrices) {
+          const planPriceDataRes = await getProductPlanPriceListPublic(
+            subscriptionData.product.systemName
+          )
           dispatch(
-            setAllPlansPrice({
+            setWorkspaceAllPlanPrices({
               productId: selectedProduct,
               data: planPriceDataRes.data.data,
             })
           )
         }
       }
-      const planDataRes = listData?.[selectedProduct]?.plansPrice
+      const planDataRes = products?.[selectedProduct]?.plansPrices
       if (planDataRes) {
         const planDataArray = Object.values(planDataRes)
         const currentPlanCycles = Array.isArray(planDataArray)
@@ -172,17 +194,21 @@ const WorkspaceUpDowngradeForm = ({
         const otherCurrentCycle = Array.isArray(currentPlanCycles)
           ? currentPlanCycles.find((item) => item.price !== currentPlanPrice)
           : null
-
+        console.log({ planDataArray })
         const planData = planDataArray
           .filter(
             (item) =>
-              item.plan.id === formik.values.plan && item.isPublished === true
+              item.isPublished === true && item.cycle === formik.values.cycle
           )
           .map((item) => ({
             value: item.id,
-            label: `${intl.formatMessage({
-              id: cycle[item.cycle],
-            })} (${item.price})`,
+            label: {
+              cycle: intl.formatMessage({
+                id: cycle[item.cycle],
+              }),
+              price: item.price,
+            },
+            planId: item.plan.id,
           }))
 
         const hidePlanData = planDataArray
@@ -213,10 +239,25 @@ const WorkspaceUpDowngradeForm = ({
     })()
   }, [
     formik.values.plan,
-    selectedProduct,
-    listData?.[selectedProduct]?.plansPrice,
+    // selectedProduct,
+    products?.[selectedProduct]?.plansPrices,
+    products?.[selectedProduct],
+    formik.values.cycle,
   ])
+  useEffect(() => {
+    if (!formik.values.subscriptionOption) {
+      return
+    }
+    const parts = formik.values.subscriptionOption.split(':')
+    if (parts.length !== 2) {
+      return
+    }
+    const [selectedPlan, selectedPrice] = parts
 
+    formik.setFieldValue('plan', selectedPlan)
+    formik.setFieldValue('price', selectedPrice)
+  }, [formik.values.subscriptionOption])
+  console.log({ lllll: formik.touched })
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
@@ -229,109 +270,135 @@ const WorkspaceUpDowngradeForm = ({
           />
         </Modal.Header>
         <Modal.Body>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Plan" />{' '}
-                <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <select
-                className="form-control"
-                name="plan"
-                id="plan"
-                value={formik.values.plan}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                disabled={!selectedProduct}
-              >
-                <option value="">
-                  <FormattedMessage id="Select-Option" />
-                </option>
-                {planOptions?.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.plan && formik.errors.plan && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.plan}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
-
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Subscription-Options" />{' '}
-                <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <select
-                className="form-control"
-                name="price"
-                id="price"
-                value={formik.values.price}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                disabled={!formik.values.plan || !selectedProduct}
-              >
-                <option value="">
-                  <FormattedMessage id="Select-Option" />{' '}
-                </option>
-                {priceList.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.price && formik.errors.price && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.price}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
-          <ListBox
-            value={formik.values.card}
-            options={cards.map((card) => ({
-              value: card.stripeCardId,
-              label: (
-                <div className="d-flex align-items-center">
-                  <FontAwesomeIcon
-                    icon={faEllipsisH}
-                    className="icon-dark pl-3"
-                  />
-                  <span className="pl-3">{card.last4Digits}</span>
-                </div>
-              ),
-            }))}
-            onChange={(e) => formik.setFieldValue('card', e.value)}
-            optionLabel="label"
-            className="form-control"
-          />
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Comment" />
-              </Form.Label>
-              <TextareaAndCounter
-                maxLength="250"
-                showCharCount="true"
-                id="comment"
-                name="comment"
-                inputValue={formik.values.comment}
-                onChange={formik.handleChange}
-                placeholder={'comment'}
+          <Form.Group className="mb-4">
+            <Form.Label>
+              <FormattedMessage id="Subscription Cycle" />
+            </Form.Label>
+            <div className="d-flex form-control justify-content-between ">
+              <Form.Check
+                inline
+                label={<FormattedMessage id="Monthly" />}
+                type="radio"
+                id="monthlyCycle"
+                name="cycle"
+                value="monthly"
+                checked={formik.values.cycle === 3} // Checking against the numeric value
+                onChange={() => formik.setFieldValue('cycle', 3)} // Setting numeric value
               />
-            </Form.Group>
-          </div>
+              <Form.Check
+                inline
+                label={<FormattedMessage id="Yearly" />}
+                type="radio"
+                id="yearlyCycle"
+                name="cycle"
+                value="yearly"
+                checked={formik.values.cycle === 4} // Checking against the numeric value
+                onChange={() => formik.setFieldValue('cycle', 4)} // Setting numeric value
+              />
+            </div>
+          </Form.Group>
+          <Form.Group className="mb-4">
+            <Form.Label>
+              <FormattedMessage id="Subscription-Options" />{' '}
+              <span style={{ color: 'red' }}>*</span>
+            </Form.Label>
+            <ListBox
+              value={
+                // `${formik.values.plan}:${formik.values.price}` ||
+                formik.values.subscriptionOption
+              }
+              options={
+                formik.values.cycle &&
+                planOptions.map((option) => ({
+                  value: `${option.value}:${
+                    priceList.find((price) => price.planId == option.value)
+                      ?.value
+                  }`,
+                  label: (
+                    <div className="d-flex justify-content-between align-items-center">
+                      <span>{option.label}</span>{' '}
+                      {priceList.find((price) => price.planId === option.value)
+                        ?.label.price || ''}{' '}
+                      $
+                    </div>
+                  ),
+                }))
+              }
+              onChange={(e) => {
+                formik.setFieldValue('subscriptionOption', e.value)
+              }}
+              optionLabel="label"
+              className="form-control p-0"
+              listStyle={{ maxHeight: '140px' }}
+            />
+            {formik.touched.subscriptionOption &&
+              formik.errors.subscriptionOption && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.subscriptionOption}
+                </Form.Control.Feedback>
+              )}{' '}
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>
+              <FormattedMessage id="Payment-Card" />{' '}
+              <span style={{ color: 'red' }}>*</span>
+            </Form.Label>
+            <ListBox
+              value={formik.values.card}
+              options={cards.map((card) => ({
+                // Use the list of cards from state
+                value: card.stripeCardId,
+                label: (
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div
+                      className="d-flex align-items-center"
+                      style={{ minWidth: '110px' }}
+                    >
+                      {cardInfo?.[card.brand]?.icon}
+                      <FontAwesomeIcon
+                        icon={faEllipsisH}
+                        className="icon-dark pl-3"
+                      />
+                      <span
+                        className="pl-1"
+                        style={{ flex: '0 0 50%', minWidth: '100px' }}
+                      >
+                        {card.last4Digits}
+                      </span>
+                      <span
+                        className="px-3"
+                        style={{ flex: '0 0 50%', minWidth: '100px' }}
+                      >
+                        {card.cardholderName}
+                      </span>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <span>
+                        {card.expirationMonth}/{card.expirationYear}
+                      </span>
+                    </div>
+                  </div>
+                ),
+              }))}
+              onChange={(e) => formik.setFieldValue('card', e.value)}
+              optionLabel="label"
+              className="form-control p-0"
+              // virtualScrollerOptions={{ itemSize: 300 }}
+              listStyle={{ maxHeight: '140px' }}
+            />
+            {formik.touched.card && formik.errors.card && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.card}
+              </Form.Control.Feedback>
+            )}{' '}
+          </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>

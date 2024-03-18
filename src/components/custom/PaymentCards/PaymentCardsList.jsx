@@ -15,7 +15,6 @@ const PaymentCardsList = () => {
   const { getPaymentCardsList, detachPaymentMethodCard, markCardAsDefault } =
     useRequest()
   const [cards, setCards] = useState([])
-  console.log(cards)
   const [confirm, setConfirm] = useState(false)
   const [update, setUpdate] = useState(1)
   const [selectedCardId, setSelectedCardId] = useState(null)

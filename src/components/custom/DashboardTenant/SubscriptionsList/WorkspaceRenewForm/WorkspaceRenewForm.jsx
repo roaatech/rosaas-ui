@@ -10,18 +10,23 @@ import { ListBox } from 'primereact/listbox'
 import { cardInfo } from '../../../../../const/cardPayment.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons'
-import { useDispatch } from 'react-redux'
-import { changeSubscriptionAttribute } from '../../../../../store/slices/workSpace.js'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  changeSubscriptionAttribute,
+  setAllpaymentCards,
+} from '../../../../../store/slices/workSpace.js'
 
 const WorkspaceRenewForm = ({
   setVisible,
   popupLabel,
   currentSubscription,
   referenceId,
-  cards,
+  // cards,
   setCards,
   setShowAddCardForm,
 }) => {
+  console.log({ currentSubscription })
+  const cards = useSelector((state) => state.workspace.paymentCards)
   const { setAutoRenewal, getPaymentCardsList } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
 
@@ -61,9 +66,12 @@ const WorkspaceRenewForm = ({
   })
 
   useEffect(() => {
+    if (Object.keys(cards).length > 0) {
+      return
+    }
     ;(async () => {
       const fetchedCardsData = await getPaymentCardsList()
-      setCards(fetchedCardsData.data.data)
+      dispatch(setAllpaymentCards(fetchedCardsData.data.data))
     })()
   }, [])
 
@@ -87,31 +95,42 @@ const WorkspaceRenewForm = ({
                 </Form.Label>
                 <ListBox
                   value={formik.values.card}
-                  options={cards.map((card) => ({
-                    // Use the list of cards from state
-                    value: card.stripeCardId,
-                    label: (
-                      <div className="d-flex ">
-                        <div className="d-flex align-items-center">
-                          {cardInfo?.[card.brand]?.icon}
-                          <FontAwesomeIcon
-                            icon={faEllipsisH}
-                            className="icon-dark pl-3"
-                          />
-                          <span className="pl-3">{card.last4Digits}</span>
+                  options={
+                    cards &&
+                    Object.values(cards).map((card) => ({
+                      // Use the list of cards from state
+                      value: card.stripeCardId,
+                      label: (
+                        <div className="d-flex ">
+                          <div
+                            className="d-flex align-items-center"
+                            style={{ minWidth: '110px' }}
+                          >
+                            {cardInfo?.[card.brand]?.icon}
+                            <FontAwesomeIcon
+                              icon={faEllipsisH}
+                              className="icon-dark pl-3"
+                            />
+                            <span className="pl-1">{card.last4Digits}</span>
+                          </div>
+                          <div className="d-flex align-items-center">
+                            <span
+                              className="px-3"
+                              style={{ flex: '0 0 100%', minWidth: '100px' }}
+                            >
+                              {card.cardholderName}
+                            </span>
+                            <span className="d-flex justify-content-end">
+                              {card.expirationMonth}/{card.expirationYear}
+                            </span>
+                          </div>
                         </div>
-                        <div className="d-flex align-items-center">
-                          <span className="px-3">{card.cardholderName}</span>
-                          <span className="px-3">
-                            {card.expirationMonth}/{card.expirationYear}
-                          </span>
-                        </div>
-                      </div>
-                    ),
-                  }))}
+                      ),
+                    }))
+                  }
                   onChange={(e) => formik.setFieldValue('card', e.value)}
                   optionLabel="label"
-                  className="form-control"
+                  className="form-control p-0"
                   // virtualScrollerOptions={{ itemSize: 300 }}
                   listStyle={{ height: '200px' }}
                 />

@@ -34,6 +34,9 @@ const useSubManagementReq = () => {
       data
     )
   }
+  const getAutoRenewalList = async () => {
+    return await Request.get(`management/sadmin/v1/Subscriptions/AutoRenewal`)
+  }
   const setAutoRenewal = async (data) => {
     return await Request.post(
       `management/sadmin/v1/Subscriptions/AutoRenewal`,
@@ -74,6 +77,7 @@ const useSubManagementReq = () => {
     subscriptionFeturesList,
     subscriptionCycleById,
     getSubscriptionsList,
+    getAutoRenewalList,
   }
 }
 export default useSubManagementReq
