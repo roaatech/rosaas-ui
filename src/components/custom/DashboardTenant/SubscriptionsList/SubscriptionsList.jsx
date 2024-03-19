@@ -124,7 +124,7 @@ export default function SubscriptionList() {
           <Row>
             {subscriptionData &&
               Object.values(subscriptionData).map((subscription) => (
-                <Col key={subscription.id} md={3}>
+                <Col key={subscription.id} xl={3} lg={4} sm={6}>
                   <Card className="mb-4">
                     <Card.Body>
                       <Card.Title>
@@ -206,6 +206,7 @@ export default function SubscriptionList() {
                           </Dropdown>
                         </div>
                       </Card.Title>
+
                       <p>
                         <FontAwesomeIcon
                           icon={
@@ -244,6 +245,14 @@ export default function SubscriptionList() {
                           }
                         </span>
                       </p>
+                      <Card.Text>
+                        <span>
+                          <strong>
+                            <FormattedMessage id="Product" />
+                          </strong>{' '}
+                          {subscription.product.displayName}
+                        </span>
+                      </Card.Text>
                       <Card.Text>
                         <span>
                           <strong>

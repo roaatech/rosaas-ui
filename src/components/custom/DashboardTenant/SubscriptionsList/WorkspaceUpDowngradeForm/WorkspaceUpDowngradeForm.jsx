@@ -274,7 +274,7 @@ const WorkspaceUpDowngradeForm = ({
             <Form.Label>
               <FormattedMessage id="Subscription Cycle" />
             </Form.Label>
-            <div className="d-flex form-control justify-content-between ">
+            <div className="d-flex form-control justify-content-center ">
               <Form.Check
                 inline
                 label={<FormattedMessage id="Monthly" />}
@@ -283,7 +283,8 @@ const WorkspaceUpDowngradeForm = ({
                 name="cycle"
                 value="monthly"
                 checked={formik.values.cycle === 3} // Checking against the numeric value
-                onChange={() => formik.setFieldValue('cycle', 3)} // Setting numeric value
+                onChange={() => formik.setFieldValue('cycle', 3)}
+                className="px-6"
               />
               <Form.Check
                 inline
@@ -294,6 +295,7 @@ const WorkspaceUpDowngradeForm = ({
                 value="yearly"
                 checked={formik.values.cycle === 4} // Checking against the numeric value
                 onChange={() => formik.setFieldValue('cycle', 4)} // Setting numeric value
+                className="px-6"
               />
             </div>
           </Form.Group>

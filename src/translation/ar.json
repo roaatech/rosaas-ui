@@ -511,5 +511,8 @@
   "Welcome-to-your-dashboard": "مرحبًا بك في لوحة التحكم الخاصة بك! استكشف وأدر حسابك بسهولة.",
   "Workspace": "مساحة العمل",
   "Update-Profile": "قم بتحسين ملفك الشخصي",
-  "Change-Password": "تغيير كلمة المرور"
+  "Change-Password": "تغيير كلمة المرور",
+  "Auto-Renewal-Payment-Method": "طريقة الدفع بالتجديد التلقائي",
+  "Payment-Card": "بطاقة الدفع",
+  "Billing-Date": "تاريخ الدفع"
 }

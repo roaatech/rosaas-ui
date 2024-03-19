@@ -83,7 +83,7 @@ const PaymentCardsList = () => {
         <Card.Body>
           <Row className="g-4">
             {cards.map((card) => (
-              <Col key={card.stripeCardId} lg={3} sm={4}>
+              <Col key={card.stripeCardId} xl={3} lg={4} sm={6}>
                 <CreditCard
                   cardTypeIcon={
                     cardInfo?.[card.brand]?.icon || faMoneyCheckDollar

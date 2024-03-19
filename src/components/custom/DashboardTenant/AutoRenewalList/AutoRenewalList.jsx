@@ -14,6 +14,7 @@ import {
   faToggleOff,
   faToggleOn,
   faExchangeAlt,
+  faMoneyCheckDollar,
 } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
 import useRequest from '../../../../axios/apis/useRequest'
@@ -28,6 +29,9 @@ import {
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog.jsx'
 import RenewForm from '../../tenant/SubscriptionManagement/RenewForm/RenewForm.jsx' // Adjust import path as per your project structure
 import WorkspaceRenewForm from '../SubscriptionsList/WorkspaceRenewForm/WorkspaceRenewForm.jsx'
+import CreditCard from '../../CreditCard/CreditCard.jsx'
+import { cardInfo } from '../../../../const/cardPayment.js'
+import { formatDate } from '../../../../lib/sharedFun/Time.js'
 
 export default function AutoRenewalList() {
   const { getAutoRenewalList } = useRequest()
@@ -87,13 +91,30 @@ export default function AutoRenewalList() {
           <Row>
             {autoRenewalData &&
               Object.values(autoRenewalData).map((autorenewal) => (
-                <Col key={autorenewal.id} md={3}>
+                <Col key={autorenewal.id} xl={4} lg={4} sm={6}>
                   <Card className="mb-4">
-                    <Card.Body>
-                      <Card.Title>
-                        <div className="d-flex justify-content-between">
-                          {autorenewal.subscription.displayName}{' '}
-                          <Dropdown as={ButtonGroup}>
+                    <Card.Header>
+                      <div className="d-flex justify-content-between">
+                        <Card.Title className="m-0 p-0">
+                          <div>
+                            <strong>
+                              <FormattedMessage id="Auto-Renewal" />
+                            </strong>{' '}
+                          </div>
+                        </Card.Title>
+                        <div>
+                          {/* <Card.Title className="m-0 p-0"> */}
+                          <span className="mx-2">
+                            <span className=" fw-normal">
+                              {' '}
+                              <FormattedMessage id="Billing-Date" />{' '}
+                            </span>
+                            <span className="billing-date">
+                              {formatDate(autorenewal.createdDate)}
+                            </span>
+                          </span>
+                          {'  '}
+                          <Dropdown className="mx-2" as={ButtonGroup}>
                             <Dropdown.Toggle
                               as={Button}
                               split
@@ -134,19 +155,22 @@ export default function AutoRenewalList() {
                                 <FormattedMessage id="Renew-Subscription" />
                               </Dropdown.Item> */}
                             </Dropdown.Menu>
-                          </Dropdown>
+                          </Dropdown>{' '}
+                          {/* </Card.Title> */}
                         </div>
-                      </Card.Title>
-                      <p>
-                        <FontAwesomeIcon
-                          icon={faCheckCircle}
-                          className={`text-success`}
-                        />{' '}
-                        <strong>
-                          <FormattedMessage id="Auto-Renewal" />
-                        </strong>{' '}
-                        <span className="text-success">{'Active'}</span>
-                      </p>
+                      </div>
+                    </Card.Header>
+                    <Card.Body>
+                      <Card.Text>
+                        <span>
+                          <strong>
+                            <FormattedMessage id="Tenant" />
+                          </strong>
+                          {'  '}
+                          {autorenewal.subscription.displayName}{' '}
+                        </span>
+                      </Card.Text>
+
                       <Card.Text>
                         <span>
                           <strong>
@@ -158,11 +182,37 @@ export default function AutoRenewalList() {
                       <Card.Text>
                         <div className="d-flex align-items-center">
                           <strong>
-                            <FormattedMessage id="Created-Date" />
-                          </strong>{' '}
-                          {autorenewal.createdDate}
+                            <FormattedMessage id="Start-Date" />
+                          </strong>
+                          {'   '}
+                          {formatDate(autorenewal.createdDate)}
                         </div>
                       </Card.Text>
+                      <div>
+                        <strong>
+                          <FormattedMessage id="Auto-Renewal-Payment-Method" />
+                        </strong>
+
+                        <div className="p-3 ">
+                          <div>
+                            <CreditCard
+                              cardNumber={
+                                autorenewal.paymentMethodCard?.last4Digits
+                              }
+                              expiryDate={`${autorenewal.paymentMethodCard?.expirationMonth}/${autorenewal.paymentMethodCard?.expirationYear}`}
+                              cardHolder={
+                                autorenewal.paymentMethodCard?.cardholderName
+                              }
+                              isDefault={autorenewal.isDefault}
+                              cardTypeIcon={
+                                cardInfo?.[autorenewal.paymentMethodCard?.brand]
+                                  ?.icon || faMoneyCheckDollar
+                              }
+                              cardView={true}
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </Card.Body>
                   </Card>
                 </Col>

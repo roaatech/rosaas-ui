@@ -14,7 +14,7 @@
   "Please-enter-a-valid-value": "Please enter a valid value",
   "All-values-are-assigned.": "All values are assigned.",
   "singInTo": "Sign in to",
-  "Arabic": "العربية",
+  "Arabic": "Arabic",
   "English": "English",
   "signIn": "Sign in",
   "yourEmail": "Your Email",
@@ -485,7 +485,6 @@
   "Expiration-Date": "Expiration Date",
   "Add-Card": "Add Card",
   "Set-As-Default": "Set As Default",
-
   "Days": "Days",
   "Free-Trial": "Free Trial",
   "Ends-On": "Ends On",
@@ -511,5 +510,8 @@
   "Go-to-Marketplace": "Go to Marketplace",
   "Welcome-to-your-dashboard": "Welcome to your dashboard! Explore and manage your account with ease.",
   "Update-Profile": "Profile Settings",
-  "Change-Password": "Change Password"
+  "Change-Password": "Change Password",
+  "Auto-Renewal-Payment-Method": "Auto Renewal Payment Method",
+  "Payment-Card": "Payment Card",
+  "Billing-Date": "Next Billing Date"
 }

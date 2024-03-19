@@ -263,16 +263,19 @@ export default (props) => {
                       </Dropdown.Item>
 
                       {userRole && (
-                        <Dropdown.Item
-                          className="fw-bold"
-                          onClick={() => dispatch(logOut())}
-                        >
-                          {/* <FontAwesomeIcon
+                        <>
+                          <Dropdown.Divider />
+                          <Dropdown.Item
+                            className="fw-bold"
+                            onClick={() => dispatch(logOut())}
+                          >
+                            {/* <FontAwesomeIcon
                     icon={faSignOutAlt}
                     className="text-danger mx-2"
                   /> */}
-                          <FormattedMessage id="Logout" />
-                        </Dropdown.Item>
+                            <FormattedMessage id="Logout" />
+                          </Dropdown.Item>
+                        </>
                       )}
                     </Dropdown.Menu>
                   </Dropdown>

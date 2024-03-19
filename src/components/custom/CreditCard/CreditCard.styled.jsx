@@ -7,11 +7,11 @@ export const Wrapper = styled.div`
     /* margin: 10% auto; */
     margin-top: 0;
     background-color: #ffc9666a;
-    max-height: 150px;
+    /* max-height: 150px; */
     max-width: 350px;
   }
   .credit-card-view {
-    max-height: 140px;
+    /* max-height: 140px; */
     min-height: 140px;
   }
   .credit-card-hover:hover {
