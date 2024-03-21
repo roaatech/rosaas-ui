@@ -5,6 +5,7 @@ import useRequest from '../../../../axios/apis/useRequest.js'
 import { Wrapper } from './InvoicesList.styled'
 import UpperContent from '../../Shared/UpperContent/UpperContent.jsx'
 import { formatDate } from '../../../../lib/sharedFun/Time.js'
+import { FormattedMessage } from 'react-intl'
 
 // const styles = StyleSheet.create({
 //   invoiceContainer: {
@@ -163,84 +164,100 @@ export default function InvoicesList() {
   return (
     <Wrapper>
       <UpperContent>
-        <h4>Invoices List</h4>
+        <h4>
+          <FormattedMessage id="Invoices-List" />
+        </h4>
       </UpperContent>
 
-      <Card className="m-3 p-3 mt-0">
-        <div>
-          <Row>
-            {invoices.map((invoice) => {
-              const sections = invoice.orderItems[0].displayName?.split(', ')
+      <div>
+        <Row className="mx-2">
+          {invoices.map((invoice) => {
+            const sections = invoice.orderItems[0].displayName?.split(', ')
 
-              const extractedData = {}
+            const extractedData = {}
 
-              sections?.forEach((section) => {
-                const matches = section.match(/\[(.*?)\]/)
-                if (matches && matches.length > 1) {
-                  const [key, value] = matches[1]
-                    .split(':')
-                    .map((item) => item.trim())
-                  extractedData[key] = value
-                }
-              })
+            sections?.forEach((section) => {
+              const matches = section.match(/\[(.*?)\]/)
+              if (matches && matches.length > 1) {
+                const [key, value] = matches[1]
+                  .split(':')
+                  .map((item) => item.trim())
+                extractedData[key] = value
+              }
+            })
 
-              return (
-                <Col key={invoice.id} md={4}>
-                  <Card className="mb-4">
-                    <Card.Header
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}
-                      className="pb-0"
+            return (
+              <Col key={invoice.id} md={4}>
+                <Card className="mb-4">
+                  <Card.Header
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                    className="pb-0"
+                  >
+                    <div style={{ flex: 1 }}>
+                      <Card.Title>
+                        <FormattedMessage id="Invoice" />
+                      </Card.Title>
+                    </div>
+
+                    <div style={{ flex: 1, textAlign: 'right' }}>
+                      <strong>
+                        <div>
+                          <Card.Title
+                            style={{
+                              color: 'var(--second-color)',
+                            }}
+                          >
+                            {' '}
+                            # {invoice.orderNumber}
+                          </Card.Title>
+                        </div>
+                      </strong>
+                    </div>
+                  </Card.Header>
+
+                  <Card.Body>
+                    {' '}
+                    <Card.Text>
+                      <strong>
+                        <FormattedMessage id="Product" />:
+                      </strong>{' '}
+                      {extractedData.Product}
+                    </Card.Text>
+                    <Card.Text>
+                      <strong>
+                        <FormattedMessage id="Tenant" />:
+                      </strong>{' '}
+                      {extractedData.Tenant}
+                    </Card.Text>
+                    <Card.Text>
+                      <strong>
+                        <FormattedMessage id="Plan" />:
+                      </strong>{' '}
+                      {extractedData.Plan}
+                    </Card.Text>
+                    <Card.Text>
+                      <strong>
+                        <FormattedMessage id="Invoice-Date" />:
+                      </strong>{' '}
+                      {formatDate(invoice.paidDate)}
+                    </Card.Text>
+                    <Card.Footer
+                      className="d-flex justify-content-between "
+                      style={{ backgroundColor: 'var(--primary1)' }}
                     >
-                      <div style={{ flex: 1 }}>
-                        <Card.Title>INVOICE</Card.Title>
-                      </div>
-
-                      <div style={{ flex: 1, textAlign: 'right' }}>
-                        <strong>
-                          <div>
-                            <Card.Title
-                              style={{
-                                color: 'var(--second-color)',
-                              }}
-                            >
-                              {' '}
-                              # {invoice.orderNumber}
-                            </Card.Title>
-                          </div>
-                        </strong>
-                      </div>
-                    </Card.Header>
-
-                    <Card.Body>
-                      {' '}
-                      <Card.Text>
-                        <strong>Product:</strong> {extractedData.Product}
-                      </Card.Text>
-                      <Card.Text>
-                        <strong>Tenant:</strong> {extractedData.Tenant}
-                      </Card.Text>
-                      <Card.Text>
-                        <strong>Plan:</strong> {extractedData.Plan}
-                      </Card.Text>
-                      <Card.Text>
-                        <strong>Invoice Date:</strong>{' '}
-                        {formatDate(invoice.paidDate)}
-                      </Card.Text>
-                      <Card.Footer
-                        className="d-flex justify-content-between "
-                        style={{ backgroundColor: 'var(--primary1)' }}
-                      >
-                        <strong>Total</strong>{' '}
-                        <span style={{ color: 'var(--second-color' }}>
-                          <strong> {invoice.orderTotal} $</strong>
-                        </span>
-                      </Card.Footer>
-                      <div className="d-flex justify-content-end">
-                        {/* <Dropdown as={ButtonGroup}>
+                      <strong>
+                        <FormattedMessage id="Total" />
+                      </strong>{' '}
+                      <span style={{ color: 'var(--second-color' }}>
+                        <strong> {invoice.orderTotal} $</strong>
+                      </span>
+                    </Card.Footer>
+                    <div className="d-flex justify-content-end">
+                      {/* <Dropdown as={ButtonGroup}>
                           <Dropdown.Toggle
                             as={Button}
                             split
@@ -266,15 +283,14 @@ export default function InvoicesList() {
                             </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown> */}
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              )
-            })}
-          </Row>
-        </div>
-      </Card>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            )
+          })}
+        </Row>
+      </div>
     </Wrapper>
   )
 }

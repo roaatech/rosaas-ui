@@ -41,7 +41,11 @@ const CheckoutTenantReg = ({
   const [specValidationErrors, setSpecValidationErrors] = useState({})
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const hash = window.location.hash
 
+  const array = hash.split('#')
+  const startWithTrial = array.find((element) => element == 'start-with-trial')
+  console.log(startWithTrial == 'start-with-trial')
   const { systemName, priceName } = useParams()
   const step = useSelector((state) => state.tenants.currentStep)
 
@@ -120,6 +124,7 @@ const CheckoutTenantReg = ({
                 planId: priceData?.plan?.id,
                 planPriceId: currentPrice,
                 specifications: specificationsArray,
+                userEnabledTheTrial: startWithTrial == 'start-with-trial',
               },
             ],
             systemName: uniqueName,
@@ -192,6 +197,7 @@ const CheckoutTenantReg = ({
             planId: priceData?.plan?.id,
             planPriceId: currentPrice,
             specifications: [],
+            userEnabledTheTrial: startWithTrial == 'start-with-trial',
           },
         ],
         systemName: uniqueName,

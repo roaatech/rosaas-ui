@@ -71,11 +71,11 @@ const WorkspaceUpDowngradeForm = ({
     getProductPlanPriceListPublic,
   } = useRequest()
   const selectedProduct = subscriptionData?.product?.id
-  const currentPlanPrice = subscriptionData?.planPrice.id
+  const currentPlanPrice = subscriptionData?.planPrice.price
   const currentPlanCycle = subscriptionData?.planPrice.cycle
   const currentPlanId = subscriptionData?.plan.id
   const [idsWithValues, setIdsWithValues] = useState()
-
+  console.log({ subscriptionData })
   const [currentSubscriptionId, setCurrentSubscriptionId] = useState('')
   useEffect(() => {
     setCurrentSubscriptionId(subscriptionData?.subscriptionId)
@@ -92,6 +92,16 @@ const WorkspaceUpDowngradeForm = ({
     subscriptionOption: Yup.string().required(
       <FormattedMessage id="This-field-is-required" />
     ),
+    // plan: Yup.string()
+    //   .test(
+    //     'not-current-plan',
+    //     'You cannot select the current plan',
+    //     function (value) {
+    //       const currentPlanId = subscriptionData?.plan.id
+    //       return value !== currentPlanId
+    //     }
+    //   )
+    //   .required('Please select a plan'),
   })
 
   const initialValues = {
@@ -99,6 +109,9 @@ const WorkspaceUpDowngradeForm = ({
     price: '',
     card: '',
     subscriptionOption: '',
+    cycle: subscriptionData?.planPrice?.cycle
+      ? subscriptionData?.planPrice?.cycle
+      : '',
   }
   const formik = useFormik({
     initialValues,
@@ -134,17 +147,29 @@ const WorkspaceUpDowngradeForm = ({
   let [planOptions, setPlanOptions] = useState([])
   useEffect(() => {
     if (products[selectedProduct]?.plans && idsWithValues) {
-      setPlanOptions(
-        Object.values(products[selectedProduct].plans)
-          .filter(
-            (item) => item.isPublished === true && item.id !== currentPlanId
-          )
-          .filter((item) => idsWithValues.includes(item.id))
-          .map((item, index) => ({
-            value: item.id,
-            label: item.displayName,
-          }))
+      const planList = Object.values(products[selectedProduct].plans)
+        .filter((item) => item.isPublished === true)
+        .filter((item) => idsWithValues.includes(item.id))
+        .map((item) => ({
+          value: item.id,
+          label:
+            item.id === currentPlanId
+              ? `${item.displayName} (Current Plan)`
+              : item.displayName,
+        }))
+
+      // Find the index of the current plan in the planList
+      const currentIndex = planList.findIndex(
+        (plan) => plan.value === currentPlanId
       )
+
+      // If the current plan exists, move it to the beginning
+      if (currentIndex !== -1) {
+        const currentPlan = planList.splice(currentIndex, 1)[0]
+        planList.unshift(currentPlan)
+      }
+
+      setPlanOptions(planList)
     }
   }, [idsWithValues])
 
@@ -192,9 +217,11 @@ const WorkspaceUpDowngradeForm = ({
           ? planDataArray.filter((item) => item.plan.id === currentPlanId)
           : null
         const otherCurrentCycle = Array.isArray(currentPlanCycles)
-          ? currentPlanCycles.find((item) => item.price !== currentPlanPrice)
+          ? currentPlanCycles.find(
+              (item) => item.price
+              // !== currentPlanPrice
+            )
           : null
-        console.log({ planDataArray })
         const planData = planDataArray
           .filter(
             (item) =>
@@ -213,16 +240,17 @@ const WorkspaceUpDowngradeForm = ({
 
         const hidePlanData = planDataArray
           .filter((item) => {
+            console.log({ currentPlanPrice })
             if (
               item.isPublished === true &&
-              (type === 'upgrade'
+              (type === 'downgrade'
                 ? item.cycle === currentPlanCycle
                   ? item.price > currentPlanPrice
-                  : item.price > otherCurrentCycle.price
-                : type === 'downgrade'
+                  : otherCurrentCycle && item.price > otherCurrentCycle?.price
+                : type === 'upgrade'
                 ? item.cycle === currentPlanCycle
                   ? item.price < currentPlanPrice
-                  : item.price < otherCurrentCycle.price
+                  : otherCurrentCycle && item.price < otherCurrentCycle?.price
                 : type !== 'changeOrderPlan')
             ) {
               return false
@@ -257,7 +285,7 @@ const WorkspaceUpDowngradeForm = ({
     formik.setFieldValue('plan', selectedPlan)
     formik.setFieldValue('price', selectedPrice)
   }, [formik.values.subscriptionOption])
-  console.log({ lllll: formik.touched })
+
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
@@ -311,13 +339,18 @@ const WorkspaceUpDowngradeForm = ({
               }
               options={
                 formik.values.cycle &&
-                planOptions.map((option) => ({
+                planOptions.map((option, index) => ({
                   value: `${option.value}:${
                     priceList.find((price) => price.planId == option.value)
                       ?.value
                   }`,
                   label: (
-                    <div className="d-flex justify-content-between align-items-center">
+                    <div
+                      style={{
+                        color: index === 0 ? 'var(--passive-color)' : '',
+                      }}
+                      className="d-flex justify-content-between align-items-center"
+                    >
                       <span>{option.label}</span>{' '}
                       {priceList.find((price) => price.planId === option.value)
                         ?.label.price || ''}{' '}
@@ -327,7 +360,17 @@ const WorkspaceUpDowngradeForm = ({
                 }))
               }
               onChange={(e) => {
-                formik.setFieldValue('subscriptionOption', e.value)
+                // Check if the selected plan is not the current plan
+                if (e.value.split(':')[0] === subscriptionData.plan.id) {
+                  // Show an error message
+                  formik.setFieldError(
+                    'plan',
+                    'You cannot select the current plan'
+                  )
+                } else {
+                  // Set the selected option
+                  formik.setFieldValue('subscriptionOption', e.value)
+                }
               }}
               optionLabel="label"
               className="form-control p-0"
@@ -342,6 +385,14 @@ const WorkspaceUpDowngradeForm = ({
                   {formik.errors.subscriptionOption}
                 </Form.Control.Feedback>
               )}{' '}
+            {formik.touched.plan && formik.errors.plan && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.plan}
+              </Form.Control.Feedback>
+            )}{' '}
           </Form.Group>
 
           <Form.Group>

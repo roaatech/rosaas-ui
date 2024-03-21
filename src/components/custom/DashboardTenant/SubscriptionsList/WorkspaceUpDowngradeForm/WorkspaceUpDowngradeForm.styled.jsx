@@ -18,4 +18,11 @@ export const Wrapper = styled.div`
     background-color: var(--second-color);
     border-color: var(--second-color);
   }
+  .p-listbox-item {
+    border: 2px !important;
+    border-color: var(--second-color);
+  }
+  .p-listbox .p-listbox-list .p-listbox-item {
+    border-bottom: 1px solid var(--misty-gray) !important;
+  }
 `

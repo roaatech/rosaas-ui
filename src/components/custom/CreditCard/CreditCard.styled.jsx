@@ -6,9 +6,9 @@ export const Wrapper = styled.div`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* margin: 10% auto; */
     margin-top: 0;
-    background-color: #ffc9666a;
+    /* background-color: #ffc9666a; */
     /* max-height: 150px; */
-    max-width: 350px;
+    /* max-width: 350px; */
   }
   .credit-card-view {
     /* max-height: 140px; */

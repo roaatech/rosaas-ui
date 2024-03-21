@@ -262,7 +262,7 @@
   "Reset-Subs": "Reset Sub",
   "Upgrade-info": "Upgrade info",
   "Upgrade-Subscription": "Upgrade Subscription",
-  "Auto-Renewal": "Auto Renewal",
+  "Auto-Renewal": "Allow Auto Renewal",
   "Reseted-At": "Reseted At",
   "cancel-renew-message": "Are you sure you want to cancel Auto Renewal?",
   "reset-limit-message": "Are you sure you want to reset the limit?",
@@ -513,5 +513,13 @@
   "Change-Password": "Change Password",
   "Auto-Renewal-Payment-Method": "Auto Renewal Payment Method",
   "Payment-Card": "Payment Card",
-  "Billing-Date": "Next Billing Date"
+  "Billing-Date": "Next Billing Date",
+  "Subscription-List": "Subscription List",
+  "Tenant": "Tenant",
+  "Invoice": "Invoice",
+  "Enabled-Date": "Enabled Date",
+  "Cancel-Auto-Renewal": "Cancel Auto Renewal",
+  "Enable-Auto-Renewal": "Enable Auto Renewal",
+  "Yearly": "Yearly",
+  "Invoices-List": "Invoices List"
 }

@@ -10,8 +10,10 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCheckCircle,
+  faDownload,
   faEllipsisV,
   faExchangeAlt,
+  faExclamationCircle,
   faMoneyCheckDollar,
   faTimesCircle,
   faToggleOff,
@@ -33,6 +35,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import RenewForm from '../../tenant/SubscriptionManagement/RenewForm/RenewForm.jsx'
 import {
   changeSubscriptionAttribute,
+  deleteAutoRenewalById,
   setWorkspaceSubscriptionData,
 } from '../../../../store/slices/workSpace.js'
 import CardSaveFormWithStripe from '../../CardSaveForm/CardSaveForm.js'
@@ -50,11 +53,19 @@ export default function SubscriptionList() {
   const [cards, setCards] = useState([])
   const [showAddCardForm, setShowAddCardForm] = useState(false)
   const [showUpDowngradeForm, setShowUpDowngradeForm] = useState(false)
+  const [showDowngradeForm, setShowDowngradeForm] = useState(false)
   const handleOpenUpDowngradeForm = (subscription) => {
     setCurrentSubscription(subscription)
     setShowUpDowngradeForm(true)
   }
+  const handleOpenDowngradeForm = (subscription) => {
+    setCurrentSubscription(subscription)
+    setShowDowngradeForm(true)
+  }
   useEffect(() => {
+    if (Object.values(subscriptionData).length > 0) {
+      return
+    }
     const fetchData = async () => {
       try {
         const response = await getSubscriptionsList()
@@ -101,6 +112,8 @@ export default function SubscriptionList() {
           attributeValue: false,
         })
       )
+      dispatch(deleteAutoRenewalById(currentSubscriptionId))
+
       setConfirm(false)
     } catch (error) {
       console.error('Error cancelling auto-renewal:', error)
@@ -111,6 +124,13 @@ export default function SubscriptionList() {
     setConfirm(true)
     setCurrentSubscriptionId(id)
   }
+  const calculateDaysRemaining = (endDate) => {
+    const currentDate = new Date()
+    const trialEndDate = new Date(endDate)
+    const timeDifference = trialEndDate.getTime() - currentDate.getTime()
+    const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24))
+    return daysRemaining >= 0 ? daysRemaining : 0
+  }
   return (
     <Wrapper>
       <UpperContent>
@@ -119,62 +139,60 @@ export default function SubscriptionList() {
         </h4>
       </UpperContent>
 
-      <Card className="m-3 p-3 mt-0">
-        <div>
-          <Row>
-            {subscriptionData &&
-              Object.values(subscriptionData).map((subscription) => (
-                <Col key={subscription.id} xl={3} lg={4} sm={6}>
-                  <Card className="mb-4">
-                    <Card.Body>
-                      <Card.Title>
-                        <div className="d-flex justify-content-between">
-                          {subscription.displayName}{' '}
-                          <Dropdown as={ButtonGroup}>
-                            <Dropdown.Toggle
-                              as={Button}
-                              split
-                              variant="link"
-                              className="text-dark m-0 p-0"
-                            >
-                              <span className="icon icon-sm">
-                                <FontAwesomeIcon
-                                  icon={faEllipsisV}
-                                  className="icon-dark"
-                                />
-                              </span>
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                              {!subscription.autoRenewalIsEnabled ? (
-                                <Dropdown.Item
-                                  onClick={() =>
-                                    automaticRenew(subscription?.id)
-                                  }
-                                >
-                                  <>
-                                    <FontAwesomeIcon
-                                      icon={faToggleOff}
-                                      className="me-2"
-                                    />
-                                    <FormattedMessage id="Enable-Auto-Renewal" />
-                                  </>
-                                </Dropdown.Item>
-                              ) : (
-                                <Dropdown.Item
-                                  onClick={() =>
-                                    handleToggleClick(subscription?.id)
-                                  }
-                                  className="text-danger"
-                                >
+      {/* <Card className="m-3 p-3 mt-0"> */}
+      <div>
+        <Row className="mx-2">
+          {subscriptionData &&
+            Object.values(subscriptionData).map((subscription) => (
+              <Col key={subscription.id} xl={3} lg={4} sm={6}>
+                <Card className="mb-4 ">
+                  <Card.Body>
+                    <Card.Title>
+                      <div className="d-flex justify-content-between">
+                        {subscription.displayName}{' '}
+                        <Dropdown as={ButtonGroup}>
+                          <Dropdown.Toggle
+                            as={Button}
+                            split
+                            variant="link"
+                            className="text-dark m-0 p-0"
+                          >
+                            <span className="icon icon-sm">
+                              <FontAwesomeIcon
+                                icon={faEllipsisV}
+                                className="icon-dark"
+                              />
+                            </span>
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            {!subscription.autoRenewalIsEnabled ? (
+                              <Dropdown.Item
+                                onClick={() => automaticRenew(subscription?.id)}
+                              >
+                                <>
                                   <FontAwesomeIcon
-                                    icon={faToggleOn}
+                                    icon={faToggleOff}
                                     className="me-2"
                                   />
-                                  <FormattedMessage id="Cancel-Auto-Renewal" />
-                                </Dropdown.Item>
-                              )}
+                                  <FormattedMessage id="Enable-Auto-Renewal" />
+                                </>
+                              </Dropdown.Item>
+                            ) : (
+                              <Dropdown.Item
+                                onClick={() =>
+                                  handleToggleClick(subscription?.id)
+                                }
+                                className="text-danger"
+                              >
+                                <FontAwesomeIcon
+                                  icon={faToggleOn}
+                                  className="me-2"
+                                />
+                                <FormattedMessage id="Cancel-Auto-Renewal" />
+                              </Dropdown.Item>
+                            )}
 
-                              {/* {subscription.autoRenewalIsEnabled && (
+                            {/* {subscription.autoRenewalIsEnabled && (
                                 <Dropdown.Item
                                   onClick={() =>
                                     automaticRenew(subscription?.id)
@@ -189,162 +207,226 @@ export default function SubscriptionList() {
                                   </>
                                 </Dropdown.Item>
                               )} */}
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenUpDowngradeForm(subscription)
-                                }
-                              >
-                                <>
-                                  <FontAwesomeIcon
-                                    icon={faUpload}
-                                    className="me-2"
-                                  />
-                                  <FormattedMessage id="Upgrade-Subscription" />
-                                </>
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        </div>
-                      </Card.Title>
+                            {
+                              // subscription.isPlanChangeAllowed &&
+                              subscription.subscriptionMode == 1 && (
+                                <Dropdown.Item
+                                  onClick={() =>
+                                    handleOpenUpDowngradeForm(subscription)
+                                  }
+                                >
+                                  <>
+                                    <FontAwesomeIcon
+                                      icon={faUpload}
+                                      className="me-2"
+                                    />
+                                    <FormattedMessage id="Upgrade-Subscription" />
+                                  </>
+                                </Dropdown.Item>
+                              )
+                            }
+                            {
+                              // subscription.isPlanChangeAllowed &&
+                              subscription.subscriptionMode == 1 && (
+                                <Dropdown.Item
+                                  onClick={() =>
+                                    handleOpenDowngradeForm(subscription)
+                                  }
+                                >
+                                  <>
+                                    <FontAwesomeIcon
+                                      icon={faDownload}
+                                      className="me-2"
+                                    />
+                                    <FormattedMessage id="Downgrade-Subscription" />
+                                  </>
+                                </Dropdown.Item>
+                              )
+                            }
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
+                    </Card.Title>
 
-                      <p>
+                    <p>
+                      <FontAwesomeIcon
+                        icon={
+                          activeStatus[
+                            subscription.isActive
+                              ? subscription.isActive
+                              : false
+                          ].icon
+                        }
+                        className={`text-${
+                          activeStatus[
+                            subscription.isActive
+                              ? subscription.isActive
+                              : false
+                          ].color
+                        } me-2`}
+                      />
+                      <strong>
+                        <FormattedMessage id="Status" />
+                      </strong>{' '}
+                      <span
+                        className={`text-${
+                          activeStatus[
+                            subscription.isActive
+                              ? subscription.isActive
+                              : false
+                          ].color
+                        }`}
+                      >
+                        {
+                          activeStatus[
+                            subscription.isActive
+                              ? subscription.isActive
+                              : false
+                          ].text
+                        }
+                      </span>
+                    </p>
+                    {/* <Card.Text>
+                      {subscription?.trial?.endDate && (
                         <FontAwesomeIcon
-                          icon={
-                            activeStatus[
-                              subscription.isActive
-                                ? subscription.isActive
-                                : false
-                            ].icon
-                          }
-                          className={`text-${
-                            activeStatus[
-                              subscription.isActive
-                                ? subscription.isActive
-                                : false
-                            ].color
-                          } me-2`}
+                          icon={faExclamationCircle}
+                          className="text-danger mr-2"
                         />
+                      )}
+                      {subscription?.trial?.endDate ? (
+                      <strong>
+                        <FormattedMessage id="Trial" />
+                      </strong>{' '}
+                        <>
+                          <span className="text-danger">
+                            {calculateDaysRemaining(
+                              subscription?.trial?.endDate
+                            )}{' '}
+                            <FormattedMessage id="Days Remaining" />
+                          </span>
+                        </>
+                      ) : (
+                        <FormattedMessage id="Not a trial plan" />
+                      )}
+                    </Card.Text> */}
+                    <Card.Text>
+                      <span>
                         <strong>
-                          <FormattedMessage id="Status" />
+                          <FormattedMessage id="Product" />
                         </strong>{' '}
-                        <span
-                          className={`text-${
-                            activeStatus[
-                              subscription.isActive
-                                ? subscription.isActive
-                                : false
-                            ].color
-                          }`}
-                        >
-                          {
-                            activeStatus[
-                              subscription.isActive
-                                ? subscription.isActive
-                                : false
-                            ].text
-                          }
-                        </span>
-                      </p>
-                      <Card.Text>
-                        <span>
+                        {subscription.product.displayName}
+                      </span>
+                    </Card.Text>
+                    <Card.Text>
+                      {subscription?.trial?.endDate ? (
+                        <>
+                          {' '}
+                          <FontAwesomeIcon
+                            icon={faExclamationCircle}
+                            className="text-danger mr-2"
+                          />
                           <strong>
-                            <FormattedMessage id="Product" />
+                            <FormattedMessage id="Trial" />
                           </strong>{' '}
-                          {subscription.product.displayName}
-                        </span>
-                      </Card.Text>
-                      <Card.Text>
+                          <span className="text-danger">
+                            {calculateDaysRemaining(
+                              subscription?.trial?.endDate
+                            )}{' '}
+                            <FormattedMessage id="Days Remaining" />
+                          </span>
+                        </>
+                      ) : (
                         <span>
                           <strong>
                             <FormattedMessage id="Plan" />
                           </strong>{' '}
                           {subscription.plan.displayName}
                         </span>
-                      </Card.Text>
-
-                      <Card.Text>
-                        <div className="d-flex align-items-center">
-                          <strong>
-                            <FormattedMessage id="Created-Date" />
-                          </strong>
-                          <TableDate
-                            className="px-2"
-                            createdDate={subscription.createdDate}
-                            editedDate={subscription.editedDate}
-                          />
-                        </div>
-                      </Card.Text>
-
-                      {subscription.autoRenewalIsEnabled ? (
-                        <p>
-                          <FontAwesomeIcon
-                            icon={faCheckCircle}
-                            className="text-success me-2"
-                          />
-                          <strong>
-                            <FormattedMessage id="Auto-Renewal" />
-                          </strong>
-                          <span className="text-success">
-                            {' '}
-                            <FormattedMessage id="Enabled" />
-                          </span>{' '}
-                          {formatDate(subscription.endDate)}
-                        </p>
-                      ) : (
-                        <p>
-                          <FontAwesomeIcon
-                            icon={faTimesCircle}
-                            className="text-danger me-2"
-                          />
-                          <strong>
-                            <FormattedMessage id="Auto-Renewal" />
-                          </strong>
-                          <strong className="text-danger">
-                            {' '}
-                            <FormattedMessage id="Disabled" />
-                          </strong>
-                        </p>
                       )}
-                      {subscription.planChangingIsEnabled && (
-                        <p>
-                          <strong>
-                            <FormattedMessage id="Plan-Changing" />:
-                          </strong>{' '}
-                          {subscription.planChangingType}
-                        </p>
-                      )}
-                      <div>
+                    </Card.Text>
+
+                    <Card.Text>
+                      <div className="d-flex align-items-center">
                         <strong>
-                          <FormattedMessage id="Payment-Method" />
+                          <FormattedMessage id="Created-Date" />
                         </strong>
-                        <div className="p-3">
-                          <div>
-                            <CreditCard
-                              cardNumber={
-                                subscription.paymentMethodCard?.last4Digits
-                              }
-                              expiryDate={`${subscription.paymentMethodCard?.expirationMonth}/${subscription.paymentMethodCard?.expirationYear}`}
-                              cardHolder={
-                                subscription.paymentMethodCard?.cardholderName
-                              }
-                              isDefault={subscription.isDefault}
-                              cardTypeIcon={
-                                cardInfo?.[
-                                  subscription.paymentMethodCard?.brand
-                                ]?.icon || faMoneyCheckDollar
-                              }
-                              cardView={true}
-                            />
-                          </div>
+                        <TableDate
+                          className="px-2"
+                          createdDate={subscription.createdDate}
+                          editedDate={subscription.editedDate}
+                        />
+                      </div>
+                    </Card.Text>
+
+                    {subscription.autoRenewalIsEnabled ? (
+                      <p>
+                        <FontAwesomeIcon
+                          icon={faCheckCircle}
+                          className="text-success me-2"
+                        />
+                        <strong>
+                          <FormattedMessage id="Auto-Renewal" />
+                        </strong>
+                        <span className="text-success">
+                          {' '}
+                          <FormattedMessage id="Enabled" />
+                        </span>{' '}
+                        {formatDate(subscription.endDate)}
+                      </p>
+                    ) : (
+                      <p>
+                        <FontAwesomeIcon
+                          icon={faTimesCircle}
+                          className="text-danger me-2"
+                        />
+                        <strong>
+                          <FormattedMessage id="Auto-Renewal" />
+                        </strong>
+                        <strong className="text-danger">
+                          {' '}
+                          <FormattedMessage id="Disabled" />
+                        </strong>
+                      </p>
+                    )}
+                    {/* {subscription.planChangingIsEnabled && (
+                      <p>
+                        <strong>
+                          <FormattedMessage id="Plan-Changing" />:
+                        </strong>{' '}
+                        {subscription.planChangingType}
+                      </p>
+                    )} */}
+                    <div>
+                      <strong>
+                        <FormattedMessage id="Payment-Method" />
+                      </strong>
+                      <div className="p-3">
+                        <div>
+                          <CreditCard
+                            cardNumber={
+                              subscription.paymentMethodCard?.last4Digits
+                            }
+                            expiryDate={`${subscription.paymentMethodCard?.expirationMonth}/${subscription.paymentMethodCard?.expirationYear}`}
+                            cardHolder={
+                              subscription.paymentMethodCard?.cardholderName
+                            }
+                            isDefault={subscription.isDefault}
+                            cardTypeIcon={
+                              cardInfo?.[subscription.paymentMethodCard?.brand]
+                                ?.icon || faMoneyCheckDollar
+                            }
+                            cardView={true}
+                          />
                         </div>
                       </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-          </Row>
-        </div>
-      </Card>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+        </Row>
+      </div>
+      {/* </Card> */}
       {confirm && (
         <NoteInputConfirmation
           confirm={confirm}
@@ -389,7 +471,20 @@ export default function SubscriptionList() {
             subscriptionData={currentSubscription}
             setVisible={setShowUpDowngradeForm}
             type="upgrade"
-            popupLabel="Upgarde"
+            popupLabel={<FormattedMessage id="Upgrade" />}
+          />
+        </>
+      </ThemeDialog>
+      <ThemeDialog
+        visible={showDowngradeForm}
+        setVisible={setShowDowngradeForm}
+      >
+        <>
+          <WorkspaceUpDowngradeForm
+            subscriptionData={currentSubscription}
+            setVisible={setShowDowngradeForm}
+            type="downgrade"
+            popupLabel={<FormattedMessage id="Downgarde" />}
           />
         </>
       </ThemeDialog>

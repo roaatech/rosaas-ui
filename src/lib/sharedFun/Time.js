@@ -38,13 +38,15 @@ export const DataTransform = (dateTime) => {
   return formattedDateTime
 }
 export const formatDate = (dateTime) => {
-  const utcDateTime = new Date(dateTime + 'Z')
+  const utcDateTime = dateTime ? new Date(dateTime + 'Z') : ''
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const localDateTime = utcToZonedTime(utcDateTime, timeZone)
+  const localDateTime = dateTime ? utcToZonedTime(utcDateTime, timeZone) : ''
 
-  const formattedDate = format(localDateTime, 'MM/dd/yyyy', {
-    timeZone,
-  })
+  const formattedDate = dateTime
+    ? format(localDateTime, 'MM/dd/yyyy', {
+        timeZone,
+      })
+    : ''
 
   return formattedDate
 }

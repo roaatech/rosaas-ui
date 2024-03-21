@@ -74,22 +74,23 @@ const Marketplace = () => {
                   Object.values(listData).map((product) => (
                     <Col key={product.id} md={4}>
                       <Card className="p-1 m-1">
-                        <Card.Body>
-                          <div className="d-flex align-items-center justify-content-between  py-2">
-                            <Link
-                              to={`./${product.systemName}`}
-                              className="product-link mb-0 w-50 fw-bold"
-                            >
-                              <FontAwesomeIcon
-                                icon={faBox}
-                                style={{ cursor: 'pointer' }}
-                                className="product-icon"
-                              />
-                              <span className="product-name ml-2 mr-2">
-                                {product?.displayName}
-                              </span>
-                            </Link>
-                            {product?.trialType == 2 && (
+                        <Link
+                          to={`./${product.systemName}`}
+                          className="product-link"
+                        >
+                          <Card.Body>
+                            <div className="d-flex align-items-center justify-content-between  py-2">
+                              <div className=" mb-0 w-50 fw-bold">
+                                <FontAwesomeIcon
+                                  icon={faBox}
+                                  style={{ cursor: 'pointer' }}
+                                  className="product-icon"
+                                />
+                                <span className="product-name ml-2 mr-2">
+                                  {product?.displayName}
+                                </span>
+                              </div>
+                              {/* {product?.trialType == 2 && (
                               <div className="text-small">
                                 <Button
                                   variant="secondary"
@@ -118,17 +119,14 @@ const Marketplace = () => {
                                   </span>
                                 </Button>
                               </div>
-                            )}
-                          </div>
-                          <Link
-                            to={`./${product.systemName}`}
-                            className="product-link "
-                          >
+                            )} */}
+                            </div>
+
                             <Card.Text className="product-description">
                               {product.description || '----'}
                             </Card.Text>
-                          </Link>
-                        </Card.Body>
+                          </Card.Body>
+                        </Link>
                       </Card>
                     </Col>
                   ))}

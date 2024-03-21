@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  addAutoRenewal,
   changeSubscriptionAttribute,
   setAllpaymentCards,
 } from '../../../../../store/slices/workSpace.js'
@@ -25,11 +26,12 @@ const WorkspaceRenewForm = ({
   setCards,
   setShowAddCardForm,
 }) => {
-  console.log({ currentSubscription })
   const cards = useSelector((state) => state.workspace.paymentCards)
   const { setAutoRenewal, getPaymentCardsList } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
-
+  const subscriptionData = useSelector(
+    (state) => state.workspace.subscriptionData
+  )
   const validationSchema = Yup.object().shape({
     card: Yup.string().required(<FormattedMessage id="Please-select-a-card" />),
   })
@@ -54,6 +56,12 @@ const WorkspaceRenewForm = ({
             subscriptionId: currentSubscription,
             attributeName: 'autoRenewalIsEnabled',
             attributeValue: true,
+          })
+        )
+        dispatch(
+          addAutoRenewal({
+            id: currentSubscription,
+            ...subscriptionData[currentSubscription],
           })
         )
         setVisible && setVisible(false)

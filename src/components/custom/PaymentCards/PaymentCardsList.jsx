@@ -79,38 +79,32 @@ const PaymentCardsList = () => {
         />
       </UpperContent>
 
-      <Card className=" mt-0">
-        <Card.Body>
-          <Row className="g-4">
-            {cards.map((card) => (
-              <Col key={card.stripeCardId} xl={3} lg={4} sm={6}>
-                <CreditCard
-                  cardTypeIcon={
-                    cardInfo?.[card.brand]?.icon || faMoneyCheckDollar
-                  }
-                  cardNumber={card.last4Digits}
-                  expiryDate={`${card.expirationMonth} / ${card.expirationYear}`}
-                  cardHolder={card.cardholderName}
-                  isDefault={card.isDefault}
-                  onSetAsDefault={() => defaultCard(card.stripeCardId)}
-                  onDelete={() => deleteConfirm(card.stripeCardId)}
-                />
-              </Col>
-            ))}
-          </Row>
+      <Row className="g-4 mx-2">
+        {cards.map((card) => (
+          <Col key={card.stripeCardId} xl={3} lg={4} sm={6}>
+            <CreditCard
+              cardTypeIcon={cardInfo?.[card.brand]?.icon || faMoneyCheckDollar}
+              cardNumber={card.last4Digits}
+              expiryDate={`${card.expirationMonth} / ${card.expirationYear}`}
+              cardHolder={card.cardholderName}
+              isDefault={card.isDefault}
+              onSetAsDefault={() => defaultCard(card.stripeCardId)}
+              onDelete={() => deleteConfirm(card.stripeCardId)}
+            />
+          </Col>
+        ))}
+      </Row>
 
-          <DeleteConfirmation
-            message="Do you want to delete this Tenant?"
-            icon="pi pi-exclamation-triangle"
-            confirm={confirm}
-            setConfirm={setConfirm}
-            confirmFunction={deleteCard}
-            update={update}
-            setUpdate={setUpdate}
-            sideBar={false}
-          />
-        </Card.Body>
-      </Card>
+      <DeleteConfirmation
+        message="Do you want to delete this Tenant?"
+        icon="pi pi-exclamation-triangle"
+        confirm={confirm}
+        setConfirm={setConfirm}
+        confirmFunction={deleteCard}
+        update={update}
+        setUpdate={setUpdate}
+        sideBar={false}
+      />
     </Wrapper>
   )
 }

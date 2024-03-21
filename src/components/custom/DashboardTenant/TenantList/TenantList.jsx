@@ -104,75 +104,75 @@ export default function TenantList({ children }) {
   return (
     <Wrapper>
       <UpperContent>
-        <h4 className="m-0">Tenants </h4>
+        <h4 className="m-0">
+          <FormattedMessage id="Tenants" />{' '}
+        </h4>
       </UpperContent>
-      <Card className="m-3 p-3 mt-0">
-        <div className="p-d-flex p-flex-column p-ai-center">
-          <Row>
-            {tenants &&
-              Object.values(tenants).map((tenant) => (
-                <Col key={tenant.id} md={3}>
-                  <Card className="mb-3">
-                    <Card.Body>
-                      <Card.Title>{tenant.displayName}</Card.Title>
-                      <Card.Text>
-                        {' '}
-                        <Label
-                          className="mr-2"
-                          background="var(--green2)"
-                          value={tenant.subscriptions[0].productName}
-                          color="var(--teal-green)"
-                          icon={<BsBox2Fill />}
-                        />
-                        {/* {tenant.systemName} */}
-                      </Card.Text>
-                      <Card.Text>
-                        <TableDate
-                          className="px-2"
-                          createdDate={tenant.createdDate}
-                          editedDate={tenant.editedDate}
-                        />
-                      </Card.Text>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-          </Row>
-          <CustomPaginator
-            first={first}
-            rows={rows}
-            totalCount={tenantsTotalCount}
-            onPageChange={onPageChange}
-          />
-          <Dialog
-            headerClassName="pb-0"
-            className="tenantForm"
-            header={'Edit Tenant'}
-            visible={visible}
-            style={{ width: '30vw', minWidth: '300px' }}
-            onHide={() => setVisible(false)}
-          >
-            <TenantForm
-              type={'edit'}
-              tenantData={tenantData?.data}
-              update={update}
-              setUpdate={setUpdate}
-              setVisible={setVisible}
-              sideBar={false}
-            />
-          </Dialog>
-          <DeleteConfirmation
-            message="Do you want to delete this Tenant?"
-            icon="pi pi-exclamation-triangle"
-            confirm={confirm}
-            setConfirm={setConfirm}
-            confirmFunction={deleteTenant}
+      <div className="p-d-flex p-flex-column p-ai-center">
+        <Row className="mx-2">
+          {tenants &&
+            Object.values(tenants).map((tenant) => (
+              <Col key={tenant.id} md={3}>
+                <Card className="mb-3">
+                  <Card.Body>
+                    <Card.Title>{tenant.displayName}</Card.Title>
+                    <Card.Text>
+                      {' '}
+                      <Label
+                        className="mr-2"
+                        background="var(--green2)"
+                        value={tenant.subscriptions[0].productName}
+                        color="var(--teal-green)"
+                        icon={<BsBox2Fill />}
+                      />
+                      {/* {tenant.systemName} */}
+                    </Card.Text>
+                    <Card.Text>
+                      <TableDate
+                        className="px-2"
+                        createdDate={tenant.createdDate}
+                        editedDate={tenant.editedDate}
+                      />
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+        </Row>
+        <CustomPaginator
+          first={first}
+          rows={rows}
+          totalCount={tenantsTotalCount}
+          onPageChange={onPageChange}
+        />
+        <Dialog
+          headerClassName="pb-0"
+          className="tenantForm"
+          header={'Edit Tenant'}
+          visible={visible}
+          style={{ width: '30vw', minWidth: '300px' }}
+          onHide={() => setVisible(false)}
+        >
+          <TenantForm
+            type={'edit'}
+            tenantData={tenantData?.data}
             update={update}
             setUpdate={setUpdate}
+            setVisible={setVisible}
             sideBar={false}
-          />{' '}
-        </div>
-      </Card>
+          />
+        </Dialog>
+        <DeleteConfirmation
+          message="Do you want to delete this Tenant?"
+          icon="pi pi-exclamation-triangle"
+          confirm={confirm}
+          setConfirm={setConfirm}
+          confirmFunction={deleteTenant}
+          update={update}
+          setUpdate={setUpdate}
+          sideBar={false}
+        />{' '}
+      </div>
     </Wrapper>
   )
 }
