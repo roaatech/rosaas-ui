@@ -146,7 +146,7 @@ export default function ChildTable({
                     label: 'Subscription-Management',
                     func: () => {
                       navigate(
-                        `${Routes.Tenant.path}/${routeParams.id}/Subscription-Management`
+                        `${Routes.Tenant.path}/${routeParams?.id}/Subscription-Management`
                       )
                     },
                     icon: <MdFactCheck />,
