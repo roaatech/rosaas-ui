@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* margin: 10% auto; */
     margin-top: 0;
-    /* background-color: #ffc9666a; */
+    background-color: #ffebcd !important;
     /* max-height: 150px; */
     /* max-width: 350px; */
   }
@@ -18,7 +18,10 @@ export const Wrapper = styled.div`
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 0;
-    background-color: #ffc966bb;
+    background-color: #ffdaa2 !important;
+    transition:
+      background-color 0.5s ease,
+      box-shadow 0.5s ease;
   }
   .right {
     font-size: 20px;
@@ -78,6 +81,6 @@ export const Wrapper = styled.div`
     justify-content: center;
   }
   .not-available {
-    background-color: var(--primary0);
+    background-color: var(--primary4) !important;
   }
 `

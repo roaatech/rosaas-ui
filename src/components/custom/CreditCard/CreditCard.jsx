@@ -37,10 +37,10 @@ const CreditCard = ({
         className={
           cardView
             ? `credit-card-view credit-card${
-                !dataAvailable ? ' not-available' : ''
+                !dataAvailable ? 'not-available' : ''
               }`
             : `credit-card credit-card-hover${
-                !dataAvailable ? ' not-available' : ''
+                !dataAvailable ? 'not-available' : ''
               }`
         }
       >

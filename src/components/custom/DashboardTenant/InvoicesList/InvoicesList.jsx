@@ -6,6 +6,8 @@ import { Wrapper } from './InvoicesList.styled'
 import UpperContent from '../../Shared/UpperContent/UpperContent.jsx'
 import { formatDate } from '../../../../lib/sharedFun/Time.js'
 import { FormattedMessage } from 'react-intl'
+import { useDispatch, useSelector } from 'react-redux'
+import { setAllInvoices } from '../../../../store/slices/workSpace.js'
 
 // const styles = StyleSheet.create({
 //   invoiceContainer: {
@@ -60,13 +62,16 @@ import { FormattedMessage } from 'react-intl'
 
 export default function InvoicesList() {
   const { getInvoicesList } = useRequest()
-  const [invoices, setInvoices] = useState([])
-
+  const invoices = useSelector((state) => state.workspace.invoices)
+  const dispatch = useDispatch()
   useEffect(() => {
+    if (Object.values(invoices).length > 0) {
+      return
+    }
     const fetchInvoices = async () => {
       try {
         const response = await getInvoicesList()
-        setInvoices(response.data.data)
+        dispatch(setAllInvoices(response.data.data))
       } catch (error) {
         console.error('Error fetching invoices:', error)
       }
@@ -171,7 +176,7 @@ export default function InvoicesList() {
 
       <div>
         <Row className="mx-2">
-          {invoices.map((invoice) => {
+          {Object.values(invoices).map((invoice) => {
             const sections = invoice.orderItems[0].displayName?.split(', ')
 
             const extractedData = {}

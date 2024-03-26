@@ -6,34 +6,35 @@ export const workspaceSlice = createSlice({
   initialState: {
     tenants: {},
     products: {},
-    autoRenewalData: {},
+    autoRenewalData: { autoRenewalIds: [] },
     tenantsTotalCount: 0,
     createdTenant: {},
     subscriptionData: {},
     currentTab: 0,
     currentStep: 1,
     paymentCards: {},
+    invoices: {},
   },
 
   reducers: {
     setWorkspaceTenant: (state, action) => {
       if (Array.isArray(action.payload)) {
-        const allTenantWorkspace = { ...state.tenants } // Make a copy of the tenants object
+        const allTenantWorkspace = { ...state.tenants }
         action.payload.forEach((item) => {
           allTenantWorkspace[item.id] = item
         })
-        state.tenants = allTenantWorkspace // Update the tenants state
+        state.tenants = allTenantWorkspace
       } else {
         console.error('Payload is not an array')
       }
     },
     setWorkspaceSubscriptionData: (state, action) => {
       if (Array.isArray(action.payload)) {
-        const allSubscriptionData = { ...state.subscriptionData } // Make a copy of the tenants object
+        const allSubscriptionData = { ...state.subscriptionData }
         action.payload.forEach((item) => {
           allSubscriptionData[item.id] = item
         })
-        state.subscriptionData = allSubscriptionData // Update the tenants state
+        state.subscriptionData = allSubscriptionData
       } else {
         console.error('Payload is not an array')
       }
@@ -41,11 +42,8 @@ export const workspaceSlice = createSlice({
     changeSubscriptionAttribute: (state, action) => {
       const { subscriptionId, attributeName, attributeValue } = action.payload
 
-      // Check if subscriptionId is provided and subscriptionData exists
       if (subscriptionId && state.subscriptionData) {
-        // Check if the subscriptionId exists in subscriptionData
         if (state.subscriptionData[subscriptionId]) {
-          // Update the specified attribute of the subscription
           state.subscriptionData[subscriptionId][attributeName] = attributeValue
         } else {
           console.error(`Subscription with id ${subscriptionId} not found`)
@@ -89,12 +87,10 @@ export const workspaceSlice = createSlice({
       const allProduct = JSON.parse(JSON.stringify(current(state.products)))
       const allPlans = {}
 
-      // Iterate through the data and assign it to allPlans
       action.payload.data.forEach((item) => {
         allPlans[item.id] = item
       })
 
-      // Assign allPlans to the plans property of the specified product
       const productId = action.payload.productId
       if (allProduct[productId]) {
         allProduct[productId].plans = allPlans
@@ -105,13 +101,23 @@ export const workspaceSlice = createSlice({
       state.products = allProduct
     },
     setAllAutoRenewal: (state, action) => {
-      console.log({ sssss: action })
       if (Array.isArray(action.payload)) {
-        const allAutoRenewalWorkspace = { ...state.autoRenewalData } // Make a copy of the tenants object
+        const allAutoRenewalWorkspace = { ...state.autoRenewalData }
         action.payload.forEach((item) => {
           allAutoRenewalWorkspace[item.id] = item
         })
-        state.autoRenewalData = allAutoRenewalWorkspace // Update the tenants state
+        state.autoRenewalData = allAutoRenewalWorkspace
+      } else {
+        console.error('Payload is not an array')
+      }
+    },
+    setAllInvoices: (state, action) => {
+      if (Array.isArray(action.payload)) {
+        const allInvoicesWorkspace = { ...state.invoices }
+        action.payload.forEach((item) => {
+          allInvoicesWorkspace[item.id] = item
+        })
+        state.invoices = allInvoicesWorkspace
       } else {
         console.error('Payload is not an array')
       }
@@ -139,14 +145,29 @@ export const workspaceSlice = createSlice({
         console.error('Invalid auto-renewal data')
       }
     },
+    addAutoRenewalIds: (state, action) => {
+      const newAutoRenewalIds = action.payload
+      if (Array.isArray(newAutoRenewalIds)) {
+        state.autoRenewalData.autoRenewalIds = [
+          ...state.autoRenewalData.autoRenewalIds,
+          ...newAutoRenewalIds.filter(
+            (id) => !state.autoRenewalData.autoRenewalIds.includes(id)
+          ),
+        ]
+      } else {
+        console.error('Invalid auto-renewal IDs')
+      }
+    },
+    deleteAllAutoRenewalIds: (state, action) => {
+      state.autoRenewalData.autoRenewalIds = []
+    },
     setAllpaymentCards: (state, action) => {
-      console.log({ sssss: action })
       if (Array.isArray(action.payload)) {
-        const allpaymentCards = { ...state.paymentCards } // Make a copy of the tenants object
+        const allpaymentCards = { ...state.paymentCards }
         action.payload.forEach((item) => {
           allpaymentCards[item.stripeCardId] = item
         })
-        state.paymentCards = allpaymentCards // Update the tenants state
+        state.paymentCards = allpaymentCards
       } else {
         console.error('Payload is not an array')
       }
@@ -173,12 +194,10 @@ export const workspaceSlice = createSlice({
     const allProduct = JSON.parse(JSON.stringify(current(state.products)))
     const allSubscriptions = {}
 
-    // Iterate through the data and assign it to allSubscriptions
     action.payload.data.forEach((item) => {
       allSubscriptions[item.id] = item
     })
 
-    // Assign allSubscriptions to the subscriptions property of the specified product
     const productId = action.payload.productId
     if (allProduct[productId]) {
       allProduct[productId].subscriptions = allSubscriptions
@@ -186,7 +205,6 @@ export const workspaceSlice = createSlice({
       console.error(`Product with ID ${productId} not found`)
     }
 
-    // Update the products state with the modified allProduct object
     state.products = allProduct
   },
 })
@@ -206,5 +224,8 @@ export const {
   setAllpaymentCards,
   deleteAutoRenewalById,
   addAutoRenewal,
+  setAllInvoices,
+  addAutoRenewalIds,
+  deleteAllAutoRenewalIds,
 } = workspaceSlice.actions
 export default workspaceSlice.reducer

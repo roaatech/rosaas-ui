@@ -10,6 +10,8 @@ import UpperContent from '../Shared/UpperContent/UpperContent'
 import DynamicButtons from '../Shared/DynamicButtons/DynamicButtons'
 import { BsPlusCircleFill } from 'react-icons/bs'
 import CreditCard from '../CreditCard/CreditCard'
+import { setAllpaymentCards } from '../../../store/slices/workSpace'
+import { useDispatch } from 'react-redux'
 
 const PaymentCardsList = () => {
   const { getPaymentCardsList, detachPaymentMethodCard, markCardAsDefault } =
@@ -17,11 +19,13 @@ const PaymentCardsList = () => {
   const [cards, setCards] = useState([])
   const [confirm, setConfirm] = useState(false)
   const [update, setUpdate] = useState(1)
+  const dispatch = useDispatch()
   const [selectedCardId, setSelectedCardId] = useState(null)
   useEffect(() => {
     const fetchCards = async () => {
       try {
         const cardsData = await getPaymentCardsList()
+        dispatch(setAllpaymentCards(cardsData.data.data))
         setCards(cardsData.data.data)
       } catch (error) {
         console.error('Error fetching payment cards:', error)

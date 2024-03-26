@@ -7,4 +7,19 @@ export const Wrapper = styled.div`
   .accordion-item:first-of-type .accordion-button {
     background-color: var(--bs-card-bg) !important;
   }
+  .card-cancling-hover {
+    /* background-color: #ffe7e7; */
+    box-shadow: 0 0 20px #ffe7e7;
+    border-color: #ffa7a7 !important;
+  }
+  .card-enabling-hover {
+    /* background-color: #c6ffc6; */
+    box-shadow: 0 0 20px #c6ffc6;
+    border-color: #8eff8e !important;
+
+    /* transition: background-color 0.5s; */
+  }
+  .card {
+    transition: background-color 0.5s;
+  }
 `

@@ -69,6 +69,8 @@ const WorkspaceUpDowngradeForm = ({
     getProductPlansPublic,
     getPaymentCardsList,
     getProductPlanPriceListPublic,
+    setEnabledCardId,
+    setCanceledCardId,
   } = useRequest()
   const selectedProduct = subscriptionData?.product?.id
   const currentPlanPrice = subscriptionData?.planPrice.price
@@ -129,6 +131,10 @@ const WorkspaceUpDowngradeForm = ({
           cardReferenceId: values.card,
           paymentPlatform: 2,
         })
+        setEnabledCardId(currentSubscriptionId)
+        setTimeout(() => {
+          setEnabledCardId(null)
+        }, 2000)
       } else {
         const downgradeSubscriptionReq = await downgradeSubscription({
           planPriceId: values.price,
@@ -136,6 +142,11 @@ const WorkspaceUpDowngradeForm = ({
           subscriptionId: currentSubscriptionId,
           comment: values.comment,
         })
+        setCanceledCardId(currentSubscriptionId)
+
+        setTimeout(() => {
+          setCanceledCardId(null)
+        }, 2000)
       }
       setSubmitLoading(false)
 

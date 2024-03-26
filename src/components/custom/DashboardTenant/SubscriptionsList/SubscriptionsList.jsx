@@ -51,6 +51,7 @@ export default function SubscriptionList() {
   const subscriptionData = useSelector(
     (state) => state.workspace.subscriptionData
   )
+
   const [cards, setCards] = useState([])
   const [showAddCardForm, setShowAddCardForm] = useState(false)
   const [showUpDowngradeForm, setShowUpDowngradeForm] = useState(false)
@@ -81,6 +82,8 @@ export default function SubscriptionList() {
   const [currentSubscriptionId, setCurrentSubscriptionId] = useState('')
   const [currentSubscription, setCurrentSubscription] = useState()
   const [confirm, setConfirm] = useState(false)
+  const [canceledCardId, setCanceledCardId] = useState(null)
+  const [enabledCardId, setEnabledCardId] = useState(null)
 
   function automaticRenew(id) {
     setReferenceId(subscriptionData?.[id].paymentMethodCard?.referenceId)
@@ -115,6 +118,11 @@ export default function SubscriptionList() {
       )
       dispatch(deleteAutoRenewalById(currentSubscriptionId))
 
+      setCanceledCardId(subscriptionData?.[currentSubscriptionId]?.id)
+      setTimeout(() => {
+        setCanceledCardId(null)
+      }, 2000)
+
       setConfirm(false)
     } catch (error) {
       console.error('Error cancelling auto-renewal:', error)
@@ -132,7 +140,7 @@ export default function SubscriptionList() {
     const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24))
     return daysRemaining >= 0 ? daysRemaining : 0
   }
-  console.log({ subscriptionData })
+
   return (
     <Wrapper>
       <UpperContent>
@@ -147,7 +155,17 @@ export default function SubscriptionList() {
           {subscriptionData &&
             Object.values(subscriptionData).map((subscription) => (
               <Col key={subscription.id} xl={3} lg={4} sm={6}>
-                <Card className="mb-4 ">
+                <Card
+                  className={`mb-4 ${
+                    subscription.id === canceledCardId
+                      ? 'card-cancling-hover'
+                      : ''
+                  }${
+                    subscription.id === enabledCardId
+                      ? 'card-enabling-hover'
+                      : ''
+                  }`}
+                >
                   <Card.Body>
                     <Card.Title>
                       <div className="d-flex justify-content-between">
@@ -450,6 +468,7 @@ export default function SubscriptionList() {
             setCards={setCards}
             showAddCardForm={showAddCardForm}
             setShowAddCardForm={setShowAddCardForm}
+            setEnabledCardId={setEnabledCardId}
           />
         </>
       </ThemeDialog>
@@ -470,6 +489,7 @@ export default function SubscriptionList() {
       >
         <>
           <WorkspaceUpDowngradeForm
+            setEnabledCardId={setEnabledCardId}
             subscriptionData={currentSubscription}
             setVisible={setShowUpDowngradeForm}
             type="upgrade"
@@ -484,6 +504,7 @@ export default function SubscriptionList() {
         <>
           <WorkspaceUpDowngradeForm
             subscriptionData={currentSubscription}
+            setCanceledCardId={setCanceledCardId}
             setVisible={setShowDowngradeForm}
             type="downgrade"
             popupLabel={<FormattedMessage id="Downgarde" />}

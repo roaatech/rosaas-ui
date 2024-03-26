@@ -13,6 +13,7 @@ import { faEllipsisH, faEllipsisV } from '@fortawesome/free-solid-svg-icons'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   addAutoRenewal,
+  addAutoRenewalIds,
   changeSubscriptionAttribute,
   setAllpaymentCards,
   setWorkspaceAllPlanPrices,
@@ -29,6 +30,7 @@ const WorkspaceRenewFormWithCycle = ({
   // cards,
   setCards,
   setShowAddCardForm,
+  setEnabledCardId,
 }) => {
   const cards = useSelector((state) => state.workspace.paymentCards)
   const autoRenewalData = useSelector(
@@ -68,7 +70,7 @@ const WorkspaceRenewFormWithCycle = ({
     price: selectedPrice ? selectedPrice : '',
     autoRenewal: true,
   }
-  console.log({ cards })
+  console.log({ cards: Object.values(autoRenewalData) })
   const dispatch = useDispatch()
   const formik = useFormik({
     initialValues,
@@ -89,14 +91,14 @@ const WorkspaceRenewFormWithCycle = ({
             attributeValue: true,
           })
         )
-        Object.values(autoRenewalData).length > 0 &&
+        if (Object.values(autoRenewalData).length > 1) {
           dispatch(
             addAutoRenewal({
               id: currentSubscription,
               ...{
                 plan: subscriptionData?.plan,
                 renewalPlanPriceId: values.price,
-                enabledDate: new Date(),
+                enabledDate: new Date().toISOString().slice(0, 19),
                 subscriptionRenewalDate: subscriptionData?.endDate,
                 subscription: {
                   id: subscriptionData?.id,
@@ -108,6 +110,16 @@ const WorkspaceRenewFormWithCycle = ({
               },
             })
           )
+          dispatch(addAutoRenewalIds([currentSubscription]))
+        } else {
+          dispatch(addAutoRenewalIds([currentSubscription]))
+        }
+
+        setEnabledCardId(currentSubscription)
+        setTimeout(() => {
+          setEnabledCardId(null)
+        }, 2000)
+
         setVisible && setVisible(false)
       } catch (error) {
         console.error('Error submitting form:', error)
@@ -217,7 +229,14 @@ const WorkspaceRenewFormWithCycle = ({
                   value={formik.values.price}
                   options={Object.values(priceList).map((item) => ({
                     value: item.value,
-                    label: `${item.price} $ / ${item.cycle}`,
+                    label: (
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>{subscriptionData?.plan?.displayName}</div>{' '}
+                        <span>
+                          {item.price} $ / {item.cycle}
+                        </span>
+                      </div>
+                    ),
                   }))}
                   onChange={(e) => formik.setFieldValue('price', e.value)}
                   optionLabel="label"
@@ -242,7 +261,7 @@ const WorkspaceRenewFormWithCycle = ({
                 }
               />
             </Form.Group>
-            {!formik.values.autoRenewal && (
+            {!formik.values.autoRenewal && formik.values.price && (
               <Form.Group className="mb-3">
                 <Form.Label>
                   <FormattedMessage id="Cycle Count" /> -{' '}
@@ -291,7 +310,7 @@ const WorkspaceRenewFormWithCycle = ({
                       // Use the list of cards from state
                       value: card.stripeCardId,
                       label: (
-                        <div className="d-flex ">
+                        <div className="d-flex justify-content-between align-items-center">
                           <div
                             className="d-flex align-items-center"
                             style={{ minWidth: '110px' }}
@@ -301,16 +320,21 @@ const WorkspaceRenewFormWithCycle = ({
                               icon={faEllipsisH}
                               className="icon-dark pl-3"
                             />
-                            <span className="pl-1">{card.last4Digits}</span>
-                          </div>
-                          <div className="d-flex align-items-center">
+                            <span
+                              className="pl-1"
+                              style={{ flex: '0 0 50%', minWidth: '100px' }}
+                            >
+                              {card.last4Digits}
+                            </span>
                             <span
                               className="px-3"
-                              style={{ flex: '0 0 100%', minWidth: '100px' }}
+                              style={{ flex: '0 0 50%', minWidth: '100px' }}
                             >
                               {card.cardholderName}
                             </span>
-                            <span className="d-flex justify-content-end">
+                          </div>
+                          <div className="d-flex justify-content-between align-items-center">
+                            <span>
                               {card.expirationMonth}/{card.expirationYear}
                             </span>
                           </div>
