@@ -346,15 +346,22 @@ const WorkspaceUpDowngradeForm = ({
                   }`,
                   label: (
                     <div
-                      style={{
-                        color: index === 0 ? 'var(--passive-color)' : '',
-                      }}
-                      className="d-flex justify-content-between align-items-center"
+                      className={
+                        index === 0
+                          ? 'current-plan d-flex justify-content-between align-items-center'
+                          : 'd-flex justify-content-between align-items-center'
+                      }
                     >
                       <span>{option.label}</span>{' '}
                       {priceList.find((price) => price.planId === option.value)
                         ?.label.price || ''}{' '}
-                      $
+                      $ /{' '}
+                      {priceList.find((price) => price.planId === option.value)
+                        ?.label.cycle == 3 ? (
+                        <FormattedMessage id="Monthly" />
+                      ) : (
+                        <FormattedMessage id="Yearly" />
+                      )}
                     </div>
                   ),
                 }))

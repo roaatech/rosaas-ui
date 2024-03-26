@@ -63,9 +63,10 @@ export const workspaceSlice = createSlice({
       currentTenants[action.payload.id] = action.payload
       state.tenants = currentTenants
     },
+
     workspaceUpdateProduct: (state, action) => {
       const currentProducts = { ...state.products }
-      if (!currentProducts[action.payload.id]) {
+      if (!currentProducts[action.payload?.id]) {
         currentProducts[action.payload.id] = {}
       }
 
@@ -83,6 +84,7 @@ export const workspaceSlice = createSlice({
       currentProducts[action.payload.id] = mergedObject
       state.products = currentProducts
     },
+
     wokspaceSetAllPlans: (state, action) => {
       const allProduct = JSON.parse(JSON.stringify(current(state.products)))
       const allPlans = {}
@@ -128,12 +130,10 @@ export const workspaceSlice = createSlice({
     },
     addAutoRenewal: (state, action) => {
       const autoRenewalToUpdate = action.payload
-      console.log({ autoRenewalToUpdate })
-
       if (autoRenewalToUpdate && autoRenewalToUpdate.id) {
         state.autoRenewalData = {
-          ...state.autoRenewalData,
           [autoRenewalToUpdate.id]: autoRenewalToUpdate,
+          ...state.autoRenewalData,
         }
       } else {
         console.error('Invalid auto-renewal data')

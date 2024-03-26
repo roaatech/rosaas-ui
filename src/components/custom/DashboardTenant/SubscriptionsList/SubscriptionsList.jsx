@@ -42,6 +42,7 @@ import CardSaveFormWithStripe from '../../CardSaveForm/CardSaveForm.js'
 import WorkspaceRenewForm from './WorkspaceRenewForm/WorkspaceRenewForm.jsx'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation.js'
 import WorkspaceUpDowngradeForm from './WorkspaceUpDowngradeForm/WorkspaceUpDowngradeForm.jsx'
+import WorkspaceRenewFormWithCycle from './WorkspaceRenewFormWithCycle/WorkspaceRenewFormWithCycle.jsx'
 
 export default function SubscriptionList() {
   const { getSubscriptionsList, cancelAutoRenewal } = useRequest()
@@ -131,6 +132,7 @@ export default function SubscriptionList() {
     const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24))
     return daysRemaining >= 0 ? daysRemaining : 0
   }
+  console.log({ subscriptionData })
   return (
     <Wrapper>
       <UpperContent>
@@ -438,7 +440,7 @@ export default function SubscriptionList() {
       )}
       <ThemeDialog visible={visible} setVisible={setVisible}>
         <>
-          <WorkspaceRenewForm
+          <WorkspaceRenewFormWithCycle
             referenceId={referenceId}
             popupLabel={<FormattedMessage id="Auto-Renewal" />}
             setVisible={setVisible}

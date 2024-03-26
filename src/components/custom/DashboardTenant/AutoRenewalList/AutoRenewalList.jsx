@@ -119,9 +119,7 @@ export default function AutoRenewalList() {
                             <FormattedMessage id="Billing-Date" />{' '}
                           </span>
                           <span className="billing-date">
-                            {autorenewal.subscriptionRenewalDate
-                              ? formatDate(autorenewal.subscriptionRenewalDate)
-                              : formatDate(autorenewal.endDate)}
+                            {formatDate(autorenewal.subscriptionRenewalDate)}
                           </span>
                         </span>
                         {'  '}
@@ -177,12 +175,10 @@ export default function AutoRenewalList() {
                     <Card.Text>
                       <span>
                         <strong>
-                          <FormattedMessage id="Tenant" />
+                          <FormattedMessage id="Subscription" />
                         </strong>
                         {'  '}
-                        {autorenewal.subscription?.displayName
-                          ? autorenewal.subscription?.displayName
-                          : autorenewal.displayName}{' '}
+                        {autorenewal.subscription?.displayName}{' '}
                       </span>
                     </Card.Text>
 
@@ -191,7 +187,7 @@ export default function AutoRenewalList() {
                         <strong>
                           <FormattedMessage id="Plan" />
                         </strong>{' '}
-                        {autorenewal.plan.displayName}
+                        {autorenewal?.plan?.displayName}
                       </span>
                     </Card.Text>
                     <Card.Text>
@@ -200,9 +196,7 @@ export default function AutoRenewalList() {
                           <FormattedMessage id="Enabled-Date" /> {'   '}
                         </strong>
                         <span className="mx-1">
-                          {autorenewal.enabledDate
-                            ? formatDate(autorenewal.enabledDate)
-                            : formatDate(autorenewal.startDate)}
+                          {formatDate(autorenewal.enabledDate)}
                         </span>
                       </div>
                     </Card.Text>

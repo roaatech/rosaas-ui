@@ -9,7 +9,9 @@ export const Wrapper = styled.div`
     color: var(--primary5);
     background: var(--second-color-1);
   }
-
+  .p-listbox .p-listbox-list .p-listbox-item {
+    background-color: ${(props) => (props.firstItem ? 'red' : 'white')};
+  }
   .form-check-label {
     font-weight: lighter;
     color: var(--primary5);
@@ -24,5 +26,9 @@ export const Wrapper = styled.div`
   }
   .p-listbox .p-listbox-list .p-listbox-item {
     border-bottom: 1px solid var(--misty-gray) !important;
+  }
+  .current-plan {
+    /* background-color: var(--primary1); */
+    color: var(--second-color);
   }
 `

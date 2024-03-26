@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
     margin-left: auto; */
   }
   background-image: url(${bg});
-  background-size: cover;
+  background-size: auto;
   .custom-card {
     background-color: var(--pale-moonlight-gray);
   }
