@@ -1,22 +1,14 @@
+// Import necessary modules and components
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { Form } from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import { Wrapper } from './WorkspaceUpDowngradeForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import useRequest from '../../../../../axios/apis/useRequest.js'
-import {
-  setAllPlans,
-  setAllPlansPrice,
-  setAllProduct,
-} from '../../../../../store/slices/products/productsSlice.js'
-import { setAllSpecifications } from '../../../../../store/slices/products/specificationReducers.js'
 import { cycle } from '../../../../../const/product.js'
-import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
-import { changeOrderAttribute } from '../../../../../store/slices/tenants.js'
 import { ListBox } from 'primereact/listbox'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons'
@@ -27,28 +19,79 @@ import {
 } from '../../../../../store/slices/workSpace.js'
 import { cardInfo } from '../../../../../const/cardPayment.js'
 
+// Define the component
 const WorkspaceUpDowngradeForm = ({
   setVisible,
   popupLabel,
   type,
   subscriptionData,
+  setEnabledCardId,
+  setCanceledCardId,
 }) => {
+  // Redux state management
   const products = useSelector((state) => state.workspace.products)
-  useEffect(() => {
-    if (!subscriptionData) {
-      return
-    }
-    if (products[subscriptionData?.product.id]) {
-      return
-    } else {
-      dispatch(workspaceUpdateProduct(subscriptionData?.product))
-    }
-  }, [subscriptionData, products])
+  const dispatch = useDispatch()
 
+  // Formik form setup
+  const formik = useFormik({
+    initialValues,
+    validationSchema: validationSchema,
+
+    // Form submission handler
+    onSubmit: async (values) => {
+      // Set loading state
+      setSubmitLoading(true)
+
+      // Upgrade or downgrade subscription based on type
+      if (type == 'upgrade') {
+        // Upgrade subscription
+        const upgradeSubscriptionReq = await upgradeSubscription({
+          planPriceId: values.price,
+          planId: values.plan,
+          subscriptionId: currentSubscriptionId,
+          comment: values.comment,
+          cardReferenceId: values.card,
+          paymentPlatform: 2,
+        })
+        // Set enabled card ID
+        setEnabledCardId(currentSubscriptionId)
+        setTimeout(() => {
+          setEnabledCardId(null)
+        }, 2000)
+      } else {
+        // Downgrade subscription
+        const downgradeSubscriptionReq = await downgradeSubscription({
+          planPriceId: values.price,
+          planId: values.plan,
+          subscriptionId: currentSubscriptionId,
+          comment: values.comment,
+        })
+        // Set canceled card ID
+        setCanceledCardId(currentSubscriptionId)
+
+        // Reset canceled card ID after 2 seconds
+        setTimeout(() => {
+          setCanceledCardId(null)
+        }, 2000)
+      }
+      // Reset loading state
+      setSubmitLoading(false)
+
+      // Close modal if setVisible is defined
+      setVisible && setVisible(false)
+    },
+  })
+
+  // Other state variables
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
-
   const [cards, setCards] = useState([])
+  const [idsWithValues, setIdsWithValues] = useState()
+  const [currentSubscriptionId, setCurrentSubscriptionId] = useState('')
+
+  // Other hooks and effects
+
+  // Fetch cards data
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -61,51 +104,49 @@ const WorkspaceUpDowngradeForm = ({
     fetchCards()
   }, [])
 
-  const dispatch = useDispatch()
+  // Update products state if subscriptionData changes
+  useEffect(() => {
+    if (!subscriptionData) {
+      return
+    }
+    if (products[subscriptionData?.product.id]) {
+      return
+    } else {
+      dispatch(workspaceUpdateProduct(subscriptionData?.product))
+    }
+  }, [subscriptionData, products])
+
+  // Destructure functions from the custom hook useRequest
   const {
-    getProductList,
     upgradeSubscription,
     downgradeSubscription,
     getProductPlansPublic,
     getPaymentCardsList,
     getProductPlanPriceListPublic,
-    setEnabledCardId,
-    setCanceledCardId,
   } = useRequest()
+
+  // Extract data from subscriptionData
   const selectedProduct = subscriptionData?.product?.id
   const currentPlanPrice = subscriptionData?.planPrice.price
   const currentPlanCycle = subscriptionData?.planPrice.cycle
   const currentPlanId = subscriptionData?.plan.id
-  const [idsWithValues, setIdsWithValues] = useState()
-  console.log({ subscriptionData })
-  const [currentSubscriptionId, setCurrentSubscriptionId] = useState('')
+
+  // Update currentSubscriptionId when subscriptionData changes
   useEffect(() => {
     setCurrentSubscriptionId(subscriptionData?.subscriptionId)
   }, [subscriptionData?.subscriptionId])
 
+  // Define validation schema for Formik form
   const validationSchema = Yup.object().shape({
-    // plan: Yup.string().required(<FormattedMessage id="Please-select-a-plan" />),
-    // price: Yup.string().required(
-    //   <FormattedMessage id="Please-select-a-price" />
-    // ),
     card: Yup.string().required(
       <FormattedMessage id="This-field-is-required" />
     ),
     subscriptionOption: Yup.string().required(
       <FormattedMessage id="This-field-is-required" />
     ),
-    // plan: Yup.string()
-    //   .test(
-    //     'not-current-plan',
-    //     'You cannot select the current plan',
-    //     function (value) {
-    //       const currentPlanId = subscriptionData?.plan.id
-    //       return value !== currentPlanId
-    //     }
-    //   )
-    //   .required('Please select a plan'),
   })
 
+  // Initial values for Formik form
   const initialValues = {
     plan: '',
     price: '',
@@ -115,49 +156,14 @@ const WorkspaceUpDowngradeForm = ({
       ? subscriptionData?.planPrice?.cycle
       : '',
   }
-  const formik = useFormik({
-    initialValues,
-    validationSchema: validationSchema,
 
-    onSubmit: async (values) => {
-      setSubmitLoading(true)
+  const intl = useIntl() // Internationalization hook
+  let [planOptions, setPlanOptions] = useState([]) // State variable for plan options
 
-      if (type == 'upgrade') {
-        const upgradeSubscriptionReq = await upgradeSubscription({
-          planPriceId: values.price,
-          planId: values.plan,
-          subscriptionId: currentSubscriptionId,
-          comment: values.comment,
-          cardReferenceId: values.card,
-          paymentPlatform: 2,
-        })
-        setEnabledCardId(currentSubscriptionId)
-        setTimeout(() => {
-          setEnabledCardId(null)
-        }, 2000)
-      } else {
-        const downgradeSubscriptionReq = await downgradeSubscription({
-          planPriceId: values.price,
-          planId: values.plan,
-          subscriptionId: currentSubscriptionId,
-          comment: values.comment,
-        })
-        setCanceledCardId(currentSubscriptionId)
-
-        setTimeout(() => {
-          setCanceledCardId(null)
-        }, 2000)
-      }
-      setSubmitLoading(false)
-
-      setVisible && setVisible(false)
-    },
-  })
-
-  const intl = useIntl()
-  let [planOptions, setPlanOptions] = useState([])
+  // Effect to update plan options when products or plan IDs change
   useEffect(() => {
     if (products[selectedProduct]?.plans && idsWithValues) {
+      // Filter and map plan options
       const planList = Object.values(products[selectedProduct].plans)
         .filter((item) => item.isPublished === true)
         .filter((item) => idsWithValues.includes(item.id))
@@ -180,20 +186,26 @@ const WorkspaceUpDowngradeForm = ({
         planList.unshift(currentPlan)
       }
 
+      // Set plan options state
       setPlanOptions(planList)
     }
   }, [idsWithValues])
 
+  // Effect to fetch product plans and set initial form values
   useEffect(() => {
     ;(async () => {
+      // Reset form values
       formik.setFieldValue('plan', '')
       formik.setFieldValue('price', '')
+
+      // Fetch product plans if not already loaded
       if (products[selectedProduct]) {
         if (!products[selectedProduct].plans) {
           const planData = await getProductPlansPublic(
             subscriptionData.product.systemName
           )
 
+          // Dispatch action to update product plans in Redux store
           dispatch(
             wokspaceSetAllPlans({
               productId: selectedProduct,
@@ -205,14 +217,17 @@ const WorkspaceUpDowngradeForm = ({
     })()
   }, [products, selectedProduct])
 
+  // Effect to fetch product plan prices and update plan options based on current cycle
   useEffect(() => {
     ;(async () => {
       // formik.setFieldValue('price', '')
       if (products[selectedProduct]) {
         if (!products[selectedProduct]?.plansPrices) {
+          // Fetch product plan prices if not already loaded
           const planPriceDataRes = await getProductPlanPriceListPublic(
             subscriptionData.product.systemName
           )
+          // Dispatch action to update product plan prices in Redux store
           dispatch(
             setWorkspaceAllPlanPrices({
               productId: selectedProduct,
@@ -221,6 +236,8 @@ const WorkspaceUpDowngradeForm = ({
           )
         }
       }
+
+      // Filter plan data based on cycle and create plan options
       const planDataRes = products?.[selectedProduct]?.plansPrices
       if (planDataRes) {
         const planDataArray = Object.values(planDataRes)
@@ -249,6 +266,7 @@ const WorkspaceUpDowngradeForm = ({
             planId: item.plan.id,
           }))
 
+        // Filter and set hidden plan data based on subscription type
         const hidePlanData = planDataArray
           .filter((item) => {
             console.log({ currentPlanPrice })
@@ -272,6 +290,8 @@ const WorkspaceUpDowngradeForm = ({
             value: item.id,
             planId: item.plan.id,
           }))
+
+        // Set IDs with values and price list
         setIdsWithValues(hidePlanData.map((item) => item.planId))
         setPriceList(planData)
       }
@@ -283,6 +303,8 @@ const WorkspaceUpDowngradeForm = ({
     products?.[selectedProduct],
     formik.values.cycle,
   ])
+
+  // Effect to set plan and price when subscription option changes
   useEffect(() => {
     if (!formik.values.subscriptionOption) {
       return
@@ -293,15 +315,19 @@ const WorkspaceUpDowngradeForm = ({
     }
     const [selectedPlan, selectedPrice] = parts
 
+    // Set plan and price form values
     formik.setFieldValue('plan', selectedPlan)
     formik.setFieldValue('price', selectedPrice)
   }, [formik.values.subscriptionOption])
 
   return (
+    // Wrapper component for the WorkspaceUpDowngradeForm
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
         <Modal.Header>
+          {/* Modal title */}
           <Modal.Title className="h6">{popupLabel}</Modal.Title>
+          {/* Close button */}
           <Button
             variant="close"
             aria-label="Close"
@@ -309,11 +335,13 @@ const WorkspaceUpDowngradeForm = ({
           />
         </Modal.Header>
         <Modal.Body>
+          {/* Subscription cycle radio buttons */}
           <Form.Group className="mb-4">
             <Form.Label>
               <FormattedMessage id="Subscription Cycle" />
             </Form.Label>
-            <div className="d-flex form-control justify-content-center ">
+            <div className="d-flex form-control justify-content-center">
+              {/* Monthly cycle radio button */}
               <Form.Check
                 inline
                 label={<FormattedMessage id="Monthly" />}
@@ -321,10 +349,11 @@ const WorkspaceUpDowngradeForm = ({
                 id="monthlyCycle"
                 name="cycle"
                 value="monthly"
-                checked={formik.values.cycle === 3} // Checking against the numeric value
-                onChange={() => formik.setFieldValue('cycle', 3)}
+                checked={formik.values.cycle === 3} // Check if cycle is monthly
+                onChange={() => formik.setFieldValue('cycle', 3)} // Set cycle to monthly
                 className="px-6"
               />
+              {/* Yearly cycle radio button */}
               <Form.Check
                 inline
                 label={<FormattedMessage id="Yearly" />}
@@ -332,22 +361,20 @@ const WorkspaceUpDowngradeForm = ({
                 id="yearlyCycle"
                 name="cycle"
                 value="yearly"
-                checked={formik.values.cycle === 4} // Checking against the numeric value
-                onChange={() => formik.setFieldValue('cycle', 4)} // Setting numeric value
+                checked={formik.values.cycle === 4} // Check if cycle is yearly
+                onChange={() => formik.setFieldValue('cycle', 4)} // Set cycle to yearly
                 className="px-6"
               />
             </div>
           </Form.Group>
+          {/* Subscription options dropdown */}
           <Form.Group className="mb-4">
             <Form.Label>
               <FormattedMessage id="Subscription-Options" />{' '}
               <span style={{ color: 'red' }}>*</span>
             </Form.Label>
             <ListBox
-              value={
-                // `${formik.values.plan}:${formik.values.price}` ||
-                formik.values.subscriptionOption
-              }
+              value={formik.values.subscriptionOption}
               options={
                 formik.values.cycle &&
                 planOptions.map((option, index) => ({
@@ -369,9 +396,9 @@ const WorkspaceUpDowngradeForm = ({
                       $ /{' '}
                       {priceList.find((price) => price.planId === option.value)
                         ?.label.cycle == 3 ? (
-                        <FormattedMessage id="Monthly" />
+                        <FormattedMessage id="Month" />
                       ) : (
-                        <FormattedMessage id="Yearly" />
+                        <FormattedMessage id="Year" />
                       )}
                     </div>
                   ),
@@ -394,6 +421,7 @@ const WorkspaceUpDowngradeForm = ({
               className="form-control p-0"
               listStyle={{ maxHeight: '140px' }}
             />
+            {/* Display subscription option validation error */}
             {formik.touched.subscriptionOption &&
               formik.errors.subscriptionOption && (
                 <Form.Control.Feedback
@@ -402,7 +430,8 @@ const WorkspaceUpDowngradeForm = ({
                 >
                   {formik.errors.subscriptionOption}
                 </Form.Control.Feedback>
-              )}{' '}
+              )}
+            {/* Display plan validation error */}
             {formik.touched.plan && formik.errors.plan && (
               <Form.Control.Feedback
                 type="invalid"
@@ -410,9 +439,9 @@ const WorkspaceUpDowngradeForm = ({
               >
                 {formik.errors.plan}
               </Form.Control.Feedback>
-            )}{' '}
+            )}
           </Form.Group>
-
+          {/* Payment card dropdown */}
           <Form.Group>
             <Form.Label>
               <FormattedMessage id="Payment-Card" />{' '}
@@ -421,7 +450,6 @@ const WorkspaceUpDowngradeForm = ({
             <ListBox
               value={formik.values.card}
               options={cards.map((card) => ({
-                // Use the list of cards from state
                 value: card.stripeCardId,
                 label: (
                   <div className="d-flex justify-content-between align-items-center">
@@ -429,11 +457,13 @@ const WorkspaceUpDowngradeForm = ({
                       className="d-flex align-items-center"
                       style={{ minWidth: '110px' }}
                     >
+                      {/* Display card icon */}
                       {cardInfo?.[card.brand]?.icon}
                       <FontAwesomeIcon
                         icon={faEllipsisH}
                         className="icon-dark pl-3"
                       />
+                      {/* Display last 4 digits and cardholder name */}
                       <span
                         className="pl-1"
                         style={{ flex: '0 0 50%', minWidth: '100px' }}
@@ -447,6 +477,7 @@ const WorkspaceUpDowngradeForm = ({
                         {card.cardholderName}
                       </span>
                     </div>
+                    {/* Display card expiration date */}
                     <div className="d-flex justify-content-between align-items-center">
                       <span>
                         {card.expirationMonth}/{card.expirationYear}
@@ -458,9 +489,9 @@ const WorkspaceUpDowngradeForm = ({
               onChange={(e) => formik.setFieldValue('card', e.value)}
               optionLabel="label"
               className="form-control p-0"
-              // virtualScrollerOptions={{ itemSize: 300 }}
               listStyle={{ maxHeight: '140px' }}
             />
+            {/* Display card validation error */}
             {formik.touched.card && formik.errors.card && (
               <Form.Control.Feedback
                 type="invalid"
@@ -468,13 +499,16 @@ const WorkspaceUpDowngradeForm = ({
               >
                 {formik.errors.card}
               </Form.Control.Feedback>
-            )}{' '}
+            )}
           </Form.Group>
         </Modal.Body>
+        {/* Modal footer */}
         <Modal.Footer>
+          {/* Submit button */}
           <Button variant="secondary" type="submit" disabled={submitLoading}>
             <FormattedMessage id="Submit" />
           </Button>
+          {/* Close button */}
           <Button
             variant="link"
             className="text-gray "

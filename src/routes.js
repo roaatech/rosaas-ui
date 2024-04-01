@@ -20,7 +20,7 @@ import TwoStepProcessPage from './pages/TwoStepPage/TwoStepPage'
 import CreatedSuccess from './pages/CreatedSuccess/CreatedSuccess'
 import PaymentFailed from './pages/PaymentFailed/PaymentFailed'
 import CardPaymentManagement from './pages/Settings/CardPaymentManagement/CardPaymentManagement'
-import TenantWelcomePage from './pages/TenantWelcomePage/TenantWelcomePage'
+import TenantWelcomePage from './pages/WorkspacePage/WorkspacePage'
 import Marketplace from './pages/Marketplace/Marketplace'
 const adminPanel = '/admin-panel'
 export const Routes = {

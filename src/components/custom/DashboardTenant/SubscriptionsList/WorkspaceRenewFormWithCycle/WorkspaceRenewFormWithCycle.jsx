@@ -1,3 +1,4 @@
+// Import necessary dependencies and components
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
@@ -22,6 +23,7 @@ import {
 } from '../../../../../store/slices/workSpace.js'
 import { cycle } from '../../../../../const/product.js'
 
+// WorkspaceRenewFormWithCycle component
 const WorkspaceRenewFormWithCycle = ({
   setVisible,
   popupLabel,
@@ -32,58 +34,73 @@ const WorkspaceRenewFormWithCycle = ({
   setShowAddCardForm,
   setEnabledCardId,
 }) => {
+  // State variables
   const cards = useSelector((state) => state.workspace.paymentCards)
   const autoRenewalData = useSelector(
     (state) => state.workspace.autoRenewalData
   )
+  const [submitLoading, setSubmitLoading] = useState()
+  const [priceList, setPriceList] = useState({})
+
+  // Custom hook for handling API requests
   const {
     setAutoRenewal,
     getPaymentCardsList,
     getProductPlansPublic,
     getProductPlanPriceListPublic,
   } = useRequest()
-  const intl = useIntl()
-  const [submitLoading, setSubmitLoading] = useState()
-  const [priceList, setPriceList] = useState({})
 
+  // Internationalization hook
+  const intl = useIntl()
+
+  // Form validation schema
+  const validationSchema = Yup.object().shape({
+    card: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
+    price: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
+    autoRenewal: Yup.boolean(),
+  })
+
+  // Initial form values
+  const initialValues = {
+    card: cards?.[referenceId] ? referenceId : '',
+    price: '',
+    autoRenewal: true,
+  }
+
+  // Redux dispatch hook
+  const dispatch = useDispatch()
+
+  // Select subscription data from Redux store based on current subscription ID
   const subscriptionData = useSelector(
     (state) => state.workspace.subscriptionData
   )?.[currentSubscription]
-  console.log({ subscriptionData, currentSubscription })
-  const validationSchema = Yup.object().shape({
-    card: Yup.string().required(<FormattedMessage id="Please-select-a-card" />),
 
-    autoRenewal: Yup.boolean(),
-    // cycleCount: Yup.number().when('autoRenewal', {
-    //   is: false,
-    //   then: Yup.number()
-    //     .min(1, 'Cycle count must be greater than 0')
-    //     .required('Cycle count is required'),
-    // }),
-  })
+  // Extract selected plan, product, and plan price IDs from subscription data
   const selectedPlan = subscriptionData?.plan?.id
   const selectedProduct = subscriptionData?.product?.id
   const selectedPrice = subscriptionData?.planPrice?.id
 
-  const initialValues = {
-    card: referenceId ? referenceId : '',
-    price: selectedPrice ? selectedPrice : '',
-    autoRenewal: true,
-  }
-  console.log({ cards: Object.values(autoRenewalData) })
-  const dispatch = useDispatch()
+  // Formik form handling
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      // Set loading state
       setSubmitLoading(true)
       try {
+        // Make API call to set auto renewal
         await setAutoRenewal({
           subscriptionId: currentSubscription,
           cardReferenceId: values.card,
           price: values.price,
           paymentPlatform: 2,
         })
+
+        // Update subscription attribute in Redux store
         dispatch(
           changeSubscriptionAttribute({
             subscriptionId: currentSubscription,
@@ -91,6 +108,8 @@ const WorkspaceRenewFormWithCycle = ({
             attributeValue: true,
           })
         )
+
+        // Dispatch auto renewal data
         if (Object.values(autoRenewalData).length > 1) {
           dispatch(
             addAutoRenewal({
@@ -115,20 +134,24 @@ const WorkspaceRenewFormWithCycle = ({
           dispatch(addAutoRenewalIds([currentSubscription]))
         }
 
+        // Set enabled card ID
         setEnabledCardId(currentSubscription)
         setTimeout(() => {
           setEnabledCardId(null)
         }, 2000)
 
+        // Close modal
         setVisible && setVisible(false)
       } catch (error) {
         console.error('Error submitting form:', error)
       } finally {
+        // Reset loading state
         setSubmitLoading(false)
       }
     },
   })
 
+  // Fetch payment cards on component mount
   useEffect(() => {
     if (Object.keys(cards).length > 0) {
       return
@@ -138,20 +161,10 @@ const WorkspaceRenewFormWithCycle = ({
       dispatch(setAllpaymentCards(fetchedCardsData.data.data))
     })()
   }, [])
+
+  // Fetch product plans if not available in Redux store
   const products = useSelector((state) => state.workspace.products)
-  useEffect(() => {
-    if (Object.values(subscriptionData).length < 0) {
-      return
-    }
-    if (products[subscriptionData?.product?.id]) {
-      return
-    } else {
-      dispatch(workspaceUpdateProduct(subscriptionData?.product))
-    }
-  }, [
-    Object.values(subscriptionData).length < 0,
-    products[subscriptionData?.product?.id],
-  ])
+
   useEffect(() => {
     ;(async () => {
       formik.setFieldValue('plan', '')
@@ -173,6 +186,21 @@ const WorkspaceRenewFormWithCycle = ({
   }, [products[selectedProduct]])
 
   useEffect(() => {
+    if (Object.values(subscriptionData).length < 0) {
+      return
+    }
+    if (products[subscriptionData?.product?.id]) {
+      return
+    } else {
+      dispatch(workspaceUpdateProduct(subscriptionData?.product))
+    }
+  }, [
+    Object.values(subscriptionData).length < 0,
+    products[subscriptionData?.product?.id],
+  ])
+
+  // Fetch product plan prices if not available in Redux store
+  useEffect(() => {
     ;(async () => {
       if (
         products[selectedProduct] &&
@@ -190,6 +218,8 @@ const WorkspaceRenewFormWithCycle = ({
       }
     })()
   }, [products[selectedProduct]])
+
+  // Set price list based on selected product and plan
   useEffect(() => {
     const planData = products?.[selectedProduct]?.plansPrices
     if (planData) {
@@ -207,24 +237,31 @@ const WorkspaceRenewFormWithCycle = ({
       setPriceList([])
     }
   }, [products?.[selectedProduct]?.plansPrice, products?.[selectedProduct]])
+
   return (
     <Wrapper>
+      {/* Form for submitting renewal details */}
       <Form onSubmit={formik.handleSubmit}>
+        {/* Modal Header */}
         <Modal.Header>
           <Modal.Title className="h6">{popupLabel}</Modal.Title>
+          {/* Button to close the modal */}
           <Button
             variant="close"
             aria-label="Close"
             onClick={() => setVisible(false)}
           />
         </Modal.Header>
+        {/* Modal Body */}
         <Modal.Body>
           <div>
+            {/* Display selected plan's price */}
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
                   <FormattedMessage id="Price" />
                 </Form.Label>{' '}
+                {/* ListBox to select price */}
                 <ListBox
                   value={formik.values.price}
                   options={Object.values(priceList).map((item) => ({
@@ -241,10 +278,19 @@ const WorkspaceRenewFormWithCycle = ({
                   onChange={(e) => formik.setFieldValue('price', e.value)}
                   optionLabel="label"
                   className="form-control p-0"
-                  // listStyle={{ height: '200px' }}
                 />
+                {/* Display error message if price is not selected */}
+                {formik.touched.price && formik.errors.price && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.price}
+                  </Form.Control.Feedback>
+                )}
               </Form.Group>
             </div>
+            {/* Checkbox for auto renewal */}
             <Form.Group className="mb-3">
               <Form.Check
                 type="checkbox"
@@ -261,6 +307,7 @@ const WorkspaceRenewFormWithCycle = ({
                 }
               />
             </Form.Group>
+            {/* Input for cycle count if auto renewal is not selected */}
             {!formik.values.autoRenewal && formik.values.price && (
               <Form.Group className="mb-3">
                 <Form.Label>
@@ -279,6 +326,7 @@ const WorkspaceRenewFormWithCycle = ({
                       formik.touched.cycleCount && formik.errors.cycleCount
                     }
                   />
+                  {/* Display cycle period based on selected price */}
                   <span className="cyclePrice">
                     {formik.values.price &&
                       priceList.find(
@@ -286,6 +334,7 @@ const WorkspaceRenewFormWithCycle = ({
                       )?.cycle}
                   </span>
                 </div>
+                {/* Display error message if cycle count is invalid */}
                 {formik.touched.cycleCount && formik.errors.cycleCount && (
                   <Form.Control.Feedback
                     type="invalid"
@@ -296,18 +345,17 @@ const WorkspaceRenewFormWithCycle = ({
                 )}
               </Form.Group>
             )}
+            {/* ListBox to select payment card */}
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
                   <FormattedMessage id="Payment-Card" />
                 </Form.Label>
-
                 <ListBox
                   value={formik.values.card}
                   options={
                     cards &&
                     Object.values(cards).map((card) => ({
-                      // Use the list of cards from state
                       value: card.stripeCardId,
                       label: (
                         <div className="d-flex justify-content-between align-items-center">
@@ -345,11 +393,20 @@ const WorkspaceRenewFormWithCycle = ({
                   onChange={(e) => formik.setFieldValue('card', e.value)}
                   optionLabel="label"
                   className="form-control p-0"
-                  // virtualScrollerOptions={{ itemSize: 300 }}
                   listStyle={{ height: '200px' }}
                 />
+                {/* Display error message if card is not selected */}
+                {formik.touched.card && formik.errors.card && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.card}
+                  </Form.Control.Feedback>
+                )}
               </Form.Group>
             </div>
+            {/* Link to add another card */}
             <div>
               <Form.Group className="mb-3">
                 <span
@@ -370,10 +427,13 @@ const WorkspaceRenewFormWithCycle = ({
             </div>
           </div>
         </Modal.Body>
+        {/* Modal Footer */}
         <Modal.Footer>
+          {/* Submit button */}
           <Button variant="secondary" type="submit" disabled={submitLoading}>
             <FormattedMessage id="Submit" />
           </Button>
+          {/* Close button */}
           <Button
             variant="link"
             className="text-gray"

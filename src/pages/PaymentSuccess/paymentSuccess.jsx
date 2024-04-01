@@ -14,7 +14,11 @@ const PaymentSuccess = () => {
 
   const handleButtonClick = () => {
     window.location.href =
-      userRole == 'tenantAdmin' ? Routes.workSpace.path : Routes.Dashboard.path
+      userRole == 'tenantAdmin'
+        ? Routes.workSpace.path
+        : userRole == 'superAdmin'
+        ? Routes.Dashboard.path
+        : Routes.mainPage.path
   }
   return (
     <Wrapper>

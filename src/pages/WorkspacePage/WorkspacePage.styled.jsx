@@ -2,13 +2,11 @@ import { styled } from 'styled-components'
 import bg from '../../assets/img/pages/login/bg.svg'
 
 export const Wrapper = styled.div`
-  .custom-container {
-    max-width: 300px;
-    /* margin-right: auto;
-    margin-left: auto; */
+  background-image: url(${bg}); // Set the background image using imported image
+  background-size: auto; // Set background size to auto
+  .main-section {
+    min-height: 100vh;
   }
-  background-image: url(${bg});
-  background-size: auto;
   .custom-card {
     background-color: var(--pale-moonlight-gray);
   }

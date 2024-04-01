@@ -12,7 +12,6 @@ import {
   faCheckCircle,
   faDownload,
   faEllipsisV,
-  faExchangeAlt,
   faExclamationCircle,
   faMoneyCheckDollar,
   faTimesCircle,
@@ -21,9 +20,7 @@ import {
   faUpload,
 } from '@fortawesome/free-solid-svg-icons'
 import useRequest from '../../../../axios/apis/useRequest.js'
-import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
 import { FormattedMessage } from 'react-intl'
-import DateLabel from '../../Shared/DateLabel/DateLabel.jsx'
 import { formatDate } from '../../../../lib/sharedFun/Time.js'
 import CreditCard from '../../CreditCard/CreditCard.jsx'
 import { cardInfo } from '../../../../const/cardPayment.js'
@@ -32,52 +29,32 @@ import { Wrapper } from './SubscriptionsList.styled.jsx'
 import UpperContent from '../../Shared/UpperContent/UpperContent.jsx'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog.jsx'
 import { useDispatch, useSelector } from 'react-redux'
-import RenewForm from '../../tenant/SubscriptionManagement/RenewForm/RenewForm.jsx'
 import {
   changeSubscriptionAttribute,
   deleteAutoRenewalById,
   setWorkspaceSubscriptionData,
 } from '../../../../store/slices/workSpace.js'
 import CardSaveFormWithStripe from '../../CardSaveForm/CardSaveForm.js'
-import WorkspaceRenewForm from './WorkspaceRenewForm/WorkspaceRenewForm.jsx'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation.js'
 import WorkspaceUpDowngradeForm from './WorkspaceUpDowngradeForm/WorkspaceUpDowngradeForm.jsx'
 import WorkspaceRenewFormWithCycle from './WorkspaceRenewFormWithCycle/WorkspaceRenewFormWithCycle.jsx'
 
 export default function SubscriptionList() {
-  const { getSubscriptionsList, cancelAutoRenewal } = useRequest()
-  const [visible, setVisible] = useState(false)
-  const dispatch = useDispatch()
+  const { getSubscriptionsList, cancelAutoRenewal } = useRequest() // Initializing request functions
+
+  const [visible, setVisible] = useState(false) // State for modal visibility
+
+  const dispatch = useDispatch() // Initializing useDispatch hook
+
   const subscriptionData = useSelector(
     (state) => state.workspace.subscriptionData
-  )
+  ) // Getting subscription data from Redux store
 
+  // State variables for managing forms and confirmation dialog
   const [cards, setCards] = useState([])
   const [showAddCardForm, setShowAddCardForm] = useState(false)
   const [showUpDowngradeForm, setShowUpDowngradeForm] = useState(false)
   const [showDowngradeForm, setShowDowngradeForm] = useState(false)
-  const handleOpenUpDowngradeForm = (subscription) => {
-    setCurrentSubscription(subscription)
-    setShowUpDowngradeForm(true)
-  }
-  const handleOpenDowngradeForm = (subscription) => {
-    setCurrentSubscription(subscription)
-    setShowDowngradeForm(true)
-  }
-  useEffect(() => {
-    if (Object.values(subscriptionData).length > 0) {
-      return
-    }
-    const fetchData = async () => {
-      try {
-        const response = await getSubscriptionsList()
-        dispatch(setWorkspaceSubscriptionData(response.data.data))
-      } catch (error) {
-        console.error('Error fetching subscription data:', error)
-      }
-    }
-    fetchData()
-  }, [])
   const [referenceId, setReferenceId] = useState('')
   const [currentSubscriptionId, setCurrentSubscriptionId] = useState('')
   const [currentSubscription, setCurrentSubscription] = useState()
@@ -85,12 +62,14 @@ export default function SubscriptionList() {
   const [canceledCardId, setCanceledCardId] = useState(null)
   const [enabledCardId, setEnabledCardId] = useState(null)
 
+  // Function to handle automatic renewal
   function automaticRenew(id) {
     setReferenceId(subscriptionData?.[id].paymentMethodCard?.referenceId)
-
     setVisible(true)
     setCurrentSubscriptionId(subscriptionData?.[id]?.id)
   }
+
+  // Object for mapping active status to icons and colors
   const activeStatus = {
     true: {
       text: <FormattedMessage id="Active" />,
@@ -103,6 +82,8 @@ export default function SubscriptionList() {
       color: 'danger',
     },
   }
+
+  // Function to handle confirmation and cancellation of auto-renewal
   const handleConfirmation = async (data = '', comment) => {
     try {
       await cancelAutoRenewal({
@@ -117,22 +98,23 @@ export default function SubscriptionList() {
         })
       )
       dispatch(deleteAutoRenewalById(currentSubscriptionId))
-
       setCanceledCardId(subscriptionData?.[currentSubscriptionId]?.id)
       setTimeout(() => {
         setCanceledCardId(null)
       }, 2000)
-
       setConfirm(false)
     } catch (error) {
       console.error('Error cancelling auto-renewal:', error)
     }
   }
 
+  // Function to handle click on toggle button for auto-renewal
   const handleToggleClick = (id) => {
     setConfirm(true)
     setCurrentSubscriptionId(id)
   }
+
+  // Function to calculate days remaining for trial
   const calculateDaysRemaining = (endDate) => {
     const currentDate = new Date()
     const trialEndDate = new Date(endDate)
@@ -141,15 +123,64 @@ export default function SubscriptionList() {
     return daysRemaining >= 0 ? daysRemaining : 0
   }
 
+  // Fetch subscriptions list on component mount
+  useEffect(() => {
+    if (Object.values(subscriptionData).length > 0) {
+      return
+    }
+    const fetchData = async () => {
+      try {
+        const response = await getSubscriptionsList()
+        dispatch(setWorkspaceSubscriptionData(response.data.data))
+      } catch (error) {
+        console.error('Error fetching subscription data:', error)
+      }
+    }
+    fetchData()
+  }, [])
+
+  // Function to handle opening the upgrade form for a subscription
+  const handleOpenUpDowngradeForm = (subscription) => {
+    setCurrentSubscription(subscription)
+    setShowUpDowngradeForm(true)
+  }
+
+  // Function to handle opening the downgrade form for a subscription
+  const handleOpenDowngradeForm = (subscription) => {
+    setCurrentSubscription(subscription)
+    setShowDowngradeForm(true)
+  }
+
+  // Fetch subscription data when component mounts
+  useEffect(() => {
+    // Check if subscription data already exists
+    if (Object.values(subscriptionData).length > 0) {
+      return
+    }
+    // Fetch subscription data
+    const fetchData = async () => {
+      try {
+        const response = await getSubscriptionsList()
+        dispatch(setWorkspaceSubscriptionData(response.data.data))
+      } catch (error) {
+        console.error('Error fetching subscription data:', error)
+      }
+    }
+    fetchData()
+  }, [])
+
+  // This component renders the subscription list along with various actions and dialogs.
+
   return (
     <Wrapper>
+      {/* UpperContent component for displaying the title */}
       <UpperContent>
         <h4>
           <FormattedMessage id="Subscription-List" />
         </h4>
       </UpperContent>
 
-      {/* <Card className="m-3 p-3 mt-0"> */}
+      {/* Subscription list */}
       <div>
         <Row className="mx-2">
           {subscriptionData &&
@@ -167,6 +198,7 @@ export default function SubscriptionList() {
                   }`}
                 >
                   <Card.Body>
+                    {/* Subscription title with dropdown menu */}
                     <Card.Title>
                       <div className="d-flex justify-content-between">
                         {subscription.displayName}{' '}
@@ -184,7 +216,9 @@ export default function SubscriptionList() {
                               />
                             </span>
                           </Dropdown.Toggle>
+                          {/* Dropdown menu for subscription actions */}
                           <Dropdown.Menu>
+                            {/* Toggle auto-renewal option */}
                             {!subscription.autoRenewalIsEnabled ? (
                               <Dropdown.Item
                                 onClick={() => automaticRenew(subscription?.id)}
@@ -211,63 +245,44 @@ export default function SubscriptionList() {
                                 <FormattedMessage id="Cancel-Auto-Renewal" />
                               </Dropdown.Item>
                             )}
-
-                            {/* {subscription.autoRenewalIsEnabled && (
-                                <Dropdown.Item
-                                  onClick={() =>
-                                    automaticRenew(subscription?.id)
-                                  }
-                                >
-                                  <>
-                                    <FontAwesomeIcon
-                                      icon={faExchangeAlt}
-                                      className="me-2"
-                                    />
-                                    <FormattedMessage id="Change-Auto-Renewal" />
-                                  </>
-                                </Dropdown.Item>
-                              )} */}
-                            {
-                              // subscription.isPlanChangeAllowed &&
-                              subscription.subscriptionMode == 1 && (
-                                <Dropdown.Item
-                                  onClick={() =>
-                                    handleOpenUpDowngradeForm(subscription)
-                                  }
-                                >
-                                  <>
-                                    <FontAwesomeIcon
-                                      icon={faUpload}
-                                      className="me-2"
-                                    />
-                                    <FormattedMessage id="Upgrade-Subscription" />
-                                  </>
-                                </Dropdown.Item>
-                              )
-                            }
-                            {
-                              // subscription.isPlanChangeAllowed &&
-                              subscription.subscriptionMode == 1 && (
-                                <Dropdown.Item
-                                  onClick={() =>
-                                    handleOpenDowngradeForm(subscription)
-                                  }
-                                >
-                                  <>
-                                    <FontAwesomeIcon
-                                      icon={faDownload}
-                                      className="me-2"
-                                    />
-                                    <FormattedMessage id="Downgrade-Subscription" />
-                                  </>
-                                </Dropdown.Item>
-                              )
-                            }
+                            {/* Upgrade subscription option */}
+                            {subscription.subscriptionMode == 1 && (
+                              <Dropdown.Item
+                                onClick={() =>
+                                  handleOpenUpDowngradeForm(subscription)
+                                }
+                              >
+                                <>
+                                  <FontAwesomeIcon
+                                    icon={faUpload}
+                                    className="me-2"
+                                  />
+                                  <FormattedMessage id="Upgrade-Subscription" />
+                                </>
+                              </Dropdown.Item>
+                            )}
+                            {/* Downgrade subscription option */}
+                            {subscription.subscriptionMode == 1 && (
+                              <Dropdown.Item
+                                onClick={() =>
+                                  handleOpenDowngradeForm(subscription)
+                                }
+                              >
+                                <>
+                                  <FontAwesomeIcon
+                                    icon={faDownload}
+                                    className="me-2"
+                                  />
+                                  <FormattedMessage id="Downgrade-Subscription" />
+                                </>
+                              </Dropdown.Item>
+                            )}
                           </Dropdown.Menu>
                         </Dropdown>
                       </div>
                     </Card.Title>
 
+                    {/* Subscription status */}
                     <p>
                       <FontAwesomeIcon
                         icon={
@@ -306,29 +321,8 @@ export default function SubscriptionList() {
                         }
                       </span>
                     </p>
-                    {/* <Card.Text>
-                      {subscription?.trial?.endDate && (
-                        <FontAwesomeIcon
-                          icon={faExclamationCircle}
-                          className="text-danger mr-2"
-                        />
-                      )}
-                      {subscription?.trial?.endDate ? (
-                      <strong>
-                        <FormattedMessage id="Trial" />
-                      </strong>{' '}
-                        <>
-                          <span className="text-danger">
-                            {calculateDaysRemaining(
-                              subscription?.trial?.endDate
-                            )}{' '}
-                            <FormattedMessage id="Days Remaining" />
-                          </span>
-                        </>
-                      ) : (
-                        <FormattedMessage id="Not a trial plan" />
-                      )}
-                    </Card.Text> */}
+
+                    {/* Subscription product */}
                     <Card.Text>
                       <span>
                         <strong>
@@ -337,6 +331,8 @@ export default function SubscriptionList() {
                         {subscription.product.displayName}
                       </span>
                     </Card.Text>
+
+                    {/* Subscription trial or plan */}
                     <Card.Text>
                       {subscription?.trial?.endDate ? (
                         <>
@@ -365,6 +361,7 @@ export default function SubscriptionList() {
                       )}
                     </Card.Text>
 
+                    {/* Subscription creation date */}
                     <Card.Text>
                       <div className="d-flex align-items-center">
                         <strong>
@@ -378,6 +375,7 @@ export default function SubscriptionList() {
                       </div>
                     </Card.Text>
 
+                    {/* Auto-renewal status */}
                     {subscription.autoRenewalIsEnabled ? (
                       <p>
                         <FontAwesomeIcon
@@ -408,14 +406,8 @@ export default function SubscriptionList() {
                         </strong>
                       </p>
                     )}
-                    {/* {subscription.planChangingIsEnabled && (
-                      <p>
-                        <strong>
-                          <FormattedMessage id="Plan-Changing" />:
-                        </strong>{' '}
-                        {subscription.planChangingType}
-                      </p>
-                    )} */}
+
+                    {/* Payment method */}
                     <div>
                       <strong>
                         <FormattedMessage id="Payment-Method" />
@@ -446,7 +438,8 @@ export default function SubscriptionList() {
             ))}
         </Row>
       </div>
-      {/* </Card> */}
+
+      {/* Confirmation dialog for canceling auto-renewal */}
       {confirm && (
         <NoteInputConfirmation
           confirm={confirm}
@@ -456,8 +449,11 @@ export default function SubscriptionList() {
           placeholder={'Comment'}
         />
       )}
+
+      {/* Dialogs for various subscription actions */}
       <ThemeDialog visible={visible} setVisible={setVisible}>
         <>
+          {/* Dialog for renewing subscription with cycle */}
           <WorkspaceRenewFormWithCycle
             referenceId={referenceId}
             popupLabel={<FormattedMessage id="Auto-Renewal" />}
@@ -473,6 +469,7 @@ export default function SubscriptionList() {
         </>
       </ThemeDialog>
       <ThemeDialog visible={showAddCardForm} setVisible={setShowAddCardForm}>
+        {/* Dialog for adding card and setting to auto-renewal */}
         <CardSaveFormWithStripe
           setVisible={setShowAddCardForm}
           visible={showAddCardForm}
@@ -488,6 +485,7 @@ export default function SubscriptionList() {
         setVisible={setShowUpDowngradeForm}
       >
         <>
+          {/* Dialog for upgrading subscription */}
           <WorkspaceUpDowngradeForm
             setEnabledCardId={setEnabledCardId}
             subscriptionData={currentSubscription}
@@ -502,6 +500,7 @@ export default function SubscriptionList() {
         setVisible={setShowDowngradeForm}
       >
         <>
+          {/* Dialog for downgrading subscription */}
           <WorkspaceUpDowngradeForm
             subscriptionData={currentSubscription}
             setCanceledCardId={setCanceledCardId}
