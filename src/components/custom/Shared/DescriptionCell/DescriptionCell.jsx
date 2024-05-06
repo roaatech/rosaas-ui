@@ -10,11 +10,16 @@ const DescriptionCell = ({ data }) => {
     setShowMore(!showMore)
   }
 
+  const minHeight = data.minHeight ? data.minHeight : 25
   useEffect(() => {
     if (contentRef.current) {
       const textHeight = contentRef.current.scrollHeight
       setMaxHeight(
-        showMore ? `${textHeight}px` : textHeight > 25 ? '25px' : 'auto'
+        showMore
+          ? `${textHeight}px`
+          : textHeight > minHeight
+          ? `${minHeight}px`
+          : 'auto'
       )
     }
   }, [showMore])

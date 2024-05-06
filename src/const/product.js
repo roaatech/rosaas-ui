@@ -169,6 +169,7 @@ export const featureResetMap = {
 const activeTabKeys = [
   'details',
   'trialPeriod',
+  'webhook',
   'clientCredintials',
   'userManagement',
   'customSpecification',

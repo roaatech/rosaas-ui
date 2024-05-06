@@ -1,15 +1,6 @@
-import {
-  Card,
-  Col,
-  Container,
-  Form,
-  InputGroup,
-  Row,
-} from '@themesberg/react-bootstrap'
-import { ErrorMessage, Formik, useFormik } from 'formik'
+import { Card, Col, Form, Row } from '@themesberg/react-bootstrap'
+import { useFormik } from 'formik'
 import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { Wrapper } from './Profile.styled'
@@ -19,10 +10,7 @@ import { AiFillEdit, AiFillSave } from 'react-icons/ai'
 import useRequest from '../../../../axios/apis/useRequest'
 
 const Profile = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  // const oldProfileData = useSelector((state) => state.userInfo)
-  const { updateProfile, getCurrentProfile, changePassword } = useRequest()
+  const { updateProfile, getCurrentProfile } = useRequest()
   const [edit, setEdit] = useState(false)
   const [oldProfileData, setOldProfileData] = useState({})
   const cancel = () => {
@@ -120,9 +108,6 @@ const Profile = () => {
           />
         </UpperContent>
         <Card className="m-3 p-3 mt-0">
-          {/* <Container> */}
-          {/* <Card border="light" className="m-3 p-3 mt-0"> */}
-          {/* <div className="p-d-flex p-flex-column p-ai-center"> */}
           <Row>
             <Col md={6}>
               <Form.Group className="mb-3">
@@ -227,8 +212,6 @@ const Profile = () => {
             </Col>
           </Row>
         </Card>
-        {/* </Container>
-        </Card> */}
       </Form>
     </Wrapper>
   )

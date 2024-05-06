@@ -18,4 +18,14 @@ export const Wrapper = styled.div`
   .card {
     transition: background-color 0.5s;
   }
+
+  .card-upgrade-hover {
+    box-shadow: 0 0 20px #ffe0b2;
+    border-color: #ffa726 !important;
+  }
+
+  .card-downgrade-hover {
+    box-shadow: 0 0 20px #b2ebf2;
+    border-color: #00bcd4 !important;
+  }
 `

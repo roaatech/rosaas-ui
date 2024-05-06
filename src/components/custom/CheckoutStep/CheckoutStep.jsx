@@ -27,6 +27,8 @@ import { cycle } from '../../../const/product'
 import { Wrapper } from './CheckoutStep.styled'
 import { setStep } from '../../../store/slices/tenants'
 import { da } from 'date-fns/locale'
+import ThemeDialog from '../Shared/ThemeDialog/ThemeDialog'
+import GenerateNavigationLinkModal from './GenerateNavigationLinkModal/GenerateNavigationLinkModal'
 
 const CheckoutPage = (data) => {
   const {
@@ -79,6 +81,7 @@ const CheckoutPage = (data) => {
     })()
   }, [orderID])
   const [currentFeaturePlan, setCurrentFeaturePlan] = useState()
+  const [trialFeaturePlan, seTrialFeaturePlan] = useState()
   useEffect(() => {
     if (!priceData || !systemName) {
       return
@@ -117,18 +120,19 @@ const CheckoutPage = (data) => {
       setRememberCardInfo(newValue)
     }
   }
-
+  const [navigationLink, setNavigationLink] = useState()
   const handlePayment = async () => {
     const payment = await paymentCheckout({
       orderID,
       paymentMethod: hasToPay ? paymentMethod : null,
+      PaymentPlatform: hasToPay ? paymentMethod : null,
       allowStoringCardInfo: rememberCardInfo,
       enableAutoRenewal: autoRenewal,
     })
     if (hasToPay && paymentMethod === 2) {
       const navigationUrl = payment?.data.data.navigationUrl
-
-      if (navigationUrl) {
+      setNavigationLink(navigationUrl)
+      if (navigationUrl && !visible) {
         const decodedUrl = decodeURIComponent(navigationUrl)
         window.location.href = decodedUrl
 
@@ -163,6 +167,12 @@ const CheckoutPage = (data) => {
       setTrialEndDate(formattedTrialEndDate)
     }
   }, [orderData])
+  const [visible, setVisible] = useState()
+  useEffect(() => {
+    if (visible) {
+      handlePayment()
+    }
+  }, [visible])
 
   const direction = useSelector((state) => state.main.direction)
   const renderFeaturePlans = () => {
@@ -462,7 +472,7 @@ const CheckoutPage = (data) => {
                         <Form.Group className="mb-3">
                           <Form.Check
                             type="checkbox"
-                            label={<FormattedMessage id="Auto-Renewal" />}
+                            label={<FormattedMessage id="Allow-Auto-Renewal" />}
                             checked={autoRenewal}
                             onChange={handleAutoRenewalChange}
                             value={autoRenewal}
@@ -488,7 +498,25 @@ const CheckoutPage = (data) => {
                           <FormattedMessage id="Complete" />
                         )}
                       </Button>
-                    }
+                    }{' '}
+                    {hasToPay && (
+                      <>
+                        {' '}
+                        <span className="underline m-2">
+                          <FormattedMessage id="or" />
+                        </span>
+                        <Button
+                          variant="secondary"
+                          type="button"
+                          onClick={() => {
+                            setVisible(true)
+                          }}
+                          className="mx-2"
+                        >
+                          <FormattedMessage id="Create-Payment-Link" />
+                        </Button>
+                      </>
+                    )}
                   </Card.Body>
                   {orderData?.orderItems[0]?.trialPeriodInDays ? (
                     <Card.Footer>
@@ -521,6 +549,12 @@ const CheckoutPage = (data) => {
               </Col>
             </Row>
           </Container>
+          <ThemeDialog visible={visible} setVisible={setVisible}>
+            <GenerateNavigationLinkModal
+              setVisible={setVisible}
+              navigationLink={navigationLink}
+            />
+          </ThemeDialog>
         </div>
       </div>
     </Wrapper>

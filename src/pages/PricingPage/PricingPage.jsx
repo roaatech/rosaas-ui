@@ -216,23 +216,21 @@ const PricingPage = () => {
       setSelectedCycle(sortedCycleTypes?.[0])
     }
     return (
-      <div className="mb-4">
-        <Card.Header>
-          <div className="d-flex justify-content-center ">
-            {sortedCycleTypes?.map((cycleNum, index) => (
-              <Form.Check
-                key={index}
-                type="radio"
-                label={<FormattedMessage id={cycle[cycleNum]} />}
-                value={cycleNum}
-                checked={selectedCycle === cycleNum}
-                onChange={() => handleCycleChange(cycleNum)}
-                className="ml-2 mr-2"
-              />
-            ))}
-          </div>
-        </Card.Header>
-      </div>
+      <Card.Header>
+        <div className="d-flex justify-content-center ">
+          {sortedCycleTypes?.map((cycleNum, index) => (
+            <Form.Check
+              key={index}
+              type="radio"
+              label={<FormattedMessage id={cycle[cycleNum]} />}
+              value={cycleNum}
+              checked={selectedCycle === cycleNum}
+              onChange={() => handleCycleChange(cycleNum)}
+              className="mx-2 "
+            />
+          ))}
+        </div>
+      </Card.Header>
     )
   }
 

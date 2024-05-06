@@ -47,6 +47,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStopwatch } from '@fortawesome/free-solid-svg-icons'
 import ProductTrialPeriod from '../../components/custom/Product/ProductTrialPeriod/ProductTrialPeriod.jsx'
 import ProductsUsersManagement from '../../components/custom/Product/ProductsUsersManagement/ProductsUsersManagement.jsx'
+import WebhookList from '../../components/custom/Product/WebhookList/WebhookList.jsx'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -204,7 +205,9 @@ const ProductDetails = () => {
               ]}
             />
           </UpperContent>
+
           <TabView
+            scrollable
             className="card"
             activeIndex={activeIndex}
             onTabChange={(e) => setActiveIndex(e.index)}
@@ -222,6 +225,9 @@ const ProductDetails = () => {
                 data={productData}
                 setActiveIndex={setActiveIndex}
               />
+            </TabPanel>
+            <TabPanel header={<FormattedMessage id="Webhook" />}>
+              <WebhookList />
             </TabPanel>
             <TabPanel header={<FormattedMessage id="Client-Credentials" />}>
               <ClientCredentials

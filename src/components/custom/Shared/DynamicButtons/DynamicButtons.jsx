@@ -26,6 +26,7 @@ import TrialForm from '../../Product/TrialForm/TrialForm'
 import CreateSecretForm from '../../Product/ClientCredentials/SecretMangements/CreateSecretForm/CreateSecretForm'
 import CardSaveFormWithStripe from '../../CardSaveForm/CardSaveForm'
 import ChangePasswordForm from '../../DashboardTenant/Profile/ChangePasswordForm/ChangePasswordForm'
+import CreateWebhookForm from '../../Product/WebhookList/WebhookForm/WebhookForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -152,6 +153,17 @@ const DynamicButtons = ({ buttons }) => {
           setVisible={setVisible}
           sideBar={false}
           setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+        />
+      </>
+    ),
+    addEndpoint: () => (
+      <>
+        <CreateWebhookForm
+          visible={visible}
+          setVisible={setVisible}
+          popUpLable={<FormattedMessage id="Add-Endpoint" />}
+          webhookId={buttons[currentButtonIndex].currentId}
+          type={buttons[currentButtonIndex].formType}
         />
       </>
     ),
@@ -420,7 +432,8 @@ const DynamicButtons = ({ buttons }) => {
         visible={visible}
         setVisible={setVisible}
         size={
-          buttons[currentButtonIndex]?.component === 'addSpecification'
+          buttons[currentButtonIndex]?.component === 'addSpecification' ||
+          buttons[currentButtonIndex]?.component === 'addEndpoint'
             ? 'lg'
             : ''
         }

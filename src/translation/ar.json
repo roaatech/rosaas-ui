@@ -522,5 +522,23 @@
   "Enable-Auto-Renewal": "تمكين التجديد التلقائي",
   "Yearly": "سنوي",
   "Invoices-List": "قائمة الفواتير",
-  "Card-Management": "إدارة البطاقات"
+  "Card-Management": "إدارة البطاقات",
+  "Add-Endpoint": "إضافة نقطة النهاية",
+  "Signing-Secret": "سر التوقيع",
+  "URL": "رابط URL",
+  "Events-To-Listen": "الأحداث المطلوب الاستماع إليها",
+  "Signing-secret": "سر التوقيع",
+  "Activation-Status": "حالة التفعيل",
+  "Are-you-sure-you-want-to-delete-this-webhook?": "هل أنت متأكد أنك تريد حذف هذا الويب هوك؟",
+  "Select-events-to-listen-to": "اختر الأحداث للاستماع إليها",
+  "Select-Items": "اختر العناصر",
+  "Endpoint-URL": "عنوان URL للنقطة النهائية",
+  "Trial-Period": "فترة التجربة",
+  "Webhook": "ويب هوك",
+  "Reveal": "كشف",
+  "Link-generated-successfully": "تم إنشاء رابط الدفع بنجاح",
+  "Navigation-Link": "رابط التنقل",
+  "Create-Payment-Link": "إنشاء رابط الدفع",
+
+  "The-validity-period-for-this-link-extends-for-a-duration-of-24-hours": "يمتد الفترة الصالحة لهذا الرابط لمدة 24 ساعة"
 }

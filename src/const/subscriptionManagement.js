@@ -72,10 +72,10 @@ export const paymentStatus = {
     color: '#fff',
   },
   200: {
-    background: 'var(--orange-brown)',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Authorized" />,
     icon: <MdPayment />,
-    color: 'var(--orange-brown)',
+    color: 'var(--teal-green)',
   },
   300: {
     background: 'var(--green2)',

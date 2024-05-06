@@ -16,6 +16,7 @@ import usePaymentReq from './Payment/Payment'
 import useUsersManagementReq from './UsersManagement/useUsersManagementReq'
 import useAdminPrivileges from './UsersManagement/useAdminPrivileges'
 import useAccountReq from './Account/Account'
+import useWebhookEndpointReq from './Product/webhookEndpoint/useWebhookEndpointReq'
 
 const useRequest = () => {
   const { signIn, userData, logOut, signUp } = useUserReq()
@@ -32,6 +33,14 @@ const useRequest = () => {
     createTenantRequestPublic,
   } = useTenantReq()
   const { updateProfile, getCurrentProfile, changePassword } = useAccountReq()
+  const {
+    getWebhookEndpointsList,
+    getWebhookEndpointbyId,
+    createWebhookEndpoint,
+    activateWebhookEndpoint,
+    editWebhookEndpoint,
+    deleteWebhookEndpoint,
+  } = useWebhookEndpointReq()
   const {
     subscriptionDetails,
     subscriptionDetailsRenew,
@@ -266,6 +275,12 @@ const useRequest = () => {
     getSubscriptionsList,
     getInvoicesList,
     getAutoRenewalList,
+    getWebhookEndpointsList,
+    getWebhookEndpointbyId,
+    createWebhookEndpoint,
+    activateWebhookEndpoint,
+    editWebhookEndpoint,
+    deleteWebhookEndpoint,
   }
 }
 export default useRequest

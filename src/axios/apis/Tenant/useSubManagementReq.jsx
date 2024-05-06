@@ -35,7 +35,7 @@ const useSubManagementReq = () => {
     )
   }
   const getAutoRenewalList = async () => {
-    return await Request.get(`management/sadmin/v1/Subscriptions/AutoRenewal`)
+    return await Request.get(`management/sadmin/v1/Subscriptions/Renewals`)
   }
   const setAutoRenewal = async (data) => {
     return await Request.post(

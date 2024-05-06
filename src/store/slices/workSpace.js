@@ -161,6 +161,30 @@ export const workspaceSlice = createSlice({
     deleteAllAutoRenewalIds: (state, action) => {
       state.autoRenewalData.autoRenewalIds = []
     },
+    updateAutoRenewal: (state, action) => {
+      const updatedAutoRenewal = action.payload
+
+      // Check if the payload contains valid data
+      if (updatedAutoRenewal && updatedAutoRenewal.id) {
+        // If the auto-renewal with the provided ID exists, update it
+        if (state.autoRenewalData[updatedAutoRenewal.id]) {
+          state.autoRenewalData = {
+            ...state.autoRenewalData,
+            [updatedAutoRenewal.id]: {
+              ...state.autoRenewalData[updatedAutoRenewal.id],
+              ...updatedAutoRenewal, // Update only the provided fields
+            },
+          }
+        } else {
+          console.error(
+            `Auto-renewal with ID ${updatedAutoRenewal.id} not found`
+          )
+        }
+      } else {
+        console.error('Invalid auto-renewal data')
+      }
+    },
+
     setAllpaymentCards: (state, action) => {
       if (Array.isArray(action.payload)) {
         const allpaymentCards = { ...state.paymentCards }
@@ -227,5 +251,6 @@ export const {
   setAllInvoices,
   addAutoRenewalIds,
   deleteAllAutoRenewalIds,
+  updateAutoRenewal,
 } = workspaceSlice.actions
 export default workspaceSlice.reducer

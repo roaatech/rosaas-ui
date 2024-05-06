@@ -18,6 +18,7 @@ import {
   changeSubscriptionAttribute,
   setAllpaymentCards,
   setWorkspaceAllPlanPrices,
+  updateAutoRenewal,
   wokspaceSetAllPlans,
   workspaceUpdateProduct,
 } from '../../../../../store/slices/workSpace.js'
@@ -27,12 +28,15 @@ import { cycle } from '../../../../../const/product.js'
 const WorkspaceRenewFormWithCycle = ({
   setVisible,
   popupLabel,
-  currentSubscription,
+  currentRenewal,
   referenceId,
+
   // cards,
   setCards,
   setShowAddCardForm,
   setEnabledCardId,
+  setUpdate,
+  update,
 }) => {
   // State variables
   const cards = useSelector((state) => state.workspace.paymentCards)
@@ -73,16 +77,17 @@ const WorkspaceRenewFormWithCycle = ({
 
   // Redux dispatch hook
   const dispatch = useDispatch()
+  const data = useSelector((state) => state.workspace.subscriptionData)?.[
+    currentRenewal
+  ]
 
   // Select subscription data from Redux store based on current subscription ID
-  const subscriptionData = useSelector(
-    (state) => state.workspace.subscriptionData
-  )?.[currentSubscription]
+  const renewalData = autoRenewalData?.[currentRenewal] || data
 
   // Extract selected plan, product, and plan price IDs from subscription data
-  const selectedPlan = subscriptionData?.plan?.id
-  const selectedProduct = subscriptionData?.product?.id
-  const selectedPrice = subscriptionData?.planPrice?.id
+  const selectedPlan = renewalData?.plan?.id
+  const selectedProduct = renewalData?.product?.id
+  const selectedPrice = renewalData?.planPrice?.id
 
   // Formik form handling
   const formik = useFormik({
@@ -94,48 +99,62 @@ const WorkspaceRenewFormWithCycle = ({
       try {
         // Make API call to set auto renewal
         await setAutoRenewal({
-          subscriptionId: currentSubscription,
+          subscriptionId: currentRenewal,
           cardReferenceId: values.card,
-          price: values.price,
+          planPriceId: values.price,
+          renewalsCount: values.cycleCount,
+          isContinuousRenewal: values.autoRenewal,
           paymentPlatform: 2,
         })
 
         // Update subscription attribute in Redux store
         dispatch(
           changeSubscriptionAttribute({
-            subscriptionId: currentSubscription,
+            subscriptionId: currentRenewal,
             attributeName: 'autoRenewalIsEnabled',
             attributeValue: true,
           })
         )
-
+        setUpdate(update + 1)
         // Dispatch auto renewal data
         if (Object.values(autoRenewalData).length > 1) {
-          dispatch(
-            addAutoRenewal({
-              id: currentSubscription,
-              ...{
-                plan: subscriptionData?.plan,
-                renewalPlanPriceId: values.price,
-                enabledDate: new Date().toISOString().slice(0, 19),
-                subscriptionRenewalDate: subscriptionData?.endDate,
-                subscription: {
-                  id: subscriptionData?.id,
-                  displayName: subscriptionData?.displayName,
-                  systemName: subscriptionData?.systemName,
-                },
-                product: subscriptionData?.product,
-                paymentMethodCard: cards[values.card],
-              },
-            })
-          )
-          dispatch(addAutoRenewalIds([currentSubscription]))
+          !autoRenewalData?.[currentRenewal]
+            ? dispatch(
+                addAutoRenewal({
+                  id: currentRenewal,
+                  ...{
+                    plan: renewalData?.plan,
+                    renewalPlanPriceId: values.price,
+                    enabledDate: new Date().toISOString().slice(0, 19),
+                    subscriptionRenewalDate: renewalData?.endDate,
+                    subscription: {
+                      id: renewalData?.id,
+                      displayName: renewalData?.displayName,
+                      systemName: renewalData?.systemName,
+                    },
+                    product: renewalData?.product,
+                    paymentMethodCard: cards[values.card],
+                    type: 3,
+                    isContinuousRenewal: values.autoRenewal,
+                    paymentPlatform: 2,
+                    renewalsCount: values.cycleCount,
+                  },
+                })
+              )
+            : dispatch(
+                updateAutoRenewal({
+                  id: renewalData?.id,
+                  isContinuousRenewal: values.autoRenewal,
+                  renewalsCount: values.cycleCount,
+                })
+              )
+          dispatch(addAutoRenewalIds([currentRenewal]))
         } else {
-          dispatch(addAutoRenewalIds([currentSubscription]))
+          dispatch(addAutoRenewalIds([currentRenewal]))
         }
 
         // Set enabled card ID
-        setEnabledCardId(currentSubscription)
+        setEnabledCardId(currentRenewal)
         setTimeout(() => {
           setEnabledCardId(null)
         }, 2000)
@@ -171,7 +190,7 @@ const WorkspaceRenewFormWithCycle = ({
       if (products[selectedProduct]) {
         if (!products[selectedProduct].plans) {
           const planData = await getProductPlansPublic(
-            subscriptionData.product.systemName
+            renewalData.product.systemName
           )
 
           dispatch(
@@ -186,17 +205,20 @@ const WorkspaceRenewFormWithCycle = ({
   }, [products[selectedProduct]])
 
   useEffect(() => {
-    if (Object.values(subscriptionData).length < 0) {
+    if (!renewalData) {
       return
     }
-    if (products[subscriptionData?.product?.id]) {
+    if (Object.values(renewalData).length < 0) {
+      return
+    }
+    if (products[renewalData?.product?.id]) {
       return
     } else {
-      dispatch(workspaceUpdateProduct(subscriptionData?.product))
+      dispatch(workspaceUpdateProduct(renewalData?.product))
     }
   }, [
-    Object.values(subscriptionData).length < 0,
-    products[subscriptionData?.product?.id],
+    renewalData && Object.values(renewalData).length < 0,
+    products[renewalData?.product?.id],
   ])
 
   // Fetch product plan prices if not available in Redux store
@@ -207,7 +229,7 @@ const WorkspaceRenewFormWithCycle = ({
         !products[selectedProduct]?.plansPrices
       ) {
         const planPriceDataRes = await getProductPlanPriceListPublic(
-          subscriptionData.product.systemName
+          renewalData.product.systemName
         )
         dispatch(
           setWorkspaceAllPlanPrices({
@@ -268,7 +290,7 @@ const WorkspaceRenewFormWithCycle = ({
                     value: item.value,
                     label: (
                       <div className="d-flex justify-content-between align-items-center">
-                        <div>{subscriptionData?.plan?.displayName}</div>{' '}
+                        <div>{renewalData?.plan?.displayName}</div>{' '}
                         <span>
                           {item.price} $ / {item.cycle}
                         </span>

@@ -6,6 +6,7 @@ import * as featureReducers from './featureReducers'
 import * as specificationReducers from './specificationReducers'
 import * as planPriceReducers from './planPriceReducers'
 import * as featurePlanReducers from './featurePlanReducers'
+import * as WebhookEndpointsReducers from './WebhookEndpointsReducers'
 const _ = require('lodash')
 
 export const productsSlice = createSlice({
@@ -28,6 +29,8 @@ export const productsSlice = createSlice({
     ...planPriceReducers,
 
     ...featurePlanReducers,
+
+    ...WebhookEndpointsReducers,
   },
 })
 
@@ -71,5 +74,10 @@ export const {
   clientSecretInfo,
   clientSecretAttr,
   updateClientCredentialAttr,
+  setAllWebhookEndpoints,
+  WebhookEndpointInfo,
+  WebhookEndpointsChangeAttr,
+  deleteWebhookEndpointById,
+  deleteAllWebhookEndpoints,
 } = productsSlice.actions
 export default productsSlice.reducer

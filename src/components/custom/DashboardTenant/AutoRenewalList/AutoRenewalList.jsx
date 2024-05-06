@@ -34,23 +34,26 @@ import CreditCard from '../../CreditCard/CreditCard.jsx'
 import { cardInfo } from '../../../../const/cardPayment.js'
 import { formatDate } from '../../../../lib/sharedFun/Time.js'
 import UpperContent from '../../Shared/UpperContent/UpperContent.jsx'
+import renderAutoRenewals from './renderAutoRenewals/renderAutoRenewals.jsx'
+import renderUpgradeRenewals from './renderUpgradeRenewals/renderUpgradeRenewals.jsx'
+import renderDowngradeRenewals from './renderDowngradeRenewals/renderDowngradeRenewals.jsx'
+import WorkspaceRenewFormWithCycle from '../SubscriptionsList/WorkspaceRenewFormWithCycle/WorkspaceRenewFormWithCycle.jsx'
 
-export default function AutoRenewalList() {
+export default function RenewalsList() {
   const { getAutoRenewalList } = useRequest()
-  const autoRenewalData = useSelector(
-    (state) => state.workspace.autoRenewalData
-  )
+  const RenewalsData = useSelector((state) => state.workspace.autoRenewalData)
+  console.log({ RenewalsData })
   const dispatch = useDispatch()
   const { cancelAutoRenewal } = useRequest()
   const [showRenewForm, setShowRenewForm] = useState(false)
   const [currentSubscription, setCurrentSubscription] = useState(null)
   const [cards, setCards] = useState()
-  setTimeout(() => {
-    dispatch(deleteAllAutoRenewalIds())
-  }, 5000)
+  const [update, setUpdate] = useState(0)
+  const [enabledCardId, setEnabledCardId] = useState(null)
+
   useEffect(() => {
     const fetchAutoRenewalData = async () => {
-      if (Object.values(autoRenewalData).length > 1) {
+      if (Object.values(RenewalsData).length > 1) {
         return
       }
       try {
@@ -61,6 +64,9 @@ export default function AutoRenewalList() {
       }
     }
     fetchAutoRenewalData()
+    setTimeout(() => {
+      dispatch(deleteAllAutoRenewalIds())
+    }, 5000)
   }, [])
 
   const handleAutoRenewal = async (id) => {
@@ -73,7 +79,7 @@ export default function AutoRenewalList() {
 
   const handleCancelAutoRenewal = async (id, subscriptionId) => {
     try {
-      await cancelAutoRenewal({ subscriptionId })
+      await cancelAutoRenewal({ subscriptionId, subscriptionRenewalId: id })
       dispatch(
         changeSubscriptionAttribute({
           subscriptionId: subscriptionId,
@@ -86,11 +92,65 @@ export default function AutoRenewalList() {
       console.error('Error cancelling auto-renewal:', error)
     }
   }
+  const [referenceId, setReferenceId] = useState('')
+  const [visible, setVisible] = useState(false) // State for modal visibility
+  const [currentSubscriptionId, setCurrentSubscriptionId] = useState('')
 
+  function automaticRenew(id) {
+    setReferenceId(RenewalsData?.[id].paymentMethodCard?.referenceId)
+    setVisible(true)
+    setCurrentSubscriptionId(RenewalsData?.[id]?.id)
+  }
   const handleOpenRenewForm = (subscription) => {
     setCurrentSubscription(subscription.subscription)
     setShowRenewForm(true)
   }
+  const renderRenewals = (renewal) => {
+    switch (renewal?.type) {
+      case 1:
+        return renderUpgradeRenewals({
+          renewal,
+          RenewalsData,
+          formatDate,
+          handleCancelAutoRenewal,
+          CreditCard,
+          cardInfo,
+          automaticRenew,
+        })
+      case 2:
+        return renderDowngradeRenewals({
+          renewal,
+          formatDate,
+          handleCancelAutoRenewal,
+          CreditCard,
+          cardInfo,
+          RenewalsData,
+          automaticRenew,
+        })
+      case 3:
+        return renderAutoRenewals({
+          renewal,
+          RenewalsData,
+          formatDate,
+          handleCancelAutoRenewal,
+          CreditCard,
+          cardInfo,
+        })
+      default:
+        return null
+    }
+  }
+  const [updatedRenewalData, setUpdatedRenewalData] = useState()
+  useEffect(() => {
+    if (!RenewalsData) {
+      return
+    }
+    const data = Object.values(RenewalsData).map((autorenewal) =>
+      renderRenewals(autorenewal)
+    )
+    console.log(data)
+    setUpdatedRenewalData(data)
+  }, [RenewalsData])
 
   return (
     <Wrapper>
@@ -102,149 +162,11 @@ export default function AutoRenewalList() {
       </UpperContent>
       <div>
         <Row className="mx-2">
-          {autoRenewalData &&
-            Object.values(autoRenewalData).map(
-              (autorenewal) =>
-                autorenewal.id && (
-                  <Col key={autorenewal.id} xl={4} lg={4} sm={6}>
-                    <Card
-                      className={`mb-4 ${
-                        autoRenewalData.autoRenewalIds.includes(autorenewal.id)
-                          ? 'new-added'
-                          : ''
-                      }`}
-                    >
-                      <Card.Header>
-                        <div className="d-flex justify-content-between">
-                          <Card.Title className="m-0 p-0">
-                            <div>
-                              <strong>
-                                <FormattedMessage id="Auto-Renewal" />
-                              </strong>{' '}
-                            </div>
-                          </Card.Title>
-                          <div>
-                            {/* <Card.Title className="m-0 p-0"> */}
-                            <span className="mx-2">
-                              <span className=" fw-normal">
-                                {' '}
-                                <FormattedMessage id="Billing-Date" />{' '}
-                              </span>
-                              <span className="billing-date">
-                                {formatDate(
-                                  autorenewal.subscriptionRenewalDate
-                                )}
-                              </span>
-                            </span>
-                            {'  '}
-                            <Dropdown className="mx-2" as={ButtonGroup}>
-                              <Dropdown.Toggle
-                                as={Button}
-                                split
-                                variant="link"
-                                className="text-dark m-0 p-0"
-                              >
-                                <span className="icon icon-sm">
-                                  <FontAwesomeIcon
-                                    icon={faEllipsisV}
-                                    className="icon-dark"
-                                  />
-                                </span>
-                              </Dropdown.Toggle>
-                              <Dropdown.Menu>
-                                <Dropdown.Item
-                                  onClick={() =>
-                                    handleCancelAutoRenewal(
-                                      autorenewal.id,
-                                      autorenewal.subscription?.id
-                                        ? autorenewal.subscription.id
-                                        : autorenewal.id
-                                    )
-                                  }
-                                  className="text-danger"
-                                >
-                                  <FontAwesomeIcon
-                                    icon={faToggleOn}
-                                    className="me-2"
-                                  />
-                                  <FormattedMessage id="Cancel-Auto-Renewal" />
-                                </Dropdown.Item>
-
-                                {/* <Dropdown.Item
-                                onClick={() => handleOpenRenewForm(autorenewal)}
-                              >
-                                <FontAwesomeIcon
-                                  icon={faExchangeAlt}
-                                  className="me-2"
-                                />
-                                <FormattedMessage id="Renew-Subscription" />
-                              </Dropdown.Item> */}
-                              </Dropdown.Menu>
-                            </Dropdown>{' '}
-                            {/* </Card.Title> */}
-                          </div>
-                        </div>
-                      </Card.Header>
-                      <Card.Body>
-                        <Card.Text>
-                          <span>
-                            <strong>
-                              <FormattedMessage id="Subscription" />
-                            </strong>
-                            {'  '}
-                            {autorenewal.subscription?.displayName}{' '}
-                          </span>
-                        </Card.Text>
-
-                        <Card.Text>
-                          <span>
-                            <strong>
-                              <FormattedMessage id="Plan" />
-                            </strong>{' '}
-                            {autorenewal?.plan?.displayName}
-                          </span>
-                        </Card.Text>
-                        <Card.Text>
-                          <div className="d-flex align-items-center">
-                            <strong>
-                              <FormattedMessage id="Enabled-Date" /> {'   '}
-                            </strong>
-                            <span className="mx-1">
-                              {formatDate(autorenewal.enabledDate)}
-                            </span>
-                          </div>
-                        </Card.Text>
-                        <div>
-                          <strong>
-                            <FormattedMessage id="Auto-Renewal-Payment-Method" />
-                          </strong>
-
-                          <div className="p-3 ">
-                            <div>
-                              <CreditCard
-                                cardNumber={
-                                  autorenewal.paymentMethodCard?.last4Digits
-                                }
-                                expiryDate={`${autorenewal.paymentMethodCard?.expirationMonth}/${autorenewal.paymentMethodCard?.expirationYear}`}
-                                cardHolder={
-                                  autorenewal.paymentMethodCard?.cardholderName
-                                }
-                                isDefault={autorenewal.isDefault}
-                                cardTypeIcon={
-                                  cardInfo?.[
-                                    autorenewal.paymentMethodCard?.brand
-                                  ]?.icon || faMoneyCheckDollar
-                                }
-                                cardView={true}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                )
-            )}
+          {RenewalsData &&
+            Object.values(RenewalsData).map((renewal) => {
+              console.log({ renewal })
+              return renderRenewals(renewal)
+            })}
         </Row>
       </div>
       {/* </Card> */}
@@ -257,6 +179,23 @@ export default function AutoRenewalList() {
             setVisible={setShowRenewForm}
             cards={cards}
             setCards={setCards}
+          />
+        </>
+      </ThemeDialog>
+      <ThemeDialog visible={visible} setVisible={setVisible}>
+        <>
+          {/* Dialog for renewing subscription with cycle */}
+          <WorkspaceRenewFormWithCycle
+            referenceId={referenceId}
+            popupLabel={<FormattedMessage id="Auto-Renewal" />}
+            setVisible={setVisible}
+            visible={visible}
+            currentRenewal={currentSubscriptionId}
+            cards={cards}
+            setCards={setCards}
+            setEnabledCardId={setEnabledCardId}
+            setUpdate={setUpdate}
+            update={update}
           />
         </>
       </ThemeDialog>

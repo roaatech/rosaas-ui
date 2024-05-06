@@ -13,7 +13,7 @@ import Profile from './Profile/Profile' // Importing Profile component
 import InvoicesList from './InvoicesList/InvoicesList' // Importing InvoicesList component
 import PaymentCardsList from '../PaymentCards/PaymentCardsList' // Importing PaymentCardsList component
 import SubscriptionList from './SubscriptionsList/SubscriptionsList' // Importing SubscriptionList component
-import AutoRenewalList from './AutoRenewalList/AutoRenewalList' // Importing AutoRenewalList component
+import RenewalsList from './AutoRenewalList/AutoRenewalList' // Importing AutoRenewalList component
 import {
   faBox,
   faClipboardList,
@@ -48,7 +48,7 @@ const WorkSpace = () => {
         title: <FormattedMessage id="autoRenewalTitle" />,
         icon: <FontAwesomeIcon icon={faSync} />,
         link: '#autoRenewal',
-        content: <AutoRenewalList />,
+        content: <RenewalsList />,
       },
       {
         id: 4,

@@ -13,6 +13,9 @@ import { ListBox } from 'primereact/listbox'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons'
 import {
+  addAutoRenewal,
+  addAutoRenewalIds,
+  setAllpaymentCards,
   setWorkspaceAllPlanPrices,
   wokspaceSetAllPlans,
   workspaceUpdateProduct,
@@ -27,10 +30,35 @@ const WorkspaceUpDowngradeForm = ({
   subscriptionData,
   setEnabledCardId,
   setCanceledCardId,
+  setUpdate,
+  update,
 }) => {
   // Redux state management
   const products = useSelector((state) => state.workspace.products)
   const dispatch = useDispatch()
+
+  // Define validation schema for Formik form
+  const validationSchema = Yup.object().shape({
+    card: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
+    subscriptionOption: Yup.string().required(
+      <FormattedMessage id="This-field-is-required" />
+    ),
+  })
+  const autoRenewalData = useSelector(
+    (state) => state.workspace.autoRenewalData
+  )
+  // Initial values for Formik form
+  const initialValues = {
+    plan: '',
+    price: '',
+    card: '',
+    subscriptionOption: '',
+    cycle: subscriptionData?.planPrice?.cycle
+      ? subscriptionData?.planPrice?.cycle
+      : '',
+  }
 
   // Formik form setup
   const formik = useFormik({
@@ -42,9 +70,7 @@ const WorkspaceUpDowngradeForm = ({
       // Set loading state
       setSubmitLoading(true)
 
-      // Upgrade or downgrade subscription based on type
       if (type == 'upgrade') {
-        // Upgrade subscription
         const upgradeSubscriptionReq = await upgradeSubscription({
           planPriceId: values.price,
           planId: values.plan,
@@ -53,26 +79,71 @@ const WorkspaceUpDowngradeForm = ({
           cardReferenceId: values.card,
           paymentPlatform: 2,
         })
-        // Set enabled card ID
         setEnabledCardId(currentSubscriptionId)
+        setUpdate(update + 1)
         setTimeout(() => {
           setEnabledCardId(null)
         }, 2000)
+        dispatch(addAutoRenewalIds([currentSubscriptionId]))
+
+        if (Object.values(autoRenewalData).length > 1) {
+          dispatch(
+            addAutoRenewal({
+              id: currentSubscriptionId,
+              ...{
+                plan: subscriptionData?.plan,
+                renewalPlanPriceId: values.price,
+                enabledDate: new Date().toISOString().slice(0, 19),
+                subscriptionRenewalDate: subscriptionData?.endDate,
+                subscription: {
+                  id: subscriptionData?.id,
+                  displayName: subscriptionData?.displayName,
+                  systemName: subscriptionData?.systemName,
+                },
+                product: subscriptionData?.product,
+                paymentMethodCard: cards[values.card],
+                type: 1,
+              },
+            })
+          )
+        }
       } else {
-        // Downgrade subscription
         const downgradeSubscriptionReq = await downgradeSubscription({
           planPriceId: values.price,
           planId: values.plan,
           subscriptionId: currentSubscriptionId,
           comment: values.comment,
+          cardReferenceId: values.card,
+          paymentPlatform: 2,
         })
-        // Set canceled card ID
         setCanceledCardId(currentSubscriptionId)
-
-        // Reset canceled card ID after 2 seconds
+        setUpdate(update + 1)
         setTimeout(() => {
           setCanceledCardId(null)
         }, 2000)
+        dispatch(addAutoRenewalIds([currentSubscriptionId]))
+
+        if (Object.values(autoRenewalData).length > 1) {
+          dispatch(
+            addAutoRenewal({
+              id: currentSubscriptionId,
+              ...{
+                plan: subscriptionData?.plan,
+                renewalPlanPriceId: values.price,
+                enabledDate: new Date().toISOString().slice(0, 19),
+                subscriptionRenewalDate: subscriptionData?.endDate,
+                subscription: {
+                  id: subscriptionData?.id,
+                  displayName: subscriptionData?.displayName,
+                  systemName: subscriptionData?.systemName,
+                },
+                product: subscriptionData?.product,
+                paymentMethodCard: cards[values.card],
+                type: 2,
+              },
+            })
+          )
+        }
       }
       // Reset loading state
       setSubmitLoading(false)
@@ -81,27 +152,25 @@ const WorkspaceUpDowngradeForm = ({
       setVisible && setVisible(false)
     },
   })
-
   // Other state variables
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
-  const [cards, setCards] = useState([])
   const [idsWithValues, setIdsWithValues] = useState()
   const [currentSubscriptionId, setCurrentSubscriptionId] = useState('')
-
   // Other hooks and effects
 
   // Fetch cards data
+
+  const cards = useSelector((state) => state.workspace.paymentCards)
+
   useEffect(() => {
-    const fetchCards = async () => {
-      try {
-        const cardsData = await getPaymentCardsList()
-        setCards(cardsData.data.data)
-      } catch (error) {
-        console.error('Error fetching payment cards:', error)
-      }
+    if (Object.keys(cards).length > 0) {
+      return
     }
-    fetchCards()
+    ;(async () => {
+      const fetchedCardsData = await getPaymentCardsList()
+      dispatch(setAllpaymentCards(fetchedCardsData.data.data))
+    })()
   }, [])
 
   // Update products state if subscriptionData changes
@@ -135,27 +204,6 @@ const WorkspaceUpDowngradeForm = ({
   useEffect(() => {
     setCurrentSubscriptionId(subscriptionData?.subscriptionId)
   }, [subscriptionData?.subscriptionId])
-
-  // Define validation schema for Formik form
-  const validationSchema = Yup.object().shape({
-    card: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
-    ),
-    subscriptionOption: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
-    ),
-  })
-
-  // Initial values for Formik form
-  const initialValues = {
-    plan: '',
-    price: '',
-    card: '',
-    subscriptionOption: '',
-    cycle: subscriptionData?.planPrice?.cycle
-      ? subscriptionData?.planPrice?.cycle
-      : '',
-  }
 
   const intl = useIntl() // Internationalization hook
   let [planOptions, setPlanOptions] = useState([]) // State variable for plan options
@@ -449,7 +497,7 @@ const WorkspaceUpDowngradeForm = ({
             </Form.Label>
             <ListBox
               value={formik.values.card}
-              options={cards.map((card) => ({
+              options={Object.values(cards).map((card) => ({
                 value: card.stripeCardId,
                 label: (
                   <div className="d-flex justify-content-between align-items-center">
