@@ -46,6 +46,7 @@ const TwoStepProcessPage = () => {
 
   const [hasToPay, setHasToPay] = useState()
   const [priceData, setPriceData] = useState()
+  const [trialPlanId, setTrialPlanId] = useState('')
   useEffect(() => {
     if (priceData || (priceData && Object.values(priceData).length) > 0) {
       return
@@ -53,6 +54,7 @@ const TwoStepProcessPage = () => {
     ;(async () => {
       const price = await getProductPlanPricePublic(systemName, priceName)
       setPriceData(price.data.data)
+      price.data.data && setTrialPlanId(price.data.data?.product.trialPlanId)
     })()
   }, [systemName, priceName])
   return (
@@ -107,6 +109,7 @@ const TwoStepProcessPage = () => {
                   displayName={displayName}
                   priceData={priceData}
                   setPriceData={setPriceData}
+                  trialPlanId={trialPlanId}
                 />
               )}{' '}
             </Card.Body>

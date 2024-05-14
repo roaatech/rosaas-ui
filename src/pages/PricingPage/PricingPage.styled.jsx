@@ -15,4 +15,7 @@ export const Wrapper = styled.div`
   .main-container {
     margin: 0 auto;
   }
+  .text-seamlessly {
+    font-size: var(--largeFont);
+  }
 `

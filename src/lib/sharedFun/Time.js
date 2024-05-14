@@ -31,12 +31,20 @@ export const DataTransform = (dateTime) => {
   const utcDateTime = new Date(dateTime + 'Z')
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = utcToZonedTime(utcDateTime, timeZone)
-  const formattedDateTime = format(localDateTime, 'MM/dd/yyyy HH:mm:ss', {
-    timeZone,
-  })
+
+  const hasTime = localDateTime.toISOString().split('T')[1] !== '00:00:00.000Z'
+
+  const formattedDateTime = hasTime
+    ? format(localDateTime, 'MM/dd/yyyy HH:mm:ss', {
+        timeZone,
+      })
+    : format(localDateTime, 'MM/dd/yyyy', {
+        timeZone,
+      })
 
   return formattedDateTime
 }
+
 export const formatDate = (dateTime) => {
   const utcDateTime = dateTime ? new Date(dateTime + 'Z') : ''
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone

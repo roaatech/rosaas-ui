@@ -538,5 +538,9 @@
   "Link-generated-successfully": "Payment link generated successfully",
   "Navigation-Link": "Navigation Link",
   "Create-Payment-Link": "Create Payment Link",
-  "The-validity-period-for-this-link-extends-for-a-duration-of-24-hours": "The validity period for this link extends for a duration of 24 hours"
+  "The-validity-period-for-this-link-extends-for-a-duration-of-24-hours": "The validity period for this link extends for a duration of 24 hours",
+  "Cancel-Upgrade": "Cancel Upgrade",
+  "Cancel-Downgrade": "Cancel Downgrade",
+  "Disabled": "Disabled",
+  "Renewal-Options": "Renewal Options"
 }

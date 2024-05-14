@@ -539,6 +539,9 @@
   "Link-generated-successfully": "تم إنشاء رابط الدفع بنجاح",
   "Navigation-Link": "رابط التنقل",
   "Create-Payment-Link": "إنشاء رابط الدفع",
-
+  "Cancel-Upgrade": "إلغاء الترقية",
+  "Cancel-Downgrade": "إلغاء التخفيض",
+  "Disabled": "معطل",
+  "Renewal-Options": "خيارات التجديد",
   "The-validity-period-for-this-link-extends-for-a-duration-of-24-hours": "يمتد الفترة الصالحة لهذا الرابط لمدة 24 ساعة"
 }

@@ -2,14 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { redirect, useNavigate, useParams } from 'react-router-dom'
 import useRequest from '../../axios/apis/useRequest'
-import {
-  Card,
-  Col,
-  Row,
-  Button,
-  Container,
-  Form,
-} from '@themesberg/react-bootstrap'
+import { Card, Col, Row, Button, Form } from '@themesberg/react-bootstrap'
 import {
   setAllProduct,
   setAllPlans,
@@ -20,11 +13,9 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 import { BsBoxSeam, BsCheck2, BsCheck2Circle, BsXCircle } from 'react-icons/bs'
 import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import CheckoutPage from '../../components/custom/CheckoutStep/CheckoutStep'
 import { cycle } from '../../const'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBox } from '@fortawesome/free-solid-svg-icons'
-import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
+import { faBox, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 import { signinRedirectPath } from '../../store/slices/auth'
 import { setStep } from '../../store/slices/tenants'
 import { Wrapper } from './PricingPage.styled'
@@ -125,6 +116,9 @@ const PricingPage = () => {
   }
 
   useEffect(() => {
+    if (listProduct?.[productId]?.trialType != 2) {
+      return
+    }
     const initialStartWithTrial = {}
     planList &&
       Object.keys(planList).forEach((planId) => {
@@ -366,7 +360,7 @@ const PricingPage = () => {
             <Card.Footer
               style={{
                 ...(listProduct?.[productId]?.trialType === 2
-                  ? { whiteSpace: 'nowrap', minHeight: '124px' }
+                  ? { whiteSpace: 'nowrap', minHeight: '150px' }
                   : {}),
               }}
             >
@@ -394,6 +388,35 @@ const PricingPage = () => {
                           }
                           className="font-small"
                         />
+                        {startWithTrial[planId] && (
+                          <div className="small">
+                            <span className="info-icon mr-1">
+                              <FontAwesomeIcon icon={faInfoCircle} />
+                            </span>{' '}
+                            Start your{' '}
+                            <strong style={{ color: 'var(--second-color)' }}>
+                              trial
+                            </strong>{' '}
+                            ,
+                            <span>
+                              {' '}
+                              then{' '}
+                              <strong style={{ color: 'var(--second-color)' }}>
+                                switch plans
+                              </strong>
+                              <span
+                                className="info-icon"
+                                style={{
+                                  color: 'var(--info-color)',
+                                  marginLeft: '5px',
+                                }}
+                              >
+                                <i className="bi bi-info-circle"></i>
+                              </span>
+                              seamlessly
+                            </span>
+                          </div>
+                        )}
                       </Form.Group>
                     )}
                   <Button
@@ -420,7 +443,7 @@ const PricingPage = () => {
                 </>
               ) : (
                 listProduct?.[productId]?.trialType == 2 && (
-                  <div className="text-center">
+                  <div className="text-center text-seamlessly mt-4">
                     <div>
                       Start your{' '}
                       <strong style={{ color: 'var(--second-color)' }}>

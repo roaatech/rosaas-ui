@@ -41,6 +41,7 @@ import CardSaveFormWithStripe from '../../CardSaveForm/CardSaveForm.js'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation.js'
 import WorkspaceUpDowngradeForm from './WorkspaceUpDowngradeForm/WorkspaceUpDowngradeForm.jsx'
 import WorkspaceRenewFormWithCycle from './WorkspaceRenewFormWithCycle/WorkspaceRenewFormWithCycle.jsx'
+import DateLabel from '../../Shared/DateLabel/DateLabel.jsx'
 
 export default function SubscriptionList() {
   const { getSubscriptionsList, cancelAutoRenewal } = useRequest() // Initializing request functions
@@ -427,14 +428,28 @@ export default function SubscriptionList() {
                         <strong>
                           <FormattedMessage id="Created-Date" />
                         </strong>
+
                         <TableDate
-                          className="px-2"
-                          createdDate={subscription.createdDate}
-                          editedDate={subscription.editedDate}
+                          className="px-2 small"
+                          createdDate={formatDate(subscription.createdDate)}
+                          editedDate={formatDate(subscription.editedDate)}
                         />
                       </div>
                     </Card.Text>
 
+                    <Card.Text>
+                      <div className="d-flex align-items-center">
+                        <strong>
+                          <FormattedMessage id="Expiration-Date" />
+                        </strong>
+                        <span className="mx-2">
+                          <DateLabel
+                            className=" px-2"
+                            endDate={subscription.endDate}
+                          />
+                        </span>
+                      </div>
+                    </Card.Text>
                     {/* Auto-renewal status */}
                     {subscription.autoRenewalIsEnabled &&
                       !subscription.subscriptionRenewalAction

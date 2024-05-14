@@ -36,6 +36,7 @@ const CheckoutPage = (data) => {
     setHasToPay,
     displayName: tenantDisplayName,
     priceData,
+    trialPlanId,
   } = data
 
   const [orderData, setOrderData] = useState()
@@ -56,8 +57,12 @@ const CheckoutPage = (data) => {
 
   const dispatch = useDispatch()
 
-  const { paymentCheckout, getFeaturePlanPublic, getOrderByIdPublic } =
-    useRequest()
+  const {
+    paymentCheckout,
+    getFeaturePlanPublic,
+    getOrderByIdPublic,
+    getFeaturePlanListPublic,
+  } = useRequest()
 
   const listProduct = useSelector((state) => state.products.products)
 
@@ -81,7 +86,8 @@ const CheckoutPage = (data) => {
     })()
   }, [orderID])
   const [currentFeaturePlan, setCurrentFeaturePlan] = useState()
-  const [trialFeaturePlan, seTrialFeaturePlan] = useState()
+  const [trialFeaturePlan, setTrialFeaturePlan] = useState()
+  console.log({ trialFeaturePlan })
   useEffect(() => {
     if (!priceData || !systemName) {
       return
@@ -93,7 +99,18 @@ const CheckoutPage = (data) => {
       )
       setCurrentFeaturePlan(featurePlan.data.data)
     })()
-  }, [priceData, systemName])
+
+    if (trialPlanId && systemName) {
+      ;(async () => {
+        const featurePlanTrial = await getFeaturePlanListPublic(systemName)
+        setTrialFeaturePlan(
+          featurePlanTrial.data.data.filter(
+            (item) => item.plan.id === trialPlanId
+          )
+        )
+      })()
+    }
+  }, [priceData, systemName, trialPlanId])
 
   useEffect(() => {
     if (!orderData) {
