@@ -65,8 +65,11 @@ const CreateWebhookForm = ({
       const findLabel = (nodes, key, parentLabel = '') => {
         for (const node of nodes) {
           const currentLabel = parentLabel
-            ? `${parentLabel}.${node.label}`
-            : node.label
+            ? `${parentLabel.replace(/\s+/g, '')}.${node.label.replace(
+                /\s+/g,
+                ''
+              )}`
+            : node.label.replace(/\s+/g, '')
 
           if (node.key === key) {
             return currentLabel
@@ -89,7 +92,7 @@ const CreateWebhookForm = ({
     return eventLabels
       ? eventLabels
           .reduce((rows, label, index) => {
-            if (index % 3 === 0) {
+            if (index % 2 === 0) {
               rows.push([])
             }
             rows[rows.length - 1].push(
@@ -177,11 +180,26 @@ const CreateWebhookForm = ({
             })
           )
         }
+        console.log({
+          ssssssssss: {
+            ...allProducts[productId].webhookEndpoints[webhookId],
+            productId: productId,
+            endpointId: webhookId,
+            data: {
+              url: values.endpointURL,
+              description: values.description,
+              eventsToListen: eventsValues,
+              signingSecret: values.signingSecret,
+              id: webhookId,
+            },
+          },
+        })
         dispatch(
           WebhookEndpointInfo({
             productId: productId,
             endpointId: webhookId,
             data: {
+              ...allProducts[productId].webhookEndpoints[webhookId],
               url: values.endpointURL,
               description: values.description,
               eventsToListen: eventsValues,
@@ -243,7 +261,35 @@ const CreateWebhookForm = ({
       setSelectedNodeKey(selectedKeys)
     }
   }, [initialValues.events, type, nodes])
-  console.log({ selectedNodeKey })
+  const handleSelectAll = () => {
+    const selectAllKeys = (nodes) => {
+      let keys = []
+      nodes.forEach((node) => {
+        keys.push(node.key)
+        if (node.children) {
+          keys = keys.concat(selectAllKeys(node.children))
+        }
+      })
+      return keys
+    }
+
+    const allKeys = selectAllKeys(nodes)
+    const selectedKeys = {}
+    allKeys.forEach((key) => {
+      selectedKeys[key] = { checked: true, partialChecked: false }
+    })
+
+    setSelectedNodeKey(selectedKeys)
+  }
+  const [selectAllChecked, setSelectAllChecked] = useState(false)
+  useEffect(() => {
+    if (!selectAllChecked) {
+      setSelectedNodeKey({})
+    } else {
+      handleSelectAll()
+    }
+  }, [selectAllChecked])
+
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
@@ -302,9 +348,9 @@ const CreateWebhookForm = ({
             <TreeSelect
               value={selectedNodeKey}
               onChange={(e) => {
+                setSelectAllChecked(e.value?.select_all?.checked)
                 setSelectedNodeKey(e.value)
                 setSelected(renderEvents(eventsValues))
-                console.log({ e })
               }}
               options={nodes}
               ngModel="selectedNodes2"
@@ -317,6 +363,9 @@ const CreateWebhookForm = ({
             <Form.Control.Feedback type="invalid">
               {formik.errors.events}
             </Form.Control.Feedback>
+            {/* <Button onClick={handleSelectAll} className="mt-2">
+              <FormattedMessage id="Select-All" />
+            </Button> */}
           </Form.Group>
           <div className="mb-3">{renderEvents(eventsValues)}</div>
           <Form.Group className="mb-3" controlId="description">

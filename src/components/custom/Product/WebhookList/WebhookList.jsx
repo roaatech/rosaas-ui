@@ -96,8 +96,11 @@ export const WebhookList = ({}) => {
       const findLabel = (nodes, key, parentLabel = '') => {
         for (const node of nodes) {
           const currentLabel = parentLabel
-            ? `${parentLabel}.${node.label}`
-            : node.label
+            ? `${parentLabel.replace(/\s+/g, '')}.${node.label.replace(
+                /\s+/g,
+                ''
+              )}`
+            : node.label.replace(/\s+/g, '')
 
           if (node.key === key) {
             return currentLabel
