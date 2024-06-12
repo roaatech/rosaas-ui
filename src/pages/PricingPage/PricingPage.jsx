@@ -424,7 +424,9 @@ const PricingPage = () => {
                     type="submit"
                     className="w-100"
                     onClick={() =>
-                      startWithTrial[planId]
+                      startWithTrial[planId] ||
+                      (listProduct?.[productId]?.trialType == 3 &&
+                        planList[planId]?.trialPeriodInDays > 0)
                         ? // (navigate(`/signin`),
                           //   setRedirectPath(
                           //     `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`

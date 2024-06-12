@@ -542,5 +542,8 @@
   "Cancel-Upgrade": "Cancel Upgrade",
   "Cancel-Downgrade": "Cancel Downgrade",
   "Disabled": "Disabled",
-  "Renewal-Options": "Renewal Options"
+  "Renewal-Options": "Renewal Options",
+  "Downgrade": "Downgrade",
+  "Cancel-Downgrading": "Cancel Downgrading",
+  "Cancel-Upgrading": "Cancel Upgrading"
 }

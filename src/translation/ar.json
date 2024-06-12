@@ -543,5 +543,8 @@
   "Cancel-Downgrade": "إلغاء التخفيض",
   "Disabled": "معطل",
   "Renewal-Options": "خيارات التجديد",
-  "The-validity-period-for-this-link-extends-for-a-duration-of-24-hours": "يمتد الفترة الصالحة لهذا الرابط لمدة 24 ساعة"
+  "The-validity-period-for-this-link-extends-for-a-duration-of-24-hours": "يمتد الفترة الصالحة لهذا الرابط لمدة 24 ساعة",
+  "Downgrade": "التخفيض",
+  "Cancel-Downgrading": "إلغاء التخفيض",
+  "Cancel-Upgrading": "إلغاء الترقية"
 }

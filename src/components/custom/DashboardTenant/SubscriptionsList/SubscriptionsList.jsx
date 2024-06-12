@@ -6,6 +6,9 @@ import {
   Dropdown,
   Button,
   ButtonGroup,
+  Nav,
+  Tab,
+  Container,
 } from '@themesberg/react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -42,9 +45,15 @@ import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputC
 import WorkspaceUpDowngradeForm from './WorkspaceUpDowngradeForm/WorkspaceUpDowngradeForm.jsx'
 import WorkspaceRenewFormWithCycle from './WorkspaceRenewFormWithCycle/WorkspaceRenewFormWithCycle.jsx'
 import DateLabel from '../../Shared/DateLabel/DateLabel.jsx'
+import { MdArrowDropDown, MdPayment } from 'react-icons/md'
+import { Carousel } from 'primereact/carousel'
+import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
+import SubscriptionFeatureCard from '../../SubscriptionFeatureCard/SubscriptionFeatureCard.jsx'
+import { BsStars } from 'react-icons/bs'
 
 export default function SubscriptionList() {
-  const { getSubscriptionsList, cancelAutoRenewal } = useRequest() // Initializing request functions
+  const { getSubscriptionsList, cancelAutoRenewal, subscriptionFeturesList } =
+    useRequest() // Initializing request functions
 
   const [visible, setVisible] = useState(false) // State for modal visibility
 
@@ -53,6 +62,8 @@ export default function SubscriptionList() {
   const subscriptionData = useSelector(
     (state) => state.workspace.subscriptionData
   ) // Getting subscription data from Redux store
+
+  console.log({ subscriptionData })
   const autoRenewalData = useSelector(
     (state) => state.workspace.autoRenewalData
   )
@@ -175,6 +186,127 @@ export default function SubscriptionList() {
   // }, [])
 
   // This component renders the subscription list along with various actions and dialogs.
+  // const responsiveOptions = [
+  //   {
+  //     breakpoint: '1199px',
+  //     numVisible: 1,
+  //     numScroll: 1,
+  //   },
+  //   {
+  //     breakpoint: '991px',
+  //     numVisible: 2,
+  //     numScroll: 1,
+  //   },
+  //   {
+  //     breakpoint: '767px',
+  //     numVisible: 1,
+  //     numScroll: 1,
+  //   },
+  // ]
+
+  const [products, setProducts] = useState()
+  const productTemplate = (subscriptionFeature) => {
+    return (
+      <div className="product-item">
+        <SubscriptionFeatureCard
+          key={index}
+          featureName={subscriptionFeature.feature.systemName}
+          limit={subscriptionFeature.limit}
+          remainingUsage={subscriptionFeature.remainingUsage}
+        />
+      </div>
+    )
+  }
+  const [index, setIndex] = useState('')
+  console.log({
+    ssssssssss:
+      subscriptionData?.[index]?.subscriptionFeturesList &&
+      index &&
+      Object.values(subscriptionData?.[index]?.subscriptionFeturesList),
+  })
+  useEffect(() => {
+    if (
+      !index ||
+      (subscriptionData &&
+        index &&
+        subscriptionData?.[index]?.subscriptionFeturesList &&
+        !Object.values(subscriptionData?.[index]?.subscriptionFeturesList)
+          .length > 0)
+    ) {
+      return
+    }
+    if (
+      subscriptionData &&
+      index &&
+      subscriptionData?.[index]?.subscriptionFeturesList &&
+      Object.values(subscriptionData?.[index]?.subscriptionFeturesList).length >
+        0
+    ) {
+      setProducts(
+        Object.values(subscriptionData?.[index]?.subscriptionFeturesList)
+      )
+    }
+    const fetchData = async () => {
+      try {
+        const response = await subscriptionFeturesList(index)
+        dispatch(
+          changeSubscriptionAttribute({
+            subscriptionId: index,
+            attributeName: 'subscriptionFeturesList',
+            attributeValue: response.data.data,
+          })
+        )
+      } catch (error) {
+        console.error('Error fetching subscription data:', error)
+      }
+    }
+    fetchData()
+  }, [
+    index,
+    subscriptionData &&
+      index &&
+      subscriptionData?.[index]?.subscriptionFeturesList &&
+      Object.values(subscriptionData?.[index]?.subscriptionFeturesList).length,
+  ])
+  const initialSelectedTabs = {}
+  Object.keys(subscriptionData).forEach((id) => {
+    initialSelectedTabs[id] = 'icon_payment'
+  })
+  const [selectedTabs, setSelectedTabs] = useState(initialSelectedTabs)
+
+  const handleSelect = (eventKey, subscriptionId) => {
+    setSelectedTabs((prevState) => ({
+      ...prevState,
+      [subscriptionId]: eventKey,
+    }))
+    if (eventKey === 'icon_Features') {
+      setIndex(subscriptionId)
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getSubscriptionsList()
+        dispatch(setWorkspaceSubscriptionData(response.data.data))
+
+        // Set default tab as 'icon_payment' for each subscription
+        const fetchedData = response.data.data
+        const defaultTabs = {}
+        Object.keys(fetchedData).forEach((id) => {
+          defaultTabs[id] = 'icon_payment'
+        })
+        setSelectedTabs(defaultTabs)
+      } catch (error) {
+        console.error('Error fetching subscription data:', error)
+      }
+    }
+    fetchData()
+  }, [update])
+  const [show, setShow] = useState('')
+  console.log({ show })
+  const handleMouseEnter = (subsctriptionId) => setShow(subsctriptionId)
+  const handleMouseLeave = () => setShow('')
 
   return (
     <Wrapper>
@@ -192,7 +324,7 @@ export default function SubscriptionList() {
             Object.values(subscriptionData).map((subscription) => (
               <Col key={subscription.id} xl={3} lg={4} sm={6}>
                 <Card
-                  className={`mb-4 ${
+                  className={`mb-4  card-subsc${
                     subscription.id === canceledCardId
                       ? 'card-cancling-hover'
                       : ''
@@ -342,7 +474,6 @@ export default function SubscriptionList() {
                         </Dropdown>
                       </div>
                     </Card.Title>
-
                     {/* Subscription status */}
                     <p>
                       <FontAwesomeIcon
@@ -482,13 +613,13 @@ export default function SubscriptionList() {
                         <strong>
                           <FormattedMessage id="Downgrade" />
                         </strong>
-                        <span className="text-info">
+                        <span className="text-info font-small">
                           {' '}
                           <FormattedMessage id="Enabled" />
                         </span>{' '}
                         {formatDate(subscription.endDate)}
                         {subscription.autoRenewalIsEnabled && (
-                          <span>
+                          <span className="font-small">
                             {' '}
                             (
                             <FormattedMessage id="Auto-Renewal" />{' '}
@@ -507,13 +638,13 @@ export default function SubscriptionList() {
                         <strong>
                           <FormattedMessage id="Upgrade" />
                         </strong>
-                        <span className="text-warning">
+                        <span className="text-warning font-small">
                           {' '}
                           <FormattedMessage id="Enabled" />
                         </span>{' '}
                         {formatDate(subscription.endDate)}
                         {subscription.autoRenewalIsEnabled && (
-                          <span>
+                          <span className="font-small">
                             {' '}
                             (
                             <FormattedMessage id="Auto-Renewal" />{' '}
@@ -544,29 +675,124 @@ export default function SubscriptionList() {
                         </p>
                       )}
                     {/* Payment method */}
-                    <div>
-                      <strong>
-                        <FormattedMessage id="Payment-Method" />
-                      </strong>
-                      <div className="p-3">
-                        <div>
-                          <CreditCard
-                            cardNumber={
-                              subscription.paymentMethodCard?.last4Digits
+                    <div className="p-0">
+                      <Row>
+                        <Col lg={12} className="d-flex ">
+                          <Dropdown
+                            key={subscription.id}
+                            onMouseEnter={() =>
+                              handleMouseEnter(subscription.id)
                             }
-                            expiryDate={`${subscription.paymentMethodCard?.expirationMonth}/${subscription.paymentMethodCard?.expirationYear}`}
-                            cardHolder={
-                              subscription.paymentMethodCard?.cardholderName
-                            }
-                            isDefault={subscription.isDefault}
-                            cardTypeIcon={
-                              cardInfo?.[subscription.paymentMethodCard?.brand]
-                                ?.icon || faMoneyCheckDollar
-                            }
-                            cardView={true}
-                          />
-                        </div>
-                      </div>
+                            onMouseLeave={handleMouseLeave}
+                            show={show && show == subscription.id}
+                          >
+                            <Dropdown.Toggle
+                              variant="link"
+                              id="dropdown-basic"
+                              className="custom-dropdown-toggle"
+                            >
+                              {selectedTabs[subscription.id] ===
+                              'icon_Features' ? (
+                                <div className="d-flex justify-content-center ">
+                                  <BsStars className="icon icon-xs p-0 m-0" />
+                                  <span className="mx-2">
+                                    Subscription Features
+                                  </span>
+                                  <MdArrowDropDown className="mt-1" />
+                                </div>
+                              ) : (
+                                <div className="d-flex justify-content-center ">
+                                  <MdPayment className="icon icon-xs p-0  m-0" />
+                                  <span className="mx-2">Payment Method</span>{' '}
+                                  <MdArrowDropDown className="mt-1" />
+                                </div>
+                              )}
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                              <Dropdown.Item
+                                eventKey="icon_payment"
+                                onSelect={(e) =>
+                                  handleSelect(e, subscription.id)
+                                }
+                              >
+                                <div className="d-flex">
+                                  <MdPayment className="icon icon-xs mx-2" />{' '}
+                                  Payment Method
+                                </div>
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                eventKey="icon_Features"
+                                onSelect={(e) =>
+                                  handleSelect(e, subscription.id)
+                                }
+                              >
+                                <div className="d-flex">
+                                  {' '}
+                                  <BsStars className="icon icon-xs mx-2" />{' '}
+                                  Subscription Features
+                                </div>
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </Col>
+                        <Col lg={12}>
+                          {selectedTabs[subscription.id] !==
+                            'icon_Features' && (
+                            <div className="">
+                              {/* <strong>
+                                  <FormattedMessage id="Payment-Method" />
+                                </strong> */}
+                              <div className="p-3">
+                                <div>
+                                  <CreditCard
+                                    cardNumber={
+                                      subscription.paymentMethodCard
+                                        ?.last4Digits
+                                    }
+                                    expiryDate={`${subscription.paymentMethodCard?.expirationMonth}/${subscription.paymentMethodCard?.expirationYear}`}
+                                    cardHolder={
+                                      subscription.paymentMethodCard
+                                        ?.cardholderName
+                                    }
+                                    isDefault={subscription.isDefault}
+                                    cardTypeIcon={
+                                      cardInfo?.[
+                                        subscription.paymentMethodCard?.brand
+                                      ]?.icon || faMoneyCheckDollar
+                                    }
+                                    cardView={true}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          {selectedTabs[subscription.id] ===
+                            'icon_Features' && (
+                            <div>
+                              {/* <strong>
+                                <FormattedMessage id="Subscription-Features" />
+                              </strong> */}
+                              <div className="p-3">
+                                <Carousel
+                                  value={
+                                    subscriptionData &&
+                                    subscriptionData?.[subscription.id]
+                                      ?.subscriptionFeturesList &&
+                                    Object.values(
+                                      subscriptionData?.[subscription.id]
+                                        ?.subscriptionFeturesList
+                                    )
+                                  }
+                                  numVisible={1}
+                                  numScroll={1}
+                                  itemTemplate={productTemplate}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </Col>
+                      </Row>
                     </div>
                   </Card.Body>
                 </Card>

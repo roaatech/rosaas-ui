@@ -44,7 +44,15 @@ export const workspaceSlice = createSlice({
 
       if (subscriptionId && state.subscriptionData) {
         if (state.subscriptionData[subscriptionId]) {
-          state.subscriptionData[subscriptionId][attributeName] = attributeValue
+          if (attributeName === 'subscriptionFeaturesList') {
+            // Add or update the subscriptionFeaturesList
+            state.subscriptionData[subscriptionId][attributeName] =
+              attributeValue
+          } else {
+            // Handle other attributes if necessary
+            state.subscriptionData[subscriptionId][attributeName] =
+              attributeValue
+          }
         } else {
           console.error(`Subscription with id ${subscriptionId} not found`)
         }

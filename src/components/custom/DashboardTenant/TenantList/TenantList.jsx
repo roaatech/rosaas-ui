@@ -116,6 +116,7 @@ export default function TenantList({ children }) {
                 <Card className="mb-3">
                   <Card.Body>
                     <Card.Title>{tenant.displayName}</Card.Title>
+                    <Card.Text>{tenant?.systemName}</Card.Text>
                     <Card.Text>
                       {' '}
                       <Label
