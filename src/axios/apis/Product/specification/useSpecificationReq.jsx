@@ -33,8 +33,13 @@ const useSpecificationReq = () => {
       `management/sadmin/v1/Products/${productId}/Specifications/${data.id}`
     )
   }
-  const publicSpecificationByProductName = async (productName) => {
-    return await Request.get(`/public/v1/Product/${productName}/Specifications`)
+  const publicSpecificationByProductName = async (
+    productOwnerName,
+    productName
+  ) => {
+    return await Request.get(
+      `/public/v1/ProductOwner/${productOwnerName}/Product/${productName}/Specifications`
+    )
   }
 
   return {

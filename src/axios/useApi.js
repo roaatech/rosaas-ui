@@ -56,8 +56,8 @@ const useApi = () => {
       if (res.data?.data?.userAccount?.email) {
         dispatch(
           addUserInfo({
-            email: res.data?.data?.userAccount?.email,
-            role: roles[res.data?.data?.userAccount?.userType],
+            ...res.data?.data?.userAccount,
+            userType: roles[res.data?.data?.userAccount?.userType],
           })
         )
       }

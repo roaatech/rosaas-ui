@@ -10,10 +10,6 @@ import { BsStars } from 'react-icons/bs'
 const SubscriptionFeatureCard = ({ featureName, limit, remainingUsage }) => {
   const percentageUsed = ((limit - remainingUsage) / limit) * 100
   const dataAvailable = featureName && limit && remainingUsage !== undefined
-  console.log({ percentageUsed })
-  const displayValueTemplate = (value) => {
-    return `${value}${limit}`
-  }
   return (
     <Wrapper>
       <Card className={`credit-card credit-card-hover`}>

@@ -45,8 +45,8 @@ const CheckoutTenantReg = ({
 
   const array = hash.split('#')
   const startWithTrial = array.find((element) => element == 'start-with-trial')
-  console.log(startWithTrial == 'start-with-trial')
-  const { systemName, priceName } = useParams()
+  const { productOwnerSystemName, productSystemName, priceName } = useParams()
+
   const step = useSelector((state) => state.tenants.currentStep)
 
   const productId = priceData?.product?.id
@@ -56,16 +56,16 @@ const CheckoutTenantReg = ({
   const [uniqueName, setUniqueName] = useState('')
   const [title, setTitle] = useState('')
   useEffect(() => {
-    if (!systemName || !priceName || !priceData) {
+    if (!productSystemName || !priceName || !priceData) {
       return
     }
 
-    const uniName = `${systemName}-tenant-${new Date().valueOf()}`
+    const uniName = `${productSystemName}-tenant-${new Date().valueOf()}`
 
     setUniqueName(uniName.toLowerCase().replace(/[^a-z0-9_-]/g, '-'))
 
     setTitle(`${priceData?.product.displayName} Tenant ${new Date().valueOf()}`)
-  }, [systemName, priceName, priceData])
+  }, [productSystemName, priceName, priceData])
 
   const createValidation = {}
   const editValidation = {
@@ -167,11 +167,11 @@ const CheckoutTenantReg = ({
 
   const [specificationValues, setSpecificationValues] = useState({})
   const [specifications, setSpecifications] = useState({})
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
   if (userRole == undefined) userRole = 'notAuth'
 
   useEffect(() => {
-    if (!priceData || !systemName) {
+    if (!priceData || !productSystemName) {
       return
     }
     ;(async () => {
@@ -179,14 +179,16 @@ const CheckoutTenantReg = ({
       formik.setFieldValue('price', '')
       if (priceData) {
         if (!priceData.specifications) {
-          const specifications =
-            await publicSpecificationByProductName(systemName)
+          const specifications = await publicSpecificationByProductName(
+            productOwnerSystemName,
+            productSystemName
+          )
 
           setSpecifications(specifications.data.data)
         }
       }
     })()
-  }, [priceData, systemName])
+  }, [priceData, productSystemName])
 
   const fetchData = async () => {
     try {

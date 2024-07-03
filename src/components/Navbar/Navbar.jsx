@@ -48,7 +48,7 @@ export default (props) => {
       setNotifications(notifications.map((n) => ({ ...n, read: true })))
     }, 300)
   }
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
   const navigate = useNavigate()
   const Notification = (props) => {
     const { link, sender, image, time, message, read = false } = props

@@ -22,6 +22,9 @@ import PaymentFailed from './pages/PaymentFailed/PaymentFailed'
 import CardPaymentManagement from './pages/Settings/CardPaymentManagement/CardPaymentManagement'
 import TenantWelcomePage from './pages/WorkspacePage/WorkspacePage'
 import Marketplace from './pages/Marketplace/Marketplace'
+import Profile from './components/custom/DashboardTenant/Profile/Profile'
+import ProductsOwners from './pages/ProductsOwners/ProductsOwners'
+import ProductOwnerDetails from './components/custom/ProductOwner/ProdcutOwnerDetailsTab/ProdcutOwnerDetailsTab'
 const adminPanel = '/admin-panel'
 export const Routes = {
   Dashboard: {
@@ -32,6 +35,16 @@ export const Routes = {
   products: {
     path: `${adminPanel}/products`,
     component: Product,
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+  },
+  productsOwners: {
+    path: `${adminPanel}/productsOwners`,
+    component: ProductsOwners,
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+  },
+  productsOwnersDetails: {
+    path: ``,
+    component: ProductOwnerDetails,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
   mainPage: {
@@ -57,6 +70,11 @@ export const Routes = {
     path: `${adminPanel}/settings/health-check`,
     component: HealthCheckSettings,
     roles: ['superAdmin'],
+  },
+  Profile: {
+    path: `${adminPanel}/settings/Profile`,
+    component: Profile,
+    roles: ['superAdmin', 'clientAdmin'],
   },
 
   CardSettings: {
@@ -85,14 +103,14 @@ export const Routes = {
   },
 
   CheckOut: {
-    path: '/checkout/product/:systemName/plan-price/:priceName',
+    path: '/checkout/:productOwnerSystemName/:productSystemName/plan-price/:priceName',
     component: TwoStepProcessPage,
     roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
     type: 'noSidebar',
   },
 
   CheckOutOrder: {
-    path: '/checkout/product/:systemName/plan-price/:priceName/order/:orderIDParam',
+    path: '/checkout/:productOwnerSystemName/:productSystemName/plan-price/:priceName/order/:orderIDParam',
     component: TwoStepProcessPage,
     roles: ['superAdmin', 'tenantAdmin', 'notAuth'],
     type: 'noSidebar',
@@ -106,7 +124,7 @@ export const Routes = {
   },
 
   Pricing: {
-    path: `/:systemName`,
+    path: ``,
     component: PricingPage,
     roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
     type: 'noSidebar',
@@ -158,8 +176,13 @@ Routes.ProductDetails = {
   component: ProductDetails,
   roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
 }
+Routes.ProductsOwnerDetails = {
+  path: `${Routes.productsOwners.path}/:id`,
+  component: ProductDetails,
+  roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+}
 Routes.Pricing = {
-  path: `${Routes.Pricing.path}/:systemName`,
+  path: `${Routes.marketPlacePage.path}/:productOwnerSystemName/:productSystemName`,
   component: PricingPage,
   roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
   type: 'noSidebar',
@@ -174,3 +197,4 @@ Routes.TenantDetails = {
   component: TenantDetails,
   roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
 }
+Routes.productsOwnersDetails.path = `${Routes.productsOwners.path}/:id`

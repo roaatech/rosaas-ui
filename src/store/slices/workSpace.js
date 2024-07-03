@@ -132,7 +132,6 @@ export const workspaceSlice = createSlice({
     },
     deleteAutoRenewalById: (state, action) => {
       const idToDelete = action.payload
-      console.log({ idToDelete })
       const updatedAutoRenewalData = { ...state.autoRenewalData }
 
       if (updatedAutoRenewalData[idToDelete]) {

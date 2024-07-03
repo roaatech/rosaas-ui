@@ -63,11 +63,6 @@ export default function SubscriptionList() {
     (state) => state.workspace.subscriptionData
   ) // Getting subscription data from Redux store
 
-  console.log({ subscriptionData })
-  const autoRenewalData = useSelector(
-    (state) => state.workspace.autoRenewalData
-  )
-  console.log({ autoRenewalData })
   // State variables for managing forms and confirmation dialog
   const [cards, setCards] = useState([])
   const [showAddCardForm, setShowAddCardForm] = useState(false)
@@ -218,12 +213,6 @@ export default function SubscriptionList() {
     )
   }
   const [index, setIndex] = useState('')
-  console.log({
-    ssssssssss:
-      subscriptionData?.[index]?.subscriptionFeturesList &&
-      index &&
-      Object.values(subscriptionData?.[index]?.subscriptionFeturesList),
-  })
   useEffect(() => {
     if (
       !index ||
@@ -304,7 +293,6 @@ export default function SubscriptionList() {
     fetchData()
   }, [update])
   const [show, setShow] = useState('')
-  console.log({ show })
   const handleMouseEnter = (subsctriptionId) => setShow(subsctriptionId)
   const handleMouseLeave = () => setShow('')
 

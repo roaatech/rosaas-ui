@@ -47,7 +47,6 @@ const CreateWebhookForm = ({
   const [nodes, setNodes] = useState()
   const [selectedNodeKey, setSelectedNodeKey] = useState({})
   const [selected, setSelected] = useState({})
-  console.log(selected)
   const [eventsValues, setEventsValues] = useState([])
   const routeParams = useParams()
   const productId = routeParams.id
@@ -56,7 +55,6 @@ const CreateWebhookForm = ({
     if (!currentWebhookData?.eventsToListen) {
       return
     }
-    console.log({ currentWebhookData })
     setSelectedNodeKey(currentWebhookData?.eventsToListen)
   }, [currentWebhookData?.eventsToListen])
 
@@ -180,20 +178,6 @@ const CreateWebhookForm = ({
             })
           )
         }
-        console.log({
-          ssssssssss: {
-            ...allProducts[productId].webhookEndpoints[webhookId],
-            productId: productId,
-            endpointId: webhookId,
-            data: {
-              url: values.endpointURL,
-              description: values.description,
-              eventsToListen: eventsValues,
-              signingSecret: values.signingSecret,
-              id: webhookId,
-            },
-          },
-        })
         dispatch(
           WebhookEndpointInfo({
             productId: productId,
@@ -235,7 +219,6 @@ const CreateWebhookForm = ({
 
     fetchData()
   }, [])
-  console.log({ type })
   useEffect(() => {
     if (type != 'edit') {
       return

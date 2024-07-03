@@ -3,7 +3,6 @@ import { useFormik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../../axios/apis/useRequest.js'
-import { Product_Client_id } from '../../../../const/index.js'
 import {
   Modal,
   Button,
@@ -12,7 +11,7 @@ import {
 } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { productInfo } from '../../../../store/slices/products/productsSlice.js'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './ProductForm.styled.jsx'
@@ -38,6 +37,9 @@ const ProductForm = ({
   const { createProductRequest, editProductRequest } = useRequest()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const listData = useSelector((state) => state.productsOwners.productsOwners)
+  let userInfo = useSelector((state) => state.auth.userInfo)
+
   const initialValues = {
     displayName: productData ? productData.displayName : '',
     description: productData ? productData.description : '',
@@ -57,6 +59,11 @@ const ProductForm = ({
     activationEndpoint: productData ? productData.activationEndpoint : '',
     deactivationEndpoint: productData ? productData.deactivationEndpoint : '',
     deletionEndpoint: productData ? productData.deletionEndpoint : '',
+    clientId: productData
+      ? userInfo.userType == 'clientAdmin'
+        ? userInfo.id
+        : productData.clientId
+      : '',
   }
 
   const validationSchema = Yup.object().shape({
@@ -100,7 +107,10 @@ const ProductForm = ({
           activationEndpoint: values.activationEndpoint,
           deactivationEndpoint: values.deactivationEndpoint,
           deletionEndpoint: values.deletionEndpoint,
-          clientId: Product_Client_id,
+          clientId:
+            userInfo.userType == 'clientAdmin'
+              ? userInfo.id
+              : values.productOwner,
         })
         if (sideBar) {
           navigate(`${Routes.products.path}/${createProduct.data.data.id}`)
@@ -123,7 +133,10 @@ const ProductForm = ({
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
             deletionEndpoint: values.deletionEndpoint,
-            clientId: Product_Client_id,
+            clientId:
+              userInfo.userType == 'clientAdmin'
+                ? userInfo.id
+                : values.productOwner,
           },
           id: productData.id,
         })
@@ -148,7 +161,12 @@ const ProductForm = ({
             deactivationEndpoint: values.deactivationEndpoint,
             deletionEndpoint: values.deletionEndpoint,
             editedDate: new Date().toISOString().slice(0, 19),
-            clientId: { id: Product_Client_id },
+            clientId: {
+              id:
+                userInfo.userType == 'clientAdmin'
+                  ? userInfo.id
+                  : values.productOwner,
+            },
           })
         )
       }
@@ -157,6 +175,8 @@ const ProductForm = ({
       setVisible && setVisible(false)
     },
   })
+  console.log({ ytttttttttt: formik.values.productOwner })
+
   const RandomApiKey = () => {
     formik.setFieldValue('apiKey', generateApiKey())
   }
@@ -226,6 +246,48 @@ const ProductForm = ({
               </Form.Control.Feedback>
             )}
           </div>
+          {userInfo.userType == 'superAdmin' && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <FormattedMessage id="ProductOwner" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <select
+                  className="form-control"
+                  name="productOwner"
+                  id="productOwner"
+                  value={formik.values.productOwner}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                >
+                  <option value="">
+                    <FormattedMessage id="Select-Option" />
+                  </option>
+                  {listData &&
+                    Object.values(listData).map((option) => {
+                      {
+                        console.log({ ddddddddddd: option })
+                      }
+                      return (
+                        <option key={option.id} value={option.id}>
+                          {option.displayName}
+                        </option>
+                      )
+                    })}
+                </select>
+                {formik.touched.productOwner && formik.errors.productOwner && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.productOwner}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          )}
+
           {/* <div className="card toggle-container p-2 mb-3">
             <div className="d-flex align-items-center justify-content-between ">
               <Form.Label className="flex-grow-1">

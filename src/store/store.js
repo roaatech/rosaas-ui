@@ -4,6 +4,7 @@ import authReducer from './slices/auth'
 import tenantsReducer from './slices/tenants'
 import workspaceReducer from './slices/workSpace.js'
 import productsReducer from './slices/products/productsSlice.js'
+import productsOwnersReducer from './slices/productsOwners.js'
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     products: productsReducer,
     tenants: tenantsReducer,
     workspace: workspaceReducer,
+    productsOwners: productsOwnersReducer,
   },
 })

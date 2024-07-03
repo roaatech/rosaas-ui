@@ -10,7 +10,7 @@ import { BsCheckCircleFill } from 'react-icons/bs'
 import { useSelector } from 'react-redux'
 
 const PaymentSuccess = () => {
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
 
   const handleButtonClick = () => {
     window.location.href =

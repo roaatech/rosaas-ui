@@ -8,12 +8,21 @@ const usePlanPriceReq = () => {
       `management/sadmin/v1/Products/${productId}/PlanPrices`
     )
   }
-  const getProductPlanPriceListPublic = async (productName) => {
-    return await Request.get(`public/v1/Product/${productName}/PlanPrices`)
-  }
-  const getProductPlanPricePublic = async (productName, priceName) => {
+  const getProductPlanPriceListPublic = async (
+    productOwnerName,
+    productName
+  ) => {
     return await Request.get(
-      `public/v1/Product/${productName}/PlanPrices/${priceName}`
+      `public/v1/productOwner/${productOwnerName}/Product/${productName}/PlanPrices`
+    )
+  }
+  const getProductPlanPricePublic = async (
+    productOwnerName,
+    productName,
+    priceName
+  ) => {
+    return await Request.get(
+      `public/v1/productOwner/${productOwnerName}/Product/${productName}/PlanPrices/${priceName}`
     )
   }
   const getProductPlanPricePublicbyId = async (priceId) => {

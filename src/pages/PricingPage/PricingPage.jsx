@@ -26,14 +26,15 @@ const PricingPage = () => {
   const navigate = useNavigate()
   const routeParams = useParams()
 
-  const systemName = routeParams.systemName
+  const productSystemName = routeParams.productSystemName
+  const productOwnerSystemName = routeParams.productOwnerSystemName
 
   const listProduct = useSelector((state) => state.products.products)
 
   const productData = Object.values(
     Object.fromEntries(
       Object.entries(listProduct).filter(
-        ([key, value]) => value.systemName === systemName
+        ([key, value]) => value.systemName === productSystemName
       )
     )
   )[0]
@@ -46,11 +47,12 @@ const PricingPage = () => {
 
   const groupedByCycle =
     plansPriceList &&
+    Object.values(plansPriceList) &&
     Object.values(plansPriceList)
       .filter(
-        (plansPrice) =>
-          plansPrice?.isPublished === true &&
-          planList?.[plansPrice?.plan?.id].isPublished === true
+        (plansPrice) => plansPrice?.isPublished === true
+        //  &&
+        //   planList?.[plansPrice?.plan?.id]?.isPublished === true
       )
       .reduce((acc, currentObj) => {
         const { id, cycle, ...rest } = currentObj
@@ -70,7 +72,7 @@ const PricingPage = () => {
       )
     })
 
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
   const [redirectPath, setRedirectPath] = useState('')
   useEffect(() => {
     if (!redirectPath) {
@@ -134,7 +136,10 @@ const PricingPage = () => {
     const fetchData = async () => {
       try {
         if (!listData || Object.keys(listData).length === 0) {
-          const featurePlanData = await getFeaturePlanListPublic(systemName)
+          const featurePlanData = await getFeaturePlanListPublic(
+            productOwnerSystemName,
+            productSystemName
+          )
           if (
             featurePlanData.data.data &&
             Object.keys(featurePlanData.data.data > 0)
@@ -151,7 +156,10 @@ const PricingPage = () => {
         }
 
         if (!planList || Object.keys(planList).length === 0) {
-          const allPlanData = await getProductPlansPublic(systemName)
+          const allPlanData = await getProductPlansPublic(
+            productOwnerSystemName,
+            productSystemName
+          )
           if (allPlanData.data.data && Object.keys(allPlanData.data.data > 0))
             dispatch(
               setAllPlans({
@@ -161,7 +169,10 @@ const PricingPage = () => {
             )
         }
         if (!plansPriceList || Object.keys(plansPriceList).length == 0) {
-          const allPlansPrices = await getProductPlanPriceListPublic(systemName)
+          const allPlansPrices = await getProductPlanPriceListPublic(
+            productOwnerSystemName,
+            productSystemName
+          )
           if (
             allPlansPrices.data.data &&
             Object.keys(allPlansPrices.data.data > 0)
@@ -185,6 +196,7 @@ const PricingPage = () => {
     ...new Set(
       Object.values(plansPriceList)
         .filter((plansPrice) => plansPrice?.isPublished === true)
+        .filter((priceObj) => priceObj.cycle === 3 || priceObj.cycle === 4)
         .map((priceObj) => priceObj.cycle)
     ),
   ]
@@ -212,17 +224,20 @@ const PricingPage = () => {
     return (
       <Card.Header>
         <div className="d-flex justify-content-center ">
-          {sortedCycleTypes?.map((cycleNum, index) => (
-            <Form.Check
-              key={index}
-              type="radio"
-              label={<FormattedMessage id={cycle[cycleNum]} />}
-              value={cycleNum}
-              checked={selectedCycle === cycleNum}
-              onChange={() => handleCycleChange(cycleNum)}
-              className="mx-2 "
-            />
-          ))}
+          {sortedCycleTypes?.map(
+            (cycleNum, index) =>
+              (cycleNum === 3 || cycleNum === 4) && (
+                <Form.Check
+                  key={index}
+                  type="radio"
+                  label={<FormattedMessage id={cycle[cycleNum]} />}
+                  value={cycleNum}
+                  checked={selectedCycle === cycleNum}
+                  onChange={() => handleCycleChange(cycleNum)}
+                  className="mx-2"
+                />
+              )
+          )}
         </div>
       </Card.Header>
     )
@@ -432,10 +447,10 @@ const PricingPage = () => {
                           //     `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
                           //   ))
                           navigate(
-                            `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}#start-with-trial`
+                            `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}#start-with-trial`
                           )
                         : navigate(
-                            `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
+                            `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}`
                           )
                     }
                   >

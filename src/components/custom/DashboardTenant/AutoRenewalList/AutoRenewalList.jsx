@@ -42,7 +42,6 @@ import WorkspaceRenewFormWithCycle from '../SubscriptionsList/WorkspaceRenewForm
 export default function RenewalsList() {
   const { getAutoRenewalList } = useRequest()
   const RenewalsData = useSelector((state) => state.workspace.autoRenewalData)
-  console.log({ RenewalsData })
   const dispatch = useDispatch()
   const { cancelAutoRenewal } = useRequest()
   const [showRenewForm, setShowRenewForm] = useState(false)
@@ -68,14 +67,6 @@ export default function RenewalsList() {
       dispatch(deleteAllAutoRenewalIds())
     }, 5000)
   }, [])
-
-  const handleAutoRenewal = async (id) => {
-    try {
-      console.log('Auto-renewal action triggered for subscription:', id)
-    } catch (error) {
-      console.error('Error processing auto-renewal:', error)
-    }
-  }
 
   const handleCancelAutoRenewal = async (id, subscriptionId) => {
     try {
@@ -148,7 +139,6 @@ export default function RenewalsList() {
     const data = Object.values(RenewalsData).map((autorenewal) =>
       renderRenewals(autorenewal)
     )
-    console.log(data)
     setUpdatedRenewalData(data)
   }, [RenewalsData])
 
@@ -164,7 +154,6 @@ export default function RenewalsList() {
         <Row className="mx-2">
           {RenewalsData &&
             Object.values(RenewalsData).map((renewal) => {
-              console.log({ renewal })
               return renderRenewals(renewal)
             })}
         </Row>

@@ -9,7 +9,7 @@ import { Route, Routes as RouteG } from 'react-router-dom'
 const HomePage = () => {
   const { userData } = useRequest()
   const [load, setLoad] = useState(false)
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
   if (userRole == undefined) userRole = 'notAuth'
   useEffect(() => {
     ;(async () => {

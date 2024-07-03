@@ -10,6 +10,13 @@ export const breadcrumbFun = (routeParams, data) => {
       active: 'Settings',
       icon: {},
     },
+    Profile: {
+      title: 'Settings',
+      name: 'Profile',
+      navigation: '/settings/profile',
+      active: 'Settings',
+      icon: {},
+    },
     CardManagement: {
       title: 'Settings',
       name: 'Card-Management',
@@ -48,6 +55,21 @@ export const breadcrumbFun = (routeParams, data) => {
       active: 'Products',
       icon: {},
     },
+    ProductsOwnersList: {
+      title: 'Products-Owners',
+      name: 'Products-Owners-Management',
+      navigation: Routes.productsOwners.path,
+      active: 'Products',
+      icon: {},
+    },
+    ProductsOwnersDetails: {
+      title: 'Products-Owners-Details',
+      name: 'Products-Owners-Management',
+      navigation: Routes.productsOwners.path,
+      active: 'Products',
+      icon: {},
+    },
+
     ProductListPublic: {
       name: 'Products-List',
       navigation: Routes.products.path,

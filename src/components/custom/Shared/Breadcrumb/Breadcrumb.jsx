@@ -14,7 +14,7 @@ import { Routes } from '../../../../routes'
 const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
   const routeParams = useParams()
   let direction = useSelector((state) => state.main.direction)
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
   const intl = useIntl()
   const hasInfo = breadcrumbInfo ? 'yes' : null
   let navigation = '#'

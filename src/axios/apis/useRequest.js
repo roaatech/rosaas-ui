@@ -17,6 +17,7 @@ import useUsersManagementReq from './UsersManagement/useUsersManagementReq'
 import useAdminPrivileges from './UsersManagement/useAdminPrivileges'
 import useAccountReq from './Account/Account'
 import useWebhookEndpointReq from './Product/webhookEndpoint/useWebhookEndpointReq'
+import usePOReq from './ProductOwner/usePOReq'
 
 const useRequest = () => {
   const { signIn, userData, logOut, signUp } = useUserReq()
@@ -164,7 +165,13 @@ const useRequest = () => {
     fetchPaymentIntent,
     getInvoicesList,
   } = usePaymentReq()
-
+  const {
+    createPORequest,
+    editPORequest,
+    getProductOwnersList,
+    getProductOwner,
+    deleteProductOwnerReq,
+  } = usePOReq()
   return {
     signIn,
     signUp,
@@ -281,6 +288,11 @@ const useRequest = () => {
     activateWebhookEndpoint,
     editWebhookEndpoint,
     deleteWebhookEndpoint,
+    createPORequest,
+    editPORequest,
+    getProductOwnersList,
+    getProductOwner,
+    deleteProductOwnerReq,
   }
 }
 export default useRequest

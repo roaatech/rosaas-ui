@@ -41,7 +41,7 @@ const CheckoutPage = (data) => {
 
   const [orderData, setOrderData] = useState()
 
-  const { systemName, priceName } = useParams()
+  const { productSystemName, productOwnerSystemName, priceName } = useParams()
 
   const hash = window.location.hash
 
@@ -69,7 +69,7 @@ const CheckoutPage = (data) => {
   const productData = Object.values(
     Object.fromEntries(
       Object.entries(listProduct).filter(
-        ([key, value]) => value.systemName === systemName
+        ([key, value]) => value.systemName === productSystemName
       )
     )
   )[0]
@@ -85,24 +85,29 @@ const CheckoutPage = (data) => {
       setOrderData(order.data.data)
     })()
   }, [orderID])
+
   const [currentFeaturePlan, setCurrentFeaturePlan] = useState()
   const [trialFeaturePlan, setTrialFeaturePlan] = useState()
   console.log({ trialFeaturePlan })
   useEffect(() => {
-    if (!priceData || !systemName) {
+    if (!priceData || !productSystemName) {
       return
     }
     ;(async () => {
       const featurePlan = await getFeaturePlanPublic(
-        systemName,
+        productOwnerSystemName,
+        productSystemName,
         priceData?.plan.systemName
       )
       setCurrentFeaturePlan(featurePlan.data.data)
     })()
 
-    if (trialPlanId && systemName) {
+    if (trialPlanId && productSystemName) {
       ;(async () => {
-        const featurePlanTrial = await getFeaturePlanListPublic(systemName)
+        const featurePlanTrial = await getFeaturePlanListPublic(
+          productOwnerSystemName,
+          productSystemName
+        )
         setTrialFeaturePlan(
           featurePlanTrial.data.data.filter(
             (item) => item.plan.id === trialPlanId
@@ -110,7 +115,7 @@ const CheckoutPage = (data) => {
         )
       })()
     }
-  }, [priceData, systemName, trialPlanId])
+  }, [priceData, productSystemName, trialPlanId])
 
   useEffect(() => {
     if (!orderData) {

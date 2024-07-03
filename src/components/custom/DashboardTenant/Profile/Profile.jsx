@@ -5,9 +5,11 @@ import * as Yup from 'yup'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { Wrapper } from './Profile.styled'
 import UpperContent from '../../Shared/UpperContent/UpperContent'
-import { BsFillBackspaceFill } from 'react-icons/bs'
+import { BsFillBackspaceFill, BsGearFill } from 'react-icons/bs'
 import { AiFillEdit, AiFillSave } from 'react-icons/ai'
 import useRequest from '../../../../axios/apis/useRequest'
+import BreadcrumbComponent from '../../Shared/Breadcrumb/Breadcrumb'
+import { useLocation, useParams } from 'react-router-dom'
 
 const Profile = () => {
   const { updateProfile, getCurrentProfile } = useRequest()
@@ -49,6 +51,7 @@ const Profile = () => {
     email: Yup.string().email('Invalid email').required('Email is required'),
     mobileNumber: Yup.string(),
   })
+  const location = useLocation()
 
   const formik = useFormik({
     initialValues,
@@ -62,6 +65,9 @@ const Profile = () => {
   })
   return (
     <Wrapper>
+      {location.pathname.includes('admin-panel') && (
+        <BreadcrumbComponent breadcrumbInfo={'Profile'} icon={BsGearFill} />
+      )}
       <Form>
         <UpperContent>
           <h4 className="m-0">Profile </h4>

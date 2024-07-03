@@ -219,7 +219,7 @@ const TenantFormOnboarding = ({
           dispatch(setStep(2))
 
           navigate(
-            `/checkout/product/${
+            `/checkout/${listData[values.product]?.client.systemName}/${
               listData[values.product]?.systemName
             }/plan-price/${
               values?.plan &&

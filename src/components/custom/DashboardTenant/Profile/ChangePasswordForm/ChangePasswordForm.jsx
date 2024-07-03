@@ -48,7 +48,9 @@ const ChangePasswordForm = ({ setVisible, popupLabel }) => {
   return (
     <Form onSubmit={formik.handleSubmit}>
       <Modal.Header closeButton>
-        <Modal.Title className="h6">{popupLabel}</Modal.Title>
+        <Modal.Title className="h6">
+          {<FormattedMessage id={popupLabel} />}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form.Group className="mb-3">

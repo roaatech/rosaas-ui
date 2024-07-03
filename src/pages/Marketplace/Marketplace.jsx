@@ -17,19 +17,15 @@ const Marketplace = () => {
   const navigate = useNavigate()
 
   const listData = useSelector((state) => state.products.products)
-
+  console.log({ listData })
   useEffect(() => {
-    if (Object.values(listData).length > 0) {
-      return
-    }
-
     ;(async () => {
       const productList = await getProductListPublic()
       dispatch(setAllProduct(productList.data.data))
     })()
-  }, [Object.values(listData).length > 0])
+  }, [])
 
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
 
   async function getPlanPriceName(id) {
     try {
@@ -41,7 +37,6 @@ const Marketplace = () => {
     }
   }
   const isRunningInIframe = window.self !== window.top
-
   return (
     <Wrapper>
       <section style={{ minHeight: '92vh' }}>
@@ -75,7 +70,10 @@ const Marketplace = () => {
                     <Col key={product.id} md={4}>
                       <Card className="p-1 m-1">
                         <Link
-                          to={`./${product.systemName}`}
+                          to={`./${
+                            product?.client?.systemName ||
+                            product?.productOwner?.systemName
+                          }/${product.systemName}`}
                           className="product-link"
                         >
                           <Card.Body>

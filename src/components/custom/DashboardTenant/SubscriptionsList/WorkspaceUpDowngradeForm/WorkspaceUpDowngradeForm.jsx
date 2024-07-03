@@ -33,6 +33,7 @@ const WorkspaceUpDowngradeForm = ({
   setUpdate,
   update,
 }) => {
+  console.log({ subscriptionData })
   // Redux state management
   const products = useSelector((state) => state.workspace.products)
   const dispatch = useDispatch()
@@ -250,6 +251,7 @@ const WorkspaceUpDowngradeForm = ({
       if (products[selectedProduct]) {
         if (!products[selectedProduct].plans) {
           const planData = await getProductPlansPublic(
+            subscriptionData.productOwner.systemName,
             subscriptionData.product.systemName
           )
 
@@ -273,6 +275,7 @@ const WorkspaceUpDowngradeForm = ({
         if (!products[selectedProduct]?.plansPrices) {
           // Fetch product plan prices if not already loaded
           const planPriceDataRes = await getProductPlanPriceListPublic(
+            subscriptionData.productOwner.systemName,
             subscriptionData.product.systemName
           )
           // Dispatch action to update product plan prices in Redux store
@@ -317,7 +320,6 @@ const WorkspaceUpDowngradeForm = ({
         // Filter and set hidden plan data based on subscription type
         const hidePlanData = planDataArray
           .filter((item) => {
-            console.log({ currentPlanPrice })
             if (
               item.isPublished === true &&
               (type === 'downgrade'

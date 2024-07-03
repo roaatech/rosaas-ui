@@ -34,6 +34,8 @@ import TenantForm from '../../custom/tenant/TenantForm/TenantForm'
 import ProductForm from '../../custom/Product/ProductForm/ProductForm'
 import { useSelector } from 'react-redux'
 import TenantFormOnboarding from '../../custom/tenant/TenantFormOnboarding/TenantFormOnboarding'
+import { MdBusiness } from 'react-icons/md'
+import ProductOwnerForm from '../../custom/ProductOwner/ProductOwnerForm'
 
 const QuickAction = ({
   label,
@@ -53,8 +55,10 @@ const QuickAction = ({
   const [visibleTenant, setVisibleTenant] = useState(false)
   const [visibleTenantAndPay, setVisibleTenantAndPay] = useState(false)
   const [visibleProduct, setVisibleProduct] = useState(false)
+  const [visiblePO, setVisiblePO] = useState(false)
+  console.log({ visiblePO })
   const inputHeight = '56px'
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
   return (
     <Wrapper>
       <div className="d-flex  py-4 wrapper">
@@ -134,6 +138,18 @@ const QuickAction = ({
                   <FormattedMessage id="Add-Product" />
                 </Dropdown.Item>
               )}
+              {userRole == 'superAdmin' && (
+                <Dropdown.Item
+                  onSelect={() => setVisiblePO(true)}
+                  className="text-dark"
+                >
+                  <span className=" mx-2 ">
+                    <MdBusiness className="product-icon" />
+                    <FontAwesomeIcon icon={faPlus} className="plus icon-dark" />
+                  </span>
+                  <FormattedMessage id="Add-Product-Owner" />
+                </Dropdown.Item>
+              )}
               {/* <Dropdown.Item
               onClick={() => deleteConfirm(id)}
               className="text-danger"
@@ -150,6 +166,16 @@ const QuickAction = ({
                 type={'create'}
                 visible={visibleTenant}
                 setVisible={setVisibleTenant}
+              />
+            </ThemeDialog>
+          )}
+          {visiblePO && (
+            <ThemeDialog visible={visiblePO} setVisible={setVisiblePO}>
+              <ProductOwnerForm
+                popupLabel={<FormattedMessage id="Create-Product-Owner" />}
+                type={'create'}
+                visible={visiblePO}
+                setVisible={setVisiblePO}
               />
             </ThemeDialog>
           )}

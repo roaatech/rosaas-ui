@@ -34,14 +34,14 @@ const TwoStepProcessPage = () => {
   const [currentTenant, setCurrentTenant] = useState('')
   const [orderID, setOrderID] = useState('')
   const { getProductPlanPricePublic } = useRequest()
-  const { systemName, priceName } = useParams()
+  const { productSystemName, productOwnerSystemName, priceName } = useParams()
   useEffect(() => {
     if (!orderIDParam) {
       return
     }
     dispatch(setStep(2))
   }, [orderIDParam])
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
   if (userRole == undefined) userRole = 'notAuth'
 
   const [hasToPay, setHasToPay] = useState()
@@ -52,11 +52,15 @@ const TwoStepProcessPage = () => {
       return
     }
     ;(async () => {
-      const price = await getProductPlanPricePublic(systemName, priceName)
+      const price = await getProductPlanPricePublic(
+        productOwnerSystemName,
+        productSystemName,
+        priceName
+      )
       setPriceData(price.data.data)
       price.data.data && setTrialPlanId(price.data.data?.product.trialPlanId)
     })()
-  }, [systemName, priceName])
+  }, [productSystemName, priceName])
   return (
     <Wrapper>
       <div className="main-container">
