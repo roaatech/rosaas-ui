@@ -72,7 +72,6 @@ export default function ProductsOwners({ children }) {
   }
 
   const listData = useSelector((state) => state.productsOwners.productsOwners)
-  let [list, setList] = useState(Object.values(listData))
 
   useEffect(() => {
     let query = `?page=${Math.ceil(
@@ -84,14 +83,9 @@ export default function ProductsOwners({ children }) {
     ;(async () => {
       const productList = await getProductOwnersList(query)
       dispatch(setAllProductOwners(productList.data.data.items))
-      setList(productList.data.data.items)
       setTotalCount(productList.data.data.totalCount)
     })()
   }, [first, rows, searchValue, sortField, sortValue, update])
-
-  const statusBodyTemplate = (rowData) => {
-    return <ProductStatus rowData={rowData} key={rowData.id} />
-  }
 
   const onPageChange = (event) => {
     setFirst(event.first)
@@ -99,14 +93,9 @@ export default function ProductsOwners({ children }) {
   }
 
   const editForm = async (id) => {
-    if (!listData[id].creationEndpoint) {
-      const productOwnerData = await getProductOwner(id)
-      dispatch(productOwnerInfo(productOwnerData.data.data))
-    }
     setCurrentId(id)
     setVisible(true)
   }
-
   return (
     <Wrapper>
       <BreadcrumbComponent
@@ -138,7 +127,7 @@ export default function ProductsOwners({ children }) {
         >
           <Card.Body className="pt-0">
             <DataTable
-              value={list}
+              value={listData && Object.values(listData)}
               tableStyle={{ minWidth: '50rem' }}
               size={'small'}
             >
@@ -248,10 +237,10 @@ export default function ProductsOwners({ children }) {
             />
 
             <ThemeDialog visible={visible} setVisible={setVisible}>
-              <ProductForm
+              <ProductOwnerForm
                 popupLabel={<FormattedMessage id="Edit-Product-Owner" />}
                 type={'edit'}
-                productOwnerData={listData[currentId]}
+                productOwnerData={listData && listData[currentId]}
                 update={update}
                 setUpdate={setUpdate}
                 setVisible={setVisible}

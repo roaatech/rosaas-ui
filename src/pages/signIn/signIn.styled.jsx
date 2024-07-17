@@ -4,6 +4,18 @@ export const Wrapper = styled.main`
   background-image: url(${bg});
   background-size: cover;
   /* background-position: center; */
+  .custom-div {
+    cursor: pointer;
+    color: var(--second-color);
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .custom-div:hover {
+    color: var(--second-color-darker);
+  }
   .copy {
     bottom: 0;
     width: 100%;

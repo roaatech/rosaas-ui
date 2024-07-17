@@ -13,7 +13,7 @@ export const breadcrumbFun = (routeParams, data) => {
     Profile: {
       title: 'Settings',
       name: 'Profile',
-      navigation: '/settings/profile',
+      navigation: Routes.Profile.path,
       active: 'Settings',
       icon: {},
     },

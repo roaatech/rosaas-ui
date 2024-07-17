@@ -20,7 +20,15 @@ import useWebhookEndpointReq from './Product/webhookEndpoint/useWebhookEndpointR
 import usePOReq from './ProductOwner/usePOReq'
 
 const useRequest = () => {
-  const { signIn, userData, logOut, signUp } = useUserReq()
+  const {
+    SignInTenantAdminAsync,
+    SignInProductOwnerAsync,
+    userData,
+    logOut,
+    signUp,
+    signUpPOwner,
+    SignInAdminAsync,
+  } = useUserReq()
   const {
     createTenantRequest,
     editTenantRequest,
@@ -171,9 +179,12 @@ const useRequest = () => {
     getProductOwnersList,
     getProductOwner,
     deleteProductOwnerReq,
+    isProductOwnerRegistered,
+    GetCurrentProductOwnerByUserId,
   } = usePOReq()
   return {
-    signIn,
+    SignInTenantAdminAsync,
+    SignInProductOwnerAsync,
     signUp,
     userData,
     logOut,
@@ -293,6 +304,10 @@ const useRequest = () => {
     getProductOwnersList,
     getProductOwner,
     deleteProductOwnerReq,
+    signUpPOwner,
+    isProductOwnerRegistered,
+    GetCurrentProductOwnerByUserId,
+    SignInAdminAsync,
   }
 }
 export default useRequest

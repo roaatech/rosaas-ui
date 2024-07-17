@@ -1,5 +1,5 @@
 import React from 'react'
-import LoginWrapper from './LoginWrapper.styled'
+import LoginWrapper from './SignInTenantAdmin.styled.jsx'
 import { FormattedMessage } from 'react-intl'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BsFillEnvelopeOpenFill, BsUnlockFill } from 'react-icons/bs'
@@ -9,16 +9,16 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../axios/apis/useRequest.js'
-import { Routes } from '../../../routes'
+import { Routes } from '../../../routes.js'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-const Login = () => {
+const SignInTenantAdmin = () => {
   let redirectPath = useSelector(
     (state) => state.auth.redirectPath?.redirectPath
   )
 
-  const { signIn } = useRequest()
+  const { SignInTenantAdminAsync } = useRequest()
   const navigate = useNavigate()
   const initialValues = {
     email: '',
@@ -31,7 +31,7 @@ const Login = () => {
   })
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    const loginPass = await signIn(values)
+    const loginPass = await SignInTenantAdminAsync(values)
     if (loginPass) {
       redirectPath
         ? navigate(redirectPath)
@@ -112,4 +112,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default SignInTenantAdmin

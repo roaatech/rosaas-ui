@@ -2,7 +2,7 @@ import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { Modal, Button, Form } from '@themesberg/react-bootstrap'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './ProductOwnerForm.styled.jsx'
 import useRequest from '../../../axios/apis/useRequest.js'
@@ -11,19 +11,20 @@ import AutoGenerateInput from '../Shared/AutoGenerateInput/AutoGenerateInput.jsx
 
 const ProductOwnerForm = ({
   type,
-  poData,
   setVisible,
   popupLabel,
   update,
   setUpdate,
+  productOwnerData,
 }) => {
   const { createPORequest, editPORequest } = useRequest()
   const dispatch = useDispatch()
-
+  let userInfo = useSelector((state) => state.auth.userInfo)
+  console.log({ userInfo })
   const initialValues = {
-    systemName: poData ? poData.systemName : '',
-    displayName: poData ? poData.displayName : '',
-    description: poData ? poData.description : '',
+    systemName: productOwnerData ? productOwnerData.systemName : '',
+    displayName: productOwnerData ? productOwnerData.displayName : '',
+    description: productOwnerData ? productOwnerData.description : '',
   }
 
   const validationSchema = Yup.object().shape({
@@ -46,15 +47,25 @@ const ProductOwnerForm = ({
     onSubmit: async (values, { setSubmitting }) => {
       setVisible(false)
       if (type === 'create') {
-        const createPO = await createPORequest({
-          systemName: values.systemName,
-          displayName: values.displayName,
-          description: values.description,
-        })
-        setUpdate(update + 1)
+        if (userInfo?.userType == 'clientAdmin') {
+          const createPO = await createPORequest({
+            systemName: values.systemName,
+            displayName: values.displayName,
+            description: values.description,
+            CreatedByUserId: userInfo?.id,
+          })
+          setUpdate(update + 1)
+        } else {
+          const createPO = await createPORequest({
+            systemName: values.systemName,
+            displayName: values.displayName,
+            description: values.description,
+          })
+          setUpdate(update + 1)
+        }
       } else {
-        const editPO = await editPORequest({
-          id: poData.id,
+        const editPO = await editPORequest(productOwnerData.id, {
+          id: productOwnerData.id,
           systemName: values.systemName,
           displayName: values.displayName,
           description: values.description,

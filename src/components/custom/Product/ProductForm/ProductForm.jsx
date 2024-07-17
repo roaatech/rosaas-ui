@@ -24,6 +24,7 @@ import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 import { Routes } from '../../../../routes.js'
+import { Product_Client_id } from '../../../../const/product.js'
 
 const ProductForm = ({
   type,
@@ -39,7 +40,7 @@ const ProductForm = ({
   const navigate = useNavigate()
   const listData = useSelector((state) => state.productsOwners.productsOwners)
   let userInfo = useSelector((state) => state.auth.userInfo)
-
+  console.log({ userInfo: userInfo.ProductOwnerInfo?.id })
   const initialValues = {
     displayName: productData ? productData.displayName : '',
     description: productData ? productData.description : '',
@@ -59,11 +60,12 @@ const ProductForm = ({
     activationEndpoint: productData ? productData.activationEndpoint : '',
     deactivationEndpoint: productData ? productData.deactivationEndpoint : '',
     deletionEndpoint: productData ? productData.deletionEndpoint : '',
-    clientId: productData
-      ? userInfo.userType == 'clientAdmin'
-        ? userInfo.id
-        : productData.clientId
-      : '',
+    clientId:
+      productData && userInfo.userType != 'clientAdmin'
+        ? productData?.client?.id
+        : userInfo.userType == 'clientAdmin'
+        ? userInfo.ProductOwnerInfo?.id
+        : '',
   }
 
   const validationSchema = Yup.object().shape({
@@ -109,8 +111,10 @@ const ProductForm = ({
           deletionEndpoint: values.deletionEndpoint,
           clientId:
             userInfo.userType == 'clientAdmin'
-              ? userInfo.id
-              : values.productOwner,
+              ? userInfo.ProductOwnerInfo?.id
+              : values.clientId
+              ? values.clientId
+              : Product_Client_id,
         })
         if (sideBar) {
           navigate(`${Routes.products.path}/${createProduct.data.data.id}`)
@@ -133,10 +137,6 @@ const ProductForm = ({
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
             deletionEndpoint: values.deletionEndpoint,
-            clientId:
-              userInfo.userType == 'clientAdmin'
-                ? userInfo.id
-                : values.productOwner,
           },
           id: productData.id,
         })
@@ -164,8 +164,10 @@ const ProductForm = ({
             clientId: {
               id:
                 userInfo.userType == 'clientAdmin'
-                  ? userInfo.id
-                  : values.productOwner,
+                  ? userInfo.ProductOwnerInfo?.id
+                  : values.clientId
+                  ? values.clientId
+                  : Product_Client_id,
             },
           })
         )
@@ -175,7 +177,7 @@ const ProductForm = ({
       setVisible && setVisible(false)
     },
   })
-  console.log({ ytttttttttt: formik.values.productOwner })
+  console.log({ ssswss: formik.values.clientId })
 
   const RandomApiKey = () => {
     formik.setFieldValue('apiKey', generateApiKey())
@@ -246,7 +248,7 @@ const ProductForm = ({
               </Form.Control.Feedback>
             )}
           </div>
-          {userInfo.userType == 'superAdmin' && (
+          {userInfo.userType == 'superAdmin' && type === 'create' && (
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
@@ -255,9 +257,9 @@ const ProductForm = ({
                 </Form.Label>
                 <select
                   className="form-control"
-                  name="productOwner"
-                  id="productOwner"
-                  value={formik.values.productOwner}
+                  name="clientId"
+                  id="clientId"
+                  value={formik.values.clientId}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 >
@@ -276,12 +278,12 @@ const ProductForm = ({
                       )
                     })}
                 </select>
-                {formik.touched.productOwner && formik.errors.productOwner && (
+                {formik.touched.clientId && formik.errors.clientId && (
                   <Form.Control.Feedback
                     type="invalid"
                     style={{ display: 'block' }}
                   >
-                    {formik.errors.productOwner}
+                    {formik.errors.clientId}
                   </Form.Control.Feedback>
                 )}
               </Form.Group>

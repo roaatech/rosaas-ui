@@ -20,8 +20,11 @@ const useApi = () => {
     function (config) {
       dispatch(changePreloader(true))
       const noAuthRoutes = [
-        'identity/sadmin/v1/Auth/Signin',
         'identity/tadmin/v1/Auth/Signup',
+        'identity/product-owner-admin/v1/Auth/Signup',
+        'identity/product-owner-admin/v1/Auth/Signin',
+        'identity/tadmin/v1/Auth/Signin',
+        'identity/sadmin/v1/Auth/Signin',
       ]
       //* add auth
       if (!noAuthRoutes.includes(config.url)) {

@@ -43,6 +43,7 @@ const GlobalStyles = createGlobalStyle`
   --primary6:#3B3A3C;
   --primary7:#2E2D2F;
   --second-color:#ffab03;
+  --second-color-darker: #cc8802;
   --second-color-1:#ffe8b9;
  --table-hover:#eff0f2;
    --themeBackground:${(props) =>

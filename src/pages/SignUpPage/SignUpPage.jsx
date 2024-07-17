@@ -3,10 +3,19 @@ import { FormattedMessage } from 'react-intl'
 import logo from '../../assets/img/brand/rosas.svg'
 import SignUp from '../../components/custom/SignUp/SignUp'
 import { Wrapper } from './SignUpPage.styled'
-
+import { useLocation } from 'react-router-dom'
+import CreateProductOwner from '../../components/custom/ProductOwner/ProductOwnerSignUp/ProductOwnerSignUp'
+import { Routes } from '../../routes'
+import ProductOwnerReg from '../../components/custom/ProductOwner/ProductOwnerReg/ProductOwnerReg'
+import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
+import { BsBoxSeam } from 'react-icons/bs'
 const SignUpPage = () => {
+  const location = useLocation()
   return (
     <Wrapper>
+      {location.pathname == Routes.productsOwnerReg.path && (
+        <BreadcrumbComponent icon={BsBoxSeam} />
+      )}
       <section
         className="d-flex align-items-center"
         style={{ minHeight: '100vh' }}
@@ -20,13 +29,40 @@ const SignUpPage = () => {
               <div className="cardCont shadow-soft border border-round border-light p-4 p-lg-5 w-100 fmxw-500">
                 <div className="text-center text-md-center mb-4 mt-md-0">
                   <img src={logo} alt="" className="logo" />
+
                   <h3 className="mb-0">
-                    <FormattedMessage id="signUpTo" />{' '}
-                    <span className="rosaas">RoSaaS</span>
+                    {location.pathname != Routes.productsOwnerReg.path &&
+                    location.pathname != Routes.POwnerSignUp.path ? (
+                      <div>
+                        <span className="rosaas">
+                          {' '}
+                          {location.pathname === Routes.POwnerSignUp.path && (
+                            <FormattedMessage id={'Admin'} />
+                          )}{' '}
+                        </span>
+                        <FormattedMessage id={'signUpTo'} />{' '}
+                        <span className="rosaas">RoSaaS</span>
+                      </div>
+                    ) : (
+                      <div>
+                        {/* <span className="rosaas"> */}
+                        <FormattedMessage id={'Product-Owner'} />
+                        {/* </span> */}
+                        {'  '}
+                        <FormattedMessage id={'Registeration'} />{' '}
+                        {/* <span className="rosaas">RoSaaS</span> */}
+                      </div>
+                    )}
                   </h3>
                 </div>
 
-                <SignUp />
+                {location.pathname == Routes.POwnerSignUp.path ? (
+                  <CreateProductOwner />
+                ) : location.pathname == Routes.productsOwnerReg.path ? (
+                  <ProductOwnerReg />
+                ) : (
+                  <SignUp />
+                )}
               </div>
             </Col>
           </Row>

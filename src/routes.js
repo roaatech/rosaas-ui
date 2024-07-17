@@ -25,38 +25,37 @@ import Marketplace from './pages/Marketplace/Marketplace'
 import Profile from './components/custom/DashboardTenant/Profile/Profile'
 import ProductsOwners from './pages/ProductsOwners/ProductsOwners'
 import ProductOwnerDetails from './components/custom/ProductOwner/ProdcutOwnerDetailsTab/ProdcutOwnerDetailsTab'
+import POwnerChecker from './routes/ProtectedRoutes'
 const adminPanel = '/admin-panel'
 export const Routes = {
   Dashboard: {
     path: `${adminPanel}/dashboard`,
-    component: Dashboard,
+    component: () => <POwnerChecker page={<Dashboard />} />,
+
     roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
   },
   products: {
     path: `${adminPanel}/products`,
-    component: Product,
+    component: () => <POwnerChecker page={<Product />} />,
+
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
   productsOwners: {
-    path: `${adminPanel}/productsOwners`,
-    component: ProductsOwners,
+    path: `${adminPanel}/products-owners`,
+    component: () => <POwnerChecker page={<ProductsOwners />} />,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
-  productsOwnersDetails: {
-    path: ``,
-    component: ProductOwnerDetails,
-    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
-  },
+
   mainPage: {
     path: '/',
-    component: MainPage,
+    component: () => <POwnerChecker page={<MainPage />} />,
     roles: '*',
     type: 'noSidebar',
   },
   marketPlacePage: {
     path: '/marketplace',
     component: Marketplace,
-    roles: ['notAuth', 'tenantAdmin', 'productAdmin', 'superAdmin'],
+    roles: '*',
     type: 'noSidebar',
   },
 
@@ -72,7 +71,7 @@ export const Routes = {
     roles: ['superAdmin'],
   },
   Profile: {
-    path: `${adminPanel}/settings/Profile`,
+    path: `${adminPanel}/settings/profile`,
     component: Profile,
     roles: ['superAdmin', 'clientAdmin'],
   },
@@ -95,8 +94,20 @@ export const Routes = {
     roles: ['superAdmin'],
   },
 
-  Signin: {
-    path: '/signin',
+  SignInTenantAdmin: {
+    path: '/workspace/sign-in',
+    component: signIn,
+    roles: ['notAuth'],
+    type: 'noSidebar',
+  },
+  SignInSuperAdmin: {
+    path: `${adminPanel}/sign-in`,
+    component: signIn,
+    roles: ['notAuth'],
+    type: 'noSidebar',
+  },
+  ProductManagementSignIn: {
+    path: '/product-management/sign-in',
     component: signIn,
     roles: ['notAuth'],
     type: 'noSidebar',
@@ -105,28 +116,33 @@ export const Routes = {
   CheckOut: {
     path: '/checkout/:productOwnerSystemName/:productSystemName/plan-price/:priceName',
     component: TwoStepProcessPage,
-    roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
+    roles: '*',
     type: 'noSidebar',
   },
 
   CheckOutOrder: {
     path: '/checkout/:productOwnerSystemName/:productSystemName/plan-price/:priceName/order/:orderIDParam',
     component: TwoStepProcessPage,
-    roles: ['superAdmin', 'tenantAdmin', 'notAuth'],
+    roles: '*',
     type: 'noSidebar',
   },
 
   SignUp: {
-    path: '/sign-up',
+    path: '/workspace/sign-up',
     component: SignUpPage,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
-
-  Pricing: {
-    path: ``,
-    component: PricingPage,
-    roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
+  POwnerSignUp: {
+    path: '/product-management/sign-up',
+    component: SignUpPage,
+    roles: ['notAuth'],
+    type: 'noSidebar',
+  },
+  productsOwnerReg: {
+    path: '/product-management/reg',
+    component: SignUpPage,
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
     type: 'noSidebar',
   },
 
@@ -176,15 +192,11 @@ Routes.ProductDetails = {
   component: ProductDetails,
   roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
 }
-Routes.ProductsOwnerDetails = {
-  path: `${Routes.productsOwners.path}/:id`,
-  component: ProductDetails,
-  roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
-}
+
 Routes.Pricing = {
   path: `${Routes.marketPlacePage.path}/:productOwnerSystemName/:productSystemName`,
   component: PricingPage,
-  roles: ['notAuth', 'superAdmin', 'tenantAdmin'],
+  roles: '*',
   type: 'noSidebar',
 }
 Routes.SubscriptionManagement = {
@@ -197,4 +209,8 @@ Routes.TenantDetails = {
   component: TenantDetails,
   roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
 }
-Routes.productsOwnersDetails.path = `${Routes.productsOwners.path}/:id`
+Routes.ProductsOwnersDetails = {
+  path: `${Routes.productsOwners.path}/:id`,
+  component: () => <POwnerChecker page={<ProductOwnerDetails />} />,
+  roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+}

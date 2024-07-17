@@ -10,18 +10,40 @@ const useUserReq = () => {
     dispatch(logOutRequest())
     return await Request.get(`logout`)
   }
-
-  const signIn = async (data) => {
+  const SignInAdminAsync = async (data) => {
     return await Request.post('identity/sadmin/v1/Auth/Signin', data)
+  }
+  const SignInTenantAdminAsync = async (data) => {
+    return await Request.post('identity/tadmin/v1/Auth/Signin', data)
+  }
+  const SignInProductOwnerAsync = async (data) => {
+    return await Request.post(
+      'identity/product-owner-admin/v1/Auth/Signin',
+      data
+    )
   }
   const signUp = async (data) => {
     return await Request.post('identity/tadmin/v1/Auth/Signup', data)
+  }
+  const signUpPOwner = async (data) => {
+    return await Request.post(
+      'identity/product-owner-admin/v1/Auth/Signup',
+      data
+    )
   }
   const userData = async () => {
     return await Request.get('identity/sadmin/v1/Account')
   }
 
-  return { signIn, userData, logOut, signUp }
+  return {
+    SignInAdminAsync,
+    SignInProductOwnerAsync,
+    SignInTenantAdminAsync,
+    signUpPOwner,
+    userData,
+    logOut,
+    signUp,
+  }
 }
 
 export default useUserReq

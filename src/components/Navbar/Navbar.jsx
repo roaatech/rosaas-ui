@@ -163,7 +163,10 @@ export default (props) => {
                   </Dropdown>
                   <div className="media-body ms-2 mr-2 text-dark align-items-center d-none d-lg-block">
                     <span className="mb-0 font-small fw-bold email">
-                      <Link className="fw-bold" to={Routes.Signin.path}>
+                      <Link
+                        className="fw-bold"
+                        to={Routes.SignInTenantAdmin.path}
+                      >
                         <FormattedMessage id="Signin" />
                       </Link>
                     </span>

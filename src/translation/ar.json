@@ -546,5 +546,27 @@
   "The-validity-period-for-this-link-extends-for-a-duration-of-24-hours": "يمتد الفترة الصالحة لهذا الرابط لمدة 24 ساعة",
   "Downgrade": "التخفيض",
   "Cancel-Downgrading": "إلغاء التخفيض",
-  "Cancel-Upgrading": "إلغاء الترقية"
+  "Cancel-Upgrading": "إلغاء الترقية",
+
+  "Create-Product-Owner": "إنشاء مالك المنتج",
+  "Add-Product-Owner": "إضافة مالك المنتج",
+  "Product-Owner-List": "قائمة مالكي المنتجات",
+  "Profile": "الملف الشخصي",
+  "Products-Owners": "مالكو المنتجات",
+  "Products-Owners-Management": "إدارة مالكي المنتجات",
+  "Registeration": "التسجيل",
+  "Admin-Info": "معلومات المسؤول",
+  "Admin-Full-Name": "الاسم الكامل للمسؤول",
+  "Admin-Phone": "هاتف المسؤول",
+  "Admin-Email": "البريد الإلكتروني للمسؤول",
+  "Confirm-Password": "تأكيد كلمة المرور",
+  "Password": "كلمة المرور",
+  "join-as-product-owner": "انضم كمالك منتج",
+  "Sign-up-your-product-today!": "سجل منتجك اليوم!",
+  "Register-Product-Owner-Info": "تسجيل معلومات مالك المنتج",
+  "Admin-Register": "تسجيل المسؤول",
+  "Company-Name": "اسم الشركة",
+  "Company-System-Name": "اسم نظام الشركة",
+  "Admin-Panel": "لوحة المسؤول",
+  "Product-Management-Area": "منطقة إدارة المنتج"
 }

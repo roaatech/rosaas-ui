@@ -51,6 +51,7 @@ import {
 import { FormattedMessage } from 'react-intl'
 import QuickActions from './QuickActions/QuickActions'
 import { setAllProductOwners } from '../../store/slices/productsOwners.js'
+import { MdInfo } from 'react-icons/md'
 
 export default (props = {}) => {
   const navigate = useNavigate()
@@ -64,7 +65,7 @@ export default (props = {}) => {
   const productsOwnersData = useSelector(
     (state) => state.productsOwners.productsOwners
   )
-  console.log({ ssssssssssss: productsOwnersData })
+
   const tenantsData = useSelector((state) => state.tenants.tenants)
   const productsData = useSelector((state) => state.products.products)
   const [searchValue, setSearchValue] = useState('')
@@ -75,7 +76,7 @@ export default (props = {}) => {
     Object.values(productsData)
   )
   const [filteredProductsOwner, setFilteredProductsOwner] = useState()
-  console.log({ filteredProductsOwner })
+
   let userRole = useSelector((state) => state.auth.userInfo.userType)
   const roles = ['', 'superAdmin', 'clientAdmin', 'ProductAdmin', 'tenantAdmin']
 
@@ -237,6 +238,9 @@ export default (props = {}) => {
     })()
   }, [searchValue, allProducts])
   useEffect(() => {
+    if (userRole != 'superAdmin') {
+      return
+    }
     let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     ;(async () => {
@@ -244,7 +248,7 @@ export default (props = {}) => {
       dispatch(setAllProductOwners(listData.data.data.items))
       setFilteredProductsOwner(listData.data.data.items)
     })()
-  }, [searchValue, allProducts])
+  }, [searchValue])
 
   const setSearchValues = (searchValue) => {
     setSearchValue(searchValue)
@@ -310,6 +314,7 @@ export default (props = {}) => {
                 <FontAwesomeIcon icon={faTimes} />
               </Nav.Link>
             </div>
+
             <Nav className="flex-column pt-3 pt-md-0">
               <img src={selectedLogo} alt="logo" className="my-3 logo" />
 
@@ -362,8 +367,20 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
-
-              {(userRole == 'productOwner' || userRole == 'superAdmin') &&
+              {userRole == 'clientAdmin' && (
+                <NavItem
+                  key={'details'}
+                  title={'Info'}
+                  link={`${Routes.productsOwners.path}/info`}
+                  icon={MdInfo}
+                  isActive={location.pathname.includes(
+                    `${Routes.productsOwners.path}/info`
+                  )}
+                />
+              )}
+              {(userRole == 'productOwner' ||
+                userRole == 'superAdmin' ||
+                userRole == 'clientAdmin') &&
               Array.isArray(
                 searchValue.length ? filteredProducts : unFilteredProducts
               ) &&
@@ -399,7 +416,8 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
-              {userRole == 'superAdmin' &&
+
+              {(userRole == 'productOwner' || userRole == 'superAdmin') &&
               Array.isArray(
                 searchValue.length ? filteredProducts : unFilteredProducts
               ) &&
@@ -447,21 +465,25 @@ export default (props = {}) => {
                     link={Routes.Settings.path}
                     icon={BsFillClipboard2CheckFill}
                   />
+
                   <NavItem
                     title={<FormattedMessage id="Subscriptions" />}
                     link={Routes.SubscriptionsSettings.path}
                     icon={BsPeople}
                   />
+
                   <NavItem
                     title={<FormattedMessage id="Product-Warnings" />}
                     link={Routes.ProductWarningsSettings.path}
                     icon={BsExclamationTriangle}
                   />
+
                   <NavItem
                     title={<FormattedMessage id="Card-Management" />}
                     link={Routes.CardSettings.path}
                     icon={BsBank}
                   />
+
                   <NavItem
                     title={<FormattedMessage id="Profile" />}
                     link={Routes.Profile.path}

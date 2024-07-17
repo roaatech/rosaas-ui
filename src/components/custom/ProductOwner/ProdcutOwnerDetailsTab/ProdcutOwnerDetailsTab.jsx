@@ -40,23 +40,46 @@ import {
 } from '../../../../store/slices/productsOwners'
 import { Routes } from '../../../../routes'
 import { object } from 'yup'
+import { update } from 'lodash'
 
 const ProductOwnerDetails = () => {
   const routeParams = useParams()
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
   const [activeIndex, setActiveIndex] = useState(0)
-
+  const [update, setUpdate] = useState(0)
   useEffect(() => {
     setActiveIndex(0)
   }, [routeParams.id])
 
-  const { getProductOwner, deleteProductOwnerReq } = useRequest()
+  const {
+    getProductOwner,
+    deleteProductOwnerReq,
+    GetCurrentProductOwnerByUserId,
+  } = useRequest()
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
+  console.log(userRole == 'clientAdmin')
   const navigate = useNavigate()
   useEffect(() => {
+    if (userRole == 'clientAdmin') {
+      return
+    }
     ;(async () => {
       const productOwnerData = await getProductOwner(routeParams.id)
-      console.log(productOwnerData.data.data)
+      dispatch(
+        productOwnerInfo({
+          id: routeParams.id,
+          data: productOwnerData.data.data,
+        })
+      )
+    })()
+  }, [visible, routeParams?.id])
+  useEffect(() => {
+    if (userRole != 'clientAdmin') {
+      return
+    }
+    ;(async () => {
+      const productOwnerData = await GetCurrentProductOwnerByUserId()
       dispatch(
         productOwnerInfo({
           id: routeParams.id,
@@ -105,6 +128,8 @@ const ProductOwnerDetails = () => {
                   component: 'editProductOwner',
                   icon: <AiFillEdit />,
                   setActiveIndex: setActiveIndex,
+                  update: update,
+                  setUpdate: setUpdate,
                 },
                 {
                   order: 5,

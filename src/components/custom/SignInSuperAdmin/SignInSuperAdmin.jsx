@@ -1,5 +1,5 @@
 import React from 'react'
-import LoginWrapper from './LoginWrapper.styled.jsx'
+import LoginWrapper from './SignInSuperAdmin.styled.jsx'
 import { FormattedMessage } from 'react-intl'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BsFillEnvelopeOpenFill, BsUnlockFill } from 'react-icons/bs'
@@ -11,8 +11,14 @@ import * as Yup from 'yup'
 import useRequest from '../../../axios/apis/useRequest.js'
 import { Routes } from '../../../routes.js'
 import { useNavigate } from 'react-router-dom'
-const Login = () => {
-  const { signIn } = useRequest()
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+const SignInSuperAdmin = () => {
+  let redirectPath = useSelector(
+    (state) => state.auth.redirectPath?.redirectPath
+  )
+
+  const { SignInAdminAsync } = useRequest()
   const navigate = useNavigate()
   const initialValues = {
     email: '',
@@ -25,9 +31,13 @@ const Login = () => {
   })
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    const loginPass = await signIn(values)
+    const loginPass = await SignInAdminAsync(values)
     if (loginPass) {
-      navigate(Routes.Dashboard.path)
+      redirectPath
+        ? navigate(redirectPath)
+        : loginPass.data.data.userAccount.userType == 4
+        ? navigate(Routes.workSpace.path)
+        : navigate(Routes.Dashboard.path)
     }
   }
 
@@ -94,4 +104,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default SignInSuperAdmin

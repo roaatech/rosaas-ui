@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Card, Row } from '@themesberg/react-bootstrap'
+import { Card, Col, Row } from '@themesberg/react-bootstrap'
 import { Wrapper } from './MainPage.styled'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import { BsBoxSeam } from 'react-icons/bs'
@@ -21,7 +21,6 @@ import { signinRedirectPath } from '../../store/slices/auth'
 import { Routes } from '../../routes'
 const MainPage = () => {
   const dispatch = useDispatch()
-
   let direction = useSelector((state) => state.main.direction)
   let selectedLogo
 
@@ -30,6 +29,7 @@ const MainPage = () => {
   } else {
     selectedLogo = logoEn
   }
+
   const navigate = useNavigate()
   const [redirectPath, setRedirectPath] = useState('')
   useEffect(() => {
@@ -37,18 +37,19 @@ const MainPage = () => {
       return
     }
     dispatch(signinRedirectPath({ redirectPath }))
-  }, [redirectPath])
+  }, [redirectPath, dispatch])
 
   const isRunningInIframe = window.self !== window.top
   let userRole = useSelector((state) => state.auth.userInfo.userType)
+
   return (
     <Wrapper>
       <section style={{ minHeight: '92vh' }}>
         {!isRunningInIframe && (
           <BreadcrumbComponent breadcrumbInfo={'Home'} icon={BsBoxSeam} />
-        )}{' '}
-        <div className="main-container ">
-          <section className=" mt-4 mb-4 pb-3">
+        )}
+        <div className="main-container">
+          <section className="mt-4 mb-4 pb-3">
             <div className="row justify-content-center">
               <div className="col-lg-12 text-center mb-3">
                 <h1 className="mt-0">
@@ -59,16 +60,14 @@ const MainPage = () => {
                 <h2 className="mt-0">
                   <FormattedMessage id="Seamless-SaaS-Transformation" />
                 </h2>
-              </div>{' '}
+              </div>
               <div
                 className="col-lg-7 col-xl-6 text-center"
                 style={{ fontSize: 'var(--largeFont)' }}
               >
                 <FormattedMessage id="Rosaas-Description" />
               </div>
-              <div className="col-lg-9 col-xl-8 text-center">
-                {/* <p className="lead">{{ .Params.lead | safeHTML }}</p> */}
-              </div>
+              <div className="col-lg-9 col-xl-8 text-center"></div>
             </div>
           </section>
           <div className="redirect-icons">
@@ -90,10 +89,10 @@ const MainPage = () => {
             <Card
               onClick={() =>
                 userRole
-                  ? userRole == 'tenantAdmin'
+                  ? userRole === 'tenantAdmin'
                     ? navigate(Routes.workSpace.path)
                     : navigate(Routes.Dashboard.path)
-                  : navigate('/signin')
+                  : navigate(Routes.SignInTenantAdmin.path)
               }
               className="redirect-card"
             >
@@ -111,7 +110,6 @@ const MainPage = () => {
                       <>
                         <FontAwesomeIcon icon={faSignInAlt} />
                         <span>
-                          {' '}
                           <FormattedMessage id="signIn" />
                         </span>
                       </>
@@ -121,7 +119,31 @@ const MainPage = () => {
               </Card.Body>
             </Card>
           </div>
-        </div>{' '}
+          {/* <Row className="justify-content-center mt-5">
+            <Col lg={9} xl={8} className="text-center">
+              <span className="mt-4" style={{ fontSize: 'var(--largeFont)' }}>
+                <FormattedMessage id="Unlock new opportunities by joining us and showcasing your product on our platform" />
+              </span>
+              <div className="redirect-icons">
+                <Card
+                  onClick={() => navigate(Routes.POwnerSignUp.path)}
+                  className="redirect-card mt-3"
+                >
+                  <Card.Body>
+                    <Row className="justify-content-center ">
+                      <span className="redirect-link ">
+                        <FontAwesomeIcon icon={faUserPlus} />
+                        <span>
+                          <FormattedMessage id="Sign-Up-as-Product-Owner" />
+                        </span>
+                      </span>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </div>
+            </Col>
+          </Row> */}
+        </div>
       </section>
       <div className="copy">
         COPYRIGHT <span className="yellow">&copy;</span> 2023 ROAA INFORMATION

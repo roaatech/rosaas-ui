@@ -20,11 +20,7 @@ import {
 } from 'react-icons/bs'
 import { Dialog } from 'primereact/dialog'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faEllipsisH,
-  faPlus,
-  faSearch,
-} from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { Modal } from '@themesberg/react-bootstrap'
 
 import { FormattedMessage, useIntl } from 'react-intl'
@@ -126,7 +122,9 @@ const QuickAction = ({
                 <FormattedMessage id="Add-Tenant" />
               </Dropdown.Item>
 
-              {(userRole == 'productOwner' || userRole == 'superAdmin') && (
+              {(userRole == 'productOwner' ||
+                userRole == 'superAdmin' ||
+                userRole == 'clientAdmin') && (
                 <Dropdown.Item
                   onSelect={() => setVisibleProduct(true)}
                   className="text-dark"
@@ -138,7 +136,7 @@ const QuickAction = ({
                   <FormattedMessage id="Add-Product" />
                 </Dropdown.Item>
               )}
-              {userRole == 'superAdmin' && (
+              {(userRole == 'superAdmin' || userRole == 'clientAdmin') && (
                 <Dropdown.Item
                   onSelect={() => setVisiblePO(true)}
                   className="text-dark"
