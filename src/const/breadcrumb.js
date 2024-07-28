@@ -63,7 +63,7 @@ export const breadcrumbFun = (routeParams, data) => {
       icon: {},
     },
     ProductsOwnersDetails: {
-      title: 'Products-Owners-Details',
+      title: 'Product-Owner-Details',
       name: 'Products-Owners-Management',
       navigation: Routes.productsOwners.path,
       active: 'Products',

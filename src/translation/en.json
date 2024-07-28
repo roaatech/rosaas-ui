@@ -566,5 +566,9 @@
   "Company-Name": "Company Name",
   "Company-System-Name": "Company System Name",
   "Admin-Panel": "Admin Panel",
-  "Product-Management-Area": "Product Management Area"
+  "Product-Management-Area": "Product Management Area",
+  "Product-Owner-Details": "Product Owner Details",
+  "Delete-Product-Owner": "Delete Product Owner",
+  "delete-product-owner-confirmation-message": "Are you sure you want to delete the product owner?",
+  "Company-Info": "Company Info"
 }

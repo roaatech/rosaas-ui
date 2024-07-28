@@ -568,5 +568,9 @@
   "Company-Name": "اسم الشركة",
   "Company-System-Name": "اسم نظام الشركة",
   "Admin-Panel": "لوحة المسؤول",
-  "Product-Management-Area": "منطقة إدارة المنتج"
+  "Product-Management-Area": "منطقة إدارة المنتج",
+  "Product-Owner-Details": "تفاصيل مالك المنتج",
+  "Delete-Product-Owner": "حذف مالك المنتج",
+  "delete-product-owner-confirmation-message": "هل أنت متأكد أنك تريد حذف مالك المنتج؟",
+  "Company-Info": "معلومات الشركة"
 }

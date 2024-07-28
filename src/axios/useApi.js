@@ -5,13 +5,15 @@ import { logOut } from '../store/slices/auth'
 import { changePreloader } from '../store/slices/main'
 import { addUserInfo } from '../store/slices/auth'
 import { Client_id } from '../const'
+import { useNavigate } from 'react-router-dom'
+import { Routes } from '../routes'
 
 const useApi = () => {
   let axiosObject = {
     // baseURL: process.env.REACT_APP_API_URL,
     baseURL: window.localStorage.getItem('url'),
   }
-
+  const navigate = useNavigate()
   const mainInstance = axios.create(axiosObject)
 
   const dispatch = useDispatch()
@@ -67,7 +69,15 @@ const useApi = () => {
       return res
     },
     async (err) => {
+      const isSysCode2005 = err.response.data.metadata.errors.some(
+        (element) => {
+          return element.sysCode == 2005 ? true : false
+        }
+      )
       dispatch(changePreloader(false))
+      if (isSysCode2005) {
+        return navigate(Routes.EmailConfirmationPage.path)
+      }
       if (err?.response?.status == 401) {
         dispatch(logOut())
         return Promise.reject(err)

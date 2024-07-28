@@ -26,6 +26,8 @@ import Profile from './components/custom/DashboardTenant/Profile/Profile'
 import ProductsOwners from './pages/ProductsOwners/ProductsOwners'
 import ProductOwnerDetails from './components/custom/ProductOwner/ProdcutOwnerDetailsTab/ProdcutOwnerDetailsTab'
 import POwnerChecker from './routes/ProtectedRoutes'
+import EmailConfirmationPage from './pages/EmailConfirmationPage/EmailConfirmationPage'
+import ConfirmAccountPage from './pages/ConfirmAccountPage/ConfirmAccountPage'
 const adminPanel = '/admin-panel'
 export const Routes = {
   Dashboard: {
@@ -45,7 +47,12 @@ export const Routes = {
     component: () => <POwnerChecker page={<ProductsOwners />} />,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
-
+  EmailConfirmationPage: {
+    path: `/email-confirmation`,
+    component: EmailConfirmationPage,
+    roles: ['notAuth'],
+    type: 'noSidebar',
+  },
   mainPage: {
     path: '/',
     component: () => <POwnerChecker page={<MainPage />} />,
@@ -56,6 +63,12 @@ export const Routes = {
     path: '/marketplace',
     component: Marketplace,
     roles: '*',
+    type: 'noSidebar',
+  },
+  ConfirmAccount: {
+    path: '/auth/confirm-account',
+    component: ConfirmAccountPage,
+    roles: ['notAuth'],
     type: 'noSidebar',
   },
 
@@ -176,7 +189,7 @@ export const Routes = {
   NotFound: {
     path: '/not-found',
     component: NotFound,
-    roles: '*',
+    roles: '*' || ['notAuth'],
     type: 'noSidebar',
   },
 
@@ -196,7 +209,7 @@ Routes.ProductDetails = {
 Routes.Pricing = {
   path: `${Routes.marketPlacePage.path}/:productOwnerSystemName/:productSystemName`,
   component: PricingPage,
-  roles: '*',
+  roles: '*' || ['notAuth'],
   type: 'noSidebar',
 }
 Routes.SubscriptionManagement = {

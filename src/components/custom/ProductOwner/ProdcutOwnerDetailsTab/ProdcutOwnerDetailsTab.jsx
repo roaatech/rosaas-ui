@@ -19,7 +19,7 @@ import { AiFillCopy, AiFillEdit } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
 import { ProductTrialType, PublishStatus } from '../../../../const/product'
 import { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import useRequest from '../../../../axios/apis/useRequest'
 import { setAllPlans } from '../../../../store/slices/products/productsSlice'
 import Label from '../../Shared/label/Label'
@@ -57,23 +57,6 @@ const ProductOwnerDetails = () => {
     deleteProductOwnerReq,
     GetCurrentProductOwnerByUserId,
   } = useRequest()
-  let userRole = useSelector((state) => state.auth.userInfo.userType)
-  console.log(userRole == 'clientAdmin')
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (userRole == 'clientAdmin') {
-      return
-    }
-    ;(async () => {
-      const productOwnerData = await getProductOwner(routeParams.id)
-      dispatch(
-        productOwnerInfo({
-          id: routeParams.id,
-          data: productOwnerData.data.data,
-        })
-      )
-    })()
-  }, [visible, routeParams?.id])
   useEffect(() => {
     if (userRole != 'clientAdmin') {
       return
@@ -88,13 +71,39 @@ const ProductOwnerDetails = () => {
       )
     })()
   }, [visible, routeParams?.id])
+  let userInfo = useSelector((state) => state.auth.userInfo)
+
+  let userRole = userInfo.userType
+  console.log(userRole == 'clientAdmin')
+  const navigate = useNavigate()
+  let location = useLocation()
+
+  const pathIncludesInfo = location?.pathname.includes('info')
+  const current = pathIncludesInfo
+    ? userInfo.ProductOwnerInfo?.id
+    : routeParams.id
+  useEffect(() => {
+    if (userRole == 'clientAdmin') {
+      return
+    }
+    ;(async () => {
+      const productOwnerData = await getProductOwner(routeParams.id)
+      console.log({ productOwnerData })
+      dispatch(
+        productOwnerInfo({
+          id: routeParams.id,
+          data: productOwnerData.data.data,
+        })
+      )
+    })()
+  }, [visible, routeParams?.id])
 
   const listData = useSelector((state) => state.productsOwners.productsOwners)
   let productOwner = listData?.[routeParams.id]
 
   const deleteProductOwner = async () => {
-    await deleteProductOwnerReq(routeParams?.id)
-    dispatch(removeProductOwnerStore(routeParams?.id))
+    await deleteProductOwnerReq(current)
+    dispatch(removeProductOwnerStore(current))
   }
   const handleProductClick = (productId) => {
     navigate(`${Routes.products.path}/${productId}`) // Navigate to product details page

@@ -25,6 +25,9 @@ const useUserReq = () => {
   const signUp = async (data) => {
     return await Request.post('identity/tadmin/v1/Auth/Signup', data)
   }
+  const confirmEmail = async (data) => {
+    return await Request.post('identity/v1/Account/ConfirmEmail', data)
+  }
   const signUpPOwner = async (data) => {
     return await Request.post(
       'identity/product-owner-admin/v1/Auth/Signup',
@@ -43,6 +46,7 @@ const useUserReq = () => {
     userData,
     logOut,
     signUp,
+    confirmEmail,
   }
 }
 

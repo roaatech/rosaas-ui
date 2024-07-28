@@ -11,11 +11,11 @@ const POwnerChecker = ({ page }) => {
   const { isProductOwnerRegistered } = useRequest()
   const dispatch = useDispatch()
   useEffect(() => {
-    if (!userRole === 'clientAdmin' || !userInfo.id) {
+    if (!(userRole === 'clientAdmin') || !userInfo.id) {
       return
     }
     ;(async () => {
-      const ProductOwnerRegistered = await isProductOwnerRegistered(userInfo.id)
+      const ProductOwnerRegistered = await isProductOwnerRegistered()
 
       dispatch(
         updateUserInfoAttribute({
@@ -28,7 +28,7 @@ const POwnerChecker = ({ page }) => {
 
   if (
     userRole === 'clientAdmin' &&
-    userInfo?.isProductOwnerRegistered === false
+    userInfo.ProductOwnerInfo?.id == '00000000-0000-0000-0000-000000000000'
   ) {
     return <Navigate to={Routes.productsOwnerReg.path} />
   } else {
