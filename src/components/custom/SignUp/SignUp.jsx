@@ -43,8 +43,7 @@ const SignUp = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     const signUpSuccess = await signUp(values)
     if (signUpSuccess) {
-      !signUpSuccess.data.data.userAccount.emailConfirmed &&
-      !signUpSuccess.data.data.token
+      !signUpSuccess.data.data.userAccount.emailConfirmed
         ? navigate(Routes.EmailConfirmationPage.path)
         : redirectPath
         ? navigate(redirectPath)

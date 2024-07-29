@@ -52,7 +52,6 @@ const QuickAction = ({
   const [visibleTenantAndPay, setVisibleTenantAndPay] = useState(false)
   const [visibleProduct, setVisibleProduct] = useState(false)
   const [visiblePO, setVisiblePO] = useState(false)
-  console.log({ visiblePO })
   const inputHeight = '56px'
   let userRole = useSelector((state) => state.auth.userInfo.userType)
   return (

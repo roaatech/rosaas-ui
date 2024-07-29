@@ -88,7 +88,6 @@ const CheckoutPage = (data) => {
 
   const [currentFeaturePlan, setCurrentFeaturePlan] = useState()
   const [trialFeaturePlan, setTrialFeaturePlan] = useState()
-  console.log({ trialFeaturePlan })
   useEffect(() => {
     if (!priceData || !productSystemName) {
       return

@@ -50,7 +50,7 @@ export const Routes = {
   EmailConfirmationPage: {
     path: `/email-confirmation`,
     component: EmailConfirmationPage,
-    roles: ['notAuth'],
+    roles: '*',
     type: 'noSidebar',
   },
   mainPage: {

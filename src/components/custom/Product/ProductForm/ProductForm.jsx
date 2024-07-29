@@ -40,7 +40,6 @@ const ProductForm = ({
   const navigate = useNavigate()
   const listData = useSelector((state) => state.productsOwners.productsOwners)
   let userInfo = useSelector((state) => state.auth.userInfo)
-  console.log({ userInfo: userInfo.ProductOwnerInfo?.id })
   const initialValues = {
     displayName: productData ? productData.displayName : '',
     description: productData ? productData.description : '',
@@ -177,7 +176,6 @@ const ProductForm = ({
       setVisible && setVisible(false)
     },
   })
-  console.log({ ssswss: formik.values.clientId })
 
   const RandomApiKey = () => {
     formik.setFieldValue('apiKey', generateApiKey())
@@ -268,9 +266,6 @@ const ProductForm = ({
                   </option>
                   {listData &&
                     Object.values(listData).map((option) => {
-                      {
-                        console.log({ ddddddddddd: option })
-                      }
                       return (
                         <option key={option.id} value={option.id}>
                           {option.displayName}

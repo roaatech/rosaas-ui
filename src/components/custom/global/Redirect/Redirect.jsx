@@ -9,7 +9,11 @@ const Redirect = () => {
   if (userRole == undefined) userRole = 'notAuth'
   return (
     <Navigate
-      to={userRole == 'notAuth' ? Routes.mainPage.path : Routes.NotFound.path}
+      to={
+        userRole == 'notAuth'
+          ? Routes.SignInTenantAdmin.path
+          : Routes.NotFound.path
+      }
     />
   )
 }

@@ -11,7 +11,7 @@ import { FormattedMessage } from 'react-intl'
 
 const NotFound = () => {
   const handleButtonClick = () => {
-    window.location.href = Routes.Dashboard.path
+    window.location.href = Routes.mainPage.path
   }
   return (
     <Wrapper>

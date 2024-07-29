@@ -74,7 +74,6 @@ const ProductOwnerDetails = () => {
   let userInfo = useSelector((state) => state.auth.userInfo)
 
   let userRole = userInfo.userType
-  console.log(userRole == 'clientAdmin')
   const navigate = useNavigate()
   let location = useLocation()
 
@@ -88,7 +87,6 @@ const ProductOwnerDetails = () => {
     }
     ;(async () => {
       const productOwnerData = await getProductOwner(routeParams.id)
-      console.log({ productOwnerData })
       dispatch(
         productOwnerInfo({
           id: routeParams.id,

@@ -33,7 +33,6 @@ const WorkspaceUpDowngradeForm = ({
   setUpdate,
   update,
 }) => {
-  console.log({ subscriptionData })
   // Redux state management
   const products = useSelector((state) => state.workspace.products)
   const dispatch = useDispatch()

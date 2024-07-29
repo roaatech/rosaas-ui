@@ -17,7 +17,6 @@ const Marketplace = () => {
   const navigate = useNavigate()
 
   const listData = useSelector((state) => state.products.products)
-  console.log({ listData })
   useEffect(() => {
     ;(async () => {
       const productList = await getProductListPublic()

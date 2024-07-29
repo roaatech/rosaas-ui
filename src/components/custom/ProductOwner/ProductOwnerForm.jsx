@@ -20,7 +20,6 @@ const ProductOwnerForm = ({
   const { createPORequest, editPORequest } = useRequest()
   const dispatch = useDispatch()
   let userInfo = useSelector((state) => state.auth.userInfo)
-  console.log({ userInfo })
   const initialValues = {
     systemName: productOwnerData ? productOwnerData.systemName : '',
     displayName: productOwnerData ? productOwnerData.displayName : '',

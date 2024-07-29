@@ -45,7 +45,6 @@ const useApi = () => {
       return Promise.reject(error)
     }
   )
-
   mainInstance.interceptors.response.use(
     async (res) => {
       dispatch(changePreloader(false))
@@ -69,12 +68,12 @@ const useApi = () => {
       return res
     },
     async (err) => {
+      dispatch(changePreloader(false))
       const isSysCode2005 = err.response.data.metadata.errors.some(
         (element) => {
           return element.sysCode == 2005 ? true : false
         }
       )
-      dispatch(changePreloader(false))
       if (isSysCode2005) {
         return navigate(Routes.EmailConfirmationPage.path)
       }

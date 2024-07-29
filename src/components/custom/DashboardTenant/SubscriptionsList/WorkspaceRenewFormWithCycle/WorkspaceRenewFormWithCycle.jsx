@@ -83,7 +83,6 @@ const WorkspaceRenewFormWithCycle = ({
 
   // Select subscription data from Redux store based on current subscription ID
   const renewalData = autoRenewalData?.[currentRenewal] || data
-  console.log({ renewalData })
   // Extract selected plan, product, and plan price IDs from subscription data
   const selectedPlan = renewalData?.plan?.id
   const selectedProduct = renewalData?.product?.id
@@ -223,7 +222,6 @@ const WorkspaceRenewFormWithCycle = ({
   ])
 
   // Fetch product plan prices if not available in Redux store
-  console.log({ sssss: renewalData })
   useEffect(() => {
     ;(async () => {
       if (

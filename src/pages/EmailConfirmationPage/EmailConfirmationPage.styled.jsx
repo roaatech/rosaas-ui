@@ -33,7 +33,7 @@ export const Wrapper = styled.main`
   }
 
   .logo {
-    width: 250px;
+    width: 200px;
     display: inline-block;
     margin-bottom: 0.5rem;
   }
