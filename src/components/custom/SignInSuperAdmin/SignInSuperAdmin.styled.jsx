@@ -34,6 +34,11 @@ const LoginWrapper = styled.div`
     outline-offset: 0;
     box-shadow: none;
   }
+  .recaptcha-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `
 
 export default LoginWrapper

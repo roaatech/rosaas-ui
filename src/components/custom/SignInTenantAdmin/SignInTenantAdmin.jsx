@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux'
 import ReCAPTCHA from 'react-google-recaptcha'
 const SignInTenantAdmin = () => {
   const [recaptchaToken, setRecaptchaToken] = useState(null)
-  const recaptchaRef = useRef(null)
+  const recaptchaRef = React.createRef()
   const redirectPath = useSelector(
     (state) => state.auth.redirectPath?.redirectPath
   )
@@ -40,7 +40,10 @@ const SignInTenantAdmin = () => {
       return
     }
 
-    const loginPass = await SignInTenantAdminAsync(values)
+    const loginPass = await SignInTenantAdminAsync({
+      ...values,
+      recaptchaToken,
+    })
     if (loginPass) {
       redirectPath
         ? navigate(redirectPath)
@@ -100,14 +103,16 @@ const SignInTenantAdmin = () => {
                 />
               </div>
             </div>
-            <div>
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey="6Le6ARIqAAAAAC-nMJ_p2ekGqvMvEt-gqJQwC4HV"
-                onChange={onRecaptchaChange}
-              />
-              <div className="error-message">
-                {errors.recaptcha && <div>{errors.recaptcha}</div>}
+            <div className="recaptcha-container mt-2 mb-4">
+              <div>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey="6Ld6VRsqAAAAAH425zj_vqnLezTXzsJmBWC4-M8R"
+                  onChange={(val) => setRecaptchaToken(val)}
+                />
+                <div className="error-message">
+                  {errors.recaptcha && <div>{errors.recaptcha}</div>}
+                </div>
               </div>
             </div>
             <div className="pt-1">

@@ -16,10 +16,14 @@ import useRequest from '../../../../axios/apis/useRequest'
 import { Routes } from '../../../../routes'
 import Wrapper from './ProductOwnerSignUp.styled'
 import { MdOutlineArrowRight } from 'react-icons/md'
+import { useRef, useState } from 'react'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 const CreateProductOwner = () => {
-  let redirectPath = useSelector(
-    (state) => state.auth.redirectPath.redirectPath
+  const [recaptchaToken, setRecaptchaToken] = useState(null)
+  const recaptchaRef = useRef(null)
+  const redirectPath = useSelector(
+    (state) => state.auth.redirectPath?.redirectPath
   )
   const { signUpPOwner } = useRequest()
   const navigate = useNavigate()
@@ -42,24 +46,36 @@ const CreateProductOwner = () => {
       .required('Confirm Password is required'),
   })
 
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+    if (!recaptchaToken) {
+      setErrors({ recaptcha: 'Please complete the reCAPTCHA' })
+      setSubmitting(false)
+      return
+    }
+
     const productOwnerData = {
       fullName: values.fullName,
       mobileNumber: values.mobileNumber,
       email: values.email,
       password: values.password,
       confirmPassword: values.confirmPassword,
+      recaptchaToken,
     }
+
     const createSuccess = await signUpPOwner(productOwnerData)
     if (createSuccess) {
       if (redirectPath) {
         navigate(redirectPath)
-      } else if (createSuccess.data.data.userAccount.userType == 4) {
+      } else if (createSuccess.data.data.userAccount.userType === 4) {
         navigate(Routes.workSpace.path)
       } else {
         navigate(Routes.Dashboard.path)
       }
     }
+  }
+
+  const onRecaptchaChange = (token) => {
+    setRecaptchaToken(token)
   }
 
   return (
@@ -69,14 +85,12 @@ const CreateProductOwner = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, errors }) => (
           <Form className="mt-4">
             <div>
-              <Card.Header className="mb-3 ">
+              <Card.Header className="mb-3">
                 <Card.Title className="mb-0">
-                  {/* <MdOutlineArrowRight className="mx-0" /> */}
                   <FormattedMessage id="Admin-Info" />
-                  <br className="mt-1" />
                 </Card.Title>
               </Card.Header>
               <label htmlFor="fullName" className="pb-2">
@@ -181,12 +195,22 @@ const CreateProductOwner = () => {
                 />
               </div>
             </div>
+            <div className="recaptcha-container mt-2 mb-4">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey="6Ld6VRsqAAAAAH425zj_vqnLezTXzsJmBWC4-M8R"
+                onChange={onRecaptchaChange}
+              />
+              {errors.recaptcha && (
+                <div className="error-message">{errors.recaptcha}</div>
+              )}
+            </div>
             <div className="pt-1">
               <Button
                 variant="primary"
                 type="submit"
                 className="w-100"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !recaptchaToken}
               >
                 <FormattedMessage id="signUp" />
               </Button>

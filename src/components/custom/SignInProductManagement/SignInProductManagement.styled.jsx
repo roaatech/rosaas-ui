@@ -28,7 +28,11 @@ const LoginWrapper = styled.div`
     border-radius: 0;
     /* border-left: 2px solid var(--primary4) !important; */
   }
-
+  .recaptcha-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .p-inputtext:enabled:focus {
     outline: 0 none;
     outline-offset: 0;

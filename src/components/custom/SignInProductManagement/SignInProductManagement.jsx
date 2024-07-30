@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import LoginWrapper from './SignInProductManagement.styled.jsx'
 import { FormattedMessage } from 'react-intl'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,8 +13,11 @@ import { Routes } from '../../../routes.js'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import ReCAPTCHA from 'react-google-recaptcha'
 const SignInProductManagement = () => {
-  let redirectPath = useSelector(
+  const [recaptchaToken, setRecaptchaToken] = useState(null)
+  const recaptchaRef = useRef(null)
+  const redirectPath = useSelector(
     (state) => state.auth.redirectPath?.redirectPath
   )
 
@@ -30,8 +33,17 @@ const SignInProductManagement = () => {
     password: Yup.string().required('Password is required'),
   })
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    const loginPass = await SignInProductOwnerAsync(values)
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+    if (!recaptchaToken) {
+      setErrors({ recaptcha: 'Please complete the reCAPTCHA' })
+      setSubmitting(false)
+      return
+    }
+
+    const loginPass = await SignInProductOwnerAsync({
+      ...values,
+      recaptchaToken,
+    })
     if (loginPass) {
       redirectPath
         ? navigate(redirectPath)
@@ -41,6 +53,10 @@ const SignInProductManagement = () => {
     }
   }
 
+  const onRecaptchaChange = (token) => {
+    setRecaptchaToken(token)
+  }
+
   return (
     <LoginWrapper>
       <Formik
@@ -48,7 +64,7 @@ const SignInProductManagement = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, errors }) => (
           <Form className="mt-4">
             <div>
               <label htmlFor="email" className="pb-2">
@@ -87,6 +103,18 @@ const SignInProductManagement = () => {
                 />
               </div>
             </div>
+            <div className="recaptcha-container mt-2 mb-4">
+              <div>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey="6Ld6VRsqAAAAAH425zj_vqnLezTXzsJmBWC4-M8R"
+                  onChange={onRecaptchaChange}
+                />
+                <div className="error-message">
+                  {errors.recaptcha && <div>{errors.recaptcha}</div>}
+                </div>
+              </div>
+            </div>
             <div className="pt-1">
               <Button
                 variant="primary"
@@ -97,9 +125,7 @@ const SignInProductManagement = () => {
                 <FormattedMessage id="signIn" />
               </Button>
             </div>
-
             <div className="pt-2 text-center">
-              {/* Additional message for product owners */}
               <span>
                 <FormattedMessage id="join-as-product-owner" />
               </span>{' '}

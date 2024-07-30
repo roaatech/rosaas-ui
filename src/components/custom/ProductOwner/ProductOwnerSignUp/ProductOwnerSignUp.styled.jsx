@@ -5,6 +5,12 @@ const Wrapper = styled.div`
   .inputContainer {
     margin-bottom: 1.5rem;
   }
+
+  .recaptcha-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .inputContainerWithIcon {
     /* border: 2px solid var(--primary4); */
     border-radius: 7px;

@@ -14,11 +14,16 @@ import {
 } from 'react-icons/bs'
 import { Routes } from '../../../routes'
 import { useSelector } from 'react-redux'
+import ReCAPTCHA from 'react-google-recaptcha'
+import { useRef, useState } from 'react'
 
 const SignUp = () => {
-  let redirectPath = useSelector(
-    (state) => state.auth.redirectPath.redirectPath
+  const [recaptchaToken, setRecaptchaToken] = useState(null)
+  const recaptchaRef = useRef(null)
+  const redirectPath = useSelector(
+    (state) => state.auth.redirectPath?.redirectPath
   )
+
   const { signUp } = useRequest()
   const navigate = useNavigate()
 
@@ -40,8 +45,18 @@ const SignUp = () => {
       .required('Confirm Password is required'),
   })
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    const signUpSuccess = await signUp(values)
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+    if (!recaptchaToken) {
+      setErrors({ recaptcha: 'Please complete the reCAPTCHA' })
+      setSubmitting(false)
+      return
+    }
+
+    const signUpSuccess = await signUp({
+      ...values,
+      recaptchaToken,
+    })
+
     if (signUpSuccess) {
       !signUpSuccess.data.data.userAccount.emailConfirmed
         ? navigate(Routes.EmailConfirmationPage.path)
@@ -53,6 +68,10 @@ const SignUp = () => {
     }
   }
 
+  const onRecaptchaChange = (token) => {
+    setRecaptchaToken(token)
+  }
+
   return (
     <Wrapper>
       <Formik
@@ -60,7 +79,7 @@ const SignUp = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, errors }) => (
           <Form className="mt-4">
             <div>
               <label htmlFor="fullName" className="pb-2">
@@ -167,7 +186,20 @@ const SignUp = () => {
                 />
               </div>
             </div>
-            {/* (Existing code) */}
+
+            <div className="recaptcha-container mt-2 mb-4">
+              <div>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey="6Ld6VRsqAAAAAH425zj_vqnLezTXzsJmBWC4-M8R"
+                  onChange={onRecaptchaChange}
+                />
+                <div className="error-message">
+                  {errors.recaptcha && <div>{errors.recaptcha}</div>}
+                </div>
+              </div>
+            </div>
+
             <div className="pt-1">
               <Button
                 variant="primary"
