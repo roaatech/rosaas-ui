@@ -31,9 +31,11 @@ const useApi = () => {
       //* add auth
       if (!noAuthRoutes.includes(config.url)) {
         const localStorageToken = localStorage.getItem('token')
-        config.headers.Authorization = localStorageToken
-          ? `Bearer ${localStorageToken}`
-          : ''
+        if (localStorageToken) {
+          config.headers.Authorization = `Bearer ${localStorageToken}`
+        } else {
+          dispatch(logOut())
+        }
       } else {
         config.headers['Client-Id'] = Client_id
       }
@@ -69,7 +71,7 @@ const useApi = () => {
     },
     async (err) => {
       dispatch(changePreloader(false))
-      const isSysCode2005 = err.response.data.metadata.errors.some(
+      const isSysCode2005 = err.response?.data.metadata?.errors.some(
         (element) => {
           return element.sysCode == 2005 ? true : false
         }

@@ -36,7 +36,22 @@ export const Wrapper = styled.div`
     transition: all 0.3s ease;
     cursor: pointer;
   }
+  .redirect-card-product-management {
+    min-width: 230px;
+    height: 100px;
+    margin: 0 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
 
+  .redirect-card-product-management:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    color: var(--second-color);
+  }
   .redirect-card:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);

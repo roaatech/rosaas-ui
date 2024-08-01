@@ -21,7 +21,7 @@ const usePOReq = () => {
     return await Request.delete(`management/sadmin/v1/productowners/${POId}`)
   }
   const isProductOwnerRegistered = async () => {
-    return await Request.get(`management/sadmin/v1/productowners/is-registered`)
+    return await Request.get(`management/sadmin/v1/productowners/profile`)
   }
   const GetCurrentProductOwnerByUserId = async (userId) => {
     return await Request.get(`management/sadmin/v1/productowners/current`)

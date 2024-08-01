@@ -39,14 +39,6 @@ const LoginWrapper = styled.div`
     justify-content: center;
     align-items: center;
   }
-  .link-underline {
-    text-decoration: underline;
-    color: var(--second-color);
-    text-decoration-color: var(--second-color) !important;
-  }
-  .link-underline:hover {
-    color: var(--second-color-darker);
-  }
 `
 
 export default LoginWrapper

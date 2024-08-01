@@ -87,20 +87,34 @@ const SignInTenantAdmin = () => {
                 <FormattedMessage id="yourPassword" />
               </label>
               <div className="inputContainer">
-                <div className="inputContainerWithIcon">
-                  <BsUnlockFill />
-                  <Field
-                    type="password"
-                    id="password"
+                <div>
+                  <div className="inputContainerWithIcon">
+                    <BsUnlockFill />
+                    <Field
+                      type="password"
+                      id="password"
+                      name="password"
+                      as={InputText}
+                    />
+                  </div>
+
+                  <ErrorMessage
                     name="password"
-                    as={InputText}
+                    component="div"
+                    className="error-message"
                   />
                 </div>
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="error-message"
-                />
+                <div
+                  className=" m-auto mt-1"
+                  style={{ color: 'var(--second-color)' }}
+                >
+                  <Link
+                    to={Routes.ResetPasswordRequest.path}
+                    className="link-underline "
+                  >
+                    <FormattedMessage id="forgotPassword?" />
+                  </Link>
+                </div>
               </div>
             </div>
             <div className="recaptcha-container mt-2 mb-4">
@@ -129,7 +143,7 @@ const SignInTenantAdmin = () => {
               <span>
                 <FormattedMessage id="not-Registered?" />
               </span>{' '}
-              <Link className="fw-bold" to={Routes.SignUp.path}>
+              <Link to={Routes.SignUp.path} className="link-underline">
                 <FormattedMessage id="create-Account" />
               </Link>
             </div>

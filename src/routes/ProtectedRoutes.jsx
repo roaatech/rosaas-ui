@@ -7,6 +7,7 @@ import { updateUserInfoAttribute } from '../store/slices/auth'
 
 const POwnerChecker = ({ page }) => {
   const userInfo = useSelector((state) => state.auth.userInfo)
+  console.log({ userInfo })
   const userRole = userInfo?.userType
   const { isProductOwnerRegistered } = useRequest()
   const dispatch = useDispatch()
@@ -27,11 +28,12 @@ const POwnerChecker = ({ page }) => {
   }, [userInfo?.id])
 
   if (
+    userInfo.ProductOwnerInfo &&
     userRole === 'clientAdmin' &&
-    userInfo.ProductOwnerInfo?.id == '00000000-0000-0000-0000-000000000000'
+    userInfo.ProductOwnerInfo == null
   ) {
     return <Navigate to={Routes.productsOwnerReg.path} />
-  } else {
+  } else if (userRole === 'clientAdmin' && userInfo.ProductOwnerInfo != null) {
     return page
   }
 }

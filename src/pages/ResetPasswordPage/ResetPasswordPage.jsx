@@ -1,21 +1,17 @@
 import { Button, Col, Container, Row } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import logo from '../../assets/img/brand/rosas.svg'
-import SignUp from '../../components/custom/SignUp/SignUp'
-import { Wrapper } from './EmailConfirmationPage.styled'
-import { useLocation } from 'react-router-dom'
-import CreateProductOwner from '../../components/custom/ProductOwner/ProductOwnerSignUp/ProductOwnerSignUp'
-import { Routes } from '../../routes'
-import ProductOwnerReg from '../../components/custom/ProductOwner/ProductOwnerReg/ProductOwnerReg'
-import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
-import { BsBoxSeam } from 'react-icons/bs'
+import { Wrapper } from './ResetPasswordPage.styled'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-const EmailConfirmationPage = () => {
+import { Routes } from '../../routes'
+
+const ResetPasswordPage = () => {
   const userInfo = useSelector((state) => state.auth.userInfo)
   const handleButtonClick = () => {
     window.location.href = Routes.mainPage.path
   }
+
   return (
     <Wrapper>
       <section
@@ -29,13 +25,13 @@ const EmailConfirmationPage = () => {
               className="d-flex align-items-center justify-content-center"
             >
               <div className="cardCont shadow-soft border border-round border-light p-4 p-lg-5 w-100 fmxw-500 pb-0">
-                <div className="text-center text-md-center  mt-md-0">
+                <div className="text-center text-md-center mt-md-0">
                   <img src={logo} alt="RoSaaS Logo" className="logo" />
                   <h2
                     className="mb-0 mt-2"
                     style={{ color: 'var(--primary-color-1)' }}
                   >
-                    Email Confirmation
+                    Reset Password
                   </h2>
                   <br className="my-4" />
                 </div>
@@ -43,23 +39,23 @@ const EmailConfirmationPage = () => {
                 <p className="text-center">
                   {userInfo.email ? (
                     <>
-                      <FormattedMessage id={'We-Have-Sent-Email-To'} />
+                      <FormattedMessage
+                        id={'We-Have-Sent-Reset-Password-Email-To'}
+                      />
                       {'  '}
                       <span className="email">{userInfo.email}</span>
                       {'  '}
-                      <FormattedMessage
-                        id={'to-confirm-the validity-of-your-email-address.'}
-                      />{' '}
+                      <FormattedMessage id={'to-reset-your-password.'} />
                     </>
                   ) : (
                     <>
-                      Your link has been sent to your email, please activate it.{' '}
-                      {'  '}
+                      A reset link has been sent to your email, please check
+                      your inbox.{'  '}
                     </>
                   )}
                   <FormattedMessage
                     id={
-                      'After-receicing-the-email-follow-the-link-provided-to-complete-your-progress.'
+                      'After-receiving-the-email-follow-the-link-provided-to-reset-your-password.'
                     }
                   />
                 </p>
@@ -82,4 +78,4 @@ const EmailConfirmationPage = () => {
   )
 }
 
-export default EmailConfirmationPage
+export default ResetPasswordPage

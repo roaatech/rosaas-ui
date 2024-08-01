@@ -26,7 +26,7 @@ const HomePage = () => {
     { component: Component, path, type, roles },
     index
   ) => {
-    if (roles.includes(userRole) || roles === '*') {
+    if (roles?.includes(userRole) || roles === '*') {
       return (
         <Route
           key={index}

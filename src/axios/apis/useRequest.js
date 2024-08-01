@@ -29,6 +29,8 @@ const useRequest = () => {
     signUpPOwner,
     SignInAdminAsync,
     confirmEmail,
+    requestPasswordReset,
+    resetPassword,
   } = useUserReq()
   const {
     createTenantRequest,
@@ -310,6 +312,8 @@ const useRequest = () => {
     GetCurrentProductOwnerByUserId,
     SignInAdminAsync,
     confirmEmail,
+    requestPasswordReset,
+    resetPassword,
   }
 }
 export default useRequest

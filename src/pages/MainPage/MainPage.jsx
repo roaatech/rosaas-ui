@@ -14,6 +14,7 @@ import {
   faSignInAlt,
   faStore,
   faTachometerAlt,
+  faUserCog,
   faUserPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
@@ -119,22 +120,32 @@ const MainPage = () => {
               </Card.Body>
             </Card>
           </div>
-          {/* <Row className="justify-content-center mt-5">
+          <Row className="justify-content-center mt-5">
             <Col lg={9} xl={8} className="text-center">
-              <span className="mt-4" style={{ fontSize: 'var(--largeFont)' }}>
-                <FormattedMessage id="Unlock new opportunities by joining us and showcasing your product on our platform" />
-              </span>
+              <h3 className="mt-4">
+                <FormattedMessage id="Unlock new opportunities by joining us and showcasing your product on our platform." />
+              </h3>
+              <div className="row justify-content-center">
+                <div
+                  className="col-lg-7 col-xl-9 text-center"
+                  style={{ fontSize: 'var(--largeFont)' }}
+                >
+                  Share your company's innovative products on RoSaaS, the
+                  cutting-edge platform designed to transform your cloud-based
+                  solutions into successful SaaS offerings.
+                </div>
+              </div>
               <div className="redirect-icons">
                 <Card
                   onClick={() => navigate(Routes.POwnerSignUp.path)}
-                  className="redirect-card mt-3"
+                  className="redirect-card-product-management mt-3"
                 >
                   <Card.Body>
                     <Row className="justify-content-center ">
                       <span className="redirect-link ">
-                        <FontAwesomeIcon icon={faUserPlus} />
+                        <FontAwesomeIcon icon={faUserCog} />
                         <span>
-                          <FormattedMessage id="Sign-Up-as-Product-Owner" />
+                          <FormattedMessage id="Product-Management-Area" />
                         </span>
                       </span>
                     </Row>
@@ -142,7 +153,7 @@ const MainPage = () => {
                 </Card>
               </div>
             </Col>
-          </Row> */}
+          </Row>
         </div>
       </section>
       <div className="copy">

@@ -101,6 +101,17 @@ const SignInProductManagement = () => {
                   component="div"
                   className="error-message"
                 />
+                <div
+                  className=" m-auto mt-1"
+                  style={{ color: 'var(--second-color)' }}
+                >
+                  <Link
+                    to={Routes.ResetPasswordRequest.path}
+                    className="link-underline "
+                  >
+                    <FormattedMessage id="forgotPassword?" />
+                  </Link>
+                </div>
               </div>
             </div>
             <div className="recaptcha-container mt-2 mb-4">
@@ -129,7 +140,7 @@ const SignInProductManagement = () => {
               <span>
                 <FormattedMessage id="join-as-product-owner" />
               </span>{' '}
-              <Link className="fw-bold" to={Routes.POwnerSignUp.path}>
+              <Link className="link-underline " to={Routes.POwnerSignUp.path}>
                 <FormattedMessage id="Sign-up-your-product-today!" />
               </Link>
             </div>

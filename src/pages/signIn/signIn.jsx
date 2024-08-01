@@ -8,11 +8,12 @@ import SignInProductManagement from '../../components/custom/SignInProductManage
 import SignInSuperAdmin from '../../components/custom/SignInSuperAdmin/SignInSuperAdmin'
 import { Wrapper } from './signIn.styled'
 import logo from '../../assets/img/brand/rosas.svg'
+import ResetPassword from '../../components/custom/ResetPassword/ResetPassword'
 
 const SignInPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
-
+  console.log({ location })
   const renderSignInComponent = () => {
     switch (location.pathname) {
       case Routes.SignInTenantAdmin.path:
@@ -21,6 +22,10 @@ const SignInPage = () => {
         return <SignInProductManagement />
       case Routes.SignInSuperAdmin.path:
         return <SignInSuperAdmin />
+      case Routes.ResetPasswordConfirm.path:
+        return <ResetPassword />
+      case Routes.ResetPasswordRequest.path:
+        return <ResetPassword />
       default:
         return null
     }
@@ -42,6 +47,18 @@ const SignInPage = () => {
             <FormattedMessage id="Admin-Panel" />
           </>
         )
+      case Routes.ResetPasswordRequest.path:
+        return (
+          <>
+            {'  '}
+            <h3>
+              <FormattedMessage id="Forgot your password?" />
+            </h3>
+            <p>
+              <FormattedMessage id="Enter your email address and we will send you instructions to reset your password." />
+            </p>{' '}
+          </>
+        )
       default:
         return null
     }
@@ -53,6 +70,8 @@ const SignInPage = () => {
 
   return (
     (location.pathname === Routes.SignInSuperAdmin.path ||
+      location.pathname === Routes.ResetPasswordRequest.path ||
+      location.pathname === Routes.ResetPasswordConfirm.path ||
       location.pathname === Routes.SignInTenantAdmin.path ||
       location.pathname === Routes.ProductManagementSignIn.path) && (
       <Wrapper>
@@ -70,8 +89,12 @@ const SignInPage = () => {
                   <div className="text-center text-md-center mb-4 mt-md-0">
                     <img src={logo} alt="RoSaaS Logo" className="logo" />
                     <h3 className="mb-0">
-                      <FormattedMessage id="singInTo" />{' '}
-                      <span className="rosaas">RoSaaS</span>
+                      {location.pathname.includes('sign-in') && (
+                        <>
+                          <FormattedMessage id="singInTo" />{' '}
+                          <span className="rosaas">RoSaaS</span>
+                        </>
+                      )}
                       {renderHeaderText()}
                     </h3>
                   </div>
@@ -82,7 +105,7 @@ const SignInPage = () => {
             {shouldRenderCopyLink && (
               <div className="copy">
                 <span
-                  className="custom-div"
+                  className="custom-div fw-bold"
                   onClick={() => navigate(Routes.ProductManagementSignIn.path)}
                 >
                   <FormattedMessage id="Product-Management-Area" />

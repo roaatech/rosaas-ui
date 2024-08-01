@@ -14,7 +14,6 @@ import NotFound from './pages/NotFoundPage/NotFoundPage'
 import SignUpPage from './pages/SignUpPage/SignUpPage'
 import MainPage from './pages/MainPage/MainPage'
 import PricingPage from './pages/PricingPage/PricingPage'
-import CheckoutPage from './components/custom/CheckoutStep/CheckoutStep'
 import PaymentSuccess from './pages/PaymentSuccess/paymentSuccess'
 import TwoStepProcessPage from './pages/TwoStepPage/TwoStepPage'
 import CreatedSuccess from './pages/CreatedSuccess/CreatedSuccess'
@@ -28,6 +27,7 @@ import ProductOwnerDetails from './components/custom/ProductOwner/ProdcutOwnerDe
 import POwnerChecker from './routes/ProtectedRoutes'
 import EmailConfirmationPage from './pages/EmailConfirmationPage/EmailConfirmationPage'
 import ConfirmAccountPage from './pages/ConfirmAccountPage/ConfirmAccountPage'
+import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 const adminPanel = '/admin-panel'
 export const Routes = {
   Dashboard: {
@@ -53,9 +53,15 @@ export const Routes = {
     roles: '*',
     type: 'noSidebar',
   },
+  ResetPasswordConfirmPage: {
+    path: `/Reset-Password-confirmation`,
+    component: ResetPasswordPage,
+    roles: '*',
+    type: 'noSidebar',
+  },
   mainPage: {
     path: '/',
-    component: () => <POwnerChecker page={<MainPage />} />,
+    component: MainPage,
     roles: '*',
     type: 'noSidebar',
   },
@@ -143,6 +149,18 @@ export const Routes = {
   SignUp: {
     path: '/workspace/sign-up',
     component: SignUpPage,
+    roles: ['notAuth'],
+    type: 'noSidebar',
+  },
+  ResetPasswordRequest: {
+    path: '/reset-password-request',
+    component: signIn,
+    roles: ['notAuth'],
+    type: 'noSidebar',
+  },
+  ResetPasswordConfirm: {
+    path: '/auth/reset-password',
+    component: signIn,
     roles: ['notAuth'],
     type: 'noSidebar',
   },

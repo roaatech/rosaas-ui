@@ -255,7 +255,7 @@ export default (props = {}) => {
   }
 
   const productsIsOpen =
-    !pathname.includes('productsOwners') && pathname.includes('products')
+    !pathname.includes('productsOwners') && pathname.includes('products/')
       ? 'open'
       : 'close'
   const productsOwnersIsOpen = pathname.includes('productsOwners')
@@ -319,6 +319,17 @@ export default (props = {}) => {
               <img src={selectedLogo} alt="logo" className="my-3 logo" />
 
               <QuickActions setSearchValue={setSearchValues} />
+              {userRole == 'clientAdmin' && (
+                <NavItem
+                  key={'details'}
+                  title={'Info'}
+                  link={`${Routes.productsOwners.path}/info`}
+                  icon={MdInfo}
+                  isActive={location.pathname.includes(
+                    `${Routes.productsOwners.path}/info`
+                  )}
+                />
+              )}
               {active.length ? (
                 <CollapsableNavItem
                   eventKey={activeIsOpen}
@@ -367,17 +378,7 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : null}
-              {userRole == 'clientAdmin' && (
-                <NavItem
-                  key={'details'}
-                  title={'Info'}
-                  link={`${Routes.productsOwners.path}/info`}
-                  icon={MdInfo}
-                  isActive={location.pathname.includes(
-                    `${Routes.productsOwners.path}/info`
-                  )}
-                />
-              )}
+
               {(userRole == 'productOwner' ||
                 userRole == 'superAdmin' ||
                 userRole == 'clientAdmin') &&
@@ -417,7 +418,7 @@ export default (props = {}) => {
                 </CollapsableNavItem>
               ) : null}
 
-              {(userRole == 'productOwner' || userRole == 'superAdmin') &&
+              {userRole == 'superAdmin' &&
               Array.isArray(
                 searchValue.length ? filteredProducts : unFilteredProducts
               ) &&

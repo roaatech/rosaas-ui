@@ -135,7 +135,7 @@ const QuickAction = ({
                   <FormattedMessage id="Add-Product" />
                 </Dropdown.Item>
               )}
-              {(userRole == 'superAdmin' || userRole == 'clientAdmin') && (
+              {userRole == 'superAdmin' && (
                 <Dropdown.Item
                   onSelect={() => setVisiblePO(true)}
                   className="text-dark"

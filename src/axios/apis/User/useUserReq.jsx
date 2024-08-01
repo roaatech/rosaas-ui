@@ -25,6 +25,12 @@ const useUserReq = () => {
   const signUp = async (data) => {
     return await Request.post('identity/tadmin/v1/Auth/Signup', data)
   }
+  const requestPasswordReset = async (data) => {
+    return await Request.post('identity/v1/Account/ForgotPassword', data)
+  }
+  const resetPassword = async (data) => {
+    return await Request.post('identity/v1/Account/ResetPassword', data)
+  }
   const confirmEmail = async (data) => {
     return await Request.post('identity/v1/Account/ConfirmEmail', data)
   }
@@ -47,6 +53,8 @@ const useUserReq = () => {
     logOut,
     signUp,
     confirmEmail,
+    requestPasswordReset,
+    resetPassword,
   }
 }
 

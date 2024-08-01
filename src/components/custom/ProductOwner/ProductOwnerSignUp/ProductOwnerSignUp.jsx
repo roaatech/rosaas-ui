@@ -64,7 +64,9 @@ const CreateProductOwner = () => {
 
     const createSuccess = await signUpPOwner(productOwnerData)
     if (createSuccess) {
-      if (redirectPath) {
+      if (!createSuccess.data.data.userAccount.emailConfirmed) {
+        navigate(Routes.EmailConfirmationPage.path)
+      } else if (redirectPath) {
         navigate(redirectPath)
       } else if (createSuccess.data.data.userAccount.userType === 4) {
         navigate(Routes.workSpace.path)
