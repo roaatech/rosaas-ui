@@ -137,7 +137,7 @@ const MainPage = () => {
               </div>
               <div className="redirect-icons">
                 <Card
-                  onClick={() => navigate(Routes.POwnerSignUp.path)}
+                  onClick={() => navigate(Routes.ProductManagementSignIn.path)}
                   className="redirect-card-product-management mt-3"
                 >
                   <Card.Body>
