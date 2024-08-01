@@ -75,6 +75,21 @@ const ConfirmAccountPage = () => {
                     <p className="text-center">
                       <FormattedMessage id="You-can-now-log-in-with-your-account." />
                     </p>
+                    <p className="text-center">
+                      <FormattedMessage id="You-will-be-redirected-to-the-login-page-shortly.-If-not-redirected,-please-click-the-link-below." />
+                    </p>
+                    <p className="text-center">
+                      <a
+                        href={
+                          ut === 'TenantAdmin'
+                            ? Routes.SignInTenantAdmin.path
+                            : Routes.ProductManagementSignIn.path
+                        }
+                        style={{ color: 'var(--second-color)' }}
+                      >
+                        <FormattedMessage id="Go-to-Login-Page" />
+                      </a>
+                    </p>
                   </div>
                 </Col>
               </Row>
@@ -112,6 +127,19 @@ const ConfirmAccountPage = () => {
                         </p>
                         <p className="text-center">
                           <FormattedMessage id="Please-try-again-or-contact-support." />
+                        </p>
+
+                        <p className="text-center">
+                          <a
+                            href={
+                              ut === 'TenantAdmin'
+                                ? Routes.SignInTenantAdmin.path
+                                : Routes.ProductManagementSignIn.path
+                            }
+                            style={{ color: 'var(--second-color)' }}
+                          >
+                            <FormattedMessage id="Go-to-Login-Page" />
+                          </a>
                         </p>
                       </div>
                     </Col>

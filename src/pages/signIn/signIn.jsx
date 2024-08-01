@@ -38,6 +38,19 @@ const SignInPage = () => {
           <>
             <br />
             <FormattedMessage id="Product-Management-Area" />
+            <div>
+              <FormattedMessage id="singInTo" />{' '}
+              <span className="rosaas">RoSaaS</span>
+            </div>
+          </>
+        )
+      case Routes.SignInTenantAdmin.path:
+        return (
+          <>
+            <div>
+              <FormattedMessage id="singInTo" />{' '}
+              <span className="rosaas">RoSaaS</span>
+            </div>
           </>
         )
       case Routes.SignInSuperAdmin.path:
@@ -45,6 +58,10 @@ const SignInPage = () => {
           <>
             {'  '}
             <FormattedMessage id="Admin-Panel" />
+            <div>
+              <FormattedMessage id="singInTo" />{' '}
+              <span className="rosaas">RoSaaS</span>
+            </div>
           </>
         )
       case Routes.ResetPasswordRequest.path:
@@ -89,12 +106,7 @@ const SignInPage = () => {
                   <div className="text-center text-md-center mb-4 mt-md-0">
                     <img src={logo} alt="RoSaaS Logo" className="logo" />
                     <h3 className="mb-0">
-                      {location.pathname.includes('sign-in') && (
-                        <>
-                          <FormattedMessage id="singInTo" />{' '}
-                          <span className="rosaas">RoSaaS</span>
-                        </>
-                      )}
+                      {location.pathname.includes('sign-in') && <></>}
                       {renderHeaderText()}
                     </h3>
                   </div>

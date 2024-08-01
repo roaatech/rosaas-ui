@@ -11,6 +11,7 @@ import logoAr from '../../assets/img/brand/rosas-ar.svg'
 import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  faCogs,
   faSignInAlt,
   faStore,
   faTachometerAlt,
@@ -42,7 +43,7 @@ const MainPage = () => {
 
   const isRunningInIframe = window.self !== window.top
   let userRole = useSelector((state) => state.auth.userInfo.userType)
-
+  console.log({ userRole })
   return (
     <Wrapper>
       <section style={{ minHeight: '92vh' }}>
@@ -120,12 +121,31 @@ const MainPage = () => {
               </Card.Body>
             </Card>
           </div>
-          <Row className="justify-content-center mt-5">
+          <div className="redirect-icons next-line">
+            {!userRole && (
+              <Card
+                onClick={() => navigate(Routes.ProductManagementSignIn.path)}
+                className="redirect-card-product-management mt-3"
+              >
+                <Card.Body>
+                  <Row className="justify-content-center ">
+                    <span className="redirect-link ">
+                      <FontAwesomeIcon icon={faCogs} />
+                      <span>
+                        <FormattedMessage id="Product-Management-Area" />
+                      </span>
+                    </span>
+                  </Row>
+                </Card.Body>
+              </Card>
+            )}
+          </div>
+          <Row className="justify-content-center">
             <Col lg={9} xl={8} className="text-center">
-              <h3 className="mt-4">
+              {/* <h3 className="mt-4">
                 <FormattedMessage id="Unlock new opportunities by joining us and showcasing your product on our platform." />
-              </h3>
-              <div className="row justify-content-center">
+              </h3> */}
+              {/* <div className="row justify-content-center">
                 <div
                   className="col-lg-7 col-xl-9 text-center"
                   style={{ fontSize: 'var(--largeFont)' }}
@@ -134,8 +154,8 @@ const MainPage = () => {
                   cutting-edge platform designed to transform your cloud-based
                   solutions into successful SaaS offerings.
                 </div>
-              </div>
-              <div className="redirect-icons">
+              </div> */}
+              {/* <div className="redirect-icons">
                 <Card
                   onClick={() => navigate(Routes.ProductManagementSignIn.path)}
                   className="redirect-card-product-management mt-3"
@@ -143,7 +163,7 @@ const MainPage = () => {
                   <Card.Body>
                     <Row className="justify-content-center ">
                       <span className="redirect-link ">
-                        <FontAwesomeIcon icon={faUserCog} />
+                        <FontAwesomeIcon icon={faCogs} />
                         <span>
                           <FormattedMessage id="Product-Management-Area" />
                         </span>
@@ -151,7 +171,7 @@ const MainPage = () => {
                     </Row>
                   </Card.Body>
                 </Card>
-              </div>
+              </div> */}
             </Col>
           </Row>
         </div>

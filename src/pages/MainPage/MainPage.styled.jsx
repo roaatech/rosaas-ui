@@ -67,7 +67,9 @@ export const Wrapper = styled.div`
 
   .redirect-link:hover {
   }
-
+  .next-line {
+    margin-top: 4px;
+  }
   .redirect-icons span {
     margin-top: 5px;
   }
