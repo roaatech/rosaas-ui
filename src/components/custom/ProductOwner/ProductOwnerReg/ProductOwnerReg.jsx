@@ -10,6 +10,7 @@ import useRequest from '../../../../axios/apis/useRequest'
 import { Routes } from '../../../../routes'
 import Wrapper from './ProductOwnerReg.styled'
 import { updateUserInfoAttribute } from '../../../../store/slices/auth'
+import { toast } from 'react-toastify'
 
 const ProductOwnerReg = () => {
   const navigate = useNavigate()
@@ -30,7 +31,9 @@ const ProductOwnerReg = () => {
         /^[a-zA-Z0-9_-]+$/,
         <FormattedMessage id="English-Characters-Numbers-and-Underscores-are-only-accepted" />
       ),
-    displayName: Yup.string().required('Display Name is required'),
+    displayName: Yup.string().required(
+      <FormattedMessage id="Display-Name-is-required" />
+    ),
   })
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -48,8 +51,15 @@ const ProductOwnerReg = () => {
           value: createSuccess.data.data,
         })
       )
-      navigate(Routes.Dashboard.path)
+      toast.success('Registration successful', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 4000,
+      })
+      setTimeout(() => {
+        navigate(Routes.Dashboard.path)
+      }, 4000)
     }
+    setSubmitting(false)
   }
 
   const generateUniqueName = (displayName) => {
@@ -78,11 +88,10 @@ const ProductOwnerReg = () => {
       >
         {({ values, setFieldValue, isSubmitting }) => {
           return (
-            <Form className="mt-4">
+            <Form className={`mt-4 ${isSubmitting && 'form-submitting'}`}>
               <div>
                 <Card.Header className="mb-3 ">
                   <Card.Title className="mb-0">
-                    {/* <MdOutlineArrowRight className="mx-0" /> */}
                     <FormattedMessage id="Company-Info" />
                     <br className="mt-1" />
                   </Card.Title>

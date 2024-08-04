@@ -1,5 +1,5 @@
 import { Col, Container, Row } from '@themesberg/react-bootstrap'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import logo from '../../assets/img/brand/rosas.svg'
 import { Wrapper } from './ConfirmAccountPage.styled'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -18,6 +18,8 @@ const ConfirmAccountPage = () => {
   const { confirmEmail } = useRequest()
   const navigate = useNavigate()
   const [isVerified, setIsVerified] = useState()
+  const [counter, setCounter] = useState(12)
+  const intl = useIntl()
 
   useEffect(() => {
     if (!email || !code) {
@@ -30,11 +32,17 @@ const ConfirmAccountPage = () => {
         const allData = await confirmEmail({ email, code })
         setIsVerified(allData?.data?.metadata.success === true)
 
-        setTimeout(() => {
-          ut === 'TenantAdmin'
-            ? navigate(Routes.SignInTenantAdmin.path)
-            : navigate(Routes.ProductManagementSignIn.path)
-        }, 5000)
+        const countdown = setInterval(() => {
+          setCounter((prevCounter) => {
+            if (prevCounter === 1) {
+              clearInterval(countdown)
+              ut === 'TenantAdmin'
+                ? navigate(Routes.SignInTenantAdmin.path)
+                : navigate(Routes.ProductManagementSignIn.path)
+            }
+            return prevCounter - 1
+          })
+        }, 1000)
       } catch (error) {
         setIsVerified(false)
       }
@@ -70,13 +78,14 @@ const ConfirmAccountPage = () => {
                       </h3>
                     </div>
                     <p className="text-center">
-                      <FormattedMessage id="Your-account-has-been-confirmed-successfully." />
-                    </p>
-                    <p className="text-center">
+                      <FormattedMessage id="Your-account-has-been-confirmed-successfully." />{' '}
                       <FormattedMessage id="You-can-now-log-in-with-your-account." />
                     </p>
                     <p className="text-center">
-                      <FormattedMessage id="You-will-be-redirected-to-the-login-page-shortly.-If-not-redirected,-please-click-the-link-below." />
+                      <FormattedMessage
+                        id="You-will-be-redirected-to-the-login-page-shortly.-If-not-redirected,-please-click-the-link-below-in-x-seconds."
+                        values={{ counter }}
+                      />
                     </p>
                     <p className="text-center">
                       <a

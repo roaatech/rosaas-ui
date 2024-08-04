@@ -587,5 +587,7 @@
   "After-receiving-the-email-follow-the-link-provided-to-reset-your-password.": "بعد تلقي البريد الإلكتروني، اتبع الرابط المقدم لإعادة تعيين كلمة المرور الخاصة بك.",
   "forgotPassword?": "هل نسيت كلمة المرور؟",
   "you-will-be-redirected-to-the-login-page-shortly.-If-not-redirected,-please-click-the-link-below.": "سيتم توجيهك إلى صفحة تسجيل الدخول قريبًا. إذا لم يتم توجيهك، يرجى النقر على الرابط أدناه.",
-  "Go-to-Login-Page": "اذهب إلى صفحة تسجيل الدخول"
+  "Go-to-Login-Page": "اذهب إلى صفحة تسجيل الدخول",
+  "your-link-has-been-sent-to-your-email-please-activate-it": "تم إرسال الرابط إلى بريدك الإلكتروني، يرجى تفعيله",
+  "You-will-be-redirected-to-the-login-page-shortly.-If-not-redirected,-please-click-the-link-below-in-x-seconds.": "سيتم إعادة توجيهك إلى صفحة تسجيل الدخول قريبًا. إذا لم يتم إعادة التوجيه، يرجى النقر على الرابط أدناه في {counter} ثوانٍ."
 }

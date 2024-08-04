@@ -8,7 +8,7 @@ import CreateProductOwner from '../../components/custom/ProductOwner/ProductOwne
 import { Routes } from '../../routes'
 import ProductOwnerReg from '../../components/custom/ProductOwner/ProductOwnerReg/ProductOwnerReg'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
-import { BsBoxSeam } from 'react-icons/bs'
+import { BsBoxSeam, BsCheckCircle } from 'react-icons/bs'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 const EmailConfirmationPage = () => {
@@ -42,20 +42,22 @@ const EmailConfirmationPage = () => {
 
                 <p className="text-center">
                   {userInfo.email ? (
-                    <>
+                    <div style={{ color: 'green' }}>
+                      <BsCheckCircle size={24} style={{ marginRight: '8px' }} />
                       <FormattedMessage id={'We-Have-Sent-Email-To'} />
                       {'  '}
                       <span className="email">{userInfo.email}</span>
                       {'  '}
                       <FormattedMessage
                         id={'to-confirm-the validity-of-your-email-address.'}
-                      />{' '}
-                    </>
+                      />
+                    </div>
                   ) : (
-                    <>
-                      Your link has been sent to your email, please activate it.{' '}
+                    <div style={{ color: 'green' }}>
+                      <BsCheckCircle size={24} style={{ marginRight: '8px' }} />
+                      <FormattedMessage id="your-link-has-been-sent-to-your-email-please-activate-it" />
                       {'  '}
-                    </>
+                    </div>
                   )}
                   <FormattedMessage
                     id={

@@ -585,5 +585,7 @@
   "to-confirm-the validity-of-your-email-address.": "to confirm the validity of your email address.",
   "forgotPassword?": "Forgot Password?",
   "you-will-be-redirected-to-the-login-page-shortly.-If-not-redirected,-please-click-the-link-below.": "You will be redirected to the login page shortly. If not redirected, please click the link below.",
-  "Go-to-Login-Page": "Go to Login Page"
+  "You-will-be-redirected-to-the-login-page-shortly.-If-not-redirected,-please-click-the-link-below-in-x-seconds.": "You will be redirected to the login page shortly. If not redirected, please click the link below in {counter} seconds.",
+  "Go-to-Login-Page": "Go to Login Page",
+  "your-link-has-been-sent-to-your-email-please-activate-it": "Your link has been sent to your email, please activate it"
 }
