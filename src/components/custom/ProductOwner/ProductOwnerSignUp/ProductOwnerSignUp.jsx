@@ -79,7 +79,6 @@ const CreateProductOwner = () => {
   const onRecaptchaChange = (token) => {
     setRecaptchaToken(token)
   }
-
   return (
     <Wrapper>
       <Formik
@@ -200,7 +199,7 @@ const CreateProductOwner = () => {
             <div className="recaptcha-container mt-2 mb-4">
               <ReCAPTCHA
                 ref={recaptchaRef}
-                sitekey="6Ld6VRsqAAAAAH425zj_vqnLezTXzsJmBWC4-M8R"
+                sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
                 onChange={onRecaptchaChange}
               />
               {errors.recaptcha && (

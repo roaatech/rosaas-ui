@@ -10,8 +10,8 @@ import { Routes } from '../routes'
 
 const useApi = () => {
   let axiosObject = {
-    // baseURL: process.env.REACT_APP_API_URL,
-    baseURL: window.localStorage.getItem('url'),
+    baseURL: process.env.REACT_APP_API_URL,
+    // baseURL: window.localStorage.getItem('url'),
   }
   const navigate = useNavigate()
   const mainInstance = axios.create(axiosObject)

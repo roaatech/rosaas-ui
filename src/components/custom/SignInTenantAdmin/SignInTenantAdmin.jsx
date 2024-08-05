@@ -56,6 +56,7 @@ const SignInTenantAdmin = () => {
   const onRecaptchaChange = (token) => {
     setRecaptchaToken(token)
   }
+  console.log({ ssss: process.env })
 
   return (
     <LoginWrapper>
@@ -121,7 +122,7 @@ const SignInTenantAdmin = () => {
               <div>
                 <ReCAPTCHA
                   ref={recaptchaRef}
-                  sitekey="6Ld6VRsqAAAAAH425zj_vqnLezTXzsJmBWC4-M8R"
+                  sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
                   onChange={(val) => setRecaptchaToken(val)}
                 />
                 <div className="error-message">

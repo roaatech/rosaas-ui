@@ -191,7 +191,7 @@ const SignUp = () => {
               <div>
                 <ReCAPTCHA
                   ref={recaptchaRef}
-                  sitekey="6Ld6VRsqAAAAAH425zj_vqnLezTXzsJmBWC4-M8R"
+                  sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
                   onChange={onRecaptchaChange}
                 />
                 <div className="error-message">
