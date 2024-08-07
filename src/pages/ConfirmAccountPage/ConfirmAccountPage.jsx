@@ -84,7 +84,18 @@ const ConfirmAccountPage = () => {
                     <p className="text-center">
                       <FormattedMessage
                         id="You-will-be-redirected-to-the-login-page-shortly.-If-not-redirected,-please-click-the-link-below-in-x-seconds."
-                        values={{ counter }}
+                        values={{
+                          counter: (
+                            <span
+                              style={{
+                                fontWeight: 'bold',
+                                color: 'var(--second-color)',
+                              }}
+                            >
+                              {counter}
+                            </span>
+                          ),
+                        }}
                       />
                     </p>
                     <p className="text-center">

@@ -5,11 +5,11 @@ const Wrapper = styled.div`
   .inputContainer {
     margin-bottom: 1.5rem;
   }
-  br {
-    display: block; /* Ensures the <br> element is treated as a block */
-    content: ''; /* Adds content to the <br> element */
-    margin-top: 1rem; /* Adjust the margin top to control spacing */
-    border-top: 1px solid white; /* Adds a solid white border on top */
+
+  .recaptcha-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .inputContainerWithIcon {
     /* border: 2px solid var(--primary4); */
@@ -33,6 +33,12 @@ const Wrapper = styled.div`
     border: 0 !important;
     border-radius: 0;
     /* border-left: 2px solid var(--primary4) !important; */
+  }
+  br {
+    display: block; /* Ensures the <br> element is treated as a block */
+    content: ''; /* Adds content to the <br> element */
+    margin-top: 1rem; /* Adjust the margin top to control spacing */
+    border-top: 1px solid white; /* Adds a solid white border on top */
   }
 
   .p-inputtext:enabled:focus {

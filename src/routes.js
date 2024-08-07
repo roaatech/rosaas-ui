@@ -28,6 +28,8 @@ import POwnerChecker from './routes/ProtectedRoutes'
 import EmailConfirmationPage from './pages/EmailConfirmationPage/EmailConfirmationPage'
 import ConfirmAccountPage from './pages/ConfirmAccountPage/ConfirmAccountPage'
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
+import ProductManagementSignInPage from './pages/ProductManagementSignInPage/ProductManagementSignInPage'
+import ProductManagementSignUpPage from './pages/ProductManagementSignUpPage/ProductManagementSignUpPage'
 const adminPanel = '/admin-panel'
 export const Routes = {
   Dashboard: {
@@ -127,7 +129,7 @@ export const Routes = {
   },
   ProductManagementSignIn: {
     path: '/product-management/sign-in',
-    component: signIn,
+    component: ProductManagementSignInPage,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
@@ -166,7 +168,7 @@ export const Routes = {
   },
   POwnerSignUp: {
     path: '/product-management/sign-up',
-    component: SignUpPage,
+    component: ProductManagementSignUpPage,
     roles: ['notAuth'],
     type: 'noSidebar',
   },

@@ -93,7 +93,6 @@ const ProductOwnerReg = () => {
                 <Card.Header className="mb-3 ">
                   <Card.Title className="mb-0">
                     <FormattedMessage id="Company-Info" />
-                    <br className="mt-1" />
                   </Card.Title>
                 </Card.Header>
 

@@ -13,7 +13,6 @@ import ResetPassword from '../../components/custom/ResetPassword/ResetPassword'
 const SignInPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  console.log({ location })
   const renderSignInComponent = () => {
     switch (location.pathname) {
       case Routes.SignInTenantAdmin.path:
