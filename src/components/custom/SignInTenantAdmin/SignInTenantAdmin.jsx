@@ -88,35 +88,37 @@ const SignInTenantAdmin = () => {
                 <FormattedMessage id="yourPassword" />
               </label>
               <div className="inputContainer">
-                <div>
-                  <div className="inputContainerWithIcon">
-                    <BsUnlockFill />
-                    <Field
-                      type="password"
-                      id="password"
-                      name="password"
-                      as={InputText}
-                    />
-                  </div>
-
-                  <ErrorMessage
+                <div className="inputContainerWithIcon">
+                  <BsUnlockFill />
+                  <Field
+                    type="password"
+                    id="password"
                     name="password"
-                    component="div"
-                    className="error-message"
+                    as={InputText}
                   />
                 </div>
-                <div
-                  className=" m-auto mt-1"
-                  style={{ color: 'var(--second-color)' }}
-                >
-                  <Link
-                    to={Routes.ResetPasswordRequest.path}
-                    className="link-underline "
+
+                <div className="d-flex justify-content-between">
+                  <div>
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="error-message"
+                    />
+                  </div>
+                  <div
+                    className="mt-1 mx-2"
+                    style={{ color: 'var(--second-color)' }}
                   >
-                    <FormattedMessage id="forgotPassword?" />
-                  </Link>
+                    <Link
+                      to={Routes.ResetPasswordRequest.path}
+                      className="link-underline"
+                    >
+                      <FormattedMessage id="forgotPassword?" />
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              </div>{' '}
             </div>
             <div className="recaptcha-container mt-2 mb-4">
               <div>

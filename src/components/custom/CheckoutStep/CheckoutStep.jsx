@@ -143,13 +143,22 @@ const CheckoutPage = (data) => {
   }
   const [navigationLink, setNavigationLink] = useState()
   const handlePayment = async () => {
-    const payment = await paymentCheckout({
-      orderID,
-      paymentMethod: hasToPay ? paymentMethod : null,
-      PaymentPlatform: hasToPay ? paymentMethod : null,
-      allowStoringCardInfo: rememberCardInfo,
-      enableAutoRenewal: autoRenewal,
-    })
+    const payment = visible
+      ? await paymentCheckout({
+          orderID,
+          paymentMethod: hasToPay ? paymentMethod : null,
+          PaymentPlatform: hasToPay ? paymentMethod : null,
+          allowStoringCardInfo: rememberCardInfo,
+          enableAutoRenewal: autoRenewal,
+          ignoreUser: true,
+        })
+      : await paymentCheckout({
+          orderID,
+          paymentMethod: hasToPay ? paymentMethod : null,
+          PaymentPlatform: hasToPay ? paymentMethod : null,
+          allowStoringCardInfo: rememberCardInfo,
+          enableAutoRenewal: autoRenewal,
+        })
     if (hasToPay && paymentMethod === 2) {
       const navigationUrl = payment?.data.data.navigationUrl
       setNavigationLink(navigationUrl)

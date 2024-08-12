@@ -96,21 +96,26 @@ const SignInProductManagement = () => {
                     as={InputText}
                   />
                 </div>
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="error-message"
-                />
-                <div
-                  className=" m-auto mt-1"
-                  style={{ color: 'var(--second-color)' }}
-                >
-                  <Link
-                    to={Routes.ResetPasswordRequest.path}
-                    className="link-underline "
+
+                <div className="d-flex justify-content-between">
+                  <div>
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="error-message"
+                    />
+                  </div>
+                  <div
+                    className="mt-1 mx-2"
+                    style={{ color: 'var(--second-color)' }}
                   >
-                    <FormattedMessage id="forgotPassword?" />
-                  </Link>
+                    <Link
+                      to={Routes.ResetPasswordRequest.path}
+                      className="link-underline"
+                    >
+                      <FormattedMessage id="forgotPassword?" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
