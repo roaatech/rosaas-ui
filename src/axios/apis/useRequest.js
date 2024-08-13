@@ -18,6 +18,7 @@ import useAdminPrivileges from './UsersManagement/useAdminPrivileges'
 import useAccountReq from './Account/Account'
 import useWebhookEndpointReq from './Product/webhookEndpoint/useWebhookEndpointReq'
 import usePOReq from './ProductOwner/usePOReq'
+import useDiscountReq from './Setting/discount/useDiscountReq'
 
 const useRequest = () => {
   const {
@@ -32,6 +33,16 @@ const useRequest = () => {
     requestPasswordReset,
     resetPassword,
   } = useUserReq()
+  const {
+    getDiscounts,
+    createDiscount,
+    activeDiscount,
+    editDiscountRequest,
+    deleteDiscount,
+    getDiscountById,
+    deleteDiscountUsageHistoriesById,
+    getDiscountUsageHistoriesByDiscountId,
+  } = useDiscountReq()
   const {
     createTenantRequest,
     editTenantRequest,
@@ -314,6 +325,14 @@ const useRequest = () => {
     confirmEmail,
     requestPasswordReset,
     resetPassword,
+    getDiscounts,
+    createDiscount,
+    activeDiscount,
+    editDiscountRequest,
+    deleteDiscount,
+    getDiscountById,
+    deleteDiscountUsageHistoriesById,
+    getDiscountUsageHistoriesByDiscountId,
   }
 }
 export default useRequest

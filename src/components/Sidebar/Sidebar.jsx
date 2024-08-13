@@ -51,7 +51,7 @@ import {
 import { FormattedMessage } from 'react-intl'
 import QuickActions from './QuickActions/QuickActions'
 import { setAllProductOwners } from '../../store/slices/productsOwners.js'
-import { MdInfo } from 'react-icons/md'
+import { MdDiscount, MdInfo } from 'react-icons/md'
 
 export default (props = {}) => {
   const navigate = useNavigate()
@@ -480,9 +480,9 @@ export default (props = {}) => {
                   />
 
                   <NavItem
-                    title={<FormattedMessage id="Card-Management" />}
-                    link={Routes.CardSettings.path}
-                    icon={BsBank}
+                    title={<FormattedMessage id="Discounts" />}
+                    link={Routes.DiscountsPage.path}
+                    icon={MdDiscount}
                   />
 
                   <NavItem

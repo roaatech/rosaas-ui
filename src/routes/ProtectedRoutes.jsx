@@ -37,6 +37,9 @@ const POwnerChecker = ({ page }) => {
   if (userRole === 'clientAdmin' && userInfo.ProductOwnerInfo != null) {
     return page
   }
+  if (!(userRole === 'clientAdmin') || !userInfo.id) {
+    return page
+  }
 }
 
 export default POwnerChecker

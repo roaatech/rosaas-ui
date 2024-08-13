@@ -30,6 +30,8 @@ import ConfirmAccountPage from './pages/ConfirmAccountPage/ConfirmAccountPage'
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 import ProductManagementSignInPage from './pages/ProductManagementSignInPage/ProductManagementSignInPage'
 import ProductManagementSignUpPage from './pages/ProductManagementSignUpPage/ProductManagementSignUpPage'
+import DiscountsPage from './pages/DiscountsPage/DiscountsPage'
+import DiscountDetails from './components/custom/Discounts/DiscountDetails'
 const adminPanel = '/admin-panel'
 export const Routes = {
   Dashboard: {
@@ -113,6 +115,11 @@ export const Routes = {
     path: `${adminPanel}/settings/product-warnings`,
     component: ProductWarningsSettings,
     roles: ['superAdmin'],
+  },
+  DiscountsPage: {
+    path: `${adminPanel}/settings/Discounts`,
+    component: DiscountsPage,
+    roles: ['superAdmin', 'clientAdmin'],
   },
 
   SignInTenantAdmin: {
@@ -241,6 +248,11 @@ Routes.TenantDetails = {
   path: `${Routes.Tenant.path}/:id`,
   component: TenantDetails,
   roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
+}
+Routes.DiscountDetails = {
+  path: `${Routes.DiscountsPage.path}/:id`,
+  component: DiscountDetails,
+  roles: ['superAdmin', 'clientAdmin'],
 }
 Routes.ProductsOwnersDetails = {
   path: `${Routes.productsOwners.path}/:id`,
