@@ -42,6 +42,7 @@ import {
 } from '../../store/slices/products/productsSlice.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import { Routes } from '../../routes.js'
 
 export default function Product({ children }) {
   const dispatch = useDispatch()
@@ -232,7 +233,9 @@ export default function Product({ children }) {
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       <Dropdown.Item
-                        onSelect={() => navigate(`/products/${data.id}`)}
+                        onSelect={() =>
+                          navigate(`${Routes.products.path}/${data.id}`)
+                        }
                       >
                         <FontAwesomeIcon icon={faEye} className="mx-2" />
                         <FormattedMessage id="View-Details" />

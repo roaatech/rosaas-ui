@@ -2,14 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { redirect, useNavigate, useParams } from 'react-router-dom'
 import useRequest from '../../axios/apis/useRequest'
-import {
-  Card,
-  Col,
-  Row,
-  Button,
-  Container,
-  Form,
-} from '@themesberg/react-bootstrap'
+import { Card, Col, Row, Button, Form } from '@themesberg/react-bootstrap'
 import {
   setAllProduct,
   setAllPlans,
@@ -20,11 +13,9 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 import { BsBoxSeam, BsCheck2, BsCheck2Circle, BsXCircle } from 'react-icons/bs'
 import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
-import CheckoutPage from '../CheckoutPagePage/CheckoutPage'
 import { cycle } from '../../const'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBox } from '@fortawesome/free-solid-svg-icons'
-import UpperContent from '../../components/custom/Shared/UpperContent/UpperContent'
+import { faBox, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 import { signinRedirectPath } from '../../store/slices/auth'
 import { setStep } from '../../store/slices/tenants'
 import { Wrapper } from './PricingPage.styled'
@@ -34,21 +25,34 @@ const PricingPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const routeParams = useParams()
-  const productId = routeParams.id
+
+  const productSystemName = routeParams.productSystemName
+  const productOwnerSystemName = routeParams.productOwnerSystemName
+
   const listProduct = useSelector((state) => state.products.products)
-  const plansPriceList = useSelector(
-    (state) => state.products.products[productId]?.plansPrice
-  )
-  const planList = useSelector(
-    (state) => state.products.products[productId]?.plans
-  )
+
+  const productData = Object.values(
+    Object.fromEntries(
+      Object.entries(listProduct).filter(
+        ([key, value]) => value.systemName === productSystemName
+      )
+    )
+  )[0]
+
+  const productId = productData?.id
+
+  const plansPriceList = productData?.plansPrice
+
+  const planList = productData?.plans
+
   const groupedByCycle =
     plansPriceList &&
+    Object.values(plansPriceList) &&
     Object.values(plansPriceList)
       .filter(
-        (plansPrice) =>
-          plansPrice?.isPublished === true &&
-          planList?.[plansPrice?.plan?.id].isPublished === true
+        (plansPrice) => plansPrice?.isPublished === true
+        //  &&
+        //   planList?.[plansPrice?.plan?.id]?.isPublished === true
       )
       .reduce((acc, currentObj) => {
         const { id, cycle, ...rest } = currentObj
@@ -68,7 +72,7 @@ const PricingPage = () => {
       )
     })
 
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
   const [redirectPath, setRedirectPath] = useState('')
   useEffect(() => {
     if (!redirectPath) {
@@ -83,9 +87,7 @@ const PricingPage = () => {
 
   if (userRole == undefined) userRole = 'notAuth'
 
-  const listData = useSelector(
-    (state) => state.products.products[productId]?.featurePlan
-  )
+  const listData = productData?.featurePlan
 
   useEffect(() => {
     if (Object.values(listProduct).length > 0) {
@@ -106,6 +108,27 @@ const PricingPage = () => {
     getProductListPublic,
     getProductPlanPriceListPublic,
   } = useRequest()
+  const [startWithTrial, setStartWithTrial] = useState(true)
+
+  const handleStartWithTrialChange = (event, planId) => {
+    setStartWithTrial((prevState) => ({
+      ...prevState,
+      [planId]: event.target.checked,
+    }))
+  }
+
+  useEffect(() => {
+    if (listProduct?.[productId]?.trialType != 2) {
+      return
+    }
+    const initialStartWithTrial = {}
+    planList &&
+      Object.keys(planList).forEach((planId) => {
+        initialStartWithTrial[planId] = true
+      })
+    setStartWithTrial(initialStartWithTrial)
+  }, [planList])
+
   useEffect(() => {
     if (!listProduct || Object.keys(listProduct).length === 0) {
       return
@@ -114,7 +137,8 @@ const PricingPage = () => {
       try {
         if (!listData || Object.keys(listData).length === 0) {
           const featurePlanData = await getFeaturePlanListPublic(
-            listProduct[productId].systemName
+            productOwnerSystemName,
+            productSystemName
           )
           if (
             featurePlanData.data.data &&
@@ -133,7 +157,8 @@ const PricingPage = () => {
 
         if (!planList || Object.keys(planList).length === 0) {
           const allPlanData = await getProductPlansPublic(
-            listProduct[productId].systemName
+            productOwnerSystemName,
+            productSystemName
           )
           if (allPlanData.data.data && Object.keys(allPlanData.data.data > 0))
             dispatch(
@@ -145,7 +170,8 @@ const PricingPage = () => {
         }
         if (!plansPriceList || Object.keys(plansPriceList).length == 0) {
           const allPlansPrices = await getProductPlanPriceListPublic(
-            listProduct[productId].systemName
+            productOwnerSystemName,
+            productSystemName
           )
           if (
             allPlansPrices.data.data &&
@@ -170,6 +196,7 @@ const PricingPage = () => {
     ...new Set(
       Object.values(plansPriceList)
         .filter((plansPrice) => plansPrice?.isPublished === true)
+        .filter((priceObj) => priceObj.cycle === 3 || priceObj.cycle === 4)
         .map((priceObj) => priceObj.cycle)
     ),
   ]
@@ -195,23 +222,24 @@ const PricingPage = () => {
       setSelectedCycle(sortedCycleTypes?.[0])
     }
     return (
-      <div className="mb-4">
-        <Card.Header>
-          <div className="d-flex justify-content-center ">
-            {sortedCycleTypes?.map((cycleNum, index) => (
-              <Form.Check
-                key={index}
-                type="radio"
-                label={<FormattedMessage id={cycle[cycleNum]} />}
-                value={cycleNum}
-                checked={selectedCycle === cycleNum}
-                onChange={() => handleCycleChange(cycleNum)}
-                className="ml-2 mr-2"
-              />
-            ))}
-          </div>
-        </Card.Header>
-      </div>
+      <Card.Header>
+        <div className="d-flex justify-content-center ">
+          {sortedCycleTypes?.map(
+            (cycleNum, index) =>
+              (cycleNum === 3 || cycleNum === 4) && (
+                <Form.Check
+                  key={index}
+                  type="radio"
+                  label={<FormattedMessage id={cycle[cycleNum]} />}
+                  value={cycleNum}
+                  checked={selectedCycle === cycleNum}
+                  onChange={() => handleCycleChange(cycleNum)}
+                  className="mx-2"
+                />
+              )
+          )}
+        </div>
+      </Card.Header>
     )
   }
 
@@ -242,6 +270,7 @@ const PricingPage = () => {
           description: featurePlan?.description,
         }
       })
+
     return (
       <div>
         {
@@ -289,11 +318,20 @@ const PricingPage = () => {
                     )}
                   </span>
                 </div>
-                {planId == listProduct?.[productId]?.trialPlanId && (
-                  <div className="tab-header">
-                    <TrialLabel />
-                  </div>
-                )}
+                {listProduct?.[productId]?.trialType == 3 &&
+                  planList[planId]?.trialPeriodInDays > 0 && (
+                    <div className="tab-header">
+                      <TrialLabel days={planList[planId]?.trialPeriodInDays} />
+                    </div>
+                  )}
+                {listProduct?.[productId]?.trialType == 2 &&
+                  planId == listProduct?.[productId]?.trialPlanId && (
+                    <div className="tab-header">
+                      <TrialLabel
+                        days={listProduct?.[productId]?.trialPeriodInDays}
+                      />
+                    </div>
+                  )}
               </div>
               <div
                 className="fw-bold mt-2 "
@@ -302,7 +340,12 @@ const PricingPage = () => {
                   fontWeight: 'bold',
                 }}
               >
-                {planList[planId]?.displayName?.toUpperCase()}
+                {listProduct?.[productId]?.trialType == 2 &&
+                planId == listProduct?.[productId]?.trialPlanId ? (
+                  <FormattedMessage id="Trial" />
+                ) : (
+                  planList[planId]?.displayName?.toUpperCase()
+                )}
               </div>
               {}
             </Card.Header>
@@ -329,25 +372,112 @@ const PricingPage = () => {
               ))}
             </Card.Body>
 
-            <Card.Footer>
-              <Button
-                variant="primary"
-                type="submit"
-                className="w-100"
-                onClick={() =>
-                  userRole == 'notAuth'
-                    ? (navigate(`/signin`),
-                      setRedirectPath(
-                        `/payment/product/${productId}/subscribtion/${subscribtionId}`
-                      ))
-                    : navigate(
-                        `/payment/product/${productId}/subscribtion/${subscribtionId}`
-                      )
-                }
-              >
-                <FormattedMessage id="Start-With" />{' '}
-                {planList[planId]?.displayName?.toUpperCase()}
-              </Button>
+            <Card.Footer
+              style={{
+                ...(listProduct?.[productId]?.trialType === 2
+                  ? { whiteSpace: 'nowrap', minHeight: '150px' }
+                  : {}),
+              }}
+            >
+              {planId != listProduct?.[productId]?.trialPlanId ? (
+                <>
+                  {listProduct?.[productId]?.trialType == 2 &&
+                    planId !== listProduct?.[productId]?.trialPlanId && (
+                      <Form.Group className="mb-3">
+                        <Form.Check
+                          type="checkbox"
+                          label={
+                            <>
+                              <FormattedMessage id="With" />{' '}
+                              <span style={{ color: 'var(--second-color' }}>
+                                {listProduct?.[productId]?.trialPeriodInDays}{' '}
+                                <FormattedMessage id="Days" />{' '}
+                              </span>
+                              <FormattedMessage id="Free-Trial" />{' '}
+                              <FormattedMessage id="Plan" />
+                            </>
+                          }
+                          checked={startWithTrial[planId] || false}
+                          onChange={(event) =>
+                            handleStartWithTrialChange(event, planId)
+                          }
+                          className="font-small"
+                        />
+                        {startWithTrial[planId] && (
+                          <div className="small">
+                            <span className="info-icon mr-1">
+                              <FontAwesomeIcon icon={faInfoCircle} />
+                            </span>{' '}
+                            Start your{' '}
+                            <strong style={{ color: 'var(--second-color)' }}>
+                              trial
+                            </strong>{' '}
+                            ,
+                            <span>
+                              {' '}
+                              then{' '}
+                              <strong style={{ color: 'var(--second-color)' }}>
+                                switch plans
+                              </strong>
+                              <span
+                                className="info-icon"
+                                style={{
+                                  color: 'var(--info-color)',
+                                  marginLeft: '5px',
+                                }}
+                              >
+                                <i className="bi bi-info-circle"></i>
+                              </span>
+                              seamlessly
+                            </span>
+                          </div>
+                        )}
+                      </Form.Group>
+                    )}
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    className="w-100"
+                    onClick={() =>
+                      startWithTrial[planId] ||
+                      (listProduct?.[productId]?.trialType == 3 &&
+                        planList[planId]?.trialPeriodInDays > 0)
+                        ? // (navigate(`/signin`),
+                          //   setRedirectPath(
+                          //     `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
+                          //   ))
+                          navigate(
+                            `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}#start-with-trial`
+                          )
+                        : navigate(
+                            `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}`
+                          )
+                    }
+                  >
+                    <FormattedMessage id="Start-With" />{' '}
+                    {planList[planId]?.displayName?.toUpperCase()}
+                  </Button>
+                </>
+              ) : (
+                listProduct?.[productId]?.trialType == 2 && (
+                  <div className="text-center text-seamlessly mt-4">
+                    <div>
+                      Start your{' '}
+                      <strong style={{ color: 'var(--second-color)' }}>
+                        trial
+                      </strong>
+                      ,
+                    </div>
+                    <div>
+                      then{' '}
+                      <strong style={{ color: 'var(--second-color)' }}>
+                        switch plans
+                      </strong>{' '}
+                      seamlessly
+                    </div>
+                  </div>
+                )
+              )}
             </Card.Footer>
           </Card>
         }
@@ -357,20 +487,16 @@ const PricingPage = () => {
 
   return (
     <Wrapper>
-      <div className="main-container">
+      {userRole != 'notAuth' && (
         <BreadcrumbComponent
           breadcrumbInfo={'ProductPricing'}
           icon={BsBoxSeam}
         />
-        <UpperContent>
-          <h4 className="m-0">
-            <FormattedMessage id="Subscription-Options" />
-          </h4>
-        </UpperContent>
-
-        <Card>
-          <Card.Body>
-            <div className="text-center fw-bold  ">
+      )}
+      <section style={{ minHeight: '100vh' }}>
+        <div className="main-container">
+          <section className="  mb-4 pb-3">
+            <div className="pt-8 text-center fw-bold  ">
               {' '}
               <h4>
                 {' '}
@@ -379,44 +505,52 @@ const PricingPage = () => {
                   className="mr-2 product-icon ml-2"
                 />
                 {listProduct?.[productId]?.displayName?.toUpperCase()}
+                <div
+                  style={{ fontSize: 'var(--largeFont)' }}
+                  className="col-lg-12 text-center pb-3 mt-2 "
+                >
+                  {listProduct?.[productId]?.description}
+                </div>{' '}
               </h4>
             </div>
-            <div
-              style={{ fontSize: 'var(--largeFont)' }}
-              class="col-lg-12 text-center pb-3 mt-2 border-bottom"
-            >
-              {listProduct?.[productId]?.description}
-            </div>{' '}
-            <div className="text-center">{renderCycleRadioButtons()}</div>
-            <Row className="d-flex justify-content-center ">
-              {groupedByCycle &&
-                groupedByCycle[selectedCycle] &&
-                Object.keys(groupedByCycle[selectedCycle]).map((plansPrice) => {
-                  const renderedPlans = renderFeaturePlans(
-                    groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
-                  )
+          </section>
+          <Card>
+            <Card.Body>
+              <div className="text-center">{renderCycleRadioButtons()}</div>
+              <Row className=" ">
+                {groupedByCycle &&
+                  groupedByCycle[selectedCycle] &&
+                  Object.keys(groupedByCycle[selectedCycle]).map(
+                    (plansPrice) => {
+                      const renderedPlans = renderFeaturePlans(
+                        groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
+                      )
 
-                  return (
-                    renderedPlans && (
-                      <Col
-                        key={
-                          groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
-                        }
-                        md={
-                          Object.keys(groupedByCycle[selectedCycle]).length >= 3
-                            ? groupedByCycle[selectedCycle].length
-                            : 3
-                        }
-                      >
-                        {renderedPlans}
-                      </Col>
-                    )
-                  )
-                })}
-            </Row>
-          </Card.Body>
-        </Card>
-      </div>
+                      return (
+                        renderedPlans && (
+                          <Col
+                            key={
+                              groupedByCycle[selectedCycle]?.[plansPrice]?.plan
+                                .id
+                            }
+                            md={
+                              Object.keys(groupedByCycle[selectedCycle])
+                                .length >= 3
+                                ? groupedByCycle[selectedCycle].length
+                                : 3
+                            }
+                          >
+                            {renderedPlans}
+                          </Col>
+                        )
+                      )
+                    }
+                  )}
+              </Row>{' '}
+            </Card.Body>
+          </Card>
+        </div>
+      </section>
     </Wrapper>
   )
 }

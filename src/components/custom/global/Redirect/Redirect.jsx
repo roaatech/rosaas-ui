@@ -4,11 +4,12 @@ import { Navigate } from 'react-router-dom'
 import { Routes } from '../../../../routes'
 
 const Redirect = () => {
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
+
   if (userRole == undefined) userRole = 'notAuth'
   return (
     <Navigate
-      to={userRole == 'notAuth' ? Routes.Signin.path : Routes.NotFound.path}
+      to={userRole == 'notAuth' ? Routes.mainPage.path : Routes.NotFound.path}
     />
   )
 }

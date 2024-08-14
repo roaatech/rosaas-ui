@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Routes } from '../routes'
 import Sidebar from '../components/Sidebar/Sidebar'
 import Navbar from '../components/Navbar/Navbar'
 import { useSelector } from 'react-redux'
 import useRequest from '../axios/apis/useRequest'
 import { Route, Routes as RouteG } from 'react-router-dom'
+import { Routes } from '../routes'
 
 const HomePage = () => {
   const { userData } = useRequest()
   const [load, setLoad] = useState(false)
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
   if (userRole == undefined) userRole = 'notAuth'
   useEffect(() => {
     ;(async () => {
@@ -26,7 +26,7 @@ const HomePage = () => {
     { component: Component, path, type, roles },
     index
   ) => {
-    if (roles.includes(userRole) || roles === '*') {
+    if (roles?.includes(userRole) || roles === '*') {
       return (
         <Route
           key={index}

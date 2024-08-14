@@ -18,6 +18,8 @@ import {
   BsPersonSlash,
   BsPeople,
   BsExclamationTriangle,
+  BsBank,
+  BsPersonFillGear,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -48,6 +50,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
 import QuickActions from './QuickActions/QuickActions'
+import { setAllProductOwners } from '../../store/slices/productsOwners.js'
+import { MdInfo } from 'react-icons/md'
 
 export default (props = {}) => {
   const navigate = useNavigate()
@@ -58,6 +62,10 @@ export default (props = {}) => {
   const showClass = show ? 'show' : ''
   const dispatch = useDispatch()
   const userInfo = useSelector((state) => state.auth.userInfo)
+  const productsOwnersData = useSelector(
+    (state) => state.productsOwners.productsOwners
+  )
+
   const tenantsData = useSelector((state) => state.tenants.tenants)
   const productsData = useSelector((state) => state.products.products)
   const [searchValue, setSearchValue] = useState('')
@@ -67,10 +75,13 @@ export default (props = {}) => {
   const [filteredProducts, setFilteredProducts] = useState(
     Object.values(productsData)
   )
-  let userRole = useSelector((state) => state.auth.userInfo.role)
+  const [filteredProductsOwner, setFilteredProductsOwner] = useState()
+
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
   const roles = ['', 'superAdmin', 'clientAdmin', 'ProductAdmin', 'tenantAdmin']
 
   let unFilteredProducts = Object.values(productsData)
+  let unFilteredProductsOwners = Object.values(productsOwnersData)
   const setUnFilteredProducts = (newData) => {
     unFilteredProducts = newData
   }
@@ -85,7 +96,7 @@ export default (props = {}) => {
   }
   const [visibleHead, setVisibleHead] = useState(false)
   const [first, setFirst] = useState(0)
-  const { getTenantList, getProductList } = useRequest()
+  const { getTenantList, getProductList, getProductOwnersList } = useRequest()
   const [update, setUpdate] = useState(1)
 
   const onCollapse = () => setShow(!show)
@@ -226,12 +237,31 @@ export default (props = {}) => {
       setFilteredProducts(listData.data.data.items)
     })()
   }, [searchValue, allProducts])
+  useEffect(() => {
+    if (userRole != 'superAdmin') {
+      return
+    }
+    let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
+    if (searchValue) query += `&filters[0].Value=${searchValue}`
+    ;(async () => {
+      const listData = await getProductOwnersList(query)
+      dispatch(setAllProductOwners(listData.data.data.items))
+      setFilteredProductsOwner(listData.data.data.items)
+    })()
+  }, [searchValue])
 
   const setSearchValues = (searchValue) => {
     setSearchValue(searchValue)
   }
 
-  const productsIsOpen = pathname.includes('products') ? 'open' : 'close'
+  const productsIsOpen =
+    !pathname.includes('productsOwners') && pathname.includes('products/')
+      ? 'open'
+      : 'close'
+  const productsOwnersIsOpen = pathname.includes('productsOwners')
+    ? 'open'
+    : 'close'
+
   return (
     <SidebarWrapper>
       <Navbar
@@ -284,10 +314,22 @@ export default (props = {}) => {
                 <FontAwesomeIcon icon={faTimes} />
               </Nav.Link>
             </div>
+
             <Nav className="flex-column pt-3 pt-md-0">
               <img src={selectedLogo} alt="logo" className="my-3 logo" />
 
               <QuickActions setSearchValue={setSearchValues} />
+              {userRole == 'clientAdmin' && (
+                <NavItem
+                  key={'details'}
+                  title={'Info'}
+                  link={`${Routes.productsOwners.path}/info`}
+                  icon={MdInfo}
+                  isActive={location.pathname.includes(
+                    `${Routes.productsOwners.path}/info`
+                  )}
+                />
+              )}
               {active.length ? (
                 <CollapsableNavItem
                   eventKey={activeIsOpen}
@@ -298,7 +340,7 @@ export default (props = {}) => {
                     <NavItem
                       key={index}
                       title={item.systemName}
-                      link={`/tenants/${item.id}`}
+                      link={`${Routes.Tenant.path}/${item.id}`}
                       icon={BsFillPersonFill}
                     />
                   ))}
@@ -314,7 +356,7 @@ export default (props = {}) => {
                     <NavItem
                       key={index}
                       title={item.systemName}
-                      link={`/tenants/${item.id}`}
+                      link={`${Routes.Tenant.path}/${item.id}`}
                       icon={BsFillPersonFill}
                     />
                   ))}
@@ -337,7 +379,9 @@ export default (props = {}) => {
                 </CollapsableNavItem>
               ) : null}
 
-              {(userRole == 'productOwner' || userRole == 'superAdmin') &&
+              {(userRole == 'productOwner' ||
+                userRole == 'superAdmin' ||
+                userRole == 'clientAdmin') &&
               Array.isArray(
                 searchValue.length ? filteredProducts : unFilteredProducts
               ) &&
@@ -346,12 +390,12 @@ export default (props = {}) => {
                 <CollapsableNavItem
                   eventKey={productsIsOpen}
                   title={
-                    <span onClick={() => navigate('/products')}>
+                    <span onClick={() => navigate(Routes.products.path)}>
                       <FormattedMessage id="Products" />
                     </span>
                   }
                   icon={
-                    <span onClick={() => navigate('/products')}>
+                    <span onClick={() => navigate(Routes.products.path)}>
                       <BsBoxes />
                     </span>
                   }
@@ -364,10 +408,47 @@ export default (props = {}) => {
                     <NavItem
                       key={index}
                       title={product.systemName}
-                      link={`/products/${product.id}`}
+                      link={`${Routes.products.path}/${product.id}`}
                       icon={BsBoxSeam}
                       isActive={location.pathname.includes(
-                        `/products/${product.id}`
+                        `${Routes.products.path}/${product.id}`
+                      )}
+                    />
+                  ))}
+                </CollapsableNavItem>
+              ) : null}
+
+              {userRole == 'superAdmin' &&
+              Array.isArray(
+                searchValue.length ? filteredProducts : unFilteredProducts
+              ) &&
+              (searchValue.length ? filteredProducts : unFilteredProducts)
+                .length > 0 ? (
+                <CollapsableNavItem
+                  eventKey={productsOwnersIsOpen}
+                  title={
+                    <span onClick={() => navigate(Routes.productsOwners.path)}>
+                      <FormattedMessage id="Products-Owners" />
+                    </span>
+                  }
+                  icon={
+                    <span onClick={() => navigate(Routes.productsOwners.path)}>
+                      <BsBoxes />
+                    </span>
+                  }
+                  style={{}}
+                >
+                  {(searchValue.length
+                    ? filteredProductsOwner
+                    : unFilteredProductsOwners
+                  ).map((productsOwner, index) => (
+                    <NavItem
+                      key={index}
+                      title={productsOwner?.systemName}
+                      link={`${Routes.productsOwners.path}/${productsOwner?.id}`}
+                      icon={BsBoxSeam}
+                      isActive={location.pathname.includes(
+                        `${Routes.productsOwners.path}/${productsOwner?.id}`
                       )}
                     />
                   ))}
@@ -382,18 +463,32 @@ export default (props = {}) => {
                 >
                   <NavItem
                     title={<FormattedMessage id="Health-Check-sidebar" />}
-                    link={`/settings/health-check`}
+                    link={Routes.Settings.path}
                     icon={BsFillClipboard2CheckFill}
                   />
+
                   <NavItem
                     title={<FormattedMessage id="Subscriptions" />}
-                    link={`/settings/subscriptions`}
+                    link={Routes.SubscriptionsSettings.path}
                     icon={BsPeople}
                   />
+
                   <NavItem
                     title={<FormattedMessage id="Product-Warnings" />}
-                    link={`/settings/product-warnings`}
+                    link={Routes.ProductWarningsSettings.path}
                     icon={BsExclamationTriangle}
+                  />
+
+                  <NavItem
+                    title={<FormattedMessage id="Card-Management" />}
+                    link={Routes.CardSettings.path}
+                    icon={BsBank}
+                  />
+
+                  <NavItem
+                    title={<FormattedMessage id="Profile" />}
+                    link={Routes.Profile.path}
+                    icon={BsPersonFillGear}
                   />
                 </CollapsableNavItem>
               )}

@@ -7,6 +7,7 @@ import { DataTransform } from '../../../../lib/sharedFun/Time'
 const TableDate = ({
   createdDate = '10/18/200, 11:42AM',
   editedDate = '10/18/200, 11:42AM',
+  className,
 }) => {
   return (
     <Wrapper>
@@ -24,7 +25,10 @@ const TableDate = ({
           </Tooltip>
         }
       >
-        <span> {DataTransform(editedDate)}</span>
+        <span className={className ? className : ''}>
+          {' '}
+          {DataTransform(editedDate)}
+        </span>
       </OverlayTrigger>
     </Wrapper>
   )

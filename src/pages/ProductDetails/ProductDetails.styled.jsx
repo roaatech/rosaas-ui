@@ -17,7 +17,14 @@ export const Wrapper = styled.div`
       /* padding: 0; */
     }
   }
-
+  .p-tabview .p-tabview-nav-btn.p-link:hover {
+    color: var(--second-color);
+    opacity: 1;
+  }
+  .p-tabview .p-tabview-nav-btn.p-link {
+    opacity: 0.6;
+    color: var(--primary-color);
+  }
   .card-body {
     padding: 0px;
     background: unset;

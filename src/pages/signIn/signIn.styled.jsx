@@ -4,6 +4,20 @@ export const Wrapper = styled.main`
   background-image: url(${bg});
   background-size: cover;
   /* background-position: center; */
+  .custom-div {
+    cursor: pointer;
+    color: var(--second-color);
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    text-decoration: underline;
+    text-decoration-color: var(--second-color) !important;
+  }
+
+  .custom-div:hover {
+    color: var(--second-color-darker);
+  }
   .copy {
     bottom: 0;
     width: 100%;
@@ -19,6 +33,14 @@ export const Wrapper = styled.main`
   .rosaas {
     color: var(--second-color);
     font-size: var(--hugeFont);
+  }
+  .link-underline {
+    text-decoration: underline;
+    color: var(--second-color);
+    text-decoration-color: var(--second-color) !important;
+  }
+  .link-underline:hover {
+    color: var(--second-color-darker);
   }
 
   .cardCont {

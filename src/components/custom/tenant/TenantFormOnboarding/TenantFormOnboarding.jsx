@@ -18,14 +18,13 @@ import { Wrapper } from './TenantFormOnboarding.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
 import { validateSpecifications } from '../validateSpecifications/validateSpecifications.jsx'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 import { setAllPlansPrice } from '../../../../store/slices/products/productsSlice.js'
 import {
   setStep,
   setTenantCreateData,
 } from '../../../../store/slices/tenants.js'
+import { Routes } from '../../../../routes.js'
 
 const TenantFormOnboarding = ({
   type,
@@ -87,7 +86,6 @@ const TenantFormOnboarding = ({
         const product = this.resolve(Yup.ref('product'))
         const plan = this.resolve(Yup.ref('plan'))
 
-        // Replace 'listData' and adjust the condition based on your data
         if (listData[product]?.trialPlanId !== plan) {
           return value !== undefined && value !== ''
         }
@@ -116,13 +114,6 @@ const TenantFormOnboarding = ({
   const selectedProduct = tenantData?.subscriptions?.map((product) => {
     return product.productId
   })
-  const [titleToUnique, setTitleToUnique] = useState('')
-  const specificationValuesObject = (tenantData?.subscriptions || [])
-    .flatMap((subscription) => subscription?.specifications || [])
-    .reduce((acc, specification) => {
-      acc[specification.id] = specification.value
-      return acc
-    }, {})
 
   const initialValues = {
     displayName: tenantData ? tenantData.displayName : '',
@@ -132,6 +123,7 @@ const TenantFormOnboarding = ({
     price: tenantData ? tenantData.price : '',
     product: tenantData ? selectedProduct : '',
   }
+  const [startWithTrial, setStartWithTrial] = useState(false)
 
   const formik = useFormik({
     initialValues,
@@ -175,6 +167,9 @@ const TenantFormOnboarding = ({
                     ? listData[formik.values.product]?.trialPlanPriceId
                     : formik.values.price,
                 specifications: specificationsArray,
+                ...(listData?.[formik.values.product]?.trialType == 2 && {
+                  userEnabledTheTrial: startWithTrial,
+                }),
               },
             ],
             systemName: values.systemName,
@@ -185,7 +180,9 @@ const TenantFormOnboarding = ({
             createTenant?.data.data.tenantId
           ) {
             return (
-              navigate(`/tenants/${createTenant?.data.data.tenantId}`),
+              navigate(
+                `${Routes.Tenant.path}/${createTenant?.data.data.tenantId}`
+              ),
               setVisible && setVisible(false),
               dispatch(
                 deleteAllPlan({
@@ -199,6 +196,8 @@ const TenantFormOnboarding = ({
               )
             )
           }
+          const id = createTenant?.data?.data?.orderId
+
           dispatch(
             setTenantCreateData({
               tenantData: createTenant.data.data,
@@ -220,7 +219,17 @@ const TenantFormOnboarding = ({
           dispatch(setStep(2))
 
           navigate(
-            `/payment/product/${values.product}/subscribtion/${values.price}`
+            `/checkout/${listData[values.product]?.client.systemName}/${
+              listData[values.product]?.systemName
+            }/plan-price/${
+              values?.plan &&
+              listData[values.product]?.trialPlanId != values?.plan
+                ? listData[values.product]?.plansPrice?.[values.price]
+                    ?.systemName
+                : listData[values.product]?.plansPrice?.[
+                    listData[values.product]?.trialPlanPriceId
+                  ]?.systemName
+            }#${id}`
           )
           setVisible && setVisible(false)
         } else {
@@ -239,20 +248,27 @@ const TenantFormOnboarding = ({
   let planOptions
   if (listData[formik.values.product]?.plans) {
     planOptions = Object.values(listData[formik.values.product].plans)
-      .filter((item) => item.isPublished === true)
+      .filter(
+        (item) =>
+          item.isPublished === true &&
+          (listData?.[formik.values.product]?.trialType == 2
+            ? item.id !== listData?.[formik.values.product]?.trialPlanId
+            : true)
+      )
       .map((item, index) => ({
         value: item.id,
-        label:
-          listData[formik.values.product]?.trialPlanId != item.id
-            ? item.displayName
-            : `${item.displayName} (${intl.formatMessage({
-                id: 'Start-With-Trial',
-              })})`,
+        label: item.displayName,
       }))
   } else {
     planOptions = []
   }
-
+  // console.log({
+  //   sssssssssssdd:
+  //     listData[formik.values.product] &&
+  //     Object.values(listData[formik.values.product]?.plans).filter(
+  //       (item) => item.id == listData?.[formik.values.product]?.trialPlanId
+  //     ),
+  // })
   const options = list.map((item) => {
     return { value: item.id, label: item.displayName }
   })
@@ -361,7 +377,6 @@ const TenantFormOnboarding = ({
       }))
     }
   }, [formik.values.product])
-
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
@@ -431,7 +446,7 @@ const TenantFormOnboarding = ({
           </div>
           {type === 'create' && (
             <div>
-              <Form.Group className="mb-3">
+              <Form.Group className="mb-1">
                 <Form.Label>
                   <FormattedMessage id="Product" />{' '}
                   <span style={{ color: 'red' }}>*</span>
@@ -463,6 +478,27 @@ const TenantFormOnboarding = ({
                 )}
               </Form.Group>
             </div>
+          )}
+          {listData?.[formik.values.product]?.trialType == 2 && (
+            <Form.Group className="mb-3">
+              <Form.Check
+                type="checkbox"
+                label={
+                  <>
+                    <FormattedMessage id="With" />{' '}
+                    <span style={{ color: 'var(--second-color)' }}>
+                      {listData[formik.values.product]?.trialPeriodInDays}{' '}
+                      <FormattedMessage id="Days" />{' '}
+                    </span>
+                    <FormattedMessage id="Free-Trial" />{' '}
+                    <FormattedMessage id="Plan" />
+                  </>
+                }
+                checked={startWithTrial}
+                onChange={(event) => setStartWithTrial(event.target.checked)}
+                className="font-small"
+              />
+            </Form.Group>
           )}
 
           {type === 'create' && (

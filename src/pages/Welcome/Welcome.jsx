@@ -1,13 +1,9 @@
 import React from 'react'
 import { Wrapper } from './Welcome.styled'
-import { useEffect } from 'react'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
+import { useNavigate } from 'react-router-dom'
 
 const Dashboard = () => {
-  useEffect(() => {
-    document.title = 'RoSaaS-Dashboard'
-  }, [])
-
   return (
     <Wrapper>
       <BreadcrumbComponent breadcrumbInfo={'Dashboard'} />

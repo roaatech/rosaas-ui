@@ -6,8 +6,10 @@ const usePlanReq = () => {
   const getProductPlans = async (productId) => {
     return await Request.get(`management/sadmin/v1/Products/${productId}/Plans`)
   }
-  const getProductPlansPublic = async (productName) => {
-    return await Request.get(`/public/v1/Product/${productName}/Plans`)
+  const getProductPlansPublic = async (productOwnerName, productName) => {
+    return await Request.get(
+      `/public/v1/productOwner/${productOwnerName}/Product/${productName}/Plans`
+    )
   }
 
   const createPlanRequest = async (productId, data) => {

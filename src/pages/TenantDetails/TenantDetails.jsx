@@ -29,6 +29,7 @@ import { MdFactCheck } from 'react-icons/md'
 import TenantsUsersManagement from '../../components/custom/tenant/TenantsUsersManagement/TenantsUsersManagement'
 import Label from '../../components/custom/Shared/label/Label'
 import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
+import { Routes } from '../../routes'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -74,7 +75,7 @@ const TenantDetails = () => {
   const deleteTenant = async () => {
     await deleteTenantReq({ id: currentId })
     dispatch(removeTenant(routeParams.id))
-    navigate(`/Dashboard`)
+    navigate(Routes.Dashboard.path)
   }
 
   let tenantObject = tenantsData[routeParams.id]
@@ -89,7 +90,7 @@ const TenantDetails = () => {
 
   tenantObject?.subscriptions.map((item, index) => {
     if (firstLoad == 0 && item?.name == window.location.href.split('#')[1]) {
-      dispatch(setActiveIndex(index + 1))
+      dispatch(setActiveIndex(index + 2))
       firstLoad++
     }
   })
@@ -237,13 +238,13 @@ const TenantDetails = () => {
                         </Card.Body>
                       </Card>
                     </TabPanel>
-                    {/* <TabPanel
+                    <TabPanel
                       header={
                         <FormattedMessage id="Tenants-Users-Management" />
                       }
                     >
                       <TenantsUsersManagement />
-                    </TabPanel> */}
+                    </TabPanel>
                     {tenantObject?.subscriptions?.map((product, index) => (
                       <TabPanel
                         key={index}

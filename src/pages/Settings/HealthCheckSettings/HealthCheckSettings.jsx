@@ -27,6 +27,7 @@ import useRequest from '../../../axios/apis/useRequest'
 import UpperContent from '../../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../../components/custom/Shared/DynamicButtons/DynamicButtons'
+import PaymentCardsList from '../../../components/custom/PaymentCards/PaymentCardsList'
 
 const HealthCheckSettings = () => {
   const [edit, setEdit] = useState(false)
@@ -100,31 +101,6 @@ const HealthCheckSettings = () => {
             <h4 className="m-0">
               <FormattedMessage id="Settings" />
             </h4>
-            {/* <div>
-              <Button
-                className={edit ? 'd-none' : ''}
-                variant="primary"
-                type="button"
-                onClick={() => {
-                  setEdit(true)
-                }}
-              >
-                <AiFillEdit /> <FormattedMessage id="Edit" />
-              </Button>
-
-              <span className={!edit ? 'd-none' : ''}>
-                <Button
-                  variant="primary"
-                  type="button"
-                  onClick={formik.handleSubmit}
-                >
-                  <AiFillSave /> <FormattedMessage id="Save-All" />
-                </Button>
-                <Button type="button" className="ml-2 cancel" onClick={cancel}>
-                  <BsFillBackspaceFill /> <FormattedMessage id="Cancel" />
-                </Button>
-              </span>
-            </div> */}
 
             <DynamicButtons
               buttons={

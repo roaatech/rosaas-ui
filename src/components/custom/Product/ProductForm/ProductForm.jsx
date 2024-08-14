@@ -3,7 +3,6 @@ import { useFormik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
 import useRequest from '../../../../axios/apis/useRequest.js'
-import { Product_Client_id } from '../../../../const/index.js'
 import {
   Modal,
   Button,
@@ -12,7 +11,7 @@ import {
 } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { productInfo } from '../../../../store/slices/products/productsSlice.js'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './ProductForm.styled.jsx'
@@ -24,6 +23,8 @@ import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCount
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
+import { Routes } from '../../../../routes.js'
+import { Product_Client_id } from '../../../../const/product.js'
 
 const ProductForm = ({
   type,
@@ -37,6 +38,8 @@ const ProductForm = ({
   const { createProductRequest, editProductRequest } = useRequest()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const listData = useSelector((state) => state.productsOwners.productsOwners)
+  let userInfo = useSelector((state) => state.auth.userInfo)
   const initialValues = {
     displayName: productData ? productData.displayName : '',
     description: productData ? productData.description : '',
@@ -56,6 +59,12 @@ const ProductForm = ({
     activationEndpoint: productData ? productData.activationEndpoint : '',
     deactivationEndpoint: productData ? productData.deactivationEndpoint : '',
     deletionEndpoint: productData ? productData.deletionEndpoint : '',
+    clientId:
+      productData && userInfo.userType != 'clientAdmin'
+        ? productData?.client?.id
+        : userInfo.userType == 'clientAdmin'
+        ? userInfo.ProductOwnerInfo?.id
+        : '',
   }
 
   const validationSchema = Yup.object().shape({
@@ -99,10 +108,15 @@ const ProductForm = ({
           activationEndpoint: values.activationEndpoint,
           deactivationEndpoint: values.deactivationEndpoint,
           deletionEndpoint: values.deletionEndpoint,
-          clientId: Product_Client_id,
+          clientId:
+            userInfo.userType == 'clientAdmin'
+              ? userInfo.ProductOwnerInfo?.id
+              : values.clientId
+              ? values.clientId
+              : Product_Client_id,
         })
         if (sideBar) {
-          navigate(`/products/${createProduct.data.data.id}`)
+          navigate(`${Routes.products.path}/${createProduct.data.data.id}`)
         }
         setUpdate(update + 1)
       } else {
@@ -122,7 +136,6 @@ const ProductForm = ({
             activationEndpoint: values.activationEndpoint,
             deactivationEndpoint: values.deactivationEndpoint,
             deletionEndpoint: values.deletionEndpoint,
-            clientId: Product_Client_id,
           },
           id: productData.id,
         })
@@ -147,7 +160,14 @@ const ProductForm = ({
             deactivationEndpoint: values.deactivationEndpoint,
             deletionEndpoint: values.deletionEndpoint,
             editedDate: new Date().toISOString().slice(0, 19),
-            clientId: { id: Product_Client_id },
+            clientId: {
+              id:
+                userInfo.userType == 'clientAdmin'
+                  ? userInfo.ProductOwnerInfo?.id
+                  : values.clientId
+                  ? values.clientId
+                  : Product_Client_id,
+            },
           })
         )
       }
@@ -156,6 +176,7 @@ const ProductForm = ({
       setVisible && setVisible(false)
     },
   })
+
   const RandomApiKey = () => {
     formik.setFieldValue('apiKey', generateApiKey())
   }
@@ -225,6 +246,45 @@ const ProductForm = ({
               </Form.Control.Feedback>
             )}
           </div>
+          {userInfo.userType == 'superAdmin' && type === 'create' && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <FormattedMessage id="ProductOwner" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <select
+                  className="form-control"
+                  name="clientId"
+                  id="clientId"
+                  value={formik.values.clientId}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                >
+                  <option value="">
+                    <FormattedMessage id="Select-Option" />
+                  </option>
+                  {listData &&
+                    Object.values(listData).map((option) => {
+                      return (
+                        <option key={option.id} value={option.id}>
+                          {option.displayName}
+                        </option>
+                      )
+                    })}
+                </select>
+                {formik.touched.clientId && formik.errors.clientId && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.clientId}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          )}
+
           {/* <div className="card toggle-container p-2 mb-3">
             <div className="d-flex align-items-center justify-content-between ">
               <Form.Label className="flex-grow-1">

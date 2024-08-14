@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
     position: absolute;
     height: 2px;
     background-color: red;
-    width: 35px;
+    width: 60px;
   }
 
   .top-line {
@@ -29,7 +29,7 @@ export const Wrapper = styled.div`
   }
 
   .trial-text {
-    z-index: 1; /* Ensure the text is above the lines */
+    z-index: 1;
     display: inline;
   }
 `

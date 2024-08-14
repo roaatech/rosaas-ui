@@ -5,13 +5,15 @@ import { logOut } from '../store/slices/auth'
 import { changePreloader } from '../store/slices/main'
 import { addUserInfo } from '../store/slices/auth'
 import { Client_id } from '../const'
+import { useNavigate } from 'react-router-dom'
+import { Routes } from '../routes'
 
 const useApi = () => {
   let axiosObject = {
-    // baseURL: process.env.REACT_APP_API_URL,
-    baseURL: window.localStorage.getItem('url'),
+    baseURL: process.env.REACT_APP_API_URL,
+    // baseURL: window.localStorage.getItem('url'),
   }
-
+  const navigate = useNavigate()
   const mainInstance = axios.create(axiosObject)
 
   const dispatch = useDispatch()
@@ -20,15 +22,20 @@ const useApi = () => {
     function (config) {
       dispatch(changePreloader(true))
       const noAuthRoutes = [
-        'identity/sadmin/v1/Auth/Signin',
         'identity/tadmin/v1/Auth/Signup',
+        'identity/product-owner-admin/v1/Auth/Signup',
+        'identity/product-owner-admin/v1/Auth/Signin',
+        'identity/tadmin/v1/Auth/Signin',
+        'identity/sadmin/v1/Auth/Signin',
       ]
       //* add auth
       if (!noAuthRoutes.includes(config.url)) {
         const localStorageToken = localStorage.getItem('token')
-        config.headers.Authorization = localStorageToken
-          ? `Bearer ${localStorageToken}`
-          : ''
+        if (localStorageToken) {
+          config.headers.Authorization = `Bearer ${localStorageToken}`
+        } else {
+          dispatch(logOut())
+        }
       } else {
         config.headers['Client-Id'] = Client_id
       }
@@ -40,7 +47,6 @@ const useApi = () => {
       return Promise.reject(error)
     }
   )
-
   mainInstance.interceptors.response.use(
     async (res) => {
       dispatch(changePreloader(false))
@@ -56,8 +62,8 @@ const useApi = () => {
       if (res.data?.data?.userAccount?.email) {
         dispatch(
           addUserInfo({
-            email: res.data?.data?.userAccount?.email,
-            role: roles[res.data?.data?.userAccount?.userType],
+            ...res.data?.data?.userAccount,
+            userType: roles[res.data?.data?.userAccount?.userType],
           })
         )
       }
@@ -65,6 +71,14 @@ const useApi = () => {
     },
     async (err) => {
       dispatch(changePreloader(false))
+      const isSysCode2005 = err.response?.data.metadata?.errors.some(
+        (element) => {
+          return element.sysCode == 2005 ? true : false
+        }
+      )
+      if (isSysCode2005) {
+        return navigate(Routes.EmailConfirmationPage.path)
+      }
       if (err?.response?.status == 401) {
         dispatch(logOut())
         return Promise.reject(err)

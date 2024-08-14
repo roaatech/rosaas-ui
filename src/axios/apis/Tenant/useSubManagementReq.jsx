@@ -34,6 +34,9 @@ const useSubManagementReq = () => {
       data
     )
   }
+  const getAutoRenewalList = async () => {
+    return await Request.get(`management/sadmin/v1/Subscriptions/Renewals`)
+  }
   const setAutoRenewal = async (data) => {
     return await Request.post(
       `management/sadmin/v1/Subscriptions/AutoRenewal`,
@@ -54,9 +57,12 @@ const useSubManagementReq = () => {
   }
   const downgradeSubscription = async (data) => {
     return await Request.post(
-      `/management/sadmin/v1/Subscriptions/Downgrade`,
+      `management/sadmin/v1/Subscriptions/Downgrade`,
       data
     )
+  }
+  const getSubscriptionsList = async () => {
+    return await Request.get(`management/sadmin/v1/Subscriptions`)
   }
 
   return {
@@ -70,6 +76,8 @@ const useSubManagementReq = () => {
     downgradeSubscription,
     subscriptionFeturesList,
     subscriptionCycleById,
+    getSubscriptionsList,
+    getAutoRenewalList,
   }
 }
 export default useSubManagementReq

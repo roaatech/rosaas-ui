@@ -8,12 +8,7 @@ import { Wrapper } from './SubscriptionManagement.styled'
 import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel'
 import { TabPanel, TabView } from 'primereact/tabview'
 import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons'
-import {
-  MdChangeCircle,
-  MdOutlineAutorenew,
-  MdPublishedWithChanges,
-  MdTrackChanges,
-} from 'react-icons/md'
+import { MdChangeCircle, MdOutlineAutorenew } from 'react-icons/md'
 import { useParams } from 'react-router-dom'
 import {
   BsArrowCounterclockwise,
@@ -35,8 +30,6 @@ import NoteInputConfirmation from '../../components/custom/Shared/NoteInputConfi
 import RenewForm from '../../components/custom/tenant/SubscriptionManagement/RenewForm/RenewForm'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import { fetchSubscriptionDetails } from '../../components/custom/tenant/SubscriptionManagement/fetchSubscriptionDetails/fetchSubscriptionDetails'
-import Label from '../../components/custom/Shared/label/Label'
-
 import SubsGeneralData from '../../components/custom/tenant/SubscriptionManagement/SubsGeneralData/SubsGeneralData'
 import SubsFeatures from '../../components/custom/tenant/SubscriptionManagement/SubsFeatures/SubsFeatures'
 import SubsFeaturesHistory from '../../components/custom/tenant/SubscriptionManagement/SubsFeaturesHistory/SubsFeaturesHistotry'
@@ -58,6 +51,7 @@ const SubscriptionManagement = (props) => {
       }
     })()
   }, [routeParams.id])
+
   useEffect(() => {
     setCurrentProduct(tenantsData[routeParams.id]?.subscriptions[0]?.productId)
   }, [tenantsData])
@@ -81,12 +75,15 @@ const SubscriptionManagement = (props) => {
   const [currentTabCycle, setCurrentTabCycle] = useState()
   const [currentTabFeatures, setCurrentTabFeatures] = useState(0)
   const intl = useIntl()
+
   const handleTabChange = (index) => {
     setCurrentTab(index)
   }
+
   const handleFeatureTabChange = (index) => {
     setCurrentTabFeatures(index)
   }
+
   const [showResetConfirmation, setShowResetConfirmation] = useState(false)
   const [update, setUpdate] = useState(0)
   const [visible, setVisible] = useState(false)
@@ -120,10 +117,12 @@ const SubscriptionManagement = (props) => {
 
     setShowResetConfirmation(false)
   }
+
   const [
     showResetSubscriptionConfirmation,
     setShowResetSubscriptionConfirmation,
   ] = useState(false)
+
   const ResettableAllowed =
     subscriptionDatas?.subscriptionReset?.isResettableAllowed
   const handleResetSubscription = () => {

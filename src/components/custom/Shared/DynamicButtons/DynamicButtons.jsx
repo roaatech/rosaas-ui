@@ -24,12 +24,20 @@ import CreateTenantUserForm from '../../tenant/TenantsUsersManagement/CreateTena
 import CreateProductUserForm from '../../Product/ProductsUsersManagement/CreateProductUserForm/CreateProductUserForm'
 import TrialForm from '../../Product/TrialForm/TrialForm'
 import CreateSecretForm from '../../Product/ClientCredentials/SecretMangements/CreateSecretForm/CreateSecretForm'
+import CardSaveFormWithStripe from '../../CardSaveForm/CardSaveForm'
+import ChangePasswordForm from '../../DashboardTenant/Profile/ChangePasswordForm/ChangePasswordForm'
+import CreateWebhookForm from '../../Product/WebhookList/WebhookForm/WebhookForm'
+import ProductOwnerForm from '../../ProductOwner/ProductOwnerForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
   const navigate = useNavigate()
   const productsData = useSelector((state) => state.products.products)
   const tenantsData = useSelector((state) => state.tenants.tenants)
+  const productOwnersData = useSelector(
+    (state) => state.productsOwners.productsOwners
+  )
+
   let direction = useSelector((state) => state.main.direction)
   const [tenantData, setTenantData] = useState()
 
@@ -141,6 +149,19 @@ const DynamicButtons = ({ buttons }) => {
         />
       </>
     ),
+    editProductOwner: () => (
+      <ProductOwnerForm
+        popupLabel={<FormattedMessage id="Edit-Product-Owner" />}
+        type={'edit'}
+        productOwnerData={
+          productOwnersData && productOwnersData[buttons[currentButtonIndex].id]
+        }
+        update={buttons[currentButtonIndex].update}
+        setUpdate={buttons[currentButtonIndex].setUpdate}
+        visible={visible}
+        setVisible={setVisible}
+      />
+    ),
     addPlan: () => (
       <>
         <PlanForm
@@ -153,6 +174,17 @@ const DynamicButtons = ({ buttons }) => {
         />
       </>
     ),
+    addEndpoint: () => (
+      <>
+        <CreateWebhookForm
+          visible={visible}
+          setVisible={setVisible}
+          popUpLable={<FormattedMessage id="Add-Endpoint" />}
+          webhookId={buttons[currentButtonIndex].currentId}
+          type={buttons[currentButtonIndex].formType}
+        />
+      </>
+    ),
     addTrial: () => (
       <>
         <TrialForm
@@ -162,6 +194,18 @@ const DynamicButtons = ({ buttons }) => {
           setVisible={setVisible}
           sideBar={false}
           setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+        />
+      </>
+    ),
+    addCard: () => (
+      <>
+        <CardSaveFormWithStripe
+          popupLabel={<FormattedMessage id="Add-Card" />}
+          visible={visible}
+          setVisible={setVisible}
+          sideBar={false}
+          setCards={buttons[currentButtonIndex].setCards}
+          cards={buttons[currentButtonIndex].cards}
         />
       </>
     ),
@@ -210,6 +254,14 @@ const DynamicButtons = ({ buttons }) => {
           clientId={buttons[currentButtonIndex].clientId}
           update={buttons[currentButtonIndex].update}
           setUpdate={buttons[currentButtonIndex].setUpdate}
+        />
+      </>
+    ),
+    changePassword: () => (
+      <>
+        <ChangePasswordForm
+          popupLabel={buttons[currentButtonIndex].label}
+          setVisible={setVisible}
         />
       </>
     ),
@@ -398,7 +450,8 @@ const DynamicButtons = ({ buttons }) => {
         visible={visible}
         setVisible={setVisible}
         size={
-          buttons[currentButtonIndex]?.component === 'addSpecification'
+          buttons[currentButtonIndex]?.component === 'addSpecification' ||
+          buttons[currentButtonIndex]?.component === 'addEndpoint'
             ? 'lg'
             : ''
         }

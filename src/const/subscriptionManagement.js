@@ -19,9 +19,9 @@ export const SubscriptionPlanChangeStatus = {
     color: 'var(--midnight-blue)',
   },
   2: {
-    background: 'rgba(255, 201, 102, 0.4)',
+    background: 'var(--orange-yellow-blend)',
     value: <FormattedMessage id="In-Progress" />,
-    color: '#5c472e',
+    color: 'var(--mocha-brown)',
   },
   3: {
     background: 'var(--green2)',
@@ -42,9 +42,9 @@ export const SubscriptionResetStatus = {
     color: 'var(--midnight-blue)',
   },
   2: {
-    background: 'rgba(255, 201, 102, 0.4)',
+    background: 'var(--orange-yellow-blend)',
     value: <FormattedMessage id="In-Progress" />,
-    color: '#5c472e',
+    color: 'var(--mocha-brown)',
   },
   3: {
     background: 'var(--green2)',
@@ -72,10 +72,10 @@ export const paymentStatus = {
     color: '#fff',
   },
   200: {
-    background: 'var(--orange-brown)',
+    background: 'var(--green2)',
     value: <FormattedMessage id="Authorized" />,
     icon: <MdPayment />,
-    color: 'var(--orange-brown)',
+    color: 'var(--teal-green)',
   },
   300: {
     background: 'var(--green2)',
@@ -87,7 +87,7 @@ export const paymentStatus = {
     background: 'var(--red2)',
     value: <FormattedMessage id="Refunded" />,
     icon: <MdUndo />,
-    color: '#5c472e',
+    color: 'var(--mocha-brown)',
   },
   500: {
     background: 'var(--primary-color)',
@@ -117,7 +117,7 @@ export const orderStatus = {
   },
   4: {
     value: 'Cancelled',
-    color: '#5c472e',
+    color: 'var(--mocha-brown)',
   },
 }
 

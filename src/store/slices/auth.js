@@ -9,7 +9,7 @@ export const authSlice = createSlice({
     logOut: (state) => {
       state.userInfo = {}
       localStorage.removeItem('token')
-      window.location.href = '/'
+      // window.location.href = '/'
     },
     addUserInfo: (state, action) => {
       state.userInfo = action.payload
@@ -17,10 +17,19 @@ export const authSlice = createSlice({
     signinRedirectPath: (state, action) => {
       state.redirectPath = action.payload
     },
+    updateUserInfoAttribute: (state, action) => {
+      const { key, value } = action.payload
+      state.userInfo[key] = value
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { logOut, addUserInfo, signinRedirectPath } = authSlice.actions
+export const {
+  updateUserInfoAttribute,
+  logOut,
+  addUserInfo,
+  signinRedirectPath,
+} = authSlice.actions
 
 export default authSlice.reducer

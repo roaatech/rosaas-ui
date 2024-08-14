@@ -520,7 +520,7 @@ const SubscriptionManagement = (props) => {
                                           <Label
                                             {...{
                                               background:
-                                                'rgba(255, 201, 102, 0.4)',
+                                                'var(--orange-yellow-blend)',
                                               value: (
                                                 <>
                                                   <FormattedMessage
@@ -546,7 +546,7 @@ const SubscriptionManagement = (props) => {
                                                   }
                                                 </>
                                               ),
-                                              color: '#5c472e',
+                                              color: 'var(--mocha-brown)',
                                             }}
                                           />
                                         </>

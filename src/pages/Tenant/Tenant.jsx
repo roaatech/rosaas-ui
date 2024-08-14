@@ -60,9 +60,9 @@ export default function Tenant({ children }) {
     if (selectedProduct)
       query += `&filters[1].Field=selectedProduct&filters[1].Value=${selectedProduct}`
     ;(async () => {
-      // const listData = await getTenantList(query);
-      // setTotalCount(listData.data.data.totalCount);
-      // setList(listData.data.data.items);
+      const listData = await getTenantList(query)
+      setTotalCount(listData.data.data.totalCount)
+      setList(listData.data.data.items)
     })()
   }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
 
