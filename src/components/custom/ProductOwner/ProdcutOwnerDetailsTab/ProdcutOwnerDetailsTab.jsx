@@ -98,7 +98,6 @@ const ProductOwnerDetails = () => {
 
   const listData = useSelector((state) => state.productsOwners.productsOwners)
   let productOwner = listData?.[routeParams.id]
-  console.log({ productOwner })
   const deleteProductOwner = async () => {
     await deleteProductOwnerReq(current)
     dispatch(removeProductOwnerStore(current))

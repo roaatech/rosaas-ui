@@ -56,7 +56,6 @@ const SignInTenantAdmin = () => {
   const onRecaptchaChange = (token) => {
     setRecaptchaToken(token)
   }
-  console.log({ ssss: process.env })
 
   return (
     <LoginWrapper>

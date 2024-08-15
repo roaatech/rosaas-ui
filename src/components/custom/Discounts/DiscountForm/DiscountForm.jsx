@@ -23,7 +23,6 @@ const DiscountForm = ({
   const { createDiscount, editDiscountRequest, getDiscountById } = useRequest()
   const discountsData = useSelector((state) => state?.discountsSlice?.discounts)
   const [discountData, setDiscountData] = useState()
-  console.log({ discountData })
 
   useEffect(() => {
     const fetchDiscountDetails = async () => {
@@ -83,8 +82,6 @@ const DiscountForm = ({
   const [requiresCouponCode, setRequiresCouponCode] = useState(
     discountData ? discountData.requiresCouponCode : false
   )
-
-  console.log({ aaaaaaaaaa: discountsData[currentId] })
 
   const initialValues = {
     displayName: discountData ? discountData.displayName : '',

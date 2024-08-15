@@ -105,8 +105,6 @@ const CheckoutTenantReg = ({
           })
         : []
 
-      console.log({ specificationsArray })
-
       const specErrors = validateSpecifications(
         filteredSpecificationsArray,
         specificationValues,
@@ -230,7 +228,6 @@ const CheckoutTenantReg = ({
       allSpecificationsArray.filter((spec) => spec.isPublished === true)
     )
   }, [specifications, priceData, currentPrice])
-  console.log({ filteredSpecificationsArray })
 
   useEffect(() => {
     if (
