@@ -236,9 +236,9 @@ const ProductDetails = () => {
               />
             </TabPanel>
 
-            <TabPanel header={<FormattedMessage id="User-Management" />}>
+            {/* <TabPanel header={<FormattedMessage id="User-Management" />}>
               <ProductsUsersManagement />
-            </TabPanel>
+            </TabPanel> */}
             <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
               <ProductCustomSpecificationList
                 productId={productData.id}

@@ -75,14 +75,20 @@ const CreateSecretForm = ({
   })
   const [nextPage, setNexPage] = useState(false)
   const [clientSecret, setClientSecret] = useState(false)
+  console.log({ clientRecordId, clientId, currentClientId, productId })
+
   useEffect(() => {
     const fetchData = async () => {
       if (!clientRecordId || !clientId) {
         try {
           const clientData = await getClientId(productId, currentClientId)
+          const curentClientData =
+            clientData &&
+            clientData.data.data.find((item) => item.id === currentClientId)
+          console.log({ clientData })
 
-          setClientRecordId(clientData.data.data?.clientRecordId)
-          setClientId(clientData.data.data?.clientId)
+          setClientRecordId(curentClientData?.clientRecordId)
+          setClientId(curentClientData?.clientId)
         } catch (error) {
           console.error('Error:', error)
         }
@@ -162,7 +168,7 @@ const CreateSecretForm = ({
                     expiration: customExpirationDate,
                     clientId,
                     clientRecordId,
-                    created: new Date().now().toISOString().slice(0, 19),
+                    created: new Date().toISOString().slice(0, 19),
                   },
                 ],
               },
