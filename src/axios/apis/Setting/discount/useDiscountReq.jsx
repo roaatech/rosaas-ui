@@ -25,7 +25,7 @@ const useDiscountReq = () => {
   }
   const deleteDiscountUsageHistoriesById = async (discountId, id) => {
     return await Request.delete(
-      `/api/management/sadmin/v1/Discounts/${discountId}/UsageHistories/${id}`
+      `management/sadmin/v1/Discounts/${discountId}/UsageHistories/${id}`
     )
   }
   const getDiscountById = async (id) => {
@@ -33,7 +33,7 @@ const useDiscountReq = () => {
   }
   const getDiscountUsageHistoriesByDiscountId = async (discountId) => {
     return await Request.get(
-      `/api/management/sadmin/v1/Discounts/${discountId}/UsageHistories`
+      `management/sadmin/v1/Discounts/${discountId}/UsageHistories`
     )
   }
   return {

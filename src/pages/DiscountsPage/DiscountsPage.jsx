@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Wrapper } from './DiscountsPage.styled'
@@ -31,7 +31,16 @@ import {
   setAllDiscounts,
 } from '../../store/slices/discountsSlice'
 import DeleteConfirmation from '../../components/custom/global/DeleteConfirmation/DeleteConfirmation'
-import { MdOutlineCheck, MdOutlineError } from 'react-icons/md'
+import {
+  MdCheck,
+  MdClose,
+  MdOutlineCheck,
+  MdOutlineClose,
+  MdOutlineError,
+} from 'react-icons/md'
+import { DataTransform, formatDate } from '../../lib/sharedFun/Time'
+import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel'
+import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 
 export default function DiscountsPage() {
   const dispatch = useDispatch()
@@ -40,11 +49,9 @@ export default function DiscountsPage() {
   const [visibleHead, setVisibleHead] = useState(false)
   const [first, setFirst] = useState(0) // For pagination
   const [rows, setRows] = useState(10) // Rows per page
-  const [searchValue, setSearchValue] = useState('') // For filtering
   const { getDiscounts, activeDiscount, deleteDiscount } = useRequest()
   const [confirm, setConfirm] = useState(false)
   const [currentId, setCurrentId] = useState('')
-  const [update, setUpdate] = useState(1)
   const navigate = useNavigate()
 
   const listData = useSelector((state) => state?.discountsSlice?.discounts)
@@ -52,7 +59,7 @@ export default function DiscountsPage() {
   useEffect(() => {
     const fetchDiscounts = async () => {
       const response = await getDiscounts(
-        `?page=${first / rows + 1}&pageSize=${rows}&search=${searchValue}`
+        `?page=${first / rows + 1}&pageSize=${rows}`
       )
       if (response?.data) {
         dispatch(setAllDiscounts(response.data.data))
@@ -61,7 +68,7 @@ export default function DiscountsPage() {
     }
 
     fetchDiscounts()
-  }, [first, rows, searchValue, update])
+  }, [first, rows])
 
   const deleteDiscountFun = async () => {
     const response = await deleteDiscount(currentId)
@@ -83,17 +90,23 @@ export default function DiscountsPage() {
     setRows(event.rows)
   }
 
-  const onFilterChange = (value) => {
-    setSearchValue(value)
-    setFirst(0) // Reset to first page on filter change
-  }
+  // const onFilterChange = (value) => {
+  //   setSearchValue(value)
+  //   setFirst(0) // Reset to first page on filter change
+  // }
   const discountTypeOptions = [
-    { value: 1, label: 'Assigned to Plans' },
-    { value: 2, label: 'Assigned to Products' },
-    { value: 3, label: 'Assigned to Products Owners' },
-    { value: 4, label: 'Assigned to Order Total' },
-    { value: 5, label: 'Assigned to Order SubTotal' },
+    'Assigned to Plans',
+    'Assigned to Products',
+    'Assigned to Products Owners',
+    'Assigned to Order Total',
+    'Assigned to Order SubTotal',
   ]
+  const processedData = useMemo(() => {
+    return Object.values(listData)?.map((discount) => ({
+      ...discount,
+    }))
+  }, [listData])
+
   return (
     <Wrapper>
       <BreadcrumbComponent breadcrumbInfo={'DiscountsList'} />
@@ -101,8 +114,7 @@ export default function DiscountsPage() {
         <TableHead
           label={<FormattedMessage id="Add-Discount" />}
           icon={'pi-box'}
-          searchValue={searchValue}
-          setSearchValue={onFilterChange}
+          search={false}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
           title={<FormattedMessage id="Discounts-List" />}
@@ -110,8 +122,6 @@ export default function DiscountsPage() {
           <DiscountForm
             popupLabel={<FormattedMessage id="Create-Discount" />}
             type={'create'}
-            update={update}
-            setUpdate={setUpdate}
             visible={visibleHead}
             setVisible={setVisibleHead}
           />
@@ -122,7 +132,7 @@ export default function DiscountsPage() {
         >
           <Card.Body className="pt-0">
             <DataTable
-              value={listData && Object.values(listData)}
+              value={processedData && Object.values(processedData)}
               tableStyle={{ minWidth: '50rem' }}
               size={'small'}
               rows={rows}
@@ -132,16 +142,9 @@ export default function DiscountsPage() {
             >
               <Column field="displayName" header="Name" />
               <Column
+                body={(data) => discountTypeOptions[data.discountType - 1]}
                 header="Discount type"
-                body={(rowData) => {
-                  const discountType = discountTypeOptions.find(
-                    (option) => option.value === rowData.discountType
-                  )
-                  return discountType
-                    ? discountType.label
-                    : rowData.discountType
-                }}
-              />{' '}
+              />
               <Column
                 header="Discount"
                 body={(rowData) =>
@@ -151,14 +154,31 @@ export default function DiscountsPage() {
                 }
               />
               <Column
+                body={(data) =>
+                  data.startDate && (
+                    <Label
+                      {...{
+                        value: DataTransform(data.startDate),
+                        lighter: true,
+                      }}
+                    />
+                  )
+                }
                 header="Start Date"
-                body={(rowData) => rowData.startDate.replace('T', ' ')}
-              />{' '}
+              />
               <Column
+                body={(data) =>
+                  data.endDate && (
+                    <DateLabel endDate={DataTransform(data.endDate)} />
+                  )
+                }
                 header="End date"
-                body={(rowData) => rowData.endDate.replace('T', ' ')}
-              />{' '}
-              <Column field="timesUsed" header="Times used" />
+              />
+              <Column
+                body={(data) => (data.timesUsed ? data.timesUsed : 0)}
+                header="Times used"
+              />
+
               <Column
                 field="isActive"
                 header="Is active"
@@ -188,12 +208,12 @@ export default function DiscountsPage() {
                       >
                         {!data.isActive ? (
                           <span className=" ">
-                            <MdOutlineCheck className="mx-2" />
+                            <MdCheck className="mx-2" />
                             <FormattedMessage id="Activate" />
                           </span>
                         ) : (
                           <span className=" ">
-                            <MdOutlineError className="mx-2" />
+                            <MdClose className="mx-2" />
                             <FormattedMessage id="Deactivate" />
                           </span>
                         )}
@@ -202,7 +222,12 @@ export default function DiscountsPage() {
                         <FontAwesomeIcon icon={faEye} className="mx-2" />
                         <FormattedMessage id="View-Details" />
                       </Dropdown.Item>
-                      <Dropdown.Item onSelect={() => setVisible(true)}>
+                      <Dropdown.Item
+                        onSelect={() => {
+                          setCurrentId(data.id)
+                          setVisible(true)
+                        }}
+                      >
                         <FontAwesomeIcon icon={faEdit} className="mx-2" />
                         <FormattedMessage id="Edit" />
                       </Dropdown.Item>
@@ -237,6 +262,16 @@ export default function DiscountsPage() {
               confirmFunction={deleteDiscountFun}
               sideBar={false}
             />
+            <ThemeDialog visible={visible} setVisible={setVisible}>
+              <DiscountForm
+                popupLabel={<FormattedMessage id="Edit-Discount" />}
+                type={'edit'}
+                visible={visible}
+                setVisible={setVisible}
+                discountData={listData[currentId]}
+                currentId={currentId}
+              />
+            </ThemeDialog>
           </Card.Body>
         </Card>
       </div>

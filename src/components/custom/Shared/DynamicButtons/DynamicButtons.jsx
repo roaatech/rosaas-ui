@@ -28,6 +28,7 @@ import CardSaveFormWithStripe from '../../CardSaveForm/CardSaveForm'
 import ChangePasswordForm from '../../DashboardTenant/Profile/ChangePasswordForm/ChangePasswordForm'
 import CreateWebhookForm from '../../Product/WebhookList/WebhookForm/WebhookForm'
 import ProductOwnerForm from '../../ProductOwner/ProductOwnerForm'
+import DiscountForm from '../../Discounts/DiscountForm/DiscountForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -301,6 +302,15 @@ const DynamicButtons = ({ buttons }) => {
           setUpdate={buttons[currentButtonIndex].setUpdate}
         />
       </>
+    ),
+    editDiscount: () => (
+      <DiscountForm
+        popupLabel={<FormattedMessage id="Edit-Discount" />}
+        type={'edit'}
+        visible={visible}
+        setVisible={setVisible}
+        discountData={buttons[currentButtonIndex].discountData}
+      />
     ),
   }
   return (

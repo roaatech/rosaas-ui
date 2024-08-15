@@ -118,7 +118,9 @@ export const Routes = {
   },
   DiscountsPage: {
     path: `${adminPanel}/settings/Discounts`,
-    component: DiscountsPage,
+
+    component: () => <POwnerChecker page={<DiscountsPage />} />,
+
     roles: ['superAdmin', 'clientAdmin'],
   },
 

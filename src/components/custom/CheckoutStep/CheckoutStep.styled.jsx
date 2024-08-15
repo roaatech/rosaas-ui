@@ -15,6 +15,24 @@ export const Wrapper = styled.div`
   p.total {
     background-color: #ffab032a;
   }
+  .merged-form-group {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .merged-form-group .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .merged-form-group .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
   .normal-text {
     font-weight: normal;
     padding-top: 10px;

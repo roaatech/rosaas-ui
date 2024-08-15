@@ -455,41 +455,46 @@ export default (props = {}) => {
                 </CollapsableNavItem>
               ) : null}
 
-              {userRole == 'superAdmin' && (
+              {(userRole == 'superAdmin' || userRole == 'clientAdmin') && (
                 <CollapsableNavItem
                   eventKey={settingIsOpen}
                   title={<FormattedMessage id="Settings" />}
                   icon={<BsGearFill />}
                 >
-                  <NavItem
-                    title={<FormattedMessage id="Health-Check-sidebar" />}
-                    link={Routes.Settings.path}
-                    icon={BsFillClipboard2CheckFill}
-                  />
+                  {userRole == 'superAdmin' && (
+                    <>
+                      <NavItem
+                        title={<FormattedMessage id="Health-Check-sidebar" />}
+                        link={Routes.Settings.path}
+                        icon={BsFillClipboard2CheckFill}
+                      />
 
-                  <NavItem
-                    title={<FormattedMessage id="Subscriptions" />}
-                    link={Routes.SubscriptionsSettings.path}
-                    icon={BsPeople}
-                  />
+                      <NavItem
+                        title={<FormattedMessage id="Subscriptions" />}
+                        link={Routes.SubscriptionsSettings.path}
+                        icon={BsPeople}
+                      />
 
-                  <NavItem
-                    title={<FormattedMessage id="Product-Warnings" />}
-                    link={Routes.ProductWarningsSettings.path}
-                    icon={BsExclamationTriangle}
-                  />
-
+                      <NavItem
+                        title={<FormattedMessage id="Product-Warnings" />}
+                        link={Routes.ProductWarningsSettings.path}
+                        icon={BsExclamationTriangle}
+                      />
+                    </>
+                  )}
                   <NavItem
                     title={<FormattedMessage id="Discounts" />}
                     link={Routes.DiscountsPage.path}
                     icon={MdDiscount}
                   />
 
-                  <NavItem
-                    title={<FormattedMessage id="Profile" />}
-                    link={Routes.Profile.path}
-                    icon={BsPersonFillGear}
-                  />
+                  {userRole == 'superAdmin' && (
+                    <NavItem
+                      title={<FormattedMessage id="Profile" />}
+                      link={Routes.Profile.path}
+                      icon={BsPersonFillGear}
+                    />
+                  )}
                 </CollapsableNavItem>
               )}
             </Nav>

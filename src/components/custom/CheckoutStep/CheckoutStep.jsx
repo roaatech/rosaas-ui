@@ -22,13 +22,14 @@ import {
 } from 'react-icons/bs'
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { cycle } from '../../../const/product'
 import { Wrapper } from './CheckoutStep.styled'
 import { setStep } from '../../../store/slices/tenants'
 import { da } from 'date-fns/locale'
 import ThemeDialog from '../Shared/ThemeDialog/ThemeDialog'
 import GenerateNavigationLinkModal from './GenerateNavigationLinkModal/GenerateNavigationLinkModal'
+import { toast } from 'react-toastify'
 
 const CheckoutPage = (data) => {
   const {
@@ -62,6 +63,7 @@ const CheckoutPage = (data) => {
     getFeaturePlanPublic,
     getOrderByIdPublic,
     getFeaturePlanListPublic,
+    applyDiscountCode,
   } = useRequest()
 
   const listProduct = useSelector((state) => state.products.products)
@@ -88,6 +90,7 @@ const CheckoutPage = (data) => {
 
   const [currentFeaturePlan, setCurrentFeaturePlan] = useState()
   const [trialFeaturePlan, setTrialFeaturePlan] = useState()
+  const intl = useIntl()
   useEffect(() => {
     if (!priceData || !productSystemName) {
       return
@@ -140,6 +143,10 @@ const CheckoutPage = (data) => {
     } else {
       setRememberCardInfo(newValue)
     }
+  }
+  const [discountCodeStatus, setDiscountCodeStatus] = useState(false)
+  const handleDiscountCodeStatus = () => {
+    setDiscountCodeStatus(!discountCodeStatus)
   }
   const [navigationLink, setNavigationLink] = useState()
   const handlePayment = async () => {
@@ -236,7 +243,26 @@ const CheckoutPage = (data) => {
       </>
     )
   }
+  const [discountCode, setDiscountCode] = useState('')
+  const [discountAmount, setDiscountAmount] = useState(0)
+  const [isDiscountApplied, setIsDiscountApplied] = useState(false)
 
+  // Function to handle discount code application
+  const handleApplyDiscount = async () => {
+    try {
+      // const response = await applyDiscountCode(discountCode) // Replace with your actual discount code API
+      // const { discount } = response.data // Adjust based on your API response
+      setDiscountAmount(20)
+      toast.success('Discount Applied successfully', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 4000,
+      })
+      setIsDiscountApplied(true)
+    } catch (error) {
+      console.error('Error applying discount code:', error)
+      // Handle errors (e.g., show error message)
+    }
+  }
   return (
     <Wrapper>
       <div className="main-container">
@@ -440,6 +466,12 @@ const CheckoutPage = (data) => {
                           <p className="fw-bold">
                             <FormattedMessage id="Order-Subtotal-Include-Tax" />
                           </p>
+                          {isDiscountApplied && (
+                            <p className="fw-bold text-danger">
+                              <FormattedMessage id="Discount-Amount" />
+                            </p>
+                          )}
+
                           {orderData?.orderItems[0]?.trialPeriodInDays ? (
                             <>
                               <p className="fw-bold">
@@ -466,6 +498,11 @@ const CheckoutPage = (data) => {
                           <span className=" d-flex flex-column align-items-center">
                             <p>${orderData?.orderSubtotalExclTax}</p>
                             <p>${orderData?.orderSubtotalInclTax}</p>
+                            {isDiscountApplied && (
+                              <p className="fw-bold text-danger">
+                                -${discountAmount}
+                              </p>
+                            )}
                             {orderData?.orderItems[0]?.trialPeriodInDays ? (
                               <p className="trial">
                                 $0.00 /{' '}
@@ -475,15 +512,61 @@ const CheckoutPage = (data) => {
                             ) : (
                               ''
                             )}
-                            <p className="total fw-bold py-2 px-8">
-                              ${orderData?.orderTotal}
-                            </p>
+                            {isDiscountApplied && (
+                              <p className="total fw-bold py-2 px-8">
+                                ${orderData?.orderTotal - discountAmount}
+                              </p>
+                            )}
+                            {
+                              // !isDiscountApplied &&
+                              !isDiscountApplied && (
+                                <p className="total fw-bold py-2 px-8">
+                                  ${orderData?.orderTotal}
+                                </p>
+                              )
+                            }
                           </span>
                         </div>
                       </div>
                     )}
                     {paymentMethod && hasToPay && (
                       <Form>
+                        {/* Discount Code */}
+                        <div className=" mr-3">
+                          <Form.Check
+                            type="checkbox"
+                            label={<FormattedMessage id="Add-Discount-Code" />}
+                            checked={discountCodeStatus}
+                            onChange={handleDiscountCodeStatus}
+                            disabled={autoRenewal}
+                            className="font-small"
+                          />
+                          <Form.Group className="mb-3 merged-form-group">
+                            {discountCodeStatus && (
+                              <>
+                                <Form.Control
+                                  type="text"
+                                  placeholder={intl.formatMessage({
+                                    id: 'Enter-Discount-Code',
+                                  })}
+                                  value={discountCode}
+                                  onChange={(e) =>
+                                    setDiscountCode(e.target.value)
+                                  }
+                                  className="form-control"
+                                />
+                                <Button
+                                  variant="secondary"
+                                  type="button"
+                                  onClick={handleApplyDiscount}
+                                  className="btn"
+                                >
+                                  <FormattedMessage id="Apply" />
+                                </Button>
+                              </>
+                            )}
+                          </Form.Group>
+                        </div>
                         {/* Remember Card Information */}
                         <Form.Group className="mb-3">
                           <Form.Check
@@ -511,42 +594,34 @@ const CheckoutPage = (data) => {
                         </Form.Group>
                       </Form>
                     )}
-                    {
+                    <div className="button-container">
                       <Button
                         variant="primary"
                         type="button"
                         onClick={handlePayment}
                       >
                         {hasToPay ? (
-                          // <FormattedMessage
-                          //   id={`Pay-${
-                          //     paymentMethod === 1 ? 'Manual' : 'With-Stripe'
-                          //   }`}
-                          // />
                           <FormattedMessage id={`Checkout`} />
                         ) : (
                           <FormattedMessage id="Complete" />
                         )}
                       </Button>
-                    }{' '}
-                    {hasToPay && (
-                      <>
-                        {' '}
-                        <span className="underline m-2">
-                          <FormattedMessage id="or" />
-                        </span>
-                        <Button
-                          variant="secondary"
-                          type="button"
-                          onClick={() => {
-                            setVisible(true)
-                          }}
-                          className="mx-2"
-                        >
-                          <FormattedMessage id="Create-Payment-Link" />
-                        </Button>
-                      </>
-                    )}
+                      {hasToPay && (
+                        <>
+                          <span className="underline m-2">
+                            <FormattedMessage id="or" />
+                          </span>
+                          <Button
+                            variant="secondary"
+                            type="button"
+                            onClick={() => setVisible(true)}
+                            className="mx-2"
+                          >
+                            <FormattedMessage id="Create-Payment-Link" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   </Card.Body>
                   {orderData?.orderItems[0]?.trialPeriodInDays ? (
                     <Card.Footer>

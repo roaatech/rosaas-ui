@@ -19,6 +19,10 @@ import {
 } from '@themesberg/react-bootstrap'
 import { DataTransform } from '../../../lib/sharedFun/Time'
 import DeleteConfirmation from '../global/DeleteConfirmation/DeleteConfirmation'
+import BreadcrumbComponent from '../Shared/Breadcrumb/Breadcrumb'
+import Label from '../Shared/label/Label'
+import DateLabel from '../Shared/DateLabel/DateLabel'
+import { labelYesNoStyle } from '../../../const/const'
 
 const DiscountDetails = () => {
   const routeParams = useParams()
@@ -66,16 +70,26 @@ const DiscountDetails = () => {
     setUsageHistories(usageHistories.filter((h) => h.id !== currentHistoryId))
     setConfirm(false)
   }
-
+  const discountTypeOptions = [
+    { value: 1, label: 'Assigned to Plans' },
+    { value: 2, label: 'Assigned to Products' },
+    { value: 3, label: 'Assigned to Products Owners' },
+    { value: 4, label: 'Assigned to Order Total' },
+    { value: 5, label: 'Assigned to Order SubTotal' },
+  ]
+  const discountLimitationOptions = [
+    { value: 1, label: 'Unlimited' },
+    { value: 2, label: 'N Times Only' },
+    { value: 3, label: 'N Times Per Customer' },
+  ]
   return (
     <Wrapper>
-      {/* {discount && (
+      {discount && (
         <BreadcrumbComponent
           breadcrumbInfo={'DiscountDetails'}
-          param1={discount.displayName}
           data={{ name: discount.displayName }}
         />
-      )} */}
+      )}
 
       {discount && (
         <div className="main-container">
@@ -94,6 +108,7 @@ const DiscountDetails = () => {
                   component: 'editDiscount',
                   icon: <AiFillEdit />,
                   setActiveIndex: () => setActiveIndex(0),
+                  discountData: discount,
                 },
                 {
                   order: 5,
@@ -141,7 +156,12 @@ const DiscountDetails = () => {
                         </td>
                         <td>
                           <FormattedMessage
-                            id={`discountType.${discount.discountType}`}
+                            id={
+                              discountTypeOptions.find(
+                                (option) =>
+                                  option.value === discount.discountType
+                              )?.label
+                            }
                           />
                         </td>
                       </tr>
@@ -149,7 +169,11 @@ const DiscountDetails = () => {
                         <td className="fw-bold">
                           <FormattedMessage id="Use-Percentage" />
                         </td>
-                        <td>{discount.usePercentage ? 'Yes' : 'No'}</td>
+                        <td>
+                          <Label
+                            {...labelYesNoStyle[discount?.usePercentage]}
+                          />
+                        </td>
                       </tr>
                       {discount.usePercentage && (
                         <tr>
@@ -180,7 +204,14 @@ const DiscountDetails = () => {
                           <FormattedMessage id="Start-Date" />
                         </td>
                         <td>
-                          {DataTransform(discount.startDate).replace('T', ' ')}
+                          {discount.startDate && (
+                            <Label
+                              {...{
+                                value: DataTransform(discount.startDate),
+                                lighter: true,
+                              }}
+                            />
+                          )}
                         </td>
                       </tr>
                       <tr>
@@ -188,14 +219,23 @@ const DiscountDetails = () => {
                           <FormattedMessage id="End-Date" />
                         </td>
                         <td>
-                          {DataTransform(discount.endDate).replace('T', ' ')}
+                          {discount.endDate && (
+                            <DateLabel
+                              endDate={DataTransform(discount.endDate)}
+                            />
+                          )}
                         </td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
                           <FormattedMessage id="Requires-Coupon-Code" />
                         </td>
-                        <td>{discount.requiresCouponCode ? 'Yes' : 'No'}</td>
+                        <td>
+                          {' '}
+                          <Label
+                            {...labelYesNoStyle[discount?.requiresCouponCode]}
+                          />
+                        </td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
@@ -207,7 +247,10 @@ const DiscountDetails = () => {
                         <td className="fw-bold">
                           <FormattedMessage id="Is-Cumulative" />
                         </td>
-                        <td>{discount.isCumulative ? 'Yes' : 'No'}</td>
+                        <td>
+                          {' '}
+                          <Label {...labelYesNoStyle[discount?.isCumulative]} />
+                        </td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
@@ -215,7 +258,12 @@ const DiscountDetails = () => {
                         </td>
                         <td>
                           <FormattedMessage
-                            id={`discountLimitation.${discount.discountLimitation}`}
+                            id={
+                              discountLimitationOptions.find(
+                                (option) =>
+                                  option.value === discount.discountLimitation
+                              )?.label
+                            }
                           />
                         </td>
                       </tr>
@@ -229,7 +277,9 @@ const DiscountDetails = () => {
                         <td className="fw-bold">
                           <FormattedMessage id="Is-Active" />
                         </td>
-                        <td>{discount.isActive ? 'Yes' : 'No'}</td>
+                        <td>
+                          <Label {...labelYesNoStyle[discount?.isActive]} />
+                        </td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
@@ -280,10 +330,11 @@ const DiscountDetails = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {usageHistories.map((history, index) => (
+                      {Object.values(usageHistories).map((history, index) => (
                         <tr key={index}>
                           <td>
-                            {DataTransform(history.usedDate).replace('T', ' ')}
+                            {history.usedDate &&
+                              DataTransform(history.usedDate).replace('T', ' ')}
                           </td>
                           <td>{history.orderNumber}</td>
                           <td>{history.orderTotal}</td>

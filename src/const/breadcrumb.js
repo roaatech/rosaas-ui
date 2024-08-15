@@ -17,6 +17,15 @@ export const breadcrumbFun = (routeParams, data) => {
       active: 'Settings',
       icon: {},
     },
+    DiscountDetails: {
+      title: 'Discounts',
+      name: 'Discounts-Management',
+      active: 'Discounts Management',
+      parentNavigation: Routes.DiscountsPage.path,
+      parent: data?.name,
+      changableParent: true,
+      icon: {},
+    },
     Profile: {
       title: 'Settings',
       name: 'Profile',

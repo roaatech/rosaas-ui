@@ -91,8 +91,8 @@ const CheckoutTenantReg = ({
     validationSchema: validationSchema,
 
     onSubmit: async (values) => {
-      const specificationsArray = priceData?.specifications
-        ? Object.values(priceData?.specifications).map((specification) => {
+      const specificationsArray = filteredSpecificationsArray
+        ? filteredSpecificationsArray.map((specification) => {
             const specificationId = specification.id
             const value =
               specificationValues[specificationId] !== undefined
@@ -101,10 +101,12 @@ const CheckoutTenantReg = ({
             return {
               specificationId,
               value,
-              productId: values.product,
             }
           })
         : []
+
+      console.log({ specificationsArray })
+
       const specErrors = validateSpecifications(
         filteredSpecificationsArray,
         specificationValues,
@@ -146,7 +148,7 @@ const CheckoutTenantReg = ({
             setHasToPay(createTenant?.data.data?.hasToPay)
           }
 
-          dispatch(setStep(2))
+          // dispatch(setStep(2))
           const id = createTenant?.data?.data?.orderId
           if (id) {
             navigate(`#${id}`)
@@ -209,7 +211,7 @@ const CheckoutTenantReg = ({
       setCurrentTenant(createTenant?.data.data.id)
       setHasToPay(createTenant?.data.data?.hasToPay)
 
-      dispatch(setStep(2))
+      // dispatch(setStep(2))
     } catch (error) {
       console.error('Error in createTenantRequest:', error)
     }
@@ -228,6 +230,7 @@ const CheckoutTenantReg = ({
       allSpecificationsArray.filter((spec) => spec.isPublished === true)
     )
   }, [specifications, priceData, currentPrice])
+  console.log({ filteredSpecificationsArray })
 
   useEffect(() => {
     if (
