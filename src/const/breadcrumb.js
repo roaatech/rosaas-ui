@@ -12,7 +12,7 @@ export const breadcrumbFun = (routeParams, data) => {
     },
     DiscountsList: {
       title: 'Settings',
-      name: 'DiscountsList',
+      name: 'Discounts-List',
       navigation: '/settings/DiscountsList',
       active: 'Settings',
       icon: {},

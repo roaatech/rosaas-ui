@@ -8,6 +8,8 @@ import { Wrapper } from './ProductOwnerForm.styled.jsx'
 import useRequest from '../../../axios/apis/useRequest.js'
 import TextareaAndCounter from '../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import AutoGenerateInput from '../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import { Routes } from '../../../routes.js'
+import { useNavigate } from 'react-router-dom'
 
 const ProductOwnerForm = ({
   type,
@@ -18,7 +20,7 @@ const ProductOwnerForm = ({
   productOwnerData,
 }) => {
   const { createPORequest, editPORequest } = useRequest()
-  const dispatch = useDispatch()
+  const navigate = useNavigate()
   let userInfo = useSelector((state) => state.auth.userInfo)
   const initialValues = {
     systemName: productOwnerData ? productOwnerData.systemName : '',
@@ -44,7 +46,6 @@ const ProductOwnerForm = ({
     initialValues,
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      setVisible(false)
       if (type === 'create') {
         if (userInfo?.userType == 'clientAdmin') {
           const createPO = await createPORequest({
@@ -53,14 +54,16 @@ const ProductOwnerForm = ({
             description: values.description,
             CreatedByUserId: userInfo?.id,
           })
-          setUpdate(update + 1)
+          setUpdate && setUpdate(update + 1)
         } else {
           const createPO = await createPORequest({
             systemName: values.systemName,
             displayName: values.displayName,
             description: values.description,
           })
-          setUpdate(update + 1)
+          setUpdate && setUpdate(update + 1)
+          setVisible && setVisible(false)
+          navigate(`${Routes.productsOwners.path}/${createPO.data.data.id}`)
         }
       } else {
         const editPO = await editPORequest(productOwnerData.id, {
@@ -69,11 +72,11 @@ const ProductOwnerForm = ({
           displayName: values.displayName,
           description: values.description,
         })
-        setUpdate(update + 1)
+        setUpdate && setUpdate(update + 1)
+        setVisible && setVisible(false)
 
         // Dispatch any necessary actions after editing
       }
-      setVisible && setVisible(false)
       setSubmitting(false)
     },
   })

@@ -94,7 +94,7 @@ const ProductOwnerDetails = () => {
         })
       )
     })()
-  }, [visible, routeParams?.id])
+  }, [visible, routeParams?.id, update])
 
   const listData = useSelector((state) => state.productsOwners.productsOwners)
   let productOwner = listData?.[routeParams.id]

@@ -7,7 +7,6 @@ import { updateUserInfoAttribute } from '../store/slices/auth'
 
 const POwnerChecker = ({ page }) => {
   const userInfo = useSelector((state) => state.auth.userInfo)
-  console.log({ userInfo })
   const userRole = userInfo?.userType
   const { isProductOwnerRegistered } = useRequest()
   const dispatch = useDispatch()

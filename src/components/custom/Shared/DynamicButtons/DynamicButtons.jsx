@@ -29,6 +29,7 @@ import ChangePasswordForm from '../../DashboardTenant/Profile/ChangePasswordForm
 import CreateWebhookForm from '../../Product/WebhookList/WebhookForm/WebhookForm'
 import ProductOwnerForm from '../../ProductOwner/ProductOwnerForm'
 import DiscountForm from '../../Discounts/DiscountForm/DiscountForm'
+import AddValidationUrlForm from '../../Product/CustomSpecification/AddValidationUrlForm/AddValidationUrlForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -310,6 +311,13 @@ const DynamicButtons = ({ buttons }) => {
         visible={visible}
         setVisible={setVisible}
         discountData={buttons[currentButtonIndex].discountData}
+      />
+    ),
+    AddValidationUrl: () => (
+      <AddValidationUrlForm
+        productId={buttons[currentButtonIndex].id}
+        setVisible={setVisible}
+        setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
       />
     ),
   }

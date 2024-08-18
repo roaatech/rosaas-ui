@@ -75,7 +75,6 @@ const CreateSecretForm = ({
   })
   const [nextPage, setNexPage] = useState(false)
   const [clientSecret, setClientSecret] = useState(false)
-  console.log({ clientRecordId, clientId, currentClientId, productId })
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,7 +84,6 @@ const CreateSecretForm = ({
           const curentClientData =
             clientData &&
             clientData.data.data.find((item) => item.id === currentClientId)
-          console.log({ clientData })
 
           setClientRecordId(curentClientData?.clientRecordId)
           setClientId(curentClientData?.clientId)

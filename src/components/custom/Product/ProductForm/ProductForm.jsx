@@ -91,7 +91,6 @@ const ProductForm = ({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      setVisible(false)
       if (type == 'create') {
         const createProduct = await createProductRequest({
           displayName: values.displayName,
@@ -118,7 +117,8 @@ const ProductForm = ({
         if (sideBar) {
           navigate(`${Routes.products.path}/${createProduct.data.data.id}`)
         }
-        setUpdate(update + 1)
+        setUpdate && setUpdate(update + 1)
+        setVisible && setVisible(false)
       } else {
         const editProduct = await editProductRequest({
           data: {
@@ -170,10 +170,8 @@ const ProductForm = ({
             },
           })
         )
+        setVisible && setVisible(false)
       }
-
-      setVisible && setVisible(false)
-      setVisible && setVisible(false)
     },
   })
 

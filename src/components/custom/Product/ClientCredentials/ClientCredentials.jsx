@@ -15,12 +15,8 @@ import { BsHourglassSplit, BsPlusCircleFill } from 'react-icons/bs'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
 import Label from '../../Shared/label/Label'
-import {
-  Product_Client_id,
-  activeStatus,
-  clientTypeLable,
-} from '../../../../const/product'
-import { useDispatch } from 'react-redux'
+import { activeStatus, clientTypeLable } from '../../../../const/product'
+import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
 import {
   clientCredentials,
@@ -44,6 +40,12 @@ const ClientCredentials = ({ data }) => {
   const intl = useIntl()
   const { deleteClient, getClientsListByProduct, activateClient } = useRequest()
   const dispatch = useDispatch()
+  const allProducts = useSelector((state) => state.products.products)
+  const productId = data?.id
+
+  const id =
+    allProducts[productId]?.client?.id ||
+    allProducts[productId]?.productOwner?.id
 
   const deleteConfirm = (id) => {
     setCurrentClientId(id)
@@ -74,17 +76,13 @@ const ClientCredentials = ({ data }) => {
       return updatedVisibility
     })
   }
-  const productId = data?.id
 
   useEffect(() => {
     if (!data || data.clientCredentials) {
       return
     }
     ;(async () => {
-      const listData = await getClientsListByProduct(
-        productId,
-        Product_Client_id
-      )
+      const listData = await getClientsListByProduct(productId, id)
       dispatch(
         clientCredentials({
           id: productId,

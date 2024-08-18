@@ -9,13 +9,21 @@ export const productsOwners = createSlice({
       const allProductOwners = JSON.parse(
         JSON.stringify(current(state.productsOwners))
       )
+
       action?.payload?.forEach((item) => {
-        if (!{ ...current(state.productsOwners) }[item.id]) {
+        if (allProductOwners[item.id]) {
+          allProductOwners[item.id] = {
+            ...allProductOwners[item.id],
+            ...item,
+          }
+        } else {
           allProductOwners[item.id] = item
         }
       })
+
       state.productsOwners = allProductOwners
     },
+
     productOwnerInfo: (state, action) => {
       const { id, data } = action.payload
       state.productsOwners[id] = data

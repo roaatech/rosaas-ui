@@ -24,7 +24,6 @@ import {
 import { BsCheckCircleFill } from 'react-icons/bs'
 import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
-import { Product_Client_id } from '../../../../../const/product.js'
 const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
   const { createClient, regenerateClientSecret, updateClient, getClientId } =
     useRequest()
@@ -33,7 +32,9 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
   const productId = routeParams.id
   const allProducts = useSelector((state) => state.products.products)
 
-  const id = allProducts[productId]?.client.id
+  const id =
+    allProducts[productId]?.client?.id ||
+    allProducts[productId]?.productOwner?.id
   const clientItem =
     currentId && allProducts[productId].clientCredentials[currentId]
 
@@ -74,7 +75,7 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
       if (type === 'create') {
         let clientSecret
 
-        clientSecret = await createClient(productId, Product_Client_id, {
+        clientSecret = await createClient(productId, id, {
           clientId: values.clientId,
           displayName: values.displayName,
           description: values.description,

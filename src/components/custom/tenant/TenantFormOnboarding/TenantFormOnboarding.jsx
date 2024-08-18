@@ -219,9 +219,10 @@ const TenantFormOnboarding = ({
           dispatch(setStep(2))
 
           navigate(
-            `/checkout/${listData[values.product]?.client.systemName}/${
-              listData[values.product]?.systemName
-            }/plan-price/${
+            `/checkout/${
+              listData[values.product]?.productOwner?.systemName ||
+              listData[values.product]?.client?.systemName
+            }/${listData[values.product]?.systemName}/plan-price/${
               values?.plan &&
               listData[values.product]?.trialPlanId != values?.plan
                 ? listData[values.product]?.plansPrice?.[values.price]
@@ -243,6 +244,7 @@ const TenantFormOnboarding = ({
       }
     },
   })
+  console.log({ ssss: listData[formik.values.product] })
 
   const intl = useIntl()
   let planOptions

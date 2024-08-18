@@ -103,51 +103,51 @@ const DiscountForm = ({
   }
   const validationSchema = Yup.object().shape({
     displayName: Yup.string()
-      .required(<FormattedMessage id="Display Name is required" />)
-      .max(100, <FormattedMessage id="Maximum 100 characters allowed" />),
+      .required(<FormattedMessage id="display-name-is-required" />)
+      .max(100, <FormattedMessage id="maximum-100-characters-allowed" />),
     discountType: Yup.number().required(
-      <FormattedMessage id="Discount Type is required" />
+      <FormattedMessage id="discount-type-is-required" />
     ),
     adminComment: Yup.string().max(
       250,
-      <FormattedMessage id="Maximum 250 characters allowed" />
+      <FormattedMessage id="maximum-250-characters-allowed" />
     ),
     discountPercentage: usePercentage
       ? Yup.number()
-          .min(0, <FormattedMessage id="Minimum value is 0" />)
-          .max(100, <FormattedMessage id="Maximum value is 100" />)
-          .required(<FormattedMessage id="Required when using percentage" />)
+          .min(0, <FormattedMessage id="minimum-value-is-0" />)
+          .max(100, <FormattedMessage id="maximum-value-is-100" />)
+          .required(<FormattedMessage id="required-when-using-percentage" />)
       : Yup.number().notRequired(),
     discountAmount: !usePercentage
       ? Yup.number()
-          .min(0, <FormattedMessage id="Minimum value is 0" />)
+          .min(0, <FormattedMessage id="minimum-value-is-0" />)
           .required(
-            <FormattedMessage id="Required when not using percentage" />
+            <FormattedMessage id="required-when-not-using-percentage" />
           )
       : Yup.number().notRequired(),
     maximumDiscountAmount: usePercentage
       ? Yup.number()
-          .min(0, <FormattedMessage id="Minimum value is 0" />)
+          .min(0, <FormattedMessage id="minimum-value-is-0" />)
           .notRequired()
       : Yup.number().notRequired(),
     couponCode: requiresCouponCode
       ? Yup.string()
-          .required(<FormattedMessage id="Coupon code is required" />)
-          .max(50, <FormattedMessage id="Maximum 50 characters allowed" />)
+          .required(<FormattedMessage id="coupon-code-is-required" />)
+          .max(50, <FormattedMessage id="maximum-50-characters-allowed" />)
       : Yup.string().notRequired(),
     limitationTimes:
       initialValues.discountLimitation === '2' ||
       initialValues.discountLimitation === '3'
         ? Yup.number()
-            .min(1, <FormattedMessage id="Minimum value is 1" />)
-            .required(<FormattedMessage id="Limitation times is required" />)
+            .min(1, <FormattedMessage id="minimum-value-is-1" />)
+            .required(<FormattedMessage id="limitation-times-is-required" />)
         : Yup.number().notRequired(),
     startDate: Yup.date().nullable(), // Not required
     endDate: Yup.date()
       .nullable() // Not required
       .test(
         'is-greater',
-        <FormattedMessage id="End Date should be later than Start Date" />,
+        <FormattedMessage id="end-date-should-be-later-than-start-date" />,
         function (value) {
           const { startDate } = this.parent
           return !startDate || !value || value > startDate
@@ -210,18 +210,18 @@ const DiscountForm = ({
 
   // Options for DiscountType enum
   const discountTypeOptions = [
-    { value: 1, label: 'Assigned to Plans' },
-    { value: 2, label: 'Assigned to Products' },
-    { value: 3, label: 'Assigned to Products Owners' },
-    { value: 4, label: 'Assigned to Order Total' },
-    { value: 5, label: 'Assigned to Order SubTotal' },
+    { value: 1, label: 'assigned-to-plans' },
+    { value: 2, label: 'assigned-to-products' },
+    { value: 3, label: 'assigned-to-products-owners' },
+    { value: 4, label: 'assigned-to-order-total' },
+    { value: 5, label: 'assigned-to-order-subtotal' },
   ]
 
   // Options for DiscountLimitationType enum
   const discountLimitationOptions = [
-    { value: 1, label: 'Unlimited' },
-    { value: 2, label: 'N Times Only' },
-    { value: 3, label: 'N Times Per Customer' },
+    { value: 1, label: 'unlimited' },
+    { value: 2, label: 'n-times-only' },
+    { value: 3, label: 'n-times-per-customer' },
   ]
 
   return (
@@ -240,7 +240,7 @@ const DiscountForm = ({
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="displayName">
-                  <FormattedMessage id="Display Name" />{' '}
+                  <FormattedMessage id="display-name" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </label>
                 <input
@@ -266,7 +266,7 @@ const DiscountForm = ({
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="discountType">
-                  <FormattedMessage id="Discount Type" />{' '}
+                  <FormattedMessage id="discount-type" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </label>
                 <select
@@ -281,7 +281,7 @@ const DiscountForm = ({
                   }`}
                 >
                   <option value="">
-                    <FormattedMessage id="Select Type" />
+                    <FormattedMessage id="select-type" />
                   </option>
                   {discountTypeOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -309,7 +309,7 @@ const DiscountForm = ({
                       onChange={(e) => setUsePercentage(e.target.checked)}
                     />
                     <label htmlFor="usePercentage" className="ml-2">
-                      <FormattedMessage id="Use Percentage" />
+                      <FormattedMessage id="use-percentage" />
                     </label>
                   </Col>
                   {usePercentage ? (
@@ -317,7 +317,7 @@ const DiscountForm = ({
                       <Col md={6}>
                         <div className="mb-3">
                           <label htmlFor="discountPercentage">
-                            <FormattedMessage id="Discount Percentage (%)" />{' '}
+                            <FormattedMessage id="discount-percentage" />{' '}
                             <span style={{ color: 'red' }}>*</span>
                           </label>
                           <input
@@ -344,7 +344,7 @@ const DiscountForm = ({
                       <Col md={6}>
                         <div className="mb-3">
                           <label htmlFor="maximumDiscountAmount">
-                            <FormattedMessage id="Maximum Discount Amount" />
+                            <FormattedMessage id="maximum-discount-amount" />
                           </label>
                           <input
                             type="number"
@@ -372,7 +372,7 @@ const DiscountForm = ({
                     <Col md={12}>
                       <div className="mb-3">
                         <label htmlFor="discountAmount">
-                          <FormattedMessage id="Discount Amount" />{' '}
+                          <FormattedMessage id="discount-amount" />{' '}
                           <span style={{ color: 'red' }}>*</span>
                         </label>
                         <input
@@ -404,7 +404,7 @@ const DiscountForm = ({
             <Col md={6}>
               <div className="mb-3">
                 <label htmlFor="startDate">
-                  <FormattedMessage id="Start Date" />
+                  <FormattedMessage id="start-date" />
                 </label>
                 <input
                   type="datetime-local"
@@ -430,7 +430,7 @@ const DiscountForm = ({
             <Col md={6}>
               <div className="mb-3">
                 <label htmlFor="endDate">
-                  <FormattedMessage id="End Date" />
+                  <FormattedMessage id="end-date" />
                 </label>
                 <input
                   type="datetime-local"
@@ -464,7 +464,7 @@ const DiscountForm = ({
                       onChange={(e) => setRequiresCouponCode(e.target.checked)}
                     />
                     <label htmlFor="requiresCouponCode" className="ml-2">
-                      <FormattedMessage id="Requires Coupon Code" />
+                      <FormattedMessage id="requires-coupon-code" />
                     </label>
                   </Col>
 
@@ -472,7 +472,7 @@ const DiscountForm = ({
                     <Col md={12}>
                       <div className="mb-3">
                         <label htmlFor="couponCode">
-                          <FormattedMessage id="Coupon Code" />{' '}
+                          <FormattedMessage id="coupon-code" />{' '}
                           <span style={{ color: 'red' }}>*</span>
                         </label>
                         <input
@@ -506,7 +506,7 @@ const DiscountForm = ({
                   <Col md={12}>
                     <div className="mb-3">
                       <label htmlFor="discountLimitation">
-                        <FormattedMessage id="Discount Limitation" />{' '}
+                        <FormattedMessage id="discount-limitation" />{' '}
                         <span style={{ color: 'red' }}>*</span>
                       </label>
                       <select
@@ -522,7 +522,7 @@ const DiscountForm = ({
                         }`}
                       >
                         <option value="">
-                          <FormattedMessage id="Select Limitation" />
+                          <FormattedMessage id="select-limitation" />
                         </option>
                         {discountLimitationOptions.map((option) => (
                           <option key={option.value} value={option.value}>
@@ -544,7 +544,7 @@ const DiscountForm = ({
                     <Col md={12}>
                       <div className="mb-3">
                         <label htmlFor="limitationTimes">
-                          <FormattedMessage id="Limitation Times" />{' '}
+                          <FormattedMessage id="limitation-times" />{' '}
                           <span style={{ color: 'red' }}>*</span>
                         </label>
                         <input
@@ -581,13 +581,13 @@ const DiscountForm = ({
                 onChange={formik.handleChange}
               />
               <label htmlFor="isCumulative" className="ml-2">
-                <FormattedMessage id="Is Cumulative" />
+                <FormattedMessage id="is-cumulative" />
               </label>
             </Col>
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="adminComment">
-                  <FormattedMessage id="Admin Comment" />
+                  <FormattedMessage id="admin-comment" />
                 </label>
                 <textarea
                   rows={3}
@@ -616,14 +616,14 @@ const DiscountForm = ({
             type="submit"
             disabled={formik.isSubmitting}
           >
-            <FormattedMessage id="Submit" />
+            <FormattedMessage id="submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray"
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <FormattedMessage id="close" />
           </Button>
         </Modal.Footer>
       </form>

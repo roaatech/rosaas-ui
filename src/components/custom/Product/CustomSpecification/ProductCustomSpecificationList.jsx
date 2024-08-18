@@ -35,10 +35,12 @@ import {
   MdOutlineUnpublished,
   MdOutlinePublishedWithChanges,
   MdEditNote,
+  MdAdd,
 } from 'react-icons/md'
 
 import { PublishStatus } from '../../../../const'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import UrlItem from '../UrlItem/UrlItem.jsx'
 
 export const ProductCustomSpecificationList = (
   { productId },
@@ -59,6 +61,8 @@ export const ProductCustomSpecificationList = (
   const [popUpLable, setPopUpLable] = useState('')
   const intl = useIntl()
   const direction = useSelector((state) => state.main.direction)
+  const validationUrl = useSelector((state) => state.products.validationUrl) // Assuming validationUrl is in the state
+  console.log({ validationUrl })
 
   const handleDeleteSpecification = async () => {
     if (list?.specifications[currentId]?.isSubscribed) {
@@ -264,8 +268,18 @@ export const ProductCustomSpecificationList = (
               icon: <MdEditNote />,
               setActiveIndex: setActiveIndex,
             },
+            {
+              order: 4,
+              type: 'form',
+              id: productId,
+              label: 'Add-Validation-Url',
+              component: 'AddValidationUrl',
+              icon: <MdAdd />,
+              setActiveIndex: setActiveIndex,
+            },
           ]}
         />
+        {/* <div>{validationUrl && <UrlItem data={validationUrl} />}</div> */}
       </div>
 
       <div className="border-top-1 border-light">

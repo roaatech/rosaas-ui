@@ -13,6 +13,10 @@ export const productsSlice = createSlice({
   name: 'products',
   initialState: {
     products: {},
+    validationUrl: {
+      path: 'https://example.com/validate',
+      method: 'Post',
+    },
   },
 
   reducers: {
