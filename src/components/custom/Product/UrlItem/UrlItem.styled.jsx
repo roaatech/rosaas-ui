@@ -1,5 +1,13 @@
 import { styled } from 'styled-components'
 export const Wrapper = styled.div`
+  .info {
+    display: flex;
+    flex: auto;
+  }
+  .url-input {
+    max-height: 25px !important;
+  }
+
   .bar {
     padding: 5px;
     border-radius: 5px;

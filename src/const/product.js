@@ -206,4 +206,9 @@ export const urlStyle = {
     darkColor: '#f93e3e',
     lightColor: '#fae7e7',
   },
+  DISABLED: {
+    method: 'DISABLED',
+    darkColor: '#cccccc',
+    lightColor: '#f0f0f0',
+  },
 }

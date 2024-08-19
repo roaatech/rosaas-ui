@@ -41,6 +41,7 @@ import {
 import { PublishStatus } from '../../../../const'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import UrlItem from '../UrlItem/UrlItem.jsx'
+import UpperContent from '../../Shared/UpperContent/UpperContent.jsx'
 
 export const ProductCustomSpecificationList = (
   { productId },
@@ -122,6 +123,14 @@ export const ProductCustomSpecificationList = (
         value: !isPublished,
       })
     )
+  }
+  const specificationValidatorUrldata = {
+    method: 'GET',
+    path: validationUrl.path,
+    displayName: <FormattedMessage id="Specification-Validator-Url" />,
+    description: (
+      <FormattedMessage id="Specification-Validator-Url-Description" />
+    ),
   }
 
   const TableRow = (props) => {
@@ -256,7 +265,10 @@ export const ProductCustomSpecificationList = (
 
   return (
     <Wrapper>
-      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+      <UpperContent>
+        <div>
+          <UrlItem data={specificationValidatorUrldata} />
+        </div>
         <DynamicButtons
           buttons={[
             {
@@ -279,8 +291,7 @@ export const ProductCustomSpecificationList = (
             },
           ]}
         />
-        {/* <div>{validationUrl && <UrlItem data={validationUrl} />}</div> */}
-      </div>
+      </UpperContent>
 
       <div className="border-top-1 border-light">
         <Card

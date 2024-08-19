@@ -63,126 +63,121 @@ const ProductDetailsTab = ({ data }) => {
       {data && (
         <div className="main">
           <div className="details">
-            <Card border="light" className="shadow-sm mb-3 px-2">
-              <Row>
-                <Col md={6}>
-                  <Card.Body className="py-0 px-3">
-                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                      <td className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="Display-Name" />
-                      </td>
-                      <td className=" card-stats">{data.displayName}</td>
-                    </tr>
-                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                      <td className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="System-Name" />
-                      </td>
-                      <td className=" card-stats">{data.systemName}</td>
-                    </tr>
-                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                      <td className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="Client" />
-                      </td>
-                      <td className=" card-stats">{data.client?.systemName}</td>
-                    </tr>{' '}
-                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                      <td className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="Description" />
-                      </td>
-                      <td className="card-stats">
-                        {data.description && <DescriptionCell data={data} />}
-                      </td>
-                    </tr>
-                    {data?.trialType == 2 && (
-                      <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                        <td className="mb-0 w-50 fw-bold">
-                          <FormattedMessage id="Trial-Period-In-Days" />
-                        </td>
-                        <td className=" card-stats">
-                          {data?.trialPeriodInDays}
-                        </td>
-                      </tr>
-                    )}
-                  </Card.Body>
-                </Col>
-                <Col
+            <Row>
+              <Card.Body className="py-0 px-3">
+                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                  <td className="mb-0 w-50 fw-bold">
+                    <FormattedMessage id="Display-Name" />
+                  </td>
+                  <td className=" card-stats">{data.displayName}</td>
+                </tr>
+                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                  <td className="mb-0 w-50 fw-bold">
+                    <FormattedMessage id="System-Name" />
+                  </td>
+                  <td className=" card-stats">{data.systemName}</td>
+                </tr>
+                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                  <td className="mb-0 w-50 fw-bold">
+                    <FormattedMessage id="Client" />
+                  </td>
+                  <td className=" card-stats">{data.client?.systemName}</td>
+                </tr>{' '}
+                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                  <td className="mb-0 w-50 fw-bold">
+                    <FormattedMessage id="Description" />
+                  </td>
+                  <td className="card-stats">
+                    {data.description && <DescriptionCell data={data} />}
+                  </td>
+                </tr>
+                {data?.trialType == 2 && (
+                  <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                    <td className="mb-0 w-50 fw-bold">
+                      <FormattedMessage id="Trial-Period-In-Days" />
+                    </td>
+                    <td className=" card-stats">{data?.trialPeriodInDays}</td>
+                  </tr>
+                )}
+              </Card.Body>
+              {/* </Col> */}
+              {/* <Col
                   md={6}
                   className={`${
                     direction == 'rtl' ? 'border-right-1' : 'border-left-1'
                   } border-light`}
-                >
-                  <Card.Body className="py-0 px-3 ">
-                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                      <td className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="Created-Date" />
-                      </td>
-                      <td className=" card-stats">
-                        {DataTransform(data?.createdDate)}
-                      </td>
-                    </tr>
-                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                      <td className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="Last-Updated-Date" />
-                      </td>
-                      <td className="card-stats">
-                        {DataTransform(data?.editedDate)}
-                      </td>
-                    </tr>
-                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                      <td className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="Api-key" />
-                      </td>
-                      <td className="apikeyTd card-stats">
-                        <span>{data.apiKey}</span>
-                        <span className="relative">
-                          <OverlayTrigger
-                            style={{ minWidth: '150px' }}
-                            trigger={['hover', 'focus']}
-                            placement="top"
-                            overlay={
-                              <Tooltip>
-                                <div style={{ minWidth: '100px' }}>
-                                  {<FormattedMessage id={toolTipText} />}
-                                </div>
-                              </Tooltip>
-                            }
-                          >
-                            <CopyToClipboard text={code} onCopy={handleCopy}>
-                              <span className="copyItem ml-1">
-                                <AiFillCopy />
-                              </span>
-                            </CopyToClipboard>
-                          </OverlayTrigger>
-                        </span>
-                      </td>
-                    </tr>
-                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                      <td className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="Trial-Type" />
-                      </td>
-                      <td className=" card-stats">
-                        {ProductTrialType[data?.trialType] && (
-                          <Label {...ProductTrialType[data?.trialType]} />
-                        )}
-                      </td>
-                    </tr>
-                    {data?.trialType == 2 && (
-                      <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-                        <td className="mb-0 w-50 fw-bold">
-                          <FormattedMessage id="Trial-Plan" />
-                        </td>
-                        <td className=" card-stats">
-                          {listData[productId].plans &&
-                            listData[productId].plans?.[data?.trialPlanId]
-                              .displayName}
-                        </td>
-                      </tr>
+                > */}
+              <Card.Body className="py-0 px-3 ">
+                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                  <td className="mb-0 w-50 fw-bold">
+                    <FormattedMessage id="Created-Date" />
+                  </td>
+                  <td className=" card-stats">
+                    {DataTransform(data?.createdDate)}
+                  </td>
+                </tr>
+                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                  <td className="mb-0 w-50 fw-bold">
+                    <FormattedMessage id="Last-Updated-Date" />
+                  </td>
+                  <td className="card-stats">
+                    {DataTransform(data?.editedDate)}
+                  </td>
+                </tr>
+                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                  <td className="mb-0 w-50 fw-bold">
+                    <FormattedMessage id="Api-key" />
+                  </td>
+                  <td className="apikeyTd card-stats">
+                    <span>{data.apiKey}</span>
+                    <span className="relative">
+                      <OverlayTrigger
+                        style={{ minWidth: '150px' }}
+                        trigger={['hover', 'focus']}
+                        placement="top"
+                        overlay={
+                          <Tooltip>
+                            <div style={{ minWidth: '100px' }}>
+                              {<FormattedMessage id={toolTipText} />}
+                            </div>
+                          </Tooltip>
+                        }
+                      >
+                        <CopyToClipboard text={code} onCopy={handleCopy}>
+                          <span className="copyItem ml-1">
+                            <AiFillCopy />
+                          </span>
+                        </CopyToClipboard>
+                      </OverlayTrigger>
+                    </span>
+                  </td>
+                </tr>
+                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                  <td className="mb-0 w-50 fw-bold">
+                    <FormattedMessage id="Trial-Type" />
+                  </td>
+                  <td className=" card-stats">
+                    {ProductTrialType[data?.trialType] && (
+                      <Label {...ProductTrialType[data?.trialType]} />
                     )}
-                  </Card.Body>
-                </Col>
-              </Row>
-            </Card>
-            <Card border="light" className="shadow-sm mb-4">
+                  </td>
+                </tr>
+                {data?.trialType == 2 && (
+                  <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+                    <td className="mb-0 w-50 fw-bold">
+                      <FormattedMessage id="Trial-Plan" />
+                    </td>
+                    <td className=" card-stats">
+                      {listData[productId].plans &&
+                        listData[productId].plans?.[data?.trialPlanId]
+                          .displayName}
+                    </td>
+                  </tr>
+                )}
+              </Card.Body>
+            </Row>
+
+            {/* <Card border="light" className="shadow-sm mb-4">
               <Card.Body className="pb-0">
                 <Table
                   responsive
@@ -193,7 +188,7 @@ const ProductDetailsTab = ({ data }) => {
                   </tbody>
                 </Table>
               </Card.Body>
-            </Card>
+            </Card> */}
           </div>
         </div>
       )}

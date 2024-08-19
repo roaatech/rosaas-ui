@@ -48,6 +48,7 @@ import { faStopwatch } from '@fortawesome/free-solid-svg-icons'
 import ProductTrialPeriod from '../../components/custom/Product/ProductTrialPeriod/ProductTrialPeriod.jsx'
 import ProductsUsersManagement from '../../components/custom/Product/ProductsUsersManagement/ProductsUsersManagement.jsx'
 import WebhookList from '../../components/custom/Product/WebhookList/WebhookList.jsx'
+import IntegrationUrlsTab from '../../components/custom/Product/IntegrationUrlsTab/IntegrationUrlsTab.jsx'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -215,6 +216,14 @@ const ProductDetails = () => {
             {productData && (
               <TabPanel header={<FormattedMessage id="Details" />}>
                 <ProductDetailsTab
+                  data={productData}
+                  setActiveIndex={setActiveIndex}
+                />
+              </TabPanel>
+            )}
+            {productData && (
+              <TabPanel header={<FormattedMessage id="Integration-Urls" />}>
+                <IntegrationUrlsTab
                   data={productData}
                   setActiveIndex={setActiveIndex}
                 />
