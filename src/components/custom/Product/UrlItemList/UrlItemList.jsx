@@ -7,6 +7,7 @@ import {
   Card,
   Table,
   Form,
+  Alert,
 } from '@themesberg/react-bootstrap'
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,33 +15,78 @@ import { useParams } from 'react-router-dom'
 import useRequest from '../../../../axios/apis/useRequest'
 import { Wrapper } from './UrlItemList.styled'
 import { productInfo } from '../../../../store/slices/products/productsSlice'
+import { MdError, MdErrorOutline } from 'react-icons/md'
 
 const UrlItemList = ({ data }) => {
   const [urlItems, setURLS] = useState([])
+  console.log({ wwwwwww: urlItems })
 
   const listData = useSelector((state) => state.products.products)
   const productId = useParams().id
   const productData = listData?.[productId]
+  console.log({ productData })
+
   const [groupStates, setGroupStates] = useState({
-    healthGroupEnabled: productData?.isHealthCheckEnabled == true,
-    lifecycleGroupEnabled: productData?.isMainOperationEnabled == true,
-    specificationGroupEnabled:
+    isHealthCheckEnabled: productData?.isHealthCheckEnabled == true,
+    isMainOperationEnabled: productData?.isMainOperationEnabled == true,
+    isSpecificationValidatorEnabled:
       productData?.isSpecificationValidatorEnabled == true,
-    paymentAndRedirectionEndpoints:
+    isPaymentAndRedirectionEndpointsEnabled:
       productData?.isPaymentAndRedirectionEndpointsEnabled == true,
-    PlanSelectionGroupEnabled:
+    isPlanSelectionRedirectionEnabled:
       productData?.isPlanSelectionRedirectionEnabled == true,
   })
+  const urlFlagsCheck = [
+    { url: 'defaultHealthCheckUrl', flag: 'isHealthCheckEnabled' },
+    { url: 'healthStatusChangeUrl', flag: 'isHealthCheckEnabled' },
+    { url: 'subscriptionResetUrl', flag: 'isSubscriptionResetEnabled' },
+    { url: 'subscriptionUpgradeUrl', flag: 'isSubscriptionUpgradeEnabled' },
+    {
+      url: 'subscriptionDowngradeUrl',
+      flag: 'isSubscriptionDowngradeEnabled',
+    },
+    { url: 'creationEndpoint', flag: 'isMainOperationEnabled' },
+    { url: 'activationEndpoint', flag: 'isMainOperationEnabled' },
+    { url: 'deactivationEndpoint', flag: 'isMainOperationEnabled' },
+    { url: 'deletionEndpoint', flag: 'isMainOperationEnabled' },
+    {
+      url: 'specificationValidatorUrl',
+      flag: 'isSpecificationValidatorEnabled',
+    },
+    {
+      url: 'paymentSuccessCallbackUrl',
+      flag: 'isPaymentAndRedirectionEndpointsEnabled',
+    },
+    {
+      url: 'paymentFailureCallbackUrl',
+      flag: 'isPaymentAndRedirectionEndpointsEnabled',
+    },
+    {
+      url: 'planSelectionRedirectUrl',
+      flag: 'isPlanSelectionRedirectionEnabled',
+    },
+  ]
+  const [validationMessages, setValidationMessages] = useState({
+    isHealthCheckEnabled: '',
+    subscriptionGroupEnabled: '',
+    isMainOperationEnabled: '',
+    isSpecificationValidatorEnabled: '',
+    isPaymentAndRedirectionEndpointsEnabled: '',
+    isPlanSelectionRedirectionEnabled: '',
+    isSubscriptionResetEnabled: '',
+    isSubscriptionUpgradeEnabled: '',
+    isSubscriptionDowngradeEnabled: '',
+  })
+  console.log({ validationMessages })
 
   const dispatch = useDispatch()
   const { editProductRequest } = useRequest()
-  console.log(productData?.IsSubscriptionResetEnabled)
 
   useEffect(() => {
     setURLS([
       {
         method: 'GET',
-        path: data.defaultHealthCheckUrl,
+        path: productData.defaultHealthCheckUrl,
         displayName: <FormattedMessage id="Default-Health-Check-Url" />,
         description: (
           <FormattedMessage id="Default-Health-Check-Url-description" />
@@ -48,66 +94,66 @@ const UrlItemList = ({ data }) => {
       },
       {
         method: 'POST',
-        path: data.healthStatusChangeUrl,
+        path: productData.healthStatusChangeUrl,
         displayName: <FormattedMessage id="Health-Status-Change-Url" />,
         description: (
           <FormattedMessage id="Health-Status-Change-Url-Description" />
         ),
       },
       {
-        method: productData?.IsSubscriptionResetEnabled ? 'POST' : 'DISABLED',
-        path: data.subscriptionResetUrl,
+        method: productData?.isSubscriptionResetEnabled ? 'POST' : 'DISABLED',
+        path: productData.subscriptionResetUrl,
         displayName: <FormattedMessage id="Subscription-Reset-Url" />,
         description: (
           <FormattedMessage id="Subscription-Reset-Url-Description" />
         ),
-        isEnabled: productData?.IsSubscriptionResetEnabled == true,
+        isEnabled: productData?.isSubscriptionResetEnabled == true,
       },
       {
-        method: productData?.IsSubscriptionUpgradeEnabled ? 'POST' : 'DISABLED',
-        path: data.subscriptionUpgradeUrl,
+        method: productData?.isSubscriptionUpgradeEnabled ? 'POST' : 'DISABLED',
+        path: productData.subscriptionUpgradeUrl,
         displayName: <FormattedMessage id="Subscription-Upgrade-Url" />,
         description: <FormattedMessage id="Subscription-Upgrade-Description" />,
-        isEnabled: productData?.IsSubscriptionUpgradeEnabled == true,
+        isEnabled: productData?.isSubscriptionUpgradeEnabled == true,
       },
       {
-        method: productData?.IsSubscriptionDowngradeEnabled
+        method: productData?.isSubscriptionDowngradeEnabled
           ? 'POST'
           : 'DISABLED',
-        path: data.subscriptionDowngradeUrl,
+        path: productData.subscriptionDowngradeUrl,
         displayName: <FormattedMessage id="Subscription-Downgrade-Url" />,
         description: (
           <FormattedMessage id="Subscription-Downgrade-Url-Description" />
         ),
-        isEnabled: productData?.IsSubscriptionDowngradeEnabled == true,
+        isEnabled: productData?.isSubscriptionDowngradeEnabled == true,
       },
       {
         method: 'POST',
-        path: data.creationEndpoint,
+        path: productData.creationEndpoint,
         displayName: <FormattedMessage id="Creation-Url" />,
         description: <FormattedMessage id="Creation-Url-description" />,
       },
       {
         method: 'POST',
-        path: data.activationEndpoint,
+        path: productData.activationEndpoint,
         displayName: <FormattedMessage id="Activation-Url" />,
         description: <FormattedMessage id="Activation-Url-description" />,
       },
       {
         method: 'POST',
-        path: data.deactivationEndpoint,
+        path: productData.deactivationEndpoint,
         displayName: <FormattedMessage id="Deactivation-Url" />,
         description: <FormattedMessage id="Deactivation-Url-description" />,
       },
       {
         method: 'POST',
-        path: data.deletionEndpoint,
+        path: productData.deletionEndpoint,
         displayName: <FormattedMessage id="Deletion-Url" />,
         description: <FormattedMessage id="Deletion-Url-description" />,
       },
       {
         method: 'GET',
-        path: data.specificationValidatorUrl,
+        path: productData.specificationValidatorUrl,
         displayName: <FormattedMessage id="Specification-Validator-Url" />,
         description: (
           <FormattedMessage id="Specification-Validator-Url-Description" />
@@ -115,7 +161,7 @@ const UrlItemList = ({ data }) => {
       },
       {
         method: 'GET',
-        path: data.paymentSuccessCallbackUrl,
+        path: productData.paymentSuccessCallbackUrl,
         displayName: <FormattedMessage id="Payment-Success-Callback-Url" />,
         description: (
           <FormattedMessage id="Payment-Success-Callback-Url-Description" />
@@ -123,7 +169,7 @@ const UrlItemList = ({ data }) => {
       },
       {
         method: 'GET',
-        path: data.paymentFailureCallbackUrl,
+        path: productData.paymentFailureCallbackUrl,
         displayName: <FormattedMessage id="Payment-Failure-Callback-Url" />,
         description: (
           <FormattedMessage id="Payment-Failure-Callback-Url-Description" />
@@ -131,22 +177,23 @@ const UrlItemList = ({ data }) => {
       },
       {
         method: 'GET',
-        path: data.planSelectionRedirectUrl,
+        path: productData.planSelectionRedirectUrl,
         displayName: <FormattedMessage id="Plan-Selection-Redirect-Url" />,
         description: (
           <FormattedMessage id="Plan-Selection-Redirect-Url-Description" />
         ),
       },
     ])
-  }, [data, productData, groupStates.subscriptionGroupEnabled])
+  }, [productData, validationMessages])
+
   const urlFields = [
     { url: 'defaultHealthCheckUrl', flag: null },
     { url: 'healthStatusChangeUrl', flag: null },
-    { url: 'subscriptionResetUrl', flag: 'IsSubscriptionResetEnabled' },
-    { url: 'subscriptionUpgradeUrl', flag: 'IsSubscriptionUpgradeEnabled' },
+    { url: 'subscriptionResetUrl', flag: 'isSubscriptionResetEnabled' },
+    { url: 'subscriptionUpgradeUrl', flag: 'isSubscriptionUpgradeEnabled' },
     {
       url: 'subscriptionDowngradeUrl',
-      flag: 'IsSubscriptionDowngradeEnabled',
+      flag: 'isSubscriptionDowngradeEnabled',
     },
     { url: 'creationEndpoint', flag: null },
     { url: 'activationEndpoint', flag: null },
@@ -158,67 +205,172 @@ const UrlItemList = ({ data }) => {
     },
     {
       url: 'paymentSuccessCallbackUrl',
-      flag: 'isPaymentCallbackOverrideEnabled',
+      flag: 'isPaymentAndRedirectionEndpointsEnabled',
     },
     {
       url: 'paymentFailureCallbackUrl',
-      flag: 'isPaymentCallbackOverrideEnabled',
+      flag: 'isPaymentAndRedirectionEndpointsEnabled',
     },
     {
       url: 'planSelectionRedirectUrl',
       flag: 'isPlanSelectionRedirectionEnabled',
     },
   ]
+
   const handleUrlChange = async (index, newPath) => {
     const updatedProductData = { ...productData }
+    const urlField = urlFlagsCheck[index]
 
     updatedProductData[urlFields[index].url] = newPath
 
-    if (urlFields[index].flag) {
-      updatedProductData[urlFields[index].flag] = newPath.trim() !== ''
+    // Check if the field is empty
+    if (newPath.trim() === '') {
+      // Disable the checkbox and set the flag to false
+      updatedProductData[urlField.flag] = false
+
+      // Uncheck the checkbox in the UI
+      setGroupStates({
+        ...groupStates,
+        [urlField.flag]: false,
+      })
+
+      // Show a validation message if needed
+      setValidationMessages({
+        ...validationMessages,
+        [urlField.flag]: 'The-URL-cannot-be-empty-while-the-group-is-enabled.',
+      })
+    } else {
+      // Reset validation message
+      setValidationMessages({
+        ...validationMessages,
+        [urlField.flag]: '',
+      })
     }
 
+    // Send the updated data to the backend
     const editProduct = await editProductRequest({
       data: updatedProductData,
       id: productId,
     })
+
+    // Update the store
     dispatch(
       productInfo({
         ...productData,
         ...updatedProductData,
       })
     )
+
+    // Clear validation messages
+    setValidationMessages({
+      isHealthCheckEnabled: '',
+      subscriptionGroupEnabled: '',
+      isMainOperationEnabled: '',
+      isSpecificationValidatorEnabled: '',
+      isPaymentAndRedirectionEndpointsEnabled: '',
+      isPlanSelectionRedirectionEnabled: '',
+    })
   }
+
   const handleUrlToggle = async (index) => {
     const updatedUrlItems = [...urlItems]
-    const urlField = urlFields[index] // Get the URL field corresponding to this index
+    const urlField = urlFields[index]
 
-    // Toggle the isEnabled state
+    // Check if the URL is empty before enabling the checkbox
+    if (
+      !updatedUrlItems[index].isEnabled &&
+      updatedUrlItems[index].path.trim() === ''
+    ) {
+      setValidationMessages({
+        ...validationMessages,
+        [urlField.flag]:
+          'This-field-is-required-while-the-checkbox-is-enabled.',
+      })
+      return
+    }
+
+    // Toggle the checkbox
     updatedUrlItems[index].isEnabled = !updatedUrlItems[index].isEnabled
     updatedUrlItems[index].method = updatedUrlItems[index].isEnabled
       ? 'POST'
       : 'DISABLED'
 
-    setURLS(updatedUrlItems) // Update the local state
+    // Update the local state for UI
+    setURLS(updatedUrlItems)
 
     const updatedProductData = { ...productData }
+
+    // Update the flag in product data based on the checkbox state
     updatedProductData[urlField.flag] = updatedUrlItems[index].isEnabled
 
-    // Send the updated product data to the backend
+    // Send the updated data to the backend
     const editProduct = await editProductRequest({
       data: updatedProductData,
       id: productId,
     })
+
+    // Update the store
     dispatch(
       productInfo({
         ...productData,
         ...updatedProductData,
       })
     )
+
+    // Reset validation messages
+    setValidationMessages({
+      ...validationMessages,
+      [urlField.flag]: '',
+    })
+  }
+  const validateGroup = (groupItems) => {
+    for (let item of groupItems) {
+      if (!item.path || item.path.trim() === '') {
+        return false
+      }
+    }
+    return true
   }
 
-  const handleGroupToggle = async (groupName) => {
+  console.log({ groupStates })
+  const handleGroupToggle = async (
+    groupName,
+    groupStartIndex,
+    groupEndIndex
+  ) => {
+    if (!groupStates[groupName]) {
+      const groupItems = urlItems.slice(groupStartIndex, groupEndIndex + 1)
+      console.log({ urlItems })
+
+      if (!validateGroup(groupItems)) {
+        setValidationMessages({
+          ...validationMessages,
+          [groupName]: 'Please-fill-in-all-fields-before-enabling-the-group.',
+        })
+
+        return
+      }
+    }
+
     const newGroupState = !groupStates[groupName]
+    if (newGroupState) {
+      console.log({ rrrr: urlItems })
+
+      for (let i = groupStartIndex; i <= groupEndIndex; i++) {
+        if (urlItems[i]?.path.trim() === '') {
+          setValidationMessages({
+            ...validationMessages,
+            [groupName]: 'Please-fill-in-all-fields-before-enabling-the-group.',
+          })
+          return
+        }
+      }
+    }
+
+    setValidationMessages({
+      ...validationMessages,
+      [groupName]: '',
+    })
 
     // Update the local state
     setGroupStates({
@@ -226,43 +378,42 @@ const UrlItemList = ({ data }) => {
       [groupName]: newGroupState,
     })
 
-    // Create a copy of the product data to be sent to the backend
+    // Handle updating the backend (no changes needed here)
+
+    setGroupStates({
+      ...groupStates,
+      [groupName]: newGroupState,
+    })
+
     const updatedProductData = {}
 
-    // Map group names to the relevant flags in your product data
     const groupFlags = {
-      healthGroupEnabled: { healthGroupEnabled: 'isHealthCheckEnabled' }, // This group does not have a specific flag in your product data
-
-      lifecycleGroupEnabled: {
-        lifecycleGroupEnabled: 'isMainOperationEnabled',
+      isHealthCheckEnabled: { isHealthCheckEnabled: 'isHealthCheckEnabled' },
+      isMainOperationEnabled: {
+        isMainOperationEnabled: 'isMainOperationEnabled',
       },
-      specificationGroupEnabled: {
+      isSpecificationValidatorEnabled: {
         specificationValidatorUrl: 'isSpecificationValidatorEnabled',
       },
-      paymentAndRedirectionEndpoints: {
-        paymentAndRedirectionEndpoints:
+      isPaymentAndRedirectionEndpointsEnabled: {
+        isPaymentAndRedirectionEndpointsEnabled:
           'isPaymentAndRedirectionEndpointsEnabled',
       },
-      additionalEndpointsGroupEnabled: {
-        paymentSuccessCallbackUrl: 'isPaymentCallbackOverrideEnabled',
-        paymentFailureCallbackUrl: 'isPaymentCallbackOverrideEnabled',
-      },
-      PlanSelectionGroupEnabled: {
+      isPlanSelectionRedirectionEnabled: {
         planSelectionRedirectUrl: 'isPlanSelectionRedirectionEnabled',
       },
     }
-    console.log({ aaa: updatedProductData })
 
-    // For the groups that have associated flags, update those flags in the product data
     if (groupFlags[groupName]) {
       Object.keys(groupFlags[groupName]).forEach((key) => {
         updatedProductData[groupFlags[groupName][key]] = newGroupState
       })
     }
+    console.log({ updatedProductData2: updatedProductData })
+    console.log({ data2: data })
 
-    // Send the updated product data to the backend
     const editProduct = await editProductRequest({
-      data: { ...data, ...updatedProductData },
+      data: { ...productData, ...updatedProductData },
       id: productId,
     })
     dispatch(
@@ -271,35 +422,46 @@ const UrlItemList = ({ data }) => {
         ...updatedProductData,
       })
     )
+    setValidationMessages({
+      isHealthCheckEnabled: '',
+      subscriptionGroupEnabled: '',
+      isMainOperationEnabled: '',
+      isSpecificationValidatorEnabled: '',
+      isPaymentAndRedirectionEndpointsEnabled: '',
+      isPlanSelectionRedirectionEnabled: '',
+    })
   }
 
   const getGroupMethod = (groupEnabled, index) => {
     return groupEnabled ? urlItems[index].method : 'DISABLED'
   }
-  const getUrlMethod = (urlEnabled, index) => {
-    return urlEnabled && urlItems[index].isEnabled
-      ? urlItems[index].method
-      : 'DISABLED'
-  }
+
   return (
     <Wrapper>
       {/* Group 1: Default Health Check Url and Health Status Change Url */}
-
       <Card border="light" className="shadow-sm mb-4">
         <Card.Header>
           <div className="d-flex  align-items-center">
             <Form.Check
               type="checkbox"
-              checked={groupStates.healthGroupEnabled}
+              checked={groupStates.isHealthCheckEnabled}
               className="mr-2 mb-2"
-              onChange={() => handleGroupToggle('healthGroupEnabled')}
+              onChange={() => handleGroupToggle('isHealthCheckEnabled', 0, 1)}
             />
-
             <h5>
               <FormattedMessage id="Health-Group" />
             </h5>
           </div>
+          {validationMessages.isHealthCheckEnabled && (
+            <div className="d-flex align-items-center text-danger ">
+              <span className="px-2">
+                <MdErrorOutline />
+              </span>
+              <FormattedMessage id={validationMessages.isHealthCheckEnabled} />
+            </div>
+          )}
         </Card.Header>
+
         <Card.Body className="pb-0">
           <Table
             responsive
@@ -326,7 +488,7 @@ const UrlItemList = ({ data }) => {
                       data={{
                         ...url,
                         method: getGroupMethod(
-                          groupStates.healthGroupEnabled,
+                          groupStates.isHealthCheckEnabled,
                           index
                         ),
                       }}
@@ -343,17 +505,14 @@ const UrlItemList = ({ data }) => {
       {/* Group 2: Subscription Reset URL, Subscription Upgrade, Subscription Downgrade Url */}
       <Card border="light" className="shadow-sm mb-4">
         <Card.Header>
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex align-items-center">
+            {/* Commented out the checkbox for the group level toggle */}
             <h5>
               <FormattedMessage id="Subscription-Group" />
             </h5>
-            {/* <Form.Check
-              type="checkbox"
-              checked={groupStates.subscriptionGroupEnabled}
-              onChange={() => handleGroupToggle('subscriptionGroupEnabled')}
-            /> */}
           </div>
         </Card.Header>
+
         <Card.Body className="pb-0">
           <Table
             responsive
@@ -361,39 +520,53 @@ const UrlItemList = ({ data }) => {
           >
             <tbody>
               {urlItems.slice(2, 5).map((url, index) => (
-                <tr key={index + 2}>
-                  <td className="fw-bold d-flex align-items-center">
-                    <Form.Check
-                      type="checkbox"
-                      checked={url.isEnabled}
-                      onChange={() => handleUrlToggle(index + 2)}
-                      className="mr-2"
-                    />
-                    {url.displayName}{' '}
-                    <span className="fw-normal">
-                      <OverlayTrigger
-                        trigger={['hover', 'focus']}
-                        overlay={<Tooltip>{url.description}</Tooltip>}
-                      >
-                        <span className="question">
-                          <BsFillQuestionCircleFill />
+                <React.Fragment key={index + 2}>
+                  <tr>
+                    <td className="fw-bold">
+                      <div className="d-flex align-items-center">
+                        <Form.Check
+                          type="checkbox"
+                          checked={url.isEnabled}
+                          onChange={() => handleUrlToggle(index + 2)}
+                          className="mr-2"
+                        />
+                        {url.displayName}{' '}
+                        <span className="fw-normal">
+                          <OverlayTrigger
+                            trigger={['hover', 'focus']}
+                            overlay={<Tooltip>{url.description}</Tooltip>}
+                          >
+                            <span className="question">
+                              <BsFillQuestionCircleFill />
+                            </span>
+                          </OverlayTrigger>
                         </span>
-                      </OverlayTrigger>
-                    </span>
-                  </td>
+                      </div>
+                    </td>
 
-                  <td className="url-container">
-                    <ProductUrl
-                      data={{
-                        ...url,
-                        method: getGroupMethod(url?.isEnabled, index + 2),
-                      }}
-                      onUrlChange={(newPath) =>
-                        handleUrlChange(index + 2, newPath)
-                      }
-                    />
-                  </td>
-                </tr>
+                    <td className="url-container">
+                      <ProductUrl
+                        data={{
+                          ...url,
+                          method: getGroupMethod(url?.isEnabled, index + 2),
+                        }}
+                        onUrlChange={(newPath) =>
+                          handleUrlChange(index + 2, newPath)
+                        }
+                      />
+                      {validationMessages[urlFields[index + 2].flag] && (
+                        <div className="d-flex align-items-center text-danger mt-1  ">
+                          <span className="px-2">
+                            <MdErrorOutline />
+                          </span>{' '}
+                          <FormattedMessage
+                            id={validationMessages[urlFields[index + 2].flag]}
+                          />
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                </React.Fragment>
               ))}
             </tbody>
           </Table>
@@ -406,15 +579,26 @@ const UrlItemList = ({ data }) => {
           <div className="d-flex align-items-center">
             <Form.Check
               type="checkbox"
-              checked={groupStates.lifecycleGroupEnabled}
-              onChange={() => handleGroupToggle('lifecycleGroupEnabled')}
+              checked={groupStates.isMainOperationEnabled}
+              onChange={() => handleGroupToggle('isMainOperationEnabled', 5, 8)}
               className="mr-2 mb-2"
             />
             <h5>
               <FormattedMessage id="Lifecycle-Group" />
             </h5>
           </div>
+          {validationMessages.isMainOperationEnabled && (
+            <div className="d-flex align-items-center text-danger ">
+              <span className="px-2">
+                <MdErrorOutline />
+              </span>
+              <FormattedMessage
+                id={validationMessages.isMainOperationEnabled}
+              />
+            </div>
+          )}
         </Card.Header>
+
         <Card.Body className="pb-0">
           <Table
             responsive
@@ -422,7 +606,7 @@ const UrlItemList = ({ data }) => {
           >
             <tbody>
               {urlItems.slice(5, 9).map((url, index) => (
-                <tr key={index + 5}>
+                <tr key={index + 5} className="px-5">
                   <td className="fw-bold">
                     {url.displayName}{' '}
                     <span className="fw-normal">
@@ -441,7 +625,7 @@ const UrlItemList = ({ data }) => {
                       data={{
                         ...url,
                         method: getGroupMethod(
-                          groupStates.lifecycleGroupEnabled,
+                          groupStates.isMainOperationEnabled,
                           index + 5
                         ),
                       }}
@@ -463,15 +647,29 @@ const UrlItemList = ({ data }) => {
           <div className="d-flex align-items-center">
             <Form.Check
               type="checkbox"
-              checked={groupStates.specificationGroupEnabled}
-              onChange={() => handleGroupToggle('specificationGroupEnabled')}
+              checked={groupStates.isSpecificationValidatorEnabled}
+              onChange={() =>
+                handleGroupToggle('isSpecificationValidatorEnabled', 9, 9)
+              }
               className="mr-2 mb-2"
             />
             <h5>
               <FormattedMessage id="Specification-Validator-Group" />
             </h5>
           </div>
+          {validationMessages.isSpecificationValidatorEnabled && (
+            <div className="d-flex align-items-center text-danger ">
+              <span className="px-2">
+                <MdErrorOutline />
+              </span>
+
+              <FormattedMessage
+                id={validationMessages.isSpecificationValidatorEnabled}
+              />
+            </div>
+          )}
         </Card.Header>
+
         <Card.Body className="pb-0">
           <Table
             responsive
@@ -498,7 +696,7 @@ const UrlItemList = ({ data }) => {
                       data={{
                         ...urlItems[9],
                         method: getGroupMethod(
-                          groupStates.specificationGroupEnabled,
+                          groupStates.isSpecificationValidatorEnabled,
                           9
                         ),
                       }}
@@ -518,9 +716,13 @@ const UrlItemList = ({ data }) => {
           <div className="d-flex align-items-center">
             <Form.Check
               type="checkbox"
-              checked={groupStates.paymentAndRedirectionEndpoints}
+              checked={groupStates.isPaymentAndRedirectionEndpointsEnabled}
               onChange={() =>
-                handleGroupToggle('paymentAndRedirectionEndpoints')
+                handleGroupToggle(
+                  'isPaymentAndRedirectionEndpointsEnabled',
+                  10,
+                  11
+                )
               }
               className="mr-2 mb-2"
             />
@@ -528,7 +730,22 @@ const UrlItemList = ({ data }) => {
               <FormattedMessage id="Payment-and-Redirection-Endpoints" />
             </h5>
           </div>
+          {validationMessages.isPaymentAndRedirectionEndpointsEnabled && (
+            <div className="d-flex align-items-center text-danger ">
+              <span className="px-2">
+                <MdErrorOutline />
+              </span>
+              {validationMessages.isPaymentAndRedirectionEndpointsEnabled && (
+                <FormattedMessage
+                  id={
+                    validationMessages.isPaymentAndRedirectionEndpointsEnabled
+                  }
+                />
+              )}
+            </div>
+          )}
         </Card.Header>
+
         <Card.Body className="pb-0">
           <Table
             responsive
@@ -555,7 +772,7 @@ const UrlItemList = ({ data }) => {
                       data={{
                         ...url,
                         method: getGroupMethod(
-                          groupStates.paymentAndRedirectionEndpoints,
+                          groupStates.isPaymentAndRedirectionEndpointsEnabled,
                           index + 10
                         ),
                       }}
@@ -576,15 +793,31 @@ const UrlItemList = ({ data }) => {
           <div className="d-flex align-items-center">
             <Form.Check
               type="checkbox"
-              checked={groupStates.PlanSelectionGroupEnabled}
-              onChange={() => handleGroupToggle('PlanSelectionGroupEnabled')}
+              checked={groupStates.isPlanSelectionRedirectionEnabled}
+              onChange={() =>
+                handleGroupToggle('isPlanSelectionRedirectionEnabled', 12, 12)
+              }
               className="mr-2 mb-2"
             />
             <h5>
               <FormattedMessage id="Plan-Selection" />
             </h5>
+            {validationMessages.isPlanSelectionRedirectionEnabled && (
+              <div className="d-flex align-items-center text-danger ">
+                <span className="px-2">
+                  <MdErrorOutline />
+                </span>
+
+                {validationMessages.isPlanSelectionRedirectionEnabled && (
+                  <FormattedMessage
+                    id={validationMessages.isPlanSelectionRedirectionEnabled}
+                  />
+                )}
+              </div>
+            )}
           </div>
         </Card.Header>
+
         <Card.Body className="pb-0">
           <Table
             responsive
@@ -611,7 +844,7 @@ const UrlItemList = ({ data }) => {
                       data={{
                         ...urlItems[12],
                         method: getGroupMethod(
-                          groupStates.PlanSelectionGroupEnabled,
+                          groupStates.isPlanSelectionRedirectionEnabled,
                           12
                         ),
                       }}

@@ -344,7 +344,8 @@ const DynamicButtons = ({ buttons }) => {
               return (
                 <span key={index}>
                   <Button variant={button.variant} onClick={button.func}>
-                    {button.icon} <FormattedMessage id={button.label} />
+                    {button.icon}{' '}
+                    {button.label && <FormattedMessage id={button.label} />}
                   </Button>
                 </span>
               )
@@ -357,7 +358,8 @@ const DynamicButtons = ({ buttons }) => {
                       setCurrentButtonIndex(index)
                     }}
                   >
-                    {button.icon} <FormattedMessage id={button.label} />
+                    {button.icon}
+                    {button.label && <FormattedMessage id={button.label} />}
                   </Button>
                 </span>
               )
@@ -372,7 +374,8 @@ const DynamicButtons = ({ buttons }) => {
                     }}
                     disabled={button.disable}
                   >
-                    {button.icon} <FormattedMessage id={button.label} />
+                    {button.icon}{' '}
+                    {button.label && <FormattedMessage id={button.label} />}
                   </Button>
                 </span>
               )
@@ -403,7 +406,10 @@ const DynamicButtons = ({ buttons }) => {
                             setCurrentButtonIndex(index)
                           }}
                         >
-                          {button.icon} <FormattedMessage id={button.label} />
+                          {button.icon}{' '}
+                          {button.label && (
+                            <FormattedMessage id={button.label} />
+                          )}
                         </Dropdown.Item>
                       </span>
                     )
@@ -417,7 +423,8 @@ const DynamicButtons = ({ buttons }) => {
                         }}
                         disabled={button.disable}
                       >
-                        {button.icon} <FormattedMessage id={button.label} />
+                        {button.icon}{' '}
+                        {button.label && <FormattedMessage id={button.label} />}
                       </Dropdown.Item>
                     )
                   } else if (button.type == 'action') {
@@ -428,7 +435,10 @@ const DynamicButtons = ({ buttons }) => {
                           onClick={button.func}
                           disabled={button.disable}
                         >
-                          {button.icon} <FormattedMessage id={button.label} />
+                          {button.icon}{' '}
+                          {button.label && (
+                            <FormattedMessage id={button.label} />
+                          )}
                         </Dropdown.Item>
                       )
                     } else {
@@ -440,7 +450,10 @@ const DynamicButtons = ({ buttons }) => {
                             className="redColor"
                             disabled={button.disable}
                           >
-                            {button.icon} <FormattedMessage id={button.label} />
+                            {button.icon}{' '}
+                            {button.label && (
+                              <FormattedMessage id={button.label} />
+                            )}
                           </Dropdown.Item>
                         </span>
                       )

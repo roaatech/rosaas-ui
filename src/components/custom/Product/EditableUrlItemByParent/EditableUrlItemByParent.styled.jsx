@@ -7,18 +7,7 @@ export const Wrapper = styled.div`
   .url-input {
     max-height: 25px !important;
   }
-  /* .enabled {
-    color: var(--second-color);
-  }
-  .enabled:hover {
-    color: #cb8700;
-  } */
-  .disabled {
-    color: #cdcdcd !important;
-  }
-  .disabled-edit {
-    color: var(--second-color);
-  }
+
   .bar {
     padding: 5px;
     border-radius: 5px;

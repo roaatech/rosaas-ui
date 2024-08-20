@@ -651,5 +651,26 @@
   "Discounts-List": "Discounts List",
   "Create-Discount": "Create Discount",
   "Add-Discount": "Add Discount",
-  "Discounts": "Discounts"
+  "Discounts": "Discounts",
+
+  "Subscription-Reset-Url-Description": "Subscription Reset URL Description",
+  "Subscription-Upgrade-Description": "Subscription Upgrade Description",
+  "Subscription-Downgrade-Url-Description": "Subscription Downgrade URL Description",
+  "Specification-Validator-Url": "Specification Validator URL",
+  "Specification-Validator-Url-Description": "Specification Validator URL Description",
+  "Payment-Success-Callback-Url": "Payment Success Callback URL",
+  "Payment-Success-Callback-Url-Description": "Payment Success Callback URL Description",
+  "Payment-Failure-Callback-Url": "Payment Failure Callback URL",
+  "Payment-Failure-Callback-Url-Description": "Payment Failure Callback URL Description",
+  "Plan-Selection-Redirect-Url": "Plan Selection Redirect URL",
+  "Plan-Selection-Redirect-Url-Description": "Plan Selection Redirect URL Description",
+  "Health-Group": "Health Group",
+  "Subscription-Group": "Subscription Group",
+  "Lifecycle-Group": "Lifecycle Group",
+  "Specification-Validator-Group": "Specification Validator Group",
+  "Payment-and-Redirection-Endpoints": "Payment and Redirection Endpoints",
+  "Plan-Selection": "Plan Selection",
+  "The-URL-cannot-be-empty-while-the-group-is-enabled.": "The URL cannot be empty while the group is enabled.",
+  "This-field-is-required-while-the-checkbox-is-enabled.": "This field is required while the checkbox is enabled.",
+  "Please-fill-in-all-fields-before-enabling-the-group.": "Please fill in all fields before enabling the group."
 }
