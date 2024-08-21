@@ -672,5 +672,7 @@
   "Plan-Selection": "Plan Selection",
   "The-URL-cannot-be-empty-while-the-group-is-enabled.": "The URL cannot be empty while the group is enabled.",
   "This-field-is-required-while-the-checkbox-is-enabled.": "This field is required while the checkbox is enabled.",
-  "Please-fill-in-all-fields-before-enabling-the-group.": "Please fill in all fields before enabling the group."
+  "Please-fill-in-all-fields-before-enabling-the-group.": "Please fill in all fields before enabling the group.",
+  "Edit-Product-Owner": "Edit Product Owner",
+  "Integration-Urls": "Integration URLs"
 }

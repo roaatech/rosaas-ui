@@ -19,7 +19,6 @@ const IntegrationUrlsTab = ({ data, onSave }) => {
       deletionEndpoint: updatedUrls[8].path,
     }))
   }
-  console.log({ urlData })
 
   const handleSave = () => {
     if (onSave) {

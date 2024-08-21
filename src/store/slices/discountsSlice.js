@@ -8,7 +8,6 @@ export const discountsSlice = createSlice({
   reducers: {
     setAllDiscounts: (state, action) => {
       const allDiscounts = JSON.parse(JSON.stringify(current(state.discounts)))
-      console.log(action)
 
       const discountsArray = action.payload?.items // Extract items array
       if (Array.isArray(discountsArray)) {
@@ -25,7 +24,6 @@ export const discountsSlice = createSlice({
     },
     discountInfo: (state, action) => {
       const { id, data } = action.payload
-      console.log({ id, data })
       state.discounts[id] = data
     },
     removeDiscount: (state, action) => {

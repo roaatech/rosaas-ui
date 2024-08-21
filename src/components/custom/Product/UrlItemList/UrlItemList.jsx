@@ -8,23 +8,22 @@ import {
   Table,
   Form,
   Alert,
+  Dropdown,
 } from '@themesberg/react-bootstrap'
-import { BsFillQuestionCircleFill } from 'react-icons/bs'
+import { BsFillQuestionCircleFill, BsStars } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import useRequest from '../../../../axios/apis/useRequest'
 import { Wrapper } from './UrlItemList.styled'
 import { productInfo } from '../../../../store/slices/products/productsSlice'
-import { MdError, MdErrorOutline } from 'react-icons/md'
+import { MdArrowDropDown, MdError, MdErrorOutline } from 'react-icons/md'
 
 const UrlItemList = ({ data }) => {
   const [urlItems, setURLS] = useState([])
-  console.log({ wwwwwww: urlItems })
 
   const listData = useSelector((state) => state.products.products)
   const productId = useParams().id
   const productData = listData?.[productId]
-  console.log({ productData })
 
   const [groupStates, setGroupStates] = useState({
     isHealthCheckEnabled: productData?.isHealthCheckEnabled == true,
@@ -77,7 +76,8 @@ const UrlItemList = ({ data }) => {
     isSubscriptionUpgradeEnabled: '',
     isSubscriptionDowngradeEnabled: '',
   })
-  console.log({ validationMessages })
+  const [selectedVersion, setSelectedVersion] = useState('v0.0')
+  const [showDropdown, setShowDropdown] = useState(false)
 
   const dispatch = useDispatch()
   const { editProductRequest } = useRequest()
@@ -132,6 +132,7 @@ const UrlItemList = ({ data }) => {
         path: productData.creationEndpoint,
         displayName: <FormattedMessage id="Creation-Url" />,
         description: <FormattedMessage id="Creation-Url-description" />,
+        version: productData?.creationApiVersion || 'v0.0',
       },
       {
         method: 'POST',
@@ -184,6 +185,7 @@ const UrlItemList = ({ data }) => {
         ),
       },
     ])
+    setSelectedVersion(productData?.creationApiVersion || 'v0.0')
   }, [productData, validationMessages])
 
   const urlFields = [
@@ -216,6 +218,28 @@ const UrlItemList = ({ data }) => {
       flag: 'isPlanSelectionRedirectionEnabled',
     },
   ]
+  const handleVersionSelect = async (selectedVersion) => {
+    setSelectedVersion(selectedVersion)
+
+    const updatedProductData = {
+      ...productData,
+      creationApiVersion: selectedVersion,
+    }
+
+    const editProduct = await editProductRequest({
+      data: updatedProductData,
+      id: productId,
+    })
+    dispatch(productInfo({ ...productData, ...updatedProductData }))
+  }
+
+  const handleMouseEnter = () => {
+    setShowDropdown(true)
+  }
+
+  const handleMouseLeave = () => {
+    setShowDropdown(false)
+  }
 
   const handleUrlChange = async (index, newPath) => {
     const updatedProductData = { ...productData }
@@ -332,7 +356,6 @@ const UrlItemList = ({ data }) => {
     return true
   }
 
-  console.log({ groupStates })
   const handleGroupToggle = async (
     groupName,
     groupStartIndex,
@@ -340,7 +363,6 @@ const UrlItemList = ({ data }) => {
   ) => {
     if (!groupStates[groupName]) {
       const groupItems = urlItems.slice(groupStartIndex, groupEndIndex + 1)
-      console.log({ urlItems })
 
       if (!validateGroup(groupItems)) {
         setValidationMessages({
@@ -354,8 +376,6 @@ const UrlItemList = ({ data }) => {
 
     const newGroupState = !groupStates[groupName]
     if (newGroupState) {
-      console.log({ rrrr: urlItems })
-
       for (let i = groupStartIndex; i <= groupEndIndex; i++) {
         if (urlItems[i]?.path.trim() === '') {
           setValidationMessages({
@@ -409,8 +429,6 @@ const UrlItemList = ({ data }) => {
         updatedProductData[groupFlags[groupName][key]] = newGroupState
       })
     }
-    console.log({ updatedProductData2: updatedProductData })
-    console.log({ data2: data })
 
     const editProduct = await editProductRequest({
       data: { ...productData, ...updatedProductData },
@@ -606,35 +624,91 @@ const UrlItemList = ({ data }) => {
           >
             <tbody>
               {urlItems.slice(5, 9).map((url, index) => (
-                <tr key={index + 5} className="px-5">
-                  <td className="fw-bold">
-                    {url.displayName}{' '}
-                    <span className="fw-normal">
-                      <OverlayTrigger
-                        trigger={['hover', 'focus']}
-                        overlay={<Tooltip>{url.description}</Tooltip>}
-                      >
-                        <span className="question">
-                          <BsFillQuestionCircleFill />
+                <React.Fragment key={index + 5}>
+                  <tr className="px-5">
+                    <td className="fw-bold ">
+                      {url.displayName}{' '}
+                      <span className="fw-normal mb-0 pb-0">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={<Tooltip>{url.description}</Tooltip>}
+                        >
+                          <span className="question">
+                            <BsFillQuestionCircleFill />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
+                      {url.displayName.props.id === 'Creation-Url' && (
+                        <span className="d-flex align-items-center m-0 p-0">
+                          <Dropdown
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                            show={showDropdown}
+                            className=" m-0 p-0"
+                          >
+                            <Dropdown.Toggle
+                              variant="link"
+                              id="dropdown-basic"
+                              className="custom-dropdown-toggle"
+                            >
+                              <div className="d-flex justify-content-center align-items-center">
+                                {/* <BsStars className="icon icon-xs p-0 m-0" /> */}
+
+                                <span className="font-small">
+                                  {selectedVersion.toUpperCase()}
+                                </span>
+
+                                <MdArrowDropDown className="mt-1" />
+                                <OverlayTrigger
+                                  trigger={['hover', 'focus']}
+                                  overlay={
+                                    <Tooltip>
+                                      <FormattedMessage id="This-is-the-API-payload-version-for-creation" />
+                                    </Tooltip>
+                                  }
+                                >
+                                  <span className="question-drop">
+                                    <BsFillQuestionCircleFill />
+                                  </span>
+                                </OverlayTrigger>
+                              </div>
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                              <Dropdown.Item
+                                eventKey="v0.0"
+                                onSelect={() => handleVersionSelect('v0.0')}
+                              >
+                                V0.0
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                eventKey="v0.1"
+                                onSelect={() => handleVersionSelect('v0.1')}
+                              >
+                                V0.1
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
                         </span>
-                      </OverlayTrigger>
-                    </span>
-                  </td>
-                  <td className="url-container">
-                    <ProductUrl
-                      data={{
-                        ...url,
-                        method: getGroupMethod(
-                          groupStates.isMainOperationEnabled,
-                          index + 5
-                        ),
-                      }}
-                      onUrlChange={(newPath) =>
-                        handleUrlChange(index + 5, newPath)
-                      }
-                    />
-                  </td>
-                </tr>
+                      )}
+                    </td>
+
+                    <td className="url-container">
+                      <ProductUrl
+                        data={{
+                          ...url,
+                          method: getGroupMethod(
+                            groupStates.isMainOperationEnabled,
+                            index + 5
+                          ),
+                        }}
+                        onUrlChange={(newPath) =>
+                          handleUrlChange(index + 5, newPath)
+                        }
+                      />
+                    </td>
+                  </tr>
+                </React.Fragment>
               ))}
             </tbody>
           </Table>

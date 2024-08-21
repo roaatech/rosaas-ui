@@ -7,4 +7,11 @@ export const Wrapper = styled.div`
     background-color: var(--second-color) !important;
     border-color: var(--second-color);
   }
+  .question {
+    margin-left: 4px;
+  }
+  .question-drop svg {
+    font-size: 0.7rem;
+    margin-bottom: 0.2rem;
+  }
 `

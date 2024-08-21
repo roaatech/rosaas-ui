@@ -244,7 +244,6 @@ const TenantFormOnboarding = ({
       }
     },
   })
-  console.log({ ssss: listData[formik.values.product] })
 
   const intl = useIntl()
   let planOptions

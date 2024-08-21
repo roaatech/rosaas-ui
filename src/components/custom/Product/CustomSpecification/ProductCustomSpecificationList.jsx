@@ -40,8 +40,6 @@ import {
 
 import { PublishStatus } from '../../../../const'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
-import UrlItem from '../UrlItem/UrlItem.jsx'
-import UpperContent from '../../Shared/UpperContent/UpperContent.jsx'
 
 export const ProductCustomSpecificationList = (
   { productId },
@@ -62,8 +60,6 @@ export const ProductCustomSpecificationList = (
   const [popUpLable, setPopUpLable] = useState('')
   const intl = useIntl()
   const direction = useSelector((state) => state.main.direction)
-  const validationUrl = useSelector((state) => state.products.validationUrl) // Assuming validationUrl is in the state
-  console.log({ validationUrl })
 
   const handleDeleteSpecification = async () => {
     if (list?.specifications[currentId]?.isSubscribed) {
@@ -123,14 +119,6 @@ export const ProductCustomSpecificationList = (
         value: !isPublished,
       })
     )
-  }
-  const specificationValidatorUrldata = {
-    method: 'GET',
-    path: validationUrl.path,
-    displayName: <FormattedMessage id="Specification-Validator-Url" />,
-    description: (
-      <FormattedMessage id="Specification-Validator-Url-Description" />
-    ),
   }
 
   const TableRow = (props) => {
@@ -265,10 +253,7 @@ export const ProductCustomSpecificationList = (
 
   return (
     <Wrapper>
-      <UpperContent>
-        <div>
-          <UrlItem data={specificationValidatorUrldata} />
-        </div>
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
         <DynamicButtons
           buttons={[
             {
@@ -291,7 +276,7 @@ export const ProductCustomSpecificationList = (
             },
           ]}
         />
-      </UpperContent>
+      </div>
 
       <div className="border-top-1 border-light">
         <Card

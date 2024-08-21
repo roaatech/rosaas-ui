@@ -664,5 +664,7 @@
   "Plan-Selection": "اختيار الخطة",
   "The-URL-cannot-be-empty-while-the-group-is-enabled.": "لا يمكن أن يكون الرابط فارغًا بينما المجموعة مفعلة.",
   "This-field-is-required-while-the-checkbox-is-enabled.": "هذا الحقل مطلوب بينما المربع مفعل.",
-  "Please-fill-in-all-fields-before-enabling-the-group.": "يرجى ملء جميع الحقول قبل تفعيل المجموعة."
+  "Please-fill-in-all-fields-before-enabling-the-group.": "يرجى ملء جميع الحقول قبل تفعيل المجموعة.",
+  "Edit-Product-Owner": "تعديل مالك المنتج",
+  "Integration-Urls": "روابط التكامل"
 }
