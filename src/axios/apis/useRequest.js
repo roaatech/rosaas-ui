@@ -19,6 +19,7 @@ import useAccountReq from './Account/Account'
 import useWebhookEndpointReq from './Product/webhookEndpoint/useWebhookEndpointReq'
 import usePOReq from './ProductOwner/usePOReq'
 import useDiscountReq from './Setting/discount/useDiscountReq'
+import useCurrencyReq from './Setting/currency/useCurrencyReq'
 
 const useRequest = () => {
   const {
@@ -56,6 +57,18 @@ const useRequest = () => {
     createTenantRequestPublic,
   } = useTenantReq()
   const { updateProfile, getCurrentProfile, changePassword } = useAccountReq()
+  const {
+    getCurrencies,
+    createCurrency,
+    editCurrency,
+    deleteCurrency,
+    getCurrencyById,
+    publishCurrency,
+    markAsPrimaryCurrency,
+    markAsPrimaryExchangeRateCurrency,
+    markAsPrimaryCurrencyForProductOwner,
+    markAsPrimaryExchangeRateCurrencyForProductOwner,
+  } = useCurrencyReq()
   const {
     getWebhookEndpointsList,
     getWebhookEndpointbyId,
@@ -333,6 +346,16 @@ const useRequest = () => {
     getDiscountById,
     deleteDiscountUsageHistoriesById,
     getDiscountUsageHistoriesByDiscountId,
+    getCurrencies,
+    createCurrency,
+    editCurrency,
+    deleteCurrency,
+    getCurrencyById,
+    publishCurrency,
+    markAsPrimaryCurrency,
+    markAsPrimaryExchangeRateCurrency,
+    markAsPrimaryCurrencyForProductOwner,
+    markAsPrimaryExchangeRateCurrencyForProductOwner,
   }
 }
 export default useRequest

@@ -32,6 +32,7 @@ import ProductManagementSignInPage from './pages/ProductManagementSignInPage/Pro
 import ProductManagementSignUpPage from './pages/ProductManagementSignUpPage/ProductManagementSignUpPage'
 import DiscountsPage from './pages/DiscountsPage/DiscountsPage'
 import DiscountDetails from './components/custom/Discounts/DiscountDetails'
+import CurrenciesPage from './pages/CurrenciesPage/CurrenciesPage'
 const adminPanel = '/admin-panel'
 export const Routes = {
   Dashboard: {
@@ -117,9 +118,16 @@ export const Routes = {
     roles: ['superAdmin'],
   },
   DiscountsPage: {
-    path: `${adminPanel}/settings/Discounts`,
+    path: `${adminPanel}/settings/discounts`,
 
     component: () => <POwnerChecker page={<DiscountsPage />} />,
+
+    roles: ['superAdmin', 'clientAdmin'],
+  },
+  CurrenciesPage: {
+    path: `${adminPanel}/settings/currencies`,
+
+    component: () => <POwnerChecker page={<CurrenciesPage />} />,
 
     roles: ['superAdmin', 'clientAdmin'],
   },
