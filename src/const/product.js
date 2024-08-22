@@ -112,11 +112,11 @@ export const clientTypeLable = {
 }
 
 export const cycle = {
-  2: 'Week',
+  // 2: 'Week',
   3: 'Month',
   4: 'Year',
-  5: 'One-Day',
-  6: 'Three-Day',
+  // 5: 'One-Day',
+  // 6: 'Three-Day',
   10: 'Custom',
   11: 'Unlimited',
 }

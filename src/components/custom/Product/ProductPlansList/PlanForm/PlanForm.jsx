@@ -167,7 +167,7 @@ const PlanForm = ({
 
   if (allProducts[productId]?.plans) {
     alternativePlanIDOptions = Object.values(allProducts[productId].plans)
-      .filter((item) => item.isPublished === true && planData?.id != item.id)
+      .filter((item) => planData?.id != item.id)
       .map((item, index) => ({
         value: item.id,
         label: item.displayName,

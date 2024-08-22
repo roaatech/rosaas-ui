@@ -20,7 +20,9 @@ export const Wrapper = styled.div`
     text-overflow: ellipsis;
     max-width: 100%; /* optional, depends on your layout */
   }
-
+  .rosaas-management-area-card .card-body {
+    background-color: #ffdead3b;
+  }
   .product-title {
     font-size: 24px;
     font-weight: bold;

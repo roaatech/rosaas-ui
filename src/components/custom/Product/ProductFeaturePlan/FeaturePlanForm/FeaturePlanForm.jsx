@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
-import { Modal, Button } from '@themesberg/react-bootstrap'
+import {
+  Modal,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
@@ -22,7 +27,11 @@ import {
 } from '../../../../../const/index.js'
 import { TabPanel, TabView } from 'primereact/tabview'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
+import {
+  faQuestionCircle,
+  faToggleOff,
+  faToggleOn,
+} from '@fortawesome/free-solid-svg-icons'
 import { activeTab } from '../../../../../const/product.js'
 
 const FeaturePlanForm = ({
@@ -402,7 +411,23 @@ const FeaturePlanForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Description" />
+                <FormattedMessage id="Plan-Feature-display-description" />{' '}
+                <span className="fw-normal">
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        {intl.formatMessage({
+                          id: 'Display-description-of-the-plan-feature-that-will-show-in-the-price-page',
+                        })}
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <FontAwesomeIcon icon={faQuestionCircle} />
+                    </span>
+                  </OverlayTrigger>
+                </span>
               </Form.Label>
 
               <TextareaAndCounter
