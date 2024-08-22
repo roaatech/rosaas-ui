@@ -372,154 +372,6 @@ const CustomSpecificationForm = ({
             </Container>
           </Card>
 
-          {/* 2nd Card: Is Published and Is User Editable */}
-          <Card
-            border="light"
-            className="table-wrapper table-responsive shadow-sm"
-            style={{ marginTop: '15px' }}
-          >
-            <Container>
-              <Row>
-                <Col
-                  md={4}
-                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
-                >
-                  <div className="toggle-container d-flex align-items-center justify-content-between">
-                    <Form.Label>
-                      <FormattedMessage id="Is-Published" />{' '}
-                      <span className="fw-normal">
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              {intl.formatMessage({
-                                id: 'Tenant-Specification-Display',
-                              })}
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              className={
-                                direction == 'rtl' ? 'ar-questionCircle' : ''
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </span>
-                    </Form.Label>
-                    <FontAwesomeIcon
-                      icon={
-                        formik.values.isPublished ? faToggleOn : faToggleOff
-                      }
-                      className={
-                        formik.values.isPublished
-                          ? 'active-toggle fa-lg'
-                          : 'passive-toggle fa-lg'
-                      }
-                      onClick={() =>
-                        formik.setFieldValue(
-                          'isPublished',
-                          !formik.values.isPublished
-                        )
-                      }
-                    />
-                  </div>
-                </Col>
-                <Col
-                  md={4}
-                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
-                >
-                  <div className="toggle-container d-flex align-items-center justify-content-between">
-                    <Form.Label>
-                      <FormattedMessage id="Is-User-Editable" />{' '}
-                      <span className="fw-normal">
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              {intl.formatMessage({
-                                id: 'User-Editable-Value',
-                              })}
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              className={
-                                direction == 'rtl' ? 'ar-questionCircle' : ''
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </span>
-                    </Form.Label>
-                    <FontAwesomeIcon
-                      icon={
-                        formik.values.isUserEditable ? faToggleOn : faToggleOff
-                      }
-                      className={
-                        formik.values.isUserEditable
-                          ? 'active-toggle fa-lg'
-                          : 'passive-toggle fa-lg'
-                      }
-                      onClick={() =>
-                        formik.setFieldValue(
-                          'isUserEditable',
-                          !formik.values.isUserEditable
-                        )
-                      }
-                    />
-                  </div>
-                </Col>
-                <Col
-                  md={4}
-                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
-                >
-                  <div className="toggle-container d-flex align-items-center justify-content-between  ">
-                    <Form.Label>
-                      <FormattedMessage id="Is-Required" />{' '}
-                      <span className="fw-normal">
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              {intl.formatMessage({
-                                id: 'Value-Presence-Required',
-                              })}{' '}
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              className={
-                                direction == 'rtl' ? 'ar-questionCircle' : ''
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </span>
-                    </Form.Label>
-                    <FontAwesomeIcon
-                      icon={formik.values.isRequired ? faToggleOn : faToggleOff}
-                      className={
-                        formik.values.isRequired
-                          ? 'active-toggle fa-lg'
-                          : 'passive-toggle fa-lg'
-                      }
-                      onClick={() =>
-                        formik.setFieldValue(
-                          'isRequired',
-                          !formik.values.isRequired
-                        )
-                      }
-                    />
-                  </div>
-                </Col>
-              </Row>
-            </Container>
-          </Card>
-
           {/* 3rd Card: Hint Description and Inline Description */}
           <Card
             border="light"
@@ -755,7 +607,7 @@ const CustomSpecificationForm = ({
                         </OverlayTrigger>
                       </span>
                     </Form.Label>
-                    <TabView className="mt-4"></TabView>
+                    <TabView className="mt-3"></TabView>
                     <input
                       type="text"
                       className="form-control"
@@ -852,6 +704,154 @@ const CustomSpecificationForm = ({
                         </Form.Control.Feedback>
                       )}
                   </Form.Group>
+                </Col>
+              </Row>
+            </Container>
+          </Card>
+
+          {/* 2nd Card: Is Published and Is User Editable */}
+          <Card
+            border="light"
+            className="table-wrapper table-responsive shadow-sm bool-card"
+            style={{ marginTop: '15px' }}
+          >
+            <Container>
+              <Row>
+                <Col
+                  md={4}
+                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
+                >
+                  <div className="toggle-container d-flex  justify-content-between">
+                    <Form.Label>
+                      <FormattedMessage id="Is-Published" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {intl.formatMessage({
+                                id: 'Tenant-Specification-Display',
+                              })}
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
+                    </Form.Label>
+                    <FontAwesomeIcon
+                      icon={
+                        formik.values.isPublished ? faToggleOn : faToggleOff
+                      }
+                      className={
+                        formik.values.isPublished
+                          ? 'active-toggle fa-lg'
+                          : 'passive-toggle fa-lg'
+                      }
+                      onClick={() =>
+                        formik.setFieldValue(
+                          'isPublished',
+                          !formik.values.isPublished
+                        )
+                      }
+                    />
+                  </div>
+                </Col>
+                <Col
+                  md={4}
+                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
+                >
+                  <div className="toggle-container d-flex  justify-content-between">
+                    <Form.Label>
+                      <FormattedMessage id="Is-User-Editable" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {intl.formatMessage({
+                                id: 'User-Editable-Value',
+                              })}
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
+                    </Form.Label>
+                    <FontAwesomeIcon
+                      icon={
+                        formik.values.isUserEditable ? faToggleOn : faToggleOff
+                      }
+                      className={
+                        formik.values.isUserEditable
+                          ? 'active-toggle fa-lg'
+                          : 'passive-toggle fa-lg'
+                      }
+                      onClick={() =>
+                        formik.setFieldValue(
+                          'isUserEditable',
+                          !formik.values.isUserEditable
+                        )
+                      }
+                    />
+                  </div>
+                </Col>
+                <Col
+                  md={4}
+                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
+                >
+                  <div className="toggle-container d-flex  justify-content-between  ">
+                    <Form.Label>
+                      <FormattedMessage id="Is-Required" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {intl.formatMessage({
+                                id: 'Value-Presence-Required',
+                              })}{' '}
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
+                    </Form.Label>
+                    <FontAwesomeIcon
+                      icon={formik.values.isRequired ? faToggleOn : faToggleOff}
+                      className={
+                        formik.values.isRequired
+                          ? 'active-toggle fa-lg'
+                          : 'passive-toggle fa-lg'
+                      }
+                      onClick={() =>
+                        formik.setFieldValue(
+                          'isRequired',
+                          !formik.values.isRequired
+                        )
+                      }
+                    />
+                  </div>
                 </Col>
               </Row>
             </Container>
