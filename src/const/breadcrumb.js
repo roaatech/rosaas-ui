@@ -17,6 +17,13 @@ export const breadcrumbFun = (routeParams, data) => {
       active: 'Settings',
       icon: {},
     },
+    CurrenciesList: {
+      title: 'Settings',
+      name: 'Currencies-List',
+      navigation: Routes.CurrenciesPage.path,
+      active: 'Settings',
+      icon: {},
+    },
     DiscountDetails: {
       title: 'Discounts',
       name: 'Discounts-Management',

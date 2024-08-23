@@ -29,17 +29,37 @@ import {
 import Label from '../../components/custom/Shared/label/Label'
 import { PublishStatus } from '../../const'
 import {
+  MdAttachMoney,
+  MdMoneyOff,
   MdOutlinePublishedWithChanges,
   MdOutlineUnpublished,
+  MdStar,
+  MdStarBorder,
 } from 'react-icons/md'
+import {
+  PrimaryCurrencyStatus,
+  PrimaryExchangeRateCurrencyStatus,
+} from '../../const/const'
+import TableHead from '../../components/custom/Shared/TableHead/TableHead'
+import CurrencyForm from '../../components/custom/Currency/CurrencyForm'
+import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 
 export default function CurrenciesPage() {
   const dispatch = useDispatch()
   const [visible, setVisible] = useState(false)
   const [currentId, setCurrentId] = useState('')
   const [currencyDetails, setCurrencyDetails] = useState(null)
-  const { getCurrencies, getCurrencyById, deleteCurrency, publishCurrency } =
-    useRequest()
+  const [editVisible, setEditVisible] = useState(false)
+  const {
+    getCurrencies,
+    getCurrencyById,
+    deleteCurrency,
+    publishCurrency,
+    markAsPrimaryCurrency,
+    markAsPrimaryCurrencyForProductOwner,
+    markAsPrimaryExchangeRateCurrency,
+    markAsPrimaryExchangeRateCurrencyForProductOwner,
+  } = useRequest()
   const navigate = useNavigate()
 
   const listData = useSelector((state) => state?.currenciesSlice?.currencies)
@@ -92,6 +112,71 @@ export default function CurrenciesPage() {
       console.error('Failed to toggle publish status:', error)
     }
   }
+  let userInfo = useSelector((state) => state.auth.userInfo)
+  let userRole = userInfo.userType
+
+  // Extract the ProductOwnerInfo ID if the user is a product owner
+  let productOwnerId = userInfo.ProductOwnerInfo?.id
+  const togglePrimaryCurrency = async (id, isPrimary) => {
+    try {
+      let response
+
+      if (userRole === 'productOwner' && productOwnerId) {
+        // Use the product owner-specific endpoint
+        response = await markAsPrimaryCurrencyForProductOwner(
+          productOwnerId,
+          id
+        )
+      } else if (userRole === 'superAdmin') {
+        // Use the super admin-specific endpoint
+        response = await markAsPrimaryCurrency(id)
+      }
+
+      if (response?.status === 200) {
+        // Update the Redux state to reflect the change
+        dispatch(
+          currencyChangeAttr({
+            currencyId: id,
+            attributes: { isPrimaryCurrency: !isPrimary },
+          })
+        )
+      }
+    } catch (error) {
+      console.error('Failed to toggle primary currency status:', error)
+    }
+  }
+
+  const togglePrimaryExchangeRateCurrency = async (id, isPrimary) => {
+    try {
+      let response
+
+      if (userRole === 'productOwner' && productOwnerId) {
+        // Use the product owner-specific endpoint
+        response = await markAsPrimaryExchangeRateCurrencyForProductOwner(
+          productOwnerId,
+          id
+        )
+      } else if (userRole === 'superAdmin') {
+        // Use the super admin-specific endpoint
+        response = await markAsPrimaryExchangeRateCurrency(id)
+      }
+
+      if (response?.status === 200) {
+        // Update the Redux state to reflect the change
+        dispatch(
+          currencyChangeAttr({
+            currencyId: id,
+            attributes: { isPrimaryExchangeRateCurrency: !isPrimary },
+          })
+        )
+      }
+    } catch (error) {
+      console.error(
+        'Failed to toggle primary exchange rate currency status:',
+        error
+      )
+    }
+  }
 
   const processedData = useMemo(() => {
     return (
@@ -101,11 +186,36 @@ export default function CurrenciesPage() {
       }))
     )
   }, [listData])
-
+  const [visibleHead, setVisibleHead] = useState(false)
+  const handleEditCurrency = async (id) => {
+    const response = await getCurrencyById(id)
+    if (response?.data.data) {
+      setCurrencyDetails(response.data.data)
+      setEditVisible(true)
+      setCurrentId(id)
+    }
+  }
   return (
     <Wrapper>
-      {/* <BreadcrumbComponent breadcrumbInfo="CurrenciesList" /> */}
+      <BreadcrumbComponent breadcrumbInfo="CurrenciesList" />
       <div className="main-container">
+        <TableHead
+          label={<FormattedMessage id="Add-Currency" />}
+          icon={'pi-money-bill'}
+          search={false}
+          visibleHead={visibleHead}
+          setVisibleHead={setVisibleHead}
+          title={<FormattedMessage id="Currencies-List" />}
+        >
+          {userRole === 'superAdmin' && (
+            <CurrencyForm
+              popupLabel={<FormattedMessage id="Create-Currency" />}
+              type={'create'}
+              visible={visibleHead}
+              setVisible={setVisibleHead}
+            />
+          )}
+        </TableHead>
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -120,6 +230,28 @@ export default function CurrenciesPage() {
               <Column field="currencyCode" header="Currency Code" />
               <Column field="rate" header="Rate" />
               <Column field="displayOrder" header="Display Order" />
+              <Column
+                field="isPrimaryCurrency"
+                header="Primary Currency"
+                body={(data) => (
+                  <Label
+                    {...PrimaryCurrencyStatus[
+                      data.isPrimaryCurrency ? true : false
+                    ]}
+                  />
+                )}
+              />
+              <Column
+                field="isPrimaryExchangeRateCurrency"
+                header="Primary Exchange Rate Currency"
+                body={(data) => (
+                  <Label
+                    {...PrimaryExchangeRateCurrencyStatus[
+                      data.isPrimaryExchangeRateCurrency ? true : false
+                    ]}
+                  />
+                )}
+              />
               <Column
                 body={(data) => {
                   return (
@@ -153,37 +285,86 @@ export default function CurrenciesPage() {
                         <FontAwesomeIcon icon={faEye} className="mx-2" />
                         <FormattedMessage id="View-Details" />
                       </Dropdown.Item>
+                      {userRole === 'superAdmin' && (
+                        <Dropdown.Item
+                          onClick={() => handleEditCurrency(data.id)}
+                        >
+                          <FontAwesomeIcon icon={faEdit} className="mx-2" />
+                          <FormattedMessage id="Edit" />
+                        </Dropdown.Item>
+                      )}
                       <Dropdown.Item
                         onClick={() =>
-                          togglePublishCurrency(data.id, data.isPublished)
+                          togglePrimaryCurrency(data.id, data.isPrimaryCurrency)
                         }
                       >
-                        {data.isPublished ? (
+                        {data.isPrimaryCurrency ? (
                           <span className=" ">
-                            <MdOutlineUnpublished className="mx-2" />
-                            <FormattedMessage id="Unpublished" />
+                            <MdStarBorder className="mx-2" />
+                            <FormattedMessage id="Unmark-Primary-Currency" />
                           </span>
                         ) : (
                           <span className=" ">
-                            <MdOutlinePublishedWithChanges className="mx-2" />
-                            <FormattedMessage id="Published" />
+                            <MdStar className="mx-2" />
+                            <FormattedMessage id="Mark-Primary-Currency" />
                           </span>
                         )}
                       </Dropdown.Item>
-                      <Dropdown.Item onClick={() => navigate(`./${data.id}`)}>
-                        <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                        <FormattedMessage id="Edit" />
-                      </Dropdown.Item>
                       <Dropdown.Item
-                        onClick={() => {
-                          setCurrentId(data.id)
-                          deleteCurrencyFun()
-                        }}
-                        className="text-danger"
+                        onClick={() =>
+                          togglePrimaryExchangeRateCurrency(
+                            data.id,
+                            data.isPrimaryExchangeRateCurrency
+                          )
+                        }
                       >
-                        <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                        <FormattedMessage id="Delete" />
+                        {data.isPrimaryExchangeRateCurrency ? (
+                          <span className=" ">
+                            <MdMoneyOff className="mx-2" />
+                            <FormattedMessage id="Unmark-Primary-Exchange-Rate" />
+                          </span>
+                        ) : (
+                          <span className=" ">
+                            <MdAttachMoney className="mx-2" />
+                            <FormattedMessage id="Mark-Primary-Exchange-Rate" />
+                          </span>
+                        )}
                       </Dropdown.Item>
+                      {userRole === 'superAdmin' && (
+                        <>
+                          <Dropdown.Item
+                            onClick={() =>
+                              togglePublishCurrency(data.id, data.isPublished)
+                            }
+                          >
+                            {data.isPublished ? (
+                              <span className=" ">
+                                <MdOutlineUnpublished className="mx-2" />
+                                <FormattedMessage id="Unpublished" />
+                              </span>
+                            ) : (
+                              <span className=" ">
+                                <MdOutlinePublishedWithChanges className="mx-2" />
+                                <FormattedMessage id="Published" />
+                              </span>
+                            )}
+                          </Dropdown.Item>
+
+                          <Dropdown.Item
+                            onClick={() => {
+                              setCurrentId(data.id)
+                              deleteCurrencyFun()
+                            }}
+                            className="text-danger"
+                          >
+                            <FontAwesomeIcon
+                              icon={faTrashAlt}
+                              className="mx-2"
+                            />
+                            <FormattedMessage id="Delete" />
+                          </Dropdown.Item>
+                        </>
+                      )}
                     </Dropdown.Menu>
                   </Dropdown>
                 )}
@@ -191,11 +372,34 @@ export default function CurrenciesPage() {
                 header={<FormattedMessage id="Actions" />}
               />
             </DataTable>
+            <ThemeDialog visible={editVisible} setVisible={setEditVisible}>
+              {currencyDetails && (
+                <CurrencyForm
+                  popupLabel={<FormattedMessage id="Edit-Currency" />}
+                  type={'edit'}
+                  visible={editVisible}
+                  setVisible={setEditVisible}
+                  currentId={currentId}
+                />
+              )}
+            </ThemeDialog>
             <ThemeDialog visible={visible} setVisible={setVisible}>
               {currencyDetails && (
                 <ShowDetails
                   popupLabel={<FormattedMessage id="Currency-Details" />}
-                  data={currencyDetails}
+                  data={{
+                    displayName: currencyDetails.displayName,
+                    currencyCode: currencyDetails.currencyCode,
+                    rate: currencyDetails.rate,
+                    customFormatting: currencyDetails.customFormatting,
+                    isPublished: currencyDetails?.isPublished
+                      ? 'true'
+                      : 'false',
+                    displayOrder: currencyDetails.displayOrder,
+                    roundingType: currencyDetails.roundingType,
+                    createdDate: currencyDetails.createdDate,
+                    editedDate: currencyDetails.editedDate,
+                  }}
                   setVisible={setVisible}
                 />
               )}

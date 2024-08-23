@@ -20,6 +20,8 @@ import {
   BsExclamationTriangle,
   BsBank,
   BsPersonFillGear,
+  BsBuilding,
+  BsBuildings,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -47,11 +49,12 @@ import {
   faTimes,
   faSignOutAlt,
   faExclamationTriangle,
+  faBuildingUser,
 } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
 import QuickActions from './QuickActions/QuickActions'
 import { setAllProductOwners } from '../../store/slices/productsOwners.js'
-import { MdDiscount, MdInfo } from 'react-icons/md'
+import { MdCurrencyExchange, MdDiscount, MdInfo } from 'react-icons/md'
 
 export default (props = {}) => {
   const navigate = useNavigate()
@@ -139,7 +142,7 @@ export default (props = {}) => {
       link,
       external,
       target,
-      icon: Icon,
+      icon,
       image,
       badgeText,
       badgeBg = 'secondary',
@@ -156,9 +159,9 @@ export default (props = {}) => {
       <Nav.Item className={navItemClassName} onClick={() => setShow(false)}>
         <Nav.Link {...linkProps} target={target} className={classNames}>
           <span>
-            {Icon ? (
+            {icon ? (
               <span className="sidebar-icon">
-                <Icon />
+                {icon} {/* Render the icon element directly */}
               </span>
             ) : null}
             {image ? (
@@ -324,7 +327,7 @@ export default (props = {}) => {
                   key={'details'}
                   title={'Info'}
                   link={`${Routes.productsOwners.path}/info`}
-                  icon={MdInfo}
+                  icon={<MdInfo />}
                   isActive={location.pathname.includes(
                     `${Routes.productsOwners.path}/info`
                   )}
@@ -341,7 +344,7 @@ export default (props = {}) => {
                       key={index}
                       title={item.systemName}
                       link={`${Routes.Tenant.path}/${item.id}`}
-                      icon={BsFillPersonFill}
+                      icon={<BsFillPersonFill />}
                     />
                   ))}
                 </CollapsableNavItem>
@@ -357,7 +360,7 @@ export default (props = {}) => {
                       key={index}
                       title={item.systemName}
                       link={`${Routes.Tenant.path}/${item.id}`}
-                      icon={BsFillPersonFill}
+                      icon={<BsFillPersonFill />}
                     />
                   ))}
                 </CollapsableNavItem>
@@ -409,7 +412,7 @@ export default (props = {}) => {
                       key={index}
                       title={product.systemName}
                       link={`${Routes.products.path}/${product.id}`}
-                      icon={BsBoxSeam}
+                      icon={<BsBoxSeam />}
                       isActive={location.pathname.includes(
                         `${Routes.products.path}/${product.id}`
                       )}
@@ -433,7 +436,7 @@ export default (props = {}) => {
                   }
                   icon={
                     <span onClick={() => navigate(Routes.productsOwners.path)}>
-                      <BsBoxes />
+                      <BsBuildings />
                     </span>
                   }
                   style={{}}
@@ -446,7 +449,7 @@ export default (props = {}) => {
                       key={index}
                       title={productsOwner?.systemName}
                       link={`${Routes.productsOwners.path}/${productsOwner?.id}`}
-                      icon={BsBoxSeam}
+                      icon={<FontAwesomeIcon icon={faBuildingUser} />}
                       isActive={location.pathname.includes(
                         `${Routes.productsOwners.path}/${productsOwner?.id}`
                       )}
@@ -466,33 +469,38 @@ export default (props = {}) => {
                       <NavItem
                         title={<FormattedMessage id="Health-Check-sidebar" />}
                         link={Routes.Settings.path}
-                        icon={BsFillClipboard2CheckFill}
+                        icon={<BsFillClipboard2CheckFill />}
                       />
 
                       <NavItem
                         title={<FormattedMessage id="Subscriptions" />}
                         link={Routes.SubscriptionsSettings.path}
-                        icon={BsPeople}
+                        icon={<BsPeople />}
                       />
 
                       <NavItem
                         title={<FormattedMessage id="Product-Warnings" />}
                         link={Routes.ProductWarningsSettings.path}
-                        icon={BsExclamationTriangle}
+                        icon={<BsExclamationTriangle />}
                       />
                     </>
                   )}
                   <NavItem
                     title={<FormattedMessage id="Discounts" />}
                     link={Routes.DiscountsPage.path}
-                    icon={MdDiscount}
+                    icon={<MdDiscount />}
+                  />
+                  <NavItem
+                    title={<FormattedMessage id="Currencies" />}
+                    link={Routes.CurrenciesPage.path}
+                    icon={<MdCurrencyExchange />}
                   />
 
                   {userRole == 'superAdmin' && (
                     <NavItem
                       title={<FormattedMessage id="Profile" />}
                       link={Routes.Profile.path}
-                      icon={BsPersonFillGear}
+                      icon={<BsPersonFillGear />}
                     />
                   )}
                 </CollapsableNavItem>
