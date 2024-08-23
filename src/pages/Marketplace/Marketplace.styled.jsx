@@ -28,6 +28,14 @@ export const Wrapper = styled.div`
     font-weight: bold;
     margin-bottom: 10px;
   }
+  .row > * {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .row {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 
   .product-sentence {
     font-size: 18px;
