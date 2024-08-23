@@ -40,8 +40,7 @@ const SpecificationInput = ({
           validationFailureDescription,
           description,
           systemName,
-          inlineDescription = (systemName == 'MAIL' || systemName == 'Email') &&
-            'This email will be used for registration',
+          inlineDescription ,
           dataType,
         } = specification
 
@@ -77,13 +76,21 @@ const SpecificationInput = ({
               ''
             )}
             <div>
-              {inlineDescription && (
+              {inlineDescription.en || inlineDescription.ar ?(
                 <div className="text-warning mt-0 d-flex align-items-center">
                   <BsExclamationTriangleFill
                     style={{ width: '14px', marginRight: '4px' }}
                   />
-                  <span>{inlineDescription}</span>
+                  <span> 
+                    
+                  {inlineDescription?.[intl.locale] ||
+                        (intl.locale === 'ar' && inlineDescription['en']) ||
+                        (intl.locale === 'en' && inlineDescription['ar'])}
+
+                  </span>
                 </div>
+              ) : (
+                ''
               )}
               <input
                 type="text"
