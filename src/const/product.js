@@ -58,6 +58,26 @@ export const PublishStatus = {
     icon: <MdOutlineUnpublished />,
   },
 }
+
+export const generalSubTabs = [
+  'Details',
+  'Custom-Specification',
+  'Integration-Urls',
+  'Trial-Period',
+  'Webhook',
+  'Client-Credentials',
+]
+
+export const managementSubTabs = [
+  'Plans',
+  'Features',
+  "Plan's-Features",
+  'Plans-Prices',
+  'Subscriptions',
+]
+
+export const mainTabs = ['General', 'Management', 'Warnings']
+
 export const systemLockStatus = {
   true: {
     background: 'var(--green2)',

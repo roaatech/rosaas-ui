@@ -7,15 +7,19 @@ import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './PlanForm.styled.jsx'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   PlanInfo,
   setAllPlans,
 } from '../../../../../store/slices/products/productsSlice.js'
 
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
-import { activeTab } from '../../../../../const/product.js'
+import {
+  activeManagementSubTabs,
+  activeTab,
+} from '../../../../../const/product.js'
 import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import { Routes } from '../../../../../routes.js'
 
 const PlanForm = ({
   type,
@@ -23,13 +27,14 @@ const PlanForm = ({
   setVisible,
   popupLabel,
   setActiveIndex,
+  setActiveMainIndex,
 }) => {
   const { createPlanRequest, editPlanRequest, getProductPlans } = useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
   const productId = routeParams.id
   const allProducts = useSelector((state) => state.products.products)
-
+  const navigate = useNavigate()
   const ProductTrialType = allProducts[productId].trialType
 
   const initialValues = {
@@ -124,9 +129,11 @@ const PlanForm = ({
           })
         )
 
-        if (setActiveIndex) {
-          setActiveIndex(activeTab.plans)
-        }
+        // if (setActiveIndex) {
+        //   setActiveIndex(activeManagementSubTabs.plans)
+
+        // }
+        navigate(`${Routes.products.path}/${productId}#Management#Plans`)
       } else {
         const editPlan = await editPlanRequest(productId, {
           data: {
