@@ -67,7 +67,6 @@ export default function CurrenciesPage() {
   useEffect(() => {
     const fetchCurrencies = async () => {
       const response = await getCurrencies()
-      console.log(response?.data.data)
 
       if (response?.data.data) {
         dispatch(setAllCurrencies(response.data.data))

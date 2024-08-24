@@ -115,67 +115,67 @@ const TenantForm = ({
     validationSchema: validationSchema,
 
     onSubmit: async (values) => {
-      const specificationsArray = productData?.specifications
-        ? Object.values(productData.specifications).map((specification) => {
-            const specificationId = specification.id
-            const value =
-              specificationValues[specificationId] !== undefined
-                ? specificationValues[specificationId]
-                : ''
-            return {
-              specificationId,
-              value,
-              productId: values.product,
-            }
-          })
-        : []
-      const specErrors = validateSpecifications(
-        filteredSpecificationsArray,
-        specificationValues,
-        intl,
-        setSpecValidationErrors
-      )
-      formik.setErrors(specErrors.errors)
-      if (
-        Object.keys(formik.errors).length === 0 &&
-        Object.keys(specErrors.errors).length === 0
-      ) {
-        if (type == 'create') {
-          const createTenant = await createTenantRequest({
-            subscriptions: [
-              {
-                productId: values.product,
-                planId: values.plan,
-                planPriceId: values.price,
-                specifications: specificationsArray,
-              },
-            ],
-            systemName: values.systemName,
-            displayName: values.displayName,
-          })
+      // const specificationsArray = productData?.specifications
+      //   ? Object.values(productData.specifications).map((specification) => {
+      //       const specificationId = specification.id
+      //       const value =
+      //         specificationValues[specificationId] !== undefined
+      //           ? specificationValues[specificationId]
+      //           : ''
+      //       return {
+      //         specificationId,
+      //         value,
+      //         productId: values.product,
+      //       }
+      //     })
+      //   : []
+      // const specErrors = validateSpecifications(
+      //   filteredSpecificationsArray,
+      //   specificationValues,
+      //   intl,
+      //   setSpecValidationErrors
+      // )
+      // formik.setErrors(specErrors.errors)
+      // if (
+      //   Object.keys(formik.errors).length === 0 &&
+      //   Object.keys(specErrors.errors).length === 0
+      // ) {
+      // if (type == 'create') {
+      //   const createTenant = await createTenantRequest({
+      //     subscriptions: [
+      //       {
+      //         productId: values.product,
+      //         planId: values.plan,
+      //         planPriceId: values.price,
+      //         specifications: specificationsArray,
+      //       },
+      //     ],
+      //     systemName: values.systemName,
+      //     displayName: values.displayName,
+      //   })
 
-          dispatch(
-            deleteAllPlan({
-              productId: values.product,
-            })
-          )
-          dispatch(
-            deleteAllPlanPrice({
-              productId: values.product,
-            })
-          )
+      //   dispatch(
+      //     deleteAllPlan({
+      //       productId: values.product,
+      //     })
+      //   )
+      //   dispatch(
+      //     deleteAllPlanPrice({
+      //       productId: values.product,
+      //     })
+      //   )
 
-          navigate(`/tenants/${createTenant.data.data.id}`)
-        } else {
-          const editTenant = await editTenantRequest({
-            displayName: values.displayName,
-            id: tenantData.id,
-          })
-          updateTenant()
-        }
+      //   navigate(`/tenants/${createTenant.data.data.id}`)
+      //   setVisible && setVisible(false)
+      // }
+      if (type == 'edit') {
+        const editTenant = await editTenantRequest({
+          displayName: values.displayName,
+          id: tenantData.id,
+        })
+        updateTenant && updateTenant()
+        setVisible && setVisible(false)
       }
-      setVisible && setVisible(false)
-      setVisible && setVisible(false)
     },
   })
 
