@@ -103,13 +103,25 @@ export const Wrapper = styled.div`
     overflow-y: unset !important;
   }
 
-  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  .p-tabview .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
     border-color: var(--second-color);
     color: var(--second-color);
   }
 
-  .p-tabview .p-tabview-nav .p-tabview-ink-bar {
+  .p-tabview .p-tabview .p-tabview-nav .p-tabview-ink-bar {
     background-color: var(--second-color);
+  }
+  .p-tabview .p-tabview .p-tabview-nav li .p-tabview-nav-link:first-child {
+    transition: none;
+  }
+
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+  }
+
+  .p-tabview .p-tabview-nav .p-tabview-ink-bar {
+    background-color: var(--primary-color);
   }
   .p-tabview .p-tabview-nav li .p-tabview-nav-link:first-child {
     transition: none;

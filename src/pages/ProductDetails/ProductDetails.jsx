@@ -207,7 +207,7 @@ const ProductDetails = () => {
             />
           </UpperContent>
 
-          <TabView
+          {/* <TabView
             scrollable
             className="card"
             activeIndex={activeIndex}
@@ -235,6 +235,7 @@ const ProductDetails = () => {
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>
+
             <TabPanel header={<FormattedMessage id="Webhook" />}>
               <WebhookList />
             </TabPanel>
@@ -243,12 +244,12 @@ const ProductDetails = () => {
                 data={productData}
                 setActiveIndex={setActiveIndex}
               />
-            </TabPanel>
+            </TabPanel> */}
 
-            {/* <TabPanel header={<FormattedMessage id="User-Management" />}>
+          {/* <TabPanel header={<FormattedMessage id="User-Management" />}>
               <ProductsUsersManagement />
             </TabPanel> */}
-            <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
+          {/* <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
               <ProductCustomSpecificationList
                 productId={productData.id}
                 productName={productData.systemName}
@@ -290,6 +291,110 @@ const ProductDetails = () => {
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>
+            <TabPanel
+              header={
+                <div>
+                  <FormattedMessage id="Warnings" />
+                  {productData?.warningsNum > 0 && (
+                    <span className="error-badge">
+                      {productData?.warningsNum}
+                    </span>
+                  )}
+                </div>
+              }
+              className={productData?.warningsNum > 0 && 'warnings'}
+            >
+              <ProductWarnings
+                productId={productData.id}
+                setActiveIndex={setActiveIndex}
+              />
+            </TabPanel>
+          </TabView> */}
+          <TabView
+            scrollable
+            className="card"
+            activeIndex={activeIndex}
+            onTabChange={(e) => setActiveIndex(e.index)}
+          >
+            <TabPanel header={<FormattedMessage id="General" />}>
+              <TabView>
+                <TabPanel header={<FormattedMessage id="Details" />}>
+                  <ProductDetailsTab
+                    data={productData}
+                    setActiveIndex={setActiveIndex}
+                  />
+                </TabPanel>
+                <TabPanel
+                  header={<FormattedMessage id="Custom-Specification" />}
+                >
+                  <ProductCustomSpecificationList
+                    productId={productData.id}
+                    productName={productData.systemName}
+                    setActiveIndex={setActiveIndex}
+                  />
+                </TabPanel>
+                <TabPanel header={<FormattedMessage id="Integration-Urls" />}>
+                  <IntegrationUrlsTab
+                    data={productData}
+                    setActiveIndex={setActiveIndex}
+                  />
+                </TabPanel>
+                <TabPanel header={<FormattedMessage id="Trial-Period" />}>
+                  <ProductTrialPeriod
+                    data={productData}
+                    setActiveIndex={setActiveIndex}
+                  />
+                </TabPanel>
+                <TabPanel header={<FormattedMessage id="Webhook" />}>
+                  <WebhookList />
+                </TabPanel>
+                <TabPanel header={<FormattedMessage id="Client-Credentials" />}>
+                  <ClientCredentials
+                    data={productData}
+                    setActiveIndex={setActiveIndex}
+                  />
+                </TabPanel>
+              </TabView>
+            </TabPanel>
+
+            <TabPanel header={<FormattedMessage id="Management" />}>
+              <TabView>
+                <TabPanel header={<FormattedMessage id="Plans" />}>
+                  <ProductPlansList
+                    productId={productData.id}
+                    productName={productData.systemName}
+                    setActiveIndex={setActiveIndex}
+                  />
+                </TabPanel>
+                <TabPanel header={<FormattedMessage id="Features" />}>
+                  <ProductFeaturesList
+                    productId={productData.id}
+                    productName={productData.systemName}
+                    setActiveIndex={setActiveIndex}
+                  />
+                </TabPanel>
+                <TabPanel header={<FormattedMessage id="Plan's-Features" />}>
+                  <ProductFeaturePlan
+                    productId={productData.id}
+                    setActiveIndex={setActiveIndex}
+                  />
+                </TabPanel>
+                <TabPanel header={<FormattedMessage id="Plans-Prices" />}>
+                  <ProductPlansPriceList
+                    productId={productData.id}
+                    setActiveIndex={setActiveIndex}
+                  />
+                </TabPanel>
+                <TabPanel header={<FormattedMessage id="Subscriptions" />}>
+                  <ProductTenantsList
+                    productId={productData.id}
+                    productName={productData.systemName}
+                    setActiveIndex={setActiveIndex}
+                  />
+                </TabPanel>
+              </TabView>
+            </TabPanel>
+
             <TabPanel
               header={
                 <div>
