@@ -95,6 +95,8 @@ const PlanForm = ({
           displayOrder: values.displayOrder || 0,
           alternativePlanID: values.alternativePlanID || null,
           trialPeriodInDays: values.trialPeriodInDays || 0,
+          isLockedBySystem: false,
+          tenancyType: 3,
         })
 
         if (!allProducts[productId].plan) {
