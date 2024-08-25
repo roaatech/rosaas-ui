@@ -704,5 +704,9 @@
   "delete": "حذف",
   "actions": "إجراءات",
   "edit-currency": "تعديل العملة",
-  "currency-details": "تفاصيل العملة"
+  "currency-details": "تفاصيل العملة",
+  "Plan-Feature-display-description": "Plan Feature Display Description",
+  "Display-description-of-the-plan-feature-that-will-show-in-the-price-page": "Display description of the plan feature that will show on the price page",
+  "Inline-description": "Inline Description",
+  "Hint-description": "Hint Description"
 }

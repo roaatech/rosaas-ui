@@ -27,6 +27,7 @@ const useApi = () => {
         'identity/product-owner-admin/v1/Auth/Signin',
         'identity/tadmin/v1/Auth/Signin',
         'identity/sadmin/v1/Auth/Signin',
+        'identity/v1/Account/ConfirmEmail',
       ]
       //* add auth
       if (!noAuthRoutes.includes(config.url)) {
@@ -59,6 +60,12 @@ const useApi = () => {
         'ProductAdmin',
         'tenantAdmin',
       ]
+      if (
+        res.data?.data?.token === null &&
+        res.data?.data?.isUserMustConfirmEmail === true
+      ) {
+        return navigate(Routes.EmailConfirmationPage.path)
+      }
       if (res.data?.data?.userAccount?.email) {
         dispatch(
           addUserInfo({

@@ -215,16 +215,18 @@ export default (props) => {
                       </div>
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
-                      {userRole == 'tenantAdmin' && (
+                      {
                         <Dropdown.Item
                           className="fw-bold"
                           onClick={() => {
-                            navigate(`${Routes.workSpace.path}#profile`)
+                            userRole == 'tenantAdmin'
+                              ? navigate(`${Routes.workSpace.path}#profile`)
+                              : navigate(Routes.Profile.path)
                           }}
                         >
                           <FormattedMessage id="Update-Profile" />
                         </Dropdown.Item>
-                      )}
+                      }
                       <Dropdown.Divider />
                       <Dropdown.Item
                         className="fw-bold"

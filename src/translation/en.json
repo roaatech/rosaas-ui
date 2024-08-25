@@ -710,5 +710,9 @@
   "delete": "Delete",
   "actions": "Actions",
   "edit-currency": "Edit Currency",
-  "currency-details": "Currency Details"
+  "currency-details": "Currency Details",
+  "Plan-Feature-display-description": "وصف عرض ميزة الخطة",
+  "Display-description-of-the-plan-feature-that-will-show-in-the-price-page": "وصف عرض ميزة الخطة الذي سيظهر في صفحة الأسعار",
+  "Inline-description": "وصف داخل السطر",
+  "Hint-description": "وصف التلميح"
 }
