@@ -9,7 +9,7 @@ export const authSlice = createSlice({
     logOut: (state) => {
       state.userInfo = {}
       localStorage.removeItem('token')
-      window.location.href = '/'
+      // window.location.href = '/'
     },
     addUserInfo: (state, action) => {
       state.userInfo = action.payload
