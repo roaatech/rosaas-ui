@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { InputText } from 'primereact/inputtext'
-import { Button } from '@themesberg/react-bootstrap'
+import { Button, Toast } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import * as Yup from 'yup'
 import ReCAPTCHA from 'react-google-recaptcha'
 import useRequest from '../../../axios/apis/useRequest.js'
 import { Routes } from '../../../routes.js'
 import LoginWrapper from './ResetPassword.styled.jsx'
+import { toast } from 'react-toastify'
 
 const ResetPassword = () => {
   const [step, setStep] = useState(null)
@@ -20,7 +21,10 @@ const ResetPassword = () => {
   useEffect(() => {
     if (location.pathname == Routes.ResetPasswordRequest.path) {
       setStep(1)
-    } else if (location.pathname == Routes.ResetPasswordConfirm.path) {
+    } else if (
+      location.pathname == Routes.ResetPasswordConfirm.path ||
+      location.pathname == Routes.setPassword.path
+    ) {
       setStep(2)
     }
   }, [location.pathname])
@@ -71,11 +75,24 @@ const ResetPassword = () => {
       newPassword: values.password,
       code,
     })
-    if (response) {
-      ut == 'TenantAdmin'
-        ? navigate(Routes.SignInTenantAdmin.path)
-        : navigate(Routes.ProductManagementSignIn.path)
+    if (
+      response &&
+      response.success &&
+      location.pathname == Routes.setPassword.path
+    ) {
+      navigate(Routes.ConfirmAccountByPassword.path)
+    } else if (response && response.success) {
+      Toast.success('Password reset successful', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 4000,
+      })
+      setTimeout(() => {
+        ut == 'TenantAdmin'
+          ? navigate(Routes.SignInTenantAdmin.path)
+          : navigate(Routes.ProductManagementSignIn.path)
+      }, 4000)
     }
+
     setSubmitting(false)
   }
 

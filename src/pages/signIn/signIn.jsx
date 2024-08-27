@@ -23,6 +23,8 @@ const SignInPage = () => {
         return <SignInSuperAdmin />
       case Routes.ResetPasswordConfirm.path:
         return <ResetPassword />
+      case Routes.setPassword.path:
+        return <ResetPassword />
       case Routes.ResetPasswordRequest.path:
         return <ResetPassword />
       default:
@@ -75,20 +77,38 @@ const SignInPage = () => {
             </p>{' '}
           </>
         )
+      case Routes.ResetPasswordConfirm.path:
+        return (
+          <>
+            {'  '}
+            <div>
+              <FormattedMessage id="Reset-Account-password" />
+            </div>{' '}
+          </>
+        )
+      case Routes.setPassword.path:
+        return (
+          <>
+            {'  '}
+            <div>
+              <FormattedMessage id="Set-Your-password" />
+            </div>{' '}
+          </>
+        )
       default:
         return null
     }
   }
 
   const shouldRenderCopyLink =
-    location.pathname !== Routes.ProductManagementSignIn.path &&
-    location.pathname !== Routes.SignInSuperAdmin.path
+    location.pathname == Routes.SignInTenantAdmin.path
 
   return (
     (location.pathname === Routes.SignInSuperAdmin.path ||
       location.pathname === Routes.ResetPasswordRequest.path ||
       location.pathname === Routes.ResetPasswordConfirm.path ||
       location.pathname === Routes.SignInTenantAdmin.path ||
+      location.pathname === Routes.setPassword.path ||
       location.pathname === Routes.ProductManagementSignIn.path) && (
       <Wrapper>
         <section

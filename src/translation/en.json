@@ -711,8 +711,14 @@
   "actions": "Actions",
   "edit-currency": "Edit Currency",
   "currency-details": "Currency Details",
-  "Plan-Feature-display-description": "وصف عرض ميزة الخطة",
-  "Display-description-of-the-plan-feature-that-will-show-in-the-price-page": "وصف عرض ميزة الخطة الذي سيظهر في صفحة الأسعار",
-  "Inline-description": "وصف داخل السطر",
-  "Hint-description": "وصف التلميح"
+  "Plan-Feature-display-description": "Plan Feature Display Description",
+  "Display-description-of-the-plan-feature-that-will-show-in-the-price-page": "Display description of the plan feature that will show on the price page",
+  "Inline-description": "Inline Description",
+  "Hint-description": "Hint Description",
+  "With": "With",
+  "start-your": "Start your",
+  "trial": "trial",
+  "then": "then",
+  "switch-plans": "switch plans",
+  "seamlessly": "seamlessly"
 }
