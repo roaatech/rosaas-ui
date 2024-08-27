@@ -73,14 +73,14 @@ export const paymentStatus = {
   },
   200: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Authorized" />,
-    icon: <MdPayment />,
+    value: <FormattedMessage id="Paid" />,
+    icon: <AiFillDollarCircle />,
     color: 'var(--teal-green)',
   },
   300: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Paid" />,
-    icon: <AiFillDollarCircle />,
+    value: <FormattedMessage id="Authorized" />,
+    icon: <MdPayment />,
     color: 'var(--teal-green)',
   },
   400: {
@@ -91,11 +91,17 @@ export const paymentStatus = {
   },
   500: {
     background: 'var(--primary-color)',
+    value: <FormattedMessage id="Failed" />,
+    icon: <AiOutlineIssuesClose />,
+    color: 'var(--orange-brown)',
+  },
+  600: {
+    background: 'var(--primary-color)',
     value: <FormattedMessage id="Voided" />,
     icon: <AiOutlineIssuesClose />,
     color: '#fff',
   },
-  600: {
+  700: {
     background: 'var(--primary-color)',
     value: <FormattedMessage id="Partially-Refunded" />,
     icon: <AiOutlineCheckCircle />,
