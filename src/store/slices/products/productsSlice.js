@@ -83,5 +83,6 @@ export const {
   WebhookEndpointsChangeAttr,
   deleteWebhookEndpointById,
   deleteAllWebhookEndpoints,
+  deleteAllPlanPriceBySystemName,
 } = productsSlice.actions
 export default productsSlice.reducer

@@ -13,9 +13,12 @@ import {
   addToHistory,
   changeMode,
   changePreloader,
+  deleteProductOwner,
+  setProductOwner,
 } from '../../../store/slices/main'
 import useRequest from '../../../axios/apis/useRequest'
 import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 const AppWrapper = ({ children, customHistory }) => {
   const { userData } = useRequest()
@@ -25,6 +28,7 @@ const AppWrapper = ({ children, customHistory }) => {
   let darkMode = useSelector((state) => state.main.darkMode)
   let loaded = useSelector((state) => state.main.preloader)
   const [triggerReload, setTriggerReload] = useState(false)
+
   useEffect(() => {
     ;(async () => {
       if (direction === 'rtl') {

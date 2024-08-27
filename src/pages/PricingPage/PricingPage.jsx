@@ -8,9 +8,11 @@ import {
   setAllPlans,
   setAllFeaturePlan,
   setAllPlansPrice,
+  deleteAllPlanPrice,
+  deleteAllPlanPriceBySystemName,
 } from '../../store/slices/products/productsSlice'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
-import { BsBoxSeam, BsCheck2, BsCheck2Circle, BsXCircle } from 'react-icons/bs'
+import { BsBoxSeam, BsCheck2Circle, BsXCircle } from 'react-icons/bs'
 import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { cycle } from '../../const'
@@ -20,6 +22,8 @@ import { signinRedirectPath } from '../../store/slices/auth'
 import { setStep } from '../../store/slices/tenants'
 import { Wrapper } from './PricingPage.styled'
 import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
+import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
+import { setProductOwner } from '../../store/slices/main'
 
 const PricingPage = () => {
   const dispatch = useDispatch()
@@ -27,7 +31,15 @@ const PricingPage = () => {
   const routeParams = useParams()
 
   const productSystemName = routeParams.productSystemName
-  const productOwnerSystemName = routeParams.productOwnerSystemName
+  const productOwnerSystemName = routeParams.productOwnerSystemName || ''
+  // const pOSystemName = useSelector((state) => state.main.pOSystemName)
+
+  // useEffect(() => {
+  //   if (!productOwnerSystemName) {
+  //     return
+  //   }
+  //   dispatch(setProductOwner(productOwnerSystemName))
+  // }, [productOwnerSystemName])
 
   const listProduct = useSelector((state) => state.products.products)
 
@@ -42,6 +54,7 @@ const PricingPage = () => {
   const productId = productData?.id
 
   const plansPriceList = productData?.plansPrice
+  console.log({ plansPriceList })
 
   const planList = productData?.plans
 
@@ -49,11 +62,7 @@ const PricingPage = () => {
     plansPriceList &&
     Object.values(plansPriceList) &&
     Object.values(plansPriceList)
-      .filter(
-        (plansPrice) => plansPrice?.isPublished === true
-        //  &&
-        //   planList?.[plansPrice?.plan?.id]?.isPublished === true
-      )
+      .filter((plansPrice) => plansPrice?.isPublished === true)
       .reduce((acc, currentObj) => {
         const { id, cycle, ...rest } = currentObj
         const cycleNumber = parseInt(cycle, 10)
@@ -90,7 +99,13 @@ const PricingPage = () => {
   const listData = productData?.featurePlan
 
   useEffect(() => {
-    if (Object.values(listProduct).length > 0) {
+    if (
+      Object.values(listProduct).length > 0
+      // ||
+      // !pOSystemName ||
+      // !pOSystemName === '' ||
+      // productOwnerSystemName !== pOSystemName
+    ) {
       return
     }
 
@@ -98,7 +113,11 @@ const PricingPage = () => {
       const productList = await getProductListPublic()
       dispatch(setAllProduct(productList.data.data))
     })()
-  }, [Object.values(listProduct).length > 0])
+  }, [
+    Object.values(listProduct).length > 0,
+    // pOSystemName,
+    productOwnerSystemName,
+  ])
 
   const [selectedCycle, setSelectedCycle] = useState('')
 
@@ -116,6 +135,7 @@ const PricingPage = () => {
       [planId]: event.target.checked,
     }))
   }
+  const currency = useSelector((state) => state.main.currency)
 
   useEffect(() => {
     if (listProduct?.[productId]?.trialType != 2) {
@@ -128,9 +148,19 @@ const PricingPage = () => {
       })
     setStartWithTrial(initialStartWithTrial)
   }, [planList])
+  useEffect(() => {
+    dispatch(deleteAllPlanPriceBySystemName({ systemName: productSystemName }))
+  }, [currency])
 
   useEffect(() => {
-    if (!listProduct || Object.keys(listProduct).length === 0) {
+    if (
+      !listProduct ||
+      Object.keys(listProduct).length === 0
+      // ||
+      // !pOSystemName ||
+      // !pOSystemName === '' ||
+      // productOwnerSystemName !== pOSystemName
+    ) {
       return
     }
     const fetchData = async () => {
@@ -190,7 +220,13 @@ const PricingPage = () => {
     }
 
     fetchData()
-  }, [productId, Object.keys(listProduct).length > 0])
+  }, [
+    productId,
+    Object.keys(listProduct).length > 0,
+    // pOSystemName,
+    productOwnerSystemName,
+    plansPriceList,
+  ])
 
   const allCycleTypes = plansPriceList && [
     ...new Set(
@@ -289,7 +325,6 @@ const PricingPage = () => {
                   <span
                     style={{
                       fontSize: '1.3rem',
-                      // fontWeight: 'bold',
                       marginRight: '0.5rem',
                     }}
                     className="mb-4 mr-1"
@@ -347,7 +382,6 @@ const PricingPage = () => {
                   planList[planId]?.displayName?.toUpperCase()
                 )}
               </div>
-              {}
             </Card.Header>
             <Card.Body>
               {uniqueFeatures?.map((feature) => (
@@ -408,16 +442,17 @@ const PricingPage = () => {
                             <span className="info-icon mr-1">
                               <FontAwesomeIcon icon={faInfoCircle} />
                             </span>{' '}
-                            Start your{' '}
+                            <FormattedMessage id="start-your" />{' '}
                             <strong style={{ color: 'var(--second-color)' }}>
-                              trial
+                              <FormattedMessage id="trial" />
                             </strong>{' '}
                             ,
                             <span>
                               {' '}
-                              then{' '}
+                              <FormattedMessage id="then" />{' '}
                               <strong style={{ color: 'var(--second-color)' }}>
-                                switch plans
+                                <FormattedMessage id="switch-plans" />
+                                {'  '}
                               </strong>
                               <span
                                 className="info-icon"
@@ -428,7 +463,7 @@ const PricingPage = () => {
                               >
                                 <i className="bi bi-info-circle"></i>
                               </span>
-                              seamlessly
+                              <FormattedMessage id="seamlessly" />
                             </span>
                           </div>
                         )}
@@ -442,11 +477,7 @@ const PricingPage = () => {
                       startWithTrial[planId] ||
                       (listProduct?.[productId]?.trialType == 3 &&
                         planList[planId]?.trialPeriodInDays > 0)
-                        ? // (navigate(`/signin`),
-                          //   setRedirectPath(
-                          //     `/checkout/product/${systemName}/plan-price/${filteredPrices.systemName}`
-                          //   ))
-                          navigate(
+                        ? navigate(
                             `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}#start-with-trial`
                           )
                         : navigate(
@@ -462,18 +493,18 @@ const PricingPage = () => {
                 listProduct?.[productId]?.trialType == 2 && (
                   <div className="text-center text-seamlessly mt-4">
                     <div>
-                      Start your{' '}
+                      <FormattedMessage id="start-your" />{' '}
                       <strong style={{ color: 'var(--second-color)' }}>
-                        trial
+                        <FormattedMessage id="trial" />
                       </strong>
                       ,
                     </div>
                     <div>
-                      then{' '}
+                      <FormattedMessage id="then" />{' '}
                       <strong style={{ color: 'var(--second-color)' }}>
-                        switch plans
+                        <FormattedMessage id="switch-plans" />
                       </strong>{' '}
-                      seamlessly
+                      <FormattedMessage id="seamlessly" />
                     </div>
                   </div>
                 )
@@ -487,12 +518,13 @@ const PricingPage = () => {
 
   return (
     <Wrapper>
-      {userRole != 'notAuth' && (
+      <MarketplaceNavBar profile={userRole != 'notAuth'} />
+      {/* {userRole != 'notAuth' && (
         <BreadcrumbComponent
           breadcrumbInfo={'ProductPricing'}
           icon={BsBoxSeam}
         />
-      )}
+      )} */}
       <section style={{ minHeight: '100vh' }}>
         <div className="main-container">
           <section className="  mb-4 pb-3">
@@ -505,12 +537,14 @@ const PricingPage = () => {
                   className="mr-2 product-icon ml-2"
                 />
                 {listProduct?.[productId]?.displayName?.toUpperCase()}
-                <div
-                  style={{ fontSize: 'var(--largeFont)' }}
-                  className="col-lg-12 text-center pb-3 mt-2 "
-                >
-                  {listProduct?.[productId]?.description}
-                </div>{' '}
+                {listProduct?.[productId]?.description && (
+                  <div
+                    style={{ fontSize: 'var(--largeFont)' }}
+                    className="col-lg-12 text-center pb-3 mt-2 "
+                  >
+                    {listProduct?.[productId]?.description}
+                  </div>
+                )}
               </h4>
             </div>
           </section>

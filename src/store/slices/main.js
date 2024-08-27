@@ -8,6 +8,7 @@ export const mainSlice = createSlice({
     preloader: true,
     sidebar: 1,
     history: [],
+    currency: localStorage.getItem('selectedCurrency') || 'USD',
   },
   reducers: {
     directionFun: (state, action) => {
@@ -23,10 +24,29 @@ export const mainSlice = createSlice({
     addToHistory: (state, action) => {
       state.history = [...state.history, action.payload]
     },
+    setCurrencyCode: (state, action) => {
+      state.currency = action.payload
+      localStorage.setItem('selectedCurrency', action.payload)
+    },
+    setProductOwner: (state, action) => {
+      state.pOSystemName = action.payload
+
+      // PO-System-Name
+    },
+    deleteProductOwner: (state) => {
+      state.pOSystemName = null // Resetting pOSystemName to null
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { directionFun, changePreloader, changeMode, addToHistory } =
-  mainSlice.actions
+export const {
+  directionFun,
+  changePreloader,
+  deleteProductOwner,
+  changeMode,
+  addToHistory,
+  setCurrencyCode,
+  setProductOwner,
+} = mainSlice.actions
 export default mainSlice.reducer

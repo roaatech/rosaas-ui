@@ -1,6 +1,9 @@
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
+  .main-container {
+    padding: 4%;
+  }
   .p-steps .p-steps-current.p-steps-item:before {
     border-color: var(--second-color) !important;
   }

@@ -8,6 +8,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { currencyInfo } from '../../../store/slices/products/currenciesSlice'
 import useRequest from '../../../axios/apis/useRequest'
 
+// Define your options object
+const roundingTypeOptions = {
+  1: 10,
+  // Add more options here as needed
+}
+
 const CurrencyForm = ({
   type, // 'create' or 'edit'
   setVisible, // Function to toggle modal visibility
@@ -93,7 +99,10 @@ const CurrencyForm = ({
       .min(0, <FormattedMessage id="minimum-value-is-0" />),
     roundingType: Yup.number()
       .required(<FormattedMessage id="rounding-type-is-required" />)
-      .min(0, <FormattedMessage id="minimum-value-is-0" />),
+      .oneOf(
+        Object.keys(roundingTypeOptions),
+        <FormattedMessage id="invalid-rounding-type" />
+      ),
   })
 
   const formik = useFormik({
@@ -281,8 +290,7 @@ const CurrencyForm = ({
                   <FormattedMessage id="rounding-type" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </label>
-                <input
-                  type="number"
+                <select
                   name="roundingType"
                   id="roundingType"
                   value={formik.values.roundingType}
@@ -292,7 +300,16 @@ const CurrencyForm = ({
                       ? 'is-invalid'
                       : ''
                   }`}
-                />
+                >
+                  <option value="">
+                    <FormattedMessage id="Select-Option" />
+                  </option>
+                  {Object.entries(roundingTypeOptions).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
                 {formik.touched.roundingType && formik.errors.roundingType && (
                   <div className="invalid-feedback">
                     {formik.errors.roundingType}

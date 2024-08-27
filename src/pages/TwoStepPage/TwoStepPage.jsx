@@ -17,6 +17,9 @@ import { Wrapper } from './TwoStepPage.styled'
 import { setStep } from '../../store/slices/tenants'
 import useRequest from '../../axios/apis/useRequest'
 import PaymentForm from '../../components/custom/PaymentForm/PaymentForm'
+import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
+import { setProductOwner } from '../../store/slices/main'
+import { deleteAllPlanPriceBySystemName } from '../../store/slices/products/productsSlice'
 
 const TwoStepProcessPage = () => {
   const params = useParams()
@@ -35,22 +38,36 @@ const TwoStepProcessPage = () => {
   const [orderID, setOrderID] = useState('')
   const { getProductPlanPricePublic } = useRequest()
   const { productSystemName, productOwnerSystemName, priceName } = useParams()
+
   useEffect(() => {
     if (!orderIDParam) {
       return
     }
     dispatch(setStep(2))
   }, [orderIDParam])
+
   let userRole = useSelector((state) => state.auth.userInfo.userType)
   if (userRole == undefined) userRole = 'notAuth'
+
+  useEffect(() => {
+    if (!productOwnerSystemName) {
+      return
+    }
+    dispatch(setProductOwner(productOwnerSystemName))
+  }, [productOwnerSystemName])
 
   const [hasToPay, setHasToPay] = useState()
   const [priceData, setPriceData] = useState()
   const [trialPlanId, setTrialPlanId] = useState('')
+  const currency = useSelector((state) => state.main.currency)
+  // useEffect(() => {
+  //   dispatch(deleteAllPlanPriceBySystemName({ systemName: productSystemName }))
+  //   setPriceData(null)
+  // }, [currency])
   useEffect(() => {
-    if (priceData || (priceData && Object.values(priceData).length) > 0) {
-      return
-    }
+    // if (priceData || (priceData && Object.values(priceData).length) > 0) {
+    //   return
+    // }
     ;(async () => {
       const price = await getProductPlanPricePublic(
         productOwnerSystemName,
@@ -60,9 +77,11 @@ const TwoStepProcessPage = () => {
       setPriceData(price.data.data)
       price.data.data && setTrialPlanId(price.data.data?.product.trialPlanId)
     })()
-  }, [productSystemName, priceName])
+  }, [productSystemName, priceName, currency])
   return (
     <Wrapper>
+      <MarketplaceNavBar />
+
       <div className="main-container">
         {userRole != 'notAuth' && (
           <BreadcrumbComponent breadcrumbInfo={'ProductList'} />

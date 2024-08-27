@@ -705,8 +705,15 @@
   "actions": "إجراءات",
   "edit-currency": "تعديل العملة",
   "currency-details": "تفاصيل العملة",
-  "Plan-Feature-display-description": "Plan Feature Display Description",
-  "Display-description-of-the-plan-feature-that-will-show-in-the-price-page": "Display description of the plan feature that will show on the price page",
-  "Inline-description": "Inline Description",
-  "Hint-description": "Hint Description"
+
+  "Plan-Feature-display-description": "وصف عرض ميزة الخطة",
+  "Display-description-of-the-plan-feature-that-will-show-in-the-price-page": "وصف عرض ميزة الخطة الذي سيظهر في صفحة الأسعار",
+  "Inline-description": "وصف داخل السطر",
+  "Hint-description": "وصف التلميح",
+  "With": "مع",
+  "start-your": "ابدأ",
+  "trial": "تجربتك",
+  "then": "ثم",
+  "switch-plans": "بدل الخطط",
+  "seamlessly": "بسلاسة"
 }

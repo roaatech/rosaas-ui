@@ -45,6 +45,7 @@ const CheckoutPage = (data) => {
   const { productSystemName, productOwnerSystemName, priceName } = useParams()
 
   const hash = window.location.hash
+  const currency = useSelector((state) => state.main.currency)
 
   const array = hash.split('#')
   const orderID = array.find(
@@ -75,6 +76,7 @@ const CheckoutPage = (data) => {
       )
     )
   )[0]
+
   const [productId, setProductId] = useState(productData?.id)
 
   useEffect(() => {
@@ -86,23 +88,16 @@ const CheckoutPage = (data) => {
       const order = await getOrderByIdPublic(orderID)
       setOrderData(order.data.data)
     })()
-  }, [orderID])
+  }, [orderID, currency])
 
   const [currentFeaturePlan, setCurrentFeaturePlan] = useState()
   const [trialFeaturePlan, setTrialFeaturePlan] = useState()
   const intl = useIntl()
+
   useEffect(() => {
     if (!priceData || !productSystemName) {
       return
     }
-    ;(async () => {
-      const featurePlan = await getFeaturePlanPublic(
-        productOwnerSystemName,
-        productSystemName,
-        priceData?.plan.systemName
-      )
-      setCurrentFeaturePlan(featurePlan.data.data)
-    })()
 
     if (trialPlanId && productSystemName) {
       ;(async () => {
@@ -115,6 +110,15 @@ const CheckoutPage = (data) => {
             (item) => item.plan.id === trialPlanId
           )
         )
+      })()
+    } else {
+      ;(async () => {
+        const featurePlan = await getFeaturePlanPublic(
+          productOwnerSystemName,
+          productSystemName,
+          priceData?.plan.systemName
+        )
+        setCurrentFeaturePlan(featurePlan.data.data)
       })()
     }
   }, [priceData, productSystemName, trialPlanId])
