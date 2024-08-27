@@ -181,14 +181,14 @@ export const Routes = {
   },
   ResetPasswordRequest: {
     path: '/reset-password-request',
-    component: <POwnerChecker page={<SignInPage />} />,
+    component: () => <POwnerChecker page={<SignInPage />} />,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
 
   ResetPasswordConfirm: {
     path: '/auth/reset-password',
-    component: <POwnerChecker page={<SignInPage />} />,
+    component: () => <POwnerChecker page={<SignInPage />} />,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
