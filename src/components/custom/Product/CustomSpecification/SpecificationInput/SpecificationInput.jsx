@@ -76,13 +76,14 @@ const SpecificationInput = ({
               ''
             )}
             <div>
-              {inlineDescription.en || inlineDescription.ar ?(
+              { inlineDescription && 
+              (inlineDescription.en || inlineDescription.ar )?(
                 <div className="text-warning mt-0 d-flex align-items-center">
                   <BsExclamationTriangleFill
                     style={{ width: '14px', marginRight: '4px' }}
                   />
                   <span> 
-                    
+
                   {inlineDescription?.[intl.locale] ||
                         (intl.locale === 'ar' && inlineDescription['en']) ||
                         (intl.locale === 'en' && inlineDescription['ar'])}
@@ -91,7 +92,7 @@ const SpecificationInput = ({
                 </div>
               ) : (
                 ''
-              )}
+              )} 
               <input
                 type="text"
                 name={
