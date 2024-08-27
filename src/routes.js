@@ -194,7 +194,7 @@ export const Routes = {
   },
   setPassword: {
     path: '/auth/set-password',
-    component: <POwnerChecker page={<SignInPage />} />,
+    component: () => <POwnerChecker page={<SignInPage />} />,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
