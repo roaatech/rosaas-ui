@@ -482,7 +482,7 @@ const PricingPage = () => {
                           ?.isPlanSelectionRedirectionEnabled &&
                         listProduct?.[productId]?.planSelectionRedirectUrl
                       ) {
-                        window.location.href = `${listProduct?.[productId]?.planSelectionRedirectUrl}?plan-price=${filteredPrices.systemName}`
+                        window.top.location.href = `${listProduct?.[productId]?.planSelectionRedirectUrl}?plan-price=${filteredPrices.systemName}`
                       } else if (
                         startWithTrial[planId] ||
                         (listProduct?.[productId]?.trialType === 3 &&
