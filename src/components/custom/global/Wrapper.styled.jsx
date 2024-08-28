@@ -45,6 +45,7 @@ const GlobalStyles = createGlobalStyle`
   --second-color:#ffab03;
   --second-color-darker: #cc8802;
   --second-color-1:#ffe8b9;
+  --second-color-2:#ffe8b934;
  --table-hover:#eff0f2;
    --themeBackground:${(props) =>
      props.darkMode ? darkBackground : lightBackground};

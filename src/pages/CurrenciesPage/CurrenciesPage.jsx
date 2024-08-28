@@ -23,6 +23,7 @@ import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import ShowDetails from '../../components/custom/Shared/ShowDetails/ShowDetails'
 import {
   currencyChangeAttr,
+  currencyChangeAttrWithOpposites,
   removeCurrency,
   setAllCurrencies,
 } from '../../store/slices/currenciesSlice'
@@ -134,9 +135,10 @@ export default function CurrenciesPage() {
       if (response?.status === 200) {
         // Update the Redux state to reflect the change
         dispatch(
-          currencyChangeAttr({
+          currencyChangeAttrWithOpposites({
             currencyId: id,
-            attributes: { isPrimaryCurrency: !isPrimary },
+            attributeName: 'isPrimaryCurrency',
+            newValue: !isPrimary,
           })
         )
       }
@@ -163,9 +165,10 @@ export default function CurrenciesPage() {
       if (response?.status === 200) {
         // Update the Redux state to reflect the change
         dispatch(
-          currencyChangeAttr({
+          currencyChangeAttrWithOpposites({
             currencyId: id,
-            attributes: { isPrimaryExchangeRateCurrency: !isPrimary },
+            attributeName: 'isPrimaryExchangeRateCurrency',
+            newValue: !isPrimary,
           })
         )
       }

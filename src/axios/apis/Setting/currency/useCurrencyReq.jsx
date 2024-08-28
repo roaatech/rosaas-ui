@@ -34,6 +34,9 @@ const useCurrencyReq = () => {
       `management/sadmin/v1/Currencies/${id}/MarkAsPrimary`
     )
   }
+  const getCurrenciesPublishList = async () => {
+    return await Request.get(`public/v1/Currencies`)
+  }
 
   const markAsPrimaryExchangeRateCurrency = async (id) => {
     return await Request.post(
@@ -69,6 +72,7 @@ const useCurrencyReq = () => {
     markAsPrimaryExchangeRateCurrency,
     markAsPrimaryCurrencyForProductOwner,
     markAsPrimaryExchangeRateCurrencyForProductOwner,
+    getCurrenciesPublishList,
   }
 }
 

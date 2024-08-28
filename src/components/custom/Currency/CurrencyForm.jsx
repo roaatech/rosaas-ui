@@ -7,12 +7,9 @@ import { Button, Col, Container, Modal, Row } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { currencyInfo } from '../../../store/slices/currenciesSlice'
 import useRequest from '../../../axios/apis/useRequest'
+import { roundingTypeOptions } from '../../../const/const'
 
-// Define your options object
-const roundingTypeOptions = {
-  1: 10,
-  // Add more options here as needed
-}
+// Define your options object with formatted messages
 
 const CurrencyForm = ({
   type, // 'create' or 'edit'
@@ -66,7 +63,7 @@ const CurrencyForm = ({
         rate: currencyData.rate || 0,
         customFormatting: currencyData.customFormatting || '',
         displayOrder: currencyData.displayOrder || 0,
-        roundingType: currencyData.roundingType || 0,
+        roundingType: currencyData.roundingType || '',
       })
     }
   }, [currencyData])
@@ -77,7 +74,7 @@ const CurrencyForm = ({
     rate: currencyData ? currencyData.rate : 0,
     customFormatting: currencyData ? currencyData.customFormatting : '',
     displayOrder: currencyData ? currencyData.displayOrder : 0,
-    roundingType: currencyData ? currencyData.roundingType : 0,
+    roundingType: currencyData ? parseInt(currencyData.roundingType, 10) : 0,
   }
 
   const validationSchema = Yup.object().shape({
@@ -86,10 +83,13 @@ const CurrencyForm = ({
       .max(100, <FormattedMessage id="maximum-100-characters-allowed" />),
     currencyCode: Yup.string()
       .required(<FormattedMessage id="currency-code-is-required" />)
-      .max(10, <FormattedMessage id="maximum-10-characters-allowed" />),
+      .matches(
+        /^[A-Z]{3}$/,
+        <FormattedMessage id="currency-code-must-be-3-letters" />
+      ),
     rate: Yup.number()
       .required(<FormattedMessage id="rate-is-required" />)
-      .min(0, <FormattedMessage id="minimum-value-is-0" />),
+      .min(0.01, <FormattedMessage id="rate-must-be-greater-than-zero" />),
     customFormatting: Yup.string().max(
       100,
       <FormattedMessage id="maximum-100-characters-allowed" />
@@ -97,10 +97,10 @@ const CurrencyForm = ({
     displayOrder: Yup.number()
       .required(<FormattedMessage id="display-order-is-required" />)
       .min(0, <FormattedMessage id="minimum-value-is-0" />),
-    roundingType: Yup.number()
+    roundingType: Yup.number() // Validate as a number
       .required(<FormattedMessage id="rounding-type-is-required" />)
       .oneOf(
-        Object.keys(roundingTypeOptions),
+        Object.keys(roundingTypeOptions).map(Number),
         <FormattedMessage id="invalid-rounding-type" />
       ),
   })
@@ -258,7 +258,7 @@ const CurrencyForm = ({
               </div>
             </Col>
 
-            <Col md={6}>
+            <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="displayOrder">
                   <FormattedMessage id="display-order" />{' '}
@@ -284,7 +284,7 @@ const CurrencyForm = ({
               </div>
             </Col>
 
-            <Col md={6}>
+            <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="roundingType">
                   <FormattedMessage id="rounding-type" />{' '}
@@ -294,7 +294,12 @@ const CurrencyForm = ({
                   name="roundingType"
                   id="roundingType"
                   value={formik.values.roundingType}
-                  onChange={formik.handleChange}
+                  onChange={(e) =>
+                    formik.setFieldValue(
+                      'roundingType',
+                      parseInt(e.target.value, 10)
+                    )
+                  } // Convert to integer
                   className={`form-control ${
                     formik.touched.roundingType && formik.errors.roundingType
                       ? 'is-invalid'
@@ -302,14 +307,17 @@ const CurrencyForm = ({
                   }`}
                 >
                   <option value="">
-                    <FormattedMessage id="Select-Option" />
+                    <FormattedMessage id="select-option" />
                   </option>
-                  {Object.entries(roundingTypeOptions).map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
+                  {Object.entries(roundingTypeOptions).map(
+                    ([value, labelId]) => (
+                      <option key={value} value={value}>
+                        <FormattedMessage id={labelId} />
+                      </option>
+                    )
+                  )}
                 </select>
+
                 {formik.touched.roundingType && formik.errors.roundingType && (
                   <div className="invalid-feedback">
                     {formik.errors.roundingType}

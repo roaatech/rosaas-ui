@@ -419,7 +419,7 @@ const CheckoutPage = (data) => {
                       </OverlayTrigger>
                     </div>
                     <div className=" card-stats">
-                      ${priceData?.price} /{' '}
+                      {priceData?.priceDetails?.formattedPrice} /{' '}
                       {cycle[priceData?.cycle] && (
                         <FormattedMessage id={cycle[priceData?.cycle]} />
                       )}{' '}
@@ -463,7 +463,7 @@ const CheckoutPage = (data) => {
                   <Card.Body>
                     {paymentMethod && hasToPay && (
                       <div className="d-flex align-items-start justify-content-between py-3">
-                        <div className="w-50">
+                        <div className="">
                           <p className="fw-bold">
                             <FormattedMessage id="Order-Subtotal-Exclude-Tax" />
                           </p>
@@ -498,18 +498,29 @@ const CheckoutPage = (data) => {
                             </p>
                           )}
                         </div>
-                        <div className="w-50">
+                        <div className="">
                           <span className=" d-flex flex-column align-items-center">
-                            <p>${orderData?.orderSubtotalExclTax}</p>
-                            <p>${orderData?.orderSubtotalInclTax}</p>
+                            <p>
+                              {
+                                orderData?.orderSubtotalExclTaxDetails
+                                  .formattedPrice
+                              }
+                            </p>
+                            <p>
+                              {
+                                orderData?.orderSubtotalInclTaxDetails
+                                  .formattedPrice
+                              }
+                            </p>
                             {isDiscountApplied && (
                               <p className="fw-bold text-danger">
-                                -${discountAmount}
+                                - {discountAmount}
+                                {` (${orderData?.userCurrencyCode}) `}
                               </p>
                             )}
                             {orderData?.orderItems[0]?.trialPeriodInDays ? (
                               <p className="trial">
-                                $0.00 /{' '}
+                                0.00 {` (${orderData?.userCurrencyCode}) `}/{' '}
                                 {orderData?.orderItems[0]?.trialPeriodInDays}{' '}
                                 <FormattedMessage id="Days" />
                               </p>
@@ -525,7 +536,7 @@ const CheckoutPage = (data) => {
                               // !isDiscountApplied &&
                               !isDiscountApplied && (
                                 <p className="total fw-bold py-2 px-8">
-                                  ${orderData?.orderTotal}
+                                  {orderData?.orderTotalDetails.formattedPrice}
                                 </p>
                               )
                             }

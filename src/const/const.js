@@ -42,3 +42,13 @@ export const PrimaryExchangeRateCurrencyStatus = {
     icon: <MdMoneyOff />,
   },
 }
+export const roundingTypeOptions = {
+  10: 'rounding-type-default',
+  20: 'rounding-type-up-0.05',
+  30: 'rounding-type-down-0.05',
+  40: 'rounding-type-up-0.10',
+  50: 'rounding-type-down-0.10',
+  60: 'rounding-type-0.50',
+  70: 'rounding-type-1.00',
+  80: 'rounding-type-up-1.00',
+}

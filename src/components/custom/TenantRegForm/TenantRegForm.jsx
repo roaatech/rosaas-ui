@@ -335,7 +335,7 @@ const CheckoutTenantReg = ({
                   </div>
                   {priceData && (
                     <div className=" card-stats">
-                      ${priceData?.price} /{' '}
+                      {priceData?.priceDetails.formattedPrice} /{' '}
                       <FormattedMessage id={cycle[priceData?.cycle]} />
                     </div>
                   )}

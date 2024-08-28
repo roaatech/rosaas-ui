@@ -715,5 +715,21 @@
   "trial": "تجربتك",
   "then": "ثم",
   "switch-plans": "بدل الخطط",
-  "seamlessly": "بسلاسة"
+  "seamlessly": "بسلاسة",
+  "rounding-type-default": "التقريب الافتراضي",
+  "rounding-type-up-0.05": "التقريب لأعلى بفواصل 0.05 (0.06 يقرب إلى 0.10)",
+  "rounding-type-down-0.05": "التقريب لأسفل بفواصل 0.05 (0.06 يقرب إلى 0.05)",
+  "rounding-type-up-0.10": "التقريب لأعلى بفواصل 0.10 (1.05 يقرب إلى 1.10)",
+  "rounding-type-down-0.10": "التقريب لأسفل بفواصل 0.10 (1.05 يقرب إلى 1.00)",
+  "rounding-type-0.50": "التقريب بفواصل 0.50",
+  "rounding-type-1.00": "التقريب بفواصل 1.00 (من 1.01 إلى 1.49 يقرب إلى 1.00، ومن 1.50 إلى 1.99 يقرب إلى 2.00)",
+  "rounding-type-up-1.00": "التقريب لأعلى بفواصل 1.00 (من 1.01 إلى 1.99 يقرب إلى 2.00)",
+  "currency-code-must-be-3-letters": "يجب أن يتكون رمز العملة من 3 أحرف",
+  "rate-must-be-greater-than-zero": "يجب أن يكون السعر أكبر من صفر",
+  "invalid-rounding-type": "نوع التقريب غير صحيح",
+  "select-option": "اختر خيارًا",
+  "Primary-Currency": "العملة الأساسية",
+  "Primary-Exchange-Rate-Currency": "العملة الأساسية لسعر الصرف",
+  "Not-Primary-Currency": "ليست العملة الأساسية",
+  "Not-Primary-Exchange-Rate-Currency": "ليست العملة الأساسية لسعر الصرف"
 }

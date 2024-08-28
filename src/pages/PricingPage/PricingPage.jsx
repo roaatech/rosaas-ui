@@ -135,6 +135,7 @@ const PricingPage = () => {
     }))
   }
   const currency = useSelector((state) => state.main.currency)
+  console.log({ currency })
 
   useEffect(() => {
     if (listProduct?.[productId]?.trialType != 2) {
@@ -319,10 +320,10 @@ const PricingPage = () => {
                 className="d-flex align-items-center justify-content-between "
               >
                 <div
-                  className="mb-0 w-50 "
+                  className=" "
                   style={{ display: 'flex', alignItems: 'center' }}
                 >
-                  <span
+                  {/* <span
                     style={{
                       fontSize: '1.3rem',
                       marginRight: '0.5rem',
@@ -330,15 +331,17 @@ const PricingPage = () => {
                     className="mb-4 mr-1"
                   >
                     $
-                  </span>
+                  </span>*/}
                   <span
                     style={{
-                      fontSize: '2rem',
+                      fontSize: '1.5rem',
                       fontWeight: 'bold',
                       transition: 'all 0.9s',
+                      whiteSpace: 'nowrap',
                     }}
                   >
-                    {filteredPrices?.price}
+                    {/* {filteredPrices?.price} */}
+                    {filteredPrices?.priceDetails?.formattedPrice}
                   </span>
                   <span
                     className="mt-3 ml-1"

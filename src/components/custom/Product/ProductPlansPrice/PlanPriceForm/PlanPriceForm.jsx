@@ -176,7 +176,7 @@ const PlanPriceForm = ({
           systemName: values.systemName,
           planId: values.plan,
           cycle: parseInt(values.cycle),
-          price: parseInt(values.price),
+          price: parseFloat(values.price),
           description: values.description,
         })
 
@@ -219,7 +219,7 @@ const PlanPriceForm = ({
       } else {
         const editPlan = await editPlanPriceRequest(productId, {
           data: {
-            price: parseInt(values.price),
+            price: parseFloat(values.price),
             description: values.description,
             cycle: parseInt(values.cycle),
           },

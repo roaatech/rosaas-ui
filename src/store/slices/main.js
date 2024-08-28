@@ -11,7 +11,7 @@ export const mainSlice = createSlice({
     currency: {
       currencyCode: localStorage.getItem('currencyCode'),
       id: localStorage.getItem('currencyId'),
-    } || { id: 1, currencyCode: 'USD' },
+    },
   },
   reducers: {
     directionFun: (state, action) => {
@@ -29,7 +29,7 @@ export const mainSlice = createSlice({
     },
     setCurrentCurrencyCodeAndId: (state, action) => {
       const { id, currencyCode } = action.payload
-      state.currentCurrency = { id, currencyCode }
+      state.currency = { id, currencyCode }
     },
     setProductOwner: (state, action) => {
       state.pOSystemName = action.payload

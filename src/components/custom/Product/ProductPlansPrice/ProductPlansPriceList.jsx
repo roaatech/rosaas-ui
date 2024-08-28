@@ -257,7 +257,7 @@ export default function ProductPlansPriceList({ children }) {
                         variant="link"
                         className="text-dark m-0 p-0 planFeatureButton"
                       >
-                        {listData[tableData[planItem + ',' + item]]?.price} ${' '}
+                        {listData[tableData[planItem + ',' + item]]?.price}{' '}
                         {listData[tableData[planItem + ',' + item]]
                           ?.isPublished ? (
                           <span className="label green">

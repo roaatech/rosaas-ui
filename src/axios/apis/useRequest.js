@@ -59,6 +59,7 @@ const useRequest = () => {
   const { updateProfile, getCurrentProfile, changePassword } = useAccountReq()
   const {
     getCurrencies,
+    getCurrenciesPublishList,
     createCurrency,
     editCurrency,
     deleteCurrency,
@@ -199,6 +200,7 @@ const useRequest = () => {
     getConfig,
     fetchPaymentIntent,
     getInvoicesList,
+    checkOrderCurrencyChange,
   } = usePaymentReq()
   const {
     createPORequest,
@@ -356,6 +358,8 @@ const useRequest = () => {
     markAsPrimaryExchangeRateCurrency,
     markAsPrimaryCurrencyForProductOwner,
     markAsPrimaryExchangeRateCurrencyForProductOwner,
+    getCurrenciesPublishList,
+    checkOrderCurrencyChange,
   }
 }
 export default useRequest

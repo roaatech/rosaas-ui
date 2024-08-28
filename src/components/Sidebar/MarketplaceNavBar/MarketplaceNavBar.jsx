@@ -7,107 +7,182 @@ import useRequest from '../../../axios/apis/useRequest'
 import { directionFun } from '../../../store/slices/main'
 import useGlobal from '../../../lib/hocks/global'
 import { logOut } from '../../../store/slices/auth'
-import { useNavigate } from 'react-router-dom'
+import { matchPath, useLocation, useNavigate } from 'react-router-dom'
 import { Routes } from '../../../routes'
 import { setPublicCurrenciesList } from '../../../store/slices/currenciesSlice'
+import { Toast } from 'primereact/toast'
 
 const MarketplaceNavBar = ({ profile }) => {
-  const dispatch = useDispatch()
+  const isRunningInIframe = window.self !== window.top
+  const location = useLocation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const direction = useSelector((state) => state.main.direction)
   const userInfo = useSelector((state) => state.auth.userInfo)
-  const { currenciesList } = useRequest()
-  const { setCurrency } = useGlobal()
+  const { getCurrenciesPublishList, checkOrderCurrencyChange } = useRequest()
+  const { setCurrency, changeDirection } = useGlobal()
+  const isMatch = Boolean(
+    matchPath(
+      {
+        path: Routes.CheckOut.path,
+        end: true, // or false if you want partial match
+      },
+      location.pathname
+    )
+  )
+  const step = useSelector((state) => state.tenants.currentStep)
 
-  // State to keep track of the selected currency code
-  const [selectedCurrency, setSelectedCurrency] = useState(() => {
-    return localStorage.getItem('selectedCurrency') || 'USD' // Default to USD or fetch from localStorage
-  })
+  console.log({ isMatch })
 
-  const mockCurrenciesList = [
-    { id: 1, displayName: 'US Dollar', currencyCode: 'USD' },
-    { id: 2, displayName: 'Euro', currencyCode: 'EUR' },
-    { id: 3, displayName: 'Saudi Riyal', currencyCode: 'SAR' },
-    { id: 4, displayName: 'Japanese Yen', currencyCode: 'JPY' },
-    { id: 5, displayName: 'British Pound', currencyCode: 'GBP' },
-  ]
+  const [selectedCurrency, setSelectedCurrency] = useState(() =>
+    localStorage.getItem('currencyCode')
+  )
+  const [loading, setLoading] = useState(false)
+  console.log({ loading })
 
-  const currencyItems = mockCurrenciesList.map((currency) => ({
-    label: currency.displayName,
-    command: () => {
-      setCurrency(currency.currencyCode, currency.id)
-      setSelectedCurrency(currency.currencyCode) // Update selected currency code in state
-    },
-  }))
+  const [toast, setToast] = useState(null)
+
+  const publicCurrenciesList = useSelector(
+    (state) => state.currenciesSlice?.publicCurrenciesList
+  )
+  const hash = window.location.hash
+  console.log({ hash })
+  const orderId = hash.split('#')
+  console.log({ orderId: orderId[1] })
+
+  const currencyItems =
+    publicCurrenciesList &&
+    Object.values(publicCurrenciesList).map((currency) => ({
+      label: currency.displayName,
+      command: async () => {
+        if (isMatch && step === 2) {
+          setLoading(true)
+          try {
+            const response = await checkOrderCurrencyChange(orderId[1], {
+              currencyId: currency.id,
+            })
+
+            if (response.status == 200) {
+              console.log('**************8888888888')
+
+              setCurrency(currency.currencyCode, currency.id)
+              setSelectedCurrency(currency.currencyCode)
+              localStorage.setItem('currencyCode', currency.currencyCode)
+              localStorage.setItem('currencyId', currency.id)
+              showToast('Currency changed successfully!', 'success')
+            } else {
+              showToast('Failed to change currency. Please try again.', 'error')
+            }
+          } catch (error) {
+            console.error('Error changing currency:', error)
+            showToast('An error occurred while changing currency.', 'error')
+          } finally {
+            setLoading(false)
+          }
+        } else {
+          setCurrency(currency.currencyCode, currency.id)
+          setSelectedCurrency(currency.currencyCode)
+          localStorage.setItem('currencyCode', currency.currencyCode)
+          localStorage.setItem('currencyId', currency.id)
+        }
+      },
+    }))
+
   useEffect(() => {
     const fetchCurrencies = async () => {
       try {
-        // const response = await request('/currencies') // Adjust the endpoint as needed
-        // if (response && response.data) {
-        dispatch(setPublicCurrenciesList(mockCurrenciesList)) // Dispatch action to update the Redux store
-        // }
+        const response = await getCurrenciesPublishList('/currencies')
+        if (response && response.data) {
+          const currencies = response.data.data
+          dispatch(setPublicCurrenciesList(currencies))
+
+          // Find and store the primary currency
+          const primaryCurrency = Object.values(currencies).find(
+            (currency) => currency.isPrimaryCurrency
+          )
+          if (primaryCurrency && !selectedCurrency) {
+            localStorage.setItem('currencyCode', primaryCurrency.currencyCode)
+            localStorage.setItem('currencyId', primaryCurrency.id)
+            setSelectedCurrency(primaryCurrency.currencyCode)
+          }
+        }
       } catch (error) {
         console.error('Failed to fetch currencies:', error)
       }
     }
 
     fetchCurrencies()
-  }, [mockCurrenciesList])
+  }, [dispatch, selectedCurrency])
 
-  const items = [
-    // Profile email and logout options as the first item if profile is true
-    ...(profile && userInfo.email
-      ? [
-          {
-            label: userInfo.email,
-            icon: 'pi pi-fw pi-user',
-            items: [
+  const showToast = (message, severity) => {
+    setToast({ message, severity })
+    setTimeout(() => setToast(null), 3000) // Hide toast after 3 seconds
+  }
+
+  const items = isRunningInIframe
+    ? [
+        {
+          label: `Currency (${selectedCurrency})`,
+          icon: 'pi pi-fw pi-money-bill',
+          items: currencyItems,
+        },
+        {
+          label:
+            direction === 'rtl' ? (
+              <FormattedMessage id="English" />
+            ) : (
+              <FormattedMessage id="Arabic" />
+            ),
+          icon: 'pi pi-fw pi-globe',
+          command: () => changeDirection(direction === 'rtl' ? 'ltr' : 'rtl'),
+        },
+      ]
+    : [
+        ...(profile && userInfo.email
+          ? [
               {
-                label: <FormattedMessage id="Logout" />,
-                icon: 'pi pi-fw pi-sign-out',
-                command: () => {
-                  dispatch(logOut())
-                },
+                label: userInfo.email,
+                icon: 'pi pi-fw pi-user',
+                items: [
+                  {
+                    label: <FormattedMessage id="Logout" />,
+                    icon: 'pi pi-fw pi-sign-out',
+                    command: () => dispatch(logOut()),
+                  },
+                ],
               },
-            ],
-          },
-        ]
-      : []),
-    {
-      label: <FormattedMessage id="Home" />,
-      icon: 'pi pi-fw pi-home',
-      command: () => {
-        navigate(Routes.mainPage.path) // Navigate to the home page
-      },
-    },
-    {
-      label: <FormattedMessage id="Marketplace" />,
-      icon: 'pi pi-fw pi-shopping-cart',
-      command: () => {
-        navigate(Routes.marketPlacePage.path) // Navigate to the marketplace page
-      },
-    },
-    {
-      label:
-        direction === 'rtl' ? (
-          <FormattedMessage id="English" />
-        ) : (
-          <FormattedMessage id="Arabic" />
-        ),
-      icon: 'pi pi-fw pi-globe',
-      command: () => {
-        dispatch(directionFun(direction === 'rtl' ? 'ltr' : 'rtl'))
-      },
-    },
-    {
-      label: `Currency (${selectedCurrency})`, // Dynamically display selected currency
-      icon: 'pi pi-fw pi-money-bill',
-      items: currencyItems,
-    },
-  ]
+            ]
+          : []),
+        {
+          label: <FormattedMessage id="Home" />,
+          icon: 'pi pi-fw pi-home',
+          command: () => navigate(Routes.mainPage.path),
+        },
+        {
+          label: <FormattedMessage id="Marketplace" />,
+          icon: 'pi pi-fw pi-shopping-cart',
+          command: () => navigate(Routes.marketPlacePage.path),
+        },
+        {
+          label:
+            direction === 'rtl' ? (
+              <FormattedMessage id="English" />
+            ) : (
+              <FormattedMessage id="Arabic" />
+            ),
+          icon: 'pi pi-fw pi-globe',
+          command: () =>
+            dispatch(directionFun(direction === 'rtl' ? 'ltr' : 'rtl')),
+        },
+        {
+          label: `Currency (${selectedCurrency})`,
+          icon: 'pi pi-fw pi-money-bill',
+          items: currencyItems,
+        },
+      ]
 
   useEffect(() => {
-    const storedCurrency = localStorage.getItem('selectedCurrency')
+    const storedCurrency = localStorage.getItem('currencyCode')
     if (storedCurrency) {
       setSelectedCurrency(storedCurrency)
     }
@@ -116,7 +191,17 @@ const MarketplaceNavBar = ({ profile }) => {
   return (
     <Wrapper>
       <div className="card">
+        {loading && <div className="progress-indicator">Loading...</div>}{' '}
+        {/* Show a progress indicator */}
         <Menubar model={items} />
+        {toast && (
+          <Toast
+            severity={toast.severity}
+            summary={toast.message}
+            detail={''}
+            className="p-toast-bottom-right"
+          />
+        )}
       </div>
     </Wrapper>
   )

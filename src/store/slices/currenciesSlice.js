@@ -60,6 +60,21 @@ export const currenciesSlice = createSlice({
         Object.assign(currencies[currencyId], attributes)
       }
     },
+    currencyChangeAttrWithOpposites: (state, action) => {
+      const { currencyId, attributeName, newValue } = action.payload
+      const { currencies } = state
+
+      // Iterate over all currencies to set the specified attribute
+      Object.keys(currencies).forEach((id) => {
+        if (id === currencyId) {
+          newValue === true
+            ? (currencies[id][attributeName] = true)
+            : (currencies[id][attributeName] = false)
+        } else {
+          currencies[id][attributeName] = false
+        }
+      })
+    },
   },
 })
 
@@ -70,6 +85,7 @@ export const {
   removeCurrency,
   currencyChangeAttr,
   setPublicCurrenciesList,
+  currencyChangeAttrWithOpposites,
 } = currenciesSlice.actions
 
 export default currenciesSlice.reducer
