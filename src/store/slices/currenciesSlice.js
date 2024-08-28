@@ -4,6 +4,7 @@ export const currenciesSlice = createSlice({
   name: 'currencies',
   initialState: {
     currencies: {},
+    publicCurrenciesList: {},
   },
   reducers: {
     setAllCurrencies: (state, action) => {
@@ -24,6 +25,22 @@ export const currenciesSlice = createSlice({
       }
 
       state.currencies = allCurrencies
+    },
+    setPublicCurrenciesList: (state, action) => {
+      const publicCurrencies = JSON.parse(
+        JSON.stringify(current(state.publicCurrenciesList))
+      )
+
+      const currenciesArray = action.payload
+      if (Array.isArray(currenciesArray)) {
+        currenciesArray.forEach((item) => {
+          publicCurrencies[item.id] = item // Add each currency to the public list
+        })
+      } else {
+        console.error('Payload is not an array:', currenciesArray)
+      }
+
+      state.publicCurrenciesList = publicCurrencies
     },
     currencyInfo: (state, action) => {
       const { id, data } = action.payload
@@ -52,6 +69,7 @@ export const {
   currencyInfo,
   removeCurrency,
   currencyChangeAttr,
+  setPublicCurrenciesList,
 } = currenciesSlice.actions
 
 export default currenciesSlice.reducer

@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './CurrencyForm.styled'
 import { Button, Col, Container, Modal, Row } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { currencyInfo } from '../../../store/slices/products/currenciesSlice'
+import { currencyInfo } from '../../../store/slices/currenciesSlice'
 import useRequest from '../../../axios/apis/useRequest'
 
 // Define your options object

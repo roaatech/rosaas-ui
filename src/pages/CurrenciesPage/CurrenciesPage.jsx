@@ -25,7 +25,7 @@ import {
   currencyChangeAttr,
   removeCurrency,
   setAllCurrencies,
-} from '../../store/slices/products/currenciesSlice'
+} from '../../store/slices/currenciesSlice'
 import Label from '../../components/custom/Shared/label/Label'
 import { PublishStatus } from '../../const'
 import {

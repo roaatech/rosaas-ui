@@ -42,6 +42,8 @@ const CheckoutTenantReg = ({
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const hash = window.location.hash
+  const currency = useSelector((state) => state.main.currency)
+  console.log({ currency: currency.id })
 
   const array = hash.split('#')
   const startWithTrial = array.find((element) => element == 'start-with-trial')
@@ -117,6 +119,8 @@ const CheckoutTenantReg = ({
         Object.keys(specErrors.errors).length === 0
       ) {
         if (type == 'create') {
+          console.log({ currencyId: currency })
+
           const createTenant = await createTenantRequestPublic({
             subscriptions: [
               {
@@ -127,6 +131,7 @@ const CheckoutTenantReg = ({
                 userEnabledTheTrial: startWithTrial == 'start-with-trial',
               },
             ],
+            currencyId: currency.id,
             systemName: uniqueName,
             displayName: title,
           })
@@ -192,6 +197,8 @@ const CheckoutTenantReg = ({
 
   const fetchData = async () => {
     try {
+      console.log('***********777*')
+
       const createTenant = await createTenantRequestPublic({
         subscriptions: [
           {
@@ -204,6 +211,7 @@ const CheckoutTenantReg = ({
         ],
         systemName: uniqueName,
         displayName: title,
+        currencyId: currency.id,
       })
       setDisplayName(title)
       setCurrentTenant(createTenant?.data.data.id)

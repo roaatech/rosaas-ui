@@ -9,6 +9,7 @@ import useGlobal from '../../../lib/hocks/global'
 import { logOut } from '../../../store/slices/auth'
 import { useNavigate } from 'react-router-dom'
 import { Routes } from '../../../routes'
+import { setPublicCurrenciesList } from '../../../store/slices/currenciesSlice'
 
 const MarketplaceNavBar = ({ profile }) => {
   const dispatch = useDispatch()
@@ -24,20 +25,34 @@ const MarketplaceNavBar = ({ profile }) => {
   })
 
   const mockCurrenciesList = [
-    { displayName: 'US Dollar', currencyCode: 'USD' },
-    { displayName: 'Euro', currencyCode: 'EUR' },
-    { displayName: 'Saudi Riyal', currencyCode: 'SAR' },
-    { displayName: 'Japanese Yen', currencyCode: 'JPY' },
-    { displayName: 'British Pound', currencyCode: 'GBP' },
+    { id: 1, displayName: 'US Dollar', currencyCode: 'USD' },
+    { id: 2, displayName: 'Euro', currencyCode: 'EUR' },
+    { id: 3, displayName: 'Saudi Riyal', currencyCode: 'SAR' },
+    { id: 4, displayName: 'Japanese Yen', currencyCode: 'JPY' },
+    { id: 5, displayName: 'British Pound', currencyCode: 'GBP' },
   ]
 
   const currencyItems = mockCurrenciesList.map((currency) => ({
     label: currency.displayName,
     command: () => {
-      setCurrency(currency.currencyCode)
+      setCurrency(currency.currencyCode, currency.id)
       setSelectedCurrency(currency.currencyCode) // Update selected currency code in state
     },
   }))
+  useEffect(() => {
+    const fetchCurrencies = async () => {
+      try {
+        // const response = await request('/currencies') // Adjust the endpoint as needed
+        // if (response && response.data) {
+        dispatch(setPublicCurrenciesList(mockCurrenciesList)) // Dispatch action to update the Redux store
+        // }
+      } catch (error) {
+        console.error('Failed to fetch currencies:', error)
+      }
+    }
+
+    fetchCurrencies()
+  }, [mockCurrenciesList])
 
   const items = [
     // Profile email and logout options as the first item if profile is true

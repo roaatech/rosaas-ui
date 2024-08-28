@@ -1,5 +1,8 @@
 import { useDispatch } from 'react-redux'
-import { directionFun, setCurrencyCode } from '../../store/slices/main'
+import {
+  directionFun,
+  setCurrentCurrencyCodeAndId,
+} from '../../store/slices/main'
 let x = 0
 const useGlobal = () => {
   const dispatch = useDispatch()
@@ -8,9 +11,15 @@ const useGlobal = () => {
     dispatch(directionFun(direction))
     document.documentElement.dir = direction
   }
-  const setCurrency = (currencyCode) => {
-    localStorage.setItem('selectedCurrency', currencyCode)
-    dispatch(setCurrencyCode(currencyCode))
+  const setCurrency = (currencyCode, currencyId) => {
+    localStorage.setItem('currencyCode', currencyCode)
+    localStorage.setItem('currencyId', currencyId)
+    dispatch(
+      setCurrentCurrencyCodeAndId({
+        id: currencyId,
+        currencyCode: currencyCode,
+      })
+    )
   }
   const searchWait = (e, setInputValue, setSearchValue, setFirst) => {
     setInputValue(e.target.value)

@@ -473,17 +473,27 @@ const PricingPage = () => {
                     variant="primary"
                     type="submit"
                     className="w-100"
-                    onClick={() =>
-                      startWithTrial[planId] ||
-                      (listProduct?.[productId]?.trialType == 3 &&
-                        planList[planId]?.trialPeriodInDays > 0)
-                        ? navigate(
-                            `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}#start-with-trial`
-                          )
-                        : navigate(
-                            `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}`
-                          )
-                    }
+                    onClick={() => {
+                      if (
+                        listProduct?.[productId]
+                          ?.isPlanSelectionRedirectionEnabled &&
+                        listProduct?.[productId]?.planSelectionRedirectUrl
+                      ) {
+                        window.location.href = `${listProduct?.[productId]?.planSelectionRedirectUrl}?plan-price=${filteredPrices.systemName}`
+                      } else if (
+                        startWithTrial[planId] ||
+                        (listProduct?.[productId]?.trialType === 3 &&
+                          planList[planId]?.trialPeriodInDays > 0)
+                      ) {
+                        navigate(
+                          `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}#start-with-trial`
+                        )
+                      } else {
+                        navigate(
+                          `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}`
+                        )
+                      }
+                    }}
                   >
                     <FormattedMessage id="Start-With" />{' '}
                     {planList[planId]?.displayName?.toUpperCase()}

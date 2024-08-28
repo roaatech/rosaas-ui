@@ -39,7 +39,8 @@ const useApi = () => {
       ]
 
       config.headers['Accept-Language'] = direction === 'rtl' ? 'ar' : 'en'
-      config.headers['Currency-Code'] = currency
+      config.headers['Currency-Code'] = currency.currencyCode
+      config.headers['Currency-Id'] = currency.id
       config.headers['PO-System-Name'] = pOSystemName
 
       //* Add auth
