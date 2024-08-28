@@ -45,7 +45,7 @@ const useCurrencyReq = () => {
 
   const markAsPrimaryCurrencyForProductOwner = async (productOwnerId, id) => {
     return await Request.post(
-      `management/sadmin/v1/productowners/${productOwnerId}/Currencies/${id}/MarkAsPrimary`
+      `management/product-owner-admin/v1/productowners/${productOwnerId}/Currencies/${id}/MarkAsPrimary`
     )
   }
 
@@ -54,7 +54,7 @@ const useCurrencyReq = () => {
     id
   ) => {
     return await Request.post(
-      `management/sadmin/v1/productowners/${productOwnerId}/Currencies/${id}/MarkAsPrimaryExchangeRate`
+      `management/product-owner-admin/v1/productowners/${productOwnerId}/Currencies/${id}/MarkAsPrimaryExchangeRate`
     )
   }
 
