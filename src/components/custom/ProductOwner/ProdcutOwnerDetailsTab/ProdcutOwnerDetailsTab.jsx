@@ -41,6 +41,7 @@ import {
 import { Routes } from '../../../../routes'
 import { object } from 'yup'
 import { update } from 'lodash'
+import ProductOwnerLimitsTab from '../ProductOwnerLimitsTab/ProductOwnerLimitsTab'
 
 const ProductOwnerDetails = () => {
   const routeParams = useParams()
@@ -152,13 +153,13 @@ const ProductOwnerDetails = () => {
             />
           </UpperContent>
 
-          <TabView
-            scrollable
-            className="card"
-            activeIndex={activeIndex}
-            onTabChange={(e) => setActiveIndex(e.index)}
-          >
-            {productOwner && (
+          {productOwner && (
+            <TabView
+              scrollable
+              className="card"
+              activeIndex={activeIndex}
+              onTabChange={(e) => setActiveIndex(e.index)}
+            >
               <TabPanel header={<FormattedMessage id="Details" />}>
                 <div className="row-button">
                   <div className="dynamicButtons"></div>
@@ -224,8 +225,11 @@ const ProductOwnerDetails = () => {
                   </Card.Body>
                 </Card>
               </TabPanel>
-            )}
-          </TabView>
+              <TabPanel header={<FormattedMessage id="Product-Owner-Limits" />}>
+                <ProductOwnerLimitsTab productOwnerId={productOwner.id} />
+              </TabPanel>
+            </TabView>
+          )}
         </div>
       )}
     </Wrapper>

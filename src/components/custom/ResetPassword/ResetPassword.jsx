@@ -85,7 +85,7 @@ const ResetPassword = () => {
     ) {
       navigate(`${Routes.ConfirmAccountByPassword.path}${search}`)
     } else if (response && response.status == 200) {
-      toast.success('Password reset successful', {
+      toast.success(<FormattedMessage id="Password-reset-successful" />, {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 4000,
       })

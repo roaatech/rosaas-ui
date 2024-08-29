@@ -22,6 +22,7 @@ import {
   BsPersonFillGear,
   BsBuilding,
   BsBuildings,
+  BsPercent,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -261,7 +262,7 @@ export default (props = {}) => {
     !pathname.includes('productsOwners') && pathname.includes('products/')
       ? 'open'
       : 'close'
-  const productsOwnersIsOpen = pathname.includes('productsOwners')
+  const productsOwnersIsOpen = pathname.includes('products-owners')
     ? 'open'
     : 'close'
 
@@ -496,6 +497,13 @@ export default (props = {}) => {
                     icon={<MdCurrencyExchange />}
                   />
 
+                  {userRole == 'superAdmin' && (
+                    <NavItem
+                      title={<FormattedMessage id="Exchange-Rate-Providers" />}
+                      link={Routes.ExchangeRateProvidersSettings.path}
+                      icon={<BsPercent />}
+                    />
+                  )}
                   {userRole == 'superAdmin' && (
                     <NavItem
                       title={<FormattedMessage id="Profile" />}

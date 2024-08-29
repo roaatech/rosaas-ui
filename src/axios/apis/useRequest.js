@@ -210,6 +210,7 @@ const useRequest = () => {
     deleteProductOwnerReq,
     isProductOwnerRegistered,
     GetCurrentProductOwnerByUserId,
+    ProductOwnerLimits,
   } = usePOReq()
   return {
     SignInTenantAdminAsync,
@@ -360,6 +361,7 @@ const useRequest = () => {
     markAsPrimaryExchangeRateCurrencyForProductOwner,
     getCurrenciesPublishList,
     checkOrderCurrencyChange,
+    ProductOwnerLimits,
   }
 }
 export default useRequest

@@ -33,6 +33,7 @@ import DiscountsPage from './pages/DiscountsPage/DiscountsPage'
 import DiscountDetails from './components/custom/Discounts/DiscountDetails'
 import CurrenciesPage from './pages/CurrenciesPage/CurrenciesPage'
 import SignInPage from './pages/signIn/signIn'
+import ExchangeRateProvidersSettings from './pages/Settings/ExchangeRateProvidersSettings/ExchangeRateProvidersSettings'
 const adminPanel = '/admin-panel'
 
 export const Routes = {
@@ -116,6 +117,11 @@ export const Routes = {
   SubscriptionsSettings: {
     path: `${adminPanel}/settings/subscriptions`,
     component: SubscriptionsSettings,
+    roles: ['superAdmin'],
+  },
+  ExchangeRateProvidersSettings: {
+    path: `${adminPanel}/settings/exchange-rate-providers`,
+    component: ExchangeRateProvidersSettings,
     roles: ['superAdmin'],
   },
 

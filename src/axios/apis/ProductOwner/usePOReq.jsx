@@ -17,6 +17,11 @@ const usePOReq = () => {
   const getProductOwner = async (POId) => {
     return await Request.get(`management/sadmin/v1/productowners/${POId}`)
   }
+  const ProductOwnerLimits = async (POId) => {
+    return await Request.get(
+      `management/sadmin/v1/productowners/${POId}/Limits`
+    )
+  }
   const deleteProductOwnerReq = async (POId) => {
     return await Request.delete(`management/sadmin/v1/productowners/${POId}`)
   }
@@ -35,6 +40,7 @@ const usePOReq = () => {
     deleteProductOwnerReq,
     isProductOwnerRegistered,
     GetCurrentProductOwnerByUserId,
+    ProductOwnerLimits,
   }
 }
 

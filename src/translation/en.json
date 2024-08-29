@@ -744,5 +744,18 @@
   "sendResetLink": "Send Reset Link",
   "resetPassword": "Reset Password",
   "setPassword": "Set Password",
-  "Reset-Account-password": "Reset Account Password"
+  "Reset-Account-password": "Reset Account Password",
+  "Limit-Type": "Limit Type",
+  "Max-Limit": "Max Limit",
+  "Current-Usage": "Current Usage",
+  "Remaining": "Remaining",
+  "Is-Unlimited": "Is Unlimited",
+  "Modification-Date": "Modification Date",
+  "ExchangeRateProviders-Settings": "Exchange Rate Providers Settings",
+  "Provider": "Provider",
+  "Provider-desc": "Provider Description",
+  "System-Rate-Access-Control": "System Rate Access Control",
+  "Password-reset-successful": "Password reset successful",
+  "Product-Owner-Limits": "Product Owner Limits",
+  "Exchange-Rate-Providers": "Exchange Rate Providers"
 }

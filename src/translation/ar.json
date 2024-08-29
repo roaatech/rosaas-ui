@@ -739,5 +739,18 @@
   "sendResetLink": "إرسال رابط إعادة التعيين",
   "resetPassword": "إعادة تعيين كلمة المرور",
   "setPassword": "تعيين كلمة المرور",
-  "Reset-Account-password": "إعادة تعيين كلمة مرور الحساب"
+  "Reset-Account-password": "إعادة تعيين كلمة مرور الحساب",
+  "Password-reset-successful": "تم إعادة تعيين كلمة المرور بنجاح",
+  "Limit-Type": "نوع الحد",
+  "Max-Limit": "الحد الأقصى",
+  "Current-Usage": "الاستهلاك الحالي",
+  "Remaining": "المتبقي",
+  "Is-Unlimited": "غير محدود",
+  "Modification-Date": "تاريخ التعديل",
+  "ExchangeRateProviders-Settings": "إعدادات مزودي سعر الصرف",
+  "Provider": "المزود",
+  "Provider-desc": "وصف المزود",
+  "System-Rate-Access-Control": "التحكم في الوصول إلى سعر النظام",
+  "Product-Owner-Limits": "حدود مالك المنتج",
+  "Exchange-Rate-Providers": "مزودو سعر الصرف"
 }
