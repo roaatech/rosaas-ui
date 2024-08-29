@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import { Button, Toast } from '@themesberg/react-bootstrap'
@@ -38,6 +38,7 @@ const ResetPassword = () => {
   const validationSchemaEmail = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
   })
+  const search = useLocation().search
 
   const validationSchemaPassword = Yup.object().shape({
     password: Yup.string().required('Password is required'),
@@ -77,11 +78,11 @@ const ResetPassword = () => {
     })
     if (
       response &&
-      response.success &&
+      response.status == 200 &&
       location.pathname == Routes.setPassword.path
     ) {
-      navigate(Routes.ConfirmAccountByPassword.path)
-    } else if (response && response.success) {
+      navigate(`${Routes.ConfirmAccountByPassword.path}${search}`)
+    } else if (response && response.status == 200) {
       Toast.success('Password reset successful', {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 4000,
@@ -205,7 +206,11 @@ const ResetPassword = () => {
                       className="w-100"
                       disabled={isSubmitting}
                     >
-                      <FormattedMessage id="resetPassword" />
+                      {location.pathname == Routes.setPassword.path ? (
+                        <FormattedMessage id="setPassword" />
+                      ) : (
+                        <FormattedMessage id="resetPassword" />
+                      )}
                     </Button>
                   </div>
                 </>

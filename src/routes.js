@@ -92,7 +92,7 @@ export const Routes = {
 
   Tenant: {
     path: `${adminPanel}/tenants`,
-    component: Tenant,
+    component: () => <POwnerChecker page={<Tenant />} />,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
   },
 
@@ -206,7 +206,7 @@ export const Routes = {
   },
   productsOwnerReg: {
     path: '/product-management/reg',
-    component: () => <POwnerChecker page={<SignUpPage />} />,
+    component: SignUpPage,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
     type: 'noSidebar',
   },

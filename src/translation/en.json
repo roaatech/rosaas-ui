@@ -736,5 +736,13 @@
   "Primary-Currency": "Primary Currency",
   "Primary-Exchange-Rate-Currency": "Primary Exchange Rate Currency",
   "Not-Primary-Currency": "Not Primary Currency",
-  "Not-Primary-Exchange-Rate-Currency": "Not Primary Exchange Rate Currency"
+  "Not-Primary-Exchange-Rate-Currency": "Not Primary Exchange Rate Currency",
+  "Your-account-has-been-confirmed-and-password-set-successfully.": "Your account has been confirmed and password set successfully.",
+  "Account-and-Password-Set-Successfully": "Account and Password Set Successfully",
+  "Set-Your-password": "Set Your Password",
+  "newPassword": "New Password",
+  "sendResetLink": "Send Reset Link",
+  "resetPassword": "Reset Password",
+  "setPassword": "Set Password",
+  "Reset-Account-password": "Reset Account Password"
 }

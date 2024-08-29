@@ -731,5 +731,13 @@
   "Primary-Currency": "العملة الأساسية",
   "Primary-Exchange-Rate-Currency": "العملة الأساسية لسعر الصرف",
   "Not-Primary-Currency": "ليست العملة الأساسية",
-  "Not-Primary-Exchange-Rate-Currency": "ليست العملة الأساسية لسعر الصرف"
+  "Not-Primary-Exchange-Rate-Currency": "ليست العملة الأساسية لسعر الصرف",
+  "Your-account-has-been-confirmed-and-password-set-successfully.": "تم تأكيد حسابك وتعيين كلمة المرور بنجاح.",
+  "Account-and-Password-Set-Successfully": "تم تعيين الحساب وكلمة المرور بنجاح",
+  "Set-Your-password": "قم بتعيين كلمة مرورك",
+  "newPassword": "كلمة المرور الجديدة",
+  "sendResetLink": "إرسال رابط إعادة التعيين",
+  "resetPassword": "إعادة تعيين كلمة المرور",
+  "setPassword": "تعيين كلمة المرور",
+  "Reset-Account-password": "إعادة تعيين كلمة مرور الحساب"
 }
