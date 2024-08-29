@@ -752,5 +752,6 @@
   "Provider-desc": "وصف المزود",
   "System-Rate-Access-Control": "التحكم في الوصول إلى سعر النظام",
   "Product-Owner-Limits": "حدود مالك المنتج",
-  "Exchange-Rate-Providers": "مزودو سعر الصرف"
+  "Exchange-Rate-Providers": "مزودو سعر الصرف",
+  "Max-Products-Limit": "الحد الأقصى لعدد المنتجات"
 }

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
 import { productOwnerChangeAttr } from '../../../../store/slices/productsOwners'
 import { Wrapper } from './ProductOwnerLimitsTab.styled'
+import { LimitType, roundingTypeOptions } from '../../../../const/const'
 
 const ProductOwnerLimitsTab = ({ productOwnerId }) => {
   const dispatch = useDispatch()
@@ -63,7 +64,7 @@ const ProductOwnerLimitsTab = ({ productOwnerId }) => {
               {productOwnerLimits &&
                 Object.values(productOwnerLimits).map((limit, index) => (
                   <tr key={index}>
-                    <td>{limit.limitType}</td>
+                    <td>{LimitType[limit.limitType]} </td>{' '}
                     <td>{limit.maxLimit}</td>
                     <td>{limit.currentUsage}</td>
                     <td>{limit.remaining}</td>

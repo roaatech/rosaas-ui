@@ -52,3 +52,6 @@ export const roundingTypeOptions = {
   70: 'rounding-type-1.00',
   80: 'rounding-type-up-1.00',
 }
+export const LimitType = {
+  10: <FormattedMessage id="Max-Products-Limit" />,
+}

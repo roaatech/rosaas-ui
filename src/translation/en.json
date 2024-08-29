@@ -757,5 +757,6 @@
   "System-Rate-Access-Control": "System Rate Access Control",
   "Password-reset-successful": "Password reset successful",
   "Product-Owner-Limits": "Product Owner Limits",
-  "Exchange-Rate-Providers": "Exchange Rate Providers"
+  "Exchange-Rate-Providers": "Exchange Rate Providers",
+  "Max-Products-Limit": "Max Products Limit"
 }
