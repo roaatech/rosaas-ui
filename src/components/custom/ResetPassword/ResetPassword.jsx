@@ -76,6 +76,8 @@ const ResetPassword = () => {
       newPassword: values.password,
       code,
     })
+    console.log(response && response.status == 200)
+
     if (
       response &&
       response.status == 200 &&
@@ -83,7 +85,7 @@ const ResetPassword = () => {
     ) {
       navigate(`${Routes.ConfirmAccountByPassword.path}${search}`)
     } else if (response && response.status == 200) {
-      Toast.success('Password reset successful', {
+      toast.success('Password reset successful', {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 4000,
       })
