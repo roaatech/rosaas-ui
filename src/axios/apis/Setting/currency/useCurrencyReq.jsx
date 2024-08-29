@@ -6,6 +6,11 @@ const useCurrencyReq = () => {
   const getCurrencies = async () => {
     return await Request.get(`management/sadmin/v1/Currencies`)
   }
+  const getCurrenciesProductOwnerList = async (productOwnerId) => {
+    return await Request.get(
+      `management/product-owner-admin/v1/productowners/${productOwnerId}/Currencies`
+    )
+  }
 
   const createCurrency = async (data) => {
     return await Request.post(`management/sadmin/v1/Currencies`, data)
@@ -73,6 +78,7 @@ const useCurrencyReq = () => {
     markAsPrimaryCurrencyForProductOwner,
     markAsPrimaryExchangeRateCurrencyForProductOwner,
     getCurrenciesPublishList,
+    getCurrenciesProductOwnerList,
   }
 }
 

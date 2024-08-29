@@ -60,21 +60,32 @@ export default function CurrenciesPage() {
     markAsPrimaryCurrencyForProductOwner,
     markAsPrimaryExchangeRateCurrency,
     markAsPrimaryExchangeRateCurrencyForProductOwner,
+    getCurrenciesProductOwnerList,
   } = useRequest()
 
   const listData = useSelector((state) => state?.currenciesSlice?.currencies)
+  let userInfo = useSelector((state) => state.auth.userInfo)
+  let userRole = userInfo.userType
 
+  // Extract the ProductOwnerInfo ID if the user is a product owner
+  let productOwnerId = userInfo.ProductOwnerInfo?.id
   useEffect(() => {
     const fetchCurrencies = async () => {
-      const response = await getCurrencies()
-
-      if (response?.data.data) {
-        dispatch(setAllCurrencies(response.data.data))
+      if (userRole === 'superAdmin') {
+        const response = await getCurrencies()
+        if (response?.data.data) {
+          dispatch(setAllCurrencies(response.data.data))
+        }
+      } else if (userRole === 'productOwner' && productOwnerId) {
+        const response = await getCurrenciesProductOwnerList(productOwnerId)
+        if (response?.data.data) {
+          dispatch(setAllCurrencies(response.data.data))
+        }
       }
     }
 
     fetchCurrencies()
-  }, [])
+  }, [productOwnerId])
 
   const handleViewDetails = async (id) => {
     const response = await getCurrencyById(id)
@@ -90,6 +101,7 @@ export default function CurrenciesPage() {
       dispatch(removeCurrency(id))
     }
   }
+
   const togglePublishCurrency = async (id, isPublished) => {
     try {
       // Prepare the data with the opposite value of isPublished
@@ -111,11 +123,7 @@ export default function CurrenciesPage() {
       console.error('Failed to toggle publish status:', error)
     }
   }
-  let userInfo = useSelector((state) => state.auth.userInfo)
-  let userRole = userInfo.userType
 
-  // Extract the ProductOwnerInfo ID if the user is a product owner
-  let productOwnerId = userInfo.ProductOwnerInfo?.id
   const togglePrimaryCurrency = async (id, isPrimary) => {
     try {
       let response

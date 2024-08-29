@@ -30,8 +30,8 @@ const UrlItemList = ({ data }) => {
     isMainOperationEnabled: productData?.isMainOperationEnabled == true,
     isSpecificationValidatorEnabled:
       productData?.isSpecificationValidatorEnabled == true,
-    isPaymentAndRedirectionEndpointsEnabled:
-      productData?.isPaymentAndRedirectionEndpointsEnabled == true,
+    isPaymentCallbackOverrideEnabled:
+      productData?.isPaymentCallbackOverrideEnabled == true,
     isPlanSelectionRedirectionEnabled:
       productData?.isPlanSelectionRedirectionEnabled == true,
   })
@@ -52,13 +52,10 @@ const UrlItemList = ({ data }) => {
       url: 'specificationValidatorUrl',
       flag: 'isSpecificationValidatorEnabled',
     },
-    {
-      url: 'paymentSuccessCallbackUrl',
-      flag: 'isPaymentAndRedirectionEndpointsEnabled',
-    },
+
     {
       url: 'paymentFailureCallbackUrl',
-      flag: 'isPaymentAndRedirectionEndpointsEnabled',
+      flag: 'isPaymentCallbackOverrideEnabled',
     },
     {
       url: 'planSelectionRedirectUrl',
@@ -70,7 +67,7 @@ const UrlItemList = ({ data }) => {
     subscriptionGroupEnabled: '',
     isMainOperationEnabled: '',
     isSpecificationValidatorEnabled: '',
-    isPaymentAndRedirectionEndpointsEnabled: '',
+    isPaymentCallbackOverrideEnabled: '',
     isPlanSelectionRedirectionEnabled: '',
     isSubscriptionResetEnabled: '',
     isSubscriptionUpgradeEnabled: '',
@@ -207,11 +204,11 @@ const UrlItemList = ({ data }) => {
     },
     {
       url: 'paymentSuccessCallbackUrl',
-      flag: 'isPaymentAndRedirectionEndpointsEnabled',
+      flag: 'isPaymentCallbackOverrideEnabled',
     },
     {
       url: 'paymentFailureCallbackUrl',
-      flag: 'isPaymentAndRedirectionEndpointsEnabled',
+      flag: 'isPaymentCallbackOverrideEnabled',
     },
     {
       url: 'planSelectionRedirectUrl',
@@ -291,7 +288,7 @@ const UrlItemList = ({ data }) => {
       subscriptionGroupEnabled: '',
       isMainOperationEnabled: '',
       isSpecificationValidatorEnabled: '',
-      isPaymentAndRedirectionEndpointsEnabled: '',
+      isPaymentCallbackOverrideEnabled: '',
       isPlanSelectionRedirectionEnabled: '',
     })
   }
@@ -415,9 +412,8 @@ const UrlItemList = ({ data }) => {
       isSpecificationValidatorEnabled: {
         specificationValidatorUrl: 'isSpecificationValidatorEnabled',
       },
-      isPaymentAndRedirectionEndpointsEnabled: {
-        isPaymentAndRedirectionEndpointsEnabled:
-          'isPaymentAndRedirectionEndpointsEnabled',
+      isPaymentCallbackOverrideEnabled: {
+        isPaymentCallbackOverrideEnabled: 'isPaymentCallbackOverrideEnabled',
       },
       isPlanSelectionRedirectionEnabled: {
         planSelectionRedirectUrl: 'isPlanSelectionRedirectionEnabled',
@@ -445,7 +441,7 @@ const UrlItemList = ({ data }) => {
       subscriptionGroupEnabled: '',
       isMainOperationEnabled: '',
       isSpecificationValidatorEnabled: '',
-      isPaymentAndRedirectionEndpointsEnabled: '',
+      isPaymentCallbackOverrideEnabled: '',
       isPlanSelectionRedirectionEnabled: '',
     })
   }
@@ -790,13 +786,9 @@ const UrlItemList = ({ data }) => {
           <div className="d-flex align-items-center">
             <Form.Check
               type="checkbox"
-              checked={groupStates.isPaymentAndRedirectionEndpointsEnabled}
+              checked={groupStates.isPaymentCallbackOverrideEnabled}
               onChange={() =>
-                handleGroupToggle(
-                  'isPaymentAndRedirectionEndpointsEnabled',
-                  10,
-                  11
-                )
+                handleGroupToggle('isPaymentCallbackOverrideEnabled', 10, 11)
               }
               className="mr-2 mb-2"
             />
@@ -804,16 +796,14 @@ const UrlItemList = ({ data }) => {
               <FormattedMessage id="Payment-and-Redirection-Endpoints" />
             </h5>
           </div>
-          {validationMessages.isPaymentAndRedirectionEndpointsEnabled && (
+          {validationMessages.isPaymentCallbackOverrideEnabled && (
             <div className="d-flex align-items-center text-danger ">
               <span className="px-2">
                 <MdErrorOutline />
               </span>
-              {validationMessages.isPaymentAndRedirectionEndpointsEnabled && (
+              {validationMessages.isPaymentCallbackOverrideEnabled && (
                 <FormattedMessage
-                  id={
-                    validationMessages.isPaymentAndRedirectionEndpointsEnabled
-                  }
+                  id={validationMessages.isPaymentCallbackOverrideEnabled}
                 />
               )}
             </div>
@@ -846,7 +836,7 @@ const UrlItemList = ({ data }) => {
                       data={{
                         ...url,
                         method: getGroupMethod(
-                          groupStates.isPaymentAndRedirectionEndpointsEnabled,
+                          groupStates.isPaymentCallbackOverrideEnabled,
                           index + 10
                         ),
                       }}

@@ -63,7 +63,10 @@ const CurrencyForm = ({
         rate: currencyData.rate || 0,
         customFormatting: currencyData.customFormatting || '',
         displayOrder: currencyData.displayOrder || 0,
-        roundingType: currencyData.roundingType || '',
+        roundingType:
+          currencyData.roundingType !== undefined
+            ? parseInt(currencyData.roundingType, 10)
+            : 0,
       })
     }
   }, [currencyData])
@@ -94,9 +97,10 @@ const CurrencyForm = ({
       100,
       <FormattedMessage id="maximum-100-characters-allowed" />
     ),
-    displayOrder: Yup.number()
-      .required(<FormattedMessage id="display-order-is-required" />)
-      .min(0, <FormattedMessage id="minimum-value-is-0" />),
+    displayOrder: Yup.number().min(
+      0,
+      <FormattedMessage id="minimum-value-is-0" />
+    ),
     roundingType: Yup.number() // Validate as a number
       .required(<FormattedMessage id="rounding-type-is-required" />)
       .oneOf(
@@ -108,6 +112,7 @@ const CurrencyForm = ({
   const formik = useFormik({
     initialValues,
     validationSchema,
+    enableReinitialize: true,
     onSubmit: async (values, { setSubmitting }) => {
       try {
         if (type === 'create') {
@@ -262,7 +267,6 @@ const CurrencyForm = ({
               <div className="mb-3">
                 <label htmlFor="displayOrder">
                   <FormattedMessage id="display-order" />{' '}
-                  <span style={{ color: 'red' }}>*</span>
                 </label>
                 <input
                   type="number"

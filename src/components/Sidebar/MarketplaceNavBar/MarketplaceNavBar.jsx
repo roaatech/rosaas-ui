@@ -32,13 +32,10 @@ const MarketplaceNavBar = ({ profile }) => {
   )
   const step = useSelector((state) => state.tenants.currentStep)
 
-  console.log({ isMatch })
-
   const [selectedCurrency, setSelectedCurrency] = useState(() =>
     localStorage.getItem('currencyCode')
   )
   const [loading, setLoading] = useState(false)
-  console.log({ loading })
 
   const [toast, setToast] = useState(null)
 
@@ -46,9 +43,7 @@ const MarketplaceNavBar = ({ profile }) => {
     (state) => state.currenciesSlice?.publicCurrenciesList
   )
   const hash = window.location.hash
-  console.log({ hash })
   const orderId = hash.split('#')
-  console.log({ orderId: orderId[1] })
 
   const currencyItems =
     publicCurrenciesList &&

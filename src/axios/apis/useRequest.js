@@ -69,6 +69,7 @@ const useRequest = () => {
     markAsPrimaryExchangeRateCurrency,
     markAsPrimaryCurrencyForProductOwner,
     markAsPrimaryExchangeRateCurrencyForProductOwner,
+    getCurrenciesProductOwnerList,
   } = useCurrencyReq()
   const {
     getWebhookEndpointsList,
@@ -362,6 +363,7 @@ const useRequest = () => {
     getCurrenciesPublishList,
     checkOrderCurrencyChange,
     ProductOwnerLimits,
+    getCurrenciesProductOwnerList,
   }
 }
 export default useRequest
