@@ -342,7 +342,7 @@ export default (props = {}) => {
                   {active.map((item, index) => (
                     <NavItem
                       key={index}
-                      title={item.systemName}
+                      title={item.displayName}
                       link={`${Routes.Tenant.path}/${item.id}`}
                       icon={<BsFillPersonFill />}
                     />
@@ -358,7 +358,7 @@ export default (props = {}) => {
                   {inactive.map((item, index) => (
                     <NavItem
                       key={index}
-                      title={item.systemName}
+                      title={item.displayName}
                       link={`${Routes.Tenant.path}/${item.id}`}
                       icon={<BsFillPersonFill />}
                     />
@@ -375,7 +375,7 @@ export default (props = {}) => {
                   {archived.map((item, index) => (
                     <NavItem
                       key={index}
-                      title={item.systemName}
+                      title={item.displayName}
                       link={`/tenants/${item.id}`}
                     />
                   ))}

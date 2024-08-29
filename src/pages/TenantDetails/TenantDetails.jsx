@@ -126,7 +126,7 @@ const TenantDetails = () => {
           <UpperContent>
             <h4 className="m-0">
               <FormattedMessage id="Tenant-Details" />:{' '}
-              {tenantObject.systemName}
+              {tenantObject.displayName}
             </h4>
           </UpperContent>
         )}
