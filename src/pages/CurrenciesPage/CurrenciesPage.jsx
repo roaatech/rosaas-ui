@@ -61,7 +61,6 @@ export default function CurrenciesPage() {
     markAsPrimaryExchangeRateCurrency,
     markAsPrimaryExchangeRateCurrencyForProductOwner,
   } = useRequest()
-  const navigate = useNavigate()
 
   const listData = useSelector((state) => state?.currenciesSlice?.currencies)
 
@@ -85,10 +84,10 @@ export default function CurrenciesPage() {
     }
   }
 
-  const deleteCurrencyFun = async () => {
-    const response = await deleteCurrency(currentId)
+  const deleteCurrencyFun = async (id) => {
+    const response = await deleteCurrency(id)
     if (response?.status === 200) {
-      dispatch(removeCurrency(currentId))
+      dispatch(removeCurrency(id))
     }
   }
   const togglePublishCurrency = async (id, isPublished) => {
@@ -138,7 +137,6 @@ export default function CurrenciesPage() {
           currencyChangeAttrWithOpposites({
             currencyId: id,
             attributeName: 'isPrimaryCurrency',
-            newValue: !isPrimary,
           })
         )
       }
@@ -168,7 +166,6 @@ export default function CurrenciesPage() {
           currencyChangeAttrWithOpposites({
             currencyId: id,
             attributeName: 'isPrimaryExchangeRateCurrency',
-            newValue: !isPrimary,
           })
         )
       }
@@ -306,43 +303,36 @@ export default function CurrenciesPage() {
                           <FormattedMessage id="edit" />
                         </Dropdown.Item>
                       )}
-                      <Dropdown.Item
-                        onClick={() =>
-                          togglePrimaryCurrency(data.id, data.isPrimaryCurrency)
-                        }
-                      >
-                        {data.isPrimaryCurrency ? (
-                          <span className=" ">
-                            <MdStarBorder className="mx-2" />
-                            <FormattedMessage id="unmark-primary-currency" />
-                          </span>
-                        ) : (
+                      {!data.isPrimaryCurrency && (
+                        <Dropdown.Item
+                          onClick={() =>
+                            togglePrimaryCurrency(
+                              data.id,
+                              data.isPrimaryCurrency
+                            )
+                          }
+                        >
                           <span className=" ">
                             <MdStar className="mx-2" />
                             <FormattedMessage id="mark-primary-currency" />
                           </span>
-                        )}
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={() =>
-                          togglePrimaryExchangeRateCurrency(
-                            data.id,
-                            data.isPrimaryExchangeRateCurrency
-                          )
-                        }
-                      >
-                        {data.isPrimaryExchangeRateCurrency ? (
-                          <span className=" ">
-                            <MdMoneyOff className="mx-2" />
-                            <FormattedMessage id="unmark-primary-exchange-rate" />
-                          </span>
-                        ) : (
+                        </Dropdown.Item>
+                      )}
+                      {!data.isPrimaryExchangeRateCurrency && (
+                        <Dropdown.Item
+                          onClick={() =>
+                            togglePrimaryExchangeRateCurrency(
+                              data.id,
+                              data.isPrimaryExchangeRateCurrency
+                            )
+                          }
+                        >
                           <span className=" ">
                             <MdAttachMoney className="mx-2" />
                             <FormattedMessage id="mark-primary-exchange-rate" />
                           </span>
-                        )}
-                      </Dropdown.Item>
+                        </Dropdown.Item>
+                      )}
                       {userRole === 'superAdmin' && (
                         <>
                           <Dropdown.Item
@@ -366,7 +356,7 @@ export default function CurrenciesPage() {
                           <Dropdown.Item
                             onClick={() => {
                               setCurrentId(data.id)
-                              deleteCurrencyFun()
+                              deleteCurrencyFun(data.id)
                             }}
                             className="text-danger"
                           >

@@ -61,15 +61,13 @@ export const currenciesSlice = createSlice({
       }
     },
     currencyChangeAttrWithOpposites: (state, action) => {
-      const { currencyId, attributeName, newValue } = action.payload
+      const { currencyId, attributeName } = action.payload
       const { currencies } = state
 
       // Iterate over all currencies to set the specified attribute
       Object.keys(currencies).forEach((id) => {
         if (id === currencyId) {
-          newValue === true
-            ? (currencies[id][attributeName] = true)
-            : (currencies[id][attributeName] = false)
+          currencies[id][attributeName] = true
         } else {
           currencies[id][attributeName] = false
         }

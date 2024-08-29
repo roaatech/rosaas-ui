@@ -57,23 +57,17 @@ const ProductOwnerLimitsTab = ({ productOwnerId }) => {
                 <th>
                   <FormattedMessage id="Is-Unlimited" />
                 </th>
-                <th>
-                  <FormattedMessage id="Modification-Date" />
-                </th>
               </tr>
             </thead>
             <tbody>
               {productOwnerLimits &&
                 Object.values(productOwnerLimits).map((limit, index) => (
                   <tr key={index}>
-                    <td>{limit.LimitType}</td>
-                    <td>{limit.MaxLimit}</td>
-                    <td>{limit.CurrentUsage}</td>
-                    <td>{limit.Remaining}</td>
-                    <td>{limit.IsUnlimited ? 'Yes' : 'No'}</td>
-                    <td>
-                      {new Date(limit.ModificationDate).toLocaleDateString()}
-                    </td>
+                    <td>{limit.limitType}</td>
+                    <td>{limit.maxLimit}</td>
+                    <td>{limit.currentUsage}</td>
+                    <td>{limit.remaining}</td>
+                    <td>{limit.isUnlimited ? 'Yes' : 'No'}</td>
                   </tr>
                 ))}
             </tbody>
