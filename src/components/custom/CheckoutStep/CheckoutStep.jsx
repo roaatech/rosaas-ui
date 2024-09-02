@@ -548,14 +548,13 @@ const CheckoutPage = (data) => {
                       <Form>
                         {/* Discount Code */}
                         <div className=" mr-3">
-                          <Form.Check
+                          {/* <Form.Check
                             type="checkbox"
                             label={<FormattedMessage id="Add-Discount-Code" />}
                             checked={discountCodeStatus}
                             onChange={handleDiscountCodeStatus}
-                            disabled={autoRenewal}
                             className="font-small"
-                          />
+                          /> */}
                           <Form.Group className="mb-3 merged-form-group">
                             {discountCodeStatus && (
                               <>
