@@ -25,6 +25,7 @@ import {
   setTenantCreateData,
 } from '../../../../store/slices/tenants.js'
 import { Routes } from '../../../../routes.js'
+import { setPublicCurrenciesList } from '../../../../store/slices/currenciesSlice.js'
 
 const TenantFormOnboarding = ({
   type,
@@ -40,6 +41,7 @@ const TenantFormOnboarding = ({
     getProductPlans,
     getProductPlanPriceList,
     getProductSpecification,
+    getCurrenciesPublishList,
   } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
@@ -62,6 +64,19 @@ const TenantFormOnboarding = ({
       })()
     }
   }, [])
+  const publicCurrenciesList = useSelector(
+    (state) => state.currenciesSlice?.publicCurrenciesList
+  )
+  useEffect(() => {
+    const fetchCurrencies = async () => {
+      const response = await getCurrenciesPublishList('/currencies')
+      if (response && response.data) {
+        const currencies = response.data.data
+        dispatch(setPublicCurrenciesList(currencies))
+      }
+    }
+    fetchCurrencies()
+  }, [])
 
   const createValidation = {
     displayName: Yup.string()
@@ -79,6 +94,9 @@ const TenantFormOnboarding = ({
         <FormattedMessage id="Please-select-a-price" />
       ),
     }),
+    currency: Yup.string().required(
+      <FormattedMessage id="Currency-is-required" />
+    ),
     price: Yup.string().test(
       'price-validation',
       <FormattedMessage id="Please-select-a-price" />,
@@ -122,6 +140,7 @@ const TenantFormOnboarding = ({
     plan: tenantData ? tenantData.plan : '',
     price: tenantData ? tenantData.price : '',
     product: tenantData ? selectedProduct : '',
+    currency: '',
   }
   const [startWithTrial, setStartWithTrial] = useState(false)
 
@@ -172,6 +191,7 @@ const TenantFormOnboarding = ({
                 }),
               },
             ],
+            currencyId: values.currency,
             systemName: values.systemName,
             displayName: values.displayName,
           })
@@ -544,6 +564,41 @@ const TenantFormOnboarding = ({
               </Form.Group>
             </div>
           )}
+          {type === 'create' && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <FormattedMessage id="Currency" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <select
+                  className="form-control"
+                  name="currency"
+                  id="currency"
+                  value={formik.values.currency}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                >
+                  <option value="">
+                    <FormattedMessage id="Select-Option" />
+                  </option>
+                  {Object.values(publicCurrenciesList).map((currency) => (
+                    <option key={currency.id} value={currency.id}>
+                      {currency.displayName}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.currency && formik.errors.currency && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.currency}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          )}
           {type === 'create' &&
             (formik.values?.plan
               ? listData[formik.values.product]?.trialPlanId !=
@@ -574,7 +629,7 @@ const TenantFormOnboarding = ({
                     </option>
                     {priceList.map((option) => (
                       <option key={option.value} value={option.value}>
-                        <span className="dolar">$</span>
+                        {/* <span className="dolar">$</span> */}
                         <div className="price">{option.price}</div>/
                         <div className="cycle">{option.cycle}</div>
                         {option.label}

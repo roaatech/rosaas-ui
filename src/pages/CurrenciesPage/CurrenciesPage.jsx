@@ -76,7 +76,7 @@ export default function CurrenciesPage() {
         if (response?.data.data) {
           dispatch(setAllCurrencies(response.data.data))
         }
-      } else if (userRole === 'productOwner' && productOwnerId) {
+      } else if (userRole === 'clientAdmin' && productOwnerId) {
         const response = await getCurrenciesProductOwnerList(productOwnerId)
         if (response?.data.data) {
           dispatch(setAllCurrencies(response.data.data))

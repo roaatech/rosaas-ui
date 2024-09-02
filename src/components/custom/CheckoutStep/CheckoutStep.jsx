@@ -270,7 +270,7 @@ const CheckoutPage = (data) => {
   return (
     <Wrapper>
       <div className="main-container">
-        <div className="p-3">
+        <div className="">
           <Container className="card">
             <Row>
               <Col md={7}>
