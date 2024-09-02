@@ -111,7 +111,10 @@ export default function SubsFeatures(data) {
                   {/* End-Date */}
                   <td>
                     {subscription.reset != 1 ? (
-                      <DateLabel endDate={formatDate(subscription.endDate)} />
+                      <DateLabel
+                        formatedDate={true}
+                        endDate={formatDate(subscription.endDate)}
+                      />
                     ) : (
                       '-'
                     )}

@@ -760,5 +760,11 @@
   "Product-Owner-Limits": "Product Owner Limits",
   "Exchange-Rate-Providers": "Exchange Rate Providers",
   "Max-Products-Limit": "Max Products Limit",
-  "Add-Discount-Code": "Add Discount Code"
+  "Add-Discount-Code": "Add Discount Code",
+  "Save": "Save",
+  "Subscribers": "Subscribers",
+  "Currencies": "Currencies",
+  "Custom": "Custom",
+  "Publish": "Publish",
+  "Unpublish": "Unpublish"
 }

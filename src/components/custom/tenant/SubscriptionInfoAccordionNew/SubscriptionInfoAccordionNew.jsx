@@ -264,6 +264,9 @@ const SubscriptionInfoAccordionNew = (props) => {
                                                                             subscriptionData.endDate
                                                                           )
                                                                     }
+                                                                    formatedDate={
+                                                                      true
+                                                                    }
                                                                   />
                                                                 </td>
                                                                 <td className="remind-value">
@@ -367,6 +370,9 @@ const SubscriptionInfoAccordionNew = (props) => {
                                                                           : formatDate(
                                                                               subscriptionData.endDate
                                                                             )
+                                                                      }
+                                                                      formatedDate={
+                                                                        true
                                                                       }
                                                                     />
                                                                   </td>

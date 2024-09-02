@@ -303,13 +303,13 @@ export default function ProductPlansPriceList({ children }) {
                           {listData[tableData[planItem + ',' + item]]
                             ?.isPublished ? (
                             <span className="label">
-                              <MdOutlineUnpublished />{' '}
-                              <FormattedMessage id="Unpublished" />
+                              <MdOutlineUnpublished className="mx-2" />{' '}
+                              <FormattedMessage id="Unpublish" />
                             </span>
                           ) : (
                             <span className="label">
-                              <MdOutlinePublishedWithChanges />{' '}
-                              <FormattedMessage id="Published" />
+                              <MdOutlinePublishedWithChanges className="mx-2" />{' '}
+                              <FormattedMessage id="Publish" />
                             </span>
                           )}
                         </Dropdown.Item>

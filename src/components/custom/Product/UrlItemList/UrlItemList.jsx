@@ -247,24 +247,24 @@ const UrlItemList = ({ data }) => {
     // Check if the field is empty
     if (newPath.trim() === '') {
       // Disable the checkbox and set the flag to false
-      updatedProductData[urlField.flag] = false
+      updatedProductData[urlField?.flag] = false
 
       // Uncheck the checkbox in the UI
       setGroupStates({
         ...groupStates,
-        [urlField.flag]: false,
+        [urlField?.flag]: false,
       })
 
       // Show a validation message if needed
       setValidationMessages({
         ...validationMessages,
-        [urlField.flag]: 'The-URL-cannot-be-empty-while-the-group-is-enabled.',
+        [urlField?.flag]: 'The-URL-cannot-be-empty-while-the-group-is-enabled.',
       })
     } else {
       // Reset validation message
       setValidationMessages({
         ...validationMessages,
-        [urlField.flag]: '',
+        [urlField?.flag]: '',
       })
     }
 
@@ -304,7 +304,7 @@ const UrlItemList = ({ data }) => {
     ) {
       setValidationMessages({
         ...validationMessages,
-        [urlField.flag]:
+        [urlField?.flag]:
           'This-field-is-required-while-the-checkbox-is-enabled.',
       })
       return
@@ -322,7 +322,7 @@ const UrlItemList = ({ data }) => {
     const updatedProductData = { ...productData }
 
     // Update the flag in product data based on the checkbox state
-    updatedProductData[urlField.flag] = updatedUrlItems[index].isEnabled
+    updatedProductData[urlField?.flag] = updatedUrlItems[index].isEnabled
 
     // Send the updated data to the backend
     const editProduct = await editProductRequest({
@@ -341,7 +341,7 @@ const UrlItemList = ({ data }) => {
     // Reset validation messages
     setValidationMessages({
       ...validationMessages,
-      [urlField.flag]: '',
+      [urlField?.flag]: '',
     })
   }
   const validateGroup = (groupItems) => {
@@ -568,13 +568,13 @@ const UrlItemList = ({ data }) => {
                           handleUrlChange(index + 2, newPath)
                         }
                       />
-                      {validationMessages[urlFields[index + 2].flag] && (
+                      {validationMessages[urlFields[index + 2]?.flag] && (
                         <div className="d-flex align-items-center text-danger mt-1  ">
                           <span className="px-2">
                             <MdErrorOutline />
                           </span>{' '}
                           <FormattedMessage
-                            id={validationMessages[urlFields[index + 2].flag]}
+                            id={validationMessages[urlFields[index + 2]?.flag]}
                           />
                         </div>
                       )}

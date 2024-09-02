@@ -169,7 +169,10 @@ export default function DiscountsPage() {
               <Column
                 body={(data) =>
                   data.endDate && (
-                    <DateLabel endDate={DataTransform(data.endDate)} />
+                    <DateLabel
+                      formatedDate={true}
+                      endDate={DataTransform(data.endDate)}
+                    />
                   )
                 }
                 header="End date"

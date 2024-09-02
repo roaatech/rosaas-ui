@@ -755,5 +755,11 @@
   "Product-Owner-Limits": "حدود مالك المنتج",
   "Exchange-Rate-Providers": "مزودو سعر الصرف",
   "Max-Products-Limit": "الحد الأقصى لعدد المنتجات",
-  "Add-Discount-Code": "إضافة رمز خصم"
+  "Add-Discount-Code": "إضافة رمز خصم",
+  "Save": "حفظ",
+  "Subscribers": "المشتركون",
+  "Currencies": "العملات",
+  "Custom": "مخصص",
+  "Publish": "نشر",
+  "Unpublish": "إلغاء النشر"
 }

@@ -13,7 +13,7 @@ const ProductOwnerLimitsTab = ({ productOwnerId }) => {
   const { ProductOwnerLimits } = useRequest()
 
   const productOwnerLimits = useSelector(
-    (state) => state.productsOwners.productsOwners[productOwnerId].limits
+    (state) => state.productsOwners.productsOwners?.[productOwnerId]?.limits
   )
 
   useEffect(() => {

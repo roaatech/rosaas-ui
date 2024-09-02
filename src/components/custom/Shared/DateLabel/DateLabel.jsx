@@ -1,12 +1,13 @@
 import React from 'react'
 import { Wrapper } from './DateLabel.styled'
+import { formatDate } from '../../../../lib/sharedFun/Time'
 
 function isDateExpired(endDate) {
   const currentDate = new Date()
   return endDate !== 'Unlimited' && currentDate > new Date(endDate)
 }
 
-const DateLabel = ({ endDate }) => {
+const DateLabel = ({ endDate, formatedDate }) => {
   const DateStatus = {
     true: {
       background: 'rgba(255, 104, 104, 0.208)',
@@ -26,7 +27,7 @@ const DateLabel = ({ endDate }) => {
           background: DateStatus[expired].background,
         }}
       >
-        {endDate ? endDate : 'Unlimited'}
+        {endDate ? (formatedDate ? endDate : formatDate(endDate)) : 'Unlimited'}
       </span>
     </Wrapper>
   )

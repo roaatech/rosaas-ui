@@ -128,7 +128,7 @@ export default function CurrenciesPage() {
     try {
       let response
 
-      if (userRole === 'productOwner' && productOwnerId) {
+      if (userRole === 'clientAdmin' && productOwnerId) {
         // Use the product owner-specific endpoint
         response = await markAsPrimaryCurrencyForProductOwner(
           productOwnerId,
@@ -157,12 +157,13 @@ export default function CurrenciesPage() {
     try {
       let response
 
-      if (userRole === 'productOwner' && productOwnerId) {
+      if (userRole === 'clientAdmin' && productOwnerId) {
         // Use the product owner-specific endpoint
-        response = await markAsPrimaryExchangeRateCurrencyForProductOwner(
-          productOwnerId,
-          id
-        )
+        // response = await markAsPrimaryExchangeRateCurrencyForProductOwner(
+        //   productOwnerId,
+        //   id
+        // )
+        return
       } else if (userRole === 'superAdmin') {
         // Use the super admin-specific endpoint
         response = await markAsPrimaryExchangeRateCurrency(id)
@@ -257,6 +258,7 @@ export default function CurrenciesPage() {
                   />
                 )}
               />
+
               <Column
                 field="isPrimaryExchangeRateCurrency"
                 header={
@@ -270,6 +272,7 @@ export default function CurrenciesPage() {
                   />
                 )}
               />
+
               <Column
                 body={(data) => {
                   return (
@@ -326,21 +329,22 @@ export default function CurrenciesPage() {
                           </span>
                         </Dropdown.Item>
                       )}
-                      {!data.isPrimaryExchangeRateCurrency && (
-                        <Dropdown.Item
-                          onClick={() =>
-                            togglePrimaryExchangeRateCurrency(
-                              data.id,
-                              data.isPrimaryExchangeRateCurrency
-                            )
-                          }
-                        >
-                          <span className=" ">
-                            <MdAttachMoney className="mx-2" />
-                            <FormattedMessage id="mark-primary-exchange-rate" />
-                          </span>
-                        </Dropdown.Item>
-                      )}
+                      {!data.isPrimaryExchangeRateCurrency &&
+                        userRole === 'superAdmin' && (
+                          <Dropdown.Item
+                            onClick={() =>
+                              togglePrimaryExchangeRateCurrency(
+                                data.id,
+                                data.isPrimaryExchangeRateCurrency
+                              )
+                            }
+                          >
+                            <span className=" ">
+                              <MdAttachMoney className="mx-2" />
+                              <FormattedMessage id="mark-primary-exchange-rate" />
+                            </span>
+                          </Dropdown.Item>
+                        )}
                       {userRole === 'superAdmin' && (
                         <>
                           <Dropdown.Item
@@ -351,12 +355,12 @@ export default function CurrenciesPage() {
                             {data.isPublished ? (
                               <span className=" ">
                                 <MdOutlineUnpublished className="mx-2" />
-                                <FormattedMessage id="unpublished" />
+                                <FormattedMessage id="Unpublish" />
                               </span>
                             ) : (
                               <span className=" ">
                                 <MdOutlinePublishedWithChanges className="mx-2" />
-                                <FormattedMessage id="published" />
+                                <FormattedMessage id="Publish" />
                               </span>
                             )}
                           </Dropdown.Item>

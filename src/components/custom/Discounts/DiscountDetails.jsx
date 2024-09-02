@@ -222,6 +222,7 @@ const DiscountDetails = () => {
                           {discount.endDate && (
                             <DateLabel
                               endDate={DataTransform(discount.endDate)}
+                              formatedDate={true}
                             />
                           )}
                         </td>

@@ -163,6 +163,7 @@ export default function SubsFeaturesHistory(data) {
                                     <td>
                                       {cycle.reset != 1 ? (
                                         <DateLabel
+                                          formatedDate={true}
                                           endDate={
                                             cycle.endDate
                                               ? formatDate(cycle.endDate)

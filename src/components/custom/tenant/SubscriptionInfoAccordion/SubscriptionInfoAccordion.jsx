@@ -82,6 +82,7 @@ const SubscriptionInfoAccordion = (props) => {
                                     ? formatDate(subscription.featureEndDate)
                                     : formatDate(subscriptionData.endDate)
                                 }
+                                formatedDate={true}
                               />
                             </td>
                             <td>
