@@ -43,7 +43,6 @@ const CheckoutTenantReg = ({
   const dispatch = useDispatch()
   const hash = window.location.hash
   const currency = useSelector((state) => state.main.currency)
-  console.log({ currency: currency.id })
 
   const array = hash.split('#')
   const startWithTrial = array.find((element) => element == 'start-with-trial')
@@ -119,8 +118,6 @@ const CheckoutTenantReg = ({
         Object.keys(specErrors.errors).length === 0
       ) {
         if (type == 'create') {
-          console.log({ currencyId: currency })
-
           const createTenant = await createTenantRequestPublic({
             subscriptions: [
               {
@@ -197,8 +194,6 @@ const CheckoutTenantReg = ({
 
   const fetchData = async () => {
     try {
-      console.log('***********777*')
-
       const createTenant = await createTenantRequestPublic({
         subscriptions: [
           {

@@ -58,8 +58,6 @@ const MarketplaceNavBar = ({ profile }) => {
             })
 
             if (response.status == 200) {
-              console.log('**************8888888888')
-
               setCurrency(currency.currencyCode, currency.id)
               setSelectedCurrency(currency.currencyCode)
               localStorage.setItem('currencyCode', currency.currencyCode)
@@ -96,8 +94,7 @@ const MarketplaceNavBar = ({ profile }) => {
             (currency) => currency.isPrimaryCurrency
           )
           if (primaryCurrency && !selectedCurrency) {
-            localStorage.setItem('currencyCode', primaryCurrency.currencyCode)
-            localStorage.setItem('currencyId', primaryCurrency.id)
+            setCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
             setSelectedCurrency(primaryCurrency.currencyCode)
           }
         }

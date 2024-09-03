@@ -48,7 +48,11 @@ export const Wrapper = styled.div`
     margin: ${(props) =>
       props.direction == 'rtl' ? '0 0 0 0.5rem' : '0 0.5rem 0 0'};
   }
-
+  .multi-level .nav-link {
+    /* padding-left: 45px; */
+    padding-left: ${(props) => (props.direction == 'rtl' ? '0px' : '20px')};
+    padding-right: ${(props) => (props.direction == 'rtl' ? '20px' : '0px')};
+  }
   .multi-level .nav-link {
     padding: ${(props) =>
       props.direction == 'rtl'

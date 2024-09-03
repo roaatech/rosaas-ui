@@ -138,17 +138,17 @@ const ProductOwnerDetails = () => {
                   update: update,
                   setUpdate: setUpdate,
                 },
-                {
-                  order: 5,
-                  type: 'delete',
-                  confirmationMessage:
-                    'delete-product-owner-confirmation-message',
-                  id: routeParams.id,
-                  navAfterDelete: Routes.productsOwners.path,
-                  label: 'Delete-Product-Owner',
-                  request: deleteProductOwner,
-                  icon: <BsFillTrash3Fill />,
-                },
+                // {
+                //   order: 5,
+                //   type: 'delete',
+                //   confirmationMessage:
+                //     'delete-product-owner-confirmation-message',
+                //   id: routeParams.id,
+                //   navAfterDelete: Routes.productsOwners.path,
+                //   label: 'Delete-Product-Owner',
+                //   request: deleteProductOwner,
+                //   icon: <BsFillTrash3Fill />,
+                // },
               ]}
             />
           </UpperContent>

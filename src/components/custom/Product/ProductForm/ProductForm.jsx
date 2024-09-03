@@ -67,7 +67,26 @@ const ProductForm = ({
         : '',
   }
 
-  const validationSchema = Yup.object().shape({
+  // const validationSchema = Yup.object().shape({
+  //   displayName: Yup.string()
+  //     .required(<FormattedMessage id="This-field-is-required" />)
+  //     .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+
+  //   systemName: Yup.string()
+  //     .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
+  //     .required(<FormattedMessage id="System-Name-is-required" />)
+  //     .matches(
+  //       /^[a-zA-Z0-9_-]+$/,
+  //       <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+  //     ),
+
+  //   defaultHealthCheckUrl: Yup.string(),
+  //   healthStatusChangeUrl: Yup.string(),
+  //   subscriptionResetUrl: Yup.string(),
+  //   subscriptionDowngradeUrl: Yup.string(),
+  //   subscriptionUpgradeUrl: Yup.string(),
+  // })
+  const createValidation = {
     displayName: Yup.string()
       .required(<FormattedMessage id="This-field-is-required" />)
       .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
@@ -79,14 +98,15 @@ const ProductForm = ({
         /^[a-zA-Z0-9_-]+$/,
         <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
-
-    defaultHealthCheckUrl: Yup.string(),
-    healthStatusChangeUrl: Yup.string(),
-    subscriptionResetUrl: Yup.string(),
-    subscriptionDowngradeUrl: Yup.string(),
-    subscriptionUpgradeUrl: Yup.string(),
-  })
-
+  }
+  const editValidation = {
+    displayName: Yup.string()
+      .required(<FormattedMessage id="This-field-is-required" />)
+      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+  }
+  const validationSchema = Yup.object().shape(
+    type === 'create' ? createValidation : editValidation
+  )
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
@@ -330,49 +350,51 @@ const ProductForm = ({
             </Form.Group>
           </div>
 
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Api-key" />
-              </Form.Label>
-              <div className="inputIcon">
-                <span className="buttonCont">
-                  <OverlayTrigger
-                    style={{ minWidth: '150px' }}
-                    trigger={['hover', 'focus']}
-                    placement="top"
-                    overlay={
-                      <Tooltip>
-                        <FormattedMessage id="Random-api-key" />
-                      </Tooltip>
-                    }
+          {type !== 'create' && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <FormattedMessage id="Api-key" />
+                </Form.Label>
+                <div className="inputIcon">
+                  <span className="buttonCont">
+                    <OverlayTrigger
+                      style={{ minWidth: '150px' }}
+                      trigger={['hover', 'focus']}
+                      placement="top"
+                      overlay={
+                        <Tooltip>
+                          <FormattedMessage id="Random-api-key" />
+                        </Tooltip>
+                      }
+                    >
+                      <button type="button" onClick={RandomApiKey}>
+                        <GiPerspectiveDiceSixFacesRandom />
+                      </button>
+                    </OverlayTrigger>
+                  </span>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="apiKey"
+                    name="apiKey"
+                    onChange={formik.handleChange}
+                    value={formik.values.apiKey}
+                  />
+                </div>
+
+                {formik.touched.apiKey && formik.errors.apiKey && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
                   >
-                    <button type="button" onClick={RandomApiKey}>
-                      <GiPerspectiveDiceSixFacesRandom />
-                    </button>
-                  </OverlayTrigger>
-                </span>
-
-                <input
-                  type="text"
-                  className="form-control"
-                  id="apiKey"
-                  name="apiKey"
-                  onChange={formik.handleChange}
-                  value={formik.values.apiKey}
-                />
-              </div>
-
-              {formik.touched.apiKey && formik.errors.apiKey && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.apiKey}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
+                    {formik.errors.apiKey}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button

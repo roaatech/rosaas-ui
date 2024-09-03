@@ -761,5 +761,6 @@
   "Currencies": "العملات",
   "Custom": "مخصص",
   "Publish": "نشر",
-  "Unpublish": "إلغاء النشر"
+  "Unpublish": "إلغاء النشر",
+  "Exch-Rate-Prov": "مزود سعر الصرف"
 }

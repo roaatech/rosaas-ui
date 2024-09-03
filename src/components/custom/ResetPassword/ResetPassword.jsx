@@ -76,7 +76,6 @@ const ResetPassword = () => {
       newPassword: values.password,
       code,
     })
-    console.log(response && response.status == 200)
 
     if (
       response &&

@@ -286,7 +286,7 @@ export default (props = {}) => {
         <SimpleBar
           className={`collapse ${showClass} sidebar d-md-block bg-primary text-white`}
         >
-          <div className="sidebar-inner px-4 pt-3 pb-6">
+          <div className="sidebar-inner px-2 pt-3 pb-6">
             <div className="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
               <div className="d-flex align-items-center">
                 <div className="user-avatar lg-avatar me-4">
@@ -424,10 +424,14 @@ export default (props = {}) => {
 
               {userRole == 'superAdmin' &&
               Array.isArray(
-                searchValue.length ? filteredProducts : unFilteredProducts
+                searchValue.length
+                  ? filteredProductsOwner
+                  : unFilteredProductsOwners
               ) &&
-              (searchValue.length ? filteredProducts : unFilteredProducts)
-                .length > 0 ? (
+              (searchValue.length
+                ? filteredProductsOwner
+                : unFilteredProductsOwners
+              ).length > 0 ? (
                 <CollapsableNavItem
                   eventKey={productsOwnersIsOpen}
                   title={
@@ -486,13 +490,11 @@ export default (props = {}) => {
                       />
                     </>
                   )}
-                  {userRole == 'superAdmin' && (
-                    <NavItem
-                      title={<FormattedMessage id="Discounts" />}
-                      link={Routes.DiscountsPage.path}
-                      icon={<MdDiscount />}
-                    />
-                  )}
+                  <NavItem
+                    title={<FormattedMessage id="Discounts" />}
+                    link={Routes.DiscountsPage.path}
+                    icon={<MdDiscount />}
+                  />
                   <NavItem
                     title={<FormattedMessage id="Currencies" />}
                     link={Routes.CurrenciesPage.path}
@@ -506,6 +508,7 @@ export default (props = {}) => {
                       icon={<BsPercent />}
                     />
                   )}
+
                   {userRole == 'superAdmin' && (
                     <NavItem
                       title={<FormattedMessage id="Profile" />}

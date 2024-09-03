@@ -14,7 +14,7 @@ import {
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import { BsBoxSeam, BsCheck2Circle, BsXCircle } from 'react-icons/bs'
 import { useState } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { cycle } from '../../const'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBox, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
@@ -52,6 +52,7 @@ const PricingPage = () => {
   )[0]
 
   const productId = productData?.id
+  const intl = useIntl()
 
   const plansPriceList = productData?.plansPrice
 
@@ -135,7 +136,6 @@ const PricingPage = () => {
     }))
   }
   const currency = useSelector((state) => state.main.currency)
-  console.log({ currency })
 
   useEffect(() => {
     if (listProduct?.[productId]?.trialType != 2) {
@@ -483,7 +483,15 @@ const PricingPage = () => {
                           ?.isPlanSelectionRedirectionEnabled &&
                         listProduct?.[productId]?.planSelectionRedirectUrl
                       ) {
-                        window.top.location.href = `${listProduct?.[productId]?.planSelectionRedirectUrl}?plan-price=${filteredPrices.systemName}&currency-code=${currencyCode}`
+                        window.top.location.href = `${
+                          listProduct?.[productId]?.planSelectionRedirectUrl
+                        }?plan-price=${
+                          filteredPrices.systemName
+                        }&currency-code=${currencyCode}&trial-enabled=${
+                          startWithTrial[planId] ||
+                          (listProduct?.[productId]?.trialType === 3 &&
+                            planList[planId]?.trialPeriodInDays > 0)
+                        }&language=${intl.locale}`
                       } else if (
                         startWithTrial[planId] ||
                         (listProduct?.[productId]?.trialType === 3 &&
