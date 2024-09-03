@@ -653,7 +653,7 @@ const PricingPage = () => {
                             }
                             md={
                               Object.keys(groupedByCycle[selectedCycle])
-                                .length >= 3
+                                .length > 3
                                 ? groupedByCycle[selectedCycle].length
                                 : 3
                             }
