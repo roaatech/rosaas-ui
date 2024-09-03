@@ -556,6 +556,35 @@ const PricingPage = () => {
       </div>
     )
   }
+  const [md, setMd] = useState(4) // Default value for `md` is 4 (3 columns)
+  const [colsPerRow, setColsPerRow] = useState(3) // Initial assumption based on md={4}
+
+  // Function to update the column size (`md`) based on window width
+  const updateMd = () => {
+    const width = window.innerWidth
+    let newMd = 4
+
+    if (width < 576) {
+      newMd = 12
+    } else if (width >= 576 && width < 768) {
+      newMd = 6 // sm: 2 columns
+    } else if (width >= 768 && width < 992) {
+      newMd = 4 // md: 3 columns
+    } else {
+      newMd = 3 // lg and above: 4 columns
+    }
+
+    setMd(newMd) // Update the `md` value
+    setColsPerRow(Math.floor(12 / newMd)) // Calculate columns per row
+  }
+
+  useEffect(() => {
+    updateMd() // Set initial `md` and `colsPerRow` values based on current window width
+    window.addEventListener('resize', updateMd) // Adjust on window resize
+
+    // Cleanup event listener on component unmount
+    return () => window.removeEventListener('resize', updateMd)
+  }, [])
 
   return (
     <Wrapper>
@@ -580,8 +609,14 @@ const PricingPage = () => {
                 {listProduct?.[productId]?.displayName?.toUpperCase()}
                 {listProduct?.[productId]?.description && (
                   <div
-                    style={{ fontSize: 'var(--largeFont)' }}
-                    className="col-lg-12 text-center pb-3 mt-2 d-flex align-items-center  px-12"
+                    style={{
+                      fontSize: 'var(--largeFont)',
+                      maxWidth: '900px', // Adjust the width as needed
+                      margin: '0 auto', // Center horizontally
+                      textAlign: 'center', // Center text within the container
+                      padding: '0 1rem', // Add some padding for spacing
+                    }}
+                    className="text-center pb-3 mt-2"
                   >
                     {listProduct?.[productId]?.description}
                   </div>
@@ -601,10 +636,13 @@ const PricingPage = () => {
                       const renderedPlans = renderFeaturePlans(
                         groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
                       )
-                      const numCards = Object.keys(
-                        groupedByCycle[selectedCycle]
-                      ).length
-                      const mdValue = Math.min(12 / numCards, 4)
+                      console.log(
+                        groupedByCycle[selectedCycle] &&
+                          Object.keys(groupedByCycle[selectedCycle])?.length >=
+                            3
+                          ? Object.keys(groupedByCycle[selectedCycle])?.length
+                          : 3
+                      )
 
                       return (
                         renderedPlans && (
@@ -619,7 +657,6 @@ const PricingPage = () => {
                                 ? groupedByCycle[selectedCycle].length
                                 : 3
                             }
-                            className={'d-flex justify-content-center mx-auto'}
                           >
                             {renderedPlans}
                           </Col>
@@ -627,7 +664,7 @@ const PricingPage = () => {
                       )
                     }
                   )}
-              </Row>{' '}
+              </Row>
             </Card.Body>
           </Card>
         </div>
