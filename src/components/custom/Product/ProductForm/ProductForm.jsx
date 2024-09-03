@@ -334,7 +334,7 @@ const ProductForm = ({
 
               <TextareaAndCounter
                 addTextarea={formik.setFieldValue}
-                maxLength={120}
+                maxLength={450}
                 showCharCount
                 inputValue={formik?.values?.description}
               />

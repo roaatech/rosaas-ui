@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import TenantStatus from '../../tenant/TenantStatus/TenantStatus'
 import useRequest from '../../../../axios/apis/useRequest'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisH, faGear } from '@fortawesome/free-solid-svg-icons'
+import { faEllipsisH, faGear, faSort } from '@fortawesome/free-solid-svg-icons'
 import {
   Card,
   Table,
@@ -11,49 +11,30 @@ import {
   Dropdown,
 } from '@themesberg/react-bootstrap'
 import TableDate from '../../Shared/TableDate/TableDate'
-import { Link, Navigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  productInfo,
   subscribe,
+  sortSubscriptions,
 } from '../../../../store/slices/products/productsSlice.js'
 import { setAllTenant } from '../../../../store/slices/tenants'
 import { FormattedMessage } from 'react-intl'
-import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
+import { formatDate } from '../../../../lib/sharedFun/Time'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import Label from '../../Shared/label/Label'
 import { activeStatus } from '../../../../const/product'
 import { Wrapper } from './ProductTenantsList.styled'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import { Routes } from '../../../../routes.js'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { getProductTenants } = useRequest()
-  const [searchValue] = useState('')
-  const [sortField] = useState('')
-  const [sortValue] = useState('')
-  const [first] = useState(0)
-  const [rows] = useState(10)
-  const [update] = useState(1)
-  const [selectedProduct] = useState()
+  const [sortField, setSortField] = useState('')
+  const [sortOrder, setSortOrder] = useState('asc')
 
   const dispatch = useDispatch()
-
   const list = useSelector((state) => state.products.products[productId])
-
-  function isDateTimeInFuture(dateTimeString) {
-    // Parse the given date string into a Date object
-    const [datePart, timePart] = dateTimeString.split(' ')
-    const [day, month, year] = datePart.split('/').map(Number)
-    const [hours, minutes, seconds] = timePart.split(':').map(Number)
-    const inputDate = new Date(year, month - 1, day, hours, minutes, seconds)
-
-    // Get the current date and time
-    const currentDate = new Date()
-
-    // Compare the two dates
-    return inputDate > currentDate
-  }
 
   useEffect(() => {
     let params = `${productId}/subscriptions`
@@ -65,7 +46,14 @@ export const ProductTenantsList = ({ productId, productName }) => {
         dispatch(subscribe({ id: productId, data: listData.data.data }))
       }
     })()
-  }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
+  }, [productId, list, dispatch, getProductTenants])
+
+  const handleSort = (field) => {
+    const order = sortField === field && sortOrder === 'asc' ? 'desc' : 'asc'
+    setSortField(field)
+    setSortOrder(order)
+    dispatch(sortSubscriptions({ productId, sortBy: field, order }))
+  }
 
   const TableRow = (props) => {
     const {
@@ -75,12 +63,12 @@ export const ProductTenantsList = ({ productId, productName }) => {
       createdDate,
       editedDate,
       tenantId,
-      plan,
+      plan: { systemName: planSystemName },
       startDate,
       endDate,
       isActive,
     } = props
-    const subscribtionStatus = isActive ? true : false
+    const subscriptionStatus = isActive ? true : false
 
     return (
       <tr>
@@ -90,44 +78,22 @@ export const ProductTenantsList = ({ productId, productName }) => {
         <td>
           <span className="fw-normal">{systemName}</span>
         </td>
-
-        {/* <td>
-          <span className="fw-normal">
-            <OverlayTrigger
-              trigger={["hover", "focus"]}
-              overlay={<Tooltip>{list?.defaultHealthCheckUrl}</Tooltip>}>
-              <span
-                style={{
-                  background:
-                    urlIsOverridden[healthCheckUrlIsOverridden.toString()]
-                      .background,
-                }}
-                size="sm"
-                className="p-1 border-round border-1 border-400 mx-2">
-                {urlIsOverridden[healthCheckUrlIsOverridden.toString()].value}
-              </span>
-            </OverlayTrigger>
-          </span>
-        </td> */}
-
         <td>
           <span className={`fw-normal`}>
-            <DataLabelWhite text={plan.systemName} />
+            <DataLabelWhite text={planSystemName} />
           </span>
         </td>
         <td>
           <span>
-            <Label {...activeStatus[subscribtionStatus]} />
+            <Label {...activeStatus[subscriptionStatus]} />
           </span>
         </td>
         <td>
-          {' '}
           <DataLabelWhite text={formatDate(startDate)} />
         </td>
         <td>
           <DateLabel endDate={endDate} />
         </td>
-
         <td>
           <span className="fw-normal">
             {status && <TenantStatus statusValue={status} />}
@@ -138,7 +104,6 @@ export const ProductTenantsList = ({ productId, productName }) => {
             <TableDate createdDate={createdDate} editedDate={editedDate} />
           </span>
         </td>
-
         <td>
           <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle
@@ -154,7 +119,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
             <Dropdown.Menu>
               <Dropdown.Item>
                 <Link
-                  to={`/tenants/${tenantId}#${productName}`}
+                  to={`${Routes.Tenant.path}/${tenantId}#${productName}`}
                   className="w-100 d-block"
                 >
                   <FontAwesomeIcon icon={faGear} className="mx-2" />{' '}
@@ -175,32 +140,62 @@ export const ProductTenantsList = ({ productId, productName }) => {
           <Table hover className="user-table align-items-center">
             <thead>
               <tr>
-                <th className="border-bottom">
-                  <FormattedMessage id="Title" />
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('displayName')}
+                >
+                  <FormattedMessage id="Title" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
                 </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Unique-Name" />
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('systemName')}
+                >
+                  <FormattedMessage id="Unique-Name" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
                 </th>
-
-                <th className="border-bottom">
-                  <FormattedMessage id="Plan" />
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('plan.systemName')}
+                >
+                  <FormattedMessage id="Plan" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
                 </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Subscription-Status" />
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('isActive')}
+                >
+                  <FormattedMessage id="Subscription-Status" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
                 </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Start-Date" />
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('startDate')}
+                >
+                  <FormattedMessage id="Start-Date" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
                 </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="End-Date" />
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('endDate')}
+                >
+                  <FormattedMessage id="End-Date" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
                 </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Tenant-Status" />
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('status')}
+                >
+                  <FormattedMessage id="Tenant-Status" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
                 </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Created-Date" />
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('createdDate')}
+                >
+                  <FormattedMessage id="Created-Date" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
                 </th>
-
                 <th className="border-bottom">
                   <FormattedMessage id="Actions" />
                 </th>
@@ -208,7 +203,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
             </thead>
             <tbody>
               {list?.subscribe?.length
-                ? list?.subscribe?.map((t, index) => (
+                ? list.subscribe.map((t, index) => (
                     <TableRow key={index} {...t} />
                   ))
                 : null}

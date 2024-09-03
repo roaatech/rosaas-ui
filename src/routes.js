@@ -41,7 +41,7 @@ export const Routes = {
     path: `${adminPanel}/dashboard`,
     component: () => <POwnerChecker page={<Dashboard />} />,
 
-    roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
   products: {
     path: `${adminPanel}/products`,
@@ -52,7 +52,7 @@ export const Routes = {
   productsOwners: {
     path: `${adminPanel}/products-owners`,
     component: () => <POwnerChecker page={<ProductsOwners />} />,
-    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+    roles: ['superAdmin'],
   },
   EmailConfirmationPage: {
     path: `/email-confirmation`,
@@ -94,7 +94,7 @@ export const Routes = {
   Tenant: {
     path: `${adminPanel}/tenants`,
     component: () => <POwnerChecker page={<Tenant />} />,
-    roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
 
   Settings: {
@@ -220,21 +220,21 @@ export const Routes = {
   PaymentSuccess: {
     path: '/success',
     component: () => <POwnerChecker page={<PaymentSuccess />} />,
-    roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
     type: 'noSidebar',
   },
 
   PaymentFailed: {
     path: '/failed',
     component: () => <POwnerChecker page={<PaymentFailed />} />,
-    roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
     type: 'noSidebar',
   },
 
   CreatedSuccess: {
     path: '/created-successfully',
     component: CreatedSuccess,
-    roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
     type: 'noSidebar',
   },
 
@@ -273,12 +273,12 @@ Routes.Pricing = {
 Routes.SubscriptionManagement = {
   path: `${Routes.Tenant.path}/:id/Subscription-Management`,
   component: SubscriptionManagement,
-  roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
+  roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
 }
 Routes.TenantDetails = {
   path: `${Routes.Tenant.path}/:id`,
   component: TenantDetails,
-  roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
+  roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
 }
 Routes.DiscountDetails = {
   path: `${Routes.DiscountsPage.path}/:id`,

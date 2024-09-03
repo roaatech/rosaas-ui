@@ -29,6 +29,7 @@ const PricingPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const routeParams = useParams()
+  const [showOldPrice, setShowOldPrice] = useState(true)
 
   const productSystemName = routeParams.productSystemName
   const productOwnerSystemName = routeParams.productOwnerSystemName || ''
@@ -313,50 +314,33 @@ const PricingPage = () => {
       <div>
         {
           <Card>
-            <Card.Header className="">
+            <Card.Header
+              style={{
+                transition: 'all 0.9s',
+                minHeight: '173px',
+                backgroundColor: 'rgb(255 201 102 / 8%)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                // alignItems: 'center',
+              }}
+              className=""
+            >
+              {' '}
               <div
+                className="d-flex align-items-center justify-content-between fw-bold mt-2 "
                 style={{
-                  transition: 'all 0.9s',
+                  fontSize: '1.5rem',
+                  fontWeight: 'bold',
                 }}
-                className="d-flex align-items-center justify-content-between "
               >
-                <div
-                  className=" "
-                  style={{ display: 'flex', alignItems: 'center' }}
-                >
-                  {/* <span
-                    style={{
-                      fontSize: '1.3rem',
-                      marginRight: '0.5rem',
-                    }}
-                    className="mb-4 mr-1"
-                  >
-                    $
-                  </span>*/}
-                  <span
-                    style={{
-                      fontSize: '1.5rem',
-                      fontWeight: 'bold',
-                      transition: 'all 0.9s',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {/* {filteredPrices?.price} */}
-                    {filteredPrices?.priceDetails?.formattedPrice}
-                  </span>
-                  <span
-                    className="mt-3 ml-1"
-                    style={{
-                      transition: 'all 0.9s',
-                    }}
-                  >
-                    {' '}
-                    /
-                    {filteredPrices?.cycle && (
-                      <FormattedMessage id={cycle[filteredPrices?.cycle]} />
-                    )}
-                  </span>
-                </div>
+                {listProduct?.[productId]?.trialType == 2 &&
+                planId == listProduct?.[productId]?.trialPlanId ? (
+                  <FormattedMessage id="Trial" />
+                ) : (
+                  planList[planId]?.displayName?.toUpperCase()
+                )}
+
                 {listProduct?.[productId]?.trialType == 3 &&
                   planList[planId]?.trialPeriodInDays > 0 && (
                     <div className="tab-header">
@@ -372,19 +356,54 @@ const PricingPage = () => {
                     </div>
                   )}
               </div>
-              <div
-                className="fw-bold mt-2 "
-                style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 'bold',
-                }}
-              >
-                {listProduct?.[productId]?.trialType == 2 &&
-                planId == listProduct?.[productId]?.trialPlanId ? (
-                  <FormattedMessage id="Trial" />
-                ) : (
-                  planList[planId]?.displayName?.toUpperCase()
-                )}
+              <div className="d-flex align-items-center justify-content-between ">
+                <div>
+                  {showOldPrice &&
+                    filteredPrices?.oldPriceDetails?.formattedPrice && (
+                      <div
+                        style={{
+                          textDecoration: 'line-through',
+                          color: 'var(--gray-600)',
+                        }}
+                        className=" mr-1 "
+                      >
+                        {' '}
+                        {/* {filteredPrices?.priceDetails?.formattedPrice=="40.18 (SAR)"&&<span>40.18 (SAR)</span>} */}
+                        {filteredPrices?.oldPriceDetails?.formattedPrice}
+                      </div>
+                    )}
+                  <span
+                    style={{
+                      fontSize: '1.5rem',
+                      fontWeight: 'bold',
+                      transition: 'all 0.9s',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {filteredPrices?.priceDetails?.formattedPrice}
+                  </span>
+                  <span
+                    className="mt-3 ml-1"
+                    style={{
+                      transition: 'all 0.9s',
+                    }}
+                  >
+                    {' '}
+                    /
+                    {filteredPrices?.cycle && (
+                      <FormattedMessage id={cycle[filteredPrices?.cycle]} />
+                    )}
+                  </span>
+                  <div
+                    style={{
+                      color: 'var(--second-color) !important',
+                      fontSize: '1.2rem',
+                    }}
+                    className=" mr-1 "
+                  >
+                    {filteredPrices?.description}
+                  </div>
+                </div>
               </div>
             </Card.Header>
             <Card.Body>
@@ -562,7 +581,7 @@ const PricingPage = () => {
                 {listProduct?.[productId]?.description && (
                   <div
                     style={{ fontSize: 'var(--largeFont)' }}
-                    className="col-lg-12 text-center pb-3 mt-2 "
+                    className="col-lg-12 text-center pb-3 mt-2 d-flex align-items-center  px-12"
                   >
                     {listProduct?.[productId]?.description}
                   </div>
@@ -573,7 +592,8 @@ const PricingPage = () => {
           <Card>
             <Card.Body>
               <div className="text-center">{renderCycleRadioButtons()}</div>
-              <Row className=" ">
+              <Row className="justify-content-center">
+                {' '}
                 {groupedByCycle &&
                   groupedByCycle[selectedCycle] &&
                   Object.keys(groupedByCycle[selectedCycle]).map(
@@ -581,6 +601,10 @@ const PricingPage = () => {
                       const renderedPlans = renderFeaturePlans(
                         groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
                       )
+                      const numCards = Object.keys(
+                        groupedByCycle[selectedCycle]
+                      ).length
+                      const mdValue = Math.min(12 / numCards, 4)
 
                       return (
                         renderedPlans && (
@@ -595,6 +619,7 @@ const PricingPage = () => {
                                 ? groupedByCycle[selectedCycle].length
                                 : 3
                             }
+                            className={'d-flex justify-content-center mx-auto'}
                           >
                             {renderedPlans}
                           </Col>

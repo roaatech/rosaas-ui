@@ -490,11 +490,13 @@ export default (props = {}) => {
                       />
                     </>
                   )}
-                  <NavItem
-                    title={<FormattedMessage id="Discounts" />}
-                    link={Routes.DiscountsPage.path}
-                    icon={<MdDiscount />}
-                  />
+                  {userRole == 'superAdmin' && (
+                    <NavItem
+                      title={<FormattedMessage id="Discounts" />}
+                      link={Routes.DiscountsPage.path}
+                      icon={<MdDiscount />}
+                    />
+                  )}
                   <NavItem
                     title={<FormattedMessage id="Currencies" />}
                     link={Routes.CurrenciesPage.path}

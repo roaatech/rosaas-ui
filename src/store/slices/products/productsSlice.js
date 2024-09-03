@@ -45,6 +45,7 @@ export const {
   deleteSpecification,
   setAllProduct,
   subscribe,
+  sortSubscriptions,
   productInfo,
   removeProductStore,
   setAllFeaturePlan,
