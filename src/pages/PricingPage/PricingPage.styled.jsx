@@ -18,7 +18,4 @@ export const Wrapper = styled.div`
   .text-seamlessly {
     font-size: var(--largeFont);
   }
-  .col .card {
-    max-width: 391px;
-  }
 `
