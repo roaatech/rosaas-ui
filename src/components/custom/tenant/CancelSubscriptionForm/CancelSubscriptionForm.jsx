@@ -10,12 +10,19 @@ import { useNavigate, useParams } from 'react-router-dom'
 import useRequest from '../../../../axios/apis/useRequest.js'
 import { MdDangerous, MdError } from 'react-icons/md'
 import { Routes } from '../../../../routes.js'
+import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 
-const CancelSubscriptionForm = ({ setVisible, popupLabel, updateTenant }) => {
-  const { cancelSubscriptionRequest } = useRequest()
+const CancelSubscriptionForm = ({
+  setVisible,
+  popupLabel,
+  updateTenant,
+  subscriptionId,
+  systemName,
+  type,
+}) => {
+  const { cancelSubscriptionRequest, suspendSubscriptionRequest } = useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
-  const subscriptionId = routeParams.id
   const navigate = useNavigate()
   const params = useParams()
   const currentTenantId = params.id
@@ -23,7 +30,9 @@ const CancelSubscriptionForm = ({ setVisible, popupLabel, updateTenant }) => {
     (state) => state.tenants.tenants?.[currentTenantId]
   )
   console.log({
-    currentTenantsData: currentTenantsData.subscriptions?.[0].status,
+    subscriptionId:
+      currentTenantsData?.subscriptions?.[0]?.subscriptionId || subscriptionId,
+    systemName,
   })
 
   const initialValues = {
@@ -31,25 +40,39 @@ const CancelSubscriptionForm = ({ setVisible, popupLabel, updateTenant }) => {
     reason: '',
     comment: '',
   }
+  let userInfo = useSelector((state) => state.auth.userInfo)
+
+  let userRole = userInfo.userType
 
   // Custom validation schema
   const validationSchema = Yup.object().shape({
-    systemName: Yup.string()
-      .required(<FormattedMessage id="System-Name-is-required" />)
-      .matches(
-        /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="Only-English-Characters,-Numbers,-and-Underscores-are-accepted." />
-      )
-      .test(
-        'is-correct-system-name',
-        <FormattedMessage id="System-Name-does-not-match" />,
-        (value) => value === currentTenantsData?.systemName // Custom validation logic
-      ),
+    systemName:
+      type === 'cancel'
+        ? Yup.string()
+            .required(<FormattedMessage id="System-Name-is-required" />)
+            .matches(
+              /^[a-zA-Z0-9_-]+$/,
+              <FormattedMessage id="Only-English-Characters,-Numbers,-and-Underscores-are-accepted." />
+            )
+            .test(
+              'is-correct-system-name',
+              <FormattedMessage id="System-Name-does-not-match" />,
+              (value) =>
+                value === currentTenantsData?.systemName || value === systemName // Custom validation logic
+            )
+        : Yup.string(),
     reason: Yup.number().required(<FormattedMessage id="Reason-is-required" />),
-    comment: Yup.string().max(
-      500,
-      <FormattedMessage id="Must-be-maximum-500-digits" />
-    ),
+    comment:
+      type === 'cancel'
+        ? Yup.string()
+            .max(500, <FormattedMessage id="Must-be-maximum-500-digits" />)
+            .required(
+              <FormattedMessage id="Comment-is-required-for-cancellation" />
+            )
+        : Yup.string().max(
+            500,
+            <FormattedMessage id="Must-be-maximum-500-digits" />
+          ),
   })
 
   const formik = useFormik({
@@ -57,31 +80,49 @@ const CancelSubscriptionForm = ({ setVisible, popupLabel, updateTenant }) => {
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        await cancelSubscriptionRequest({
-          reason: parseInt(values.reason),
-          comment: values.comment,
-          subscriptionId: currentTenantsData?.subscriptions?.[0].subscriptionId,
-        })
+        if (type === 'cancel') {
+          await cancelSubscriptionRequest({
+            reason: parseInt(values.reason),
+            comment: values.comment,
+            subscriptionId:
+              currentTenantsData?.subscriptions?.[0]?.subscriptionId ||
+              subscriptionId,
+          })
+        } else if (type === 'suspend') {
+          await suspendSubscriptionRequest({
+            reason: parseInt(values.reason),
+            comment: values.comment,
+            subscriptionId:
+              currentTenantsData?.subscriptions?.[0]?.subscriptionId ||
+              subscriptionId,
+          })
+        }
 
         setVisible && setVisible(false)
         updateTenant && updateTenant()
-        // navigate(Routes.Tenant.path)
       } catch (error) {
-        console.error('Error canceling subscription:', error)
+        console.error(`Error ${type}ing subscription:`, error)
       } finally {
         setSubmitting(false)
       }
     },
   })
 
-  const reasonsOptions = [
-    { value: 1, label: 'Unpaid' },
-    { value: 2, label: 'Super-Admin-Request' },
-    { value: 3, label: 'External-System-Request' },
-    { value: 4, label: 'Product-Owner-Request' },
-    { value: 5, label: 'Subscriber-Request' },
-    { value: 10, label: 'Other' },
-  ]
+  const reasonsOptions =
+    userRole == 'clientAdmin'
+      ? [
+          { value: 1, label: 'Unpaid' },
+          { value: 4, label: 'Product-Owner-Request' },
+          { value: 5, label: 'Subscriber-Request' },
+        ]
+      : [
+          { value: 1, label: 'Unpaid' },
+          { value: 2, label: 'Super-Admin-Request' },
+          { value: 3, label: 'External-System-Request' },
+          { value: 4, label: 'Product-Owner-Request' },
+          { value: 5, label: 'Subscriber-Request' },
+          { value: 10, label: 'Other' },
+        ]
 
   return (
     <Wrapper>
@@ -97,33 +138,54 @@ const CancelSubscriptionForm = ({ setVisible, popupLabel, updateTenant }) => {
 
         <Modal.Body>
           <div>
-            <div className="alert alert-danger" role="alert">
+            <div
+              className={`alert alert-${
+                type === 'cancel' ? 'danger' : 'warning'
+              }`}
+              role="alert"
+            >
               <MdError className="mx-2" />
-              <FormattedMessage id="Are-you-sure-you-want-to-cancel-this-subscription?" />
-            </div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="System-Name" />{' '}
-                <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <input
-                className="form-control"
-                type="text"
-                id="systemName"
-                name="systemName"
-                onChange={formik.handleChange}
-                value={formik.values.systemName}
+              <FormattedMessage
+                id={
+                  type === 'cancel'
+                    ? 'Are-you-sure-you-want-to-cancel-this-subscription?'
+                    : 'Are-you-sure-you-want-to-suspend-this-subscription?'
+                }
               />
+            </div>
 
-              {formik.touched.systemName && formik.errors.systemName && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.systemName}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
+            {type === 'cancel' && (
+              <>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <FormattedMessage id="System-Name" />{' '}
+                    <span style={{ color: 'red' }}>*</span>
+                  </Form.Label>
+                  <div
+                    className="text-warning"
+                    // style={{ color: 'var(--second-color)' }}
+                  >
+                    <FormattedMessage id="Enter-the-system-name-of-the-subscription-to-cancel-it." />
+                  </div>
+                  <input
+                    className="form-control"
+                    type="text"
+                    id="systemName"
+                    name="systemName"
+                    onChange={formik.handleChange}
+                    value={formik.values.systemName}
+                  />
+                  {formik.touched.systemName && formik.errors.systemName && (
+                    <Form.Control.Feedback
+                      type="invalid"
+                      style={{ display: 'block' }}
+                    >
+                      {formik.errors.systemName}
+                    </Form.Control.Feedback>
+                  )}
+                </Form.Group>
+              </>
+            )}
           </div>
           <div>
             <Form.Group className="mb-3">
@@ -144,7 +206,7 @@ const CancelSubscriptionForm = ({ setVisible, popupLabel, updateTenant }) => {
                 </option>
                 {reasonsOptions.map((option) => (
                   <option key={option.value} value={option.value}>
-                    {option.label}
+                    {<FormattedMessage id={option.label} />}
                   </option>
                 ))}
               </select>
@@ -162,16 +224,20 @@ const CancelSubscriptionForm = ({ setVisible, popupLabel, updateTenant }) => {
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="Comment" />
+                {'  '}
+                {type === 'cancel' && <span style={{ color: 'red' }}>*</span>}
               </Form.Label>
-              <textarea
+
+              <TextareaAndCounter
                 className="form-control"
                 id="comment"
                 name="comment"
                 onChange={formik.handleChange}
-                value={formik.values.comment}
-                rows="3"
+                showCharCount={true}
+                addTextarea={formik.setFieldValue}
+                inputValue={formik.values.comment}
+                maxLength={250}
               />
-
               {formik.touched.comment && formik.errors.comment && (
                 <Form.Control.Feedback
                   type="invalid"
@@ -184,7 +250,10 @@ const CancelSubscriptionForm = ({ setVisible, popupLabel, updateTenant }) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" type="submit">
+          <Button
+            variant={type === 'cancel' ? 'danger' : 'warning'}
+            type="submit"
+          >
             <FormattedMessage id="Submit" />
           </Button>
           <Button

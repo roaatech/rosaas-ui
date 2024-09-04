@@ -770,5 +770,21 @@
   "Exch-Rate-Prov": "Exchange Rate Prov.",
   "30-days": "30 days",
   "60-days": "60 days",
-  "90-days": "90 days"
+  "90-days": "90 days",
+  "Enter-the-system-name-of-the-subscription-to-cancel-it.": "Enter the system name of the subscription to cancel it.",
+  "Are-you-sure-you-want-to-suspend-this-subscription?": "Are you sure you want to suspend this subscription?",
+  "Are-you-sure-you-want-to-cancel-this-subscription?": "Are you sure you want to cancel this subscription? Once cancelled, all resources will be permanently deleted, and data cannot be recovered.",
+  "Super-Admin-Request": "Super Admin Request",
+  "External-System-Request": "External System Request",
+  "Product-Owner-Request": "Product Owner Request",
+  "Subscriber-Request": "Subscriber Request",
+  "Reason": "Reason",
+  "Other": "Other",
+  "Suspend-Subscription": "Suspend Subscription",
+  "Cancel-Subscription": "Cancel Subscription",
+  "Must-be-maximum-500-digits": "Must be maximum 500 digits",
+  "Reason-is-required": "Reason is required",
+  "System-Name-does-not-match": "System name does not match",
+  "Only-English-Characters,-Numbers,-and-Underscores-are-accepted.": "Only English characters, numbers, and underscores are accepted.",
+  "Comment-is-required-for-cancellation": "Comment is required for cancellation"
 }

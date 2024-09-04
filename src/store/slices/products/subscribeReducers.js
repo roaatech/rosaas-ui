@@ -32,3 +32,32 @@ export const sortSubscriptions = (state, action) => {
     })
   }
 }
+export const filterSubscriptions = (state, action) => {
+  const { productId } = action.payload
+  const term = state.products[productId].searchTerm?.toLowerCase()
+  console.log({ term })
+
+  if (state.products[productId]?.subscribe) {
+    state.products[productId].filtered = state.products[
+      productId
+    ].subscribe.filter(
+      (sub) =>
+        sub.displayName?.toLowerCase().includes(term) ||
+        sub.systemName?.toLowerCase().includes(term) ||
+        sub.plan.systemName?.toLowerCase().includes(term)
+    )
+  }
+}
+export const setSearchTerm = (state, action) => {
+  const { productId, searchTerm } = action.payload
+
+  state.products[productId].searchTerm = searchTerm
+}
+
+export const changeSubscriptionAttr = (state, action) => {
+  const { productId, subscriptionId, attr, value } = action.payload
+
+  if (state.products[productId]?.subscribe) {
+    state.products[productId].subscribe[subscriptionId][attr] = value
+  }
+}

@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { statusConst } from '../../../../const'
-import { MdFactCheck } from 'react-icons/md'
+import { MdFactCheck, MdOutlineCancel } from 'react-icons/md'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import { Routes } from '../../../../routes'
@@ -146,7 +146,19 @@ export default function ChildTable({
                           label: 'Cancel-Subscription',
                           component: 'cancelSubscription',
                           updateTenant: updateTenant,
-                          icon: <MdFactCheck />,
+                          icon: <MdOutlineCancel />,
+                          variant: 'text-danger',
+                          formType: 'cancel',
+                        },
+                        {
+                          order: 4,
+                          type: 'form',
+                          label: 'Suspend-Subscription',
+                          component: 'supsendsubscription',
+                          updateTenant: updateTenant,
+                          icon: <MdOutlineCancel />,
+                          variant: 'text-warning',
+                          formType: 'suspend',
                         },
                       ]
                     : []),

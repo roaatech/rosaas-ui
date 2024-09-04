@@ -242,6 +242,17 @@ const DynamicButtons = ({ buttons }) => {
           popupLabel={<FormattedMessage id="Cancel-Subscription" />}
           setVisible={setVisible}
           updateTenant={buttons[currentButtonIndex].updateTenant}
+          type={buttons[currentButtonIndex].formType}
+        />
+      </>
+    ),
+    supsendsubscription: () => (
+      <>
+        <CancelSubscriptionForm
+          popupLabel={<FormattedMessage id="Suspend-Subscription" />}
+          setVisible={setVisible}
+          updateTenant={buttons[currentButtonIndex].updateTenant}
+          type={buttons[currentButtonIndex].formType}
         />
       </>
     ),
@@ -426,6 +437,7 @@ const DynamicButtons = ({ buttons }) => {
                   } else if (button.type == 'form') {
                     return (
                       <Dropdown.Item
+                        className={`${button.variant && button.variant}`}
                         key={index}
                         onClick={() => {
                           setVisible(true)

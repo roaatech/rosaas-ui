@@ -4,6 +4,11 @@ export const Wrapper = styled.div`
     color: var(--passive-color);
     cursor: pointer;
   }
+  .display-cell {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+  }
   .active-toggle {
     color: var(--second-color);
     cursor: pointer;
@@ -12,7 +17,7 @@ export const Wrapper = styled.div`
     color: #ffab03b4;
     cursor: pointer;
   }
-  p.total {
+  .total {
     background-color: #ffab032a;
   }
   .merged-form-group {
@@ -23,6 +28,9 @@ export const Wrapper = styled.div`
   .merged-form-group .form-control {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+  }
+  .no-bottom-border {
+    border-bottom: none;
   }
   .button-container {
     display: flex;

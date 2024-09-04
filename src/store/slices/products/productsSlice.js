@@ -85,5 +85,8 @@ export const {
   deleteWebhookEndpointById,
   deleteAllWebhookEndpoints,
   deleteAllPlanPriceBySystemName,
+  filterSubscriptions,
+  setSearchTerm,
+  changeSubscriptionAttr,
 } = productsSlice.actions
 export default productsSlice.reducer

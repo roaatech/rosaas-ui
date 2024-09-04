@@ -84,6 +84,23 @@ export const activeStatus = {
     color: 'var(--orange-brown)',
   },
 }
+export const subscriptionStatus = {
+  1: {
+    background: 'var(--green2)',
+    value: <FormattedMessage id="Active" />,
+    color: 'var(--teal-green)',
+  },
+  2: {
+    background: 'var(--yellow2)',
+    value: <FormattedMessage id="Suspended" />,
+    color: 'var(--yellow-brown)',
+  },
+  3: {
+    background: 'var(--red2)',
+    value: <FormattedMessage id="Canceled" />,
+    color: 'var(--orange-brown)',
+  },
+}
 
 export const isMajorStatus = {
   true: {

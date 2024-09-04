@@ -764,5 +764,21 @@
   "Unpublish": "إلغاء النشر",
   "30-days": "30 يوماً",
   "60-days": "60 يوماً",
-  "90-days": "90 يوماً"
+  "90-days": "90 يوماً",
+  "Enter-the-system-name-of-the-subscription-to-cancel-it.": "أدخل اسم النظام الخاص بالاشتراك لإلغائه.",
+  "Are-you-sure-you-want-to-suspend-this-subscription?": "هل أنت متأكد من رغبتك في تعليق هذا الاشتراك؟",
+  "Are-you-sure-you-want-to-cancel-this-subscription?": "هل أنت متأكد من رغبتك في إلغاء هذا الاشتراك؟ عند الإلغاء، سيتم حذف جميع الموارد بشكل دائم ولا يمكن استرداد البيانات.",
+  "Super-Admin-Request": "طلب المدير العام",
+  "External-System-Request": "طلب النظام الخارجي",
+  "Product-Owner-Request": "طلب مالك المنتج",
+  "Subscriber-Request": "طلب المشترك",
+  "Reason": "السبب",
+  "Other": "أخرى",
+  "Suspend-Subscription": "تعليق الاشتراك",
+  "Cancel-Subscription": "إلغاء الاشتراك",
+  "Must-be-maximum-500-digits": "يجب ألا يتجاوز 500 رقم",
+  "Reason-is-required": "السبب مطلوب",
+  "System-Name-does-not-match": "اسم النظام لا يتطابق",
+  "Only-English-Characters,-Numbers,-and-Underscores-are-accepted.": "يتم قبول الأحرف الإنجليزية والأرقام والشرطات السفلية فقط.",
+  "Comment-is-required-for-cancellation": "التعليق مطلوب للإلغاء"
 }

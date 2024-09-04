@@ -335,6 +335,7 @@ const PricingPage = () => {
                 }}
               >
                 {listProduct?.[productId]?.trialType == 2 &&
+                listProduct?.[productId]?.trialPlanId &&
                 planId == listProduct?.[productId]?.trialPlanId ? (
                   <FormattedMessage id="Trial" />
                 ) : (
@@ -627,7 +628,7 @@ const PricingPage = () => {
           <Card>
             <Card.Body>
               <div className="text-center">{renderCycleRadioButtons()}</div>
-              <Row className="justify-content-center ">
+              <Row className="justify-content-center mt-3 ">
                 {' '}
                 {groupedByCycle &&
                   groupedByCycle[selectedCycle] &&

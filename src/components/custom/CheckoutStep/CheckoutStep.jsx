@@ -7,6 +7,7 @@ import {
   Container,
   OverlayTrigger,
   Tooltip,
+  Table,
 } from '@themesberg/react-bootstrap'
 import { useEffect } from 'react'
 import { useState } from 'react'
@@ -37,10 +38,17 @@ const CheckoutPage = (data) => {
     setHasToPay,
     displayName: tenantDisplayName,
     priceData,
-    trialPlanId,
   } = data
 
   const [orderData, setOrderData] = useState()
+  const [trialPlanId, setTrialPlanId] = useState()
+
+  useEffect(() => {
+    if (!orderData) {
+      return
+    }
+    setTrialPlanId(orderData.orderItems[0].planId)
+  }, [orderData])
 
   const { productSystemName, productOwnerSystemName, priceName } = useParams()
 
@@ -91,7 +99,9 @@ const CheckoutPage = (data) => {
   }, [orderID, currency])
 
   const [currentFeaturePlan, setCurrentFeaturePlan] = useState()
+
   const [trialFeaturePlan, setTrialFeaturePlan] = useState()
+  console.log({ trialFeaturePlan, currentFeaturePlan })
   const intl = useIntl()
 
   useEffect(() => {
@@ -217,11 +227,16 @@ const CheckoutPage = (data) => {
 
   const direction = useSelector((state) => state.main.direction)
   const renderFeaturePlans = () => {
-    const featurePlans =
-      currentFeaturePlan &&
-      currentFeaturePlan.sort((a, b) => {
-        return a.feature.id.localeCompare(b.feature.id)
-      })
+    const featurePlans = currentFeaturePlan
+      ? currentFeaturePlan.sort((a, b) => {
+          return a.feature.id.localeCompare(b.feature.id)
+        })
+      : trialFeaturePlan &&
+        trialFeaturePlan.sort((a, b) => {
+          return a.feature.id.localeCompare(b.feature.id)
+        })
+    console.log({ featurePlans })
+
     return (
       <>
         <Card.Header>
@@ -273,7 +288,7 @@ const CheckoutPage = (data) => {
         <div className="">
           <Container className="card">
             <Row>
-              <Col md={7}>
+              <Col lg={7} md={12}>
                 {renderFeaturePlans()}
 
                 <Card.Header className="fw-bold">
@@ -428,7 +443,8 @@ const CheckoutPage = (data) => {
                 </Card.Body>
               </Col>
               <Col
-                md={5}
+                lg={5}
+                md={12}
                 className={
                   direction == 'rtl'
                     ? 'border-right-1 border-light  '
@@ -460,7 +476,185 @@ const CheckoutPage = (data) => {
                       </Form.Group>
                     </Form>
                   )} */}
+                  {/* Labels and prices table */}
                   <Card.Body>
+                    {paymentMethod && hasToPay && (
+                      <table className="table no-border p-0">
+                        <tbody className="p-0">
+                          <tr>
+                            <td className="fw-bold">
+                              <FormattedMessage id="Order-Subtotal-Exclude-Tax" />
+                            </td>
+                            <td className="display-cell">
+                              {
+                                orderData?.orderSubtotalExclTaxDetails
+                                  .formattedPrice
+                              }
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="fw-bold">
+                              <FormattedMessage id="Order-Subtotal-Include-Tax" />
+                            </td>
+                            <td className="display-cell">
+                              {
+                                orderData?.orderSubtotalInclTaxDetails
+                                  .formattedPrice
+                              }
+                            </td>
+                          </tr>
+                          {isDiscountApplied && (
+                            <tr>
+                              <td className="fw-bold text-danger">
+                                <FormattedMessage id="Discount-Amount" />
+                              </td>
+                              <td className="text-danger display-cell">
+                                - {discountAmount}{' '}
+                                {` (${orderData?.userCurrencyCode})`}
+                              </td>
+                            </tr>
+                          )}
+                          {orderData?.orderItems[0]?.trialPeriodInDays ? (
+                            <>
+                              <tr>
+                                <td className="fw-bold">
+                                  <FormattedMessage id="Due-Now" />
+                                </td>
+                                <td className="trial display-cell">
+                                  0.00 {` (${orderData?.userCurrencyCode}) `}/{' '}
+                                  {orderData?.orderItems[0]?.trialPeriodInDays}{' '}
+                                  <FormattedMessage id="Days" />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="fw-bold ">
+                                  <FormattedMessage id="After-Trial" />
+                                  <div className="normal-text font-small fw-bold">
+                                    <FormattedMessage id="Ends-On" /> (
+                                    {trialEndDate})
+                                  </div>
+                                </td>
+                                <td className="total fw-bold display-cell ">
+                                  <div>
+                                    {
+                                      orderData?.orderTotalDetails
+                                        .formattedPrice
+                                    }
+                                  </div>
+                                </td>
+                              </tr>
+                            </>
+                          ) : (
+                            <tr className="">
+                              <td className="fw-bold ">
+                                <FormattedMessage id="Total" />
+                              </td>
+                              <td className="total fw-bold display-cell ">
+                                {' '}
+                                {orderData?.orderTotalDetails.formattedPrice}
+                              </td>
+                            </tr>
+                          )}
+                          {isDiscountApplied && (
+                            <tr>
+                              <td className="fw-bold py-2 px-8 total">
+                                <FormattedMessage id="Total-Payable" />
+                              </td>
+                              <td className="fw-bold py-2 px-8 total">
+                                ${orderData?.orderTotal - discountAmount}
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    )}
+                    {paymentMethod && hasToPay && (
+                      <Form>
+                        <div className=" mr-3">
+                          <Form.Group className="mb-3 merged-form-group">
+                            {discountCodeStatus && (
+                              <>
+                                <Form.Control
+                                  type="text"
+                                  placeholder={intl.formatMessage({
+                                    id: 'Enter-Discount-Code',
+                                  })}
+                                  value={discountCode}
+                                  onChange={(e) =>
+                                    setDiscountCode(e.target.value)
+                                  }
+                                  className="form-control"
+                                />
+                                <Button
+                                  variant="secondary"
+                                  type="button"
+                                  onClick={handleApplyDiscount}
+                                  className="btn"
+                                >
+                                  <FormattedMessage id="Apply" />
+                                </Button>
+                              </>
+                            )}
+                          </Form.Group>
+                        </div>
+
+                        <Form.Group className="mb-3">
+                          <Form.Check
+                            type="checkbox"
+                            label={
+                              <FormattedMessage id="Remember-Card-Information" />
+                            }
+                            checked={rememberCardInfo}
+                            onChange={handleRememberCardInfoChange}
+                            value={rememberCardInfo}
+                            disabled={autoRenewal}
+                            className="font-small"
+                          />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                          <Form.Check
+                            type="checkbox"
+                            label={<FormattedMessage id="Allow-Auto-Renewal" />}
+                            checked={autoRenewal}
+                            onChange={handleAutoRenewalChange}
+                            value={autoRenewal}
+                            className="font-small"
+                          />
+                        </Form.Group>
+                      </Form>
+                    )}
+                    <div className="button-container">
+                      <Button
+                        variant="primary"
+                        type="button"
+                        onClick={handlePayment}
+                      >
+                        {hasToPay ? (
+                          <FormattedMessage id={`Checkout`} />
+                        ) : (
+                          <FormattedMessage id="Complete" />
+                        )}
+                      </Button>
+                      {hasToPay && (
+                        <>
+                          <span className="underline m-2">
+                            <FormattedMessage id="or" />
+                          </span>
+                          <Button
+                            variant="secondary"
+                            type="button"
+                            onClick={() => setVisible(true)}
+                            className="mx-2"
+                          >
+                            <FormattedMessage id="Create-Payment-Link" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </Card.Body>
+
+                  {/* <Card.Body>
                     {paymentMethod && hasToPay && (
                       <div className="d-flex align-items-start justify-content-between py-3">
                         <div className="">
@@ -533,7 +727,7 @@ const CheckoutPage = (data) => {
                               </p>
                             )}
                             {
-                              // !isDiscountApplied &&
+                             
                               !isDiscountApplied && (
                                 <p className="total fw-bold py-2 px-8">
                                   {orderData?.orderTotalDetails.formattedPrice}
@@ -544,99 +738,8 @@ const CheckoutPage = (data) => {
                         </div>
                       </div>
                     )}
-                    {paymentMethod && hasToPay && (
-                      <Form>
-                        {/* Discount Code */}
-                        <div className=" mr-3">
-                          {/* <Form.Check
-                            type="checkbox"
-                            label={<FormattedMessage id="Add-Discount-Code" />}
-                            checked={discountCodeStatus}
-                            onChange={handleDiscountCodeStatus}
-                            className="font-small"
-                          /> */}
-                          <Form.Group className="mb-3 merged-form-group">
-                            {discountCodeStatus && (
-                              <>
-                                <Form.Control
-                                  type="text"
-                                  placeholder={intl.formatMessage({
-                                    id: 'Enter-Discount-Code',
-                                  })}
-                                  value={discountCode}
-                                  onChange={(e) =>
-                                    setDiscountCode(e.target.value)
-                                  }
-                                  className="form-control"
-                                />
-                                <Button
-                                  variant="secondary"
-                                  type="button"
-                                  onClick={handleApplyDiscount}
-                                  className="btn"
-                                >
-                                  <FormattedMessage id="Apply" />
-                                </Button>
-                              </>
-                            )}
-                          </Form.Group>
-                        </div>
-                        {/* Remember Card Information */}
-                        <Form.Group className="mb-3">
-                          <Form.Check
-                            type="checkbox"
-                            label={
-                              <FormattedMessage id="Remember-Card-Information" />
-                            }
-                            checked={rememberCardInfo}
-                            onChange={handleRememberCardInfoChange}
-                            value={rememberCardInfo}
-                            disabled={autoRenewal}
-                            className="font-small"
-                          />
-                        </Form.Group>
-                        {/* Auto Renewal */}
-                        <Form.Group className="mb-3">
-                          <Form.Check
-                            type="checkbox"
-                            label={<FormattedMessage id="Allow-Auto-Renewal" />}
-                            checked={autoRenewal}
-                            onChange={handleAutoRenewalChange}
-                            value={autoRenewal}
-                            className="font-small"
-                          />
-                        </Form.Group>
-                      </Form>
-                    )}
-                    <div className="button-container">
-                      <Button
-                        variant="primary"
-                        type="button"
-                        onClick={handlePayment}
-                      >
-                        {hasToPay ? (
-                          <FormattedMessage id={`Checkout`} />
-                        ) : (
-                          <FormattedMessage id="Complete" />
-                        )}
-                      </Button>
-                      {hasToPay && (
-                        <>
-                          <span className="underline m-2">
-                            <FormattedMessage id="or" />
-                          </span>
-                          <Button
-                            variant="secondary"
-                            type="button"
-                            onClick={() => setVisible(true)}
-                            className="mx-2"
-                          >
-                            <FormattedMessage id="Create-Payment-Link" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </Card.Body>
+                    
+                  </Card.Body> */}
                   {orderData?.orderItems[0]?.trialPeriodInDays ? (
                     <Card.Footer>
                       <div className="free-trial-terms">

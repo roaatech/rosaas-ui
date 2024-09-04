@@ -16,25 +16,37 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   subscribe,
   sortSubscriptions,
+  filterSubscriptions,
+  setSearchTerm,
 } from '../../../../store/slices/products/productsSlice.js'
 import { setAllTenant } from '../../../../store/slices/tenants'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { formatDate } from '../../../../lib/sharedFun/Time'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import Label from '../../Shared/label/Label'
-import { activeStatus } from '../../../../const/product'
+import { activeStatus, subscriptionStatus } from '../../../../const/product'
 import { Wrapper } from './ProductTenantsList.styled'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { Routes } from '../../../../routes.js'
+import { BsSearch } from 'react-icons/bs'
+import { InputText } from 'primereact/inputtext'
+import CancelSubscriptionForm from '../../tenant/CancelSubscriptionForm/CancelSubscriptionForm.jsx'
+import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog.jsx'
+import { MdOutlineCancel } from 'react-icons/md'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { getProductTenants } = useRequest()
   const [sortField, setSortField] = useState('')
   const [sortOrder, setSortOrder] = useState('asc')
+  const [inputValue, setInputValue] = useState('')
 
   const dispatch = useDispatch()
   const list = useSelector((state) => state.products.products[productId])
+  const searchTerm = useSelector(
+    (state) => state.products.products[productId].searchTerm
+  )
+  console.log({ list })
 
   useEffect(() => {
     let params = `${productId}/subscriptions`
@@ -48,6 +60,10 @@ export const ProductTenantsList = ({ productId, productName }) => {
     })()
   }, [productId, list, dispatch, getProductTenants])
 
+  useEffect(() => {
+    dispatch(filterSubscriptions({ productId }))
+  }, [searchTerm && Object.values(searchTerm).length, dispatch, productId])
+
   const handleSort = (field) => {
     const order = sortField === field && sortOrder === 'asc' ? 'desc' : 'asc'
     setSortField(field)
@@ -55,6 +71,32 @@ export const ProductTenantsList = ({ productId, productName }) => {
     dispatch(sortSubscriptions({ productId, sortBy: field, order }))
   }
 
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setInputValue(value)
+    dispatch(setSearchTerm({ productId, searchTerm: value }))
+  }
+  const [visible, setVisible] = useState(false)
+  const [currentSubscriptionId, setCurrentSubscriptionId] = useState()
+  const [currentSystemName, setCurrentSystemName] = useState()
+  const [popupLabel, setpopuplabel] = useState()
+  const [type, setType] = useState()
+  const suspendSubscription = async (subscriptionId, systemName) => {
+    setCurrentSubscriptionId(subscriptionId)
+    setCurrentSystemName(systemName)
+    setVisible(true)
+    setType('suspend')
+    setpopuplabel(<FormattedMessage id="Suspend-Subscription" />)
+  }
+  const cancelSubscription = async (subscriptionId, systemName) => {
+    setCurrentSubscriptionId(subscriptionId)
+    setCurrentSystemName(systemName)
+    setVisible(true)
+    setType('cancel')
+    setpopuplabel(<FormattedMessage id="Cancel-Subscription" />)
+  }
+
+  const intl = useIntl()
   const TableRow = (props) => {
     const {
       displayName,
@@ -63,12 +105,12 @@ export const ProductTenantsList = ({ productId, productName }) => {
       createdDate,
       editedDate,
       tenantId,
-      plan: { systemName: planSystemName },
+      plan: { systemName: planSystemName } = {},
       startDate,
       endDate,
-      isActive,
+      subscriptionStatus: subscriptionStatusValue,
+      subscriptionId,
     } = props
-    const subscriptionStatus = isActive ? true : false
 
     return (
       <tr>
@@ -85,7 +127,7 @@ export const ProductTenantsList = ({ productId, productName }) => {
         </td>
         <td>
           <span>
-            <Label {...activeStatus[subscriptionStatus]} />
+            <Label {...subscriptionStatus[subscriptionStatusValue]} />
           </span>
         </td>
         <td>
@@ -126,6 +168,30 @@ export const ProductTenantsList = ({ productId, productName }) => {
                   <FormattedMessage id="Manage" />
                 </Link>
               </Dropdown.Item>
+              {subscriptionStatusValue != 3 && (
+                <Dropdown.Item
+                  onSelect={() => {
+                    cancelSubscription(subscriptionId, systemName)
+                  }}
+                >
+                  <span className="text-danger">
+                    <MdOutlineCancel className="mx-2" />
+                    <FormattedMessage id="Cancel-Subscription" />
+                  </span>
+                </Dropdown.Item>
+              )}
+              {subscriptionStatusValue != 2 && subscriptionStatusValue != 3 && (
+                <Dropdown.Item
+                  onSelect={() => {
+                    suspendSubscription(subscriptionId, systemName)
+                  }}
+                >
+                  <span className="text-warning">
+                    <MdOutlineCancel className="mx-2" />
+                    <FormattedMessage id="Suspend-Subscription" />
+                  </span>
+                </Dropdown.Item>
+              )}
             </Dropdown.Menu>
           </Dropdown>
         </td>
@@ -137,6 +203,18 @@ export const ProductTenantsList = ({ productId, productName }) => {
     <Wrapper>
       <Card border="light" className="table-wrapper table-responsive shadow-sm">
         <Card.Body className="pt-0">
+          <div className="d-flex justify-content-end mb-3">
+            <div className="p-input-icon-left mx-3">
+              <BsSearch />
+              <InputText
+                className="form-control"
+                placeholder={intl.formatMessage({ id: 'Search' })}
+                value={inputValue}
+                onChange={handleSearch}
+              />
+            </div>
+          </div>
+
           <Table hover className="user-table align-items-center">
             <thead>
               <tr>
@@ -202,15 +280,31 @@ export const ProductTenantsList = ({ productId, productName }) => {
               </tr>
             </thead>
             <tbody>
-              {list?.subscribe?.length
-                ? list.subscribe.map((t, index) => (
+              {list?.filtered?.length && searchTerm
+                ? list.filtered &&
+                  list.filtered.map((t, index) => (
                     <TableRow key={index} {...t} />
                   ))
-                : null}
+                : !searchTerm &&
+                  list.subscribe &&
+                  list.subscribe.map((t, index) => (
+                    <TableRow key={index} {...t} />
+                  ))}
             </tbody>
           </Table>
         </Card.Body>
       </Card>
+      <ThemeDialog visible={visible} setVisible={setVisible}>
+        <>
+          <CancelSubscriptionForm
+            popupLabel={popupLabel}
+            setVisible={setVisible}
+            systemName={currentSystemName}
+            subscriptionId={currentSubscriptionId}
+            type={type}
+          />
+        </>
+      </ThemeDialog>
     </Wrapper>
   )
 }
