@@ -11,7 +11,15 @@ import {
 import { FormattedMessage, useIntl } from 'react-intl'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import { Wrapper } from './ClientCredentials.styled'
-import { BsHourglassSplit, BsPlusCircleFill } from 'react-icons/bs'
+import {
+  BsArrowDown,
+  BsArrowDownCircle,
+  BsArrowUp,
+  BsFillArrowDownCircleFill,
+  BsFillArrowUpCircleFill,
+  BsHourglassSplit,
+  BsPlusCircleFill,
+} from 'react-icons/bs'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
 import Label from '../../Shared/label/Label'
@@ -131,9 +139,28 @@ const ClientCredentials = ({ data }) => {
       <>
         <tr className={className}>
           <td>
-            <Button variant="primary" onClick={() => manageClientSecret(id)}>
-              <GiThreeKeys />
-            </Button>
+            <td>
+              <Button
+                variant="secondary"
+                onClick={() => manageClientSecret(id)}
+                className="icon-transition "
+                style={{
+                  transition: 'transform 0.9s ease',
+                }}
+              >
+                {SecretManagementVisible[id] ? (
+                  <>
+                    <FormattedMessage id="Secrets" />{' '}
+                    <BsFillArrowUpCircleFill />
+                  </>
+                ) : (
+                  <>
+                    <FormattedMessage id="Secrets" />{' '}
+                    <BsFillArrowDownCircleFill />
+                  </>
+                )}
+              </Button>
+            </td>
           </td>
           <td>
             <span className="fw-normal">{displayName}</span>

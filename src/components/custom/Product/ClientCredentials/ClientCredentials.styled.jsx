@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 export const Wrapper = styled.div`
+  transition: transform 0.7s ease;
+
   .dynamicButtons {
     margin-left: auto;
     width: fit-content;
@@ -11,5 +13,12 @@ export const Wrapper = styled.div`
   }
   .SecretMangements {
     background-color: var(--table-hover);
+  }
+  .icon-transition {
+    transition: transform 0.3s ease;
+  }
+
+  .icon-rotate {
+    transform: rotate(180deg);
   }
 `

@@ -92,6 +92,7 @@ const useRequest = () => {
     subscriptionCycleById,
     getSubscriptionsList,
     getAutoRenewalList,
+    cancelSubscriptionRequest,
   } = useSubManagementReq()
 
   const {
@@ -364,6 +365,7 @@ const useRequest = () => {
     checkOrderCurrencyChange,
     ProductOwnerLimits,
     getCurrenciesProductOwnerList,
+    cancelSubscriptionRequest,
   }
 }
 export default useRequest

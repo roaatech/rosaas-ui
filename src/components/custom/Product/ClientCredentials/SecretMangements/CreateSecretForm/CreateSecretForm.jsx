@@ -416,11 +416,21 @@ const CreateSecretForm = ({
                   <option value="">
                     <FormattedMessage id="Select-Option" />
                   </option>
-                  <option value="30">30 days</option>
-                  <option value="60">60 days</option>
-                  <option value="90">90 days</option>
-                  <option value="custom">Custom</option>
-                  <option value="none">None</option>
+                  <option value="30">
+                    <FormattedMessage id="30-days" />
+                  </option>
+                  <option value="60">
+                    <FormattedMessage id="60-days" />
+                  </option>
+                  <option value="90">
+                    <FormattedMessage id="90-days" />
+                  </option>
+                  <option value="custom">
+                    <FormattedMessage id="Custom" />
+                  </option>
+                  <option value="none">
+                    <FormattedMessage id="Unlimited" />
+                  </option>
                 </Form.Control>
 
                 {expirationType === 'custom' ? (

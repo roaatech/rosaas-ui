@@ -18,6 +18,9 @@ export const Wrapper = styled.main`
   .custom-div:hover {
     color: var(--second-color-darker);
   }
+  .super-admin-card {
+    background-color: var(--second-color-1) !important;
+  }
   .copy {
     bottom: 0;
     width: 100%;

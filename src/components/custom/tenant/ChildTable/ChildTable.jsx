@@ -37,6 +37,11 @@ export default function ChildTable({
 }) {
   const { getProductSpecification } = useRequest()
   const dispatch = useDispatch()
+  const params = useParams()
+  const currentTenantId = params.id
+  const currentTenantsData = useSelector(
+    (state) => state.tenants.tenants?.[currentTenantId]
+  )
 
   const listProducts = useSelector((state) => state.products.products)
   useEffect(() => {
@@ -119,16 +124,6 @@ export default function ChildTable({
           buttons={
             productData.actions && productData.actions[0]?.status != 13
               ? [
-                  //  {
-                  //       order: 1,
-                  //       type: 'form',
-                  //       id: routeParams.id,
-                  //       label: 'Edit',
-                  //       component: 'editTenant',
-                  //       updateTenant: updateTenant,
-                  //       icon: <AiFillEdit />,
-                  //     }
-                  //   :
                   {
                     order: 1,
                     type: 'form',
@@ -140,8 +135,23 @@ export default function ChildTable({
                     disable: !checkSpecificationsArray,
                     icon: <AiFillEdit />,
                   },
+                  // Ensure the condition returns an object or nothing
+                  ...(currentTenantsData.subscriptions?.[0].status != 11 &&
+                  currentTenantsData.subscriptions?.[0].status != 12 &&
+                  currentTenantsData.subscriptions?.[0].status != 13
+                    ? [
+                        {
+                          order: 4,
+                          type: 'form',
+                          label: 'Cancel-Subscription',
+                          component: 'cancelSubscription',
+                          updateTenant: updateTenant,
+                          icon: <MdFactCheck />,
+                        },
+                      ]
+                    : []),
                   {
-                    order: 4,
+                    order: 5, // Adjusted order to avoid duplication
                     type: 'action',
                     label: 'Subscription-Management',
                     func: () => {

@@ -767,5 +767,8 @@
   "Custom": "Custom",
   "Publish": "Publish",
   "Unpublish": "Unpublish",
-  "Exch-Rate-Prov": "Exchange Rate Prov."
+  "Exch-Rate-Prov": "Exchange Rate Prov.",
+  "30-days": "30 days",
+  "60-days": "60 days",
+  "90-days": "90 days"
 }

@@ -30,6 +30,7 @@ import CreateWebhookForm from '../../Product/WebhookList/WebhookForm/WebhookForm
 import ProductOwnerForm from '../../ProductOwner/ProductOwnerForm'
 import DiscountForm from '../../Discounts/DiscountForm/DiscountForm'
 import AddValidationUrlForm from '../../Product/CustomSpecification/AddValidationUrlForm/AddValidationUrlForm'
+import CancelSubscriptionForm from '../../tenant/CancelSubscriptionForm/CancelSubscriptionForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -232,6 +233,15 @@ const DynamicButtons = ({ buttons }) => {
           setVisible={setVisible}
           sideBar={false}
           setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+        />
+      </>
+    ),
+    cancelSubscription: () => (
+      <>
+        <CancelSubscriptionForm
+          popupLabel={<FormattedMessage id="Cancel-Subscription" />}
+          setVisible={setVisible}
+          updateTenant={buttons[currentButtonIndex].updateTenant}
         />
       </>
     ),

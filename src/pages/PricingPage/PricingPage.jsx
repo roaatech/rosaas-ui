@@ -627,7 +627,7 @@ const PricingPage = () => {
           <Card>
             <Card.Body>
               <div className="text-center">{renderCycleRadioButtons()}</div>
-              <Row className="justify-content-center">
+              <Row className="justify-content-center ">
                 {' '}
                 {groupedByCycle &&
                   groupedByCycle[selectedCycle] &&
@@ -635,13 +635,6 @@ const PricingPage = () => {
                     (plansPrice) => {
                       const renderedPlans = renderFeaturePlans(
                         groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
-                      )
-                      console.log(
-                        groupedByCycle[selectedCycle] &&
-                          Object.keys(groupedByCycle[selectedCycle])?.length >=
-                            3
-                          ? Object.keys(groupedByCycle[selectedCycle])?.length
-                          : 3
                       )
 
                       return (

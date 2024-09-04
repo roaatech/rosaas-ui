@@ -121,7 +121,13 @@ const SignInPage = () => {
                 xs={12}
                 className="d-flex align-items-center justify-content-center"
               >
-                <div className="cardCont shadow-soft border border-round border-light p-4 p-lg-5 w-100 fmxw-500">
+                <div
+                  className={`cardCont shadow-soft border border-round border-light p-4 p-lg-5 w-100 fmxw-500 ${
+                    location.pathname === Routes.SignInSuperAdmin.path
+                      ? 'super-admin-card'
+                      : ''
+                  }`}
+                >
                   <div className="text-center text-md-center mb-4 mt-md-0">
                     <img src={logo} alt="RoSaaS Logo" className="logo" />
                     <h3 className="mb-0">
