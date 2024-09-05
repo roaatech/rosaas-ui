@@ -53,7 +53,7 @@ const DynamicButtons = ({ buttons }) => {
   const [toggleStates, setToggleStates] = useState(
     buttons.reduce((acc, button, index) => {
       if (button.type === 'toggle') {
-        acc[button.group] = acc[button.group] || {} // Initialize group if it doesn't exist
+        acc[button.group] = acc[button.group] || {}
         acc[button.group][index] = button.toggleValue
       }
       return acc
@@ -71,19 +71,27 @@ const DynamicButtons = ({ buttons }) => {
     const checkMoreArray = buttons.map((button) => button.order > 3)
     setMore(checkMoreArray.includes(true))
   }, [buttons])
-
   const handleToggle = (index, group) => {
-    setToggleStates((prevState) => ({
-      ...prevState,
-      [group]: {
-        ...Object.keys(prevState[group]).reduce((acc, key) => {
-          acc[key] = false // Set all group toggles to false
-          return acc
-        }, {}),
-        [index]: !prevState[group][index], // Only the clicked toggle becomes active
-      },
-    }))
-    buttons[index].toggleFunc()
+    setToggleStates((prevState) => {
+      const isActive = prevState[group][index]
+
+      if (isActive) return prevState
+
+      return {
+        ...prevState,
+        [group]: {
+          ...Object.keys(prevState[group]).reduce((acc, key) => {
+            acc[key] = false
+            return acc
+          }, {}),
+          [index]: true,
+        },
+      }
+    })
+
+    if (!toggleStates[group][index]) {
+      buttons[index].toggleFunc()
+    }
   }
 
   const forms = {

@@ -23,6 +23,12 @@ export const Wrapper = styled.div`
     border-color: var(--themeGray) !important;
   }
 
+  .dynamicButtons {
+    margin-left: auto;
+    width: fit-content;
+    margin-bottom: 1.25rem;
+  }
+
   tr > td.url-container {
     padding-top: 5px;
     padding-bottom: 5px;

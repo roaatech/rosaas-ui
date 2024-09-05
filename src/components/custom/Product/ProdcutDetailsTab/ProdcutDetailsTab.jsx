@@ -13,9 +13,11 @@ import useRequest from '../../../../axios/apis/useRequest'
 import { setAllPlans } from '../../../../store/slices/products/productsSlice'
 import Label from '../../Shared/label/Label'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
 const ProductDetailsTab = ({ data }) => {
   const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
+  const [selectedLanguage, setSelectedLanguage] = useState('en') // State for language selection
 
   const handleCopy = () => {
     setToolTipText('Copied')
@@ -50,6 +52,22 @@ const ProductDetailsTab = ({ data }) => {
 
   return (
     <Wrapper>
+      {/* Dynamic Buttons for Language Selection */}
+      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+        <DynamicButtons
+          buttons={[
+            ...Object.keys({ en: 'English', ar: 'Arabic' }).map((lang) => ({
+              order: 1,
+              type: 'toggle',
+              label: lang,
+              group: 'language',
+              toggleValue: selectedLanguage === lang,
+              toggleFunc: () => setSelectedLanguage(lang),
+              variant: 'primary',
+            })),
+          ]}
+        />
+      </div>
       {data && (
         <div className="main">
           <div className="details">
@@ -59,7 +77,10 @@ const ProductDetailsTab = ({ data }) => {
                   <td className="mb-0 w-50 fw-bold">
                     <FormattedMessage id="Display-Name" />
                   </td>
-                  <td className="card-stats">{data.displayName}</td>
+                  <td className="card-stats">
+                    {data.displayNameLocalizations?.[selectedLanguage] ||
+                      data.displayName}
+                  </td>
                 </tr>
                 <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                   <td className="mb-0 w-50 fw-bold">
@@ -78,7 +99,9 @@ const ProductDetailsTab = ({ data }) => {
                     <FormattedMessage id="Description" />
                   </td>
                   <td className="card-stats">
-                    {data.description && <DescriptionCell data={data} />}
+                    {data.descriptionLocalizations?.[selectedLanguage] || (
+                      <DescriptionCell data={data} />
+                    )}
                   </td>
                 </tr>
                 {data?.trialType === 2 && (
@@ -151,7 +174,9 @@ const ProductDetailsTab = ({ data }) => {
                       <FormattedMessage id="Trial-Plan" />
                     </td>
                     <td className="card-stats">
-                      {listData[productId].plans &&
+                      {(listData[productId].plans &&
+                        listData[productId].plans?.[data?.trialPlanId]
+                          .displayNameLocalizations?.[selectedLanguage]) ||
                         listData[productId].plans?.[data?.trialPlanId]
                           .displayName}
                     </td>
