@@ -17,6 +17,7 @@ import {
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import { activeIndex, cycle } from '../../../../../const/index.js'
 import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
 
 const PlanPriceForm = ({
   type,
@@ -56,7 +57,6 @@ const PlanPriceForm = ({
       if (!allPlansPrices) {
         try {
           const response = await getProductPlanPriceList(productId)
-
           dispatch(
             setAllPlansPrice({
               productId: productId,
@@ -103,6 +103,7 @@ const PlanPriceForm = ({
       console.error('Error handling plan cycle:', error)
     }
   }
+
   const [plansWithAllCyclesAssigned, setPlansWithAllCyclesAssigned] = useState(
     []
   )
@@ -136,12 +137,14 @@ const PlanPriceForm = ({
   useEffect(() => {
     handlePlansWithAllCyclesAssigned()
   }, [])
+
   const initialValues = {
     plan: plan || (planPriceData ? planPriceData.plan.id : ''),
     systemName: planPriceData ? planPriceData.systemName : '',
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
     price: planPriceData ? planPriceData.price : '',
-    description: planPriceData ? planPriceData.description : '',
+    descriptionEn: planPriceData?.descriptionLocalizations?.en || '',
+    descriptionAr: planPriceData?.descriptionLocalizations?.ar || '',
     cyclesYouDontHave: cyclesYouDontHave,
   }
 
@@ -165,19 +168,36 @@ const PlanPriceForm = ({
       .required(<FormattedMessage id="This-field-is-required" />)
       .min(0, <FormattedMessage id="The-price-must-be-0-or-more" />)
       .max(999999, <FormattedMessage id="The-value-must-not-exceed-999,999" />),
+
+    descriptionEn: Yup.string().max(
+      250,
+      <FormattedMessage id="Must-be-maximum-250-digits" />
+    ),
+    descriptionAr: Yup.string().max(
+      250,
+      <FormattedMessage id="Must-be-maximum-250-digits" />
+    ),
   })
 
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
+      const dataToSubmit = {
+        systemName: values.systemName,
+        planId: values.plan,
+        cycle: parseInt(values.cycle),
+        price: parseFloat(values.price),
+
+        descriptionLocalizations: {
+          en: values.descriptionEn,
+          ar: values.descriptionAr,
+        },
+      }
+
       if (type === 'create') {
         const createPlanPrice = await createPlanPriceRequest(productId, {
-          systemName: values.systemName,
-          planId: values.plan,
-          cycle: parseInt(values.cycle),
-          price: parseFloat(values.price),
-          description: values.description,
+          ...dataToSubmit,
         })
 
         if (!allProducts[productId].plansPrice) {
@@ -203,7 +223,10 @@ const PlanPriceForm = ({
               price: values.price,
               systemName: values.systemName,
 
-              description: values.description,
+              descriptionLocalizations: {
+                en: values.descriptionEn,
+                ar: values.descriptionAr,
+              },
               id: createPlanPrice.data.data.id,
               isPublished: false,
               isSubscribed: false,
@@ -220,8 +243,11 @@ const PlanPriceForm = ({
         const editPlan = await editPlanPriceRequest(productId, {
           data: {
             price: parseFloat(values.price),
-            description: values.description,
             cycle: parseInt(values.cycle),
+            descriptionLocalizations: {
+              en: values.descriptionEn,
+              ar: values.descriptionAr,
+            },
           },
           id: planPriceData.id,
         })
@@ -238,7 +264,11 @@ const PlanPriceForm = ({
               systemName: values.systemName,
               cycle: values.cycle,
               price: values.price,
-              description: values.description,
+
+              descriptionLocalizations: {
+                en: values.descriptionEn,
+                ar: values.descriptionAr,
+              },
               id: planPriceData.id,
               isPublished: planPriceData.isPublished,
               isSubscribed: planPriceData.isSubscribed,
@@ -272,6 +302,7 @@ const PlanPriceForm = ({
   const filteredPlanOptions = planOptions.filter(
     (option) => !plansWithAllCyclesAssigned.includes(option.value)
   )
+
   useEffect(() => {
     ;(async () => {
       if (!allPlans) {
@@ -299,6 +330,7 @@ const PlanPriceForm = ({
         </Modal.Header>
 
         <Modal.Body>
+          {/* System Name Field */}
           {type !== 'edit' && (
             <div className="mb-3">
               <AutoGenerateInput
@@ -346,6 +378,8 @@ const PlanPriceForm = ({
               )}
             </div>
           )}
+
+          {/* Plan Selection */}
           {type !== 'edit' && (
             <>
               <div>
@@ -433,6 +467,7 @@ const PlanPriceForm = ({
             </>
           )}
 
+          {/* Price Field */}
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
@@ -462,26 +497,40 @@ const PlanPriceForm = ({
               )}
             </Form.Group>
           </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Description" />
-              </Form.Label>
 
-              <TextareaAndCounter
-                addTextarea={formik.setFieldValue}
-                maxLength={250}
-                showCharCount
-                inputValue={formik?.values?.description}
-              />
-
-              {formik.touched.description && formik.errors.description && (
-                <div className="invalid-feedback">
-                  {formik.errors.description}
-                </div>
-              )}
-            </Form.Group>
-          </div>
+          {/* MultilingualInput for Description */}
+          <MultilingualInput
+            inputLabel="Description"
+            languages={[
+              { code: 'en', name: 'English' },
+              { code: 'ar', name: 'Arabic' },
+            ]}
+            inputIds={{
+              en: 'descriptionEn',
+              ar: 'descriptionAr',
+            }}
+            placeholder={{
+              en: 'English-Description',
+              ar: 'Arabic-Description',
+            }}
+            tooltipMessageId="Description-Tooltip"
+            values={{
+              en: formik.values.descriptionEn,
+              ar: formik.values.descriptionAr,
+            }}
+            onChange={formik.handleChange}
+            isRequired={false}
+            inputType="TextareaAndCounter"
+            maxLength={250}
+            errors={{
+              en: formik.errors.descriptionEn,
+              ar: formik.errors.descriptionAr,
+            }}
+            touched={{
+              en: formik.touched.descriptionEn,
+              ar: formik.touched.descriptionAr,
+            }}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">

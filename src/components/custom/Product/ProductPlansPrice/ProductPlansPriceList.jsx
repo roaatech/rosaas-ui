@@ -69,6 +69,7 @@ export default function ProductPlansPriceList({ children }) {
   const [type, setType] = useState('')
   const [show, setShow] = useState(false)
   const [popUpLable, setPopUpLable] = useState('')
+  const [selectedLanguage, setSelectedLanguage] = useState('en') // State for language selection
 
   const productId = routeParams.id
   const listProductDataStore = useSelector(
@@ -76,10 +77,7 @@ export default function ProductPlansPriceList({ children }) {
   )
 
   const plansData = { ...listProductDataStore?.plans }
-  // delete default key from list
   const listData = { ...listProductDataStore?.plansPrice }
-  // listData['00000000-0000-0000-0000-000000000000'] &&
-  //   delete listData['00000000-0000-0000-0000-000000000000']
   let list = listData && Object.values(listData)
 
   const handleDeletePlanPrice = async () => {
@@ -119,11 +117,13 @@ export default function ProductPlansPriceList({ children }) {
       setConfirm(true)
     }
   }
+
   const toastError = (message) => {
     return toast.error(intl.formatMessage({ id: message }), {
       position: toast.POSITION.TOP_CENTER,
     })
   }
+
   const editForm = async (id) => {
     if (listData[id].isSubscribed == true) {
       toast.error(
@@ -214,8 +214,7 @@ export default function ProductPlansPriceList({ children }) {
       cycle: cycle[data.cycle],
       Published: data.isPublished ? 'Yes' : 'No',
       Subscribed: data.isSubscribed ? 'Yes' : 'No',
-      Description: data.description,
-
+      Description: data.descriptionLocalizations[selectedLanguage],
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
     }
@@ -346,6 +345,17 @@ export default function ProductPlansPriceList({ children }) {
       <div className="dynamicButtons pt-0 mt-0 mb-1 ">
         <DynamicButtons
           buttons={[
+            ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+              (lang, index) => ({
+                order: 1,
+                type: 'toggle',
+                label: lang,
+                group: 'language',
+                toggleValue: selectedLanguage === lang,
+                toggleFunc: () => setSelectedLanguage(lang),
+                variant: 'primary',
+              })
+            ),
             {
               order: 1,
               type: 'form',
@@ -369,61 +379,63 @@ export default function ProductPlansPriceList({ children }) {
                 <tr>
                   <th className="border-bottom"></th>
                   {Object.keys(plansData).map((item, index) => (
-                    <>
-                      <th
-                        className="clickable-icon"
-                        key={index}
-                        onClick={() =>
-                          togglePublishPlan(item, plansData[item].isPublished)
-                        }
-                      >
-                        <span className="mr-2">
-                          {plansData[item].isPublished ? (
-                            <span className="label green">
-                              <BsToggleOn />
-                            </span>
-                          ) : (
-                            <span className="label grey">
-                              <BsToggleOff />
-                            </span>
-                          )}
-                        </span>
-                        {plansData[item].displayName}
-                        <span className="ml-2 ">
-                          <OverlayTrigger
-                            trigger={['hover', 'focus']}
-                            overlay={
-                              <Tooltip>
-                                {plansData[item].isLockedBySystem
-                                  ? intl.formatMessage({
-                                      id: 'Locked-by-system',
-                                    })
-                                  : intl.formatMessage({
-                                      id: 'Not-locked-by-system',
-                                    })}
-                              </Tooltip>
-                            }
+                    <th
+                      className="clickable-icon"
+                      key={index}
+                      onClick={() =>
+                        togglePublishPlan(item, plansData[item].isPublished)
+                      }
+                    >
+                      <span className="mr-2">
+                        {plansData[item].isPublished ? (
+                          <span className="label green">
+                            <BsToggleOn />
+                          </span>
+                        ) : (
+                          <span className="label grey">
+                            <BsToggleOff />
+                          </span>
+                        )}
+                      </span>
+                      {
+                        plansData[item].displayNameLocalizations[
+                          selectedLanguage
+                        ]
+                      }
+                      <span className="ml-2 ">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {plansData[item].isLockedBySystem
+                                ? intl.formatMessage({
+                                    id: 'Locked-by-system',
+                                  })
+                                : intl.formatMessage({
+                                    id: 'Not-locked-by-system',
+                                  })}
+                            </Tooltip>
+                          }
+                        >
+                          <span
+                            className={`${
+                              plansData[item].isLockedBySystem
+                                ? 'lock-active'
+                                : 'lock-passive'
+                            }`}
                           >
-                            <span
-                              className={`${
-                                plansData[item].isLockedBySystem
-                                  ? 'lock-active'
-                                  : 'lock-passive'
-                              }`}
-                            >
-                              {plansData[item].isLockedBySystem ? (
-                                <BsFillLockFill />
-                              ) : (
-                                <BsFillUnlockFill />
-                              )}
-                              <span className="ml-1">
-                                {plansData[item].isLockedBySystem}
-                              </span>
+                            {plansData[item].isLockedBySystem ? (
+                              <BsFillLockFill />
+                            ) : (
+                              <BsFillUnlockFill />
+                            )}
+                            <span className="ml-1">
+                              {plansData[item].isLockedBySystem}
                             </span>
-                          </OverlayTrigger>
-                        </span>
-                      </th>
-                    </>
+                          </span>
+                        </OverlayTrigger>
+                      </span>
+                    </th>
                   ))}
                 </tr>
               </thead>
@@ -456,7 +468,7 @@ export default function ProductPlansPriceList({ children }) {
           <PlanPriceForm
             popupLabel={<FormattedMessage id={popUpLable} />}
             type={type}
-            planPriceData={type == 'edit' ? listData[currentId] : {}}
+            planPriceData={type === 'edit' ? listData[currentId] : {}}
             setVisible={setVisible}
             plan={currentPlanId}
             cycleValue={currentCycle}
