@@ -14,6 +14,9 @@ const AutoGenerateInput = ({
   disabled,
 }) => {
   useEffect(() => {
+    if (!value) {
+      return
+    }
     let uniqueNameTitle =
       value &&
       value

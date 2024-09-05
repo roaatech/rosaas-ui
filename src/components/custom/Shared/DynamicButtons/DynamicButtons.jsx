@@ -1,20 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import ThemeDialog from '../ThemeDialog/ThemeDialog'
 import ProductForm from '../../Product/ProductForm/ProductForm'
 import useRequest from '../../../../axios/apis/useRequest'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import TenantForm from '../../tenant/TenantForm/TenantForm'
 import { Dropdown, Button } from '@themesberg/react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import {
+  faChevronDown,
+  faToggleOn,
+  faToggleOff,
+} from '@fortawesome/free-solid-svg-icons'
 import { Wrapper } from './DynamicButtons.styled'
 import FeatureForm from '../../Product/ProductFeaturesList/FeatureForm/FeatureForm'
 import FeaturePlanForm from '../../Product/ProductFeaturePlan/FeaturePlanForm/FeaturePlanForm'
 import PlanForm from '../../Product/ProductPlansList/PlanForm/PlanForm'
-import { useEffect } from 'react'
 import PlanPriceForm from '../../Product/ProductPlansPrice/PlanPriceForm/PlanPriceForm'
 import CustomSpecificationForm from '../../Product/CustomSpecification/CustomSpecificationForm/CustomSpecificationForm'
 import TenantSpecificationForm from '../../tenant/TenantSpecificatifonForm/TenantSpecificationForm'
@@ -40,40 +43,48 @@ const DynamicButtons = ({ buttons }) => {
   const productOwnersData = useSelector(
     (state) => state.productsOwners.productsOwners
   )
-
   let direction = useSelector((state) => state.main.direction)
-  const [tenantData, setTenantData] = useState()
 
   const [confirm, setConfirm] = useState(false)
   const [currentButtonIndex, setCurrentButtonIndex] = useState()
   const [more, setMore] = useState(false)
+  const [visible, setVisible] = useState(false)
+
+  const [toggleStates, setToggleStates] = useState(
+    buttons.reduce((acc, button, index) => {
+      if (button.type === 'toggle') {
+        acc[button.group] = acc[button.group] || {} // Initialize group if it doesn't exist
+        acc[button.group][index] = button.toggleValue
+      }
+      return acc
+    }, {})
+  )
+
   const request = useRequest()
+
   const deleteItem = async () => {
     buttons[currentButtonIndex].request()
     navigate(buttons[currentButtonIndex].navAfterDelete)
   }
-  // const deleteItem = async () => {
-  //   await request[buttons[currentButtonIndex].request]({
-  //     id: buttons[currentButtonIndex].id,
-  //   })
-  //   navigate(buttons[currentButtonIndex].navAfterDelete)
-  // }
 
   useEffect(() => {
-    ;(() => {
-      const checkMoreArray = buttons.map((button) => {
-        return button.order > 3
-      })
-      if (checkMoreArray.includes(true)) {
-        setMore(true)
-      } else {
-        setMore(false)
-      }
-    })()
+    const checkMoreArray = buttons.map((button) => button.order > 3)
+    setMore(checkMoreArray.includes(true))
   }, [buttons])
 
-  /****************************************** */
-  const [visible, setVisible] = useState(false)
+  const handleToggle = (index, group) => {
+    setToggleStates((prevState) => ({
+      ...prevState,
+      [group]: {
+        ...Object.keys(prevState[group]).reduce((acc, key) => {
+          acc[key] = false // Set all group toggles to false
+          return acc
+        }, {}),
+        [index]: !prevState[group][index], // Only the clicked toggle becomes active
+      },
+    }))
+    buttons[index].toggleFunc()
+  }
 
   const forms = {
     editProduct: () => (
@@ -95,62 +106,53 @@ const DynamicButtons = ({ buttons }) => {
       />
     ),
     editTenant: () => (
-      <>
-        <TenantForm
-          popupLabel={<FormattedMessage id="Edit-Tenant" />}
-          type={'edit'}
-          tenantData={tenantsData[buttons[currentButtonIndex].id]}
-          visible={visible}
-          setVisible={setVisible}
-          sideBar={false}
-          updateTenant={buttons[currentButtonIndex].updateTenant}
-        />
-      </>
+      <TenantForm
+        popupLabel={<FormattedMessage id="Edit-Tenant" />}
+        type={'edit'}
+        tenantData={tenantsData[buttons[currentButtonIndex].id]}
+        visible={visible}
+        setVisible={setVisible}
+        sideBar={false}
+        updateTenant={buttons[currentButtonIndex].updateTenant}
+      />
     ),
     editTenantSpecification: () => (
-      <>
-        <TenantSpecificationForm
-          popupLabel={<FormattedMessage id="Edit-Specification" />}
-          type={'edit'}
-          tenantData={tenantsData[buttons[currentButtonIndex].id]}
-          visible={visible}
-          setVisible={setVisible}
-          sideBar={false}
-          updateTenant={buttons[currentButtonIndex].updateTenant}
-          selectedProduct={buttons[currentButtonIndex].selectedProduct}
-        />
-      </>
+      <TenantSpecificationForm
+        popupLabel={<FormattedMessage id="Edit-Specification" />}
+        type={'edit'}
+        tenantData={tenantsData[buttons[currentButtonIndex].id]}
+        visible={visible}
+        setVisible={setVisible}
+        sideBar={false}
+        updateTenant={buttons[currentButtonIndex].updateTenant}
+        selectedProduct={buttons[currentButtonIndex].selectedProduct}
+      />
     ),
     upDowngradeSubscription: () => (
-      <>
-        <UpDowngradeForm
-          popupLabel={
-            <FormattedMessage id={buttons[currentButtonIndex]?.label} />
-          }
-          tenantData={tenantsData[buttons[currentButtonIndex].id]}
-          visible={visible}
-          setVisible={setVisible}
-          sideBar={false}
-          update={buttons[currentButtonIndex].update}
-          setUpdate={buttons[currentButtonIndex].setUpdate}
-          selectedProduct={buttons[currentButtonIndex].selectedProduct}
-          type={buttons[currentButtonIndex].formType}
-          currentOrderId={buttons[currentButtonIndex].currentOrderId}
-        />
-      </>
+      <UpDowngradeForm
+        popupLabel={
+          <FormattedMessage id={buttons[currentButtonIndex]?.label} />
+        }
+        tenantData={tenantsData[buttons[currentButtonIndex].id]}
+        visible={visible}
+        setVisible={setVisible}
+        sideBar={false}
+        update={buttons[currentButtonIndex].update}
+        setUpdate={buttons[currentButtonIndex].setUpdate}
+        selectedProduct={buttons[currentButtonIndex].selectedProduct}
+        type={buttons[currentButtonIndex].formType}
+        currentOrderId={buttons[currentButtonIndex].currentOrderId}
+      />
     ),
-
     addFeaturePlan: () => (
-      <>
-        <FeaturePlanForm
-          popupLabel={<FormattedMessage id="Add-Plan-Feature" />}
-          type={'create'}
-          visible={visible}
-          setVisible={setVisible}
-          sideBar={false}
-          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
-        />
-      </>
+      <FeaturePlanForm
+        popupLabel={<FormattedMessage id="Add-Plan-Feature" />}
+        type={'create'}
+        visible={visible}
+        setVisible={setVisible}
+        sideBar={false}
+        setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+      />
     ),
     editProductOwner: () => (
       <ProductOwnerForm
@@ -166,164 +168,136 @@ const DynamicButtons = ({ buttons }) => {
       />
     ),
     addPlan: () => (
-      <>
-        <PlanForm
-          popupLabel={<FormattedMessage id="Add-Plan" />}
-          type={'create'}
-          visible={visible}
-          setVisible={setVisible}
-          sideBar={false}
-          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
-        />
-      </>
+      <PlanForm
+        popupLabel={<FormattedMessage id="Add-Plan" />}
+        type={'create'}
+        visible={visible}
+        setVisible={setVisible}
+        sideBar={false}
+        setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+      />
     ),
     addEndpoint: () => (
-      <>
-        <CreateWebhookForm
-          visible={visible}
-          setVisible={setVisible}
-          popUpLable={<FormattedMessage id="Add-Endpoint" />}
-          webhookId={buttons[currentButtonIndex].currentId}
-          type={buttons[currentButtonIndex].formType}
-        />
-      </>
+      <CreateWebhookForm
+        visible={visible}
+        setVisible={setVisible}
+        popUpLable={<FormattedMessage id="Add-Endpoint" />}
+        webhookId={buttons[currentButtonIndex].currentId}
+        type={buttons[currentButtonIndex].formType}
+      />
     ),
     addTrial: () => (
-      <>
-        <TrialForm
-          popupLabel={<FormattedMessage id="Trial-Period" />}
-          type={'create'}
-          visible={visible}
-          setVisible={setVisible}
-          sideBar={false}
-          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
-        />
-      </>
+      <TrialForm
+        popupLabel={<FormattedMessage id="Trial-Period" />}
+        type={'create'}
+        visible={visible}
+        setVisible={setVisible}
+        sideBar={false}
+        setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+      />
     ),
     addCard: () => (
-      <>
-        <CardSaveFormWithStripe
-          popupLabel={<FormattedMessage id="Add-Card" />}
-          visible={visible}
-          setVisible={setVisible}
-          sideBar={false}
-          setCards={buttons[currentButtonIndex].setCards}
-          cards={buttons[currentButtonIndex].cards}
-        />
-      </>
+      <CardSaveFormWithStripe
+        popupLabel={<FormattedMessage id="Add-Card" />}
+        visible={visible}
+        setVisible={setVisible}
+        sideBar={false}
+        setCards={buttons[currentButtonIndex].setCards}
+        cards={buttons[currentButtonIndex].cards}
+      />
     ),
     addSpecification: () => (
-      <>
-        <CustomSpecificationForm
-          popupLabel={<FormattedMessage id="Add-Custom-Specification" />}
-          type={'create'}
-          visible={visible}
-          setVisible={setVisible}
-          sideBar={false}
-          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
-        />
-      </>
+      <CustomSpecificationForm
+        popupLabel={<FormattedMessage id="Add-Custom-Specification" />}
+        type={'create'}
+        visible={visible}
+        setVisible={setVisible}
+        sideBar={false}
+        setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+      />
     ),
     addPlanPrice: () => (
-      <>
-        <PlanPriceForm
-          popupLabel={<FormattedMessage id="Add-Plan-Price" />}
-          type={'create'}
-          visible={visible}
-          setVisible={setVisible}
-          sideBar={false}
-          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
-        />
-      </>
+      <PlanPriceForm
+        popupLabel={<FormattedMessage id="Add-Plan-Price" />}
+        type={'create'}
+        visible={visible}
+        setVisible={setVisible}
+        sideBar={false}
+        setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+      />
     ),
     cancelSubscription: () => (
-      <>
-        <CancelSubscriptionForm
-          popupLabel={<FormattedMessage id="Cancel-Subscription" />}
-          setVisible={setVisible}
-          updateTenant={buttons[currentButtonIndex].updateTenant}
-          type={buttons[currentButtonIndex].formType}
-        />
-      </>
+      <CancelSubscriptionForm
+        popupLabel={<FormattedMessage id="Cancel-Subscription" />}
+        setVisible={setVisible}
+        updateTenant={buttons[currentButtonIndex].updateTenant}
+        type={buttons[currentButtonIndex].formType}
+      />
     ),
     supsendsubscription: () => (
-      <>
-        <CancelSubscriptionForm
-          popupLabel={<FormattedMessage id="Suspend-Subscription" />}
-          setVisible={setVisible}
-          updateTenant={buttons[currentButtonIndex].updateTenant}
-          type={buttons[currentButtonIndex].formType}
-        />
-      </>
+      <CancelSubscriptionForm
+        popupLabel={<FormattedMessage id="Suspend-Subscription" />}
+        setVisible={setVisible}
+        updateTenant={buttons[currentButtonIndex].updateTenant}
+        type={buttons[currentButtonIndex].formType}
+      />
     ),
     addFeature: () => (
-      <>
-        <FeatureForm
-          popupLabel={<FormattedMessage id="Add-Feature" />}
-          type={'create'}
-          visible={visible}
-          setVisible={setVisible}
-          sideBar={false}
-          setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
-        />
-      </>
+      <FeatureForm
+        popupLabel={<FormattedMessage id="Add-Feature" />}
+        type={'create'}
+        visible={visible}
+        setVisible={setVisible}
+        sideBar={false}
+        setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
+      />
     ),
     createSecret: () => (
-      <>
-        <CreateSecretForm
-          popupLabel={buttons[currentButtonIndex].popupLabel}
-          type={buttons[currentButtonIndex].formType}
-          setVisible={setVisible}
-          clientId={buttons[currentButtonIndex].clientId}
-          update={buttons[currentButtonIndex].update}
-          setUpdate={buttons[currentButtonIndex].setUpdate}
-        />
-      </>
+      <CreateSecretForm
+        popupLabel={buttons[currentButtonIndex].popupLabel}
+        type={buttons[currentButtonIndex].formType}
+        setVisible={setVisible}
+        clientId={buttons[currentButtonIndex].clientId}
+        update={buttons[currentButtonIndex].update}
+        setUpdate={buttons[currentButtonIndex].setUpdate}
+      />
     ),
     changePassword: () => (
-      <>
-        <ChangePasswordForm
-          popupLabel={buttons[currentButtonIndex].label}
-          setVisible={setVisible}
-        />
-      </>
+      <ChangePasswordForm
+        popupLabel={buttons[currentButtonIndex].label}
+        setVisible={setVisible}
+      />
     ),
     createTenantUser: () => (
-      <>
-        <CreateTenantUserForm
-          popupLabel={buttons[currentButtonIndex].popupLabel}
-          currentUser={buttons[currentButtonIndex].currentUser}
-          type={buttons[currentButtonIndex].formType}
-          setVisible={setVisible}
-          clientId={buttons[currentButtonIndex].clientId}
-          update={buttons[currentButtonIndex].update}
-          setUpdate={buttons[currentButtonIndex].setUpdate}
-        />
-      </>
+      <CreateTenantUserForm
+        popupLabel={buttons[currentButtonIndex].popupLabel}
+        currentUser={buttons[currentButtonIndex].currentUser}
+        type={buttons[currentButtonIndex].formType}
+        setVisible={setVisible}
+        clientId={buttons[currentButtonIndex].clientId}
+        update={buttons[currentButtonIndex].update}
+        setUpdate={buttons[currentButtonIndex].setUpdate}
+      />
     ),
     createProductUser: () => (
-      <>
-        <CreateProductUserForm
-          popupLabel={buttons[currentButtonIndex].popupLabel}
-          type={buttons[currentButtonIndex].formType}
-          setVisible={setVisible}
-          clientId={buttons[currentButtonIndex].clientId}
-          update={buttons[currentButtonIndex].update}
-          setUpdate={buttons[currentButtonIndex].setUpdate}
-        />
-      </>
+      <CreateProductUserForm
+        popupLabel={buttons[currentButtonIndex].popupLabel}
+        type={buttons[currentButtonIndex].formType}
+        setVisible={setVisible}
+        clientId={buttons[currentButtonIndex].clientId}
+        update={buttons[currentButtonIndex].update}
+        setUpdate={buttons[currentButtonIndex].setUpdate}
+      />
     ),
     createClient: () => (
-      <>
-        <CreateClientForm
-          popupLabel={buttons[currentButtonIndex].popupLabel}
-          type={buttons[currentButtonIndex].formType}
-          setVisible={setVisible}
-          clientId={buttons[currentButtonIndex].clientId}
-          update={buttons[currentButtonIndex].update}
-          setUpdate={buttons[currentButtonIndex].setUpdate}
-        />
-      </>
+      <CreateClientForm
+        popupLabel={buttons[currentButtonIndex].popupLabel}
+        type={buttons[currentButtonIndex].formType}
+        setVisible={setVisible}
+        clientId={buttons[currentButtonIndex].clientId}
+        update={buttons[currentButtonIndex].update}
+        setUpdate={buttons[currentButtonIndex].setUpdate}
+      />
     ),
     editDiscount: () => (
       <DiscountForm
@@ -342,26 +316,23 @@ const DynamicButtons = ({ buttons }) => {
       />
     ),
   }
+
   return (
     <Wrapper direction={direction} className="d-flex">
       <div
         className="dynamicAction"
         style={{
-          borderRadius:
-            more == true
-              ? direction == 'rtl'
-                ? '0 8px 8px 0'
-                : '8px 0 0 8px'
-              : '8px',
+          borderRadius: more
+            ? direction === 'rtl'
+              ? '0 8px 8px 0'
+              : '8px 0 0 8px'
+            : '8px',
         }}
       >
-        {/* {more.toString()} */}
         {buttons.map((button, index) => {
-          button.variant
-            ? (button.variant = button.variant)
-            : (button.variant = 'secondary')
+          button.variant = button.variant || 'secondary'
           if (button.order <= 3) {
-            if (button.type == 'action') {
+            if (button.type === 'action') {
               return (
                 <span key={index}>
                   <Button variant={button.variant} onClick={button.func}>
@@ -370,7 +341,7 @@ const DynamicButtons = ({ buttons }) => {
                   </Button>
                 </span>
               )
-            } else if (button.type == 'delete') {
+            } else if (button.type === 'delete') {
               return (
                 <span key={index}>
                   <Button
@@ -384,7 +355,7 @@ const DynamicButtons = ({ buttons }) => {
                   </Button>
                 </span>
               )
-            } else if (button.type == 'form') {
+            } else if (button.type === 'form') {
               return (
                 <span key={index}>
                   <Button
@@ -396,6 +367,28 @@ const DynamicButtons = ({ buttons }) => {
                     disabled={button.disable}
                   >
                     {button.icon}{' '}
+                    {button.label && <FormattedMessage id={button.label} />}
+                  </Button>
+                </span>
+              )
+            } else if (button.type === 'toggle') {
+              return (
+                <span key={index}>
+                  <Button
+                    variant={
+                      toggleStates[button.group][index]
+                        ? button.variant
+                        : `${button.variant} transparent`
+                    }
+                    onClick={() => handleToggle(index, button.group)}
+                    style={{
+                      opacity: toggleStates[button.group][index] ? 1 : 0.5,
+                      color: toggleStates[button.group][index]
+                        ? 'var(--second-color) !important'
+                        : '',
+                    }}
+                  >
+                    {button.icon}
                     {button.label && <FormattedMessage id={button.label} />}
                   </Button>
                 </span>
@@ -415,8 +408,8 @@ const DynamicButtons = ({ buttons }) => {
             </Dropdown.Toggle>
             <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-1">
               {buttons.map((button, index) => {
-                if (button.order > 3)
-                  if (button.type == 'delete') {
+                if (button.order > 3) {
+                  if (button.type === 'delete') {
                     return (
                       <span key={index}>
                         <Dropdown.Divider />
@@ -434,7 +427,7 @@ const DynamicButtons = ({ buttons }) => {
                         </Dropdown.Item>
                       </span>
                     )
-                  } else if (button.type == 'form') {
+                  } else if (button.type === 'form') {
                     return (
                       <Dropdown.Item
                         className={`${button.variant && button.variant}`}
@@ -480,7 +473,27 @@ const DynamicButtons = ({ buttons }) => {
                         </span>
                       )
                     }
+                  } else if (button.type === 'toggle') {
+                    return (
+                      <Dropdown.Item
+                        key={index}
+                        onClick={() => handleToggle(index, button.group)}
+                        className={`${button.variant && button.variant}`}
+                        style={{
+                          opacity: toggleStates[button.group][index] ? 1 : 0.5, // Transparent style
+                        }}
+                      >
+                        {button.icon}{' '}
+                        {button.label && <FormattedMessage id={button.label} />}
+                        {toggleStates[button.group][index] ? (
+                          <FontAwesomeIcon icon={faToggleOn} />
+                        ) : (
+                          <FontAwesomeIcon icon={faToggleOff} />
+                        )}
+                      </Dropdown.Item>
+                    )
                   }
+                }
               })}
             </Dropdown.Menu>
           </Dropdown>
@@ -510,11 +523,9 @@ const DynamicButtons = ({ buttons }) => {
         }
       >
         {currentButtonIndex !== undefined &&
-        buttons[currentButtonIndex].type == 'form' ? (
-          forms[buttons[currentButtonIndex]?.component]()
-        ) : (
-          <></>
-        )}
+        buttons[currentButtonIndex].type === 'form'
+          ? forms[buttons[currentButtonIndex]?.component]()
+          : null}
       </ThemeDialog>
     </Wrapper>
   )

@@ -52,6 +52,7 @@ import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { setActiveIndex } from '../../../../store/slices/tenants'
 import { GiShadowFollower } from 'react-icons/gi'
 import { systemLockStatus, tenancyTypeEnum } from '../../../../const/product.js'
+import { dynamicButtonsLanguages } from '../../../../const/const.js'
 
 export const ProductPlansList = ({ productId }) => {
   const { getProductPlans, deletePlanReq, publishPlan } = useRequest()
@@ -65,6 +66,8 @@ export const ProductPlansList = ({ productId }) => {
   const [popUpLable, setPopUpLable] = useState('')
   const intl = useIntl()
   const ProductTrialType = list.trialType
+  const [selectedLanguage, setSelectedLanguage] = useState('en')
+  console.log({ selectedLanguage })
 
   const handleDeletePlan = async () => {
     if (list?.plans[currentId]?.isSubscribed) {
@@ -153,113 +156,115 @@ export const ProductPlansList = ({ productId }) => {
       tenancyType,
       alternativePlanID,
       trialPeriodInDays,
+      descriptionLocalizations,
+      displayNameLocalizations,
     } = props
     const publishStatus = isPublished ? true : false
+    console.log(
+      displayNameLocalizations?.[selectedLanguage],
+      selectedLanguage,
+      descriptionLocalizations,
+      displayNameLocalizations
+    )
 
     return (
-      <>
-        <tr>
+      <tr>
+        <td>
+          <span className="fw-normal">
+            {displayNameLocalizations?.[selectedLanguage] || displayName}
+          </span>
+        </td>
+        <td>
+          <span className="fw-normal">{systemName}</span>
+        </td>
+        <td>
+          <span>
+            <Label {...PublishStatus[publishStatus]} />
+          </span>
+        </td>
+        <td>
+          <span>{tenancyTypeEnum[tenancyType]}</span>
+        </td>
+        <td>
+          <span>
+            <Label {...systemLockStatus[isLockedBySystem]} />
+          </span>
+        </td>
+        <td>
+          <span
+            className={`${
+              subscribers > 0 ? 'subscribers-active' : 'subscribers-passive'
+            }`}
+          >
+            <GiShadowFollower />
+            <span className="ml-1">{subscribers ? subscribers : 0}</span>
+          </span>
+        </td>
+        <td className="description">
+          <DescriptionCell
+            data={{
+              description:
+                descriptionLocalizations?.[selectedLanguage] || description,
+            }}
+          />
+        </td>
+        <td>
+          <span className={`fw-normal`}>{displayOrder}</span>
+        </td>
+        <td>
+          <span>{list.plans?.[alternativePlanID]?.displayName}</span>
+        </td>
+        {ProductTrialType == 3 && (
           <td>
-            <span className="fw-normal">{displayName}</span>
+            <span>{trialPeriodInDays}</span>
           </td>
-          <td>
-            <span className="fw-normal">{systemName}</span>
-          </td>
-          <td>
-            <span>
-              <Label {...PublishStatus[publishStatus]} />
-            </span>
-          </td>
-          <td>
-            <span>{tenancyTypeEnum[tenancyType]}</span>
-          </td>
-
-          <td>
-            <span>
-              <Label {...systemLockStatus[isLockedBySystem]} />
-            </span>
-          </td>
-
-          <td>
-            <span
-              className={`${
-                subscribers > 0 ? 'subscribers-active' : 'subscribers-passive'
-              }`}
+        )}
+        <td>
+          <span className="fw-normal">
+            <TableDate createdDate={createdDate} editedDate={editedDate} />
+          </span>
+        </td>
+        <td>
+          <Dropdown as={ButtonGroup}>
+            <Dropdown.Toggle
+              as={Button}
+              split
+              variant="link"
+              className="text-dark m-0 p-0"
             >
-              <GiShadowFollower />
-              <span className="ml-1">{subscribers ? subscribers : 0}</span>
-            </span>
-          </td>
-
-          <td className="description">
-            <DescriptionCell data={{ description }} />
-          </td>
-
-          <td>
-            <span className={`fw-normal`}>{displayOrder}</span>
-          </td>
-          <td>
-            <span>{list.plans?.[alternativePlanID]?.displayName}</span>
-          </td>
-          {ProductTrialType == 3 && (
-            <td>
-              <span>{trialPeriodInDays}</span>
-            </td>
-          )}
-          <td>
-            <span className="fw-normal">
-              <TableDate createdDate={createdDate} editedDate={editedDate} />
-            </span>
-          </td>
-
-          <td>
-            <Dropdown as={ButtonGroup}>
-              <Dropdown.Toggle
-                as={Button}
-                split
-                variant="link"
-                className="text-dark m-0 p-0"
+              <span className="icon icon-sm">
+                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+              </span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onSelect={() => editForm(id)}>
+                <FontAwesomeIcon icon={faEdit} className="mx-2" />
+                <FormattedMessage id="Edit" />
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => togglePublishPlan(id, isPublished)}>
+                {isPublished ? (
+                  <span className=" ">
+                    <MdOutlineUnpublished className="mx-2" />
+                    <FormattedMessage id="Unpublish" />
+                  </span>
+                ) : (
+                  <span className=" ">
+                    <MdOutlinePublishedWithChanges className="mx-2" />
+                    <FormattedMessage id="Publish" />
+                  </span>
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => deleteConfirm(id)}
+                className="text-danger"
               >
-                <span className="icon icon-sm">
-                  <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
-                </span>
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  onSelect={() => {
-                    editForm(id)
-                  }}
-                >
-                  <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                  <FormattedMessage id="Edit" />
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => togglePublishPlan(id, isPublished)}
-                >
-                  {isPublished ? (
-                    <span className=" ">
-                      <MdOutlineUnpublished className="mx-2" />
-                      <FormattedMessage id="Unpublish" />
-                    </span>
-                  ) : (
-                    <span className=" ">
-                      <MdOutlinePublishedWithChanges className="mx-2" />
-                      <FormattedMessage id="Publish" />
-                    </span>
-                  )}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => deleteConfirm(id)}
-                  className="text-danger"
-                >
-                  <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                  <FormattedMessage id="Delete" />
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </td>
-        </tr>
-      </>
+                <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
+                <FormattedMessage id="Delete" />
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </td>
+      </tr>
     )
   }
 
@@ -267,17 +272,26 @@ export const ProductPlansList = ({ productId }) => {
     <Wrapper>
       <div className="dynamicButtons pt-0 mt-0 mb-1 ">
         <DynamicButtons
-          buttons={[
-            {
+          buttons={Object.keys(dynamicButtonsLanguages)
+            .map((lang, index) => ({
               order: 1,
-              type: 'form',
-              id: productId,
-              label: 'Add-Plan',
-              component: 'addPlan',
-              icon: <BsPencilSquare />,
-              setActiveIndex: setActiveIndex,
-            },
-          ]}
+              type: 'toggle',
+              label: lang,
+              toggleValue: selectedLanguage === lang,
+              toggleFunc: () => setSelectedLanguage(lang), // Update selected language
+              variant: 'primary',
+            }))
+            .concat([
+              {
+                order: 1,
+                type: 'form',
+                id: productId,
+                label: 'Add-Plan',
+                component: 'addPlan',
+                icon: <BsPencilSquare />,
+                setActiveIndex: setActiveIndex,
+              },
+            ])}
         />
       </div>
       <div className="border-top-1 border-light">
