@@ -193,7 +193,6 @@ const FeatureForm = ({
               en: 'English-Name',
               ar: 'Arabic-Name',
             }}
-            tooltipMessageId="Friendly-Name-Label"
             values={{
               en: formik.values.displayNameEn,
               ar: formik.values.displayNameAr,
@@ -256,7 +255,6 @@ const FeatureForm = ({
               en: 'English-Description',
               ar: 'Arabic-Description',
             }}
-            tooltipMessageId="Description-Tooltip"
             values={{
               en: formik.values.descriptionEn,
               ar: formik.values.descriptionAr,

@@ -513,7 +513,6 @@ const PlanPriceForm = ({
               en: 'English-Description',
               ar: 'Arabic-Description',
             }}
-            tooltipMessageId="Description-Tooltip"
             values={{
               en: formik.values.descriptionEn,
               ar: formik.values.descriptionAr,
