@@ -780,5 +780,9 @@
   "Reason-is-required": "السبب مطلوب",
   "System-Name-does-not-match": "اسم النظام لا يتطابق",
   "Only-English-Characters,-Numbers,-and-Underscores-are-accepted.": "يتم قبول الأحرف الإنجليزية والأرقام والشرطات السفلية فقط.",
-  "Comment-is-required-for-cancellation": "التعليق مطلوب للإلغاء"
+  "Comment-is-required-for-cancellation": "التعليق مطلوب للإلغاء",
+  "Selection-Availability": "متاحة للاختيار",
+  "Visibility-Status": "مرئية",
+  "Visible": "مرئي"
+  
 }

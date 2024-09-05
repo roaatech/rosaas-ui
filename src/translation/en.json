@@ -786,5 +786,8 @@
   "Reason-is-required": "Reason is required",
   "System-Name-does-not-match": "System name does not match",
   "Only-English-Characters,-Numbers,-and-Underscores-are-accepted.": "Only English characters, numbers, and underscores are accepted.",
-  "Comment-is-required-for-cancellation": "Comment is required for cancellation"
+  "Comment-is-required-for-cancellation": "Comment is required for cancellation",
+  "Selection-Availability": "Available for Selection",
+  "Visibility-Status": "Visibility Status",
+  "Invisible": "invisible"
 }

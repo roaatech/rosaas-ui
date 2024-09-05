@@ -51,7 +51,7 @@ import { PublishStatus } from '../../../../const'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { setActiveIndex } from '../../../../store/slices/tenants'
 import { GiShadowFollower } from 'react-icons/gi'
-import { systemLockStatus, tenancyTypeEnum } from '../../../../const/product.js'
+import { systemLockStatus, tenancyTypeEnum, booleanStatus,visibilityStatus } from '../../../../const/product.js'
 import { dynamicButtonsLanguages } from '../../../../const/const.js'
 
 export const ProductPlansList = ({ productId }) => {
@@ -151,13 +151,15 @@ export const ProductPlansList = ({ productId }) => {
       createdDate,
       isPublished,
       editedDate,
-      subscribers,
+      subscriptionsCount,
       isLockedBySystem,
       tenancyType,
       alternativePlanID,
       trialPeriodInDays,
       descriptionLocalizations,
       displayNameLocalizations,
+      isAvailableForSelection,
+      isVisible,
     } = props
     const publishStatus = isPublished ? true : false
     console.log(
@@ -183,31 +185,36 @@ export const ProductPlansList = ({ productId }) => {
           </span>
         </td>
         <td>
-          <span>{tenancyTypeEnum[tenancyType]}</span>
+          <span>
+            <Label {...booleanStatus[isAvailableForSelection]} />
+          </span>
         </td>
         <td>
           <span>
-            <Label {...systemLockStatus[isLockedBySystem]} />
+            <Label {...visibilityStatus[isVisible]} />
           </span>
+        </td>
+        <td>
+          <span>{tenancyTypeEnum[tenancyType]}</span>
         </td>
         <td>
           <span
             className={`${
-              subscribers > 0 ? 'subscribers-active' : 'subscribers-passive'
+              subscriptionsCount > 0 ? 'subscribers-active' : 'subscribers-passive'
             }`}
           >
             <GiShadowFollower />
-            <span className="ml-1">{subscribers ? subscribers : 0}</span>
+            <span className="ml-1">{subscriptionsCount ? subscriptionsCount : 0}</span>
           </span>
         </td>
-        <td className="description">
+        {/*<td className="description">
           <DescriptionCell
             data={{
               description:
                 descriptionLocalizations?.[selectedLanguage] || description,
             }}
           />
-        </td>
+        </td>*/}
         <td>
           <span className={`fw-normal`}>{displayOrder}</span>
         </td>
@@ -219,6 +226,11 @@ export const ProductPlansList = ({ productId }) => {
             <span>{trialPeriodInDays}</span>
           </td>
         )}
+        <td>
+          <span>
+            <Label {...systemLockStatus[isLockedBySystem]} />
+          </span>
+        </td>
         <td>
           <span className="fw-normal">
             <TableDate createdDate={createdDate} editedDate={editedDate} />
@@ -311,19 +323,22 @@ export const ProductPlansList = ({ productId }) => {
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Status" />
+                  </th> 
+                  <th className="border-bottom">
+                    <FormattedMessage id="Selection-Availability" />
+                  </th> 
+                  <th className="border-bottom">
+                    <FormattedMessage id="Visibility-Status" />
                   </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Tenancy-Type" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="System-Lock-Status" />
-                  </th>
-                  <th className="border-bottom">
                     <FormattedMessage id="Subscribers" />
                   </th>
-                  <th className="border-bottom">
+                  {/*<th className="border-bottom">
                     <FormattedMessage id="Description" />
-                  </th>
+                  </th>*/}
                   <th className="border-bottom">
                     <FormattedMessage id="Display-Order" />
                   </th>
@@ -334,7 +349,10 @@ export const ProductPlansList = ({ productId }) => {
                     <th className="border-bottom">
                       <FormattedMessage id="Trial-Period-In-Days" />
                     </th>
-                  )}
+                  )} 
+                  <th className="border-bottom">
+                    <FormattedMessage id="System-Lock-Status" />
+                  </th>
                   <th className="border-bottom">
                     <FormattedMessage id="Date" />
                   </th>

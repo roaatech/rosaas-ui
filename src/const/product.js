@@ -114,6 +114,31 @@ export const isMajorStatus = {
     color: 'var(--orange-brown)',
   },
 }
+export const booleanStatus = {
+  true: {
+    background: 'var(--green2)',
+    value: <FormattedMessage id="yes" />,
+    color: 'var(--teal-green)',
+  },
+  false: {
+    background: 'var(--red2)',
+    value: <FormattedMessage id="no" />,
+    color: 'var(--orange-brown)',
+  },
+}
+
+export const visibilityStatus = {
+  true: {
+    background: 'var(--green2)',
+    value: <FormattedMessage id="Visible" />,
+    color: 'var(--teal-green)',
+  },
+  false: {
+    background: 'var(--red2)',
+    value: <FormattedMessage id="invisible" />,
+    color: 'var(--orange-brown)',
+  },
+}
 export const clientTypeLable = {
   101: {
     background: 'var(--orange-yellow-blend)',
