@@ -23,6 +23,7 @@ import {
 } from '../../../../../store/slices/products/productsSlice.js'
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
 import { TabPanel, TabView } from 'primereact/tabview'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
@@ -77,6 +78,16 @@ const CustomSpecificationForm = ({
         })
       ),
     displayNameEn: Yup.string().test({
+      name: 'displayNameRequired',
+      message: <FormattedMessage id="Display-Name-is-required" />,
+      test: (value, context) => {
+        const { parent } = context
+        const displayNameEn = parent.displayNameEn
+        const displayNameAr = parent.displayNameAr
+        return !!displayNameEn || !!displayNameAr
+      },
+    }),
+    displayNameAr: Yup.string().test({
       name: 'displayNameRequired',
       message: <FormattedMessage id="Display-Name-is-required" />,
       test: (value, context) => {
@@ -297,7 +308,7 @@ const CustomSpecificationForm = ({
                   </Form.Group>
                 </Col>
                 <Col md={6}>
-                  <Form.Group className="">
+                  {/* <Form.Group className="">
                     <Form.Label>
                       <FormattedMessage id="Display-Name" />{' '}
                       <span style={{ color: 'red' }}>* </span>
@@ -366,7 +377,38 @@ const CustomSpecificationForm = ({
                             formik.errors.displayNameAr}
                         </Form.Control.Feedback>
                       )}
-                  </Form.Group>
+                  </Form.Group> */}
+                  <MultilingualInput
+                    inputLabel="Display-Name"
+                    languages={[
+                      { code: 'en', name: 'English' },
+                      { code: 'ar', name: 'Arabic' },
+                    ]}
+                    inputIds={{
+                      en: 'displayNameEn',
+                      ar: 'displayNameAr',
+                    }}
+                    placeholder={{
+                      en: 'English-Name',
+                      ar: 'Arabic-Name',
+                    }}
+                    tooltipMessageId="Friendly-Name-Label"
+                    values={{
+                      en: formik.values.displayNameEn,
+                      ar: formik.values.displayNameAr,
+                    }}
+                    onChange={formik.handleChange}
+                    isRequired={true}
+                    inputType="input"
+                    errors={{
+                      en: formik.errors.displayNameEn,
+                      ar: formik.errors.displayNameAr,
+                    }}
+                    touched={{
+                      en: formik.touched.displayNameEn,
+                      ar: formik.touched.displayNameAr,
+                    }}
+                  />
                 </Col>
               </Row>
             </Container>
@@ -384,77 +426,38 @@ const CustomSpecificationForm = ({
                   md={6}
                   className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
                 >
-                  <Form.Group>
-                    <Form.Label className="mb-1">
-                      <FormattedMessage id="Hint-description" />{' '}
-                      <span className="fw-normal">
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              {intl.formatMessage({
-                                id: 'Friendly-Hint-Description',
-                              })}
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              className={
-                                direction == 'rtl' ? 'ar-questionCircle' : ''
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </span>
-                    </Form.Label>
-                    <TabView>
-                      <TabPanel header="En">
-                        <div className="form-group mt-3">
-                          <TextareaAndCounter
-                            addTextarea={formik.setFieldValue}
-                            maxLength={250}
-                            showCharCount
-                            inputValue={formik.values.descriptionEn}
-                            placeholder={intl.formatMessage({
-                              id: 'English-Hint-Description',
-                            })}
-                            id="descriptionEn"
-                            name="descriptionEn"
-                            onChange={formik.handleChange}
-                            disableMainClass={true}
-                          />
-                        </div>
-                      </TabPanel>
-                      <TabPanel header="Ar">
-                        <div className="form-group mt-3">
-                          <TextareaAndCounter
-                            addTextarea={formik.setFieldValue}
-                            maxLength={250}
-                            showCharCount
-                            inputValue={formik?.values?.descriptionAr}
-                            placeholder={intl.formatMessage({
-                              id: 'Arabic-Hint-Description',
-                            })}
-                            id="descriptionAr"
-                            name="descriptionAr"
-                            onChange={formik.handleChange}
-                            disableMainClass={true}
-                          />
-                        </div>
-                      </TabPanel>
-                    </TabView>
-
-                    {formik.touched.descriptionEn &&
-                      formik.errors.descriptionEn && (
-                        <Form.Control.Feedback
-                          type="invalid"
-                          style={{ display: 'block' }}
-                        >
-                          {formik.errors.descriptionEn}
-                        </Form.Control.Feedback>
-                      )}
-                  </Form.Group>
+                  <MultilingualInput
+                    inputLabel="Hint-description"
+                    languages={[
+                      { code: 'en', name: 'English' },
+                      { code: 'ar', name: 'Arabic' },
+                    ]}
+                    inputIds={{
+                      en: 'descriptionEn',
+                      ar: 'descriptionAr',
+                    }}
+                    placeholder={{
+                      en: 'English-Hint-Description',
+                      ar: 'Arabic-Hint-Description',
+                    }}
+                    tooltipMessageId="Friendly-Hint-Description"
+                    values={{
+                      en: formik.values.descriptionEn,
+                      ar: formik.values.descriptionAr,
+                    }}
+                    onChange={formik.handleChange}
+                    isRequired={false}
+                    inputType="TextareaAndCounter"
+                    maxLength={250}
+                    errors={{
+                      en: formik.errors.descriptionEn,
+                      ar: formik.errors.descriptionAr,
+                    }}
+                    touched={{
+                      en: formik.touched.descriptionEn,
+                      ar: formik.touched.descriptionAr,
+                    }}
+                  />
                 </Col>
                 <Col md={6}>
                   <Form.Group>

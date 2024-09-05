@@ -27,6 +27,10 @@ export const PrimaryCurrencyStatus = {
     icon: <MdStarBorder />,
   },
 }
+export const dynamicButtonsLanguages = {
+  en: 'English',
+  ar: 'Arabic',
+}
 
 export const PrimaryExchangeRateCurrencyStatus = {
   true: {
