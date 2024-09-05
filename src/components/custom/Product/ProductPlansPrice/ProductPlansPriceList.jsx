@@ -20,6 +20,7 @@ import { useParams } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
+import DataLabelPrice from '../../Shared/DataLabelPrice/DataLabelPrice'
 
 import {
   PlansChangeAttr,
@@ -207,11 +208,14 @@ export default function ProductPlansPriceList({ children }) {
   }
 
   const handleData = (data) => {
+    console.log(data)
     return {
       'System-Name': data.systemName,
       'System-Lock-Status': data.isLockedBySystem ? 'Yes' : 'No',
       Plan: data.plan.displayName,
-      cycle: cycle[data.cycle],
+      Price: data.price,
+      oldPrice: data.oldPrice,
+      Cycle: cycle[data.cycle],
       Published: data.isPublished ? 'Yes' : 'No',
       Subscribed: data.isSubscribed ? 'Yes' : 'No',
       Description: data.description,
@@ -257,7 +261,9 @@ export default function ProductPlansPriceList({ children }) {
                         variant="link"
                         className="text-dark m-0 p-0 planFeatureButton"
                       >
-                        {listData[tableData[planItem + ',' + item]]?.price}{' '}
+                        <span>
+                          <DataLabelPrice price={listData[tableData[planItem + ',' + item]]?.price} oldPrice={listData[tableData[planItem + ',' + item]]?.oldPrice} /> 
+                        </span>  
                         {listData[tableData[planItem + ',' + item]]
                           ?.isPublished ? (
                           <span className="label green">

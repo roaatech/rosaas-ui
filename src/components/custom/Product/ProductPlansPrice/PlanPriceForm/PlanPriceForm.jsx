@@ -20,7 +20,7 @@ import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInp
 
 const PlanPriceForm = ({
   type,
-  planPriceData,
+  planPriceData, 
   setVisible,
   popupLabel,
   setActiveIndex,
@@ -141,6 +141,7 @@ const PlanPriceForm = ({
     systemName: planPriceData ? planPriceData.systemName : '',
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
     price: planPriceData ? planPriceData.price : '',
+    oldPrice: planPriceData ? planPriceData.oldPrice : '',
     description: planPriceData ? planPriceData.description : '',
     cyclesYouDontHave: cyclesYouDontHave,
   }
@@ -165,6 +166,10 @@ const PlanPriceForm = ({
       .required(<FormattedMessage id="This-field-is-required" />)
       .min(0, <FormattedMessage id="The-price-must-be-0-or-more" />)
       .max(999999, <FormattedMessage id="The-value-must-not-exceed-999,999" />),
+      
+    oldPrice: Yup.number() 
+    .min(1, <FormattedMessage id="The-price-must-be-1-or-more" />)
+    .max(999999, <FormattedMessage id="The-value-must-not-exceed-999,999" />),
   })
 
   const formik = useFormik({
@@ -177,6 +182,7 @@ const PlanPriceForm = ({
           planId: values.plan,
           cycle: parseInt(values.cycle),
           price: parseFloat(values.price),
+          oldPrice: parseFloat(values.oldPrice),
           description: values.description,
         })
 
@@ -201,6 +207,7 @@ const PlanPriceForm = ({
               },
               cycle: values.cycle,
               price: values.price,
+              oldPrice: values.oldPrice,
               systemName: values.systemName,
 
               description: values.description,
@@ -220,6 +227,7 @@ const PlanPriceForm = ({
         const editPlan = await editPlanPriceRequest(productId, {
           data: {
             price: parseFloat(values.price),
+            oldPrice: parseFloat(values.oldPrice),
             description: values.description,
             cycle: parseInt(values.cycle),
           },
@@ -238,6 +246,7 @@ const PlanPriceForm = ({
               systemName: values.systemName,
               cycle: values.cycle,
               price: values.price,
+              oldPrice: values.oldPrice,
               description: values.description,
               id: planPriceData.id,
               isPublished: planPriceData.isPublished,
@@ -458,6 +467,31 @@ const PlanPriceForm = ({
                   style={{ display: 'block' }}
                 >
                   {formik.errors.price}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <FormattedMessage id="OldPrice" />{' '} 
+              </Form.Label>
+              <input
+                type="text"
+                className="form-control"
+                id="oldPrice"
+                name="oldPrice"
+                onChange={formik.handleChange}
+                value={  formik.values.oldPrice }
+                disabled={[1, 2].includes(tenancyType)}
+              />
+              {formik.touched.oldPrice && formik.errors.oldPrice && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.oldPrice}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
