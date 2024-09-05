@@ -17,6 +17,7 @@ import {
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import { activeIndex, cycle } from '../../../../../const/index.js'
 import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
 
 const PlanPriceForm = ({
   type,
