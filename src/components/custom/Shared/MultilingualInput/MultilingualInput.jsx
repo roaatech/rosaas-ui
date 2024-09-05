@@ -41,22 +41,24 @@ const MultilingualInput = ({
         <Form.Label>
           <FormattedMessage id={inputLabel} />
           {isRequired && <span style={{ color: 'red' }}>*</span>}
-          <span className="fw-normal">
-            <OverlayTrigger
-              trigger={['hover', 'focus']}
-              overlay={
-                <Tooltip>
-                  {intl.formatMessage({
-                    id: tooltipMessageId,
-                  })}
-                </Tooltip>
-              }
-            >
-              <span>
-                {'  '} <BsFillQuestionCircleFill />
-              </span>
-            </OverlayTrigger>
-          </span>
+          {tooltipMessageId && (
+            <span className="fw-normal">
+              <OverlayTrigger
+                trigger={['hover', 'focus']}
+                overlay={
+                  <Tooltip>
+                    {intl.formatMessage({
+                      id: tooltipMessageId,
+                    })}
+                  </Tooltip>
+                }
+              >
+                <span>
+                  {'  '} <BsFillQuestionCircleFill />
+                </span>
+              </OverlayTrigger>
+            </span>
+          )}
         </Form.Label>
         <TabView>
           {languages.map((lang) => (

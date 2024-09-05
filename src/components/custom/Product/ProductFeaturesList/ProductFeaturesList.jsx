@@ -47,6 +47,9 @@ export const ProductFeaturesList = ({ productId }) => {
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
 
+  // State for language selection
+  const [selectedLanguage, setSelectedLanguage] = useState('en') // Default language
+
   const handleDeleteFeature = async () => {
     if (list?.features[currentId]?.isSubscribed) {
       toast.error('Cannot delete a subscribed feature.', {
@@ -96,77 +99,71 @@ export const ProductFeaturesList = ({ productId }) => {
       id,
       createdDate,
       editedDate,
+      descriptionLocalizations,
+      displayNameLocalizations,
     } = props
 
     const mappedType = featureTypeMap[type]
-    // const mappedUnit = featureUnitMap[unit]
     const mappedReset = featureResetMap[reset]
 
     return (
-      <>
-        <tr>
-          <td>
-            <span className="fw-normal">{displayName}</span>
-          </td>
-          <td>
-            <span className="fw-normal">{systemName}</span>
-          </td>
-          <td className="description">
-            <DescriptionCell data={{ description }} />
-          </td>
-
-          <td>
-            <span className={`fw-normal`}>{mappedType}</span>
-          </td>
-          {/* <td>
-            <span className="fw-normal">{mappedUnit}</span>
-          </td> */}
-          {/* <td>
-            <span className="fw-normal">
-              <FormattedMessage id={mappedReset} />
-            </span>
-          </td> */}
-          <td>
-            <span className="fw-normal">{displayOrder}</span>
-          </td>
-          <td>
-            <span className="fw-normal">
-              <TableDate createdDate={createdDate} editedDate={editedDate} />
-            </span>
-          </td>
-          <td>
-            <Dropdown as={ButtonGroup}>
-              <Dropdown.Toggle
-                as={Button}
-                split
-                variant="link"
-                className="text-dark m-0 p-0"
+      <tr>
+        <td>
+          <span className="fw-normal">
+            {displayNameLocalizations?.[selectedLanguage]}
+          </span>
+        </td>
+        <td>
+          <span className="fw-normal">{systemName}</span>
+        </td>
+        <td className="description">
+          {descriptionLocalizations?.[selectedLanguage] && (
+            <DescriptionCell
+              data={{
+                description: descriptionLocalizations?.[selectedLanguage],
+              }}
+            />
+          )}
+        </td>
+        <td>
+          <span className={`fw-normal`}>{mappedType}</span>
+        </td>
+        <td>
+          <span className="fw-normal">{displayOrder}</span>
+        </td>
+        <td>
+          <span className="fw-normal">
+            <TableDate createdDate={createdDate} editedDate={editedDate} />
+          </span>
+        </td>
+        <td>
+          <Dropdown as={ButtonGroup}>
+            <Dropdown.Toggle
+              as={Button}
+              split
+              variant="link"
+              className="text-dark m-0 p-0"
+            >
+              <span className="icon icon-sm">
+                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+              </span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onSelect={() => editForm(id)}>
+                <FontAwesomeIcon icon={faEdit} className="mx-2" />
+                <FormattedMessage id="Edit" />
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => deleteConfirm(id)}
+                className="text-danger"
               >
-                <span className="icon icon-sm">
-                  <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
-                </span>
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  onSelect={() => {
-                    editForm(id)
-                  }}
-                >
-                  <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                  <FormattedMessage id="Edit" />
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => deleteConfirm(id)}
-                  className="text-danger"
-                >
-                  <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                  <FormattedMessage id="Delete" />
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </td>
-        </tr>
-      </>
+                <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
+                <FormattedMessage id="Delete" />
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </td>
+      </tr>
     )
   }
 
@@ -175,8 +172,19 @@ export const ProductFeaturesList = ({ productId }) => {
       <div className="dynamicButtons pt-0 mt-0 mb-1 ">
         <DynamicButtons
           buttons={[
+            ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+              (lang, index) => ({
+                order: 1,
+                type: 'toggle',
+                label: lang,
+                group: 'language',
+                toggleValue: selectedLanguage === lang,
+                toggleFunc: () => setSelectedLanguage(lang),
+                variant: 'primary',
+              })
+            ),
             {
-              order: 1,
+              order: 2,
               type: 'form',
               id: productId,
               label: 'Add-Feature',
@@ -204,16 +212,9 @@ export const ProductFeaturesList = ({ productId }) => {
                   <th className="border-bottom description">
                     <FormattedMessage id="Description" />
                   </th>
-
                   <th className="border-bottom">
                     <FormattedMessage id="Type" />
                   </th>
-                  {/* <th className="border-bottom">
-                    <FormattedMessage id="Unit" />
-                  </th> */}
-                  {/* <th className="border-bottom">
-                    <FormattedMessage id="Reset" />
-                  </th> */}
                   <th className="border-bottom">
                     <FormattedMessage id="Display-Order" />
                   </th>
@@ -227,9 +228,9 @@ export const ProductFeaturesList = ({ productId }) => {
               </thead>
               <tbody>
                 {list?.features && Object.values(list?.features).length
-                  ? Object.values(list?.features).map((t, index) => {
-                      return <TableRow key={index} {...t} />
-                    })
+                  ? Object.values(list?.features).map((t, index) => (
+                      <TableRow key={index} {...t} />
+                    ))
                   : null}
               </tbody>
             </Table>
@@ -247,18 +248,16 @@ export const ProductFeaturesList = ({ productId }) => {
         </Card>
 
         <ThemeDialog visible={visible} setVisible={setVisible}>
-          <>
-            <FeatureForm
-              productId={productId}
-              popupLabel={<FormattedMessage id={popUpLable} />}
-              type={type}
-              update={update}
-              setUpdate={setUpdate}
-              setVisible={setVisible}
-              sideBar={false}
-              featureData={type == 'edit' ? list?.features[currentId] : {}}
-            />
-          </>
+          <FeatureForm
+            productId={productId}
+            popupLabel={<FormattedMessage id={popUpLable} />}
+            type={type}
+            update={update}
+            setUpdate={setUpdate}
+            setVisible={setVisible}
+            sideBar={false}
+            featureData={type === 'edit' ? list?.features[currentId] : {}}
+          />
         </ThemeDialog>
       </div>
     </Wrapper>

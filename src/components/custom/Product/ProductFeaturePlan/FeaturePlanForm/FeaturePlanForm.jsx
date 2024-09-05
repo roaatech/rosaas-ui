@@ -33,6 +33,7 @@ import {
   faToggleOn,
 } from '@fortawesome/free-solid-svg-icons'
 import { activeTab } from '../../../../../const/product.js'
+import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
 
 const FeaturePlanForm = ({
   type,
@@ -73,7 +74,6 @@ const FeaturePlanForm = ({
   const allPlansfeatures = useSelector(
     (state) => state.products.products[productId]?.featurePlan
   )
-  // console.log({ allPlansfeatures })
 
   if (allPlansArray) {
     allPlansArray = allPlansArray.filter((plan) => !plan.isSubscribed)
@@ -134,7 +134,8 @@ const FeaturePlanForm = ({
     unitDisplayNameAr: FeaturePlanData
       ? FeaturePlanData?.unitDisplayName?.ar
       : '',
-    description: FeaturePlanData ? FeaturePlanData?.description : '',
+    descriptionEn: FeaturePlanData?.descriptionLocalizations?.en || '',
+    descriptionAr: FeaturePlanData?.descriptionLocalizations?.ar || '',
   }
 
   const validationSchema = Yup.object().shape({
@@ -192,20 +193,24 @@ const FeaturePlanForm = ({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      if (type === 'create') {
-        const dataDetails = {
-          description: values.description,
-          featureId: values.feature,
-          planId: values.plan,
+      const dataDetails = {
+        descriptionLocalizations: {
+          en: values.descriptionEn,
+          ar: values.descriptionAr,
+        },
+        featureId: values.feature,
+        planId: values.plan,
+      }
+      if (values.limit) dataDetails.limit = unlimited ? null : values.limit
+      if (values.reset) dataDetails.reset = parseInt(values.reset)
+      if (values.unit) dataDetails.unit = parseInt(values.unit)
+      if (values.unitDisplayNameEn || values.unitDisplayNameAr)
+        dataDetails.unitDisplayName = {
+          en: values.unitDisplayNameEn,
+          ar: values.unitDisplayNameAr,
         }
-        if (values.limit) dataDetails.limit = unlimited ? null : values.limit
-        if (values.reset) dataDetails.reset = parseInt(values.reset)
-        if (values.unit) dataDetails.unit = parseInt(values.unit)
-        if (values.unitDisplayName)
-          dataDetails.unitDisplayName = {
-            en: values.unitDisplayNameEn,
-            ar: values.unitDisplayNameAr,
-          }
+
+      if (type === 'create') {
         const createFeaturePlan = await createFeaturePlanRequest({
           productId: productId,
           data: dataDetails,
@@ -224,14 +229,7 @@ const FeaturePlanForm = ({
           featurePlanInfo({
             productId: productId,
             data: {
-              description: values.description,
-              limit: unlimited ? null : values.limit,
-              reset: values.reset,
-              unit: values.unit,
-              unitDisplayName: {
-                en: values.unitDisplayNameEn,
-                ar: values.unitDisplayNameAr,
-              },
+              ...dataDetails,
               feature: {
                 id: values.feature,
                 displayName: featureOptions.find(
@@ -254,40 +252,34 @@ const FeaturePlanForm = ({
           setActiveIndex(activeTab.plansFeatures)
         }
       } else {
-        const dataDetails = {
-          description: values.description,
-        }
-        if (values.reset) dataDetails.reset = parseInt(values.reset)
-        if (values.limit) dataDetails.limit = unlimited ? null : values.limit
-        if (values.unit) dataDetails.unit = parseInt(values.unit)
-        if (values.unitDisplayNameEn || values.unitDisplayNameAr)
-          dataDetails.unitDisplayName = {
-            en: values.unitDisplayNameEn,
-            ar: values.unitDisplayNameAr,
-          }
         const editFeaturePlan = await editFeaturePlanRequest({
           productId: productId,
           featurePlanId: FeaturePlanData.id,
           data: dataDetails,
         })
 
-        const newData = JSON.parse(JSON.stringify(FeaturePlanData))
-        newData.description = values.description
-        newData.limit = unlimited ? null : values.limit
-        newData.reset = values.reset
-        newData.unit = values.unit
-        newData.unitDisplayName = {
-          en: values.unitDisplayNameEn,
-          ar: values.unitDisplayNameAr,
+        const newData = {
+          ...FeaturePlanData,
+          descriptionLocalizations: {
+            en: values.descriptionEn,
+            ar: values.descriptionAr,
+          },
+          limit: unlimited ? null : values.limit,
+          reset: values.reset,
+          unit: values.unit,
+          unitDisplayName: {
+            en: values.unitDisplayNameEn,
+            ar: values.unitDisplayNameAr,
+          },
+          editedDate: new Date().toISOString().slice(0, 19),
         }
-        newData.createdDate = FeaturePlanData.createdDate
-        newData.editedDate = new Date().toISOString().slice(0, 19)
 
         dispatch(featurePlanInfo({ productId, data: newData }))
       }
       setVisible && setVisible(false)
     },
   })
+
   const [availableFeatures, setAvailableFeatures] = useState()
   useEffect(() => {
     if (!featureOptions) {
@@ -408,42 +400,40 @@ const FeaturePlanForm = ({
             </Form.Group>
           </div>
 
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Plan-Feature-display-description" />{' '}
-                <span className="fw-normal">
-                  <OverlayTrigger
-                    trigger={['hover', 'focus']}
-                    overlay={
-                      <Tooltip>
-                        {intl.formatMessage({
-                          id: 'Display-description-of-the-plan-feature-that-will-show-in-the-price-page',
-                        })}
-                      </Tooltip>
-                    }
-                  >
-                    <span>
-                      <FontAwesomeIcon icon={faQuestionCircle} />
-                    </span>
-                  </OverlayTrigger>
-                </span>
-              </Form.Label>
+          {/* MultilingualInput for Description */}
+          <MultilingualInput
+            inputLabel="Plan-Feature-display-description"
+            languages={[
+              { code: 'en', name: 'English' },
+              { code: 'ar', name: 'Arabic' },
+            ]}
+            inputIds={{
+              en: 'descriptionEn',
+              ar: 'descriptionAr',
+            }}
+            placeholder={{
+              en: 'English-Description',
+              ar: 'Arabic-Description',
+            }}
+            tooltipMessageId="Display-description-of-the-plan-feature-that-will-show-in-the-price-page"
+            values={{
+              en: formik.values.descriptionEn,
+              ar: formik.values.descriptionAr,
+            }}
+            onChange={formik.handleChange}
+            isRequired={false}
+            inputType="TextareaAndCounter"
+            maxLength={250}
+            errors={{
+              en: formik.errors.descriptionEn,
+              ar: formik.errors.descriptionAr,
+            }}
+            touched={{
+              en: formik.touched.descriptionEn,
+              ar: formik.touched.descriptionAr,
+            }}
+          />
 
-              <TextareaAndCounter
-                addTextarea={formik.setFieldValue}
-                maxLength={250}
-                showCharCount
-                inputValue={formik?.values?.description}
-              />
-
-              {formik.touched.description && formik.errors.description && (
-                <div className="invalid-feedback">
-                  {formik.errors.description}
-                </div>
-              )}
-            </Form.Group>
-          </div>
           <div
             style={{
               display: isFeatureBoolean(formik.values.feature)
@@ -584,61 +574,37 @@ const FeaturePlanForm = ({
               )}
             </Form.Group>
             {unitDisplayName && (
-              <div>
-                <Form.Group>
-                  <Form.Label className="mb-1">
-                    <FormattedMessage id="Unit-Display-Name" />{' '}
-                    <span style={{ color: 'red' }}>* </span>
-                  </Form.Label>
-                  <div className="card">
-                    <TabView>
-                      <TabPanel header="En">
-                        <div className="form-group mt-3">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="unitDisplayNameEn"
-                            name="unitDisplayNameEn"
-                            onChange={formik.handleChange}
-                            value={formik.values.unitDisplayNameEn}
-                            placeholder={intl.formatMessage({
-                              id: 'English-Name',
-                            })}
-                          />
-                        </div>
-                      </TabPanel>
-                      <TabPanel header="Ar">
-                        <div className="form-group mt-3">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="unitDisplayNameAr"
-                            name="unitDisplayNameAr"
-                            onChange={formik.handleChange}
-                            value={formik.values.unitDisplayNameAr}
-                            placeholder={intl.formatMessage({
-                              id: 'Arabic-Name',
-                            })}
-                          />
-                        </div>
-                      </TabPanel>
-                    </TabView>
-
-                    {(formik.touched.unitDisplayNameEn ||
-                      formik.touched.unitDisplayNameAr) &&
-                      (formik.errors.unitDisplayNameEn ||
-                        formik.errors.unitDisplayNameAr) && (
-                        <Form.Control.Feedback
-                          type="invalid"
-                          style={{ unitDisplay: 'block' }}
-                        >
-                          {formik.errors.unitDisplayNameEn ||
-                            formik.errors.unitDisplayNameAr}
-                        </Form.Control.Feedback>
-                      )}
-                  </div>
-                </Form.Group>
-              </div>
+              <MultilingualInput
+                inputLabel="Unit-Display-Name"
+                languages={[
+                  { code: 'en', name: 'English' },
+                  { code: 'ar', name: 'Arabic' },
+                ]}
+                inputIds={{
+                  en: 'unitDisplayNameEn',
+                  ar: 'unitDisplayNameAr',
+                }}
+                placeholder={{
+                  en: 'English-Name',
+                  ar: 'Arabic-Name',
+                }}
+                tooltipMessageId="Tooltip-for-Unit-Display-Name"
+                values={{
+                  en: formik.values.unitDisplayNameEn,
+                  ar: formik.values.unitDisplayNameAr,
+                }}
+                onChange={formik.handleChange}
+                isRequired={true}
+                inputType="input"
+                errors={{
+                  en: formik.errors.unitDisplayNameEn,
+                  ar: formik.errors.unitDisplayNameAr,
+                }}
+                touched={{
+                  en: formik.touched.unitDisplayNameEn,
+                  ar: formik.touched.unitDisplayNameAr,
+                }}
+              />
             )}
           </div>
         </Modal.Body>

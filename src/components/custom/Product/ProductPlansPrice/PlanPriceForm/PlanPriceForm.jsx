@@ -20,7 +20,7 @@ import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInp
 
 const PlanPriceForm = ({
   type,
-  planPriceData, 
+  planPriceData,
   setVisible,
   popupLabel,
   setActiveIndex,
@@ -142,7 +142,8 @@ const PlanPriceForm = ({
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
     price: planPriceData ? planPriceData.price : '',
     oldPrice: planPriceData ? planPriceData.oldPrice : '',
-    description: planPriceData ? planPriceData.description : '',
+    descriptionEn: planPriceData?.descriptionLocalizations?.en || '',
+    descriptionAr: planPriceData?.descriptionLocalizations?.ar || '',
     cyclesYouDontHave: cyclesYouDontHave,
   }
 
@@ -166,11 +167,11 @@ const PlanPriceForm = ({
       .required(<FormattedMessage id="This-field-is-required" />)
       .min(0, <FormattedMessage id="The-price-must-be-0-or-more" />)
       .max(999999, <FormattedMessage id="The-value-must-not-exceed-999,999" />),
-      
-    oldPrice: Yup.number() 
+oldPrice: Yup.number() 
     .min(1, <FormattedMessage id="The-price-must-be-1-or-more" />)
     .max(999999, <FormattedMessage id="The-value-must-not-exceed-999,999" />),
   })
+  
 
   const formik = useFormik({
     initialValues,
@@ -182,7 +183,6 @@ const PlanPriceForm = ({
           planId: values.plan,
           cycle: parseInt(values.cycle),
           price: parseFloat(values.price),
-          oldPrice: parseFloat(values.oldPrice),
           description: values.description,
         })
 
@@ -207,7 +207,6 @@ const PlanPriceForm = ({
               },
               cycle: values.cycle,
               price: values.price,
-              oldPrice: values.oldPrice,
               systemName: values.systemName,
 
               description: values.description,
@@ -246,8 +245,11 @@ const PlanPriceForm = ({
               systemName: values.systemName,
               cycle: values.cycle,
               price: values.price,
-              oldPrice: values.oldPrice,
-              description: values.description,
+               oldPrice: values.oldPrice,
+              descriptionLocalizations: {
+                en: values.descriptionEn,
+                ar: values.descriptionAr,
+              },
               id: planPriceData.id,
               isPublished: planPriceData.isPublished,
               isSubscribed: planPriceData.isSubscribed,
@@ -471,8 +473,7 @@ const PlanPriceForm = ({
               )}
             </Form.Group>
           </div>
-          
-          <div>
+           <div>
             <Form.Group className="mb-3">
               <Form.Label>
                 <FormattedMessage id="OldPrice" />{' '} 
@@ -496,26 +497,37 @@ const PlanPriceForm = ({
               )}
             </Form.Group>
           </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Description" />
-              </Form.Label>
-
-              <TextareaAndCounter
-                addTextarea={formik.setFieldValue}
-                maxLength={250}
-                showCharCount
-                inputValue={formik?.values?.description}
-              />
-
-              {formik.touched.description && formik.errors.description && (
-                <div className="invalid-feedback">
-                  {formik.errors.description}
-                </div>
-              )}
-            </Form.Group>
-          </div>
+          <MultilingualInput
+            inputLabel="Description"
+            languages={[
+              { code: 'en', name: 'English' },
+              { code: 'ar', name: 'Arabic' },
+            ]}
+            inputIds={{
+              en: 'descriptionEn',
+              ar: 'descriptionAr',
+            }}
+            placeholder={{
+              en: 'English-Description',
+              ar: 'Arabic-Description',
+            }}
+            values={{
+              en: formik.values.descriptionEn,
+              ar: formik.values.descriptionAr,
+            }}
+            onChange={formik.handleChange}
+            isRequired={false}
+            inputType="TextareaAndCounter"
+            maxLength={250}
+            errors={{
+              en: formik.errors.descriptionEn,
+              ar: formik.errors.descriptionAr,
+            }}
+            touched={{
+              en: formik.touched.descriptionEn,
+              ar: formik.touched.descriptionAr,
+            }}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">

@@ -58,6 +58,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [type, setType] = useState('')
   const [show, setShow] = useState(false)
   const [popUpLable, setPopUpLable] = useState('')
+  const [selectedLanguage, setSelectedLanguage] = useState('en') // State for language selection
 
   const productId = routeParams.id
   const listDataStore = useSelector(
@@ -66,10 +67,10 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const planList = useSelector(
     (state) => state.products.products[productId]?.plans
   )
-  // delete default key from list
   const listData = { ...listDataStore }
   const intl = useIntl()
-  // const defaultData = {}
+
+  // Remove default key from list
   listData['00000000-0000-0000-0000-000000000000'] &&
     delete listData['00000000-0000-0000-0000-000000000000']
   let list = listData && Object.values(listData)
@@ -128,14 +129,19 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
 
   const handleData = (data) => {
     return {
-      Feature: data.feature.displayName,
-      Plan: data.plan.displayName,
+      Feature:
+        data.feature.displayNameLocalizations[selectedLanguage] ||
+        data.feature.displayName,
+      Plan:
+        data.plan.displayNameLocalizations[selectedLanguage] ||
+        data.plan.displayName,
       Limit: data.limit,
       Unit: featureUnitMap[data.unit],
-      'Unit-Display-Name-En': data.unitDisplayName?.en,
-      'Unit-Display-Name-Ar': data.unitDisplayName?.ar,
+      'Unit-Display-Name':
+        data.unitDisplayName?.[selectedLanguage] || data.unitDisplayName?.en,
       Reset: featureResetMap[data.reset],
-      Description: data.description,
+      Description:
+        data.descriptionLocalizations[selectedLanguage] || data.description,
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
     }
@@ -167,11 +173,13 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const featuresObj = {}
   const tableData = {}
 
-  const generateTableData = list?.map((item) => {
+  list?.forEach((item) => {
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         featureId: item.feature.id,
-        displayName: item.feature.displayName,
+        displayName:
+          item.feature.displayNameLocalizations[selectedLanguage] ||
+          item.feature.displayName,
         systemName: item.feature.systemName,
         type: item.feature.type,
         index: Object.keys(featuresObj).length,
@@ -357,8 +365,19 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
       <div className="dynamicButtons pt-0 mt-0 mb-1 ">
         <DynamicButtons
           buttons={[
+            ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+              (lang, index) => ({
+                order: 1,
+                type: 'toggle',
+                label: lang,
+                group: 'language',
+                toggleValue: selectedLanguage === lang,
+                toggleFunc: () => setSelectedLanguage(lang),
+                variant: 'primary',
+              })
+            ),
             {
-              order: 1,
+              order: 2,
               type: 'form',
               id: routeParams.id,
               label: 'Add-Plan-Feature',
@@ -377,9 +396,9 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
             <Table hover className="user-table align-items-center">
               <thead>
                 <tr>
-                  <th className="border-bottom  table-title-cell">
-                    {' '}
-                    Features / Plans
+                  <th className="border-bottom table-title-cell">
+                    <FormattedMessage id="Features" /> /{' '}
+                    <FormattedMessage id="Plans" />
                   </th>
                   {planList &&
                     Object.keys(planList)?.map((item, index) => (
@@ -400,7 +419,9 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                           </span>
                         )}
                         <span className="mr-1">
-                          {planList[item].displayName}
+                          {planList[item].displayNameLocalizations[
+                            selectedLanguage
+                          ] || planList[item].displayName}
                         </span>
 
                         {planList[item].subscribers && (
