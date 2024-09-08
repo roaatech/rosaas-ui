@@ -165,6 +165,9 @@ export const ProductPlansList = ({ productId }) => {
       })
     )
   }
+  const filterRedirectionLink = (description) => {
+    return description?.replace(/#redirection-link=([^\s]+)/, '') || ''
+  }
 
   const TableRow = (props) => {
     const {
@@ -187,12 +190,9 @@ export const ProductPlansList = ({ productId }) => {
       isVisible,
     } = props
     const publishStatus = isPublished ? true : false
-    console.log(
-      displayNameLocalizations?.[selectedLanguage],
-      selectedLanguage,
-      descriptionLocalizations,
-      displayNameLocalizations
-    )
+    const filteredDescription =
+      filterRedirectionLink(descriptionLocalizations?.[selectedLanguage]) ||
+      filterRedirectionLink(description)
 
     return (
       <tr>

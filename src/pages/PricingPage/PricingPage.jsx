@@ -290,7 +290,23 @@ const PricingPage = () => {
   }
   const currencyCode = currency.currencyCode
   const direction = useSelector((state) => state.main.direction)
+  const extractRedirectionLinkFromDescription = (description) => {
+    const linkMatch = description.match(/#redirection-link=([^#]+)#/)
+    const redirectionLink = linkMatch ? linkMatch[1] : ''
 
+    // Replace ##word## with a clickable link
+    const updatedDescription = description.replace(
+      /##(.*?)##/,
+      `<a href="${redirectionLink}" target="_blank" style="text-decoration: underline; color: var(--second-color); font-weight: bold;">$1</a>`
+    )
+
+    // Remove the redirection link part from the description
+    const cleanedDescription = updatedDescription
+      .replace(/#redirection-link=([^#]+)#/, '')
+      .trim()
+
+    return { cleanedDescription, redirectionLink }
+  }
   const renderFeaturePlans = (planId) => {
     const featurePlans =
       listData &&
@@ -310,6 +326,7 @@ const PricingPage = () => {
       )
 
     const subscribtionId = filteredPrices?.id
+
     const featureStatusMap = {}
     featurePlans &&
       featurePlans.forEach((featurePlan) => {
@@ -320,6 +337,16 @@ const PricingPage = () => {
           },
         }
       })
+    const isAvailableForSelection = planList[planId]?.isAvailableForSelection
+
+    // Extract redirection link and formatted description if not available for selection
+    let formattedDescription = ''
+    if (!isAvailableForSelection) {
+      const { cleanedDescription } = extractRedirectionLinkFromDescription(
+        planList[planId]?.descriptionLocalizations?.[intl.locale] || ''
+      )
+      formattedDescription = cleanedDescription
+    }
 
     return (
       <div>
@@ -380,54 +407,68 @@ const PricingPage = () => {
                   )}
               </div>
               <div className="d-flex align-items-center justify-content-between ">
-                <div>
-                  {showOldPrice &&
-                    filteredPrices?.oldPriceDetails?.formattedPrice && (
-                      <div
-                        style={{
-                          textDecoration: 'line-through',
-                          color: 'var(--gray-600)',
-                        }}
-                        className=" mr-1 "
-                      >
-                        {' '}
-                        {/* {filteredPrices?.priceDetails?.formattedPrice=="40.18 (SAR)"&&<span>40.18 (SAR)</span>} */}
-                        {filteredPrices?.oldPriceDetails?.formattedPrice}
-                      </div>
-                    )}
+                {isAvailableForSelection ? (
+                  <div>
+                    {showOldPrice &&
+                      filteredPrices?.oldPriceDetails?.formattedPrice && (
+                        <div
+                          style={{
+                            textDecoration: 'line-through',
+                            color: 'var(--gray-600)',
+                          }}
+                          className=" mr-1 "
+                        >
+                          {' '}
+                          {filteredPrices?.oldPriceDetails?.formattedPrice}
+                        </div>
+                      )}
+                    <span
+                      style={{
+                        fontSize: '1.5rem',
+                        fontWeight: 'bold',
+                        transition: 'all 0.9s',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {filteredPrices?.priceDetails?.formattedPrice}
+                    </span>
+                    <span
+                      className="mt-3 ml-1"
+                      style={{
+                        transition: 'all 0.9s',
+                      }}
+                    >
+                      {' '}
+                      /
+                      {filteredPrices?.cycle && (
+                        <SafeFormatMessage id={cycle[filteredPrices?.cycle]} />
+                      )}
+                    </span>
+                    <div
+                      style={{
+                        color: 'var(--second-color) !important',
+                        fontSize: '1.2rem',
+                      }}
+                      className=" mr-1 "
+                    >
+                      {filteredPrices?.descriptionLocalizations?.[
+                        intl.locale
+                      ] || filteredPrices?.description}
+                    </div>
+                  </div>
+                ) : (
                   <span
                     style={{
                       fontSize: '1.5rem',
                       fontWeight: 'bold',
                       transition: 'all 0.9s',
                       whiteSpace: 'nowrap',
+                      color: 'var(--second-color)',
                     }}
                   >
-                    {filteredPrices?.priceDetails?.formattedPrice}
+                    <SafeFormatMessage id="Contact-Us" />
                   </span>
-                  <span
-                    className="mt-3 ml-1"
-                    style={{
-                      transition: 'all 0.9s',
-                    }}
-                  >
-                    {' '}
-                    /
-                    {filteredPrices?.cycle && (
-                      <SafeFormatMessage id={cycle[filteredPrices?.cycle]} />
-                    )}
-                  </span>
-                  <div
-                    style={{
-                      color: 'var(--second-color) !important',
-                      fontSize: '1.2rem',
-                    }}
-                    className=" mr-1 "
-                  >
-                    {filteredPrices?.descriptionLocalizations?.[intl.locale] ||
-                      filteredPrices?.description}
-                  </div>
-                </div>
+                )}
               </div>
             </Card.Header>
             <Card.Body>
@@ -459,136 +500,166 @@ const PricingPage = () => {
 
             <Card.Footer
               style={{
-                ...(listProduct?.[productId]?.trialType === 2
-                  ? { whiteSpace: 'nowrap', minHeight: '150px' }
-                  : {}),
+                whiteSpace:
+                  listProduct?.[productId]?.trialType === 2 ? 'nowrap' : '',
+                minHeight:
+                  listProduct?.[productId]?.trialType === 2 ? '150px' : '',
+                backgroundColor: !isAvailableForSelection
+                  ? 'rgb(255 201 102 / 8%)'
+                  : '',
+                textAlign: !isAvailableForSelection ? 'center' : '',
               }}
             >
-              {planId != listProduct?.[productId]?.trialPlanId ? (
-                <>
-                  {listProduct?.[productId]?.trialType == 2 &&
-                    planId !== listProduct?.[productId]?.trialPlanId && (
-                      <Form.Group
-                        className={`mb-3 ${intl.locale === 'ar' ? 'rtl' : ''}`}
-                      >
-                        <Form.Check
-                          type="checkbox"
-                          label={
-                            <>
-                              <SafeFormatMessage id="With" />{' '}
-                              <span style={{ color: 'var(--second-color' }}>
-                                {listProduct?.[productId]?.trialPeriodInDays}{' '}
-                                {listProduct?.[productId]?.trialPeriodInDays <=
-                                10 ? (
-                                  <SafeFormatMessage id="Days" />
-                                ) : (
-                                  <SafeFormatMessage id="Days-ar" />
-                                )}{' '}
-                              </span>
-                              <SafeFormatMessage id="Free-Trial-Plan" />{' '}
-                            </>
-                          }
-                          checked={startWithTrial[planId] || false}
-                          onChange={(event) =>
-                            handleStartWithTrialChange(event, planId)
-                          }
-                          className="font-small"
-                        />
-                        {startWithTrial[planId] && (
-                          <div className="small">
-                            <span className="info-icon mr-1">
-                              <FontAwesomeIcon icon={faInfoCircle} />
-                            </span>{' '}
-                            <SafeFormatMessage id="start-your" />{' '}
-                            <strong style={{ color: 'var(--second-color)' }}>
-                              <SafeFormatMessage id="trial" />
-                            </strong>{' '}
-                            ,
-                            <span>
-                              {' '}
-                              <SafeFormatMessage id="then" />{' '}
-                              <strong style={{ color: 'var(--second-color)' }}>
-                                <SafeFormatMessage id="switch-plans" />
-                                {'  '}
-                              </strong>
-                              <span
-                                className="info-icon"
-                                style={{
-                                  color: 'var(--info-color)',
-                                  marginLeft: '5px',
-                                }}
-                              >
-                                <i className="bi bi-info-circle"></i>
-                              </span>
-                              <SafeFormatMessage id="seamlessly" />
-                            </span>
-                          </div>
-                        )}
-                      </Form.Group>
-                    )}
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    className="w-100"
-                    onClick={() => {
-                      if (
-                        listProduct?.[productId]
-                          ?.isPlanSelectionRedirectionEnabled &&
-                        listProduct?.[productId]?.planSelectionRedirectUrl
-                      ) {
-                        window.top.location.href = `${
-                          listProduct?.[productId]?.planSelectionRedirectUrl
-                        }?plan-price=${
-                          filteredPrices.systemName
-                        }&currency-code=${currencyCode}&trial-enabled=${
-                          startWithTrial[planId] ||
-                          (listProduct?.[productId]?.trialType === 3 &&
-                            planList[planId]?.trialPeriodInDays > 0)
-                        }&language=${intl.locale}`
-                      } else if (
-                        startWithTrial[planId] ||
-                        (listProduct?.[productId]?.trialType === 3 &&
-                          planList[planId]?.trialPeriodInDays > 0)
-                      ) {
-                        navigate(
-                          `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}#start-with-trial`
-                        )
-                      } else {
-                        navigate(
-                          `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}`
-                        )
-                      }
-                    }}
-                  >
-                    <>
-                      <SafeFormatMessage id="Start-With" />{' '}
-                      {planList[planId]?.displayNameLocalizations?.[intl.locale]
-                        ? planList[planId]?.displayNameLocalizations?.[
-                            intl.locale
-                          ]?.toUpperCase()
-                        : planList[planId]?.displayName?.toUpperCase()}
-                    </>
-                  </Button>
-                </>
+              {!isAvailableForSelection ? (
+                <div
+                  className="text-center text-seamlessly mt-4"
+                  style={{ whiteSpace: 'pre-wrap' }}
+                  dangerouslySetInnerHTML={{
+                    __html: formattedDescription,
+                  }}
+                />
               ) : (
-                listProduct?.[productId]?.trialType == 2 && (
-                  <div className="text-center text-seamlessly mt-4">
-                    <div>
-                      <SafeFormatMessage id="start-your" />{' '}
-                      <strong style={{ color: 'var(--second-color)' }}>
-                        <SafeFormatMessage id="trial" />
-                      </strong>
-                      ,
-                    </div>
-                    <div>
-                      <SafeFormatMessage id="then" />{' '}
-                      <strong style={{ color: 'var(--second-color)' }}>
-                        <SafeFormatMessage id="switch-plans" />
-                      </strong>{' '}
-                      <SafeFormatMessage id="seamlessly" />
-                    </div>
-                  </div>
-                )
+                <>
+                  {planId !== listProduct?.[productId]?.trialPlanId ? (
+                    <>
+                      {listProduct?.[productId]?.trialType === 2 &&
+                        planId !== listProduct?.[productId]?.trialPlanId && (
+                          <Form.Group
+                            className={`mb-3 ${
+                              intl.locale === 'ar' ? 'rtl' : ''
+                            }`}
+                          >
+                            <Form.Check
+                              type="checkbox"
+                              label={
+                                <>
+                                  <SafeFormatMessage id="With" />{' '}
+                                  <span
+                                    style={{ color: 'var(--second-color)' }}
+                                  >
+                                    {
+                                      listProduct?.[productId]
+                                        ?.trialPeriodInDays
+                                    }{' '}
+                                    {listProduct?.[productId]
+                                      ?.trialPeriodInDays <= 10 ? (
+                                      <SafeFormatMessage id="Days" />
+                                    ) : (
+                                      <SafeFormatMessage id="Days-ar" />
+                                    )}{' '}
+                                  </span>
+                                  <SafeFormatMessage id="Free-Trial-Plan" />{' '}
+                                </>
+                              }
+                              checked={startWithTrial[planId] || false}
+                              onChange={(event) =>
+                                handleStartWithTrialChange(event, planId)
+                              }
+                              className="font-small"
+                            />
+                            {startWithTrial[planId] && (
+                              <div className="small">
+                                <span className="info-icon mr-1">
+                                  <FontAwesomeIcon icon={faInfoCircle} />
+                                </span>{' '}
+                                <SafeFormatMessage id="start-your" />{' '}
+                                <strong
+                                  style={{ color: 'var(--second-color)' }}
+                                >
+                                  <SafeFormatMessage id="trial" />
+                                </strong>{' '}
+                                ,
+                                <span>
+                                  {' '}
+                                  <SafeFormatMessage id="then" />{' '}
+                                  <strong
+                                    style={{ color: 'var(--second-color)' }}
+                                  >
+                                    <SafeFormatMessage id="switch-plans" />{' '}
+                                  </strong>
+                                  <span
+                                    className="info-icon"
+                                    style={{
+                                      color: 'var(--info-color)',
+                                      marginLeft: '5px',
+                                    }}
+                                  >
+                                    <i className="bi bi-info-circle"></i>
+                                  </span>
+                                  <SafeFormatMessage id="seamlessly" />
+                                </span>
+                              </div>
+                            )}
+                          </Form.Group>
+                        )}
+
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        className="w-100"
+                        onClick={() => {
+                          if (
+                            listProduct?.[productId]
+                              ?.isPlanSelectionRedirectionEnabled &&
+                            listProduct?.[productId]?.planSelectionRedirectUrl
+                          ) {
+                            window.top.location.href = `${
+                              listProduct?.[productId]?.planSelectionRedirectUrl
+                            }?plan-price=${
+                              filteredPrices.systemName
+                            }&currency-code=${currencyCode}&trial-enabled=${
+                              startWithTrial[planId] ||
+                              (listProduct?.[productId]?.trialType === 3 &&
+                                planList[planId]?.trialPeriodInDays > 0)
+                            }&language=${intl.locale}`
+                          } else if (
+                            startWithTrial[planId] ||
+                            (listProduct?.[productId]?.trialType === 3 &&
+                              planList[planId]?.trialPeriodInDays > 0)
+                          ) {
+                            navigate(
+                              `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}#start-with-trial`
+                            )
+                          } else {
+                            navigate(
+                              `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}`
+                            )
+                          }
+                        }}
+                      >
+                        <>
+                          <SafeFormatMessage id="Start-With" />{' '}
+                          {planList[planId]?.displayNameLocalizations?.[
+                            intl.locale
+                          ]
+                            ? planList[planId]?.displayNameLocalizations?.[
+                                intl.locale
+                              ]?.toUpperCase()
+                            : planList[planId]?.displayName?.toUpperCase()}
+                        </>
+                      </Button>
+                    </>
+                  ) : (
+                    listProduct?.[productId]?.trialType == 2 && (
+                      <div className="text-center text-seamlessly mt-4">
+                        <div>
+                          <SafeFormatMessage id="start-your" />{' '}
+                          <strong style={{ color: 'var(--second-color)' }}>
+                            <SafeFormatMessage id="trial" />
+                          </strong>
+                          ,
+                        </div>
+                        <div>
+                          <SafeFormatMessage id="then" />{' '}
+                          <strong style={{ color: 'var(--second-color)' }}>
+                            <SafeFormatMessage id="switch-plans" />
+                          </strong>{' '}
+                          <SafeFormatMessage id="seamlessly" />
+                        </div>
+                      </div>
+                    )
+                  )}
+                </>
               )}
             </Card.Footer>
           </Card>

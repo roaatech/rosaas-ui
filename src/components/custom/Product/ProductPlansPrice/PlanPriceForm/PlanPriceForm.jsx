@@ -175,12 +175,13 @@ const PlanPriceForm = ({
         (value) => (value + '').match(/^\d+(\.\d{1,2})?$/)
       ),
     oldPrice: Yup.number()
+      .nullable() // This makes the field optional
       .min(0, <SafeFormatMessage id="The-price-must-be-0-or-more" />)
       .max(999999, <SafeFormatMessage id="The-value-must-not-exceed-999,999" />)
       .test(
         'is-decimal',
         <SafeFormatMessage id="The-price-must-have-up-to-two-decimal-places" />,
-        (value) => (value + '').match(/^\d+(\.\d{1,2})?$/)
+        (value) => !value || (value + '').match(/^\d+(\.\d{1,2})?$/) // Validation only applies if a value exists
       ),
   })
 

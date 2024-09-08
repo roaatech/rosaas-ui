@@ -1,8 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
-import { Modal, Button, Form } from '@themesberg/react-bootstrap'
+import {
+  Modal,
+  Button,
+  Form,
+  OverlayTrigger,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './PlanForm.styled.jsx'
@@ -16,6 +22,7 @@ import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInp
 import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
 import { activeTab } from '../../../../../const/product.js'
 import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import { BsFillQuestionCircleFill } from 'react-icons/bs'
 
 const PlanForm = ({
   type,
@@ -31,17 +38,38 @@ const PlanForm = ({
   const allProducts = useSelector((state) => state.products.products)
   const ProductTrialType = allProducts[productId].trialType
 
-  // Updated initial values for multilingual fields and isAvailableForSelection
+  const extractRedirectionLink = (description) => {
+    const match = description.match(/#redirection-link=([^#]+)#/)
+    return match ? match[1] : ''
+  }
+  const [redirectionLink, setRedirectionLink] = useState(
+    planData?.descriptionLocalizations?.en
+      ? extractRedirectionLink(planData.descriptionLocalizations.en)
+      : ''
+  )
+
+  // Remove the redirection link from the description
+  const cleanDescription = (description) => {
+    return description.replace(/#redirection-link=([^#]+)#/, '').trim()
+  }
   const initialValues = {
     displayNameEn: planData?.displayNameLocalizations?.en || '',
     displayNameAr: planData?.displayNameLocalizations?.ar || '',
-    descriptionEn: planData?.descriptionLocalizations?.en || '',
-    descriptionAr: planData?.descriptionLocalizations?.ar || '',
     systemName: planData ? planData.systemName : '',
     displayOrder: planData ? planData.displayOrder : '0',
     alternativePlanID: planData ? planData.alternativePlanID : '',
     trialPeriodInDays: planData ? planData.trialPeriodInDays : '0',
     isAvailableForSelection: planData ? planData.isAvailableForSelection : true,
+    descriptionEn: planData?.descriptionLocalizations?.en
+      ? cleanDescription(planData.descriptionLocalizations.en)
+      : '',
+    descriptionAr: planData?.descriptionLocalizations?.ar
+      ? cleanDescription(planData.descriptionLocalizations.ar)
+      : '',
+
+    redirectionLink: planData?.descriptionLocalizations?.en
+      ? extractRedirectionLink(planData.descriptionLocalizations.en)
+      : '',
   }
 
   const validationSchema = Yup.object().shape({
@@ -90,6 +118,7 @@ const PlanForm = ({
       .default(0),
     trialPeriodInDays: Yup.number(),
   })
+
   useEffect(() => {
     const fetchData = async () => {
       if (!allProducts[productId].plan) {
@@ -114,6 +143,22 @@ const PlanForm = ({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
+      const descriptionWithRedirectionEn = values.isAvailableForSelection
+        ? values.descriptionEn
+        : values.descriptionEn
+        ? redirectionLink
+          ? `${values.descriptionEn} #redirection-link=${redirectionLink}#`
+          : values.descriptionEn
+        : ''
+      const descriptionWithRedirectionAr =
+        values.isAvailableForSelection && redirectionLink
+          ? values.descriptionAr
+          : values.descriptionAr
+          ? redirectionLink
+            ? `${values.descriptionAr} #redirection-link=${redirectionLink}#`
+            : values.descriptionAr
+          : ''
+
       const dataToSubmit = {
         isLockedBySystem: false,
         tenancyType: 3,
@@ -123,13 +168,13 @@ const PlanForm = ({
           ar: values.displayNameAr,
         },
         descriptionLocalizations: {
-          en: values.descriptionEn,
-          ar: values.descriptionAr,
+          en: descriptionWithRedirectionEn,
+          ar: descriptionWithRedirectionAr,
         },
         displayOrder: values.displayOrder || 0,
         alternativePlanID: values.alternativePlanID || null,
         trialPeriodInDays: values.trialPeriodInDays || 0,
-        isAvailableForSelection: values.isAvailableForSelection, // Include the checkbox value
+        isAvailableForSelection: values.isAvailableForSelection,
       }
 
       if (type === 'create') {
@@ -192,6 +237,7 @@ const PlanForm = ({
   } else {
     alternativePlanIDOptions = []
   }
+  const direction = useSelector((state) => state.main.direction)
 
   return (
     <Wrapper>
@@ -268,39 +314,6 @@ const PlanForm = ({
               </Form.Control.Feedback>
             )}
           </div>
-
-          {/* MultilingualInput for Description */}
-          <MultilingualInput
-            inputLabel="Description"
-            languages={[
-              { code: 'en', name: 'English' },
-              { code: 'ar', name: 'Arabic' },
-            ]}
-            inputIds={{
-              en: 'descriptionEn',
-              ar: 'descriptionAr',
-            }}
-            placeholder={{
-              en: 'English-Description',
-              ar: 'Arabic-Description',
-            }}
-            values={{
-              en: formik.values.descriptionEn,
-              ar: formik.values.descriptionAr,
-            }}
-            onChange={formik.handleChange}
-            isRequired={false}
-            inputType="TextareaAndCounter"
-            maxLength={250}
-            errors={{
-              en: formik.errors.descriptionEn,
-              ar: formik.errors.descriptionAr,
-            }}
-            touched={{
-              en: formik.touched.descriptionEn,
-              ar: formik.touched.descriptionAr,
-            }}
-          />
 
           {/* Display Order Field */}
           <div>
@@ -402,6 +415,78 @@ const PlanForm = ({
               onChange={formik.handleChange}
             />
           </Form.Group>
+
+          {/* Redirection Link Input if not available for selection */}
+          {!formik.values.isAvailableForSelection && (
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <SafeFormatMessage id="Redirection-Link" />
+              </Form.Label>
+              <OverlayTrigger
+                trigger={['hover', 'focus']}
+                overlay={
+                  <Tooltip>
+                    <SafeFormatMessage id="Provide-a-redirection-link-here.-This-link-will-be-used-in-the-marketplace-for-unselectable-plans-to-redirect-users,-for-example,-to-##Contact-Us##." />
+                  </Tooltip>
+                }
+              >
+                <span>
+                  <BsFillQuestionCircleFill
+                    style={{ color: '#6c757d' }}
+                    className={
+                      direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                    }
+                  />
+                </span>
+              </OverlayTrigger>
+              <input
+                type="text"
+                className="form-control"
+                id="redirectionLink"
+                name="redirectionLink"
+                placeholder="https://example.com/contact-us"
+                value={redirectionLink}
+                onChange={(e) => setRedirectionLink(e.target.value)}
+              />
+            </Form.Group>
+          )}
+          {/* MultilingualInput for Description with Tooltip */}
+
+          <MultilingualInput
+            inputLabel="Description"
+            languages={[
+              { code: 'en', name: 'English' },
+              { code: 'ar', name: 'Arabic' },
+            ]}
+            tooltipMessageId={
+              !formik.values.isAvailableForSelection &&
+              'The-word-enclosed-between-##-will-be-related-to-the-redirection-link.-for-example,-to-##Contact-Us##.'
+            }
+            inputIds={{
+              en: 'descriptionEn',
+              ar: 'descriptionAr',
+            }}
+            placeholder={{
+              en: 'English-Description',
+              ar: 'Arabic-Description',
+            }}
+            values={{
+              en: formik.values.descriptionEn,
+              ar: formik.values.descriptionAr,
+            }}
+            onChange={formik.handleChange}
+            isRequired={false}
+            inputType="TextareaAndCounter"
+            maxLength={250}
+            errors={{
+              en: formik.errors.descriptionEn,
+              ar: formik.errors.descriptionAr,
+            }}
+            touched={{
+              en: formik.touched.descriptionEn,
+              ar: formik.touched.descriptionAr,
+            }}
+          />
         </Modal.Body>
 
         <Modal.Footer>
