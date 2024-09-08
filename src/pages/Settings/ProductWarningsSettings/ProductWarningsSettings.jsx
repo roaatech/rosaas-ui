@@ -29,6 +29,7 @@ import { WarningType } from '../../../const/WarningsSettings'
 import ProductWarnings from '../../../components/custom/Product/ProductWarnings/ProductWarnings'
 import { useDispatch } from 'react-redux'
 import { removeProductWarningsStore } from '../../../store/slices/products/productsSlice'
+import SafeFormatMessage from '../../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ProductWarningsSettings = () => {
   const [edit, setEdit] = useState(false)
@@ -149,7 +150,7 @@ const ProductWarningsSettings = () => {
         <Form onSubmit={formik.handleSubmit}>
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Settings" />
+              <SafeFormatMessage id="Settings" />
             </h4>
 
             <DynamicButtons
@@ -194,7 +195,7 @@ const ProductWarningsSettings = () => {
           <Card className="m-3 mt-0">
             <Card.Body>
               <h5 className="mb-4">
-                <FormattedMessage id="Product-Warnings-Settings" />
+                <SafeFormatMessage id="Product-Warnings-Settings" />
               </h5>
 
               <Row>
@@ -203,14 +204,14 @@ const ProductWarningsSettings = () => {
                     <Form.Group>
                       <div className="border-top-1 border-light pt-2">
                         <Form.Label>
-                          <FormattedMessage id={fieldName} />
+                          <SafeFormatMessage id={fieldName} />
                           <span style={{ color: 'red' }}>* </span>
                           <span className="fw-normal">
                             <OverlayTrigger
                               trigger={['hover', 'focus']}
                               overlay={
                                 <Tooltip>
-                                  <FormattedMessage id={`${fieldName}_desc`} />
+                                  <SafeFormatMessage id={`${fieldName}_desc`} />
                                 </Tooltip>
                               }
                             >
@@ -225,7 +226,7 @@ const ProductWarningsSettings = () => {
                         <Card.Body> */}
                       <div className="small p-2 ">
                         {' '}
-                        <FormattedMessage id="Message-En" />
+                        <SafeFormatMessage id="Message-En" />
                       </div>
                       <input
                         className="form-control"
@@ -247,7 +248,7 @@ const ProductWarningsSettings = () => {
                           </Form.Control.Feedback>
                         )}
                       <div className="small p-2">
-                        <FormattedMessage id="Message-Ar" />
+                        <SafeFormatMessage id="Message-Ar" />
                       </div>
                       <input
                         className="form-control"
@@ -270,7 +271,7 @@ const ProductWarningsSettings = () => {
                         )}
                       <div className="small p-2">
                         {' '}
-                        <FormattedMessage id="Type" />
+                        <SafeFormatMessage id="Type" />
                       </div>
                       <select
                         className="form-select "
@@ -282,7 +283,7 @@ const ProductWarningsSettings = () => {
                         disabled={!edit}
                       >
                         <option value="">
-                          <FormattedMessage id="Select-Option" />
+                          <SafeFormatMessage id="Select-Option" />
                         </option>
                         {Object.entries(WarningType).map(([value, label]) => (
                           <option key={value} value={value}>

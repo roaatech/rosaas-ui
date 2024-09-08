@@ -486,7 +486,9 @@
   "Expiration-Date": "تاريخ الانتهاء",
   "Add-Card": "إضافة بطاقة",
   "Days": "أيام",
-  "Free-Trial": "تجريبية مجانية",
+  "Days-ar": "يوم",
+  "Free-Trial": "تجربة مجانية",
+  "Free-Trial-Plan": "تجربة مجانية للخطة",
   "Set-As-Default": "تعيين كافتراضي",
   "After-Trial-Ends-On": "بعد انتهاء الفترة التجريبية في",
   "Remember-Card-Information": "احفظ تفاصيل بطاقتك للمعاملات المستقبلية",
@@ -782,7 +784,15 @@
   "Only-English-Characters,-Numbers,-and-Underscores-are-accepted.": "يتم قبول الأحرف الإنجليزية والأرقام والشرطات السفلية فقط.",
   "Comment-is-required-for-cancellation": "التعليق مطلوب للإلغاء",
   "Selection-Availability": "متاحة للاختيار",
-  "Visibility-Status": "مرئية",
-  "Visible": "مرئي"
-  
+  "Visibility-Status": "حالة الظهور",
+  "Visible": "مرئي",
+  "Link-in-progress": "الرابط قيد التنفيذ",
+  "The-navigation-link-is-being-generated-or-unavailable-please-await-or-try-again-later": "يتم توليد رابط التنقل أو أنه غير متاح، يرجى الانتظار أو المحاولة مرة أخرى لاحقًا",
+
+  "Planned": "مخطط",
+  "Limited": "محدود",
+  "invisible": "غير مرئي",
+  "Show-Plan": "إظهار الخطة",
+  "Hide-Plan": "إخفاء الخطة",
+  "Is-Available-For-Selection": "متاح للاختيار"
 }

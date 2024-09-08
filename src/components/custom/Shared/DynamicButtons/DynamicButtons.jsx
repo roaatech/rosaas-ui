@@ -34,6 +34,7 @@ import ProductOwnerForm from '../../ProductOwner/ProductOwnerForm'
 import DiscountForm from '../../Discounts/DiscountForm/DiscountForm'
 import AddValidationUrlForm from '../../Product/CustomSpecification/AddValidationUrlForm/AddValidationUrlForm'
 import CancelSubscriptionForm from '../../tenant/CancelSubscriptionForm/CancelSubscriptionForm'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -101,12 +102,12 @@ const DynamicButtons = ({ buttons }) => {
         visible={visible}
         productData={productsData[buttons[currentButtonIndex].id]}
         setVisible={setVisible}
-        popupLabel={<FormattedMessage id="Edit-Product" />}
+        popupLabel={<SafeFormatMessage id="Edit-Product" />}
       />
     ),
     addTenant: () => (
       <TenantForm
-        popupLabel={<FormattedMessage id="Create-Tenant" />}
+        popupLabel={<SafeFormatMessage id="Create-Tenant" />}
         type={'create'}
         visible={visible}
         setVisible={setVisible}
@@ -115,7 +116,7 @@ const DynamicButtons = ({ buttons }) => {
     ),
     editTenant: () => (
       <TenantForm
-        popupLabel={<FormattedMessage id="Edit-Tenant" />}
+        popupLabel={<SafeFormatMessage id="Edit-Tenant" />}
         type={'edit'}
         tenantData={tenantsData[buttons[currentButtonIndex].id]}
         visible={visible}
@@ -126,7 +127,7 @@ const DynamicButtons = ({ buttons }) => {
     ),
     editTenantSpecification: () => (
       <TenantSpecificationForm
-        popupLabel={<FormattedMessage id="Edit-Specification" />}
+        popupLabel={<SafeFormatMessage id="Edit-Specification" />}
         type={'edit'}
         tenantData={tenantsData[buttons[currentButtonIndex].id]}
         visible={visible}
@@ -139,7 +140,7 @@ const DynamicButtons = ({ buttons }) => {
     upDowngradeSubscription: () => (
       <UpDowngradeForm
         popupLabel={
-          <FormattedMessage id={buttons[currentButtonIndex]?.label} />
+          <SafeFormatMessage id={buttons[currentButtonIndex]?.label} />
         }
         tenantData={tenantsData[buttons[currentButtonIndex].id]}
         visible={visible}
@@ -154,9 +155,10 @@ const DynamicButtons = ({ buttons }) => {
     ),
     addFeaturePlan: () => (
       <FeaturePlanForm
-        popupLabel={<FormattedMessage id="Add-Plan-Feature" />}
+        popupLabel={<SafeFormatMessage id="Add-Plan-Feature" />}
         type={'create'}
         visible={visible}
+        selectedLanguage={buttons[currentButtonIndex].selectedLanguage}
         setVisible={setVisible}
         sideBar={false}
         setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
@@ -164,7 +166,7 @@ const DynamicButtons = ({ buttons }) => {
     ),
     editProductOwner: () => (
       <ProductOwnerForm
-        popupLabel={<FormattedMessage id="Edit-Product-Owner" />}
+        popupLabel={<SafeFormatMessage id="Edit-Product-Owner" />}
         type={'edit'}
         productOwnerData={
           productOwnersData && productOwnersData[buttons[currentButtonIndex].id]
@@ -177,7 +179,7 @@ const DynamicButtons = ({ buttons }) => {
     ),
     addPlan: () => (
       <PlanForm
-        popupLabel={<FormattedMessage id="Add-Plan" />}
+        popupLabel={<SafeFormatMessage id="Add-Plan" />}
         type={'create'}
         visible={visible}
         setVisible={setVisible}
@@ -189,14 +191,14 @@ const DynamicButtons = ({ buttons }) => {
       <CreateWebhookForm
         visible={visible}
         setVisible={setVisible}
-        popUpLable={<FormattedMessage id="Add-Endpoint" />}
+        popUpLable={<SafeFormatMessage id="Add-Endpoint" />}
         webhookId={buttons[currentButtonIndex].currentId}
         type={buttons[currentButtonIndex].formType}
       />
     ),
     addTrial: () => (
       <TrialForm
-        popupLabel={<FormattedMessage id="Trial-Period" />}
+        popupLabel={<SafeFormatMessage id="Trial-Period" />}
         type={'create'}
         visible={visible}
         setVisible={setVisible}
@@ -206,7 +208,7 @@ const DynamicButtons = ({ buttons }) => {
     ),
     addCard: () => (
       <CardSaveFormWithStripe
-        popupLabel={<FormattedMessage id="Add-Card" />}
+        popupLabel={<SafeFormatMessage id="Add-Card" />}
         visible={visible}
         setVisible={setVisible}
         sideBar={false}
@@ -216,7 +218,7 @@ const DynamicButtons = ({ buttons }) => {
     ),
     addSpecification: () => (
       <CustomSpecificationForm
-        popupLabel={<FormattedMessage id="Add-Custom-Specification" />}
+        popupLabel={<SafeFormatMessage id="Add-Custom-Specification" />}
         type={'create'}
         visible={visible}
         setVisible={setVisible}
@@ -226,7 +228,7 @@ const DynamicButtons = ({ buttons }) => {
     ),
     addPlanPrice: () => (
       <PlanPriceForm
-        popupLabel={<FormattedMessage id="Add-Plan-Price" />}
+        popupLabel={<SafeFormatMessage id="Add-Plan-Price" />}
         type={'create'}
         visible={visible}
         setVisible={setVisible}
@@ -236,7 +238,7 @@ const DynamicButtons = ({ buttons }) => {
     ),
     cancelSubscription: () => (
       <CancelSubscriptionForm
-        popupLabel={<FormattedMessage id="Cancel-Subscription" />}
+        popupLabel={<SafeFormatMessage id="Cancel-Subscription" />}
         setVisible={setVisible}
         updateTenant={buttons[currentButtonIndex].updateTenant}
         type={buttons[currentButtonIndex].formType}
@@ -244,7 +246,7 @@ const DynamicButtons = ({ buttons }) => {
     ),
     supsendsubscription: () => (
       <CancelSubscriptionForm
-        popupLabel={<FormattedMessage id="Suspend-Subscription" />}
+        popupLabel={<SafeFormatMessage id="Suspend-Subscription" />}
         setVisible={setVisible}
         updateTenant={buttons[currentButtonIndex].updateTenant}
         type={buttons[currentButtonIndex].formType}
@@ -252,7 +254,7 @@ const DynamicButtons = ({ buttons }) => {
     ),
     addFeature: () => (
       <FeatureForm
-        popupLabel={<FormattedMessage id="Add-Feature" />}
+        popupLabel={<SafeFormatMessage id="Add-Feature" />}
         type={'create'}
         visible={visible}
         setVisible={setVisible}
@@ -309,7 +311,7 @@ const DynamicButtons = ({ buttons }) => {
     ),
     editDiscount: () => (
       <DiscountForm
-        popupLabel={<FormattedMessage id="Edit-Discount" />}
+        popupLabel={<SafeFormatMessage id="Edit-Discount" />}
         type={'edit'}
         visible={visible}
         setVisible={setVisible}
@@ -345,7 +347,7 @@ const DynamicButtons = ({ buttons }) => {
                 <span key={index}>
                   <Button variant={button.variant} onClick={button.func}>
                     {button.icon}{' '}
-                    {button.label && <FormattedMessage id={button.label} />}
+                    {button.label && <SafeFormatMessage id={button.label} />}
                   </Button>
                 </span>
               )
@@ -359,7 +361,7 @@ const DynamicButtons = ({ buttons }) => {
                     }}
                   >
                     {button.icon}
-                    {button.label && <FormattedMessage id={button.label} />}
+                    {button.label && <SafeFormatMessage id={button.label} />}
                   </Button>
                 </span>
               )
@@ -375,7 +377,7 @@ const DynamicButtons = ({ buttons }) => {
                     disabled={button.disable}
                   >
                     {button.icon}{' '}
-                    {button.label && <FormattedMessage id={button.label} />}
+                    {button.label && <SafeFormatMessage id={button.label} />}
                   </Button>
                 </span>
               )
@@ -397,7 +399,7 @@ const DynamicButtons = ({ buttons }) => {
                     }}
                   >
                     {button.icon}
-                    {button.label && <FormattedMessage id={button.label} />}
+                    {button.label && <SafeFormatMessage id={button.label} />}
                   </Button>
                 </span>
               )
@@ -430,7 +432,7 @@ const DynamicButtons = ({ buttons }) => {
                         >
                           {button.icon}{' '}
                           {button.label && (
-                            <FormattedMessage id={button.label} />
+                            <SafeFormatMessage id={button.label} />
                           )}
                         </Dropdown.Item>
                       </span>
@@ -447,7 +449,9 @@ const DynamicButtons = ({ buttons }) => {
                         disabled={button.disable}
                       >
                         {button.icon}{' '}
-                        {button.label && <FormattedMessage id={button.label} />}
+                        {button.label && (
+                          <SafeFormatMessage id={button.label} />
+                        )}
                       </Dropdown.Item>
                     )
                   } else if (button.type == 'action') {
@@ -460,7 +464,7 @@ const DynamicButtons = ({ buttons }) => {
                         >
                           {button.icon}{' '}
                           {button.label && (
-                            <FormattedMessage id={button.label} />
+                            <SafeFormatMessage id={button.label} />
                           )}
                         </Dropdown.Item>
                       )
@@ -475,7 +479,7 @@ const DynamicButtons = ({ buttons }) => {
                           >
                             {button.icon}{' '}
                             {button.label && (
-                              <FormattedMessage id={button.label} />
+                              <SafeFormatMessage id={button.label} />
                             )}
                           </Dropdown.Item>
                         </span>
@@ -492,7 +496,9 @@ const DynamicButtons = ({ buttons }) => {
                         }}
                       >
                         {button.icon}{' '}
-                        {button.label && <FormattedMessage id={button.label} />}
+                        {button.label && (
+                          <SafeFormatMessage id={button.label} />
+                        )}
                         {toggleStates[button.group][index] ? (
                           <FontAwesomeIcon icon={faToggleOn} />
                         ) : (
@@ -509,7 +515,7 @@ const DynamicButtons = ({ buttons }) => {
       )}
       <DeleteConfirmation
         message={
-          <FormattedMessage
+          <SafeFormatMessage
             id={buttons[currentButtonIndex]?.confirmationMessage}
           />
         }

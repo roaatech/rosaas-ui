@@ -11,6 +11,7 @@ import { matchPath, useLocation, useNavigate } from 'react-router-dom'
 import { Routes } from '../../../routes'
 import { setPublicCurrenciesList } from '../../../store/slices/currenciesSlice'
 import { Toast } from 'primereact/toast'
+import SafeFormatMessage from '../../custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const MarketplaceNavBar = ({ profile }) => {
   const isRunningInIframe = window.self !== window.top
@@ -121,9 +122,9 @@ const MarketplaceNavBar = ({ profile }) => {
         {
           label:
             direction === 'rtl' ? (
-              <FormattedMessage id="English" />
+              <SafeFormatMessage id="English" />
             ) : (
-              <FormattedMessage id="Arabic" />
+              <SafeFormatMessage id="Arabic" />
             ),
           icon: 'pi pi-fw pi-globe',
           command: () => changeDirection(direction === 'rtl' ? 'ltr' : 'rtl'),
@@ -137,7 +138,7 @@ const MarketplaceNavBar = ({ profile }) => {
                 icon: 'pi pi-fw pi-user',
                 items: [
                   {
-                    label: <FormattedMessage id="Logout" />,
+                    label: <SafeFormatMessage id="Logout" />,
                     icon: 'pi pi-fw pi-sign-out',
                     command: () => dispatch(logOut()),
                   },
@@ -146,25 +147,24 @@ const MarketplaceNavBar = ({ profile }) => {
             ]
           : []),
         {
-          label: <FormattedMessage id="Home" />,
+          label: <SafeFormatMessage id="Home" />,
           icon: 'pi pi-fw pi-home',
           command: () => navigate(Routes.mainPage.path),
         },
         {
-          label: <FormattedMessage id="Marketplace" />,
+          label: <SafeFormatMessage id="Marketplace" />,
           icon: 'pi pi-fw pi-shopping-cart',
           command: () => navigate(Routes.marketPlacePage.path),
         },
         {
           label:
             direction === 'rtl' ? (
-              <FormattedMessage id="English" />
+              <SafeFormatMessage id="English" />
             ) : (
-              <FormattedMessage id="Arabic" />
+              <SafeFormatMessage id="Arabic" />
             ),
           icon: 'pi pi-fw pi-globe',
-          command: () =>
-            dispatch(directionFun(direction === 'rtl' ? 'ltr' : 'rtl')),
+          command: () => changeDirection(direction === 'rtl' ? 'ltr' : 'rtl'),
         },
         {
           label: `Currency (${selectedCurrency})`,

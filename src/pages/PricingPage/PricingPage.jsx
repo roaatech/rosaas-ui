@@ -24,12 +24,14 @@ import { Wrapper } from './PricingPage.styled'
 import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
 import { setProductOwner } from '../../store/slices/main'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const PricingPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const routeParams = useParams()
   const [showOldPrice, setShowOldPrice] = useState(true)
+  const [language, setLanguage] = useState()
 
   const productSystemName = routeParams.productSystemName
   const productOwnerSystemName = routeParams.productOwnerSystemName || ''
@@ -58,6 +60,7 @@ const PricingPage = () => {
   const plansPriceList = productData?.plansPrice
 
   const planList = productData?.plans
+  console.log({ planList })
 
   const groupedByCycle =
     plansPriceList &&
@@ -81,6 +84,7 @@ const PricingPage = () => {
         )
       )
     })
+  console.log({ groupedByCycle })
 
   let userRole = useSelector((state) => state.auth.userInfo.userType)
   const [redirectPath, setRedirectPath] = useState('')
@@ -242,7 +246,11 @@ const PricingPage = () => {
     ...new Set(
       Object.values(listData).map((featurePlan) => ({
         id: featurePlan.feature.id,
-        displayName: featurePlan.feature?.displayName,
+        displayNameLocalizations: {
+          [intl.locale]:
+            featurePlan.feature?.displayNameLocalizations?.[intl.locale] ||
+            featurePlan.feature?.displayName,
+        },
       }))
     ),
   ]
@@ -268,7 +276,7 @@ const PricingPage = () => {
                 <Form.Check
                   key={index}
                   type="radio"
-                  label={<FormattedMessage id={cycle[cycleNum]} />}
+                  label={<SafeFormatMessage id={cycle[cycleNum]} />}
                   value={cycleNum}
                   checked={selectedCycle === cycleNum}
                   onChange={() => handleCycleChange(cycleNum)}
@@ -281,6 +289,7 @@ const PricingPage = () => {
     )
   }
   const currencyCode = currency.currencyCode
+  const direction = useSelector((state) => state.main.direction)
 
   const renderFeaturePlans = (planId) => {
     const featurePlans =
@@ -306,7 +315,9 @@ const PricingPage = () => {
       featurePlans.forEach((featurePlan) => {
         featureStatusMap[featurePlan?.feature?.id] = {
           status: true,
-          description: featurePlan?.description,
+          descriptionLocalizations: {
+            [intl.locale]: featurePlan?.descriptionLocalizations?.[intl.locale],
+          },
         }
       })
 
@@ -337,20 +348,31 @@ const PricingPage = () => {
                 {listProduct?.[productId]?.trialType == 2 &&
                 listProduct?.[productId]?.trialPlanId &&
                 planId == listProduct?.[productId]?.trialPlanId ? (
-                  <FormattedMessage id="Trial" />
+                  <SafeFormatMessage id="Trial" />
                 ) : (
+                  planList[planId]?.displayNameLocalizations?.[
+                    intl.locale
+                  ]?.toUpperCase() ||
                   planList[planId]?.displayName?.toUpperCase()
                 )}
 
                 {listProduct?.[productId]?.trialType == 3 &&
                   planList[planId]?.trialPeriodInDays > 0 && (
-                    <div className="tab-header">
+                    <div
+                      className={
+                        direction == 'rtl' ? 'rtl tab-header' : 'tab-header'
+                      }
+                    >
                       <TrialLabel days={planList[planId]?.trialPeriodInDays} />
                     </div>
                   )}
                 {listProduct?.[productId]?.trialType == 2 &&
                   planId == listProduct?.[productId]?.trialPlanId && (
-                    <div className="tab-header">
+                    <div
+                      className={
+                        direction == 'rtl' ? 'rtl tab-header' : 'tab-header'
+                      }
+                    >
                       <TrialLabel
                         days={listProduct?.[productId]?.trialPeriodInDays}
                       />
@@ -392,7 +414,7 @@ const PricingPage = () => {
                     {' '}
                     /
                     {filteredPrices?.cycle && (
-                      <FormattedMessage id={cycle[filteredPrices?.cycle]} />
+                      <SafeFormatMessage id={cycle[filteredPrices?.cycle]} />
                     )}
                   </span>
                   <div
@@ -402,7 +424,8 @@ const PricingPage = () => {
                     }}
                     className=" mr-1 "
                   >
-                    {filteredPrices?.description}
+                    {filteredPrices?.descriptionLocalizations?.[intl.locale] ||
+                      filteredPrices?.description}
                   </div>
                 </div>
               </div>
@@ -416,13 +439,17 @@ const PricingPage = () => {
                         <BsCheck2Circle
                           style={{ color: 'var(--second-color)' }}
                         />{' '}
-                        {featureStatusMap?.[feature.id]?.description ||
+                        {featureStatusMap?.[feature.id]
+                          ?.descriptionLocalizations?.[intl.locale] ||
+                          featureStatusMap?.[feature.id]?.description ||
+                          feature.displayNameLocalizations?.[intl.locale] ||
                           feature.displayName}{' '}
                       </span>
                     ) : (
                       <span>
                         <BsXCircle style={{ color: 'var(--silver-gray)' }} />{' '}
-                        {feature.displayName}
+                        {feature.displayNameLocalizations?.[intl.locale] ||
+                          feature.displayName}
                       </span>
                     )}{' '}
                   </p>
@@ -441,18 +468,24 @@ const PricingPage = () => {
                 <>
                   {listProduct?.[productId]?.trialType == 2 &&
                     planId !== listProduct?.[productId]?.trialPlanId && (
-                      <Form.Group className="mb-3">
+                      <Form.Group
+                        className={`mb-3 ${intl.locale === 'ar' ? 'rtl' : ''}`}
+                      >
                         <Form.Check
                           type="checkbox"
                           label={
                             <>
-                              <FormattedMessage id="With" />{' '}
+                              <SafeFormatMessage id="With" />{' '}
                               <span style={{ color: 'var(--second-color' }}>
                                 {listProduct?.[productId]?.trialPeriodInDays}{' '}
-                                <FormattedMessage id="Days" />{' '}
+                                {listProduct?.[productId]?.trialPeriodInDays <=
+                                10 ? (
+                                  <SafeFormatMessage id="Days" />
+                                ) : (
+                                  <SafeFormatMessage id="Days-ar" />
+                                )}{' '}
                               </span>
-                              <FormattedMessage id="Free-Trial" />{' '}
-                              <FormattedMessage id="Plan" />
+                              <SafeFormatMessage id="Free-Trial-Plan" />{' '}
                             </>
                           }
                           checked={startWithTrial[planId] || false}
@@ -466,16 +499,16 @@ const PricingPage = () => {
                             <span className="info-icon mr-1">
                               <FontAwesomeIcon icon={faInfoCircle} />
                             </span>{' '}
-                            <FormattedMessage id="start-your" />{' '}
+                            <SafeFormatMessage id="start-your" />{' '}
                             <strong style={{ color: 'var(--second-color)' }}>
-                              <FormattedMessage id="trial" />
+                              <SafeFormatMessage id="trial" />
                             </strong>{' '}
                             ,
                             <span>
                               {' '}
-                              <FormattedMessage id="then" />{' '}
+                              <SafeFormatMessage id="then" />{' '}
                               <strong style={{ color: 'var(--second-color)' }}>
-                                <FormattedMessage id="switch-plans" />
+                                <SafeFormatMessage id="switch-plans" />
                                 {'  '}
                               </strong>
                               <span
@@ -487,7 +520,7 @@ const PricingPage = () => {
                               >
                                 <i className="bi bi-info-circle"></i>
                               </span>
-                              <FormattedMessage id="seamlessly" />
+                              <SafeFormatMessage id="seamlessly" />
                             </span>
                           </div>
                         )}
@@ -527,26 +560,32 @@ const PricingPage = () => {
                       }
                     }}
                   >
-                    <FormattedMessage id="Start-With" />{' '}
-                    {planList[planId]?.displayName?.toUpperCase()}
+                    <>
+                      <SafeFormatMessage id="Start-With" />{' '}
+                      {planList[planId]?.displayNameLocalizations?.[intl.locale]
+                        ? planList[planId]?.displayNameLocalizations?.[
+                            intl.locale
+                          ]?.toUpperCase()
+                        : planList[planId]?.displayName?.toUpperCase()}
+                    </>
                   </Button>
                 </>
               ) : (
                 listProduct?.[productId]?.trialType == 2 && (
                   <div className="text-center text-seamlessly mt-4">
                     <div>
-                      <FormattedMessage id="start-your" />{' '}
+                      <SafeFormatMessage id="start-your" />{' '}
                       <strong style={{ color: 'var(--second-color)' }}>
-                        <FormattedMessage id="trial" />
+                        <SafeFormatMessage id="trial" />
                       </strong>
                       ,
                     </div>
                     <div>
-                      <FormattedMessage id="then" />{' '}
+                      <SafeFormatMessage id="then" />{' '}
                       <strong style={{ color: 'var(--second-color)' }}>
-                        <FormattedMessage id="switch-plans" />
+                        <SafeFormatMessage id="switch-plans" />
                       </strong>{' '}
-                      <FormattedMessage id="seamlessly" />
+                      <SafeFormatMessage id="seamlessly" />
                     </div>
                   </div>
                 )
@@ -607,8 +646,14 @@ const PricingPage = () => {
                   icon={faBox}
                   className="mr-2 product-icon ml-2"
                 />
-                {listProduct?.[productId]?.displayName?.toUpperCase()}
-                {listProduct?.[productId]?.description && (
+                {listProduct?.[productId]?.displayNameLocalizations?.[
+                  intl.locale
+                ]?.toUpperCase() ||
+                  listProduct?.[productId]?.displayName?.toUpperCase()}
+                {(listProduct?.[productId]?.description ||
+                  listProduct?.[productId]?.descriptionLocalizations?.[
+                    intl.locale
+                  ]) && (
                   <div
                     style={{
                       fontSize: 'var(--largeFont)',
@@ -619,7 +664,9 @@ const PricingPage = () => {
                     }}
                     className="text-center pb-3 mt-2"
                   >
-                    {listProduct?.[productId]?.description}
+                    {listProduct?.[productId]?.descriptionLocalizations?.[
+                      intl.locale
+                    ] || listProduct?.[productId]?.description}
                   </div>
                 )}
               </h4>

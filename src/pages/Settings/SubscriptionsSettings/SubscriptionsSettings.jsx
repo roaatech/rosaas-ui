@@ -27,6 +27,7 @@ import useRequest from '../../../axios/apis/useRequest'
 import UpperContent from '../../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../../components/custom/Shared/DynamicButtons/DynamicButtons'
+import SafeFormatMessage from '../../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const SubscriptionsSettings = () => {
   const [edit, setEdit] = useState(false)
@@ -83,7 +84,7 @@ const SubscriptionsSettings = () => {
         <Form onSubmit={formik.handleSubmit}>
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Settings" />
+              <SafeFormatMessage id="Settings" />
             </h4>
 
             <DynamicButtons
@@ -128,20 +129,20 @@ const SubscriptionsSettings = () => {
           <Card className="m-3 mt-0">
             <Card.Body>
               <h5 className="mb-4">
-                <FormattedMessage id="Subscriptions-Settings" />
+                <SafeFormatMessage id="Subscriptions-Settings" />
               </h5>
               <Row>
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="subscription-Worker-Time-Period" />
+                      <SafeFormatMessage id="subscription-Worker-Time-Period" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id="subscription-Worker-Time-Period-desc" />
+                              <SafeFormatMessage id="subscription-Worker-Time-Period-desc" />
                             </Tooltip>
                           }
                         >
@@ -175,14 +176,14 @@ const SubscriptionsSettings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="Grace-Period" />
+                      <SafeFormatMessage id="Grace-Period" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id="Grace-Period-desc" />
+                              <SafeFormatMessage id="Grace-Period-desc" />
                             </Tooltip>
                           }
                         >

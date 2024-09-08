@@ -7,6 +7,7 @@ import useRequest from '../../../../axios/apis/useRequest'
 import { productOwnerChangeAttr } from '../../../../store/slices/productsOwners'
 import { Wrapper } from './ProductOwnerLimitsTab.styled'
 import { LimitType, roundingTypeOptions } from '../../../../const/const'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ProductOwnerLimitsTab = ({ productOwnerId }) => {
   const dispatch = useDispatch()
@@ -44,19 +45,19 @@ const ProductOwnerLimitsTab = ({ productOwnerId }) => {
             <thead>
               <tr>
                 <th>
-                  <FormattedMessage id="Limit-Type" />
+                  <SafeFormatMessage id="Limit-Type" />
                 </th>
                 <th>
-                  <FormattedMessage id="Max-Limit" />
+                  <SafeFormatMessage id="Max-Limit" />
                 </th>
                 <th>
-                  <FormattedMessage id="Current-Usage" />
+                  <SafeFormatMessage id="Current-Usage" />
                 </th>
                 <th>
-                  <FormattedMessage id="Remaining" />
+                  <SafeFormatMessage id="Remaining" />
                 </th>
                 <th>
-                  <FormattedMessage id="Is-Unlimited" />
+                  <SafeFormatMessage id="Is-Unlimited" />
                 </th>
               </tr>
             </thead>

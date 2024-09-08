@@ -20,6 +20,7 @@ import {
 } from '../../../../../const/index.js'
 import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx' // Import MultilingualInput
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const FeatureForm = ({
   type,
@@ -48,7 +49,7 @@ const FeatureForm = ({
   const validationSchema = Yup.object().shape({
     displayNameEn: Yup.string().test({
       name: 'displayNameRequired',
-      message: <FormattedMessage id="Display-Name-is-required" />,
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
       test: (value, context) => {
         const { parent } = context
         const displayNameEn = parent.displayNameEn
@@ -58,7 +59,7 @@ const FeatureForm = ({
     }),
     displayNameAr: Yup.string().test({
       name: 'displayNameRequired',
-      message: <FormattedMessage id="Display-Name-is-required" />,
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
       test: (value, context) => {
         const { parent } = context
         const displayNameEn = parent.displayNameEn
@@ -67,22 +68,22 @@ const FeatureForm = ({
       },
     }),
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="Unique-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
     descriptionEn: Yup.string().max(
       250,
-      <FormattedMessage id="Must-be-maximum-250-digits" />
+      <SafeFormatMessage id="Must-be-maximum-250-digits" />
     ),
     descriptionAr: Yup.string().max(
       250,
-      <FormattedMessage id="Must-be-maximum-250-digits" />
+      <SafeFormatMessage id="Must-be-maximum-250-digits" />
     ),
     type: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
+      <SafeFormatMessage id="This-field-is-required" />
     ),
     displayOrder: Yup.number()
       .typeError('Display Order must be a number')
@@ -213,7 +214,7 @@ const FeatureForm = ({
           {/* System Name Field */}
           <div className="mb-3">
             <AutoGenerateInput
-              label={<FormattedMessage id="System-Name" />}
+              label={<SafeFormatMessage id="System-Name" />}
               id="systemName"
               value={formik.values.displayNameEn}
               name={formik.values.systemName}
@@ -276,7 +277,7 @@ const FeatureForm = ({
           {/* Type Field */}
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Type" />{' '}
+              <SafeFormatMessage id="Type" />{' '}
               <span style={{ color: 'red' }}>*</span>
             </Form.Label>
             <select
@@ -287,7 +288,7 @@ const FeatureForm = ({
               value={formik.values.type}
             >
               <option value="">
-                <FormattedMessage id="Select-Option" />
+                <SafeFormatMessage id="Select-Option" />
               </option>
               {Object.entries(featureTypeMap).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -310,7 +311,7 @@ const FeatureForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Display-Order" />
+                <SafeFormatMessage id="Display-Order" />
               </Form.Label>
               <input
                 type="text"
@@ -334,14 +335,14 @@ const FeatureForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

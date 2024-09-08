@@ -18,6 +18,7 @@ import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCo
 import { activeIndex, cycle } from '../../../../../const/index.js'
 import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const PlanPriceForm = ({
   type,
@@ -152,27 +153,36 @@ const PlanPriceForm = ({
 
   const validationSchema = Yup.object().shape({
     plan: Yup.string().required(
-      <FormattedMessage id="Please-Select-a-Option" />
+      <SafeFormatMessage id="Please-Select-a-Option" />
     ),
     cycle: Yup.number().required(
-      <FormattedMessage id="Please-Select-a-Option" />
+      <SafeFormatMessage id="Please-Select-a-Option" />
     ),
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="System-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="System-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
     price: Yup.number()
-      .required(<FormattedMessage id="This-field-is-required" />)
-      .min(0, <FormattedMessage id="The-price-must-be-0-or-more" />)
-      .max(999999, <FormattedMessage id="The-value-must-not-exceed-999,999" />),
-oldPrice: Yup.number() 
-    .min(1, <FormattedMessage id="The-price-must-be-1-or-more" />)
-    .max(999999, <FormattedMessage id="The-value-must-not-exceed-999,999" />),
+      .required(<SafeFormatMessage id="This-field-is-required" />)
+      .min(0, <SafeFormatMessage id="The-price-must-be-0-or-more" />)
+      .max(999999, <SafeFormatMessage id="The-value-must-not-exceed-999,999" />)
+      .test(
+        'is-decimal',
+        <SafeFormatMessage id="The-price-must-have-up-to-two-decimal-places" />,
+        (value) => (value + '').match(/^\d+(\.\d{1,2})?$/)
+      ),
+    oldPrice: Yup.number()
+      .min(0, <SafeFormatMessage id="The-price-must-be-0-or-more" />)
+      .max(999999, <SafeFormatMessage id="The-value-must-not-exceed-999,999" />)
+      .test(
+        'is-decimal',
+        <SafeFormatMessage id="The-price-must-have-up-to-two-decimal-places" />,
+        (value) => (value + '').match(/^\d+(\.\d{1,2})?$/)
+      ),
   })
-  
 
   const formik = useFormik({
     initialValues,
@@ -184,7 +194,11 @@ oldPrice: Yup.number()
           planId: values.plan,
           cycle: parseInt(values.cycle),
           price: parseFloat(values.price),
-          description: values.description,
+          descriptionLocalizations: {
+            en: values.descriptionEn,
+            ar: values.descriptionAr,
+          },
+          oldPrice: parseFloat(values.oldPrice),
         })
 
         if (!allProducts[productId].plansPrice) {
@@ -209,8 +223,11 @@ oldPrice: Yup.number()
               cycle: values.cycle,
               price: values.price,
               systemName: values.systemName,
-
-              description: values.description,
+              oldPrice: parseFloat(values.oldPrice),
+              descriptionLocalizations: {
+                en: values.descriptionEn,
+                ar: values.descriptionAr,
+              },
               id: createPlanPrice.data.data.id,
               isPublished: false,
               isSubscribed: false,
@@ -228,7 +245,10 @@ oldPrice: Yup.number()
           data: {
             price: parseFloat(values.price),
             oldPrice: parseFloat(values.oldPrice),
-            description: values.description,
+            descriptionLocalizations: {
+              en: values.descriptionEn,
+              ar: values.descriptionAr,
+            },
             cycle: parseInt(values.cycle),
           },
           id: planPriceData.id,
@@ -246,7 +266,7 @@ oldPrice: Yup.number()
               systemName: values.systemName,
               cycle: values.cycle,
               price: values.price,
-               oldPrice: values.oldPrice,
+              oldPrice: values.oldPrice,
               descriptionLocalizations: {
                 en: values.descriptionEn,
                 ar: values.descriptionAr,
@@ -314,7 +334,7 @@ oldPrice: Yup.number()
           {type !== 'edit' && (
             <div className="mb-3">
               <AutoGenerateInput
-                label={<FormattedMessage id="System-Name" />}
+                label={<SafeFormatMessage id="System-Name" />}
                 id="systemName"
                 value={`${
                   formik.values.plan
@@ -363,7 +383,7 @@ oldPrice: Yup.number()
               <div>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    <FormattedMessage id="Plan" />{' '}
+                    <SafeFormatMessage id="Plan" />{' '}
                     <span style={{ color: 'red' }}>*</span>
                   </Form.Label>
                   <select
@@ -384,7 +404,7 @@ oldPrice: Yup.number()
                     onBlur={formik.handleBlur}
                   >
                     <option value="">
-                      <FormattedMessage id="Select-Option" />
+                      <SafeFormatMessage id="Select-Option" />
                     </option>
                     {filteredPlanOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -407,7 +427,7 @@ oldPrice: Yup.number()
               <div>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    <FormattedMessage id="cycle" />
+                    <SafeFormatMessage id="cycle" />
                     <span style={{ color: 'red' }}> *</span>
                   </Form.Label>
                   <select
@@ -419,11 +439,11 @@ oldPrice: Yup.number()
                     disabled={cyclesYouDontHave.length === 0}
                   >
                     <option value="">
-                      <FormattedMessage id="Select-Option" />
+                      <SafeFormatMessage id="Select-Option" />
                     </option>
                     {cyclesYouDontHave.map((cycleValue) => (
                       <option key={cycleValue} value={cycleValue}>
-                        <FormattedMessage id={cycle[cycleValue]} />
+                        <SafeFormatMessage id={cycle[cycleValue]} />
                       </option>
                     ))}
                   </select>
@@ -437,7 +457,7 @@ oldPrice: Yup.number()
                   )}
                   {formik.values.plan && cyclesYouDontHave.length === 0 ? (
                     <div className="assigned-value">
-                      <FormattedMessage id="All-values-are-assigned." />
+                      <SafeFormatMessage id="All-values-are-assigned." />
                     </div>
                   ) : null}
                 </Form.Group>
@@ -448,7 +468,7 @@ oldPrice: Yup.number()
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Price" />{' '}
+                <SafeFormatMessage id="Price" />{' '}
                 <span style={{ color: 'red' }}> *</span>
               </Form.Label>
               <input
@@ -474,10 +494,10 @@ oldPrice: Yup.number()
               )}
             </Form.Group>
           </div>
-           <div>
+          <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="OldPrice" />{' '} 
+                <SafeFormatMessage id="OldPrice" />{' '}
               </Form.Label>
               <input
                 type="text"
@@ -485,7 +505,7 @@ oldPrice: Yup.number()
                 id="oldPrice"
                 name="oldPrice"
                 onChange={formik.handleChange}
-                value={  formik.values.oldPrice }
+                value={formik.values.oldPrice}
                 disabled={[1, 2].includes(tenancyType)}
               />
               {formik.touched.oldPrice && formik.errors.oldPrice && (
@@ -532,14 +552,14 @@ oldPrice: Yup.number()
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

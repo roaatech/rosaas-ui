@@ -3,6 +3,7 @@ import { OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
 import { Wrapper } from './AutoGenerateInput.styled'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 
 const AutoGenerateInput = ({
   label,
@@ -51,7 +52,7 @@ const AutoGenerateInput = ({
               placement="top"
               overlay={
                 <Tooltip>
-                  <FormattedMessage id="Random-Name" />
+                  <SafeFormatMessage id="Random-Name" />
                 </Tooltip>
               }
             >

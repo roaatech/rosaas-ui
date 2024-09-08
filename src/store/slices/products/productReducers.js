@@ -12,6 +12,17 @@ const setAllProduct = (state, action) => {
   })
   state.products = allProduct
 }
+const updateAllProduct = (state, action) => {
+  const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+  action?.payload?.forEach((item) => {
+    if (!{ ...current(state.products) }[item.id]) {
+      allProduct[item.id] = item
+    } else {
+      allProduct[item.id] = { ...allProduct[item.id], ...item }
+    }
+  })
+  state.products = allProduct
+}
 
 const productInfo = (state, action) => {
   const currentProducts = { ...current(state.products) }
@@ -288,4 +299,5 @@ export {
   clientSecretInfo,
   clientSecretAttr,
   updateClientCredentialAttr,
+  updateAllProduct,
 }

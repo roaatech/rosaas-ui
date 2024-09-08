@@ -20,6 +20,7 @@ import DateLabel from '../../Shared/DateLabel/DateLabel'
 import { size } from 'lodash'
 import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import { TabPanel, TabView } from 'primereact/tabview'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const SubscriptionInfoAccordionNew = (props) => {
   let direction = useSelector((state) => state.main.direction)
@@ -44,18 +45,18 @@ const SubscriptionInfoAccordionNew = (props) => {
             <Accordion.Item eventKey="subscription">
               <Accordion.Button variant="link">
                 <span className="firstTd fw-bold">
-                  <FormattedMessage id="Subscription-Info" />
+                  <SafeFormatMessage id="Subscription-Info" />
                 </span>
                 <span className={`mr-2 `}>
                   <span>
                     <DateLabelWhite text={subscriptionData.planName} />
                   </span>
                   {'   '}
-                  <FormattedMessage id="From" />{' '}
+                  <SafeFormatMessage id="From" />{' '}
                   <DateLabelWhite
                     text={formatDate(subscriptionData.startDate)}
                   />{' '}
-                  <FormattedMessage id="to" />{' '}
+                  <SafeFormatMessage id="to" />{' '}
                   <DateLabel endDate={subscriptionData.endDate} />
                 </span>
               </Accordion.Button>
@@ -85,7 +86,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                 <Card.Body className="py-0 px-0">
                                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                                     <div className="mb-0 w-25">
-                                      <FormattedMessage id="Plan" />
+                                      <SafeFormatMessage id="Plan" />
                                     </div>
                                     <div className="small card-stats">
                                       {cyc.plan}
@@ -94,11 +95,13 @@ const SubscriptionInfoAccordionNew = (props) => {
 
                                   <div className="d-flex align-items-center justify-content-between  py-2 ">
                                     <div className="mb-0 w-25">
-                                      <FormattedMessage id="Price" />
+                                      <SafeFormatMessage id="Price" />
                                     </div>
                                     <div className="small card-stats">
                                       {cyc.price} /
-                                      <FormattedMessage id={cycle[cyc.cycle]} />
+                                      <SafeFormatMessage
+                                        id={cycle[cyc.cycle]}
+                                      />
                                     </div>
                                   </div>
                                 </Card.Body>
@@ -109,7 +112,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                 <Card.Body className="py-0 px-0 ">
                                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
                                     <div className="mb-0 w-25">
-                                      <FormattedMessage id="Start-Date" />
+                                      <SafeFormatMessage id="Start-Date" />
                                     </div>
                                     <div className="small card-stats">
                                       {formatDate(cyc.startDate)}
@@ -117,7 +120,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                   </div>
                                   <div className="d-flex align-items-center justify-content-between py-2 ml-5">
                                     <div className="mb-0 w-25">
-                                      <FormattedMessage id="End-Date" />
+                                      <SafeFormatMessage id="End-Date" />
                                     </div>
                                     <div className="small card-stats">
                                       {formatDate(cyc.endDate)}
@@ -167,7 +170,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                             {currentTab === 0 && (
                                               <Nav.Item>
                                                 <Nav.Link eventKey="allFeatures">
-                                                  <FormattedMessage id="All-Features" />
+                                                  <SafeFormatMessage id="All-Features" />
                                                 </Nav.Link>
                                               </Nav.Item>
                                             )}
@@ -200,19 +203,19 @@ const SubscriptionInfoAccordionNew = (props) => {
                                                     <thead>
                                                       <tr>
                                                         <th>
-                                                          <FormattedMessage id="Feature" />
+                                                          <SafeFormatMessage id="Feature" />
                                                         </th>
                                                         <th>
-                                                          <FormattedMessage id="Reset" />
+                                                          <SafeFormatMessage id="Reset" />
                                                         </th>
                                                         <th>
-                                                          <FormattedMessage id="Start-Date" />
+                                                          <SafeFormatMessage id="Start-Date" />
                                                         </th>
                                                         <th>
-                                                          <FormattedMessage id="End-Date" />
+                                                          <SafeFormatMessage id="End-Date" />
                                                         </th>
                                                         <th>
-                                                          <FormattedMessage id="Remind/Limit" />
+                                                          <SafeFormatMessage id="Remind/Limit" />
                                                         </th>
                                                       </tr>
                                                     </thead>
@@ -304,22 +307,22 @@ const SubscriptionInfoAccordionNew = (props) => {
                                                         <thead>
                                                           <tr>
                                                             <th>
-                                                              <FormattedMessage id="Feature" />
+                                                              <SafeFormatMessage id="Feature" />
                                                             </th>
                                                             <th>
-                                                              <FormattedMessage id="Reset" />
+                                                              <SafeFormatMessage id="Reset" />
                                                             </th>
                                                             <th>
-                                                              <FormattedMessage id="Start-Date" />
+                                                              <SafeFormatMessage id="Start-Date" />
                                                             </th>
                                                             <th>
-                                                              <FormattedMessage id="End-Date" />
+                                                              <SafeFormatMessage id="End-Date" />
                                                             </th>
                                                             <th>
-                                                              <FormattedMessage id="usage" />
+                                                              <SafeFormatMessage id="usage" />
                                                             </th>
                                                             <th>
-                                                              <FormattedMessage id="Remind/Limit" />
+                                                              <SafeFormatMessage id="Remind/Limit" />
                                                             </th>
                                                           </tr>
                                                         </thead>
@@ -344,7 +347,7 @@ const SubscriptionInfoAccordionNew = (props) => {
                                                                     }
                                                                   </td>
                                                                   <td>
-                                                                    <FormattedMessage
+                                                                    <SafeFormatMessage
                                                                       id={
                                                                         featureResetMap[
                                                                           cycle

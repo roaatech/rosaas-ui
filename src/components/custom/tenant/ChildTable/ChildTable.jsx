@@ -27,6 +27,7 @@ import { MdFactCheck, MdOutlineCancel } from 'react-icons/md'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import { Routes } from '../../../../routes'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 export default function ChildTable({
   productData,
   tenantId,
@@ -112,7 +113,7 @@ export default function ChildTable({
   const [products, setProducts] = useState([
     {
       eventKey: 'metadata',
-      title: <FormattedMessage id="Meta-Data" />,
+      title: <SafeFormatMessage id="Meta-Data" />,
       description: metadata ? rowExpansionTemplate(JSON.parse(metadata)) : null,
     },
   ])
@@ -199,7 +200,7 @@ export default function ChildTable({
               {productData.subscriptionMode == 2 && (
                 <tr>
                   <td className="fw-bold firstTd line-cell">
-                    <FormattedMessage id="Subscription-Mode" />
+                    <SafeFormatMessage id="Subscription-Mode" />
                   </td>
                   <td className=" line-cell">
                     <Label
@@ -216,7 +217,7 @@ export default function ChildTable({
               )}
               <tr>
                 <td className="fw-bold firstTd line-cell">
-                  <FormattedMessage id="Status" />
+                  <SafeFormatMessage id="Status" />
                 </td>
                 <td className=" line-cell">
                   <TenantStatus statusValue={productData.status} />
@@ -225,16 +226,16 @@ export default function ChildTable({
 
               <tr>
                 <td className="fw-bold firstTd">
-                  <FormattedMessage id="Health-Check-Url" />
+                  <SafeFormatMessage id="Health-Check-Url" />
                 </td>
                 <td className="d-flex align-items-center">
                   <span className="mr-2">
                     <Label
                       value={
                         productData.healthCheckUrlIsOverridden ? (
-                          <FormattedMessage id="Overridden" />
+                          <SafeFormatMessage id="Overridden" />
                         ) : (
-                          <FormattedMessage id="Default" />
+                          <SafeFormatMessage id="Default" />
                         )
                       }
                     />
@@ -246,7 +247,7 @@ export default function ChildTable({
               </tr>
               <tr>
                 <td className="fw-bold firstTd">
-                  <FormattedMessage id="Last-Updated-Date" />
+                  <SafeFormatMessage id="Last-Updated-Date" />
                 </td>
                 <td>{DataTransform(productData.editedDate)}</td>
               </tr>
@@ -263,16 +264,16 @@ export default function ChildTable({
               {productData?.startDate && (
                 <tr>
                   <td className="firstTd fw-bold">
-                    <FormattedMessage id="Subscription-Info" />
+                    <SafeFormatMessage id="Subscription-Info" />
                   </td>
                   <td>
                     <span>
                       <DataLabelWhite text={productData.plan.systemName} />
                     </span>
                     {'   '}
-                    <FormattedMessage id="From" />{' '}
+                    <SafeFormatMessage id="From" />{' '}
                     <DataLabelWhite text={formatDate(productData.startDate)} />{' '}
-                    <FormattedMessage id="to" />{' '}
+                    <SafeFormatMessage id="to" />{' '}
                     <DateLabel endDate={productData.endDate} />
                   </td>
                 </tr>
@@ -299,7 +300,7 @@ export default function ChildTable({
         <div className="content timeLine">
           <Card border="light" className="shadow-sm">
             <Card.Header className="fs-6">
-              <FormattedMessage id="History" />
+              <SafeFormatMessage id="History" />
               {productData?.status != 13 ? (
                 <div className="refresh">
                   <Button

@@ -51,6 +51,7 @@ import {
 } from 'react-icons/bs'
 import { setActiveIndex } from '../../../../store/slices/tenants'
 import { GiShadowFollower } from 'react-icons/gi'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 export default function ProductPlansPriceList({ children }) {
   const intl = useIntl()
   const dispatch = useDispatch()
@@ -208,7 +209,6 @@ export default function ProductPlansPriceList({ children }) {
   }
 
   const handleData = (data) => {
-    console.log(data)
     return {
       'System-Name': data.systemName,
       'System-Lock-Status': data.isLockedBySystem ? 'Yes' : 'No',
@@ -246,7 +246,7 @@ export default function ProductPlansPriceList({ children }) {
           <tr key={cycleIndex}>
             <td>
               <span className="fw-bolder">
-                <FormattedMessage id={cycle[item]} />
+                <SafeFormatMessage id={cycle[item]} />
               </span>
             </td>
             {Object.keys(plansData).map((planItem, planIndex) => (
@@ -261,8 +261,16 @@ export default function ProductPlansPriceList({ children }) {
                         className="text-dark m-0 p-0 planFeatureButton"
                       >
                         <span>
-                          <DataLabelPrice price={listData[tableData[planItem + ',' + item]]?.price} oldPrice={listData[tableData[planItem + ',' + item]]?.oldPrice} /> 
-                        </span>  
+                          <DataLabelPrice
+                            price={
+                              listData[tableData[planItem + ',' + item]]?.price
+                            }
+                            oldPrice={
+                              listData[tableData[planItem + ',' + item]]
+                                ?.oldPrice
+                            }
+                          />
+                        </span>
                         {listData[tableData[planItem + ',' + item]]
                           ?.isPublished ? (
                           <span className="label green">
@@ -285,7 +293,7 @@ export default function ProductPlansPriceList({ children }) {
                             className="mx-2"
                           />
 
-                          <FormattedMessage id="View-Details" />
+                          <SafeFormatMessage id="View-Details" />
                         </Dropdown.Item>
 
                         <Dropdown.Item
@@ -294,7 +302,7 @@ export default function ProductPlansPriceList({ children }) {
                           }
                         >
                           <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                          <FormattedMessage id="Edit" />
+                          <SafeFormatMessage id="Edit" />
                         </Dropdown.Item>
                         <Dropdown.Item
                           onSelect={() =>
@@ -309,12 +317,12 @@ export default function ProductPlansPriceList({ children }) {
                             ?.isPublished ? (
                             <span className="label">
                               <MdOutlineUnpublished className="mx-2" />{' '}
-                              <FormattedMessage id="Unpublish" />
+                              <SafeFormatMessage id="Unpublish" />
                             </span>
                           ) : (
                             <span className="label">
                               <MdOutlinePublishedWithChanges className="mx-2" />{' '}
-                              <FormattedMessage id="Publish" />
+                              <SafeFormatMessage id="Publish" />
                             </span>
                           )}
                         </Dropdown.Item>
@@ -325,7 +333,7 @@ export default function ProductPlansPriceList({ children }) {
                           className="text-danger"
                         >
                           <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                          <FormattedMessage id="Delete" />
+                          <SafeFormatMessage id="Delete" />
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
@@ -451,7 +459,7 @@ export default function ProductPlansPriceList({ children }) {
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-plan-price-confirmation-message" />
+                <SafeFormatMessage id="delete-plan-price-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
@@ -466,13 +474,13 @@ export default function ProductPlansPriceList({ children }) {
       <ThemeDialog visible={visible} setVisible={setVisible}>
         {show ? (
           <ShowDetails
-            popupLabel={<FormattedMessage id={popUpLable} />}
+            popupLabel={<SafeFormatMessage id={popUpLable} />}
             data={handleData(listData[currentId])}
             setVisible={setVisible}
           />
         ) : (
           <PlanPriceForm
-            popupLabel={<FormattedMessage id={popUpLable} />}
+            popupLabel={<SafeFormatMessage id={popUpLable} />}
             type={type}
             planPriceData={type === 'edit' ? listData[currentId] : {}}
             setVisible={setVisible}

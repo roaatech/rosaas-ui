@@ -49,6 +49,7 @@ import ProductTrialPeriod from '../../components/custom/Product/ProductTrialPeri
 import ProductsUsersManagement from '../../components/custom/Product/ProductsUsersManagement/ProductsUsersManagement.jsx'
 import WebhookList from '../../components/custom/Product/WebhookList/WebhookList.jsx'
 import IntegrationUrlsTab from '../../components/custom/Product/IntegrationUrlsTab/IntegrationUrlsTab.jsx'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -104,7 +105,7 @@ const ProductDetails = () => {
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Product-Details" /> :{' '}
+              <SafeFormatMessage id="Product-Details" /> :{' '}
               {productData.systemName}{' '}
               <span className="ml-2">
                 <Label {...PublishStatus[productData?.isPublished]} />
@@ -214,7 +215,7 @@ const ProductDetails = () => {
             onTabChange={(e) => setActiveIndex(e.index)}
           >
             {productData && (
-              <TabPanel header={<FormattedMessage id="Details" />}>
+              <TabPanel header={<SafeFormatMessage id="Details" />}>
                 <ProductDetailsTab
                   data={productData}
                   setActiveIndex={setActiveIndex}
@@ -222,33 +223,33 @@ const ProductDetails = () => {
               </TabPanel>
             )}
             {productData && (
-              <TabPanel header={<FormattedMessage id="Integration-Urls" />}>
+              <TabPanel header={<SafeFormatMessage id="Integration-Urls" />}>
                 <IntegrationUrlsTab
                   data={productData}
                   setActiveIndex={setActiveIndex}
                 />
               </TabPanel>
             )}
-            <TabPanel header={<FormattedMessage id="Trial-Period" />}>
+            <TabPanel header={<SafeFormatMessage id="Trial-Period" />}>
               <ProductTrialPeriod
                 data={productData}
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>
-            <TabPanel header={<FormattedMessage id="Webhook" />}>
+            <TabPanel header={<SafeFormatMessage id="Webhook" />}>
               <WebhookList />
             </TabPanel>
-            <TabPanel header={<FormattedMessage id="Client-Credentials" />}>
+            <TabPanel header={<SafeFormatMessage id="Client-Credentials" />}>
               <ClientCredentials
                 data={productData}
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>
 
-            {/* <TabPanel header={<FormattedMessage id="User-Management" />}>
+            {/* <TabPanel header={<SafeFormatMessage id="User-Management" />}>
               <ProductsUsersManagement />
             </TabPanel> */}
-            <TabPanel header={<FormattedMessage id="Custom-Specification" />}>
+            <TabPanel header={<SafeFormatMessage id="Custom-Specification" />}>
               <ProductCustomSpecificationList
                 productId={productData.id}
                 productName={productData.systemName}
@@ -256,34 +257,34 @@ const ProductDetails = () => {
               />
             </TabPanel>
 
-            <TabPanel header={<FormattedMessage id="Plans" />}>
+            <TabPanel header={<SafeFormatMessage id="Plans" />}>
               <ProductPlansList
                 productId={productData.id}
                 productName={productData.systemName}
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>
-            <TabPanel header={<FormattedMessage id="Features" />}>
+            <TabPanel header={<SafeFormatMessage id="Features" />}>
               <ProductFeaturesList
                 productId={productData.id}
                 productName={productData.systemName}
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>
-            <TabPanel header={<FormattedMessage id="Plan's-Features" />}>
+            <TabPanel header={<SafeFormatMessage id="Plan's-Features" />}>
               <ProductFeaturePlan
                 productId={productData.id}
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>
-            <TabPanel header={<FormattedMessage id="Plans-Prices" />}>
+            <TabPanel header={<SafeFormatMessage id="Plans-Prices" />}>
               <ProductPlansPriceList
                 productId={productData.id}
                 setActiveIndex={setActiveIndex}
               />
             </TabPanel>
 
-            <TabPanel header={<FormattedMessage id="Subscriptions" />}>
+            <TabPanel header={<SafeFormatMessage id="Subscriptions" />}>
               <ProductTenantsList
                 productId={productData.id}
                 productName={productData.systemName}
@@ -293,7 +294,7 @@ const ProductDetails = () => {
             <TabPanel
               header={
                 <div>
-                  <FormattedMessage id="Warnings" />
+                  <SafeFormatMessage id="Warnings" />
                   {productData?.warningsNum > 0 && (
                     <span className="error-badge">
                       {productData?.warningsNum}

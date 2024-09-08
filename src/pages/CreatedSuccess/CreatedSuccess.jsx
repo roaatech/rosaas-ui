@@ -6,6 +6,7 @@ import successImage from '../../assets/img/pages/createdSuccess.svg'
 import { FormattedMessage } from 'react-intl'
 import rosasLogo from '../../assets/img/brand/rosas.svg'
 import { BsCheckCircleFill } from 'react-icons/bs'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const CreatedSuccess = () => {
   const handleButtonClick = () => {
@@ -74,7 +75,7 @@ const CreatedSuccess = () => {
                   icon="pi pi-trash"
                   onClick={handleButtonClick}
                 >
-                  <FormattedMessage id="Go-Back-Home" />
+                  <SafeFormatMessage id="Go-Back-Home" />
                 </Button>
               </div>
               <div className="text-center text-md-center mb-4 mt-md-0">

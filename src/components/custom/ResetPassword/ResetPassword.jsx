@@ -10,6 +10,7 @@ import useRequest from '../../../axios/apis/useRequest.js'
 import { Routes } from '../../../routes.js'
 import LoginWrapper from './ResetPassword.styled.jsx'
 import { toast } from 'react-toastify'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const ResetPassword = () => {
   const [step, setStep] = useState(null)
@@ -84,7 +85,7 @@ const ResetPassword = () => {
     ) {
       navigate(`${Routes.ConfirmAccountByPassword.path}${search}`)
     } else if (response && response.status == 200) {
-      toast.success(<FormattedMessage id="Password-reset-successful" />, {
+      toast.success(<SafeFormatMessage id="Password-reset-successful" />, {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 4000,
       })
@@ -117,7 +118,7 @@ const ResetPassword = () => {
                 <>
                   <div>
                     <label htmlFor="email" className="pb-2">
-                      <FormattedMessage id="yourEmail" />
+                      <SafeFormatMessage id="yourEmail" />
                     </label>
                     <div className="inputContainer">
                       <div className="inputContainerWithIcon">
@@ -154,7 +155,7 @@ const ResetPassword = () => {
                       className="w-100"
                       disabled={isSubmitting}
                     >
-                      <FormattedMessage id="sendResetLink" />
+                      <SafeFormatMessage id="sendResetLink" />
                     </Button>
                   </div>
                 </>
@@ -162,7 +163,7 @@ const ResetPassword = () => {
                 <>
                   <div>
                     <label htmlFor="password" className="pb-2">
-                      <FormattedMessage id="newPassword" />
+                      <SafeFormatMessage id="newPassword" />
                     </label>
                     <div className="inputContainer">
                       <div className="inputContainerWithIcon">
@@ -182,7 +183,7 @@ const ResetPassword = () => {
                   </div>
                   <div>
                     <label htmlFor="confirmPassword" className="pb-2">
-                      <FormattedMessage id="confirmPassword" />
+                      <SafeFormatMessage id="confirmPassword" />
                     </label>
                     <div className="inputContainer">
                       <div className="inputContainerWithIcon">
@@ -208,9 +209,9 @@ const ResetPassword = () => {
                       disabled={isSubmitting}
                     >
                       {location.pathname == Routes.setPassword.path ? (
-                        <FormattedMessage id="setPassword" />
+                        <SafeFormatMessage id="setPassword" />
                       ) : (
-                        <FormattedMessage id="resetPassword" />
+                        <SafeFormatMessage id="resetPassword" />
                       )}
                     </Button>
                   </div>

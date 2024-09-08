@@ -68,7 +68,7 @@ const SignInProductManagement = () => {
           <Form className="mt-4">
             <div>
               <label htmlFor="email" className="pb-2">
-                <FormattedMessage id="yourEmail" />
+                <SafeFormatMessage id="yourEmail" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -84,7 +84,7 @@ const SignInProductManagement = () => {
             </div>
             <div>
               <label htmlFor="password" className="pb-2">
-                <FormattedMessage id="yourPassword" />
+                <SafeFormatMessage id="yourPassword" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -113,7 +113,7 @@ const SignInProductManagement = () => {
                       to={Routes.ResetPasswordRequest.path}
                       className="link-underline"
                     >
-                      <FormattedMessage id="forgotPassword?" />
+                      <SafeFormatMessage id="forgotPassword?" />
                     </Link>
                   </div>
                 </div>
@@ -138,15 +138,15 @@ const SignInProductManagement = () => {
                 className="w-100"
                 disabled={isSubmitting}
               >
-                <FormattedMessage id="signIn" />
+                <SafeFormatMessage id="signIn" />
               </Button>
             </div>
             <div className="pt-2 text-center">
               <span>
-                <FormattedMessage id="join-as-product-owner" />
+                <SafeFormatMessage id="join-as-product-owner" />
               </span>{' '}
               <Link className="link-underline " to={Routes.POwnerSignUp.path}>
-                <FormattedMessage id="Sign-up-your-product-today!" />
+                <SafeFormatMessage id="Sign-up-your-product-today!" />
               </Link>
             </div>
           </Form>

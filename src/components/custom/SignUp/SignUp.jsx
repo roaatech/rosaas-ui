@@ -16,6 +16,7 @@ import { Routes } from '../../../routes'
 import { useSelector } from 'react-redux'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { useRef, useState } from 'react'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const SignUp = () => {
   const [recaptchaToken, setRecaptchaToken] = useState(null)
@@ -83,7 +84,7 @@ const SignUp = () => {
           <Form className="mt-4">
             <div>
               <label htmlFor="fullName" className="pb-2">
-                <FormattedMessage id="Your-Full-Name" />
+                <SafeFormatMessage id="Your-Full-Name" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -104,7 +105,7 @@ const SignUp = () => {
             </div>
             <div>
               <label htmlFor="mobileNumber" className="pb-2">
-                <FormattedMessage id="Your-Phone" />
+                <SafeFormatMessage id="Your-Phone" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -125,7 +126,7 @@ const SignUp = () => {
             </div>
             <div>
               <label htmlFor="email" className="pb-2">
-                <FormattedMessage id="yourEmail" />
+                <SafeFormatMessage id="yourEmail" />
                 <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
@@ -143,7 +144,7 @@ const SignUp = () => {
 
             <div>
               <label htmlFor="password" className="pb-2">
-                <FormattedMessage id="yourPassword" />
+                <SafeFormatMessage id="yourPassword" />
                 <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
@@ -166,7 +167,7 @@ const SignUp = () => {
 
             <div>
               <label htmlFor="confirmPassword" className="pb-2">
-                <FormattedMessage id="confirmPassword" />
+                <SafeFormatMessage id="confirmPassword" />
                 <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
@@ -207,7 +208,7 @@ const SignUp = () => {
                 className="w-100"
                 disabled={isSubmitting}
               >
-                <FormattedMessage id="signUp" />
+                <SafeFormatMessage id="signUp" />
               </Button>
             </div>
           </Form>

@@ -5,6 +5,7 @@ import { Wrapper } from './ResetPasswordPage.styled'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Routes } from '../../routes'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ResetPasswordPage = () => {
   const userInfo = useSelector((state) => state.auth.userInfo)
@@ -39,13 +40,13 @@ const ResetPasswordPage = () => {
                 <p className="text-center">
                   {userInfo.email ? (
                     <>
-                      <FormattedMessage
+                      <SafeFormatMessage
                         id={'We-Have-Sent-Reset-Password-Email-To'}
                       />
                       {'  '}
                       <span className="email">{userInfo.email}</span>
                       {'  '}
-                      <FormattedMessage id={'to-reset-your-password.'} />
+                      <SafeFormatMessage id={'to-reset-your-password.'} />
                     </>
                   ) : (
                     <>
@@ -53,7 +54,7 @@ const ResetPasswordPage = () => {
                       your inbox.{'  '}
                     </>
                   )}
-                  <FormattedMessage
+                  <SafeFormatMessage
                     id={
                       'After-receiving-the-email-follow-the-link-provided-to-reset-your-password.'
                     }
@@ -66,7 +67,7 @@ const ResetPasswordPage = () => {
                     icon="pi pi-trash"
                     onClick={handleButtonClick}
                   >
-                    <FormattedMessage id="Go-Back-Home" />
+                    <SafeFormatMessage id="Go-Back-Home" />
                   </Button>
                 </div>
               </div>

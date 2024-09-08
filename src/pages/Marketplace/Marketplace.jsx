@@ -8,25 +8,38 @@ import { Card, Col, Row } from '@themesberg/react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import useRequest from '../../axios/apis/useRequest'
 import { useDispatch, useSelector } from 'react-redux'
-import { FormattedMessage } from 'react-intl'
-import { useEffect } from 'react'
-import { setAllProduct } from '../../store/slices/products/productsSlice'
+import { FormattedMessage, useIntl } from 'react-intl'
+import { useEffect, useState } from 'react'
+import {
+  setAllProduct,
+  updateAllProduct,
+} from '../../store/slices/products/productsSlice'
 import { Wrapper } from './Marketplace.styled'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import { BsBoxSeam } from 'react-icons/bs'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const Marketplace = () => {
   const { getProductListPublic, getProductPlanPricePublicbyId } = useRequest()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
+  const intl = useIntl()
+  const [language, setLanguage] = useState()
   const listData = useSelector((state) => state.products.products)
   useEffect(() => {
+    if (language == intl.locale && Object.keys(listData).length > 0) {
+      return
+    }
     ;(async () => {
-      const productList = await getProductListPublic()
-      dispatch(setAllProduct(productList.data.data))
+      try {
+        const productList = await getProductListPublic()
+        dispatch(updateAllProduct(productList.data.data))
+        setLanguage(intl.locale)
+      } catch (error) {
+        console.error('Error fetching product list:', error)
+      }
     })()
-  }, [])
+  }, [Object.keys(listData).length > 0, language == intl.locale])
 
   let userRole = useSelector((state) => state.auth.userInfo.userType)
 
@@ -41,13 +54,6 @@ const Marketplace = () => {
   }
   const isRunningInIframe = window.self !== window.top
 
-  // Convert listData object to an array and then sort it
-  const sortedListData = Object.values(listData).sort((a, b) => {
-    if (a.systemName === 'rosaas-management-area') return -1
-    if (b.systemName === 'rosaas-management-area') return 1
-    return 0
-  })
-
   return (
     <Wrapper>
       <section style={{ minHeight: '92vh' }}>
@@ -60,13 +66,13 @@ const Marketplace = () => {
               <div className="col-lg-12 text-center mb-3">
                 <h1 className="product-title py-2">
                   <FontAwesomeIcon icon={faStore} className="mr-2" />
-                  <FormattedMessage id="Marketplace" />
+                  <SafeFormatMessage id="Marketplace" />
                 </h1>
                 <h4 className="product-title">
-                  <FormattedMessage id="Product-Title" />
+                  <SafeFormatMessage id="Product-Title" />
                 </h4>
                 <p className="product-sentence">
-                  <FormattedMessage id="Product-Sentence" />
+                  <SafeFormatMessage id="Product-Sentence" />
                 </p>
               </div>
             </div>
@@ -74,8 +80,8 @@ const Marketplace = () => {
           {/* <Card>
             <Card.Body> */}
           <Row>
-            {sortedListData.length > 0 &&
-              sortedListData.map((product) => (
+            {Object.values(listData).length > 0 &&
+              Object.values(listData).map((product) => (
                 <Col key={product.id} sm={6} md={4} lg={3}>
                   <Card
                     className={`p-1 m-1 ${

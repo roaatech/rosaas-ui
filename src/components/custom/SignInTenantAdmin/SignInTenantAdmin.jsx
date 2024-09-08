@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import ReCAPTCHA from 'react-google-recaptcha'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 const SignInTenantAdmin = () => {
   const [recaptchaToken, setRecaptchaToken] = useState(null)
   const recaptchaRef = React.createRef()
@@ -68,7 +69,7 @@ const SignInTenantAdmin = () => {
           <Form className="mt-4">
             <div>
               <label htmlFor="email" className="pb-2">
-                <FormattedMessage id="yourEmail" />
+                <SafeFormatMessage id="yourEmail" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -84,7 +85,7 @@ const SignInTenantAdmin = () => {
             </div>
             <div>
               <label htmlFor="password" className="pb-2">
-                <FormattedMessage id="yourPassword" />
+                <SafeFormatMessage id="yourPassword" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -113,7 +114,7 @@ const SignInTenantAdmin = () => {
                       to={Routes.ResetPasswordRequest.path}
                       className="link-underline"
                     >
-                      <FormattedMessage id="forgotPassword?" />
+                      <SafeFormatMessage id="forgotPassword?" />
                     </Link>
                   </div>
                 </div>
@@ -138,15 +139,15 @@ const SignInTenantAdmin = () => {
                 className="w-100"
                 disabled={isSubmitting}
               >
-                <FormattedMessage id="signIn" />
+                <SafeFormatMessage id="signIn" />
               </Button>
             </div>
             <div className="pt-2 text-center">
               <span>
-                <FormattedMessage id="not-Registered?" />
+                <SafeFormatMessage id="not-Registered?" />
               </span>{' '}
               <Link to={Routes.SignUp.path} className="link-underline">
-                <FormattedMessage id="create-Account" />
+                <SafeFormatMessage id="create-Account" />
               </Link>
             </div>
           </Form>

@@ -42,6 +42,7 @@ import { Routes } from '../../../../routes'
 import { object } from 'yup'
 import { update } from 'lodash'
 import ProductOwnerLimitsTab from '../ProductOwnerLimitsTab/ProductOwnerLimitsTab'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ProductOwnerDetails = () => {
   const routeParams = useParams()
@@ -122,7 +123,7 @@ const ProductOwnerDetails = () => {
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Product-Owner-Details" /> :{' '}
+              <SafeFormatMessage id="Product-Owner-Details" /> :{' '}
               {productOwner.systemName}{' '}
             </h4>
             <DynamicButtons
@@ -160,7 +161,7 @@ const ProductOwnerDetails = () => {
               activeIndex={activeIndex}
               onTabChange={(e) => setActiveIndex(e.index)}
             >
-              <TabPanel header={<FormattedMessage id="Details" />}>
+              <TabPanel header={<SafeFormatMessage id="Details" />}>
                 <div className="row-button">
                   <div className="dynamicButtons"></div>
                 </div>
@@ -173,7 +174,7 @@ const ProductOwnerDetails = () => {
                       <tbody>
                         <tr>
                           <td className="fw-bold line-cell">
-                            <FormattedMessage id="Display-Name" />
+                            <SafeFormatMessage id="Display-Name" />
                           </td>
                           <td className="line-cell">
                             {productOwner.displayName}
@@ -181,13 +182,13 @@ const ProductOwnerDetails = () => {
                         </tr>
                         <tr>
                           <td className="fw-bold">
-                            <FormattedMessage id="System-Name" />
+                            <SafeFormatMessage id="System-Name" />
                           </td>
                           <td>{productOwner.systemName}</td>
                         </tr>
                         <tr>
                           <td className="fw-bold">
-                            <FormattedMessage id="Products" />
+                            <SafeFormatMessage id="Products" />
                           </td>
                           <td>
                             {productOwner.products &&
@@ -210,13 +211,13 @@ const ProductOwnerDetails = () => {
                         </tr>
                         <tr>
                           <td className="fw-bold">
-                            <FormattedMessage id="Created-Date" />
+                            <SafeFormatMessage id="Created-Date" />
                           </td>
                           <td>{DataTransform(productOwner.createdDate)}</td>
                         </tr>
                         <tr>
                           <td className="fw-bold">
-                            <FormattedMessage id="Last-Updated-Date" />
+                            <SafeFormatMessage id="Last-Updated-Date" />
                           </td>
                           <td>{DataTransform(productOwner.editedDate)}</td>
                         </tr>
@@ -225,7 +226,9 @@ const ProductOwnerDetails = () => {
                   </Card.Body>
                 </Card>
               </TabPanel>
-              <TabPanel header={<FormattedMessage id="Product-Owner-Limits" />}>
+              <TabPanel
+                header={<SafeFormatMessage id="Product-Owner-Limits" />}
+              >
                 <ProductOwnerLimitsTab productOwnerId={productOwner.id} />
               </TabPanel>
             </TabView>

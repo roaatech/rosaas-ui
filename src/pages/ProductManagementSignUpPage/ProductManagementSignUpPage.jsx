@@ -7,6 +7,7 @@ import ProductOwnerReg from '../../components/custom/ProductOwner/ProductOwnerRe
 import { Wrapper } from './ProductManagementSignUpPage.styled'
 import { useLocation } from 'react-router-dom'
 import { Routes } from '../../routes'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ProductManagementSignUpPage = () => {
   const location = useLocation()
@@ -31,8 +32,8 @@ const ProductManagementSignUpPage = () => {
                 style={{ maxWidth: '200px' }}
               />
               <h4 className="text-center mt-2">
-                <FormattedMessage id="Product-Owner" />{' '}
-                <FormattedMessage id="Registration" />
+                <SafeFormatMessage id="Product-Owner" />{' '}
+                <SafeFormatMessage id="Registration" />
               </h4>
             </Col>
             <Col
@@ -43,7 +44,7 @@ const ProductManagementSignUpPage = () => {
               <div className="">
                 <div className=" mb-4 mt-md-0">
                   <h3 className="mb-0">
-                    <FormattedMessage id="signUpTo" />{' '}
+                    <SafeFormatMessage id="signUpTo" />{' '}
                     <span className="rosaas">RoSaaS</span>
                   </h3>
                 </div>

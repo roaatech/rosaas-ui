@@ -4,6 +4,7 @@ import useRequest from '../../../../../axios/apis/useRequest'
 import { useFormik } from 'formik'
 import { Button, Form, Modal } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ChangePasswordForm = ({ setVisible, popupLabel }) => {
   const { changePassword } = useRequest()
@@ -49,7 +50,7 @@ const ChangePasswordForm = ({ setVisible, popupLabel }) => {
     <Form onSubmit={formik.handleSubmit}>
       <Modal.Header closeButton>
         <Modal.Title className="h6">
-          {<FormattedMessage id={popupLabel} />}
+          {<SafeFormatMessage id={popupLabel} />}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -113,7 +114,7 @@ const ChangePasswordForm = ({ setVisible, popupLabel }) => {
           type="submit"
           disabled={formik.isSubmitting}
         >
-          <FormattedMessage id="Submit" />
+          <SafeFormatMessage id="Submit" />
         </Button>
         <Button
           variant="link"
@@ -121,7 +122,7 @@ const ChangePasswordForm = ({ setVisible, popupLabel }) => {
           onClick={() => setVisible(false)}
           disabled={formik.isSubmitting}
         >
-          <FormattedMessage id="Close" />
+          <SafeFormatMessage id="Close" />
         </Button>
       </Modal.Footer>
     </Form>

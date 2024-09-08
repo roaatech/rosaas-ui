@@ -3,7 +3,16 @@ const _ = require('lodash')
 export const subscribe = (state, action) => {
   const currentProducts = { ...current(state.products) }
   const product = { ...currentProducts[action.payload.id] }
-  product.subscribe = action.payload.data
+
+  // If action.payload.data is an array, map over it to subscribe each value
+  action.payload.data?.map((value) => {
+    if (product.subscribe) {
+      product.subscribe[value.id] = value // Subscribe using value.id
+    } else {
+      product.subscribe = { [value.id]: value } // Initialize if not present
+    }
+  })
+
   const mergedObject = _.mergeWith(
     {},
     currentProducts[action.payload.id],
@@ -18,10 +27,11 @@ export const subscribe = (state, action) => {
   currentProducts[action.payload.id] = mergedObject
   state.products = currentProducts
 }
+
 export const sortSubscriptions = (state, action) => {
   const { productId, sortBy, order } = action.payload
   if (state.products[productId]?.subscribe) {
-    state.products[productId].subscribe.sort((a, b) => {
+    Object.values(state.products[productId].subscribe).sort((a, b) => {
       const fieldA = _.get(a, sortBy)
       const fieldB = _.get(b, sortBy)
       if (order === 'asc') {
@@ -35,17 +45,16 @@ export const sortSubscriptions = (state, action) => {
 export const filterSubscriptions = (state, action) => {
   const { productId } = action.payload
   const term = state.products[productId].searchTerm?.toLowerCase()
-  console.log({ term })
 
   if (state.products[productId]?.subscribe) {
-    state.products[productId].filtered = state.products[
-      productId
-    ].subscribe.filter(
-      (sub) =>
-        sub.displayName?.toLowerCase().includes(term) ||
-        sub.systemName?.toLowerCase().includes(term) ||
-        sub.plan.systemName?.toLowerCase().includes(term)
-    )
+    state.products[productId].filtered =
+      state.products[productId].subscribe &&
+      Object.values(state.products[productId].subscribe).filter(
+        (sub) =>
+          sub.displayName?.toLowerCase().includes(term) ||
+          sub.systemName?.toLowerCase().includes(term) ||
+          sub.plan.systemName?.toLowerCase().includes(term)
+      )
   }
 }
 export const setSearchTerm = (state, action) => {
@@ -55,7 +64,19 @@ export const setSearchTerm = (state, action) => {
 }
 
 export const changeSubscriptionAttr = (state, action) => {
+  console.log('99999999')
+
   const { productId, subscriptionId, attr, value } = action.payload
+  console.log(
+    { datassssssss: state.products[productId].subscribe[subscriptionId][attr] },
+    productId,
+    subscriptionId,
+    attr,
+    value
+  )
+  console.log({ actionsssss: action.payload })
+
+  console.log('*****************')
 
   if (state.products[productId]?.subscribe) {
     state.products[productId].subscribe[subscriptionId][attr] = value

@@ -38,6 +38,7 @@ import {
   setWorkspaceTenant,
 } from '../../../../store/slices/workSpace'
 import { useDispatch, useSelector } from 'react-redux'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 export default function TenantList({ children }) {
   const { getTenant, getTenantList, deleteTenantReq } = useRequest()
   const [visible, setVisible] = useState(false)
@@ -105,7 +106,7 @@ export default function TenantList({ children }) {
     <Wrapper>
       <UpperContent>
         <h4 className="m-0">
-          <FormattedMessage id="Tenants" />{' '}
+          <SafeFormatMessage id="Tenants" />{' '}
         </h4>
       </UpperContent>
       <div className="p-d-flex p-flex-column p-ai-center">

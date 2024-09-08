@@ -21,6 +21,7 @@ import {
 import { FormattedMessage } from 'react-intl'
 import { signinRedirectPath } from '../../store/slices/auth'
 import { Routes } from '../../routes'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 const MainPage = () => {
   const dispatch = useDispatch()
   let direction = useSelector((state) => state.main.direction)
@@ -59,14 +60,14 @@ const MainPage = () => {
               </div>
               <div className="col-lg-12 text-center mb-1">
                 <h2 className="mt-0">
-                  <FormattedMessage id="Seamless-SaaS-Transformation" />
+                  <SafeFormatMessage id="Seamless-SaaS-Transformation" />
                 </h2>
               </div>
               <div
                 className="col-lg-7 col-xl-6 text-center"
                 style={{ fontSize: 'var(--largeFont)' }}
               >
-                <FormattedMessage id="Rosaas-Description" />
+                <SafeFormatMessage id="Rosaas-Description" />
               </div>
               <div className="col-lg-9 col-xl-8 text-center"></div>
             </div>
@@ -81,7 +82,7 @@ const MainPage = () => {
                   <span className="redirect-link ">
                     <FontAwesomeIcon icon={faStore} />
                     <span>
-                      <FormattedMessage id="Go-to-Marketplace" />
+                      <SafeFormatMessage id="Go-to-Marketplace" />
                     </span>
                   </span>
                 </Row>
@@ -104,14 +105,14 @@ const MainPage = () => {
                       <>
                         <FontAwesomeIcon icon={faTachometerAlt} />
                         <span>
-                          <FormattedMessage id="Dashboard" />
+                          <SafeFormatMessage id="Dashboard" />
                         </span>
                       </>
                     ) : (
                       <>
                         <FontAwesomeIcon icon={faSignInAlt} />
                         <span>
-                          <FormattedMessage id="signIn" />
+                          <SafeFormatMessage id="signIn" />
                         </span>
                       </>
                     )}
@@ -131,7 +132,7 @@ const MainPage = () => {
                     <span className="redirect-link ">
                       <FontAwesomeIcon icon={faCogs} />
                       <span>
-                        <FormattedMessage id="Product-Management-Area" />
+                        <SafeFormatMessage id="Product-Management-Area" />
                       </span>
                     </span>
                   </Row>
@@ -142,7 +143,7 @@ const MainPage = () => {
           <Row className="justify-content-center">
             <Col lg={9} xl={8} className="text-center">
               {/* <h3 className="mt-4">
-                <FormattedMessage id="Unlock new opportunities by joining us and showcasing your product on our platform." />
+                <SafeFormatMessage id="Unlock new opportunities by joining us and showcasing your product on our platform." />
               </h3> */}
               {/* <div className="row justify-content-center">
                 <div
@@ -164,7 +165,7 @@ const MainPage = () => {
                       <span className="redirect-link ">
                         <FontAwesomeIcon icon={faCogs} />
                         <span>
-                          <FormattedMessage id="Product-Management-Area" />
+                          <SafeFormatMessage id="Product-Management-Area" />
                         </span>
                       </span>
                     </Row>

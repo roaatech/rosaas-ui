@@ -35,6 +35,7 @@ import SubsFeatures from '../../components/custom/tenant/SubscriptionManagement/
 import SubsFeaturesHistory from '../../components/custom/tenant/SubscriptionManagement/SubsFeaturesHistory/SubsFeaturesHistotry'
 import SubsGeneralHistoryData from '../../components/custom/tenant/SubscriptionManagement/SubsGeneralHistoryData/SubsGeneralHistoryData'
 import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const SubscriptionManagement = (props) => {
   const routeParams = useParams()
@@ -219,7 +220,7 @@ const SubscriptionManagement = (props) => {
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Subscription-Management" />:{' '}
+              <SafeFormatMessage id="Subscription-Management" />:{' '}
               {tenantsData[routeParams.id]?.systemName}
             </h4>
             <DynamicButtons
@@ -328,7 +329,7 @@ const SubscriptionManagement = (props) => {
                       ) : (
                         <div className="tab-header">
                           {cyc.cycleType == 2 ? (
-                            <FormattedMessage id="Trial" />
+                            <SafeFormatMessage id="Trial" />
                           ) : (
                             formatDate(cyc.startDate)
                           )}
@@ -384,7 +385,7 @@ const SubscriptionManagement = (props) => {
                                 cyc?.subscriptionCycleId && (
                                 <TabPanel
                                   header={
-                                    <FormattedMessage id="Subscription-Features" />
+                                    <SafeFormatMessage id="Subscription-Features" />
                                   }
                                   key={'subscriptionFeatures'}
                                 >
@@ -400,7 +401,7 @@ const SubscriptionManagement = (props) => {
                               <TabPanel
                                 key={'featuresHistory'}
                                 header={
-                                  <FormattedMessage id="Features-History" />
+                                  <SafeFormatMessage id="Features-History" />
                                 }
                               >
                                 <SubsFeaturesHistory
@@ -434,7 +435,7 @@ const SubscriptionManagement = (props) => {
               {
                 <ThemeDialog visible={visible} setVisible={setVisible}>
                   <RenewForm
-                    popupLabel={<FormattedMessage id="Renew-Subscription" />}
+                    popupLabel={<SafeFormatMessage id="Renew-Subscription" />}
                     type={'edit'}
                     tenantData={subscriptionDatas}
                     visible={visible}

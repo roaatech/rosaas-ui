@@ -17,6 +17,7 @@ import {
 } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { cycle } from '../../../../../const'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const renderDowngradeRenewals = ({
   renewal,
@@ -44,14 +45,14 @@ const renderDowngradeRenewals = ({
                     className="text-info me-2"
                   />
                   <strong>
-                    <FormattedMessage id={'Downgrade'} />
+                    <SafeFormatMessage id={'Downgrade'} />
                   </strong>{' '}
                 </div>
               </Card.Title>
               <div>
                 <span className="mx-2">
                   <span className=" fw-normal">
-                    <FormattedMessage id="Billing-Date" />
+                    <SafeFormatMessage id="Billing-Date" />
                   </span>
                   <span className="text-info">
                     {' '}
@@ -86,7 +87,7 @@ const renderDowngradeRenewals = ({
                       className="text-danger"
                     >
                       <FontAwesomeIcon icon={faToggleOn} className="me-2" />
-                      <FormattedMessage id="Cancel-Downgrade" />
+                      <SafeFormatMessage id="Cancel-Downgrade" />
                     </Dropdown.Item>
                     {!renewal.renewalsCount > 0 &&
                       !renewal.isContinuousRenewal && (
@@ -99,7 +100,7 @@ const renderDowngradeRenewals = ({
                               icon={faToggleOff}
                               className="me-2"
                             />
-                            <FormattedMessage id="Enable-Auto-Renewal" />
+                            <SafeFormatMessage id="Enable-Auto-Renewal" />
                           </>
                         </Dropdown.Item>
                       )}
@@ -112,7 +113,7 @@ const renderDowngradeRenewals = ({
             <Card.Text>
               <span>
                 <strong>
-                  <FormattedMessage id="Subscription" />
+                  <SafeFormatMessage id="Subscription" />
                 </strong>{' '}
                 {renewal.subscription?.displayName}{' '}
               </span>
@@ -121,7 +122,7 @@ const renderDowngradeRenewals = ({
             {/* <Card.Text>
                 <span>
                   <strong>
-                    <FormattedMessage id="Current-Plan" />
+                    <SafeFormatMessage id="Current-Plan" />
                   </strong>{' '}
                   {renewal?.plan?.displayName}
                 </span>
@@ -130,7 +131,7 @@ const renderDowngradeRenewals = ({
             <Card.Text>
               <span>
                 <strong>
-                  <FormattedMessage id="Basic-Plan" />
+                  <SafeFormatMessage id="Basic-Plan" />
                 </strong>{' '}
                 {/* Display information about the new plan */}
                 {/* For example: */}
@@ -141,7 +142,7 @@ const renderDowngradeRenewals = ({
             <Card.Text>
               <div className="d-flex align-items-center">
                 <strong>
-                  <FormattedMessage id="Enabled-Date" />
+                  <SafeFormatMessage id="Enabled-Date" />
                 </strong>{' '}
                 <span className="mx-1">{formatDate(renewal.enabledDate)}</span>
               </div>
@@ -155,29 +156,31 @@ const renderDowngradeRenewals = ({
                   className="text-success me-2"
                 />
                 <strong>
-                  <FormattedMessage id="Auto-Renewal" />
+                  <SafeFormatMessage id="Auto-Renewal" />
                 </strong>
                 <span className="text-success">
                   {' '}
-                  <FormattedMessage id="Enabled" />{' '}
+                  <SafeFormatMessage id="Enabled" />{' '}
                   {renewal.isContinuousRenewal && (
-                    <FormattedMessage id="Indefinitely" />
+                    <SafeFormatMessage id="Indefinitely" />
                   )}
                 </span>{' '}
                 {renewal.renewalsCount > 0 && (
                   <>
-                    <FormattedMessage id="for" />{' '}
+                    <SafeFormatMessage id="for" />{' '}
                     {renewal.renewalsCount > 1 ? (
                       <span className="text-success">
                         {renewal.renewalsCount}{' '}
-                        <FormattedMessage
+                        <SafeFormatMessage
                           id={`${cycle[renewal.plan.cycle]}s`}
                         />
                       </span>
                     ) : (
                       <span className="text-success">
                         {renewal.renewalsCount}{' '}
-                        <FormattedMessage id={`${cycle[renewal.plan.cycle]}`} />
+                        <SafeFormatMessage
+                          id={`${cycle[renewal.plan.cycle]}`}
+                        />
                       </span>
                     )}
                   </>
@@ -190,18 +193,18 @@ const renderDowngradeRenewals = ({
                   className="text-danger me-2"
                 />
                 <strong>
-                  <FormattedMessage id="Auto-Renewal" />{' '}
+                  <SafeFormatMessage id="Auto-Renewal" />{' '}
                 </strong>
                 <strong className="text-danger">
                   {' '}
-                  <FormattedMessage id="Disabled" />
+                  <SafeFormatMessage id="Disabled" />
                 </strong>
               </Card.Text>
             )}
 
             <div>
               <strong>
-                <FormattedMessage id="Payment-Method" />
+                <SafeFormatMessage id="Payment-Method" />
               </strong>
 
               <div className="p-3 ">

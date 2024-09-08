@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { currencyInfo } from '../../../store/slices/currenciesSlice'
 import useRequest from '../../../axios/apis/useRequest'
 import { roundingTypeOptions } from '../../../const/const'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 
 // Define your options object with formatted messages
 
@@ -82,30 +83,30 @@ const CurrencyForm = ({
 
   const validationSchema = Yup.object().shape({
     displayName: Yup.string()
-      .required(<FormattedMessage id="display-name-is-required" />)
-      .max(100, <FormattedMessage id="maximum-100-characters-allowed" />),
+      .required(<SafeFormatMessage id="display-name-is-required" />)
+      .max(100, <SafeFormatMessage id="maximum-100-characters-allowed" />),
     currencyCode: Yup.string()
-      .required(<FormattedMessage id="currency-code-is-required" />)
+      .required(<SafeFormatMessage id="currency-code-is-required" />)
       .matches(
         /^[A-Z]{3}$/,
-        <FormattedMessage id="currency-code-must-be-3-letters" />
+        <SafeFormatMessage id="currency-code-must-be-3-letters" />
       ),
     rate: Yup.number()
-      .required(<FormattedMessage id="rate-is-required" />)
-      .min(0.01, <FormattedMessage id="rate-must-be-greater-than-zero" />),
+      .required(<SafeFormatMessage id="rate-is-required" />)
+      .min(0.01, <SafeFormatMessage id="rate-must-be-greater-than-zero" />),
     customFormatting: Yup.string().max(
       100,
-      <FormattedMessage id="maximum-100-characters-allowed" />
+      <SafeFormatMessage id="maximum-100-characters-allowed" />
     ),
     displayOrder: Yup.number().min(
       0,
-      <FormattedMessage id="minimum-value-is-0" />
+      <SafeFormatMessage id="minimum-value-is-0" />
     ),
     roundingType: Yup.number() // Validate as a number
-      .required(<FormattedMessage id="rounding-type-is-required" />)
+      .required(<SafeFormatMessage id="rounding-type-is-required" />)
       .oneOf(
         Object.keys(roundingTypeOptions).map(Number),
-        <FormattedMessage id="invalid-rounding-type" />
+        <SafeFormatMessage id="invalid-rounding-type" />
       ),
   })
 
@@ -163,7 +164,7 @@ const CurrencyForm = ({
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="displayName">
-                  <FormattedMessage id="display-name" />{' '}
+                  <SafeFormatMessage id="display-name" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </label>
                 <input
@@ -189,7 +190,7 @@ const CurrencyForm = ({
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="currencyCode">
-                  <FormattedMessage id="currency-code" />{' '}
+                  <SafeFormatMessage id="currency-code" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </label>
                 <input
@@ -215,7 +216,7 @@ const CurrencyForm = ({
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="rate">
-                  <FormattedMessage id="rate" />{' '}
+                  <SafeFormatMessage id="rate" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </label>
                 <input
@@ -239,7 +240,7 @@ const CurrencyForm = ({
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="customFormatting">
-                  <FormattedMessage id="custom-formatting" />
+                  <SafeFormatMessage id="custom-formatting" />
                 </label>
                 <input
                   type="text"
@@ -266,7 +267,7 @@ const CurrencyForm = ({
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="displayOrder">
-                  <FormattedMessage id="display-order" />{' '}
+                  <SafeFormatMessage id="display-order" />{' '}
                 </label>
                 <input
                   type="number"
@@ -291,7 +292,7 @@ const CurrencyForm = ({
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="roundingType">
-                  <FormattedMessage id="rounding-type" />{' '}
+                  <SafeFormatMessage id="rounding-type" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </label>
                 <select
@@ -311,12 +312,12 @@ const CurrencyForm = ({
                   }`}
                 >
                   <option value="">
-                    <FormattedMessage id="select-option" />
+                    <SafeFormatMessage id="select-option" />
                   </option>
                   {Object.entries(roundingTypeOptions).map(
                     ([value, labelId]) => (
                       <option key={value} value={value}>
-                        <FormattedMessage id={labelId} />
+                        <SafeFormatMessage id={labelId} />
                       </option>
                     )
                   )}
@@ -337,14 +338,14 @@ const CurrencyForm = ({
             type="submit"
             disabled={formik.isSubmitting}
           >
-            <FormattedMessage id="submit" />
+            <SafeFormatMessage id="submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray"
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="close" />
+            <SafeFormatMessage id="close" />
           </Button>
         </Modal.Footer>
       </form>

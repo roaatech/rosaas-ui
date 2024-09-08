@@ -2,6 +2,7 @@ import React from 'react'
 import { Modal, Button, Card, Table } from '@themesberg/react-bootstrap'
 import { Wrapper } from './ShowDetails.styled.jsx'
 import { FormattedMessage } from 'react-intl'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage.jsx'
 
 const ShowDetails = ({ data, setVisible, popupLabel }) => {
   // console.log({ data })
@@ -27,7 +28,7 @@ const ShowDetails = ({ data, setVisible, popupLabel }) => {
                 {Object.keys(data).map((item, index) => (
                   <tr key={index}>
                     <td>
-                      <FormattedMessage id={item} />
+                      <SafeFormatMessage id={item} />
                     </td>
                     <td
                       className={`fw-bold ${

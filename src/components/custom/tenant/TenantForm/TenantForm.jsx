@@ -22,6 +22,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 import { setAllPlansPrice } from '../../../../store/slices/products/productsSlice.js'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const TenantForm = ({
   type,
@@ -62,29 +63,31 @@ const TenantForm = ({
 
   const createValidation = {
     displayName: Yup.string()
-      .required(<FormattedMessage id="Title-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+      .required(<SafeFormatMessage id="Title-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />),
 
     product: Yup.string().required(
-      <FormattedMessage id="Please-select-a-product" />
+      <SafeFormatMessage id="Please-select-a-product" />
     ),
-    plan: Yup.string().required(<FormattedMessage id="Please-select-a-plan" />),
+    plan: Yup.string().required(
+      <SafeFormatMessage id="Please-select-a-plan" />
+    ),
     price: Yup.string().required(
-      <FormattedMessage id="Please-select-a-price" />
+      <SafeFormatMessage id="Please-select-a-price" />
     ),
 
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="System-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="System-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
   }
   const editValidation = {
     displayName: Yup.string()
-      .required(<FormattedMessage id="Title-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+      .required(<SafeFormatMessage id="Title-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />),
   }
   const validationSchema = Yup.object().shape(
     type === 'create' ? createValidation : editValidation
@@ -302,7 +305,7 @@ const TenantForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Display-Name" />{' '}
+                <SafeFormatMessage id="Display-Name" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
@@ -328,7 +331,7 @@ const TenantForm = ({
           <div className="mb-3">
             {type === 'create' && (
               <AutoGenerateInput
-                label={<FormattedMessage id="System-Name" />}
+                label={<SafeFormatMessage id="System-Name" />}
                 id="systemName"
                 value={formik.values.displayName}
                 name={formik.values.systemName}
@@ -358,7 +361,7 @@ const TenantForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Product" />{' '}
+                  <SafeFormatMessage id="Product" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
@@ -370,7 +373,7 @@ const TenantForm = ({
                   onBlur={formik.handleBlur}
                 >
                   <option value="">
-                    <FormattedMessage id="Select-Option" />
+                    <SafeFormatMessage id="Select-Option" />
                   </option>
                   {options.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -394,7 +397,7 @@ const TenantForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Plan" />{' '}
+                  <SafeFormatMessage id="Plan" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
@@ -407,7 +410,7 @@ const TenantForm = ({
                   disabled={!formik.values.product}
                 >
                   <option value="">
-                    <FormattedMessage id="Select-Option" />
+                    <SafeFormatMessage id="Select-Option" />
                   </option>
                   {planOptions?.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -430,7 +433,7 @@ const TenantForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Subscription-Options" />{' '}
+                  <SafeFormatMessage id="Subscription-Options" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
@@ -443,7 +446,7 @@ const TenantForm = ({
                   disabled={!formik.values.plan || !formik.values.product}
                 >
                   <option value="">
-                    <FormattedMessage id="Select-Option" />{' '}
+                    <SafeFormatMessage id="Select-Option" />{' '}
                   </option>
                   {priceList.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -486,14 +489,14 @@ const TenantForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

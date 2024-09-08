@@ -8,6 +8,7 @@ import { FormattedMessage } from 'react-intl'
 import rosasLogo from '../../assets/img/brand/rosas.svg'
 import { BsCheckCircleFill } from 'react-icons/bs'
 import { useSelector } from 'react-redux'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const PaymentSuccess = () => {
   let userRole = useSelector((state) => state.auth.userInfo.userType)
@@ -82,7 +83,7 @@ const PaymentSuccess = () => {
                   icon="pi pi-trash"
                   onClick={handleButtonClick}
                 >
-                  <FormattedMessage id="Go-Back-Home" />
+                  <SafeFormatMessage id="Go-Back-Home" />
                 </Button>
               </div>
               <div className="text-center text-md-center mb-4 mt-md-0">

@@ -10,6 +10,7 @@ import Label from '../../../Shared/label/Label'
 import DateLabel from '../../../Shared/DateLabel/DateLabel'
 import useRequest from '../../../../../axios/apis/useRequest'
 import { subHistoryData } from '../../../../../store/slices/tenants'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 export default function SubsFeaturesHistory(data) {
   const { subscriptionId, currentTabFeatures, currentTabCycle, update } = data
@@ -113,22 +114,22 @@ export default function SubsFeaturesHistory(data) {
                             <thead>
                               <tr>
                                 <th>
-                                  <FormattedMessage id="Feature" />
+                                  <SafeFormatMessage id="Feature" />
                                 </th>
                                 <th>
-                                  <FormattedMessage id="Reset" />
+                                  <SafeFormatMessage id="Reset" />
                                 </th>
                                 <th>
-                                  <FormattedMessage id="Start-Date" />
+                                  <SafeFormatMessage id="Start-Date" />
                                 </th>
                                 <th>
-                                  <FormattedMessage id="End-Date" />
+                                  <SafeFormatMessage id="End-Date" />
                                 </th>
                                 <th>
-                                  <FormattedMessage id="usage" />
+                                  <SafeFormatMessage id="usage" />
                                 </th>
                                 <th>
-                                  <FormattedMessage id="Remind/Limit" />
+                                  <SafeFormatMessage id="Remind/Limit" />
                                 </th>
                               </tr>
                             </thead>
@@ -141,7 +142,7 @@ export default function SubsFeaturesHistory(data) {
 
                                     {/* Reset */}
                                     <td>
-                                      <FormattedMessage
+                                      <SafeFormatMessage
                                         id={featureResetMap[cycle.reset]}
                                       />
                                     </td>

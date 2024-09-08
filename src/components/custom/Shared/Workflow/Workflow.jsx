@@ -14,6 +14,7 @@ import { FormattedMessage } from 'react-intl'
 import CustomPaginator from '../CustomPaginator/CustomPaginator'
 import { HealthStatus } from '../../../../const'
 import Label from '../label/Label'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
   const { getTimeLine } = useRequest()
   const dispatch = useDispatch()
@@ -55,7 +56,7 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
                 <Container>
                   <Row>
                     <Col md={3} className="note-label">
-                      <FormattedMessage id={Owner[note.ownerType]} />:
+                      <SafeFormatMessage id={Owner[note.ownerType]} />:
                     </Col>{' '}
                     <Col md={9} className="note-text">
                       <div className="">
@@ -123,14 +124,14 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
                               </div>
                             ) : (
                               <div className="processType">
-                                <FormattedMessage
+                                <SafeFormatMessage
                                   id={processType[item.processType]}
                                 />
                               </div>
                             )}
                           </div>
                           <div className="author mb-2">
-                            <FormattedMessage id={Owner[item?.ownerType]} />
+                            <SafeFormatMessage id={Owner[item?.ownerType]} />
                           </div>
                         </div>
                         <div className="flex justify-content-between flex-wrap">

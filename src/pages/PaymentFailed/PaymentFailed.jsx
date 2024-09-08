@@ -6,6 +6,7 @@ import failedImage from '../../assets/img/pages/paymentFailed.svg'
 import { FormattedMessage } from 'react-intl'
 import rosasLogo from '../../assets/img/brand/rosas.svg'
 import { BsCheckCircleFill, BsXCircleFill } from 'react-icons/bs'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const PaymentFailed = () => {
   const handleButtonClick = () => {
@@ -72,7 +73,7 @@ const PaymentFailed = () => {
                 icon="pi pi-trash"
                 onClick={handleButtonClick}
               >
-                <FormattedMessage id="Go-Back-Home" />
+                <SafeFormatMessage id="Go-Back-Home" />
               </Button>
             </div>
             <div className="text-center text-md-center mb-4 mt-md-0">

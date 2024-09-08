@@ -6,6 +6,7 @@ import { Tooltip, OverlayTrigger, Button } from '@themesberg/react-bootstrap'
 import { AiFillCopy, AiOutlineEdit, AiOutlineSave } from 'react-icons/ai'
 import { FormattedMessage } from 'react-intl'
 import { useSelector } from 'react-redux'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const EditableUrlItemByParent = ({ data, onUrlChange, isParentEditing }) => {
   const url = data
@@ -76,7 +77,7 @@ const EditableUrlItemByParent = ({ data, onUrlChange, isParentEditing }) => {
             overlay={
               <Tooltip>
                 <div style={{ minWidth: '100px' }}>
-                  {<FormattedMessage id={toolTipText} />}
+                  {<SafeFormatMessage id={toolTipText} />}
                 </div>
               </Tooltip>
             }

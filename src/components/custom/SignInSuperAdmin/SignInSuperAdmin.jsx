@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import ReCAPTCHA from 'react-google-recaptcha'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 const SignInSuperAdmin = () => {
   const [recaptchaToken, setRecaptchaToken] = useState(null)
   const recaptchaRef = useRef(null)
@@ -68,7 +69,7 @@ const SignInSuperAdmin = () => {
           <Form className="mt-4">
             <div>
               <label htmlFor="email" className="pb-2">
-                <FormattedMessage id="yourEmail" />
+                <SafeFormatMessage id="yourEmail" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -84,7 +85,7 @@ const SignInSuperAdmin = () => {
             </div>
             <div>
               <label htmlFor="password" className="pb-2">
-                <FormattedMessage id="yourPassword" />
+                <SafeFormatMessage id="yourPassword" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -122,7 +123,7 @@ const SignInSuperAdmin = () => {
                 className="w-100"
                 disabled={isSubmitting}
               >
-                <FormattedMessage id="signIn" />
+                <SafeFormatMessage id="signIn" />
               </Button>
             </div>
           </Form>

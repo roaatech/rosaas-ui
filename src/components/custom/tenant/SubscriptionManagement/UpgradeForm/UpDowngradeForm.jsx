@@ -17,6 +17,7 @@ import { setAllSpecifications } from '../../../../../store/slices/products/speci
 import { cycle } from '../../../../../const/product.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import { changeOrderAttribute } from '../../../../../store/slices/tenants.js'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const UpDownGradeForm = ({
   tenantData,
@@ -65,9 +66,11 @@ const UpDownGradeForm = ({
   }, [subscriptionDatas?.subscriptionId])
 
   const validationSchema = Yup.object().shape({
-    plan: Yup.string().required(<FormattedMessage id="Please-select-a-plan" />),
+    plan: Yup.string().required(
+      <SafeFormatMessage id="Please-select-a-plan" />
+    ),
     price: Yup.string().required(
-      <FormattedMessage id="Please-select-a-price" />
+      <SafeFormatMessage id="Please-select-a-price" />
     ),
   })
 
@@ -241,7 +244,7 @@ const UpDownGradeForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Plan" />{' '}
+                <SafeFormatMessage id="Plan" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
@@ -254,7 +257,7 @@ const UpDownGradeForm = ({
                 disabled={!selectedProduct}
               >
                 <option value="">
-                  <FormattedMessage id="Select-Option" />
+                  <SafeFormatMessage id="Select-Option" />
                 </option>
                 {planOptions?.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -276,7 +279,7 @@ const UpDownGradeForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Subscription-Options" />{' '}
+                <SafeFormatMessage id="Subscription-Options" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
@@ -289,7 +292,7 @@ const UpDownGradeForm = ({
                 disabled={!formik.values.plan || !selectedProduct}
               >
                 <option value="">
-                  <FormattedMessage id="Select-Option" />{' '}
+                  <SafeFormatMessage id="Select-Option" />{' '}
                 </option>
                 {priceList.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -310,7 +313,7 @@ const UpDownGradeForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Comment" />
+                <SafeFormatMessage id="Comment" />
               </Form.Label>
               <TextareaAndCounter
                 maxLength="250"
@@ -326,14 +329,14 @@ const UpDownGradeForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

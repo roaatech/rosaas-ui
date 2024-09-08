@@ -23,6 +23,7 @@ import {
   workspaceUpdateProduct,
 } from '../../../../../store/slices/workSpace.js'
 import { cycle } from '../../../../../const/product.js'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 // WorkspaceRenewFormWithCycle component
 const WorkspaceRenewFormWithCycle = ({
@@ -60,10 +61,10 @@ const WorkspaceRenewFormWithCycle = ({
   // Form validation schema
   const validationSchema = Yup.object().shape({
     card: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
+      <SafeFormatMessage id="This-field-is-required" />
     ),
     price: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
+      <SafeFormatMessage id="This-field-is-required" />
     ),
     autoRenewal: Yup.boolean(),
   })
@@ -282,7 +283,7 @@ const WorkspaceRenewFormWithCycle = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Price" />
+                  <SafeFormatMessage id="Price" />
                 </Form.Label>{' '}
                 {/* ListBox to select price */}
                 <ListBox
@@ -320,8 +321,8 @@ const WorkspaceRenewFormWithCycle = ({
                 id="autoRenewal"
                 label={
                   <Form.Label>
-                    <FormattedMessage id="Auto Renewal" /> -{' '}
-                    <FormattedMessage id="Renew Indefinitely" />
+                    <SafeFormatMessage id="Auto Renewal" /> -{' '}
+                    <SafeFormatMessage id="Renew Indefinitely" />
                   </Form.Label>
                 }
                 checked={formik.values.autoRenewal}
@@ -334,8 +335,8 @@ const WorkspaceRenewFormWithCycle = ({
             {!formik.values.autoRenewal && formik.values.price && (
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Cycle Count" /> -{' '}
-                  <FormattedMessage id="Specify Renewal Period" />
+                  <SafeFormatMessage id="Cycle Count" /> -{' '}
+                  <SafeFormatMessage id="Specify Renewal Period" />
                 </Form.Label>
                 <div className="cycleCountContainer">
                   <Form.Control
@@ -372,7 +373,7 @@ const WorkspaceRenewFormWithCycle = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Payment-Card" />
+                  <SafeFormatMessage id="Payment-Card" />
                 </Form.Label>
                 <ListBox
                   value={formik.values.card}
@@ -454,7 +455,7 @@ const WorkspaceRenewFormWithCycle = ({
         <Modal.Footer>
           {/* Submit button */}
           <Button variant="secondary" type="submit" disabled={submitLoading}>
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           {/* Close button */}
           <Button
@@ -462,7 +463,7 @@ const WorkspaceRenewFormWithCycle = ({
             className="text-gray"
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

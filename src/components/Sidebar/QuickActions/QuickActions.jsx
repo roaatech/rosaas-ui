@@ -32,6 +32,7 @@ import { useSelector } from 'react-redux'
 import TenantFormOnboarding from '../../custom/tenant/TenantFormOnboarding/TenantFormOnboarding'
 import { MdBusiness } from 'react-icons/md'
 import ProductOwnerForm from '../../custom/ProductOwner/ProductOwnerForm'
+import SafeFormatMessage from '../../custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const QuickAction = ({
   label,
@@ -107,7 +108,7 @@ const QuickAction = ({
                 <span className="mx-2 ">
                   <BsFillPersonPlusFill className="product-icon" />
                 </span>
-                <FormattedMessage id="Add-Tenant" />
+                <SafeFormatMessage id="Add-Tenant" />
               </Dropdown.Item> */}
 
               <Dropdown.Item
@@ -118,7 +119,7 @@ const QuickAction = ({
                   <BsFillPersonPlusFill className="product-icon" />
                   {/* <FontAwesomeIcon icon={faPlus} className="plus icon-dark" /> */}
                 </span>
-                <FormattedMessage id="Add-Tenant" />
+                <SafeFormatMessage id="Add-Tenant" />
               </Dropdown.Item>
 
               {(userRole == 'productOwner' ||
@@ -132,7 +133,7 @@ const QuickAction = ({
                     <BsBoxSeam className="product-icon" />
                     <FontAwesomeIcon icon={faPlus} className="plus icon-dark" />
                   </span>
-                  <FormattedMessage id="Add-Product" />
+                  <SafeFormatMessage id="Add-Product" />
                 </Dropdown.Item>
               )}
               {userRole == 'superAdmin' && (
@@ -144,7 +145,7 @@ const QuickAction = ({
                     <MdBusiness className="product-icon" />
                     <FontAwesomeIcon icon={faPlus} className="plus icon-dark" />
                   </span>
-                  <FormattedMessage id="Add-Product-Owner" />
+                  <SafeFormatMessage id="Add-Product-Owner" />
                 </Dropdown.Item>
               )}
               {/* <Dropdown.Item
@@ -152,14 +153,14 @@ const QuickAction = ({
               className="text-danger"
             >
               <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-              <FormattedMessage id="Delete" />
+              <SafeFormatMessage id="Delete" />
             </Dropdown.Item> */}
             </Dropdown.Menu>
           </Dropdown>
           {visibleTenant && (
             <ThemeDialog visible={visibleTenant} setVisible={setVisibleTenant}>
               <TenantForm
-                popupLabel={<FormattedMessage id="Create-Tenant" />}
+                popupLabel={<SafeFormatMessage id="Create-Tenant" />}
                 type={'create'}
                 visible={visibleTenant}
                 setVisible={setVisibleTenant}
@@ -169,7 +170,7 @@ const QuickAction = ({
           {visiblePO && (
             <ThemeDialog visible={visiblePO} setVisible={setVisiblePO}>
               <ProductOwnerForm
-                popupLabel={<FormattedMessage id="Create-Product-Owner" />}
+                popupLabel={<SafeFormatMessage id="Create-Product-Owner" />}
                 type={'create'}
                 visible={visiblePO}
                 setVisible={setVisiblePO}
@@ -182,7 +183,7 @@ const QuickAction = ({
               setVisible={setVisibleTenantAndPay}
             >
               <TenantFormOnboarding
-                popupLabel={<FormattedMessage id="Tenant-Onboard" />}
+                popupLabel={<SafeFormatMessage id="Tenant-Onboard" />}
                 type={'create'}
                 visible={visibleTenantAndPay}
                 setVisible={setVisibleTenantAndPay}
@@ -195,7 +196,7 @@ const QuickAction = ({
               setVisible={setVisibleProduct}
             >
               <ProductForm
-                popupLabel={<FormattedMessage id="Create-Product" />}
+                popupLabel={<SafeFormatMessage id="Create-Product" />}
                 type={'create'}
                 visible={visibleProduct}
                 setVisible={setVisibleProduct}

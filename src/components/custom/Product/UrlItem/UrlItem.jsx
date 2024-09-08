@@ -6,6 +6,7 @@ import { Tooltip, OverlayTrigger, Button } from '@themesberg/react-bootstrap'
 import { AiFillCopy, AiOutlineEdit, AiOutlineSave } from 'react-icons/ai'
 import { FormattedMessage } from 'react-intl'
 import { useSelector } from 'react-redux'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const UrlItem = ({ data, onUrlChange }) => {
   const url = data
@@ -74,7 +75,7 @@ const UrlItem = ({ data, onUrlChange }) => {
               overlay={
                 <Tooltip>
                   <div style={{ minWidth: '100px' }}>
-                    {<FormattedMessage id={toolTipText} />}
+                    {<SafeFormatMessage id={toolTipText} />}
                   </div>
                 </Tooltip>
               }
@@ -116,9 +117,9 @@ const UrlItem = ({ data, onUrlChange }) => {
               <Tooltip>
                 <div>
                   {isEditing ? (
-                    <FormattedMessage id="Save" />
+                    <SafeFormatMessage id="Save" />
                   ) : (
-                    <FormattedMessage id="Edit" />
+                    <SafeFormatMessage id="Edit" />
                   )}
                 </div>
               </Tooltip>

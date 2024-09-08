@@ -10,6 +10,7 @@ import TextareaAndCounter from '../Shared/TextareaAndCounter/TextareaAndCounter.
 import AutoGenerateInput from '../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 import { Routes } from '../../../routes.js'
 import { useNavigate } from 'react-router-dom'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const ProductOwnerForm = ({
   type,
@@ -30,15 +31,15 @@ const ProductOwnerForm = ({
 
   const validationSchema = Yup.object().shape({
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="System-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="System-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
     displayName: Yup.string()
-      .required(<FormattedMessage id="This-field-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+      .required(<SafeFormatMessage id="This-field-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />),
     description: Yup.string().max(250),
   })
 
@@ -96,7 +97,7 @@ const ProductOwnerForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Display-Name" />{' '}
+                <SafeFormatMessage id="Display-Name" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
@@ -121,7 +122,7 @@ const ProductOwnerForm = ({
           <div className="mb-3">
             {type === 'create' && (
               <AutoGenerateInput
-                label={<FormattedMessage id="System-Name" />}
+                label={<SafeFormatMessage id="System-Name" />}
                 id="systemName"
                 value={formik.values.displayName}
                 name={formik.values.systemName}
@@ -151,7 +152,7 @@ const ProductOwnerForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Description" />
+                <SafeFormatMessage id="Description" />
               </Form.Label>
               <TextareaAndCounter
                 addTextarea={formik.setFieldValue}
@@ -172,14 +173,14 @@ const ProductOwnerForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray"
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

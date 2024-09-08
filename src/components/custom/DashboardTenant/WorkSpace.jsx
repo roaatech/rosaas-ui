@@ -23,6 +23,7 @@ import {
   faTachometerAlt,
   faUser,
 } from '@fortawesome/free-solid-svg-icons' // Importing Font Awesome icons
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const WorkSpace = () => {
   const navigate = useNavigate() // Initializing useNavigate hook
@@ -31,42 +32,42 @@ const WorkSpace = () => {
       // Memoizing card data
       {
         id: 1,
-        title: <FormattedMessage id="tenantsTitle" />, // Localized title using FormattedMessage
+        title: <SafeFormatMessage id="tenantsTitle" />, // Localized title using FormattedMessage
         icon: <FontAwesomeIcon icon={faClipboardList} />, // Icon using FontAwesomeIcon
         link: '#tenants',
         content: <TenantList />, // Content for TenantList component
       },
       {
         id: 2,
-        title: <FormattedMessage id="subscriptionsTitle" />,
+        title: <SafeFormatMessage id="subscriptionsTitle" />,
         icon: <FontAwesomeIcon icon={faBox} />,
         link: '#subscriptions',
         content: <SubscriptionList />,
       },
       {
         id: 3,
-        title: <FormattedMessage id="autoRenewalTitle" />,
+        title: <SafeFormatMessage id="autoRenewalTitle" />,
         icon: <FontAwesomeIcon icon={faSync} />,
         link: '#autoRenewal',
         content: <RenewalsList />,
       },
       {
         id: 4,
-        title: <FormattedMessage id="invoicesTitle" />,
+        title: <SafeFormatMessage id="invoicesTitle" />,
         icon: <FontAwesomeIcon icon={faMoneyBill} />,
         link: '#invoices',
         content: <InvoicesList />,
       },
       {
         id: 5,
-        title: <FormattedMessage id="paymentMethodsTitle" />,
+        title: <SafeFormatMessage id="paymentMethodsTitle" />,
         icon: <FontAwesomeIcon icon={faCreditCard} />,
         link: '#paymentMethods',
         content: <PaymentCardsList />,
       },
       {
         id: 6,
-        title: <FormattedMessage id="profileTitle" />,
+        title: <SafeFormatMessage id="profileTitle" />,
         icon: <FontAwesomeIcon icon={faUser} />,
         link: '#profile',
         content: <Profile />,
@@ -122,10 +123,10 @@ const WorkSpace = () => {
             <h1>
               {/* Render icon */}
               <FontAwesomeIcon icon={faTachometerAlt} className="mr-2" />{' '}
-              <FormattedMessage id="Workspace" /> {/* Localized message */}
+              <SafeFormatMessage id="Workspace" /> {/* Localized message */}
             </h1>
             <p>
-              <FormattedMessage id="Welcome-to-your-dashboard" />{' '}
+              <SafeFormatMessage id="Welcome-to-your-dashboard" />{' '}
               {/* Localized message */}
             </p>
           </div>

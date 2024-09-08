@@ -12,6 +12,7 @@ import { Wrapper } from './TenantSpecificatifonForm.styled.jsx'
 import { FormattedMessage, useIntl } from 'react-intl'
 import SpecificationInput from '../../Product/CustomSpecification/SpecificationInput/SpecificationInput.jsx'
 import { validateSpecifications } from '../validateSpecifications/validateSpecifications.jsx'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const TenantSpecificationForm = ({
   type,
@@ -165,14 +166,14 @@ const TenantSpecificationForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

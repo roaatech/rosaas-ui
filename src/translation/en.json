@@ -488,6 +488,7 @@
   "Add-Card": "Add Card",
   "Set-As-Default": "Set As Default",
   "Days": "Days",
+  "Days-ar": "Days",
   "Free-Trial": "Free Trial",
   "Ends-On": "Ends On",
   "After-Trial": "After Trial",
@@ -789,5 +790,14 @@
   "Comment-is-required-for-cancellation": "Comment is required for cancellation",
   "Selection-Availability": "Available for Selection",
   "Visibility-Status": "Visibility Status",
-  "Invisible": "invisible"
+  "Invisible": "invisible",
+  "Free-Trial-Plan": "Free Trial Plan",
+  "Planned": "Planned",
+  "Limited": "Limited",
+  "invisible": "Invisible",
+  "Show-Plan": "Show Plan",
+  "Hide-Plan": "Hide Plan",
+  "Is-Available-For-Selection": "Is Available For Selection",
+  "Link-in-progress": "Link in progress",
+  "The-navigation-link-is-being-generated-or-unavailable-please-await-or-try-again-later": "The navigation link is being generated or unavailable, please await or try again later"
 }

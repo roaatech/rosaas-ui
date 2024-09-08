@@ -39,6 +39,7 @@ import { GiThreeKeys } from 'react-icons/gi'
 import CreateSecretForm from './SecretMangements/CreateSecretForm/CreateSecretForm'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ClientCredentials = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
@@ -150,13 +151,13 @@ const ClientCredentials = ({ data }) => {
               >
                 {SecretManagementVisible[id] ? (
                   <>
-                    <FormattedMessage id="Secrets" />{' '}
-                    <BsFillArrowUpCircleFill />
+                    <BsFillArrowUpCircleFill />{' '}
+                    <SafeFormatMessage id="Secrets" />
                   </>
                 ) : (
                   <>
-                    <FormattedMessage id="Secrets" />{' '}
-                    <BsFillArrowDownCircleFill />
+                    <BsFillArrowDownCircleFill />{' '}
+                    <SafeFormatMessage id="Secrets" />
                   </>
                 )}
               </Button>
@@ -216,12 +217,12 @@ const ClientCredentials = ({ data }) => {
                   {!isActive ? (
                     <span className=" ">
                       <AiOutlineCheckCircle className="mx-2" />
-                      <FormattedMessage id="Activate" />
+                      <SafeFormatMessage id="Activate" />
                     </span>
                   ) : (
                     <span className=" ">
                       <AiOutlineCloseCircle className="mx-2" />
-                      <FormattedMessage id="Deactivate" />
+                      <SafeFormatMessage id="Deactivate" />
                     </span>
                   )}
                 </Dropdown.Item>
@@ -231,18 +232,18 @@ const ClientCredentials = ({ data }) => {
                   }}
                 >
                   <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                  <FormattedMessage id="Edit" />
+                  <SafeFormatMessage id="Edit" />
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => deleteConfirm(id)}
                   className="text-danger"
                 >
                   <FontAwesomeIcon icon={faBan} className="mx-2" />
-                  <FormattedMessage id="Revoke" />
+                  <SafeFormatMessage id="Revoke" />
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => createNewSecret(id)}>
                   <BsPlusCircleFill className="mx-2" />{' '}
-                  <FormattedMessage id="New-Secret" />
+                  <SafeFormatMessage id="New-Secret" />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -257,7 +258,7 @@ const ClientCredentials = ({ data }) => {
         <DynamicButtons
           buttons={[
             {
-              popupLabel: <FormattedMessage id="Create-New-Client" />,
+              popupLabel: <SafeFormatMessage id="Create-New-Client" />,
               order: 1,
               type: 'form',
               label: 'New-Client',
@@ -281,29 +282,29 @@ const ClientCredentials = ({ data }) => {
               <tr>
                 <th className="border-bottom"></th>
                 <th className="border-bottom">
-                  <FormattedMessage id="Client-Name" />
+                  <SafeFormatMessage id="Client-Name" />
                 </th>
                 <th className="border-bottom">
-                  <FormattedMessage id="Client-Id" />
+                  <SafeFormatMessage id="Client-Id" />
                 </th>
                 <th className="border-bottom">
-                  <FormattedMessage id="Status" />
+                  <SafeFormatMessage id="Status" />
                 </th>
 
                 <th className="border-bottom">
-                  <FormattedMessage id="Client-Type" />
+                  <SafeFormatMessage id="Client-Type" />
                 </th>
                 <th className="border-bottom">
-                  <FormattedMessage id="Access-Token-Life-Time" />
+                  <SafeFormatMessage id="Access-Token-Life-Time" />
                 </th>
                 <th className="border-bottom">
-                  <FormattedMessage id="Description" />
+                  <SafeFormatMessage id="Description" />
                 </th>
                 <th className="border-bottom">
-                  <FormattedMessage id="Created-Date" />
+                  <SafeFormatMessage id="Created-Date" />
                 </th>
                 <th className="border-bottom">
-                  <FormattedMessage id="Actions" />
+                  <SafeFormatMessage id="Actions" />
                 </th>
               </tr>
             </thead>
@@ -358,9 +359,9 @@ const ClientCredentials = ({ data }) => {
           <CreateClientForm
             popupLabel={
               type == 'edit' ? (
-                <FormattedMessage id="Edit" />
+                <SafeFormatMessage id="Edit" />
               ) : (
-                <FormattedMessage id="Regenerate" />
+                <SafeFormatMessage id="Regenerate" />
               )
             }
             type={type}
@@ -371,7 +372,7 @@ const ClientCredentials = ({ data }) => {
       </ThemeDialog>
       <ThemeDialog visible={visibleSecret} setVisible={setvisibleSecret}>
         <CreateSecretForm
-          popupLabel={<FormattedMessage id="Create-New-Secret" />}
+          popupLabel={<SafeFormatMessage id="Create-New-Secret" />}
           type={'create'}
           currentClientId={currentClientId}
           setVisible={setvisibleSecret}

@@ -35,6 +35,7 @@ import { Wrapper } from './ProductFeaturesList.styled'
 import { toast } from 'react-toastify'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { BsStars } from 'react-icons/bs'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export const ProductFeaturesList = ({ productId }) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
@@ -151,14 +152,14 @@ export const ProductFeaturesList = ({ productId }) => {
             <Dropdown.Menu>
               <Dropdown.Item onSelect={() => editForm(id)}>
                 <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                <FormattedMessage id="Edit" />
+                <SafeFormatMessage id="Edit" />
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => deleteConfirm(id)}
                 className="text-danger"
               >
                 <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                <FormattedMessage id="Delete" />
+                <SafeFormatMessage id="Delete" />
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -204,25 +205,25 @@ export const ProductFeaturesList = ({ productId }) => {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Display-Name" />
+                    <SafeFormatMessage id="Display-Name" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="System-Name" />
+                    <SafeFormatMessage id="System-Name" />
                   </th>
                   <th className="border-bottom description">
-                    <FormattedMessage id="Description" />
+                    <SafeFormatMessage id="Description" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Type" />
+                    <SafeFormatMessage id="Type" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Display-Order" />
+                    <SafeFormatMessage id="Display-Order" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Date" />
+                    <SafeFormatMessage id="Date" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Actions" />
+                    <SafeFormatMessage id="Actions" />
                   </th>
                 </tr>
               </thead>
@@ -236,7 +237,7 @@ export const ProductFeaturesList = ({ productId }) => {
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-feature-confirmation-message" />
+                <SafeFormatMessage id="delete-feature-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
@@ -250,7 +251,7 @@ export const ProductFeaturesList = ({ productId }) => {
         <ThemeDialog visible={visible} setVisible={setVisible}>
           <FeatureForm
             productId={productId}
-            popupLabel={<FormattedMessage id={popUpLable} />}
+            popupLabel={<SafeFormatMessage id={popUpLable} />}
             type={type}
             update={update}
             setUpdate={setUpdate}

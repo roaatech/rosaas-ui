@@ -20,6 +20,8 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import {
   faEdit,
   faEllipsisH,
+  faEye,
+  faEyeSlash,
   faToggleOff,
   faToggleOn,
   faTrashAlt,
@@ -51,11 +53,19 @@ import { PublishStatus } from '../../../../const'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { setActiveIndex } from '../../../../store/slices/tenants'
 import { GiShadowFollower } from 'react-icons/gi'
-import { systemLockStatus, tenancyTypeEnum, booleanStatus,visibilityStatus } from '../../../../const/product.js'
+import {
+  systemLockStatus,
+  tenancyTypeEnum,
+  booleanStatus,
+  visibilityStatus,
+  SelectabilityStatus,
+} from '../../../../const/product.js'
 import { dynamicButtonsLanguages } from '../../../../const/const.js'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export const ProductPlansList = ({ productId }) => {
-  const { getProductPlans, deletePlanReq, publishPlan } = useRequest()
+  const { getProductPlans, deletePlanReq, publishPlan, visiblePlan } =
+    useRequest()
   const [update, setUpdate] = useState(1)
   const dispatch = useDispatch()
   const list = useSelector((state) => state.products.products[productId])
@@ -124,6 +134,21 @@ export const ProductPlansList = ({ productId }) => {
       }
     })()
   }, [])
+  const toggleVisiblePlan = async (id, isVisible) => {
+    await visiblePlan(productId, {
+      id,
+      isVisible: !isVisible,
+    })
+
+    dispatch(
+      PlansChangeAttr({
+        productId,
+        planId: id,
+        attr: 'isVisible',
+        value: !isVisible,
+      })
+    )
+  }
 
   const togglePublishPlan = async (id, isPublished) => {
     await publishPlan(productId, {
@@ -186,7 +211,7 @@ export const ProductPlansList = ({ productId }) => {
         </td>
         <td>
           <span>
-            <Label {...booleanStatus[isAvailableForSelection]} />
+            <Label {...SelectabilityStatus[isAvailableForSelection]} />
           </span>
         </td>
         <td>
@@ -195,16 +220,20 @@ export const ProductPlansList = ({ productId }) => {
           </span>
         </td>
         <td>
-          <span>{tenancyTypeEnum[tenancyType]}</span>
+          <span>{<SafeFormatMessage id={tenancyTypeEnum[tenancyType]} />}</span>
         </td>
         <td>
           <span
             className={`${
-              subscriptionsCount > 0 ? 'subscribers-active' : 'subscribers-passive'
+              subscriptionsCount > 0
+                ? 'subscribers-active'
+                : 'subscribers-passive'
             }`}
           >
             <GiShadowFollower />
-            <span className="ml-1">{subscriptionsCount ? subscriptionsCount : 0}</span>
+            <span className="ml-1">
+              {subscriptionsCount ? subscriptionsCount : 0}
+            </span>
           </span>
         </td>
         {/*<td className="description">
@@ -251,18 +280,31 @@ export const ProductPlansList = ({ productId }) => {
             <Dropdown.Menu>
               <Dropdown.Item onSelect={() => editForm(id)}>
                 <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                <FormattedMessage id="Edit" />
+                <SafeFormatMessage id="Edit" />
               </Dropdown.Item>
               <Dropdown.Item onClick={() => togglePublishPlan(id, isPublished)}>
                 {isPublished ? (
                   <span className=" ">
                     <MdOutlineUnpublished className="mx-2" />
-                    <FormattedMessage id="Unpublish" />
+                    <SafeFormatMessage id="Unpublish" />
                   </span>
                 ) : (
                   <span className=" ">
                     <MdOutlinePublishedWithChanges className="mx-2" />
-                    <FormattedMessage id="Publish" />
+                    <SafeFormatMessage id="Publish" />
+                  </span>
+                )}
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => toggleVisiblePlan(id, isVisible)}>
+                {isVisible ? (
+                  <span className=" ">
+                    <FontAwesomeIcon icon={faEye} className="mx-2" />
+                    <SafeFormatMessage id="Hide-Plan" />
+                  </span>
+                ) : (
+                  <span className=" ">
+                    <FontAwesomeIcon icon={faEyeSlash} className="mx-2" />
+                    <SafeFormatMessage id="Show-Plan" />
                   </span>
                 )}
               </Dropdown.Item>
@@ -271,7 +313,7 @@ export const ProductPlansList = ({ productId }) => {
                 className="text-danger"
               >
                 <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                <FormattedMessage id="Delete" />
+                <SafeFormatMessage id="Delete" />
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -282,18 +324,20 @@ export const ProductPlansList = ({ productId }) => {
 
   return (
     <Wrapper>
-      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+      <div className="dynamicButtons pt-0 mt-0 mb-1 d-flex justify-content-end">
         <DynamicButtons
-          buttons={Object.keys(dynamicButtonsLanguages)
-            .map((lang, index) => ({
-              order: 1,
-              type: 'toggle',
-              label: lang,
-              toggleValue: selectedLanguage === lang,
-              toggleFunc: () => setSelectedLanguage(lang), // Update selected language
-              variant: 'primary',
-            }))
-            .concat([
+          buttons={Object.keys(dynamicButtonsLanguages).map((lang, index) => ({
+            order: 1,
+            type: 'toggle',
+            label: lang,
+            toggleValue: selectedLanguage === lang,
+            toggleFunc: () => setSelectedLanguage(lang), // Update selected language
+            variant: 'primary',
+          }))}
+        />
+        <span className="mx-2">
+          <DynamicButtons
+            buttons={[
               {
                 order: 1,
                 type: 'form',
@@ -303,8 +347,9 @@ export const ProductPlansList = ({ productId }) => {
                 icon: <BsPencilSquare />,
                 setActiveIndex: setActiveIndex,
               },
-            ])}
-        />
+            ]}
+          />
+        </span>
       </div>
       <div className="border-top-1 border-light">
         <Card
@@ -316,48 +361,48 @@ export const ProductPlansList = ({ productId }) => {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Display-Name" />
+                    <SafeFormatMessage id="Display-Name" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="System-Name" />
+                    <SafeFormatMessage id="System-Name" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Status" />
-                  </th> 
-                  <th className="border-bottom">
-                    <FormattedMessage id="Selection-Availability" />
-                  </th> 
-                  <th className="border-bottom">
-                    <FormattedMessage id="Visibility-Status" />
+                    <SafeFormatMessage id="Status" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Tenancy-Type" />
+                    <SafeFormatMessage id="Selection-Availability" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Subscribers" />
+                    <SafeFormatMessage id="Visibility-Status" />
+                  </th>
+                  <th className="border-bottom">
+                    <SafeFormatMessage id="Tenancy-Type" />
+                  </th>
+                  <th className="border-bottom">
+                    <SafeFormatMessage id="Subscribers" />
                   </th>
                   {/*<th className="border-bottom">
-                    <FormattedMessage id="Description" />
+                    <SafeFormatMessage id="Description" />
                   </th>*/}
                   <th className="border-bottom">
-                    <FormattedMessage id="Display-Order" />
+                    <SafeFormatMessage id="Display-Order" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Alternative-Plan" />
+                    <SafeFormatMessage id="Alternative-Plan" />
                   </th>
                   {ProductTrialType == 3 && (
                     <th className="border-bottom">
-                      <FormattedMessage id="Trial-Period-In-Days" />
+                      <SafeFormatMessage id="Trial-Period-In-Days" />
                     </th>
-                  )} 
+                  )}
                   <th className="border-bottom">
-                    <FormattedMessage id="System-Lock-Status" />
+                    <SafeFormatMessage id="System-Lock-Status" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Date" />
+                    <SafeFormatMessage id="Date" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Actions" />
+                    <SafeFormatMessage id="Actions" />
                   </th>
                 </tr>
               </thead>
@@ -371,7 +416,7 @@ export const ProductPlansList = ({ productId }) => {
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-plan-confirmation-message" />
+                <SafeFormatMessage id="delete-plan-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
@@ -382,10 +427,10 @@ export const ProductPlansList = ({ productId }) => {
           </Card.Body>
         </Card>
 
-        <ThemeDialog visible={visible} setVisible={setVisible} size="lg">
+        <ThemeDialog visible={visible} setVisible={setVisible}>
           <>
             <PlanForm
-              popupLabel={<FormattedMessage id={popUpLable} />}
+              popupLabel={<SafeFormatMessage id={popUpLable} />}
               type={type}
               setVisible={setVisible}
               sideBar={false}

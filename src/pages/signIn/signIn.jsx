@@ -9,6 +9,7 @@ import SignInSuperAdmin from '../../components/custom/SignInSuperAdmin/SignInSup
 import { Wrapper } from './signIn.styled'
 import logo from '../../assets/img/brand/rosas.svg'
 import ResetPassword from '../../components/custom/ResetPassword/ResetPassword'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const SignInPage = () => {
   const navigate = useNavigate()
@@ -38,9 +39,9 @@ const SignInPage = () => {
         return (
           <>
             <br />
-            <FormattedMessage id="Product-Management-Area" />
+            <SafeFormatMessage id="Product-Management-Area" />
             <div>
-              <FormattedMessage id="singInTo" />{' '}
+              <SafeFormatMessage id="singInTo" />{' '}
               <span className="rosaas">RoSaaS</span>
             </div>
           </>
@@ -49,7 +50,7 @@ const SignInPage = () => {
         return (
           <>
             <div>
-              <FormattedMessage id="singInTo" />{' '}
+              <SafeFormatMessage id="singInTo" />{' '}
               <span className="rosaas">RoSaaS</span>
             </div>
           </>
@@ -58,9 +59,9 @@ const SignInPage = () => {
         return (
           <>
             {'  '}
-            <FormattedMessage id="Admin-Panel" />
+            <SafeFormatMessage id="Admin-Panel" />
             <div>
-              <FormattedMessage id="singInTo" />{' '}
+              <SafeFormatMessage id="singInTo" />{' '}
               <span className="rosaas">RoSaaS</span>
             </div>
           </>
@@ -70,10 +71,10 @@ const SignInPage = () => {
           <>
             {'  '}
             <h3>
-              <FormattedMessage id="Forgot your password?" />
+              <SafeFormatMessage id="Forgot your password?" />
             </h3>
             <p>
-              <FormattedMessage id="Enter your email address and we will send you instructions to reset your password." />
+              <SafeFormatMessage id="Enter your email address and we will send you instructions to reset your password." />
             </p>{' '}
           </>
         )
@@ -82,7 +83,7 @@ const SignInPage = () => {
           <>
             {'  '}
             <div>
-              <FormattedMessage id="Reset-Account-password" />
+              <SafeFormatMessage id="Reset-Account-password" />
             </div>{' '}
           </>
         )
@@ -91,7 +92,7 @@ const SignInPage = () => {
           <>
             {'  '}
             <div>
-              <FormattedMessage id="Set-Your-password" />
+              <SafeFormatMessage id="Set-Your-password" />
             </div>{' '}
           </>
         )
@@ -145,7 +146,7 @@ const SignInPage = () => {
                   className="custom-div fw-bold"
                   onClick={() => navigate(Routes.ProductManagementSignIn.path)}
                 >
-                  <FormattedMessage id="Product-Management-Area" />
+                  <SafeFormatMessage id="Product-Management-Area" />
                 </span>
               </div>
             )}

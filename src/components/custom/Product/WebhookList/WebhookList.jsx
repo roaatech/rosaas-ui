@@ -42,6 +42,7 @@ import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import Label from '../../Shared/label/Label'
 import { FormattedMessage } from 'react-intl'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 export const WebhookList = ({}) => {
   const {
@@ -177,22 +178,22 @@ export const WebhookList = ({}) => {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="URL" />
+                    <SafeFormatMessage id="URL" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Events-To-Listen" />
+                    <SafeFormatMessage id="Events-To-Listen" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Signing-secret" />
+                    <SafeFormatMessage id="Signing-secret" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Activation-Status" />
+                    <SafeFormatMessage id="Activation-Status" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Description" />
+                    <SafeFormatMessage id="Description" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Actions" />
+                    <SafeFormatMessage id="Actions" />
                   </th>
                 </tr>
               </thead>
@@ -217,7 +218,7 @@ export const WebhookList = ({}) => {
                             <span>{webhook.signingSecret}</span>
                           ) : (
                             <span>
-                              <FormattedMessage id="Reveal" />
+                              <SafeFormatMessage id="Reveal" />
                             </span>
                           )}
                           <FontAwesomeIcon
@@ -268,12 +269,12 @@ export const WebhookList = ({}) => {
                                 {webhook.isActive ? (
                                   <span className=" ">
                                     <MdOutlineUnpublished className="mx-2" />
-                                    <FormattedMessage id="Deactivate" />
+                                    <SafeFormatMessage id="Deactivate" />
                                   </span>
                                 ) : (
                                   <span className=" ">
                                     <MdOutlinePublishedWithChanges className="mx-2" />
-                                    <FormattedMessage id="Activate" />
+                                    <SafeFormatMessage id="Activate" />
                                   </span>
                                 )}
                               </Dropdown.Item>
@@ -284,7 +285,7 @@ export const WebhookList = ({}) => {
                                   icon={faEdit}
                                   className="mx-2"
                                 />
-                                <FormattedMessage id="Edit" />
+                                <SafeFormatMessage id="Edit" />
                               </Dropdown.Item>
                               <Dropdown.Item
                                 onClick={() => deleteConfirm(webhook.id)}
@@ -294,7 +295,7 @@ export const WebhookList = ({}) => {
                                   icon={faTrashAlt}
                                   className="mx-2"
                                 />
-                                <FormattedMessage id="Delete" />
+                                <SafeFormatMessage id="Delete" />
                               </Dropdown.Item>
                             </Dropdown.Menu>
                           </Dropdown>
@@ -306,7 +307,7 @@ export const WebhookList = ({}) => {
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="Are-you-sure-you-want-to-delete-this-webhook?" />
+                <SafeFormatMessage id="Are-you-sure-you-want-to-delete-this-webhook?" />
               }
               confirm={confirm}
               setConfirm={setConfirm}

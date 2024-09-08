@@ -31,6 +31,7 @@ import { da } from 'date-fns/locale'
 import ThemeDialog from '../Shared/ThemeDialog/ThemeDialog'
 import GenerateNavigationLinkModal from './GenerateNavigationLinkModal/GenerateNavigationLinkModal'
 import { toast } from 'react-toastify'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const CheckoutPage = (data) => {
   const {
@@ -101,7 +102,6 @@ const CheckoutPage = (data) => {
   const [currentFeaturePlan, setCurrentFeaturePlan] = useState()
 
   const [trialFeaturePlan, setTrialFeaturePlan] = useState()
-  console.log({ trialFeaturePlan, currentFeaturePlan })
   const intl = useIntl()
 
   useEffect(() => {
@@ -235,16 +235,15 @@ const CheckoutPage = (data) => {
         trialFeaturePlan.sort((a, b) => {
           return a.feature.id.localeCompare(b.feature.id)
         })
-    console.log({ featurePlans })
 
     return (
       <>
         <Card.Header>
-          <FormattedMessage id={'Plan'} />{' '}
+          <SafeFormatMessage id={'Plan'} />{' '}
           <span className="fw-bold">
             {priceData?.plan.displayName?.toUpperCase()}
           </span>{' '}
-          <FormattedMessage id={'of-Product'} />{' '}
+          <SafeFormatMessage id={'of-Product'} />{' '}
           <span className="fw-bold">
             {listProduct?.[productId]?.displayName?.toUpperCase()}
           </span>
@@ -292,19 +291,19 @@ const CheckoutPage = (data) => {
                 {renderFeaturePlans()}
 
                 <Card.Header className="fw-bold">
-                  <FormattedMessage id="Your-Subscribe-Information" />
+                  <SafeFormatMessage id="Your-Subscribe-Information" />
                 </Card.Header>
                 <Card.Body>
                   {/* tenant Display name */}
 
                   <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-2 ">
                     <div className=" w-50 fw-bold">
-                      <FormattedMessage id="Display-Name" />
+                      <SafeFormatMessage id="Display-Name" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="generated-automatically-by-system" />
+                            <SafeFormatMessage id="generated-automatically-by-system" />
                           </Tooltip>
                         }
                       >
@@ -327,12 +326,12 @@ const CheckoutPage = (data) => {
 
                   {/* <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                     <div className=" w-50 fw-bold">
-                      <FormattedMessage id="System-Name" />
+                      <SafeFormatMessage id="System-Name" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="generated-automatically-by-system" />
+                            <SafeFormatMessage id="generated-automatically-by-system" />
                           </Tooltip>
                         }
                       >
@@ -354,12 +353,12 @@ const CheckoutPage = (data) => {
                   {/* product */}
                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                     <div className=" w-50 fw-bold">
-                      <FormattedMessage id="Product" />
+                      <SafeFormatMessage id="Product" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Product" />
+                            <SafeFormatMessage id="Subscription-Managenent-Product" />
                           </Tooltip>
                         }
                       >
@@ -383,12 +382,12 @@ const CheckoutPage = (data) => {
                   {/* plan */}
                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                     <div className=" w-50 fw-bold">
-                      <FormattedMessage id="Plan" />
+                      <SafeFormatMessage id="Plan" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Plan" />
+                            <SafeFormatMessage id="Subscription-Managenent-Plan" />
                           </Tooltip>
                         }
                       >
@@ -412,12 +411,12 @@ const CheckoutPage = (data) => {
                   {/* subsc */}
                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                     <div className=" w-50 fw-bold">
-                      <FormattedMessage id="Subscription" />
+                      <SafeFormatMessage id="Subscription" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Subscription" />
+                            <SafeFormatMessage id="Subscription-Managenent-Subscription" />
                           </Tooltip>
                         }
                       >
@@ -436,7 +435,7 @@ const CheckoutPage = (data) => {
                     <div className=" card-stats">
                       {priceData?.priceDetails?.formattedPrice} /{' '}
                       {cycle[priceData?.cycle] && (
-                        <FormattedMessage id={cycle[priceData?.cycle]} />
+                        <SafeFormatMessage id={cycle[priceData?.cycle]} />
                       )}{' '}
                     </div>
                   </div>
@@ -456,7 +455,7 @@ const CheckoutPage = (data) => {
                     <Form>
                       <Form.Group className="mb-3">
                         <Card.Header className="mb-3 fw-bold">
-                          <FormattedMessage id="Payment-Method" />
+                          <SafeFormatMessage id="Payment-Method" />
                         </Card.Header>
                         <Card.Body>
                           <div>
@@ -483,7 +482,7 @@ const CheckoutPage = (data) => {
                         <tbody className="p-0">
                           <tr>
                             <td className="fw-bold">
-                              <FormattedMessage id="Order-Subtotal-Exclude-Tax" />
+                              <SafeFormatMessage id="Order-Subtotal-Exclude-Tax" />
                             </td>
                             <td className="display-cell">
                               {
@@ -494,7 +493,7 @@ const CheckoutPage = (data) => {
                           </tr>
                           <tr>
                             <td className="fw-bold">
-                              <FormattedMessage id="Order-Subtotal-Include-Tax" />
+                              <SafeFormatMessage id="Order-Subtotal-Include-Tax" />
                             </td>
                             <td className="display-cell">
                               {
@@ -506,7 +505,7 @@ const CheckoutPage = (data) => {
                           {isDiscountApplied && (
                             <tr>
                               <td className="fw-bold text-danger">
-                                <FormattedMessage id="Discount-Amount" />
+                                <SafeFormatMessage id="Discount-Amount" />
                               </td>
                               <td className="text-danger display-cell">
                                 - {discountAmount}{' '}
@@ -518,19 +517,19 @@ const CheckoutPage = (data) => {
                             <>
                               <tr>
                                 <td className="fw-bold">
-                                  <FormattedMessage id="Due-Now" />
+                                  <SafeFormatMessage id="Due-Now" />
                                 </td>
                                 <td className="trial display-cell">
                                   0.00 {` (${orderData?.userCurrencyCode}) `}/{' '}
                                   {orderData?.orderItems[0]?.trialPeriodInDays}{' '}
-                                  <FormattedMessage id="Days" />
+                                  <SafeFormatMessage id="Days" />
                                 </td>
                               </tr>
                               <tr>
                                 <td className="fw-bold ">
-                                  <FormattedMessage id="After-Trial" />
+                                  <SafeFormatMessage id="After-Trial" />
                                   <div className="normal-text font-small fw-bold">
-                                    <FormattedMessage id="Ends-On" /> (
+                                    <SafeFormatMessage id="Ends-On" /> (
                                     {trialEndDate})
                                   </div>
                                 </td>
@@ -547,7 +546,7 @@ const CheckoutPage = (data) => {
                           ) : (
                             <tr className="">
                               <td className="fw-bold ">
-                                <FormattedMessage id="Total" />
+                                <SafeFormatMessage id="Total" />
                               </td>
                               <td className="total fw-bold display-cell ">
                                 {' '}
@@ -558,7 +557,7 @@ const CheckoutPage = (data) => {
                           {isDiscountApplied && (
                             <tr>
                               <td className="fw-bold py-2 px-8 total">
-                                <FormattedMessage id="Total-Payable" />
+                                <SafeFormatMessage id="Total-Payable" />
                               </td>
                               <td className="fw-bold py-2 px-8 total">
                                 ${orderData?.orderTotal - discountAmount}
@@ -591,7 +590,7 @@ const CheckoutPage = (data) => {
                                   onClick={handleApplyDiscount}
                                   className="btn"
                                 >
-                                  <FormattedMessage id="Apply" />
+                                  <SafeFormatMessage id="Apply" />
                                 </Button>
                               </>
                             )}
@@ -602,7 +601,7 @@ const CheckoutPage = (data) => {
                           <Form.Check
                             type="checkbox"
                             label={
-                              <FormattedMessage id="Remember-Card-Information" />
+                              <SafeFormatMessage id="Remember-Card-Information" />
                             }
                             checked={rememberCardInfo}
                             onChange={handleRememberCardInfoChange}
@@ -615,7 +614,9 @@ const CheckoutPage = (data) => {
                         <Form.Group className="mb-3">
                           <Form.Check
                             type="checkbox"
-                            label={<FormattedMessage id="Allow-Auto-Renewal" />}
+                            label={
+                              <SafeFormatMessage id="Allow-Auto-Renewal" />
+                            }
                             checked={autoRenewal}
                             onChange={handleAutoRenewalChange}
                             value={autoRenewal}
@@ -631,15 +632,15 @@ const CheckoutPage = (data) => {
                         onClick={handlePayment}
                       >
                         {hasToPay ? (
-                          <FormattedMessage id={`Checkout`} />
+                          <SafeFormatMessage id={`Checkout`} />
                         ) : (
-                          <FormattedMessage id="Complete" />
+                          <SafeFormatMessage id="Complete" />
                         )}
                       </Button>
                       {hasToPay && (
                         <>
                           <span className="underline m-2">
-                            <FormattedMessage id="or" />
+                            <SafeFormatMessage id="or" />
                           </span>
                           <Button
                             variant="secondary"
@@ -647,7 +648,7 @@ const CheckoutPage = (data) => {
                             onClick={() => setVisible(true)}
                             className="mx-2"
                           >
-                            <FormattedMessage id="Create-Payment-Link" />
+                            <SafeFormatMessage id="Create-Payment-Link" />
                           </Button>
                         </>
                       )}
@@ -659,36 +660,36 @@ const CheckoutPage = (data) => {
                       <div className="d-flex align-items-start justify-content-between py-3">
                         <div className="">
                           <p className="fw-bold">
-                            <FormattedMessage id="Order-Subtotal-Exclude-Tax" />
+                            <SafeFormatMessage id="Order-Subtotal-Exclude-Tax" />
                           </p>
                           <p className="fw-bold">
-                            <FormattedMessage id="Order-Subtotal-Include-Tax" />
+                            <SafeFormatMessage id="Order-Subtotal-Include-Tax" />
                           </p>
                           {isDiscountApplied && (
                             <p className="fw-bold text-danger">
-                              <FormattedMessage id="Discount-Amount" />
+                              <SafeFormatMessage id="Discount-Amount" />
                             </p>
                           )}
 
                           {orderData?.orderItems[0]?.trialPeriodInDays ? (
                             <>
                               <p className="fw-bold">
-                                <FormattedMessage id="Due-Now" />
+                                <SafeFormatMessage id="Due-Now" />
                               </p>
                               <p className="fw-bold ">
                                 <span className="p-0 mb-0">
-                                  <FormattedMessage id="After-Trial" />
+                                  <SafeFormatMessage id="After-Trial" />
                                 </span>
                                 <br />
                                 <span className="normal-text font-small fw-bold">
-                                  <FormattedMessage id="Ends-On" /> (
+                                  <SafeFormatMessage id="Ends-On" /> (
                                   {trialEndDate})
                                 </span>
                               </p>
                             </>
                           ) : (
                             <p className="fw-bold">
-                              <FormattedMessage id="Total" />
+                              <SafeFormatMessage id="Total" />
                             </p>
                           )}
                         </div>
@@ -716,7 +717,7 @@ const CheckoutPage = (data) => {
                               <p className="trial">
                                 0.00 {` (${orderData?.userCurrencyCode}) `}/{' '}
                                 {orderData?.orderItems[0]?.trialPeriodInDays}{' '}
-                                <FormattedMessage id="Days" />
+                                <SafeFormatMessage id="Days" />
                               </p>
                             ) : (
                               ''
@@ -744,20 +745,20 @@ const CheckoutPage = (data) => {
                     <Card.Footer>
                       <div className="free-trial-terms">
                         <p className="fw-bold">
-                          <FormattedMessage id="Free-Trial-Terms" />
+                          <SafeFormatMessage id="Free-Trial-Terms" />
                         </p>
 
                         <p className="font-small">
                           <BsCheckCircleFill className="check-circle" />{' '}
-                          <FormattedMessage id="Auto-Start-Billing-After-Trial" />
+                          <SafeFormatMessage id="Auto-Start-Billing-After-Trial" />
                           <br />
                           <BsCheckCircleFill className="check-circle" />{' '}
-                          <FormattedMessage
+                          <SafeFormatMessage
                             id="Cancel-Before"
                             values={{ trialEndDate }}
                           />{' '}
                           {trialEndDate}{' '}
-                          <FormattedMessage
+                          <SafeFormatMessage
                             id="Billing-Starts"
                             values={{ trialEndDate }}
                           />

@@ -11,6 +11,7 @@ import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Bread
 import { BsBoxSeam, BsCheckCircle } from 'react-icons/bs'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 const EmailConfirmationPage = () => {
   const userInfo = useSelector((state) => state.auth.userInfo)
   const handleButtonClick = () => {
@@ -44,22 +45,22 @@ const EmailConfirmationPage = () => {
                   {userInfo.email ? (
                     <div style={{ color: 'green' }}>
                       <BsCheckCircle size={24} style={{ marginRight: '8px' }} />
-                      <FormattedMessage id={'We-Have-Sent-Email-To'} />
+                      <SafeFormatMessage id={'We-Have-Sent-Email-To'} />
                       {'  '}
                       <span className="email">{userInfo.email}</span>
                       {'  '}
-                      <FormattedMessage
+                      <SafeFormatMessage
                         id={'to-confirm-the validity-of-your-email-address.'}
                       />
                     </div>
                   ) : (
                     <div style={{ color: 'green' }}>
                       <BsCheckCircle size={24} style={{ marginRight: '8px' }} />
-                      <FormattedMessage id="your-link-has-been-sent-to-your-email-please-activate-it" />
+                      <SafeFormatMessage id="your-link-has-been-sent-to-your-email-please-activate-it" />
                       {'  '}
                     </div>
                   )}
-                  <FormattedMessage
+                  <SafeFormatMessage
                     id={
                       'After-receicing-the-email-follow-the-link-provided-to-complete-your-progress.'
                     }
@@ -72,7 +73,7 @@ const EmailConfirmationPage = () => {
                     icon="pi pi-trash"
                     onClick={handleButtonClick}
                   >
-                    <FormattedMessage id="Go-Back-Home" />
+                    <SafeFormatMessage id="Go-Back-Home" />
                   </Button>
                 </div>
               </div>

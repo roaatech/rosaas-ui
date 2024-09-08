@@ -40,6 +40,7 @@ import {
 
 import { PublishStatus } from '../../../../const'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export const ProductCustomSpecificationList = (
   { productId },
@@ -219,7 +220,7 @@ export const ProductCustomSpecificationList = (
                   }}
                 >
                   <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                  <FormattedMessage id="Edit" />
+                  <SafeFormatMessage id="Edit" />
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => togglePublishSpecifications(id, isPublished)}
@@ -227,12 +228,12 @@ export const ProductCustomSpecificationList = (
                   {isPublished ? (
                     <span className=" ">
                       <MdOutlineUnpublished className="mx-2" />
-                      <FormattedMessage id="Unpublish" />
+                      <SafeFormatMessage id="Unpublish" />
                     </span>
                   ) : (
                     <span className=" ">
                       <MdOutlinePublishedWithChanges className="mx-2" />
-                      <FormattedMessage id="Publish" />
+                      <SafeFormatMessage id="Publish" />
                     </span>
                   )}
                 </Dropdown.Item>
@@ -241,7 +242,7 @@ export const ProductCustomSpecificationList = (
                   className="text-danger"
                 >
                   <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                  <FormattedMessage id="Delete" />
+                  <SafeFormatMessage id="Delete" />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -288,35 +289,35 @@ export const ProductCustomSpecificationList = (
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="System-Name" />
+                    <SafeFormatMessage id="System-Name" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Display-Name" />
+                    <SafeFormatMessage id="Display-Name" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Status" />
+                    <SafeFormatMessage id="Status" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Description" />
+                    <SafeFormatMessage id="Description" />
                   </th>
 
                   <th className="border-bottom">
-                    <FormattedMessage id="Is-Required" />
+                    <SafeFormatMessage id="Is-Required" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Is-User-Editable" />
+                    <SafeFormatMessage id="Is-User-Editable" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Regular-Expression" />
+                    <SafeFormatMessage id="Regular-Expression" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Validation-Failure-Description" />
+                    <SafeFormatMessage id="Validation-Failure-Description" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Date" />
+                    <SafeFormatMessage id="Date" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Actions" />
+                    <SafeFormatMessage id="Actions" />
                   </th>
                 </tr>
               </thead>
@@ -331,7 +332,7 @@ export const ProductCustomSpecificationList = (
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-specification-confirmation-message" />
+                <SafeFormatMessage id="delete-specification-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
@@ -345,7 +346,7 @@ export const ProductCustomSpecificationList = (
         <ThemeDialog visible={visible} setVisible={setVisible} size="lg">
           <>
             <CustomSpecificationForm
-              popupLabel={<FormattedMessage id={popUpLable} />}
+              popupLabel={<SafeFormatMessage id={popUpLable} />}
               type={type}
               setVisible={setVisible}
               sideBar={false}

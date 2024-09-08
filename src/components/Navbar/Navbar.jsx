@@ -28,6 +28,7 @@ import { Routes } from '../../routes'
 import { MdOutlineArrowDownward } from 'react-icons/md'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
+import SafeFormatMessage from '../custom/Shared/SafeFormatMessage/SafeFormatMessage'
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (props) => {
   const dispatch = useDispatch()
@@ -139,9 +140,9 @@ export default (props) => {
                         }}
                       >
                         {darkMode == false ? (
-                          <FormattedMessage id="Dark-Mode" />
+                          <SafeFormatMessage id="Dark-Mode" />
                         ) : (
-                          <FormattedMessage id="Light-Mode" />
+                          <SafeFormatMessage id="Light-Mode" />
                         )}
                       </Dropdown.Item>
 
@@ -154,9 +155,9 @@ export default (props) => {
                         }}
                       >
                         {direction === 'rtl' ? (
-                          <FormattedMessage id="English" />
+                          <SafeFormatMessage id="English" />
                         ) : (
-                          <FormattedMessage id="Arabic" />
+                          <SafeFormatMessage id="Arabic" />
                         )}
                       </Dropdown.Item>
                     </Dropdown.Menu>
@@ -167,7 +168,7 @@ export default (props) => {
                         className="fw-bold"
                         to={Routes.SignInTenantAdmin.path}
                       >
-                        <FormattedMessage id="Signin" />
+                        <SafeFormatMessage id="Signin" />
                       </Link>
                     </span>
                   </div>
@@ -224,7 +225,7 @@ export default (props) => {
                               : navigate(Routes.Profile.path)
                           }}
                         >
-                          <FormattedMessage id="Update-Profile" />
+                          <SafeFormatMessage id="Update-Profile" />
                         </Dropdown.Item>
                       }
                       <Dropdown.Divider />
@@ -234,7 +235,7 @@ export default (props) => {
                           navigate(Routes.marketPlacePage.path)
                         }}
                       >
-                        <FormattedMessage id="Go-to-Marketplace" />
+                        <SafeFormatMessage id="Go-to-Marketplace" />
                       </Dropdown.Item>
                       <Dropdown.Divider />
 
@@ -246,9 +247,9 @@ export default (props) => {
                         }}
                       >
                         {darkMode == false ? (
-                          <FormattedMessage id="Dark-Mode" />
+                          <SafeFormatMessage id="Dark-Mode" />
                         ) : (
-                          <FormattedMessage id="Light-Mode" />
+                          <SafeFormatMessage id="Light-Mode" />
                         )}
                       </Dropdown.Item>
 
@@ -261,9 +262,9 @@ export default (props) => {
                         }}
                       >
                         {direction === 'rtl' ? (
-                          <FormattedMessage id="English" />
+                          <SafeFormatMessage id="English" />
                         ) : (
-                          <FormattedMessage id="Arabic" />
+                          <SafeFormatMessage id="Arabic" />
                         )}
                       </Dropdown.Item>
 
@@ -278,7 +279,7 @@ export default (props) => {
                     icon={faSignOutAlt}
                     className="text-danger mx-2"
                   /> */}
-                            <FormattedMessage id="Logout" />
+                            <SafeFormatMessage id="Logout" />
                           </Dropdown.Item>
                         </>
                       )}

@@ -22,6 +22,7 @@ import {
 
 import { BsCheckCircleFill } from 'react-icons/bs'
 import { AdminPrivileges } from '../../../../../store/slices/products/productsSlice.js'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
   const [currentPopupLabel, setCurrentPopupLabel] = useState(popupLabel)
   const [currentType, setCurrentType] = useState(type)
@@ -150,14 +151,14 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
         <Alert variant={'warning'}>
           <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
           <strong>
-            <FormattedMessage id={'Warning'} /> -
+            <SafeFormatMessage id={'Warning'} /> -
           </strong>{' '}
-          {<FormattedMessage id="warning-messege-password-copy" />}
+          {<SafeFormatMessage id="warning-messege-password-copy" />}
         </Alert>
 
         <Form.Group className="mb-3">
           <Form.Label>
-            <FormattedMessage id="Email" />{' '}
+            <SafeFormatMessage id="Email" />{' '}
           </Form.Label>
 
           <div
@@ -183,7 +184,7 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
         {validEmail && (
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Password" />{' '}
+              <SafeFormatMessage id="Password" />{' '}
             </Form.Label>
             <div
               className="input-group border-right-1"
@@ -224,7 +225,7 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
               currentPopupLabel
             ) : (
               <>
-                <FormattedMessage id="Admin-created-successfully" />{' '}
+                <SafeFormatMessage id="Admin-created-successfully" />{' '}
                 <BsCheckCircleFill
                   style={{ color: 'green', marginLeft: '5px' }}
                 />
@@ -243,7 +244,7 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
           {!nextPage && (
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Email" />{' '}
+                <SafeFormatMessage id="Email" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
 
@@ -271,7 +272,7 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
           {validEmail && !nextPage && (
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Password" />{' '}
+                <SafeFormatMessage id="Password" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
 
@@ -298,16 +299,18 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
             <Alert variant={'info'}>
               <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
               <strong>
-                <FormattedMessage id={'info'} /> -
+                <SafeFormatMessage id={'info'} /> -
               </strong>{' '}
-              {<FormattedMessage id="warning-message-account-already-exists" />}
+              {
+                <SafeFormatMessage id="warning-message-account-already-exists" />
+              }
             </Alert>
           )}
         </Modal.Body>
         <Modal.Footer>
           {!nextPage && (
             <Button variant="secondary" type="submit">
-              <FormattedMessage id="Submit" />
+              <SafeFormatMessage id="Submit" />
             </Button>
           )}
           <Button
@@ -315,7 +318,7 @@ const CreateProductUserForm = ({ type, setVisible, popupLabel, currentId }) => {
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

@@ -24,6 +24,7 @@ import {
 import { BsCheckCircleFill } from 'react-icons/bs'
 import { AdminPrivileges } from '../../../../../store/slices/tenants.js'
 import { Link } from 'react-router-dom'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 const CreateTenantUserForm = ({
   type,
   setVisible,
@@ -157,14 +158,14 @@ const CreateTenantUserForm = ({
         <Alert variant={'warning'}>
           <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
           <strong>
-            <FormattedMessage id={'Warning'} /> -
+            <SafeFormatMessage id={'Warning'} /> -
           </strong>{' '}
-          {<FormattedMessage id="warning-messege-password-copy" />}
+          {<SafeFormatMessage id="warning-messege-password-copy" />}
         </Alert>
 
         <Form.Group className="mb-3">
           <Form.Label>
-            <FormattedMessage id="Email" />{' '}
+            <SafeFormatMessage id="Email" />{' '}
           </Form.Label>
 
           <div
@@ -190,7 +191,7 @@ const CreateTenantUserForm = ({
         {currentType === 'create' && validEmail == true && (
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Password" />{' '}
+              <SafeFormatMessage id="Password" />{' '}
             </Form.Label>
             <div
               className="input-group border-right-1"
@@ -231,7 +232,7 @@ const CreateTenantUserForm = ({
               currentPopupLabel
             ) : (
               <>
-                <FormattedMessage id="Admin-created-successfully" />{' '}
+                <SafeFormatMessage id="Admin-created-successfully" />{' '}
                 <BsCheckCircleFill
                   style={{ color: 'green', marginLeft: '5px' }}
                 />
@@ -250,7 +251,7 @@ const CreateTenantUserForm = ({
           {!nextPage && (
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Email" />{' '}
+                <SafeFormatMessage id="Email" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
 
@@ -284,7 +285,7 @@ const CreateTenantUserForm = ({
           {!nextPage && currentType == 'create' && (
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Password" />{' '}
+                <SafeFormatMessage id="Password" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
 
@@ -315,41 +316,41 @@ const CreateTenantUserForm = ({
               <Alert variant={'warning'}>
                 <FontAwesomeIcon icon={faWarning} className="mr-2" />
                 <strong>
-                  <FormattedMessage id={'warning'} /> -
+                  <SafeFormatMessage id={'warning'} /> -
                 </strong>{' '}
                 {
-                  <FormattedMessage id="warning-message-account-already-exists" />
+                  <SafeFormatMessage id="warning-message-account-already-exists" />
                 }
                 <span
                   onClick={() => {
                     setCurrentType('add')
-                    setCurrentPopupLabel(<FormattedMessage id="Add-User" />)
+                    setCurrentPopupLabel(<SafeFormatMessage id="Add-User" />)
                   }}
                   className="link-style"
                 >
-                  <FormattedMessage id="Navigate" />{' '}
+                  <SafeFormatMessage id="Navigate" />{' '}
                 </span>
-                <FormattedMessage id="to-the-appropriate-section-to-manage-privileges" />
+                <SafeFormatMessage id="to-the-appropriate-section-to-manage-privileges" />
               </Alert>
             )}
           {validEmail && currentType != 'create' && (
             <Alert variant={'warning'}>
               <FontAwesomeIcon icon={faWarning} className="mr-2" />
               <strong>
-                <FormattedMessage id={'warrning'} /> -
+                <SafeFormatMessage id={'warrning'} /> -
               </strong>
-              {<FormattedMessage id="warning-message-account-doesnt-exist" />}{' '}
+              {<SafeFormatMessage id="warning-message-account-doesnt-exist" />}{' '}
               <span
                 onClick={() => {
                   setCurrentType('create')
-                  setCurrentPopupLabel(<FormattedMessage id="New-User" />)
+                  setCurrentPopupLabel(<SafeFormatMessage id="New-User" />)
                 }}
                 className="link-style"
               >
                 {' '}
-                <FormattedMessage id="click-here" />
+                <SafeFormatMessage id="click-here" />
               </span>
-              <FormattedMessage id="click-here-to-designate-major" />{' '}
+              <SafeFormatMessage id="click-here-to-designate-major" />{' '}
             </Alert>
           )}
         </Modal.Body>
@@ -366,7 +367,7 @@ const CreateTenantUserForm = ({
                 (formik.values.email && validEmail && currentType != 'create')
               }
             >
-              <FormattedMessage id="Submit" />
+              <SafeFormatMessage id="Submit" />
             </Button>
           )}
           <Button
@@ -374,7 +375,7 @@ const CreateTenantUserForm = ({
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

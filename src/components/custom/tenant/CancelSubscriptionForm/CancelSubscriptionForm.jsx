@@ -11,6 +11,8 @@ import useRequest from '../../../../axios/apis/useRequest.js'
 import { MdDangerous, MdError } from 'react-icons/md'
 import { Routes } from '../../../../routes.js'
 import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+import { changeSubscriptionAttr } from '../../../../store/slices/products/productsSlice.js'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const CancelSubscriptionForm = ({
   setVisible,
@@ -19,8 +21,10 @@ const CancelSubscriptionForm = ({
   subscriptionId,
   systemName,
   type,
+  productId,
 }) => {
   const { cancelSubscriptionRequest, suspendSubscriptionRequest } = useRequest()
+
   const dispatch = useDispatch()
   const routeParams = useParams()
   const navigate = useNavigate()
@@ -29,11 +33,6 @@ const CancelSubscriptionForm = ({
   const currentTenantsData = useSelector(
     (state) => state.tenants.tenants?.[currentTenantId]
   )
-  console.log({
-    subscriptionId:
-      currentTenantsData?.subscriptions?.[0]?.subscriptionId || subscriptionId,
-    systemName,
-  })
 
   const initialValues = {
     systemName: '',
@@ -49,31 +48,34 @@ const CancelSubscriptionForm = ({
     systemName:
       type === 'cancel'
         ? Yup.string()
-            .required(<FormattedMessage id="System-Name-is-required" />)
+            .required(<SafeFormatMessage id="System-Name-is-required" />)
             .matches(
               /^[a-zA-Z0-9_-]+$/,
-              <FormattedMessage id="Only-English-Characters,-Numbers,-and-Underscores-are-accepted." />
+              <SafeFormatMessage id="Only-English-Characters,-Numbers,-and-Underscores-are-accepted." />
             )
             .test(
               'is-correct-system-name',
-              <FormattedMessage id="System-Name-does-not-match" />,
+              <SafeFormatMessage id="System-Name-does-not-match" />,
               (value) =>
                 value === currentTenantsData?.systemName || value === systemName // Custom validation logic
             )
         : Yup.string(),
-    reason: Yup.number().required(<FormattedMessage id="Reason-is-required" />),
+    reason: Yup.number().required(
+      <SafeFormatMessage id="Reason-is-required" />
+    ),
     comment:
       type === 'cancel'
         ? Yup.string()
-            .max(500, <FormattedMessage id="Must-be-maximum-500-digits" />)
+            .max(500, <SafeFormatMessage id="Must-be-maximum-500-digits" />)
             .required(
-              <FormattedMessage id="Comment-is-required-for-cancellation" />
+              <SafeFormatMessage id="Comment-is-required-for-cancellation" />
             )
         : Yup.string().max(
             500,
-            <FormattedMessage id="Must-be-maximum-500-digits" />
+            <SafeFormatMessage id="Must-be-maximum-500-digits" />
           ),
   })
+  const listProduct = useSelector((state) => state.products.products)
 
   const formik = useFormik({
     initialValues,
@@ -98,8 +100,22 @@ const CancelSubscriptionForm = ({
           })
         }
 
-        setVisible && setVisible(false)
-        updateTenant && updateTenant()
+        if (subscriptionId && productId) {
+          console.log('888888888888888')
+
+          dispatch(
+            changeSubscriptionAttr({
+              productId: productId,
+              subscriptionId: subscriptionId,
+              attr: 'subscriptionStatus',
+              value: type === 'cancel' ? 3 : 2,
+            })
+          )
+          setVisible && setVisible(false)
+        } else {
+          updateTenant && updateTenant()
+          setVisible && setVisible(false)
+        }
       } catch (error) {
         console.error(`Error ${type}ing subscription:`, error)
       } finally {
@@ -145,7 +161,7 @@ const CancelSubscriptionForm = ({
               role="alert"
             >
               <MdError className="mx-2" />
-              <FormattedMessage
+              <SafeFormatMessage
                 id={
                   type === 'cancel'
                     ? 'Are-you-sure-you-want-to-cancel-this-subscription?'
@@ -158,14 +174,14 @@ const CancelSubscriptionForm = ({
               <>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    <FormattedMessage id="System-Name" />{' '}
+                    <SafeFormatMessage id="System-Name" />{' '}
                     <span style={{ color: 'red' }}>*</span>
                   </Form.Label>
                   <div
                     className="text-warning"
                     // style={{ color: 'var(--second-color)' }}
                   >
-                    <FormattedMessage id="Enter-the-system-name-of-the-subscription-to-cancel-it." />
+                    <SafeFormatMessage id="Enter-the-system-name-of-the-subscription-to-cancel-it." />
                   </div>
                   <input
                     className="form-control"
@@ -190,7 +206,7 @@ const CancelSubscriptionForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Reason" />{' '}
+                <SafeFormatMessage id="Reason" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
@@ -202,11 +218,11 @@ const CancelSubscriptionForm = ({
                 onBlur={formik.handleBlur}
               >
                 <option value="">
-                  <FormattedMessage id="Select-Option" />
+                  <SafeFormatMessage id="Select-Option" />
                 </option>
                 {reasonsOptions.map((option) => (
                   <option key={option.value} value={option.value}>
-                    {<FormattedMessage id={option.label} />}
+                    {<SafeFormatMessage id={option.label} />}
                   </option>
                 ))}
               </select>
@@ -223,7 +239,7 @@ const CancelSubscriptionForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Comment" />
+                <SafeFormatMessage id="Comment" />
                 {'  '}
                 {type === 'cancel' && <span style={{ color: 'red' }}>*</span>}
               </Form.Label>
@@ -254,14 +270,14 @@ const CancelSubscriptionForm = ({
             variant={type === 'cancel' ? 'danger' : 'warning'}
             type="submit"
           >
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray"
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

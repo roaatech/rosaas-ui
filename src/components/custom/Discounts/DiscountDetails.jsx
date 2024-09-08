@@ -23,6 +23,7 @@ import BreadcrumbComponent from '../Shared/Breadcrumb/Breadcrumb'
 import Label from '../Shared/label/Label'
 import DateLabel from '../Shared/DateLabel/DateLabel'
 import { labelYesNoStyle } from '../../../const/const'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const DiscountDetails = () => {
   const routeParams = useParams()
@@ -95,7 +96,7 @@ const DiscountDetails = () => {
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Discount-Details" /> :{' '}
+              <SafeFormatMessage id="Discount-Details" /> :{' '}
               {discount.displayName}
             </h4>
             <DynamicButtons
@@ -130,7 +131,7 @@ const DiscountDetails = () => {
             activeIndex={activeIndex}
             onTabChange={(e) => setActiveIndex(e.index)}
           >
-            <TabPanel header={<FormattedMessage id="Details" />}>
+            <TabPanel header={<SafeFormatMessage id="Details" />}>
               <Card border="light" className="shadow-sm border-0">
                 <Card.Body className="p-0">
                   <Table
@@ -140,22 +141,22 @@ const DiscountDetails = () => {
                     <tbody>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Display-Name" />
+                          <SafeFormatMessage id="Display-Name" />
                         </td>
                         <td>{discount.displayName}</td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Admin-Comment" />
+                          <SafeFormatMessage id="Admin-Comment" />
                         </td>
                         <td>{discount.adminComment}</td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Discount-Type" />
+                          <SafeFormatMessage id="Discount-Type" />
                         </td>
                         <td>
-                          <FormattedMessage
+                          <SafeFormatMessage
                             id={
                               discountTypeOptions.find(
                                 (option) =>
@@ -167,7 +168,7 @@ const DiscountDetails = () => {
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Use-Percentage" />
+                          <SafeFormatMessage id="Use-Percentage" />
                         </td>
                         <td>
                           <Label
@@ -178,7 +179,7 @@ const DiscountDetails = () => {
                       {discount.usePercentage && (
                         <tr>
                           <td className="fw-bold">
-                            <FormattedMessage id="Discount-Percentage" />
+                            <SafeFormatMessage id="Discount-Percentage" />
                           </td>
                           <td>{discount.discountPercentage}%</td>
                         </tr>
@@ -186,7 +187,7 @@ const DiscountDetails = () => {
                       {!discount.usePercentage && (
                         <tr>
                           <td className="fw-bold">
-                            <FormattedMessage id="Discount-Amount" />
+                            <SafeFormatMessage id="Discount-Amount" />
                           </td>
                           <td>{discount.discountAmount}$</td>
                         </tr>
@@ -194,14 +195,14 @@ const DiscountDetails = () => {
                       {discount.usePercentage && (
                         <tr>
                           <td className="fw-bold">
-                            <FormattedMessage id="Maximum-Discount-Amount" />
+                            <SafeFormatMessage id="Maximum-Discount-Amount" />
                           </td>
                           <td>{discount.maximumDiscountAmount}$</td>
                         </tr>
                       )}
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Start-Date" />
+                          <SafeFormatMessage id="Start-Date" />
                         </td>
                         <td>
                           {discount.startDate && (
@@ -216,7 +217,7 @@ const DiscountDetails = () => {
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="End-Date" />
+                          <SafeFormatMessage id="End-Date" />
                         </td>
                         <td>
                           {discount.endDate && (
@@ -229,7 +230,7 @@ const DiscountDetails = () => {
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Requires-Coupon-Code" />
+                          <SafeFormatMessage id="Requires-Coupon-Code" />
                         </td>
                         <td>
                           {' '}
@@ -240,13 +241,13 @@ const DiscountDetails = () => {
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Coupon-Code" />
+                          <SafeFormatMessage id="Coupon-Code" />
                         </td>
                         <td>{discount.couponCode}</td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Is-Cumulative" />
+                          <SafeFormatMessage id="Is-Cumulative" />
                         </td>
                         <td>
                           {' '}
@@ -255,10 +256,10 @@ const DiscountDetails = () => {
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Discount-Limitation" />
+                          <SafeFormatMessage id="Discount-Limitation" />
                         </td>
                         <td>
-                          <FormattedMessage
+                          <SafeFormatMessage
                             id={
                               discountLimitationOptions.find(
                                 (option) =>
@@ -270,13 +271,13 @@ const DiscountDetails = () => {
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Limitation-Times" />
+                          <SafeFormatMessage id="Limitation-Times" />
                         </td>
                         <td>{discount.limitationTimes}</td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Is-Active" />
+                          <SafeFormatMessage id="Is-Active" />
                         </td>
                         <td>
                           <Label {...labelYesNoStyle[discount?.isActive]} />
@@ -284,7 +285,7 @@ const DiscountDetails = () => {
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Created-Date" />
+                          <SafeFormatMessage id="Created-Date" />
                         </td>
                         <td>
                           {DataTransform(discount.createdDate).replace(
@@ -295,7 +296,7 @@ const DiscountDetails = () => {
                       </tr>
                       <tr>
                         <td className="fw-bold">
-                          <FormattedMessage id="Last-Updated-Date" />
+                          <SafeFormatMessage id="Last-Updated-Date" />
                         </td>
                         <td>
                           {DataTransform(discount.editedDate).replace('T', ' ')}
@@ -307,7 +308,7 @@ const DiscountDetails = () => {
               </Card>
             </TabPanel>
 
-            <TabPanel header={<FormattedMessage id="Usage-Histories" />}>
+            <TabPanel header={<SafeFormatMessage id="Usage-Histories" />}>
               <Card border="light" className="shadow-sm border-0">
                 <Card.Body className="p-0">
                   <Table
@@ -317,16 +318,16 @@ const DiscountDetails = () => {
                     <thead className="thead-light">
                       <tr>
                         <th>
-                          <FormattedMessage id="Used" />
+                          <SafeFormatMessage id="Used" />
                         </th>
                         <th>
-                          <FormattedMessage id="Order-Number" />
+                          <SafeFormatMessage id="Order-Number" />
                         </th>
                         <th>
-                          <FormattedMessage id="Order-Total" />
+                          <SafeFormatMessage id="Order-Total" />
                         </th>
                         <th>
-                          <FormattedMessage id="Actions" />
+                          <SafeFormatMessage id="Actions" />
                         </th>
                       </tr>
                     </thead>
@@ -359,7 +360,7 @@ const DiscountDetails = () => {
                                   }}
                                 >
                                   <BsFillTrash3Fill className="mx-2 text-danger" />
-                                  <FormattedMessage id="Delete" />
+                                  <SafeFormatMessage id="Delete" />
                                 </Dropdown.Item>
                               </Dropdown.Menu>
                             </Dropdown>
@@ -373,7 +374,7 @@ const DiscountDetails = () => {
             </TabPanel>
           </TabView>
           <DeleteConfirmation
-            message={<FormattedMessage id="delete-confirmation-message" />}
+            message={<SafeFormatMessage id="delete-confirmation-message" />}
             icon="pi pi-exclamation-triangle"
             confirm={confirm}
             setConfirm={setConfirm}

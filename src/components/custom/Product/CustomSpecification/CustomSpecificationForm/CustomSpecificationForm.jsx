@@ -28,6 +28,7 @@ import { TabPanel, TabView } from 'primereact/tabview'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 import { activeTab } from '../../../../../const/product.js'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const CustomSpecificationForm = ({
   type,
@@ -79,7 +80,7 @@ const CustomSpecificationForm = ({
       ),
     displayNameEn: Yup.string().test({
       name: 'displayNameRequired',
-      message: <FormattedMessage id="Display-Name-is-required" />,
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
       test: (value, context) => {
         const { parent } = context
         const displayNameEn = parent.displayNameEn
@@ -89,7 +90,7 @@ const CustomSpecificationForm = ({
     }),
     displayNameAr: Yup.string().test({
       name: 'displayNameRequired',
-      message: <FormattedMessage id="Display-Name-is-required" />,
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
       test: (value, context) => {
         const { parent } = context
         const displayNameEn = parent.displayNameEn
@@ -265,7 +266,7 @@ const CustomSpecificationForm = ({
                 >
                   <Form.Group className="">
                     <Form.Label>
-                      <FormattedMessage id="System-Name" />{' '}
+                      <SafeFormatMessage id="System-Name" />{' '}
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
@@ -310,7 +311,7 @@ const CustomSpecificationForm = ({
                 <Col md={6}>
                   {/* <Form.Group className="">
                     <Form.Label>
-                      <FormattedMessage id="Display-Name" />{' '}
+                      <SafeFormatMessage id="Display-Name" />{' '}
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
@@ -462,7 +463,7 @@ const CustomSpecificationForm = ({
                 <Col md={6}>
                   <Form.Group>
                     <Form.Label className="mb-1">
-                      <FormattedMessage id="Inline-Description" />{' '}
+                      <SafeFormatMessage id="Inline-Description" />{' '}
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
@@ -549,7 +550,7 @@ const CustomSpecificationForm = ({
                 >
                   {/* <div className="toggle-container d-flex align-items-center justify-content-between  mb-2">
                     <Form.Label>
-                      <FormattedMessage id="Is-Required" />{' '}
+                      <SafeFormatMessage id="Is-Required" />{' '}
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
@@ -588,7 +589,7 @@ const CustomSpecificationForm = ({
                   </div> */}
                   <Form.Group>
                     <Form.Label>
-                      <FormattedMessage id="Regular-Expression" />{' '}
+                      <SafeFormatMessage id="Regular-Expression" />{' '}
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
@@ -634,7 +635,7 @@ const CustomSpecificationForm = ({
                 <Col md={6}>
                   <Form.Group>
                     <Form.Label className="mb-1 ">
-                      <FormattedMessage id="Validation-Failure-Description" />{' '}
+                      <SafeFormatMessage id="Validation-Failure-Description" />{' '}
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
@@ -726,7 +727,7 @@ const CustomSpecificationForm = ({
                 >
                   <div className="toggle-container d-flex  justify-content-between">
                     <Form.Label>
-                      <FormattedMessage id="Is-Published" />{' '}
+                      <SafeFormatMessage id="Is-Published" />{' '}
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
@@ -772,7 +773,7 @@ const CustomSpecificationForm = ({
                 >
                   <div className="toggle-container d-flex  justify-content-between">
                     <Form.Label>
-                      <FormattedMessage id="Is-User-Editable" />{' '}
+                      <SafeFormatMessage id="Is-User-Editable" />{' '}
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
@@ -818,7 +819,7 @@ const CustomSpecificationForm = ({
                 >
                   <div className="toggle-container d-flex  justify-content-between  ">
                     <Form.Label>
-                      <FormattedMessage id="Is-Required" />{' '}
+                      <SafeFormatMessage id="Is-Required" />{' '}
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
@@ -862,14 +863,14 @@ const CustomSpecificationForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

@@ -8,6 +8,7 @@ import { BsCheckCircle, BsXCircle } from 'react-icons/bs'
 import { useEffect, useState } from 'react'
 import useRequest from '../../axios/apis/useRequest'
 import NotFound from '../NotFoundPage/NotFoundPage'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ConfirmAccountPage = () => {
   const location = useLocation()
@@ -98,10 +99,10 @@ const ConfirmAccountPage = () => {
                           >
                             <BsCheckCircle />
                             {'  '}
-                            <FormattedMessage id="Account-and-Password-Set-Successfully" />
+                            <SafeFormatMessage id="Account-and-Password-Set-Successfully" />
                           </h3>
                           <p className="text-center">
-                            <FormattedMessage id="Your-account-has-been-confirmed-and-password-set-successfully." />
+                            <SafeFormatMessage id="Your-account-has-been-confirmed-and-password-set-successfully." />
                           </p>
                         </>
                       ) : isVerified ? (
@@ -112,11 +113,11 @@ const ConfirmAccountPage = () => {
                           >
                             <BsCheckCircle />
                             {'  '}
-                            <FormattedMessage id="Account-Verified" />
+                            <SafeFormatMessage id="Account-Verified" />
                           </h3>
                           <p className="text-center">
-                            <FormattedMessage id="Your-account-has-been-confirmed-successfully." />{' '}
-                            <FormattedMessage id="You-can-now-log-in-with-your-account." />
+                            <SafeFormatMessage id="Your-account-has-been-confirmed-successfully." />{' '}
+                            <SafeFormatMessage id="You-can-now-log-in-with-your-account." />
                           </p>
                         </>
                       ) : (
@@ -127,18 +128,18 @@ const ConfirmAccountPage = () => {
                           >
                             <BsXCircle />
                             {'  '}
-                            <FormattedMessage id="Account-Not-Verified" />
+                            <SafeFormatMessage id="Account-Not-Verified" />
                           </h3>
                           <p className="text-center">
-                            <FormattedMessage id="There-was-an-issue-confirming-your-account." />
+                            <SafeFormatMessage id="There-was-an-issue-confirming-your-account." />
                           </p>
                           <p className="text-center">
-                            <FormattedMessage id="Please-try-again-or-contact-support." />
+                            <SafeFormatMessage id="Please-try-again-or-contact-support." />
                           </p>
                         </>
                       )}
                       <p className="text-center">
-                        <FormattedMessage
+                        <SafeFormatMessage
                           id={
                             isVerified
                               ? 'You-will-be-redirected-to-the-login-page-shortly.-If-not-redirected,-please-click-the-link-below-in-x-seconds.'
@@ -167,7 +168,7 @@ const ConfirmAccountPage = () => {
                           }
                           style={{ color: 'var(--second-color)' }}
                         >
-                          <FormattedMessage id="Go-to-Login-Page" />
+                          <SafeFormatMessage id="Go-to-Login-Page" />
                         </a>
                       </p>
                     </div>
@@ -200,14 +201,14 @@ const ConfirmAccountPage = () => {
                           >
                             <BsXCircle />
                             {'  '}
-                            <FormattedMessage id="Account-Not-Verified" />
+                            <SafeFormatMessage id="Account-Not-Verified" />
                           </h3>
                         </div>
                         <p className="text-center">
-                          <FormattedMessage id="There-was-an-issue-confirming-your-account." />
+                          <SafeFormatMessage id="There-was-an-issue-confirming-your-account." />
                         </p>
                         <p className="text-center">
-                          <FormattedMessage id="Please-try-again-or-contact-support." />
+                          <SafeFormatMessage id="Please-try-again-or-contact-support." />
                         </p>
 
                         <p className="text-center">
@@ -219,7 +220,7 @@ const ConfirmAccountPage = () => {
                             }
                             style={{ color: 'var(--second-color)' }}
                           >
-                            <FormattedMessage id="Go-to-Login-Page" />
+                            <SafeFormatMessage id="Go-to-Login-Page" />
                           </a>
                         </p>
                       </div>

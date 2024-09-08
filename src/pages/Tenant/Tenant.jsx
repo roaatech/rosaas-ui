@@ -30,6 +30,7 @@ import { Routes } from '../../routes.js'
 import TenantFormOnboarding from '../../components/custom/tenant/TenantFormOnboarding/TenantFormOnboarding.jsx'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeTenant, tenantInfo } from '../../store/slices/tenants.js'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 export default function Tenant({ children }) {
   const { getTenant, getTenantList, deleteTenantReq } = useRequest()
   const [visible, setVisible] = useState(false)
@@ -116,7 +117,7 @@ export default function Tenant({ children }) {
       />
       <div className="main-container">
         <TableHead
-          label={<FormattedMessage id="Add-Tenant" />}
+          label={<SafeFormatMessage id="Add-Tenant" />}
           popupLabel={'Create Tenant'}
           icon={'pi-user-plus'}
           setSearchValue={setSearchValue}
@@ -134,7 +135,7 @@ export default function Tenant({ children }) {
           /> */}
           <TenantFormOnboarding
             type={'create'}
-            popupLabel={<FormattedMessage id="Create-Tenant" />}
+            popupLabel={<SafeFormatMessage id="Create-Tenant" />}
             update={update}
             setUpdate={setUpdate}
             visible={visibleHead}
@@ -283,7 +284,7 @@ export default function Tenant({ children }) {
             >
               <TenantForm
                 type={'edit'}
-                popupLabel={<FormattedMessage id="Edit-Tenant" />}
+                popupLabel={<SafeFormatMessage id="Edit-Tenant" />}
                 tenantData={tenantData?.data}
                 updateTenant={updateTenant}
                 setUpdate={setUpdate}

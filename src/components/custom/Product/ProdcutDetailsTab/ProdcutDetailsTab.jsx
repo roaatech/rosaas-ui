@@ -14,6 +14,7 @@ import { setAllPlans } from '../../../../store/slices/products/productsSlice'
 import Label from '../../Shared/label/Label'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ProductDetailsTab = ({ data }) => {
   const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
@@ -75,7 +76,7 @@ const ProductDetailsTab = ({ data }) => {
               <Card.Body className="py-0 px-3">
                 <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                   <td className="mb-0 w-50 fw-bold">
-                    <FormattedMessage id="Display-Name" />
+                    <SafeFormatMessage id="Display-Name" />
                   </td>
                   <td className="card-stats">
                     {data.displayNameLocalizations?.[selectedLanguage] ||
@@ -84,19 +85,19 @@ const ProductDetailsTab = ({ data }) => {
                 </tr>
                 <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                   <td className="mb-0 w-50 fw-bold">
-                    <FormattedMessage id="System-Name" />
+                    <SafeFormatMessage id="System-Name" />
                   </td>
                   <td className="card-stats">{data.systemName}</td>
                 </tr>
                 <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                   <td className="mb-0 w-50 fw-bold">
-                    <FormattedMessage id="Client" />
+                    <SafeFormatMessage id="Client" />
                   </td>
                   <td className="card-stats">{data.client?.systemName}</td>
                 </tr>
                 <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                   <td className="mb-0 w-50 fw-bold">
-                    <FormattedMessage id="Description" />
+                    <SafeFormatMessage id="Description" />
                   </td>
                   <td className="card-stats">
                     {data.descriptionLocalizations?.[selectedLanguage] || (
@@ -107,7 +108,7 @@ const ProductDetailsTab = ({ data }) => {
                 {data?.trialType === 2 && (
                   <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                     <td className="mb-0 w-50 fw-bold">
-                      <FormattedMessage id="Trial-Period-In-Days" />
+                      <SafeFormatMessage id="Trial-Period-In-Days" />
                     </td>
                     <td className="card-stats">{data?.trialPeriodInDays}</td>
                   </tr>
@@ -116,7 +117,7 @@ const ProductDetailsTab = ({ data }) => {
               <Card.Body className="py-0 px-3">
                 <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                   <td className="mb-0 w-50 fw-bold">
-                    <FormattedMessage id="Created-Date" />
+                    <SafeFormatMessage id="Created-Date" />
                   </td>
                   <td className="card-stats">
                     {DataTransform(data?.createdDate)}
@@ -124,7 +125,7 @@ const ProductDetailsTab = ({ data }) => {
                 </tr>
                 <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                   <td className="mb-0 w-50 fw-bold">
-                    <FormattedMessage id="Last-Updated-Date" />
+                    <SafeFormatMessage id="Last-Updated-Date" />
                   </td>
                   <td className="card-stats">
                     {DataTransform(data?.editedDate)}
@@ -132,7 +133,7 @@ const ProductDetailsTab = ({ data }) => {
                 </tr>
                 <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                   <td className="mb-0 w-50 fw-bold">
-                    <FormattedMessage id="Api-key" />
+                    <SafeFormatMessage id="Api-key" />
                   </td>
                   <td className="apikeyTd card-stats">
                     <span>{data.apiKey}</span>
@@ -144,7 +145,7 @@ const ProductDetailsTab = ({ data }) => {
                         overlay={
                           <Tooltip>
                             <div style={{ minWidth: '100px' }}>
-                              {<FormattedMessage id={toolTipText} />}
+                              {<SafeFormatMessage id={toolTipText} />}
                             </div>
                           </Tooltip>
                         }
@@ -160,7 +161,7 @@ const ProductDetailsTab = ({ data }) => {
                 </tr>
                 <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                   <td className="mb-0 w-50 fw-bold">
-                    <FormattedMessage id="Trial-Type" />
+                    <SafeFormatMessage id="Trial-Type" />
                   </td>
                   <td className="card-stats">
                     {ProductTrialType[data?.trialType] && (
@@ -171,14 +172,14 @@ const ProductDetailsTab = ({ data }) => {
                 {data?.trialType === 2 && (
                   <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                     <td className="mb-0 w-50 fw-bold">
-                      <FormattedMessage id="Trial-Plan" />
+                      <SafeFormatMessage id="Trial-Plan" />
                     </td>
                     <td className="card-stats">
                       {(listData[productId].plans &&
                         listData[productId].plans?.[data?.trialPlanId]
-                          .displayNameLocalizations?.[selectedLanguage]) ||
+                          ?.displayNameLocalizations?.[selectedLanguage]) ||
                         listData[productId].plans?.[data?.trialPlanId]
-                          .displayName}
+                          ?.displayName}
                     </td>
                   </tr>
                 )}

@@ -1,4 +1,6 @@
 import {
+  BsEye,
+  BsEyeSlash,
   BsFillCheckCircleFill,
   BsFillExclamationCircleFill,
   BsFillLockFill,
@@ -13,8 +15,11 @@ import {
   MdOutlineLock,
   MdMicExternalOff,
   MdMicExternalOn,
+  MdCheckBox,
+  MdCheckBoxOutlineBlank,
 } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
+import SafeFormatMessage from '../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 export const Product_id = '88e67328-3b20-413e-b6e1-010b48fa7bc9'
 export const Product_Client_id = '88283b02-e969-485a-a5a3-9e5d1d0d3337'
@@ -23,13 +28,13 @@ export const Client_id = 'spa_rosas_admin_panel'
 export const HealthStatus = {
   true: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Healthy" />,
+    value: <SafeFormatMessage id="Healthy" />,
     color: 'var(--teal-green)',
     icon: <BsFillCheckCircleFill />,
   },
   false: {
     background: 'var(--red2)',
-    value: <FormattedMessage id="Unavailable" />,
+    value: <SafeFormatMessage id="Unavailable" />,
     color: 'var(--orange-brown)',
     icon: <BsFillExclamationCircleFill />,
   },
@@ -47,27 +52,41 @@ export const DateStatus = {
 export const PublishStatus = {
   true: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Published" />,
+    value: <SafeFormatMessage id="Published" />,
     color: 'var(--teal-green)',
     icon: <MdOutlinePublishedWithChanges />,
   },
   false: {
     background: 'var(--red2)',
-    value: <FormattedMessage id="Unpublished" />,
+    value: <SafeFormatMessage id="Unpublished" />,
     color: 'var(--orange-brown)',
     icon: <MdOutlineUnpublished />,
+  },
+}
+export const SelectabilityStatus = {
+  true: {
+    background: 'var(--green2)',
+    value: <SafeFormatMessage id="Selectable" />,
+    color: 'var(--teal-green)',
+    icon: <MdCheckBox />,
+  },
+  false: {
+    background: 'var(--red2)',
+    value: <SafeFormatMessage id="Unselectable" />,
+    color: 'var(--orange-brown)',
+    icon: <MdCheckBoxOutlineBlank />,
   },
 }
 export const systemLockStatus = {
   true: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Locked" />,
+    value: <SafeFormatMessage id="Locked" />,
     color: 'var(--teal-green)',
     icon: <BsFillLockFill />,
   },
   false: {
     background: 'var(--red2)',
-    value: <FormattedMessage id="Unlocked" />,
+    value: <SafeFormatMessage id="Unlocked" />,
     color: 'var(--orange-brown)',
     icon: <BsFillUnlockFill />,
   },
@@ -75,29 +94,29 @@ export const systemLockStatus = {
 export const activeStatus = {
   true: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Active" />,
+    value: <SafeFormatMessage id="Active" />,
     color: 'var(--teal-green)',
   },
   false: {
     background: 'var(--red2)',
-    value: <FormattedMessage id="Inactive" />,
+    value: <SafeFormatMessage id="Inactive" />,
     color: 'var(--orange-brown)',
   },
 }
 export const subscriptionStatus = {
   1: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Active" />,
+    value: <SafeFormatMessage id="Active" />,
     color: 'var(--teal-green)',
   },
   2: {
     background: 'var(--yellow2)',
-    value: <FormattedMessage id="Suspended" />,
+    value: <SafeFormatMessage id="Suspended" />,
     color: 'var(--yellow-brown)',
   },
   3: {
     background: 'var(--red2)',
-    value: <FormattedMessage id="Canceled" />,
+    value: <SafeFormatMessage id="Canceled" />,
     color: 'var(--orange-brown)',
   },
 }
@@ -105,24 +124,24 @@ export const subscriptionStatus = {
 export const isMajorStatus = {
   true: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="true" />,
+    value: <SafeFormatMessage id="true" />,
     color: 'var(--teal-green)',
   },
   false: {
     background: 'var(--red2)',
-    value: <FormattedMessage id="false" />,
+    value: <SafeFormatMessage id="false" />,
     color: 'var(--orange-brown)',
   },
 }
 export const booleanStatus = {
   true: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="yes" />,
+    value: <SafeFormatMessage id="yes" />,
     color: 'var(--teal-green)',
   },
   false: {
     background: 'var(--red2)',
-    value: <FormattedMessage id="no" />,
+    value: <SafeFormatMessage id="no" />,
     color: 'var(--orange-brown)',
   },
 }
@@ -130,25 +149,27 @@ export const booleanStatus = {
 export const visibilityStatus = {
   true: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Visible" />,
+    value: <SafeFormatMessage id="Visible" />,
     color: 'var(--teal-green)',
+    icon: <BsEye />,
   },
   false: {
     background: 'var(--red2)',
-    value: <FormattedMessage id="invisible" />,
+    value: <SafeFormatMessage id="invisible" />,
     color: 'var(--orange-brown)',
+    icon: <BsEyeSlash />,
   },
 }
 export const clientTypeLable = {
   101: {
     background: 'var(--orange-yellow-blend)',
-    value: <FormattedMessage id="External-System" />,
+    value: <SafeFormatMessage id="External-System" />,
     color: 'var(--mocha-brown)',
   },
 
   102: {
     background: 'var(--misty-blue)',
-    value: <FormattedMessage id="External-System-Client" />,
+    value: <SafeFormatMessage id="External-System-Client" />,
     color: 'var(--midnight-blue)',
   },
 }
@@ -164,17 +185,17 @@ export const cycle = {
 }
 export const ProductTrialType = {
   1: {
-    value: <FormattedMessage id="No-Trial" />,
+    value: <SafeFormatMessage id="No-Trial" />,
     color: 'var(--primary-color)',
     background: 'var(--primary0)',
   },
   2: {
-    value: <FormattedMessage id="Product-Has-Trial-Plan" />,
+    value: <SafeFormatMessage id="Product-Has-Trial-Plan" />,
     color: 'var(--orange-brown)',
     background: 'var(--misty-blue)',
   },
   3: {
-    value: <FormattedMessage id="Each-Plan-Has-Optional-Trial-Period" />,
+    value: <SafeFormatMessage id="Each-Plan-Has-Optional-Trial-Period" />,
     color: 'var(--teal-green)',
     background: 'var(--misty-gray)',
   },
@@ -187,7 +208,7 @@ export const urlIsOverridden = {
 export const tenancyTypeEnum = {
   1: 'Unlimited',
   2: 'Limited',
-  3: 'Planed',
+  3: 'Planned',
 }
 export const featureTypeMap = {
   1: 'Number',

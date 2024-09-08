@@ -17,6 +17,7 @@ import {
 } from '../../../../../../store/slices/tenants'
 import UpDownGradeForm from '../../UpgradeForm/UpDowngradeForm'
 import ThemeDialog from '../../../../Shared/ThemeDialog/ThemeDialog'
+import SafeFormatMessage from '../../../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 function PaymentFlow({ price, product }) {
   const { getOrdersListByTenantId } = useRequest()
@@ -69,10 +70,10 @@ function PaymentFlow({ price, product }) {
         <div className="timeLineCont card p-2">
           <div className="p-2 border-bottom mb-1 border-light">
             <label htmlFor="">
-              <FormattedMessage id="Order-History" />
+              <SafeFormatMessage id="Order-History" />
             </label>
             <div>
-              <FormattedMessage id="Manage-Billing-Information-and-View-Receipts" />
+              <SafeFormatMessage id="Manage-Billing-Information-and-View-Receipts" />
             </div>
           </div>
           {ordersList &&
@@ -82,7 +83,7 @@ function PaymentFlow({ price, product }) {
                   <div className="timeLineItemCont" key={index}>
                     <div className="flex justify-content-between flex-wrap">
                       <div className="mb-2 fw-bold">
-                        <FormattedMessage id="Order" /> #{item?.orderNumber}
+                        <SafeFormatMessage id="Order" /> #{item?.orderNumber}
                       </div>
 
                       {!item?.hasToPay ? (
@@ -100,7 +101,7 @@ function PaymentFlow({ price, product }) {
                           }
                           className="font-small"
                         >
-                          <FormattedMessage id="Pay-Now" />
+                          <SafeFormatMessage id="Pay-Now" />
                         </Button>
                       ) : (
                         <Button
@@ -108,7 +109,7 @@ function PaymentFlow({ price, product }) {
                           onClick={() => changeOrderPlanForm(item.orderId)}
                           className="font-small"
                         >
-                          <FormattedMessage id="Select-Your-Plan" />
+                          <SafeFormatMessage id="Select-Your-Plan" />
                         </Button>
                       )}
                     </div>
@@ -118,7 +119,7 @@ function PaymentFlow({ price, product }) {
                         style={{ color: orderStatus[item?.orderStatus]?.color }}
                       >
                         {orderStatus[item?.orderStatus]?.value && (
-                          <FormattedMessage
+                          <SafeFormatMessage
                             id={orderStatus[item?.orderStatus]?.value}
                           />
                         )}
@@ -131,7 +132,7 @@ function PaymentFlow({ price, product }) {
         </div>
         <ThemeDialog visible={visible} setVisible={setVisible}>
           <UpDownGradeForm
-            popupLabel={<FormattedMessage id={'Change-Order-Plan'} />}
+            popupLabel={<SafeFormatMessage id={'Change-Order-Plan'} />}
             tenantData={currentTenantData}
             visible={visible}
             setVisible={setVisible}

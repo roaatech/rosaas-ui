@@ -38,6 +38,7 @@ import { toast } from 'react-toastify'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import Label from '../../Shared/label/Label'
 import { GiShadowFollower } from 'react-icons/gi'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [currentPlanId, setCurrentPlanId] = useState('')
@@ -58,12 +59,15 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [type, setType] = useState('')
   const [show, setShow] = useState(false)
   const [popUpLable, setPopUpLable] = useState('')
-  const [selectedLanguage, setSelectedLanguage] = useState('en') // State for language selection
+  const [selectedLanguage, setSelectedLanguage] = useState('en')
+
+  console.log({ sRRRRRRRRRRRR: selectedLanguage })
 
   const productId = routeParams.id
   const listDataStore = useSelector(
     (state) => state.products.products[productId]?.featurePlan
   )
+  console.log('listDataStore', listDataStore)
   const planList = useSelector(
     (state) => state.products.products[productId]?.plans
   )
@@ -178,7 +182,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
       featuresObj[item.feature.id] = {
         featureId: item.feature.id,
         displayName:
-          item.feature.displayNameLocalizations[selectedLanguage] ||
+          item.feature?.displayNameLocalizations?.[selectedLanguage] ||
           item.feature.displayName,
         systemName: item.feature.systemName,
         type: item.feature.type,
@@ -231,7 +235,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                                       tableData[planId + ',' + item.featureId]
                                     ].unit
                                   ]
-                                : direction == 'rtl'
+                                : selectedLanguage != 'en'
                                 ? listData[
                                     tableData[planId + ',' + item.featureId]
                                   ].unitDisplayName?.ar || 'unit'
@@ -247,7 +251,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                                 ],
                               })
                             ) : (
-                              <FormattedMessage id="Yes" />
+                              <SafeFormatMessage id="Yes" />
                             )}
                           </Dropdown.Toggle>
                           <Dropdown.Menu>
@@ -263,7 +267,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                                 className="mx-2"
                               />
 
-                              <FormattedMessage id="View-Details" />
+                              <SafeFormatMessage id="View-Details" />
                             </Dropdown.Item>
 
                             <Dropdown.Item
@@ -274,7 +278,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                               }
                             >
                               <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                              <FormattedMessage id="Edit" />
+                              <SafeFormatMessage id="Edit" />
                             </Dropdown.Item>
                             <Dropdown.Item
                               onClick={() =>
@@ -288,7 +292,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                                 icon={faTrashAlt}
                                 className="mx-2"
                               />
-                              <FormattedMessage id="Delete" />
+                              <SafeFormatMessage id="Delete" />
                             </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
@@ -299,7 +303,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                             handleCreateFeaturePlan(item.featureId, planId)
                           }
                         >
-                          <FormattedMessage id="No" />
+                          <SafeFormatMessage id="No" />
                         </span>
                       ) : (
                         <span
@@ -381,6 +385,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
               type: 'form',
               id: routeParams.id,
               label: 'Add-Plan-Feature',
+              selectedLanguage: selectedLanguage,
               component: 'addFeaturePlan',
               icon: <BsUiChecks />,
             },
@@ -397,8 +402,8 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
               <thead>
                 <tr>
                   <th className="border-bottom table-title-cell">
-                    <FormattedMessage id="Features" /> /{' '}
-                    <FormattedMessage id="Plans" />
+                    <SafeFormatMessage id="Features" /> /{' '}
+                    <SafeFormatMessage id="Plans" />
                   </th>
                   {planList &&
                     Object.keys(planList)?.map((item, index) => (
@@ -462,7 +467,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-feature-plan-confirmation-message" />
+                <SafeFormatMessage id="delete-feature-plan-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
@@ -477,13 +482,14 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
       <ThemeDialog visible={visible} setVisible={setVisible}>
         {show ? (
           <ShowDetails
-            popupLabel={<FormattedMessage id={popUpLable} />}
+            popupLabel={<SafeFormatMessage id={popUpLable} />}
             data={handleData(listData[currentId])}
             setVisible={setVisible}
           />
         ) : (
           <FeaturePlanForm
-            popupLabel={<FormattedMessage id={popUpLable} />}
+            popupLabel={<SafeFormatMessage id={popUpLable} />}
+            selectedLanguage={selectedLanguage || 'en'}
             type={type}
             FeaturePlanData={type == 'edit' ? listData[currentId] : {}}
             setVisible={setVisible}

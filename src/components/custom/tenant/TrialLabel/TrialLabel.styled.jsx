@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
     color: red;
     font-size: 14px;
     font-weight: bold;
-    transform: rotate(8deg);
+    /* transform: rotate(8deg); */
     padding-left: 12px;
   }
 
@@ -31,5 +31,6 @@ export const Wrapper = styled.div`
   .trial-text {
     z-index: 1;
     display: inline;
+    text-align: center; /* Ensures the text itself is centered */
   }
 `

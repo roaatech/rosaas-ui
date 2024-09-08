@@ -26,6 +26,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 import { Routes } from '../../../../routes.js'
 import { Product_Client_id } from '../../../../const/product.js'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const ProductForm = ({
   type,
@@ -74,7 +75,7 @@ const ProductForm = ({
   const createValidation = {
     displayNameEn: Yup.string().test({
       name: 'displayNameRequired',
-      message: <FormattedMessage id="Display-Name-is-required" />,
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
       test: (value, context) => {
         const { parent } = context
         const displayNameEn = parent.displayNameEn
@@ -84,7 +85,7 @@ const ProductForm = ({
     }),
     displayNameAr: Yup.string().test({
       name: 'displayNameRequired',
-      message: <FormattedMessage id="Display-Name-is-required" />,
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
       test: (value, context) => {
         const { parent } = context
         const displayNameEn = parent.displayNameEn
@@ -93,18 +94,18 @@ const ProductForm = ({
       },
     }),
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="System-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="System-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
   }
 
   const editValidation = {
     displayNameEn: Yup.string().test({
       name: 'displayNameRequired',
-      message: <FormattedMessage id="Display-Name-is-required" />,
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
       test: (value, context) => {
         const { parent } = context
         const displayNameEn = parent.displayNameEn
@@ -114,7 +115,7 @@ const ProductForm = ({
     }),
     displayNameAr: Yup.string().test({
       name: 'displayNameRequired',
-      message: <FormattedMessage id="Display-Name-is-required" />,
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
       test: (value, context) => {
         const { parent } = context
         const displayNameEn = parent.displayNameEn
@@ -241,7 +242,7 @@ const ProductForm = ({
           {type === 'create' && (
             <div className="mb-3">
               <AutoGenerateInput
-                label={<FormattedMessage id="System-Name" />}
+                label={<SafeFormatMessage id="System-Name" />}
                 id="systemName"
                 value={formik.values.displayNameEn}
                 name={formik.values.systemName}
@@ -272,7 +273,7 @@ const ProductForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="ProductOwner" />{' '}
+                  <SafeFormatMessage id="ProductOwner" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
@@ -284,7 +285,7 @@ const ProductForm = ({
                   onBlur={formik.handleBlur}
                 >
                   <option value="">
-                    <FormattedMessage id="Select-Option" />
+                    <SafeFormatMessage id="Select-Option" />
                   </option>
                   {listData &&
                     Object.values(listData).map((option) => (
@@ -343,7 +344,7 @@ const ProductForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Api-key" />
+                  <SafeFormatMessage id="Api-key" />
                 </Form.Label>
                 <div className="inputIcon">
                   <span className="buttonCont">
@@ -353,7 +354,7 @@ const ProductForm = ({
                       placement="top"
                       overlay={
                         <Tooltip>
-                          <FormattedMessage id="Random-api-key" />
+                          <SafeFormatMessage id="Random-api-key" />
                         </Tooltip>
                       }
                     >
@@ -387,14 +388,14 @@ const ProductForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

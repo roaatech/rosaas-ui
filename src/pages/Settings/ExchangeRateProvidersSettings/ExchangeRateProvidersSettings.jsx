@@ -23,6 +23,7 @@ import useRequest from '../../../axios/apis/useRequest'
 import BreadcrumbComponent from '../../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import UpperContent from '../../../components/custom/Shared/UpperContent/UpperContent'
 import DynamicButtons from '../../../components/custom/Shared/DynamicButtons/DynamicButtons'
+import SafeFormatMessage from '../../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ExchangeRateProvidersSettings = () => {
   const [edit, setEdit] = useState(false)
@@ -73,7 +74,7 @@ const ExchangeRateProvidersSettings = () => {
         <Form onSubmit={formik.handleSubmit}>
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Settings" />
+              <SafeFormatMessage id="Settings" />
             </h4>
             <DynamicButtons
               buttons={
@@ -113,20 +114,20 @@ const ExchangeRateProvidersSettings = () => {
           <Card className="m-3 mt-0">
             <Card.Body>
               <h5 className="mb-4">
-                <FormattedMessage id="ExchangeRateProviders-Settings" />
+                <SafeFormatMessage id="ExchangeRateProviders-Settings" />
               </h5>
               <Row>
                 <Col sm={12} className="mb-3">
                   <Form.Group id="provider">
                     <Form.Label>
-                      <FormattedMessage id="Provider" />
+                      <SafeFormatMessage id="Provider" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id="Provider-desc" />
+                              <SafeFormatMessage id="Provider-desc" />
                             </Tooltip>
                           }
                         >
@@ -169,7 +170,7 @@ const ExchangeRateProvidersSettings = () => {
                       id="accessibility"
                       name="accessibility"
                       label={
-                        <FormattedMessage id="System-Rate-Access-Control" />
+                        <SafeFormatMessage id="System-Rate-Access-Control" />
                       }
                       onChange={formik.handleChange}
                       checked={formik.values.accessibility}

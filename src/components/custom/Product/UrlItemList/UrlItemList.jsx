@@ -17,6 +17,7 @@ import useRequest from '../../../../axios/apis/useRequest'
 import { Wrapper } from './UrlItemList.styled'
 import { productInfo } from '../../../../store/slices/products/productsSlice'
 import { MdArrowDropDown, MdError, MdErrorOutline } from 'react-icons/md'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const UrlItemList = ({ data }) => {
   const [urlItems, setURLS] = useState([])
@@ -84,33 +85,35 @@ const UrlItemList = ({ data }) => {
       {
         method: 'GET',
         path: productData.defaultHealthCheckUrl,
-        displayName: <FormattedMessage id="Default-Health-Check-Url" />,
+        displayName: <SafeFormatMessage id="Default-Health-Check-Url" />,
         description: (
-          <FormattedMessage id="Default-Health-Check-Url-description" />
+          <SafeFormatMessage id="Default-Health-Check-Url-description" />
         ),
       },
       {
         method: 'POST',
         path: productData.healthStatusChangeUrl,
-        displayName: <FormattedMessage id="Health-Status-Change-Url" />,
+        displayName: <SafeFormatMessage id="Health-Status-Change-Url" />,
         description: (
-          <FormattedMessage id="Health-Status-Change-Url-Description" />
+          <SafeFormatMessage id="Health-Status-Change-Url-Description" />
         ),
       },
       {
         method: productData?.isSubscriptionResetEnabled ? 'POST' : 'DISABLED',
         path: productData.subscriptionResetUrl,
-        displayName: <FormattedMessage id="Subscription-Reset-Url" />,
+        displayName: <SafeFormatMessage id="Subscription-Reset-Url" />,
         description: (
-          <FormattedMessage id="Subscription-Reset-Url-Description" />
+          <SafeFormatMessage id="Subscription-Reset-Url-Description" />
         ),
         isEnabled: productData?.isSubscriptionResetEnabled == true,
       },
       {
         method: productData?.isSubscriptionUpgradeEnabled ? 'POST' : 'DISABLED',
         path: productData.subscriptionUpgradeUrl,
-        displayName: <FormattedMessage id="Subscription-Upgrade-Url" />,
-        description: <FormattedMessage id="Subscription-Upgrade-Description" />,
+        displayName: <SafeFormatMessage id="Subscription-Upgrade-Url" />,
+        description: (
+          <SafeFormatMessage id="Subscription-Upgrade-Description" />
+        ),
         isEnabled: productData?.isSubscriptionUpgradeEnabled == true,
       },
       {
@@ -118,67 +121,67 @@ const UrlItemList = ({ data }) => {
           ? 'POST'
           : 'DISABLED',
         path: productData.subscriptionDowngradeUrl,
-        displayName: <FormattedMessage id="Subscription-Downgrade-Url" />,
+        displayName: <SafeFormatMessage id="Subscription-Downgrade-Url" />,
         description: (
-          <FormattedMessage id="Subscription-Downgrade-Url-Description" />
+          <SafeFormatMessage id="Subscription-Downgrade-Url-Description" />
         ),
         isEnabled: productData?.isSubscriptionDowngradeEnabled == true,
       },
       {
         method: 'POST',
         path: productData.creationEndpoint,
-        displayName: <FormattedMessage id="Creation-Url" />,
-        description: <FormattedMessage id="Creation-Url-description" />,
+        displayName: <SafeFormatMessage id="Creation-Url" />,
+        description: <SafeFormatMessage id="Creation-Url-description" />,
         version: productData?.creationApiVersion || 'v0.0',
       },
       {
         method: 'POST',
         path: productData.activationEndpoint,
-        displayName: <FormattedMessage id="Activation-Url" />,
-        description: <FormattedMessage id="Activation-Url-description" />,
+        displayName: <SafeFormatMessage id="Activation-Url" />,
+        description: <SafeFormatMessage id="Activation-Url-description" />,
       },
       {
         method: 'POST',
         path: productData.deactivationEndpoint,
-        displayName: <FormattedMessage id="Deactivation-Url" />,
-        description: <FormattedMessage id="Deactivation-Url-description" />,
+        displayName: <SafeFormatMessage id="Deactivation-Url" />,
+        description: <SafeFormatMessage id="Deactivation-Url-description" />,
       },
       {
         method: 'POST',
         path: productData.deletionEndpoint,
-        displayName: <FormattedMessage id="Deletion-Url" />,
-        description: <FormattedMessage id="Deletion-Url-description" />,
+        displayName: <SafeFormatMessage id="Deletion-Url" />,
+        description: <SafeFormatMessage id="Deletion-Url-description" />,
       },
       {
         method: 'GET',
         path: productData.specificationValidatorUrl,
-        displayName: <FormattedMessage id="Specification-Validator-Url" />,
+        displayName: <SafeFormatMessage id="Specification-Validator-Url" />,
         description: (
-          <FormattedMessage id="Specification-Validator-Url-Description" />
+          <SafeFormatMessage id="Specification-Validator-Url-Description" />
         ),
       },
       {
         method: 'GET',
         path: productData.paymentSuccessCallbackUrl,
-        displayName: <FormattedMessage id="Payment-Success-Callback-Url" />,
+        displayName: <SafeFormatMessage id="Payment-Success-Callback-Url" />,
         description: (
-          <FormattedMessage id="Payment-Success-Callback-Url-Description" />
+          <SafeFormatMessage id="Payment-Success-Callback-Url-Description" />
         ),
       },
       {
         method: 'GET',
         path: productData.paymentFailureCallbackUrl,
-        displayName: <FormattedMessage id="Payment-Failure-Callback-Url" />,
+        displayName: <SafeFormatMessage id="Payment-Failure-Callback-Url" />,
         description: (
-          <FormattedMessage id="Payment-Failure-Callback-Url-Description" />
+          <SafeFormatMessage id="Payment-Failure-Callback-Url-Description" />
         ),
       },
       {
         method: 'GET',
         path: productData.planSelectionRedirectUrl,
-        displayName: <FormattedMessage id="Plan-Selection-Redirect-Url" />,
+        displayName: <SafeFormatMessage id="Plan-Selection-Redirect-Url" />,
         description: (
-          <FormattedMessage id="Plan-Selection-Redirect-Url-Description" />
+          <SafeFormatMessage id="Plan-Selection-Redirect-Url-Description" />
         ),
       },
     ])
@@ -463,7 +466,7 @@ const UrlItemList = ({ data }) => {
               onChange={() => handleGroupToggle('isHealthCheckEnabled', 0, 1)}
             />
             <h5>
-              <FormattedMessage id="Health-Group" />
+              <SafeFormatMessage id="Health-Group" />
             </h5>
           </div>
           {validationMessages.isHealthCheckEnabled && (
@@ -471,7 +474,7 @@ const UrlItemList = ({ data }) => {
               <span className="px-2">
                 <MdErrorOutline />
               </span>
-              <FormattedMessage id={validationMessages.isHealthCheckEnabled} />
+              <SafeFormatMessage id={validationMessages.isHealthCheckEnabled} />
             </div>
           )}
         </Card.Header>
@@ -522,7 +525,7 @@ const UrlItemList = ({ data }) => {
           <div className="d-flex align-items-center">
             {/* Commented out the checkbox for the group level toggle */}
             <h5>
-              <FormattedMessage id="Subscription-Group" />
+              <SafeFormatMessage id="Subscription-Group" />
             </h5>
           </div>
         </Card.Header>
@@ -573,7 +576,7 @@ const UrlItemList = ({ data }) => {
                           <span className="px-2">
                             <MdErrorOutline />
                           </span>{' '}
-                          <FormattedMessage
+                          <SafeFormatMessage
                             id={validationMessages[urlFields[index + 2]?.flag]}
                           />
                         </div>
@@ -598,7 +601,7 @@ const UrlItemList = ({ data }) => {
               className="mr-2 mb-2"
             />
             <h5>
-              <FormattedMessage id="Lifecycle-Group" />
+              <SafeFormatMessage id="Lifecycle-Group" />
             </h5>
           </div>
           {validationMessages.isMainOperationEnabled && (
@@ -606,7 +609,7 @@ const UrlItemList = ({ data }) => {
               <span className="px-2">
                 <MdErrorOutline />
               </span>
-              <FormattedMessage
+              <SafeFormatMessage
                 id={validationMessages.isMainOperationEnabled}
               />
             </div>
@@ -659,7 +662,7 @@ const UrlItemList = ({ data }) => {
                                   trigger={['hover', 'focus']}
                                   overlay={
                                     <Tooltip>
-                                      <FormattedMessage id="This-is-the-API-payload-version-for-creation" />
+                                      <SafeFormatMessage id="This-is-the-API-payload-version-for-creation" />
                                     </Tooltip>
                                   }
                                 >
@@ -724,7 +727,7 @@ const UrlItemList = ({ data }) => {
               className="mr-2 mb-2"
             />
             <h5>
-              <FormattedMessage id="Specification-Validator-Group" />
+              <SafeFormatMessage id="Specification-Validator-Group" />
             </h5>
           </div>
           {validationMessages.isSpecificationValidatorEnabled && (
@@ -733,7 +736,7 @@ const UrlItemList = ({ data }) => {
                 <MdErrorOutline />
               </span>
 
-              <FormattedMessage
+              <SafeFormatMessage
                 id={validationMessages.isSpecificationValidatorEnabled}
               />
             </div>
@@ -793,7 +796,7 @@ const UrlItemList = ({ data }) => {
               className="mr-2 mb-2"
             />
             <h5>
-              <FormattedMessage id="Payment-and-Redirection-Endpoints" />
+              <SafeFormatMessage id="Payment-and-Redirection-Endpoints" />
             </h5>
           </div>
           {validationMessages.isPaymentCallbackOverrideEnabled && (
@@ -802,7 +805,7 @@ const UrlItemList = ({ data }) => {
                 <MdErrorOutline />
               </span>
               {validationMessages.isPaymentCallbackOverrideEnabled && (
-                <FormattedMessage
+                <SafeFormatMessage
                   id={validationMessages.isPaymentCallbackOverrideEnabled}
                 />
               )}
@@ -864,7 +867,7 @@ const UrlItemList = ({ data }) => {
               className="mr-2 mb-2"
             />
             <h5>
-              <FormattedMessage id="Plan-Selection" />
+              <SafeFormatMessage id="Plan-Selection" />
             </h5>
             {validationMessages.isPlanSelectionRedirectionEnabled && (
               <div className="d-flex align-items-center text-danger ">
@@ -873,7 +876,7 @@ const UrlItemList = ({ data }) => {
                 </span>
 
                 {validationMessages.isPlanSelectionRedirectionEnabled && (
-                  <FormattedMessage
+                  <SafeFormatMessage
                     id={validationMessages.isPlanSelectionRedirectionEnabled}
                   />
                 )}

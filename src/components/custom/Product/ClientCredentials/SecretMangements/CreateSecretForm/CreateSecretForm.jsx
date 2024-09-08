@@ -22,6 +22,7 @@ import {
   clientSecretInfo,
 } from '../../../../../../store/slices/products/productsSlice.js'
 import { BsCheckCircleFill } from 'react-icons/bs'
+import SafeFormatMessage from '../../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 const CreateSecretForm = ({
   type,
   setVisible,
@@ -70,8 +71,8 @@ const CreateSecretForm = ({
 
   const validationSchema = Yup.object().shape({
     displayName: Yup.string()
-      .required(<FormattedMessage id="Display-Name-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+      .required(<SafeFormatMessage id="Display-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />),
   })
   const [nextPage, setNexPage] = useState(false)
   const [clientSecret, setClientSecret] = useState(false)
@@ -273,14 +274,14 @@ const CreateSecretForm = ({
           <Alert variant={'warning'}>
             <FontAwesomeIcon icon={faTriangleExclamation} className="mr-2" />
             <strong>
-              <FormattedMessage id={'Warning'} /> -
+              <SafeFormatMessage id={'Warning'} /> -
             </strong>{' '}
-            {<FormattedMessage id="warning-messege-secret-copy" />}
+            {<SafeFormatMessage id="warning-messege-secret-copy" />}
           </Alert>
         )}
         <Form.Group className="mb-3">
           <Form.Label>
-            <FormattedMessage id="Client-ID" />{' '}
+            <SafeFormatMessage id="Client-ID" />{' '}
           </Form.Label>
 
           <div
@@ -305,7 +306,7 @@ const CreateSecretForm = ({
         {!showClientId && (
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Client-Secret" />{' '}
+              <SafeFormatMessage id="Client-Secret" />{' '}
             </Form.Label>
             <div
               className="input-group border-right-1"
@@ -346,7 +347,7 @@ const CreateSecretForm = ({
               popupLabel
             ) : (
               <>
-                <FormattedMessage id="Secret-generated-successfully" />{' '}
+                <SafeFormatMessage id="Secret-generated-successfully" />{' '}
                 <BsCheckCircleFill
                   style={{ color: 'green', marginLeft: '5px' }}
                 />
@@ -365,7 +366,7 @@ const CreateSecretForm = ({
           {!nextPage && !showClientId && (
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Display-Name" />{' '}
+                <SafeFormatMessage id="Display-Name" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
 
@@ -392,7 +393,7 @@ const CreateSecretForm = ({
           {!nextPage && !showClientId && (
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Expiration" />
+                <SafeFormatMessage id="Expiration" />
               </Form.Label>
 
               <div className="d-flex align-items-center">
@@ -414,22 +415,22 @@ const CreateSecretForm = ({
                 >
                   {' '}
                   <option value="">
-                    <FormattedMessage id="Select-Option" />
+                    <SafeFormatMessage id="Select-Option" />
                   </option>
                   <option value="30">
-                    <FormattedMessage id="30-days" />
+                    <SafeFormatMessage id="30-days" />
                   </option>
                   <option value="60">
-                    <FormattedMessage id="60-days" />
+                    <SafeFormatMessage id="60-days" />
                   </option>
                   <option value="90">
-                    <FormattedMessage id="90-days" />
+                    <SafeFormatMessage id="90-days" />
                   </option>
                   <option value="custom">
-                    <FormattedMessage id="Custom" />
+                    <SafeFormatMessage id="Custom" />
                   </option>
                   <option value="none">
-                    <FormattedMessage id="Unlimited" />
+                    <SafeFormatMessage id="Unlimited" />
                   </option>
                 </Form.Control>
 
@@ -469,7 +470,7 @@ const CreateSecretForm = ({
         <Modal.Footer>
           {!nextPage && !showClientId && (
             <Button variant="secondary" type="submit">
-              <FormattedMessage id="Submit" />
+              <SafeFormatMessage id="Submit" />
             </Button>
           )}
           <Button
@@ -477,7 +478,7 @@ const CreateSecretForm = ({
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

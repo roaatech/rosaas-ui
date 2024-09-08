@@ -24,6 +24,12 @@ const usePlanReq = () => {
       data
     )
   }
+  const visiblePlan = async (productId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/products/${productId}/Plans/${data.id}/Visibility`,
+      data
+    )
+  }
   const editPlanRequest = async (productId, data) => {
     return await Request.put(
       `management/sadmin/v1/Products/${productId}/Plans/${data.id}`,
@@ -44,6 +50,7 @@ const usePlanReq = () => {
     editPlanRequest,
     deletePlanReq,
     getProductPlansPublic,
+    visiblePlan,
   }
 }
 

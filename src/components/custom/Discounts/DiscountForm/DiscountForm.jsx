@@ -11,6 +11,7 @@ import {
   discountInfo,
 } from '../../../../store/slices/discountsSlice'
 import { Client_id } from '../../../../const'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const DiscountForm = ({
   type, // 'create' or 'edit'
@@ -103,51 +104,51 @@ const DiscountForm = ({
   }
   const validationSchema = Yup.object().shape({
     displayName: Yup.string()
-      .required(<FormattedMessage id="display-name-is-required" />)
-      .max(100, <FormattedMessage id="maximum-100-characters-allowed" />),
+      .required(<SafeFormatMessage id="display-name-is-required" />)
+      .max(100, <SafeFormatMessage id="maximum-100-characters-allowed" />),
     discountType: Yup.number().required(
-      <FormattedMessage id="discount-type-is-required" />
+      <SafeFormatMessage id="discount-type-is-required" />
     ),
     adminComment: Yup.string().max(
       250,
-      <FormattedMessage id="maximum-250-characters-allowed" />
+      <SafeFormatMessage id="maximum-250-characters-allowed" />
     ),
     discountPercentage: usePercentage
       ? Yup.number()
-          .min(0, <FormattedMessage id="minimum-value-is-0" />)
-          .max(100, <FormattedMessage id="maximum-value-is-100" />)
-          .required(<FormattedMessage id="required-when-using-percentage" />)
+          .min(0, <SafeFormatMessage id="minimum-value-is-0" />)
+          .max(100, <SafeFormatMessage id="maximum-value-is-100" />)
+          .required(<SafeFormatMessage id="required-when-using-percentage" />)
       : Yup.number().notRequired(),
     discountAmount: !usePercentage
       ? Yup.number()
-          .min(0, <FormattedMessage id="minimum-value-is-0" />)
+          .min(0, <SafeFormatMessage id="minimum-value-is-0" />)
           .required(
-            <FormattedMessage id="required-when-not-using-percentage" />
+            <SafeFormatMessage id="required-when-not-using-percentage" />
           )
       : Yup.number().notRequired(),
     maximumDiscountAmount: usePercentage
       ? Yup.number()
-          .min(0, <FormattedMessage id="minimum-value-is-0" />)
+          .min(0, <SafeFormatMessage id="minimum-value-is-0" />)
           .notRequired()
       : Yup.number().notRequired(),
     couponCode: requiresCouponCode
       ? Yup.string()
-          .required(<FormattedMessage id="coupon-code-is-required" />)
-          .max(50, <FormattedMessage id="maximum-50-characters-allowed" />)
+          .required(<SafeFormatMessage id="coupon-code-is-required" />)
+          .max(50, <SafeFormatMessage id="maximum-50-characters-allowed" />)
       : Yup.string().notRequired(),
     limitationTimes:
       initialValues.discountLimitation === '2' ||
       initialValues.discountLimitation === '3'
         ? Yup.number()
-            .min(1, <FormattedMessage id="minimum-value-is-1" />)
-            .required(<FormattedMessage id="limitation-times-is-required" />)
+            .min(1, <SafeFormatMessage id="minimum-value-is-1" />)
+            .required(<SafeFormatMessage id="limitation-times-is-required" />)
         : Yup.number().notRequired(),
     startDate: Yup.date().nullable(), // Not required
     endDate: Yup.date()
       .nullable() // Not required
       .test(
         'is-greater',
-        <FormattedMessage id="end-date-should-be-later-than-start-date" />,
+        <SafeFormatMessage id="end-date-should-be-later-than-start-date" />,
         function (value) {
           const { startDate } = this.parent
           return !startDate || !value || value > startDate
@@ -240,7 +241,7 @@ const DiscountForm = ({
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="displayName">
-                  <FormattedMessage id="display-name" />{' '}
+                  <SafeFormatMessage id="display-name" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </label>
                 <input
@@ -266,7 +267,7 @@ const DiscountForm = ({
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="discountType">
-                  <FormattedMessage id="discount-type" />{' '}
+                  <SafeFormatMessage id="discount-type" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </label>
                 <select
@@ -281,11 +282,11 @@ const DiscountForm = ({
                   }`}
                 >
                   <option value="">
-                    <FormattedMessage id="select-type" />
+                    <SafeFormatMessage id="select-type" />
                   </option>
                   {discountTypeOptions.map((option) => (
                     <option key={option.value} value={option.value}>
-                      <FormattedMessage id={option.label} />
+                      <SafeFormatMessage id={option.label} />
                     </option>
                   ))}
                 </select>
@@ -309,7 +310,7 @@ const DiscountForm = ({
                       onChange={(e) => setUsePercentage(e.target.checked)}
                     />
                     <label htmlFor="usePercentage" className="ml-2">
-                      <FormattedMessage id="use-percentage" />
+                      <SafeFormatMessage id="use-percentage" />
                     </label>
                   </Col>
                   {usePercentage ? (
@@ -317,7 +318,7 @@ const DiscountForm = ({
                       <Col md={6}>
                         <div className="mb-3">
                           <label htmlFor="discountPercentage">
-                            <FormattedMessage id="discount-percentage" />{' '}
+                            <SafeFormatMessage id="discount-percentage" />{' '}
                             <span style={{ color: 'red' }}>*</span>
                           </label>
                           <input
@@ -344,7 +345,7 @@ const DiscountForm = ({
                       <Col md={6}>
                         <div className="mb-3">
                           <label htmlFor="maximumDiscountAmount">
-                            <FormattedMessage id="maximum-discount-amount" />
+                            <SafeFormatMessage id="maximum-discount-amount" />
                           </label>
                           <input
                             type="number"
@@ -372,7 +373,7 @@ const DiscountForm = ({
                     <Col md={12}>
                       <div className="mb-3">
                         <label htmlFor="discountAmount">
-                          <FormattedMessage id="discount-amount" />{' '}
+                          <SafeFormatMessage id="discount-amount" />{' '}
                           <span style={{ color: 'red' }}>*</span>
                         </label>
                         <input
@@ -404,7 +405,7 @@ const DiscountForm = ({
             <Col md={6}>
               <div className="mb-3">
                 <label htmlFor="startDate">
-                  <FormattedMessage id="start-date" />
+                  <SafeFormatMessage id="start-date" />
                 </label>
                 <input
                   type="datetime-local"
@@ -430,7 +431,7 @@ const DiscountForm = ({
             <Col md={6}>
               <div className="mb-3">
                 <label htmlFor="endDate">
-                  <FormattedMessage id="end-date" />
+                  <SafeFormatMessage id="end-date" />
                 </label>
                 <input
                   type="datetime-local"
@@ -464,7 +465,7 @@ const DiscountForm = ({
                       onChange={(e) => setRequiresCouponCode(e.target.checked)}
                     />
                     <label htmlFor="requiresCouponCode" className="ml-2">
-                      <FormattedMessage id="requires-coupon-code" />
+                      <SafeFormatMessage id="requires-coupon-code" />
                     </label>
                   </Col>
 
@@ -472,7 +473,7 @@ const DiscountForm = ({
                     <Col md={12}>
                       <div className="mb-3">
                         <label htmlFor="couponCode">
-                          <FormattedMessage id="coupon-code" />{' '}
+                          <SafeFormatMessage id="coupon-code" />{' '}
                           <span style={{ color: 'red' }}>*</span>
                         </label>
                         <input
@@ -506,7 +507,7 @@ const DiscountForm = ({
                   <Col md={12}>
                     <div className="mb-3">
                       <label htmlFor="discountLimitation">
-                        <FormattedMessage id="discount-limitation" />{' '}
+                        <SafeFormatMessage id="discount-limitation" />{' '}
                         <span style={{ color: 'red' }}>*</span>
                       </label>
                       <select
@@ -522,11 +523,11 @@ const DiscountForm = ({
                         }`}
                       >
                         <option value="">
-                          <FormattedMessage id="select-limitation" />
+                          <SafeFormatMessage id="select-limitation" />
                         </option>
                         {discountLimitationOptions.map((option) => (
                           <option key={option.value} value={option.value}>
-                            <FormattedMessage id={option.label} />
+                            <SafeFormatMessage id={option.label} />
                           </option>
                         ))}
                       </select>
@@ -544,7 +545,7 @@ const DiscountForm = ({
                     <Col md={12}>
                       <div className="mb-3">
                         <label htmlFor="limitationTimes">
-                          <FormattedMessage id="limitation-times" />{' '}
+                          <SafeFormatMessage id="limitation-times" />{' '}
                           <span style={{ color: 'red' }}>*</span>
                         </label>
                         <input
@@ -581,13 +582,13 @@ const DiscountForm = ({
                 onChange={formik.handleChange}
               />
               <label htmlFor="isCumulative" className="ml-2">
-                <FormattedMessage id="is-cumulative" />
+                <SafeFormatMessage id="is-cumulative" />
               </label>
             </Col>
             <Col md={12}>
               <div className="mb-3">
                 <label htmlFor="adminComment">
-                  <FormattedMessage id="admin-comment" />
+                  <SafeFormatMessage id="admin-comment" />
                 </label>
                 <textarea
                   rows={3}
@@ -616,14 +617,14 @@ const DiscountForm = ({
             type="submit"
             disabled={formik.isSubmitting}
           >
-            <FormattedMessage id="submit" />
+            <SafeFormatMessage id="submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray"
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="close" />
+            <SafeFormatMessage id="close" />
           </Button>
         </Modal.Footer>
       </form>

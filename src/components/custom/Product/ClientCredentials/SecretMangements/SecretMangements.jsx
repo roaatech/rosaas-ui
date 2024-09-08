@@ -28,6 +28,7 @@ import CreateSecretForm from './CreateSecretForm/CreateSecretForm'
 import DeleteConfirmation from '../../../global/DeleteConfirmation/DeleteConfirmation'
 import { clientCredentialsSecrets } from '../../../../../store/slices/products/productsSlice'
 import DateLabel from '../../../Shared/DateLabel/DateLabel'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const SecretMangements = ({ data, currentClientId }) => {
   const [confirm, setConfirm] = useState(false)
@@ -161,18 +162,18 @@ const SecretMangements = ({ data, currentClientId }) => {
                   }}
                 >
                   <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                  <FormattedMessage id="Edit" />
+                  <SafeFormatMessage id="Edit" />
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => deleteConfirm(id)}
                   className="text-danger"
                 >
                   <FontAwesomeIcon icon={faBan} className="mx-2" />
-                  <FormattedMessage id="Revoke" />
+                  <SafeFormatMessage id="Revoke" />
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => regenerateClientSecret(id)}>
                   <FontAwesomeIcon icon={faSyncAlt} className="mx-2" />
-                  <FormattedMessage id="Regenerate-Secret" />
+                  <SafeFormatMessage id="Regenerate-Secret" />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -187,7 +188,7 @@ const SecretMangements = ({ data, currentClientId }) => {
         <DynamicButtons
           buttons={[
             {
-              popupLabel: <FormattedMessage id="Create-New-Secret" />,
+              popupLabel: <SafeFormatMessage id="Create-New-Secret" />,
               order: 1,
               type: 'form',
               label: 'New-Secret',
@@ -197,7 +198,7 @@ const SecretMangements = ({ data, currentClientId }) => {
               formType: 'create',
             },
             {
-              popupLabel: <FormattedMessage id="Show-Client-Id" />,
+              popupLabel: <SafeFormatMessage id="Show-Client-Id" />,
               order: 4,
               type: 'form',
               label: 'Show-Client-Id',
@@ -220,20 +221,20 @@ const SecretMangements = ({ data, currentClientId }) => {
             <thead>
               <tr>
                 <th className="border-bottom">
-                  <FormattedMessage id="Secret-Display-Name" />
+                  <SafeFormatMessage id="Secret-Display-Name" />
                 </th>
                 <th className="border-bottom">
-                  <FormattedMessage id="Status" />
+                  <SafeFormatMessage id="Status" />
                 </th>
 
                 <th className="border-bottom">
-                  <FormattedMessage id="Created-Date" />
+                  <SafeFormatMessage id="Created-Date" />
                 </th>
                 <th className="border-bottom">
-                  <FormattedMessage id="expiration-date" />
+                  <SafeFormatMessage id="expiration-date" />
                 </th>
                 <th className="border-bottom">
-                  <FormattedMessage id="Actions" />
+                  <SafeFormatMessage id="Actions" />
                 </th>
               </tr>
             </thead>
@@ -273,9 +274,9 @@ const SecretMangements = ({ data, currentClientId }) => {
           <CreateSecretForm
             popupLabel={
               type == 'edit' ? (
-                <FormattedMessage id="Edit" />
+                <SafeFormatMessage id="Edit" />
               ) : (
-                <FormattedMessage id="Regenerate" />
+                <SafeFormatMessage id="Regenerate" />
               )
             }
             type={type}

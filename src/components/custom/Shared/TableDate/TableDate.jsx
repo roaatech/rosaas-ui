@@ -3,6 +3,7 @@ import { Wrapper } from './TableDate.styled'
 import { OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 
 const TableDate = ({
   createdDate = '10/18/200, 11:42AM',
@@ -16,11 +17,11 @@ const TableDate = ({
         overlay={
           <Tooltip>
             <div>
-              <FormattedMessage id="Last-Update-At" />{' '}
+              <SafeFormatMessage id="Last-Update-At" />{' '}
               {DataTransform(editedDate)}
             </div>
             <div>
-              <FormattedMessage id="Created-At" /> {DataTransform(createdDate)}
+              <SafeFormatMessage id="Created-At" /> {DataTransform(createdDate)}
             </div>
           </Tooltip>
         }

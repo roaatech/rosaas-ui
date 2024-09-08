@@ -4,6 +4,7 @@ import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import { FormattedMessage, useIntl } from 'react-intl'
 import TextareaAndCounter from '../TextareaAndCounter/TextareaAndCounter'
 import { Wrapper } from './MultilingualInput.style'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 
 const MultilingualInput = ({
   languages,
@@ -20,26 +21,12 @@ const MultilingualInput = ({
   placeholder,
 }) => {
   const intl = useIntl()
-  console.log({
-    languages,
-    inputIds,
-    tooltipMessageId,
-    values,
-    onChange,
-    isRequired,
-    inputType,
-    maxLength,
-    errors,
-    touched,
-    inputLabel,
-    placeholder,
-  })
 
   return (
     <Wrapper>
       <Form.Group>
         <Form.Label>
-          <FormattedMessage id={inputLabel} />
+          <SafeFormatMessage id={inputLabel} />
           {isRequired && <span style={{ color: 'red' }}>*</span>}
           {tooltipMessageId && (
             <span className="fw-normal">
@@ -79,6 +66,9 @@ const MultilingualInput = ({
                           })
                         : ''
                     }
+                    style={{
+                      direction: lang.code === 'ar' ? 'rtl' : 'ltr',
+                    }}
                   />
                 ) : (
                   <TextareaAndCounter
@@ -99,6 +89,9 @@ const MultilingualInput = ({
                     name={inputIds?.[lang.code]}
                     onChange={onChange}
                     disableMainClass={true}
+                    style={{
+                      direction: lang.code === 'ar' ? 'rtl' : 'ltr',
+                    }}
                   />
                 )}
               </div>

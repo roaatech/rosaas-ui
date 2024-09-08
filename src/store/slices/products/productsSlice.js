@@ -39,6 +39,7 @@ export const productsSlice = createSlice({
 })
 
 export const {
+  updateAllProduct,
   setAllSpecifications,
   specificationInfo,
   specificationChangeAttr,

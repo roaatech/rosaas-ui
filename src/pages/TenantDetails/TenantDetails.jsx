@@ -30,6 +30,7 @@ import TenantsUsersManagement from '../../components/custom/tenant/TenantsUsersM
 import Label from '../../components/custom/Shared/label/Label'
 import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 import { Routes } from '../../routes'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 let firstLoad = 0
 const TenantDetails = () => {
@@ -125,7 +126,7 @@ const TenantDetails = () => {
         {tenantObject && (
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Tenant-Details" />:{' '}
+              <SafeFormatMessage id="Tenant-Details" />:{' '}
               {tenantObject.displayName}
             </h4>
           </UpperContent>
@@ -143,7 +144,7 @@ const TenantDetails = () => {
                       dispatch(setActiveIndex(e.index))
                     }}
                   >
-                    <TabPanel header={<FormattedMessage id="Details" />}>
+                    <TabPanel header={<SafeFormatMessage id="Details" />}>
                       <div className="row-button ">
                         <div className="dynamicButtons">
                           <DynamicButtons
@@ -187,7 +188,7 @@ const TenantDetails = () => {
                             <tbody>
                               <tr>
                                 <td className="fw-bold line-cell">
-                                  <FormattedMessage id="Display-Name" />
+                                  <SafeFormatMessage id="Display-Name" />
                                 </td>
                                 <td className=" line-cell">
                                   {tenantObject.displayName}
@@ -195,13 +196,13 @@ const TenantDetails = () => {
                               </tr>
                               <tr>
                                 <td className="fw-bold">
-                                  <FormattedMessage id="System-Name" />
+                                  <SafeFormatMessage id="System-Name" />
                                 </td>
                                 <td>{tenantObject.systemName}</td>
                               </tr>
                               <tr>
                                 <td className="fw-bold">
-                                  <FormattedMessage id="Products" />
+                                  <SafeFormatMessage id="Products" />
                                 </td>
                                 <td>
                                   {tenantObject.subscriptions.map(
@@ -219,7 +220,7 @@ const TenantDetails = () => {
 
                               <tr>
                                 <td className="fw-bold">
-                                  <FormattedMessage id="Created-Date" />
+                                  <SafeFormatMessage id="Created-Date" />
                                 </td>
                                 <td>
                                   {DataTransform(tenantObject.createdDate)}
@@ -227,7 +228,7 @@ const TenantDetails = () => {
                               </tr>
                               <tr>
                                 <td className="fw-bold">
-                                  <FormattedMessage id="Last-Updated-Date" />
+                                  <SafeFormatMessage id="Last-Updated-Date" />
                                 </td>
                                 <td>
                                   {DataTransform(tenantObject.editedDate)}
@@ -240,7 +241,7 @@ const TenantDetails = () => {
                     </TabPanel>
                     {/* <TabPanel
                       header={
-                        <FormattedMessage id="Tenants-Users-Management" />
+                        <SafeFormatMessage id="Tenants-Users-Management" />
                       }
                     >
                       <TenantsUsersManagement />
@@ -295,7 +296,7 @@ const TenantDetails = () => {
                   )}
                   <ThemeDialog visible={visible} setVisible={setVisible}>
                     <TenantForm
-                      popupLabel={<FormattedMessage id="Edit-Tenant" />}
+                      popupLabel={<SafeFormatMessage id="Edit-Tenant" />}
                       type={'edit'}
                       tenantData={tenantObject}
                       setVisible={setVisible}

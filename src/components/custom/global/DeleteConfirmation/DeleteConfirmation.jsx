@@ -1,6 +1,7 @@
 import React from 'react'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import { FormattedMessage } from 'react-intl'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 export default function DeleteConfirmation({
   confirm,
@@ -28,9 +29,9 @@ export default function DeleteConfirmation({
     <>
       <ConfirmDialog
         message={message}
-        header={<FormattedMessage id="Confirmation" />}
-        rejectLabel={<FormattedMessage id="No" />}
-        acceptLabel={<FormattedMessage id="Yes" />}
+        header={<SafeFormatMessage id="Confirmation" />}
+        rejectLabel={<SafeFormatMessage id="No" />}
+        acceptLabel={<SafeFormatMessage id="Yes" />}
         icon={icon}
         accept={accept}
         reject={reject}

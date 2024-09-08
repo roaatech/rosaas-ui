@@ -13,8 +13,9 @@ import {
 } from '../../../../../store/slices/products/productsSlice.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
-import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx' // Import MultilingualInput
+import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
 import { activeTab } from '../../../../../const/product.js'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const PlanForm = ({
   type,
@@ -30,7 +31,7 @@ const PlanForm = ({
   const allProducts = useSelector((state) => state.products.products)
   const ProductTrialType = allProducts[productId].trialType
 
-  // Updated initial values for multilingual fields
+  // Updated initial values for multilingual fields and isAvailableForSelection
   const initialValues = {
     displayNameEn: planData?.displayNameLocalizations?.en || '',
     displayNameAr: planData?.displayNameLocalizations?.ar || '',
@@ -40,20 +41,20 @@ const PlanForm = ({
     displayOrder: planData ? planData.displayOrder : '0',
     alternativePlanID: planData ? planData.alternativePlanID : '',
     trialPeriodInDays: planData ? planData.trialPeriodInDays : '0',
+    isAvailableForSelection: planData ? planData.isAvailableForSelection : true,
   }
 
-  // Updated validation schema for multilingual fields
   const validationSchema = Yup.object().shape({
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="Unique-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
     displayNameEn: Yup.string().test({
       name: 'displayNameRequired',
-      message: <FormattedMessage id="Display-Name-is-required" />,
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
       test: (value, context) => {
         const { parent } = context
         const displayNameEn = parent.displayNameEn
@@ -63,7 +64,7 @@ const PlanForm = ({
     }),
     displayNameAr: Yup.string().test({
       name: 'displayNameRequired',
-      message: <FormattedMessage id="Display-Name-is-required" />,
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
       test: (value, context) => {
         const { parent } = context
         const displayNameEn = parent.displayNameEn
@@ -73,21 +74,22 @@ const PlanForm = ({
     }),
     descriptionEn: Yup.string().max(
       250,
-      <FormattedMessage id="Must-be-maximum-250-digits" />
+      <SafeFormatMessage id="Must-be-maximum-250-digits" />
     ),
     descriptionAr: Yup.string().max(
       250,
-      <FormattedMessage id="Must-be-maximum-250-digits" />
+      <SafeFormatMessage id="Must-be-maximum-250-digits" />
     ),
     displayOrder: Yup.number()
-      .typeError(<FormattedMessage id="Display-Order-must-be-a-number" />)
-      .integer(<FormattedMessage id="Display-Order-must-be-an-integer" />)
-      .min(0, <FormattedMessage id="Display-Order-must-be-a-positive-number" />)
+      .typeError(<SafeFormatMessage id="Display-Order-must-be-a-number" />)
+      .integer(<SafeFormatMessage id="Display-Order-must-be-an-integer" />)
+      .min(
+        0,
+        <SafeFormatMessage id="Display-Order-must-be-a-positive-number" />
+      )
       .default(0),
-    alternativePlanID: Yup.string(),
     trialPeriodInDays: Yup.number(),
   })
-
   useEffect(() => {
     const fetchData = async () => {
       if (!allProducts[productId].plan) {
@@ -127,6 +129,7 @@ const PlanForm = ({
         displayOrder: values.displayOrder || 0,
         alternativePlanID: values.alternativePlanID || null,
         trialPeriodInDays: values.trialPeriodInDays || 0,
+        isAvailableForSelection: values.isAvailableForSelection, // Include the checkbox value
       }
 
       if (type === 'create') {
@@ -162,6 +165,7 @@ const PlanForm = ({
             planId: planData.id,
             productId: productId,
             data: {
+              ...planData,
               ...dataToSubmit,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: planData.createdDate,
@@ -238,7 +242,7 @@ const PlanForm = ({
           <div className="mb-3">
             {type === 'create' && (
               <AutoGenerateInput
-                label={<FormattedMessage id="System-Name" />}
+                label={<SafeFormatMessage id="System-Name" />}
                 id="systemName"
                 value={formik.values.displayNameEn}
                 name={formik.values.systemName}
@@ -302,7 +306,7 @@ const PlanForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Display-Order" />
+                <SafeFormatMessage id="Display-Order" />
               </Form.Label>
               <input
                 type="text"
@@ -328,7 +332,7 @@ const PlanForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Trial-Period-In-Days" />
+                  <SafeFormatMessage id="Trial-Period-In-Days" />
                 </Form.Label>
                 <input
                   type="text"
@@ -355,7 +359,7 @@ const PlanForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Alternative-Plan" />{' '}
+                <SafeFormatMessage id="Alternative-Plan" />{' '}
               </Form.Label>
               <select
                 className="form-control"
@@ -367,7 +371,7 @@ const PlanForm = ({
                 disabled={!productId}
               >
                 <option value="">
-                  <FormattedMessage id="Select-Option" />
+                  <SafeFormatMessage id="Select-Option" />
                 </option>
                 {alternativePlanIDOptions?.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -386,17 +390,30 @@ const PlanForm = ({
                 )}
             </Form.Group>
           </div>
+
+          {/* isAvailableForSelection Checkbox */}
+          <Form.Group className="mb-3">
+            <Form.Check
+              type="checkbox"
+              label={<SafeFormatMessage id="Is-Available-For-Selection" />}
+              id="isAvailableForSelection"
+              name="isAvailableForSelection"
+              checked={formik.values.isAvailableForSelection}
+              onChange={formik.handleChange}
+            />
+          </Form.Group>
         </Modal.Body>
+
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

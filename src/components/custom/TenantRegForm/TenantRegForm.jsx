@@ -20,6 +20,7 @@ import SpecificationInput from '../Product/CustomSpecification/SpecificationInpu
 import { setStep } from '../../../store/slices/tenants'
 import { cycle } from '../../../const'
 import { Routes } from '../../../routes'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const CheckoutTenantReg = ({
   type,
@@ -71,8 +72,8 @@ const CheckoutTenantReg = ({
   const createValidation = {}
   const editValidation = {
     displayName: Yup.string()
-      .required(<FormattedMessage id="Display-Name-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+      .required(<SafeFormatMessage id="Display-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />),
   }
   const validationSchema = Yup.object().shape(
     type === 'create' ? createValidation : editValidation
@@ -291,7 +292,7 @@ const CheckoutTenantReg = ({
                     type="submit"
                     disabled={submitLoading}
                   >
-                    <FormattedMessage id="Submit" />
+                    <SafeFormatMessage id="Submit" />
                   </Button>
                 </Card.Footer>
               </Form>
@@ -299,13 +300,13 @@ const CheckoutTenantReg = ({
           </Col>
           <Col md={5}>
             <Card.Header className="fw-bold">
-              <FormattedMessage id="Your-Subscribe-Information" />
+              <SafeFormatMessage id="Your-Subscribe-Information" />
             </Card.Header>
             <Card.Body>
               {/* product */}
               <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-2 ">
                 <div className=" w-50 fw-bold">
-                  <FormattedMessage id="Product" />
+                  <SafeFormatMessage id="Product" />
                 </div>
                 <div className=" card-stats">
                   {priceData?.product?.displayName}
@@ -315,7 +316,7 @@ const CheckoutTenantReg = ({
               {/* plan */}
               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                 <div className=" w-50 fw-bold">
-                  <FormattedMessage id="Plan" />
+                  <SafeFormatMessage id="Plan" />
                 </div>
                 <div className=" card-stats">{priceData?.plan?.systemName}</div>
               </div>
@@ -326,12 +327,12 @@ const CheckoutTenantReg = ({
                 priceData?.product?.trialType != 2) && (
                 <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                   <div className=" w-50 fw-bold">
-                    <FormattedMessage id="Subscription" />
+                    <SafeFormatMessage id="Subscription" />
                   </div>
                   {priceData && (
                     <div className=" card-stats">
                       {priceData?.priceDetails.formattedPrice} /{' '}
-                      <FormattedMessage id={cycle[priceData?.cycle]} />
+                      <SafeFormatMessage id={cycle[priceData?.cycle]} />
                     </div>
                   )}
                 </div>

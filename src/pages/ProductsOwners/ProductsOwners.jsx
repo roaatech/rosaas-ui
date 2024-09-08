@@ -42,6 +42,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Routes } from '../../routes.js'
 import ProductOwnerForm from '../../components/custom/ProductOwner/ProductOwnerForm.jsx'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export default function ProductsOwners({ children }) {
   const dispatch = useDispatch()
@@ -104,16 +105,16 @@ export default function ProductsOwners({ children }) {
       />
       <div className="main-container">
         <TableHead
-          label={<FormattedMessage id="Add-Product-Owner" />}
+          label={<SafeFormatMessage id="Add-Product-Owner" />}
           icon={'pi-box'}
           setSearchValue={setSearchValue}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
           setFirst={setFirst}
-          title={<FormattedMessage id="Product-Owner-List" />}
+          title={<SafeFormatMessage id="Product-Owner-List" />}
         >
           <ProductOwnerForm
-            popupLabel={<FormattedMessage id="Create-Product-Owner" />}
+            popupLabel={<SafeFormatMessage id="Create-Product-Owner" />}
             type={'create'}
             update={update}
             setUpdate={setUpdate}
@@ -135,7 +136,7 @@ export default function ProductsOwners({ children }) {
                 field="displayName"
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Display-Name" />}
+                    text={<SafeFormatMessage id="Display-Name" />}
                     field="displayName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -151,7 +152,7 @@ export default function ProductsOwners({ children }) {
                 field="systemName"
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="System-Name" />}
+                    text={<SafeFormatMessage id="System-Name" />}
                     field="systemName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -174,7 +175,7 @@ export default function ProductsOwners({ children }) {
                 style={{ width: '250px', maxidth: '250px' }}
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Date" />}
+                    text={<SafeFormatMessage id="Date" />}
                     field="editedDate"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -209,24 +210,24 @@ export default function ProductsOwners({ children }) {
                         }
                       >
                         <FontAwesomeIcon icon={faEye} className="mx-2" />
-                        <FormattedMessage id="View-Details" />
+                        <SafeFormatMessage id="View-Details" />
                       </Dropdown.Item>
                       <Dropdown.Item onSelect={() => editForm(data.id)}>
                         <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                        <FormattedMessage id="Edit" />
+                        <SafeFormatMessage id="Edit" />
                       </Dropdown.Item>
                       {/* <Dropdown.Item
                         onClick={() => deleteConfirm(data.id)}
                         className="text-danger"
                       >
                         <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                        <FormattedMessage id="Delete" />
+                        <SafeFormatMessage id="Delete" />
                       </Dropdown.Item> */}
                     </Dropdown.Menu>
                   </Dropdown>
                 )}
                 style={{ width: '60px', textAlign: 'center' }}
-                header={<FormattedMessage id="Actions" />}
+                header={<SafeFormatMessage id="Actions" />}
               />
             </DataTable>
             <CustomPaginator
@@ -238,7 +239,7 @@ export default function ProductsOwners({ children }) {
 
             <ThemeDialog visible={visible} setVisible={setVisible}>
               <ProductOwnerForm
-                popupLabel={<FormattedMessage id="Edit-Product-Owner" />}
+                popupLabel={<SafeFormatMessage id="Edit-Product-Owner" />}
                 type={'edit'}
                 productOwnerData={listData && listData[currentId]}
                 update={update}
@@ -249,7 +250,7 @@ export default function ProductsOwners({ children }) {
 
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-product-owner-confirmation-message" />
+                <SafeFormatMessage id="delete-product-owner-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}

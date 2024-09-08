@@ -27,6 +27,7 @@ import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStopwatch } from '@fortawesome/free-solid-svg-icons'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ProductTrialPeriod = ({ data, setActiveIndex }) => {
   const [code, setCode] = useState(data.apiKey)
@@ -88,7 +89,7 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
                     <Col md={12}>
                       <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                         <td className="mb-0 w-50 fw-bold">
-                          <FormattedMessage id="Trial-Type" />
+                          <SafeFormatMessage id="Trial-Type" />
                         </td>
                         <td className=" card-stats">
                           {ProductTrialType[data?.trialType] && (
@@ -104,7 +105,7 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
                       <Card.Body className="py-0 px-3">
                         <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                           <td className="mb-0 w-50 fw-bold">
-                            <FormattedMessage id="Trial-Type" />
+                            <SafeFormatMessage id="Trial-Type" />
                           </td>
                           <td className=" card-stats">
                             {ProductTrialType[data?.trialType] && (
@@ -115,12 +116,12 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
                         {data?.trialType == 2 && (
                           <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                             <td className="mb-0 w-50 fw-bold">
-                              <FormattedMessage id="Trial-Plan" />
+                              <SafeFormatMessage id="Trial-Plan" />
                             </td>
                             <td className=" card-stats">
                               {listData[productId].plans &&
                                 listData[productId].plans?.[data?.trialPlanId]
-                                  .displayName}
+                                  ?.displayName}
                             </td>
                           </tr>
                         )}
@@ -136,7 +137,7 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
                         {data?.trialType == 2 && (
                           <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                             <td className="mb-0 w-50 fw-bold">
-                              <FormattedMessage id="Trial-Period-In-Days" />
+                              <SafeFormatMessage id="Trial-Period-In-Days" />
                             </td>
                             <td className=" card-stats">
                               {data?.trialPeriodInDays}

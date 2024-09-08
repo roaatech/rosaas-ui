@@ -26,6 +26,7 @@ import {
 import DateLabel from '../../../Shared/DateLabel/DateLabel'
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import PaymentFlow from './PaymentFlow/PaymentFlow'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 export default function SubsGeneralData(data) {
   const {
@@ -57,12 +58,12 @@ export default function SubsGeneralData(data) {
                   {/* product */}
                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                     <div className="mb-0 w-50 fw-bold">
-                      <FormattedMessage id="Product" />
+                      <SafeFormatMessage id="Product" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Product" />
+                            <SafeFormatMessage id="Subscription-Managenent-Product" />
                           </Tooltip>
                         }
                       >
@@ -89,12 +90,12 @@ export default function SubsGeneralData(data) {
                   {/* plan */}
                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                     <div className="mb-0 w-50 fw-bold">
-                      <FormattedMessage id="Plan" />
+                      <SafeFormatMessage id="Plan" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Plan" />
+                            <SafeFormatMessage id="Subscription-Managenent-Plan" />
                           </Tooltip>
                         }
                       >
@@ -118,12 +119,12 @@ export default function SubsGeneralData(data) {
                   {/* subsc status */}
                   <div className="d-flex align-items-center justify-content-between border-bottom  border-light py-2 ">
                     <div className="mb-0 w-50 fw-bold">
-                      <FormattedMessage id="Subscription-Status" />
+                      <SafeFormatMessage id="Subscription-Status" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Subscription-Status" />
+                            <SafeFormatMessage id="Subscription-Managenent-Subscription-Status" />
                           </Tooltip>
                         }
                       >
@@ -152,12 +153,12 @@ export default function SubsGeneralData(data) {
                   {
                     <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                       <div className="mb-0 w-50 fw-bold">
-                        <FormattedMessage id="Subscription" />
+                        <SafeFormatMessage id="Subscription" />
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id="Subscription-Managenent-Subscription" />
+                              <SafeFormatMessage id="Subscription-Managenent-Subscription" />
                             </Tooltip>
                           }
                         >
@@ -176,7 +177,7 @@ export default function SubsGeneralData(data) {
                       {!isTrial ? (
                         <div className=" card-stats">
                           ${subscriptionDatas.planPrice} /{' '}
-                          <FormattedMessage
+                          <SafeFormatMessage
                             id={cycle[subscriptionDatas.planCycle]}
                           />
                         </div>
@@ -196,12 +197,12 @@ export default function SubsGeneralData(data) {
                   {/* start date */}
                   <div className="d-flex align-items-center justify-content-between  py-2 ">
                     <div className="mb-0 w-50 fw-bold">
-                      <FormattedMessage id="Start-Date" />
+                      <SafeFormatMessage id="Start-Date" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Start-Date" />
+                            <SafeFormatMessage id="Subscription-Managenent-Start-Date" />
                           </Tooltip>
                         }
                       >
@@ -234,12 +235,12 @@ export default function SubsGeneralData(data) {
                   {/* Auto-Renewal */}
                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                     <div className="mb-0 w-50 fw-bold">
-                      <FormattedMessage id="Auto-Renewal" />{' '}
+                      <SafeFormatMessage id="Auto-Renewal" />{' '}
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Auto-Renewal" />
+                            <SafeFormatMessage id="Subscription-Managenent-Auto-Renewal" />
                           </Tooltip>
                         }
                       >
@@ -304,12 +305,12 @@ export default function SubsGeneralData(data) {
                   {/* Reset Limits */}
                   <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                     <div className="mb-0 fw-bold">
-                      <FormattedMessage id="Reset-Limit" />
+                      <SafeFormatMessage id="Reset-Limit" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Reset-Limit" />
+                            <SafeFormatMessage id="Subscription-Managenent-Reset-Limit" />
                           </Tooltip>
                         }
                       >
@@ -329,7 +330,7 @@ export default function SubsGeneralData(data) {
                     <div>
                       {subscriptionDatas.lastLimitsResetDate ? (
                         <span>
-                          {/* <FormattedMessage id="Reseted-At" />:{' '} */}
+                          {/* <SafeFormatMessage id="Reseted-At" />:{' '} */}
                           <Label
                             {...{
                               background: '#ffab032b',
@@ -368,12 +369,12 @@ export default function SubsGeneralData(data) {
                   {/* Reset Subs */}
                   <div className="d-flex align-items-center justify-content-between  py-2  border-bottom  border-light ">
                     <div className="mb-0 fw-bold">
-                      <FormattedMessage id="Reset-Subs" />
+                      <SafeFormatMessage id="Reset-Subs" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Reset-Subscription" />
+                            <SafeFormatMessage id="Subscription-Managenent-Reset-Subscription" />
                           </Tooltip>
                         }
                       >
@@ -409,7 +410,7 @@ export default function SubsGeneralData(data) {
                           {subscriptionDatas.subscriptionReset
                             .lastResetDate && (
                             <span>
-                              <FormattedMessage id="Reseted-At" />:{' '}
+                              <SafeFormatMessage id="Reseted-At" />:{' '}
                               {subscriptionDatas?.subscriptionReset
                                 .lastResetDate
                                 ? DataTransform(
@@ -469,7 +470,7 @@ export default function SubsGeneralData(data) {
                     <div className="mb-0 w-50 fw-bold">
                       {subscriptionDatas?.subscriptionPlanChange &&
                       subscriptionDatas?.subscriptionPlanChange.type ? (
-                        <FormattedMessage
+                        <SafeFormatMessage
                           id={
                             PlanChangingType[
                               subscriptionDatas.subscriptionPlanChange.type
@@ -479,12 +480,12 @@ export default function SubsGeneralData(data) {
                       ) : (
                         ''
                       )}{' '}
-                      <FormattedMessage id="info" />
+                      <SafeFormatMessage id="info" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-Info" />
+                            <SafeFormatMessage id="Subscription-Managenent-Info" />
                           </Tooltip>
                         }
                       >
@@ -547,12 +548,12 @@ export default function SubsGeneralData(data) {
                   {/* End Date */}
                   <div className="d-flex align-items-center justify-content-between py-2 ">
                     <div className="mb-0 w-50 fw-bold">
-                      <FormattedMessage id="End-Date" />
+                      <SafeFormatMessage id="End-Date" />
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
-                            <FormattedMessage id="Subscription-Managenent-End-Date" />
+                            <SafeFormatMessage id="Subscription-Managenent-End-Date" />
                           </Tooltip>
                         }
                       >

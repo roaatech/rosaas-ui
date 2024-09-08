@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import SignInProductManagement from '../../components/custom/SignInProductManagement/SignInProductManagement'
 import { Wrapper } from './ProductManagementSignInPage.styled'
 import logo from '../../assets/img/brand/rosas.svg'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ProductManagementSignInPage = () => {
   const navigate = useNavigate()
@@ -29,7 +30,7 @@ const ProductManagementSignInPage = () => {
                 style={{ maxWidth: '200px' }}
               />
               <h4 className="text-center mt-2">
-                <FormattedMessage id="Product-Management-Area" />
+                <SafeFormatMessage id="Product-Management-Area" />
               </h4>
             </Col>
             <Col
@@ -40,7 +41,7 @@ const ProductManagementSignInPage = () => {
               <div className="">
                 <div className=" mb-4 mt-md-0">
                   <h3 className="mb-0">
-                    <FormattedMessage id="singInTo" />{' '}
+                    <SafeFormatMessage id="singInTo" />{' '}
                     <span className="rosaas">RoSaaS</span>
                   </h3>
                 </div>

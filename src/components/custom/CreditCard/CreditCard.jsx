@@ -15,6 +15,7 @@ import { MdError, MdOutlineStarBorder } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
 import Label from '../Shared/label/Label'
 import { BsArrowRightCircleFill, BsTriangle } from 'react-icons/bs'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const CreditCard = ({
   cardNumber: last4Digits,
@@ -50,7 +51,7 @@ const CreditCard = ({
               {' '}
               <MdError />
               <h3 className="payment-info-not-available">
-                <FormattedMessage id="payment-Info-Not-Available" />
+                <SafeFormatMessage id="payment-Info-Not-Available" />
               </h3>
             </div>
           ) : (
@@ -98,11 +99,11 @@ const CreditCard = ({
                     >
                       <Dropdown.Item onClick={onSetAsDefault}>
                         <MdOutlineStarBorder />
-                        <FormattedMessage id="Set-As-Default" />
+                        <SafeFormatMessage id="Set-As-Default" />
                       </Dropdown.Item>
                       <Dropdown.Item className="text-danger" onClick={onDelete}>
                         <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                        <FormattedMessage id="Delete" />
+                        <SafeFormatMessage id="Delete" />
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
@@ -112,7 +113,7 @@ const CreditCard = ({
                     <Label
                       {...{
                         background: '#ffffffa1',
-                        value: <FormattedMessage id="Default" />,
+                        value: <SafeFormatMessage id="Default" />,
                       }}
                     />
                   </div>

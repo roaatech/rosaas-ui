@@ -12,10 +12,27 @@ export const Wrapper = styled.div`
   .tab-header {
     transform: rotate(22deg);
   }
+  .tab-header.rtl {
+    transform: rotate(-30deg) !important;
+  }
   .main-container {
     margin: 0 auto;
   }
   .text-seamlessly {
     font-size: var(--largeFont);
+  }
+
+  .rtl .form-check {
+    direction: rtl;
+    text-align: right;
+    display: flex;
+  }
+  .rtl .form-check-input {
+    margin-left: 0;
+    margin-right: 5px; /* Adjust space between checkbox and text */
+  }
+
+  .rtl .form-check-label {
+    margin-right: 3px; /* Increase space between checkbox and label */
   }
 `

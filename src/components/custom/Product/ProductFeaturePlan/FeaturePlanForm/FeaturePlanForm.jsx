@@ -34,6 +34,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { activeTab } from '../../../../../const/product.js'
 import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const FeaturePlanForm = ({
   type,
@@ -43,6 +44,7 @@ const FeaturePlanForm = ({
   setActiveIndex,
   plan,
   feature,
+  selectedLanguage,
 }) => {
   const routeParams = useParams()
   const productId = routeParams.id
@@ -67,6 +69,8 @@ const FeaturePlanForm = ({
   const allProducts = useSelector((state) => state.products.products)
   const listFeatureData = allProducts[productId]?.features
   let allFeatureArray = listFeatureData && Object.values(listFeatureData)
+  console.log({ allFeatureArray })
+
   const allPlans = useSelector(
     (state) => state.products.products[productId]?.plans
   )
@@ -84,7 +88,9 @@ const FeaturePlanForm = ({
       ? allFeatureArray.map((item) => {
           return {
             value: item.id,
-            label: item.displayName,
+            label: selectedLanguage
+              ? item?.displayNameLocalizations?.[selectedLanguage]
+              : item.displayName,
             type: item.type == 1 ? 'Number' : 'Boolean',
           }
         })
@@ -94,7 +100,12 @@ const FeaturePlanForm = ({
 
   const planOptions = allPlans
     ? allPlansArray.map((item) => {
-        return { value: item.id, label: item.displayName }
+        return {
+          value: item.id,
+          label:
+            item.displayNameLocalizations?.[selectedLanguage] ||
+            item.displayName,
+        }
       })
     : []
 
@@ -140,10 +151,10 @@ const FeaturePlanForm = ({
 
   const validationSchema = Yup.object().shape({
     feature: Yup.string().required(
-      <FormattedMessage id="Please-Select-a-Option" />
+      <SafeFormatMessage id="Please-Select-a-Option" />
     ),
     plan: Yup.string().required(
-      <FormattedMessage id="Please-Select-a-Option" />
+      <SafeFormatMessage id="Please-Select-a-Option" />
     ),
     limit: Yup.number()
       .nullable()
@@ -232,9 +243,9 @@ const FeaturePlanForm = ({
               ...dataDetails,
               feature: {
                 id: values.feature,
-                displayName: featureOptions.find(
-                  (item) => item.value === values.feature
-                ).label,
+                displayNameLocalizations: Object.values(listFeatureData).find(
+                  (item) => item.id === values.feature
+                ).displayNameLocalizations,
               },
               plan: {
                 id: values.plan,
@@ -308,6 +319,7 @@ const FeaturePlanForm = ({
 
         setAvailableFeatures(updatedAvailableFeatures)
       }
+      console.log(featuresAssignedToPlan)
     }
   }, [formik.values.plan, FeaturePlanData?.plan?.id, featureOptions])
   useEffect(() => {
@@ -333,7 +345,7 @@ const FeaturePlanForm = ({
           <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Plan" />{' '}
+                <SafeFormatMessage id="Plan" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
@@ -345,7 +357,7 @@ const FeaturePlanForm = ({
                 onBlur={formik.handleBlur}
               >
                 <option value={''}>
-                  <FormattedMessage id="Select-Option" />
+                  <SafeFormatMessage id="Select-Option" />
                 </option>
                 {planOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -367,7 +379,7 @@ const FeaturePlanForm = ({
           <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Feature" />{' '}
+                <SafeFormatMessage id="Feature" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
@@ -380,7 +392,7 @@ const FeaturePlanForm = ({
                 disabled={!formik.values.plan}
               >
                 <option value={''}>
-                  <FormattedMessage id="Select-Option" />
+                  <SafeFormatMessage id="Select-Option" />
                 </option>
                 {availableFeatures &&
                   availableFeatures.map((option) => (
@@ -399,84 +411,6 @@ const FeaturePlanForm = ({
               )}
             </Form.Group>
           </div>
-
-          {/* MultilingualInput for Description */}
-          <MultilingualInput
-            inputLabel="Plan-Feature-display-description"
-            languages={[
-              { code: 'en', name: 'English' },
-              { code: 'ar', name: 'Arabic' },
-            ]}
-            inputIds={{
-              en: 'descriptionEn',
-              ar: 'descriptionAr',
-            }}
-            placeholder={{
-              en: 'English-Description',
-              ar: 'Arabic-Description',
-            }}
-            tooltipMessageId="Display-description-of-the-plan-feature-that-will-show-in-the-price-page"
-            values={{
-              en: formik.values.descriptionEn,
-              ar: formik.values.descriptionAr,
-            }}
-            onChange={formik.handleChange}
-            isRequired={false}
-            inputType="TextareaAndCounter"
-            maxLength={250}
-            errors={{
-              en: formik.errors.descriptionEn,
-              ar: formik.errors.descriptionAr,
-            }}
-            touched={{
-              en: formik.touched.descriptionEn,
-              ar: formik.touched.descriptionAr,
-            }}
-          />
-
-          <div
-            style={{
-              display: isFeatureBoolean(formik.values.feature)
-                ? 'none'
-                : 'block',
-            }}
-          >
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Reset" />
-                <span style={{ color: 'red' }}> *</span>
-              </Form.Label>
-              <select
-                className="form-control"
-                id="reset"
-                name="reset"
-                onChange={formik.handleChange}
-                value={
-                  isFeatureBoolean(formik.values.feature)
-                    ? ''
-                    : formik.values.reset
-                }
-                disabled={isFeatureBoolean(formik.values.feature)}
-              >
-                <option value="">
-                  <FormattedMessage id="Select-Option" />
-                </option>
-                {Object.entries(featureResetMap).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.reset && formik.errors.reset && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.reset}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
           <div
             style={{
               display: isFeatureBoolean(formik.values.feature)
@@ -486,7 +420,7 @@ const FeaturePlanForm = ({
           >
             <Form.Group className="">
               <Form.Label>
-                <FormattedMessage id="Limit" />
+                <SafeFormatMessage id="Limit" />
                 <span style={{ color: 'red' }}> *</span>
               </Form.Label>
               <input
@@ -519,7 +453,7 @@ const FeaturePlanForm = ({
                 }`}
               >
                 <span>
-                  <FormattedMessage id="Unlimited" />
+                  <SafeFormatMessage id="Unlimited" />
                 </span>
                 <FontAwesomeIcon
                   icon={unlimited ? faToggleOn : faToggleOff}
@@ -540,7 +474,7 @@ const FeaturePlanForm = ({
           >
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Unit" />
+                <SafeFormatMessage id="Unit" />
                 <span style={{ color: 'red' }}> *</span>
               </Form.Label>
               <select
@@ -556,7 +490,7 @@ const FeaturePlanForm = ({
                 disabled={isFeatureBoolean(formik.values.feature)}
               >
                 <option value="">
-                  <FormattedMessage id="Select-Option" />
+                  <SafeFormatMessage id="Select-Option" />
                 </option>
                 {Object.entries(featureUnitMap).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -607,17 +541,93 @@ const FeaturePlanForm = ({
               />
             )}
           </div>
+          <div
+            style={{
+              display: isFeatureBoolean(formik.values.feature)
+                ? 'none'
+                : 'block',
+            }}
+          >
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <SafeFormatMessage id="Reset" />
+                <span style={{ color: 'red' }}> *</span>
+              </Form.Label>
+              <select
+                className="form-control"
+                id="reset"
+                name="reset"
+                onChange={formik.handleChange}
+                value={
+                  isFeatureBoolean(formik.values.feature)
+                    ? ''
+                    : formik.values.reset
+                }
+                disabled={isFeatureBoolean(formik.values.feature)}
+              >
+                <option value="">
+                  <SafeFormatMessage id="Select-Option" />
+                </option>
+                {Object.entries(featureResetMap).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.reset && formik.errors.reset && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.reset}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          {/* MultilingualInput for Description */}
+          <MultilingualInput
+            inputLabel="Plan-Feature-display-description"
+            languages={[
+              { code: 'en', name: 'English' },
+              { code: 'ar', name: 'Arabic' },
+            ]}
+            inputIds={{
+              en: 'descriptionEn',
+              ar: 'descriptionAr',
+            }}
+            placeholder={{
+              en: 'English-Description',
+              ar: 'Arabic-Description',
+            }}
+            tooltipMessageId="Display-description-of-the-plan-feature-that-will-show-in-the-price-page"
+            values={{
+              en: formik.values.descriptionEn,
+              ar: formik.values.descriptionAr,
+            }}
+            onChange={formik.handleChange}
+            isRequired={false}
+            inputType="TextareaAndCounter"
+            maxLength={250}
+            errors={{
+              en: formik.errors.descriptionEn,
+              ar: formik.errors.descriptionAr,
+            }}
+            touched={{
+              en: formik.touched.descriptionEn,
+              ar: formik.touched.descriptionAr,
+            }}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

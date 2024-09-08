@@ -9,6 +9,7 @@ import Label from '../../Shared/label/Label'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import { size } from 'lodash'
 import DateLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const SubscriptionInfoAccordion = (props) => {
   const subscriptionData = useSelector(
@@ -27,18 +28,18 @@ const SubscriptionInfoAccordion = (props) => {
                 className="w-100 d-flex justify-content-between accordionButton"
               >
                 <span className="firstTd fw-bold">
-                  <FormattedMessage id="Subscription-Info" />
+                  <SafeFormatMessage id="Subscription-Info" />
                 </span>
                 <span className={`mr-2 `}>
                   <span>
                     <DateLabelWhite text={subscriptionData.planName} />
                   </span>
                   {'   '}
-                  <FormattedMessage id="From" />{' '}
+                  <SafeFormatMessage id="From" />{' '}
                   <DateLabelWhite
                     text={formatDate(subscriptionData.startDate)}
                   />{' '}
-                  <FormattedMessage id="to" />{' '}
+                  <SafeFormatMessage id="to" />{' '}
                   <DateLabel endDate={subscriptionData.endDate} />
                 </span>
               </Accordion.Button>
@@ -48,19 +49,19 @@ const SubscriptionInfoAccordion = (props) => {
                     <thead>
                       <tr>
                         <th>
-                          <FormattedMessage id="Feature" />
+                          <SafeFormatMessage id="Feature" />
                         </th>
                         <th>
-                          <FormattedMessage id="Reset" />
+                          <SafeFormatMessage id="Reset" />
                         </th>
                         <th>
-                          <FormattedMessage id="Start-Date" />
+                          <SafeFormatMessage id="Start-Date" />
                         </th>
                         <th>
-                          <FormattedMessage id="End-Date" />
+                          <SafeFormatMessage id="End-Date" />
                         </th>
                         <th>
-                          <FormattedMessage id="Remind/Limit" />
+                          <SafeFormatMessage id="Remind/Limit" />
                         </th>
                       </tr>
                     </thead>

@@ -18,6 +18,7 @@ import {
   timeDifferenceFromNow,
 } from '../../../../lib/sharedFun/Time'
 import { FormattedMessage, useIntl } from 'react-intl'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
   const intl = useIntl()
@@ -39,7 +40,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
         >
           <span className=" mb-0 fw-bold d-flex  align-items-center  w-100">
             <span className="firstTd">
-              <FormattedMessage id="Health-Check-Status" />
+              <SafeFormatMessage id="Health-Check-Status" />
             </span>
             <span className="mr-2 tabHolder">
               <span className="mr-2">
@@ -77,9 +78,9 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                       trigger={['hover', 'focus']}
                       overlay={
                         <Tooltip>
-                          <FormattedMessage id="Since" />{' '}
+                          <SafeFormatMessage id="Since" />{' '}
                           {DataTransform(item.healthCheckStatus.checkDate)},
-                          <FormattedMessage id="last-checked" />{' '}
+                          <SafeFormatMessage id="last-checked" />{' '}
                           {DataTransform(item.healthCheckStatus.lastCheckDate)}
                         </Tooltip>
                       }
@@ -111,22 +112,22 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                     <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-3">
                       <div>
                         <h6>
-                          <FormattedMessage id="Health-Check-Status-Info" />
+                          <SafeFormatMessage id="Health-Check-Status-Info" />
                         </h6>
                       </div>
                     </div>
                     <div className="checksCount d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
                       <div className="mb-0 w-25">
-                        <FormattedMessage id="Checks-Count" />
+                        <SafeFormatMessage id="Checks-Count" />
                       </div>
                       <div className="small card-stats">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id={'Health-Checks-Count'} /> (
+                              <SafeFormatMessage id={'Health-Checks-Count'} /> (
                               {item.healthCheckStatus.healthyCount}) <br />
-                              <FormattedMessage
+                              <SafeFormatMessage
                                 id={'Unavailable-Checks-Count'}
                               />{' '}
                               ({item.healthCheckStatus.unhealthyCount})
@@ -161,7 +162,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                     </div>
                     <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
                       <div className="mb-0 w-25">
-                        <FormattedMessage id="Url" />
+                        <SafeFormatMessage id="Url" />
                       </div>
                       <div className="small card-stats">
                         {item.healthCheckStatus.healthCheckUrl}
@@ -169,7 +170,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                     </div>
                     <div className="d-flex align-items-center justify-content-between pt-2 ml-5">
                       <div className="mb-0 w-25">
-                        <FormattedMessage id="Duration" />
+                        <SafeFormatMessage id="Duration" />
                       </div>
                       <div className="small card-stats">
                         {item.healthCheckStatus.duration}
@@ -187,13 +188,13 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                       <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-3">
                         <div>
                           <h6>
-                            <FormattedMessage id="External-System-Dispatch" />
+                            <SafeFormatMessage id="External-System-Dispatch" />
                           </h6>
                         </div>
                       </div>
                       <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
                         <div className="mb-0 w-25">
-                          <FormattedMessage id="Is-Successful" />
+                          <SafeFormatMessage id="Is-Successful" />
                         </div>
                         <div className="small card-stats uppercase">
                           {item.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
@@ -201,7 +202,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                       </div>
                       <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ml-5">
                         <div className="mb-0 w-25">
-                          <FormattedMessage id="Url" />
+                          <SafeFormatMessage id="Url" />
                         </div>
                         <div className="small card-stats">
                           {item.healthCheckStatus?.externalSystemDispatch?.url}
@@ -209,7 +210,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                       </div>
                       <div className="d-flex align-items-center justify-content-between  pt-2 ml-5">
                         <div className="mb-0 w-25">
-                          <FormattedMessage id="Dispatch-Date" />
+                          <SafeFormatMessage id="Dispatch-Date" />
                         </div>
                         <div className="small card-stats">
                           {Time(

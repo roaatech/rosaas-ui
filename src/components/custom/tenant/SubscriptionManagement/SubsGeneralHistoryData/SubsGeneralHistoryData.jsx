@@ -10,6 +10,7 @@ import Label from '../../../Shared/label/Label'
 import DateLabel from '../../../Shared/DateLabel/DateLabel'
 import useRequest from '../../../../../axios/apis/useRequest'
 import { subHistoryData } from '../../../../../store/slices/tenants'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 export default function SubsGeneralHistoryData(data) {
   const { tenantsData, currentTabCycle, isTrial } = data
@@ -51,7 +52,7 @@ export default function SubsGeneralHistoryData(data) {
               {/* product */}
               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                 <div className="mb-0 w-25 fw-bold">
-                  <FormattedMessage id="Product" />
+                  <SafeFormatMessage id="Product" />
                 </div>
                 <div className=" card-stats">
                   {tenantsData[routeParams.id]?.subscriptions[0]?.productName}
@@ -61,7 +62,7 @@ export default function SubsGeneralHistoryData(data) {
               {/* plan */}
               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                 <div className="mb-0 w-25 fw-bold">
-                  <FormattedMessage id="Plan" />
+                  <SafeFormatMessage id="Plan" />
                 </div>
                 <div className=" card-stats">
                   {subHistory?.plan.displayName}
@@ -72,13 +73,13 @@ export default function SubsGeneralHistoryData(data) {
               {
                 <div className="d-flex align-items-center justify-content-between py-2 ">
                   <div className="mb-0 w-25 fw-bold">
-                    <FormattedMessage id="Subscription" />
+                    <SafeFormatMessage id="Subscription" />
                   </div>
                   {!isTrial ? (
                     <div className=" card-stats">
                       ${subHistory?.price} /{' '}
                       {subHistory?.cycle && (
-                        <FormattedMessage id={cycle[subHistory?.cycle]} />
+                        <SafeFormatMessage id={cycle[subHistory?.cycle]} />
                       )}
                     </div>
                   ) : (
@@ -101,7 +102,7 @@ export default function SubsGeneralHistoryData(data) {
               {/* start date */}
               <div className="d-flex align-items-center justify-content-between  border-bottom border-light py-2 ">
                 <div className="mb-0 w-25 fw-bold">
-                  <FormattedMessage id="Start-Date" />
+                  <SafeFormatMessage id="Start-Date" />
                 </div>
                 <div className=" card-stats">
                   {subHistory?.startDate && (
@@ -119,7 +120,7 @@ export default function SubsGeneralHistoryData(data) {
               {/* End Date */}
               <div className="d-flex align-items-center justify-content-between py-2 ">
                 <div className="mb-0 w-25 fw-bold">
-                  <FormattedMessage id="End-Date" />
+                  <SafeFormatMessage id="End-Date" />
                 </div>
                 <div className=" card-stats">
                   {subHistory?.endDate && (

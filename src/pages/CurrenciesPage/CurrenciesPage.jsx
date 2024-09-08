@@ -44,6 +44,7 @@ import {
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import CurrencyForm from '../../components/custom/Currency/CurrencyForm'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 export default function CurrenciesPage() {
   const dispatch = useDispatch()
@@ -208,16 +209,16 @@ export default function CurrenciesPage() {
       <BreadcrumbComponent breadcrumbInfo="CurrenciesList" />
       <div className="main-container">
         <TableHead
-          label={<FormattedMessage id="add-currency" />}
+          label={<SafeFormatMessage id="add-currency" />}
           icon={'pi-money-bill'}
           search={false}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
-          title={<FormattedMessage id="currencies-list" />}
+          title={<SafeFormatMessage id="currencies-list" />}
         >
           {userRole === 'superAdmin' && (
             <CurrencyForm
-              popupLabel={<FormattedMessage id="create-currency" />}
+              popupLabel={<SafeFormatMessage id="create-currency" />}
               type={'create'}
               visible={visibleHead}
               setVisible={setVisibleHead}
@@ -236,20 +237,20 @@ export default function CurrenciesPage() {
             >
               <Column
                 field="displayName"
-                header={<FormattedMessage id="currency-name" />}
+                header={<SafeFormatMessage id="currency-name" />}
               />
               <Column
                 field="currencyCode"
-                header={<FormattedMessage id="currency-code" />}
+                header={<SafeFormatMessage id="currency-code" />}
               />
-              <Column field="rate" header={<FormattedMessage id="rate" />} />
+              <Column field="rate" header={<SafeFormatMessage id="rate" />} />
               <Column
                 field="displayOrder"
-                header={<FormattedMessage id="display-order" />}
+                header={<SafeFormatMessage id="display-order" />}
               />
               <Column
                 field="isPrimaryCurrency"
-                header={<FormattedMessage id="primary-currency" />}
+                header={<SafeFormatMessage id="primary-currency" />}
                 body={(data) => (
                   <Label
                     {...PrimaryCurrencyStatus[
@@ -262,7 +263,7 @@ export default function CurrenciesPage() {
               <Column
                 field="isPrimaryExchangeRateCurrency"
                 header={
-                  <FormattedMessage id="primary-exchange-rate-currency" />
+                  <SafeFormatMessage id="primary-exchange-rate-currency" />
                 }
                 body={(data) => (
                   <Label
@@ -283,7 +284,7 @@ export default function CurrenciesPage() {
                     </span>
                   )
                 }}
-                header={<FormattedMessage id="published" />}
+                header={<SafeFormatMessage id="published" />}
               />
               <Column
                 body={(data) => (
@@ -304,14 +305,14 @@ export default function CurrenciesPage() {
                     <Dropdown.Menu>
                       <Dropdown.Item onClick={() => handleViewDetails(data.id)}>
                         <FontAwesomeIcon icon={faEye} className="mx-2" />
-                        <FormattedMessage id="view-details" />
+                        <SafeFormatMessage id="view-details" />
                       </Dropdown.Item>
                       {userRole === 'superAdmin' && (
                         <Dropdown.Item
                           onClick={() => handleEditCurrency(data.id)}
                         >
                           <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                          <FormattedMessage id="edit" />
+                          <SafeFormatMessage id="edit" />
                         </Dropdown.Item>
                       )}
                       {!data.isPrimaryCurrency && (
@@ -325,7 +326,7 @@ export default function CurrenciesPage() {
                         >
                           <span className=" ">
                             <MdStar className="mx-2" />
-                            <FormattedMessage id="mark-primary-currency" />
+                            <SafeFormatMessage id="mark-primary-currency" />
                           </span>
                         </Dropdown.Item>
                       )}
@@ -341,7 +342,7 @@ export default function CurrenciesPage() {
                           >
                             <span className=" ">
                               <MdAttachMoney className="mx-2" />
-                              <FormattedMessage id="mark-primary-exchange-rate" />
+                              <SafeFormatMessage id="mark-primary-exchange-rate" />
                             </span>
                           </Dropdown.Item>
                         )}
@@ -355,12 +356,12 @@ export default function CurrenciesPage() {
                             {data.isPublished ? (
                               <span className=" ">
                                 <MdOutlineUnpublished className="mx-2" />
-                                <FormattedMessage id="Unpublish" />
+                                <SafeFormatMessage id="Unpublish" />
                               </span>
                             ) : (
                               <span className=" ">
                                 <MdOutlinePublishedWithChanges className="mx-2" />
-                                <FormattedMessage id="Publish" />
+                                <SafeFormatMessage id="Publish" />
                               </span>
                             )}
                           </Dropdown.Item>
@@ -376,7 +377,7 @@ export default function CurrenciesPage() {
                               icon={faTrashAlt}
                               className="mx-2"
                             />
-                            <FormattedMessage id="delete" />
+                            <SafeFormatMessage id="delete" />
                           </Dropdown.Item>
                         </>
                       )}
@@ -384,13 +385,13 @@ export default function CurrenciesPage() {
                   </Dropdown>
                 )}
                 style={{ width: '60px', textAlign: 'center' }}
-                header={<FormattedMessage id="actions" />}
+                header={<SafeFormatMessage id="actions" />}
               />
             </DataTable>
             <ThemeDialog visible={editVisible} setVisible={setEditVisible}>
               {currencyDetails && (
                 <CurrencyForm
-                  popupLabel={<FormattedMessage id="edit-currency" />}
+                  popupLabel={<SafeFormatMessage id="edit-currency" />}
                   type={'edit'}
                   visible={editVisible}
                   setVisible={setEditVisible}
@@ -401,7 +402,7 @@ export default function CurrenciesPage() {
             <ThemeDialog visible={visible} setVisible={setVisible}>
               {currencyDetails && (
                 <ShowDetails
-                  popupLabel={<FormattedMessage id="Currency-Details" />}
+                  popupLabel={<SafeFormatMessage id="Currency-Details" />}
                   data={{
                     displayName: currencyDetails.displayName,
                     currencyCode: currencyDetails.currencyCode,

@@ -10,6 +10,7 @@ import { Form } from '@themesberg/react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { useNavigate } from 'react-router-dom'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const PlanForm = ({
   type,
@@ -98,7 +99,7 @@ const PlanForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="System-Name" />
+                <SafeFormatMessage id="System-Name" />
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
@@ -124,7 +125,7 @@ const PlanForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Description" />
+                <SafeFormatMessage id="Description" />
               </Form.Label>
 
               <textarea
@@ -151,7 +152,7 @@ const PlanForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Display-Order" />
+                <SafeFormatMessage id="Display-Order" />
               </Form.Label>
               <input
                 type="text"
@@ -179,14 +180,14 @@ const PlanForm = ({
             type="submit"
             // disabled={submitLoading}
           >
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

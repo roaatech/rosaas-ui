@@ -9,6 +9,7 @@ import { Routes } from '../../routes'
 import ProductOwnerReg from '../../components/custom/ProductOwner/ProductOwnerReg/ProductOwnerReg'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import { BsBoxSeam } from 'react-icons/bs'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 const SignUpPage = () => {
   const location = useLocation()
   return (
@@ -37,19 +38,19 @@ const SignUpPage = () => {
                         <span className="rosaas">
                           {' '}
                           {location.pathname === Routes.POwnerSignUp.path && (
-                            <FormattedMessage id={'Admin'} />
+                            <SafeFormatMessage id={'Admin'} />
                           )}{' '}
                         </span>
-                        <FormattedMessage id={'signUpTo'} />{' '}
+                        <SafeFormatMessage id={'signUpTo'} />{' '}
                         <span className="rosaas">RoSaaS</span>
                       </div>
                     ) : (
                       <div>
                         {/* <span className="rosaas"> */}
-                        <FormattedMessage id={'Product-Owner'} />
+                        <SafeFormatMessage id={'Product-Owner'} />
                         {/* </span> */}
                         {'  '}
-                        <FormattedMessage id={'Registeration'} />{' '}
+                        <SafeFormatMessage id={'Registeration'} />{' '}
                         {/* <span className="rosaas">RoSaaS</span> */}
                       </div>
                     )}

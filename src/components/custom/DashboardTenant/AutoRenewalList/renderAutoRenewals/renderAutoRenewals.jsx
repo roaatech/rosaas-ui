@@ -14,6 +14,7 @@ import {
 } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { cycle } from '../../../../../const'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const renderAutoRenewals = ({
   renewal,
@@ -40,14 +41,14 @@ const renderAutoRenewals = ({
                   className="text-success me-2"
                 />
                 <strong>
-                  <FormattedMessage id={'Auto-Renewal'} />
+                  <SafeFormatMessage id={'Auto-Renewal'} />
                 </strong>{' '}
               </div>
             </Card.Title>
             <div>
               <span className="mx-2">
                 <span className=" fw-normal">
-                  <FormattedMessage id="Billing-Date" />
+                  <SafeFormatMessage id="Billing-Date" />
                 </span>
                 <span className="text-success">
                   {' '}
@@ -79,7 +80,7 @@ const renderAutoRenewals = ({
                     className="text-danger"
                   >
                     <FontAwesomeIcon icon={faToggleOn} className="me-2" />
-                    <FormattedMessage id="Cancel-Auto-Renewal" />
+                    <SafeFormatMessage id="Cancel-Auto-Renewal" />
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -90,7 +91,7 @@ const renderAutoRenewals = ({
           <Card.Text>
             <span>
               <strong>
-                <FormattedMessage id="Subscription" />
+                <SafeFormatMessage id="Subscription" />
               </strong>{' '}
               {renewal.subscription?.displayName}{' '}
             </span>
@@ -99,7 +100,7 @@ const renderAutoRenewals = ({
           <Card.Text>
             <span>
               <strong>
-                <FormattedMessage id="Plan" />
+                <SafeFormatMessage id="Plan" />
               </strong>{' '}
               {renewal?.plan?.displayName}
             </span>
@@ -107,7 +108,7 @@ const renderAutoRenewals = ({
           <Card.Text>
             <div className="d-flex align-items-center">
               <strong>
-                <FormattedMessage id="Enabled-Date" />
+                <SafeFormatMessage id="Enabled-Date" />
               </strong>{' '}
               <span className="mx-1">{formatDate(renewal.enabledDate)}</span>
             </div>
@@ -117,27 +118,27 @@ const renderAutoRenewals = ({
             <Card.Text>
               <FontAwesomeIcon icon={faSyncAlt} className="text-success me-2" />
               <strong>
-                <FormattedMessage id="Auto-Renewal" />
+                <SafeFormatMessage id="Auto-Renewal" />
               </strong>
               <span className="text-success">
                 {' '}
-                <FormattedMessage id="Enabled" />{' '}
+                <SafeFormatMessage id="Enabled" />{' '}
                 {renewal.isContinuousRenewal && (
-                  <FormattedMessage id="Indefinitely" />
+                  <SafeFormatMessage id="Indefinitely" />
                 )}
               </span>{' '}
               {renewal.renewalsCount > 0 && (
                 <>
-                  <FormattedMessage id="for" />{' '}
+                  <SafeFormatMessage id="for" />{' '}
                   {renewal.renewalsCount > 1 ? (
                     <span className="text-success">
                       {renewal.renewalsCount}{' '}
-                      <FormattedMessage id={`${cycle[renewal.plan.cycle]}s`} />
+                      <SafeFormatMessage id={`${cycle[renewal.plan.cycle]}s`} />
                     </span>
                   ) : (
                     <span className="text-success">
                       {renewal.renewalsCount}{' '}
-                      <FormattedMessage id={`${cycle[renewal.plan.cycle]}`} />
+                      <SafeFormatMessage id={`${cycle[renewal.plan.cycle]}`} />
                     </span>
                   )}
                 </>
@@ -147,7 +148,7 @@ const renderAutoRenewals = ({
 
           <div>
             <strong>
-              <FormattedMessage id="Auto-Renewal-Payment-Method" />
+              <SafeFormatMessage id="Auto-Renewal-Payment-Method" />
             </strong>
 
             <div className="p-3 ">

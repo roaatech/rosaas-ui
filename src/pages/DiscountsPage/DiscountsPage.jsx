@@ -41,6 +41,7 @@ import {
 import { DataTransform, formatDate } from '../../lib/sharedFun/Time'
 import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 export default function DiscountsPage() {
   const dispatch = useDispatch()
@@ -112,15 +113,15 @@ export default function DiscountsPage() {
       <BreadcrumbComponent breadcrumbInfo={'DiscountsList'} />
       <div className="main-container">
         <TableHead
-          label={<FormattedMessage id="Add-Discount" />}
+          label={<SafeFormatMessage id="Add-Discount" />}
           icon={'pi-box'}
           search={false}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
-          title={<FormattedMessage id="Discounts-List" />}
+          title={<SafeFormatMessage id="Discounts-List" />}
         >
           <DiscountForm
-            popupLabel={<FormattedMessage id="Create-Discount" />}
+            popupLabel={<SafeFormatMessage id="Create-Discount" />}
             type={'create'}
             visible={visibleHead}
             setVisible={setVisibleHead}
@@ -212,18 +213,18 @@ export default function DiscountsPage() {
                         {!data.isActive ? (
                           <span className=" ">
                             <MdCheck className="mx-2" />
-                            <FormattedMessage id="Activate" />
+                            <SafeFormatMessage id="Activate" />
                           </span>
                         ) : (
                           <span className=" ">
                             <MdClose className="mx-2" />
-                            <FormattedMessage id="Deactivate" />
+                            <SafeFormatMessage id="Deactivate" />
                           </span>
                         )}
                       </Dropdown.Item>
                       <Dropdown.Item onSelect={() => navigate(`./${data.id}`)}>
                         <FontAwesomeIcon icon={faEye} className="mx-2" />
-                        <FormattedMessage id="View-Details" />
+                        <SafeFormatMessage id="View-Details" />
                       </Dropdown.Item>
                       <Dropdown.Item
                         onSelect={() => {
@@ -232,7 +233,7 @@ export default function DiscountsPage() {
                         }}
                       >
                         <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                        <FormattedMessage id="Edit" />
+                        <SafeFormatMessage id="Edit" />
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => {
@@ -242,13 +243,13 @@ export default function DiscountsPage() {
                         className="text-danger"
                       >
                         <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                        <FormattedMessage id="Delete" />
+                        <SafeFormatMessage id="Delete" />
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 )}
                 style={{ width: '60px', textAlign: 'center' }}
-                header={<FormattedMessage id="Actions" />}
+                header={<SafeFormatMessage id="Actions" />}
               />
             </DataTable>
             <CustomPaginator
@@ -258,7 +259,7 @@ export default function DiscountsPage() {
               onPageChange={onPageChange}
             />
             <DeleteConfirmation
-              message={<FormattedMessage id="delete-confirmation-message" />}
+              message={<SafeFormatMessage id="delete-confirmation-message" />}
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
               setConfirm={setConfirm}
@@ -267,7 +268,7 @@ export default function DiscountsPage() {
             />
             <ThemeDialog visible={visible} setVisible={setVisible}>
               <DiscountForm
-                popupLabel={<FormattedMessage id="Edit-Discount" />}
+                popupLabel={<SafeFormatMessage id="Edit-Discount" />}
                 type={'edit'}
                 visible={visible}
                 setVisible={setVisible}

@@ -20,6 +20,7 @@ import PaymentForm from '../../components/custom/PaymentForm/PaymentForm'
 import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
 import { setProductOwner } from '../../store/slices/main'
 import { deleteAllPlanPriceBySystemName } from '../../store/slices/products/productsSlice'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const TwoStepProcessPage = () => {
   const params = useParams()
@@ -41,6 +42,7 @@ const TwoStepProcessPage = () => {
 
   useEffect(() => {
     if (!orderIDParam) {
+      dispatch(setStep(1))
       return
     }
     dispatch(setStep(2))
@@ -96,7 +98,7 @@ const TwoStepProcessPage = () => {
                       label: (
                         <>
                           <FontAwesomeIcon icon={faInfoCircle} />{' '}
-                          <FormattedMessage id="Subscribtion-Info" />
+                          <SafeFormatMessage id="Subscribtion-Info" />
                         </>
                       ),
                     },
@@ -104,7 +106,7 @@ const TwoStepProcessPage = () => {
                       label: (
                         <>
                           <FontAwesomeIcon icon={faMoneyCheckDollar} />{' '}
-                          <FormattedMessage id="Check-Out" />
+                          <SafeFormatMessage id="Check-Out" />
                         </>
                       ),
                     },
@@ -116,7 +118,7 @@ const TwoStepProcessPage = () => {
               {step === 1 && (
                 <CheckoutTenantReg
                   type="create"
-                  popupLabel={<FormattedMessage id="Enter-Your-Info" />}
+                  popupLabel={<SafeFormatMessage id="Enter-Your-Info" />}
                   setCurrentTenant={setCurrentTenant}
                   setHasToPay={setHasToPay}
                   setDisplayName={setDisplayName}

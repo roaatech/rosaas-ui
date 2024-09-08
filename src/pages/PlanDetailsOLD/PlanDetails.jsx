@@ -47,7 +47,7 @@
 //         <div className="main-container">
 //           <UpperContent>
 //             <h4 className="m-0">
-//               <FormattedMessage id="Plan-Details" /> : {planData.name}
+//               <SafeFormatMessage id="Plan-Details" /> : {planData.name}
 //             </h4>
 //             <DynamicButtons
 //               buttons={[
@@ -74,7 +74,7 @@
 //             />
 //           </UpperContent>
 //           <TabView className="card">
-//             <TabPanel header={<FormattedMessage id="Details" />}>
+//             <TabPanel header={<SafeFormatMessage id="Details" />}>
 //               {/* <PlanDetailsTab data={planData} /> */}
 //             </TabPanel>
 //           </TabView>

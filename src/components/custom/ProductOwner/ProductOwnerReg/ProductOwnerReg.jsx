@@ -11,6 +11,7 @@ import { Routes } from '../../../../routes'
 import Wrapper from './ProductOwnerReg.styled'
 import { updateUserInfoAttribute } from '../../../../store/slices/auth'
 import { toast } from 'react-toastify'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ProductOwnerReg = () => {
   const navigate = useNavigate()
@@ -25,14 +26,14 @@ const ProductOwnerReg = () => {
 
   const validationSchema = Yup.object().shape({
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="Unique-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters-Numbers-and-Underscores-are-only-accepted" />
+        <SafeFormatMessage id="English-Characters-Numbers-and-Underscores-are-only-accepted" />
       ),
     displayName: Yup.string().required(
-      <FormattedMessage id="Display-Name-is-required" />
+      <SafeFormatMessage id="Display-Name-is-required" />
     ),
   })
 
@@ -92,12 +93,12 @@ const ProductOwnerReg = () => {
               <div>
                 <Card.Header className="mb-3 ">
                   <Card.Title className="mb-0">
-                    <FormattedMessage id="Company-Info" />
+                    <SafeFormatMessage id="Company-Info" />
                   </Card.Title>
                 </Card.Header>
 
                 <label htmlFor="displayName" className="pb-2">
-                  <FormattedMessage id="Company-Name" />
+                  <SafeFormatMessage id="Company-Name" />
                 </label>
                 <div className="inputContainer">
                   <div className="inputContainerWithIcon">
@@ -122,7 +123,7 @@ const ProductOwnerReg = () => {
                 </div>
               </div>
               <label htmlFor="systemName" className="pb-2">
-                <FormattedMessage id="Company-System-Name" />
+                <SafeFormatMessage id="Company-System-Name" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -142,7 +143,7 @@ const ProductOwnerReg = () => {
 
               <div>
                 <label htmlFor="description" className="pb-2">
-                  <FormattedMessage id="Description" />
+                  <SafeFormatMessage id="Description" />
                 </label>
                 <div className="inputContainer">
                   <div className="inputContainerWithIcon">
@@ -167,7 +168,7 @@ const ProductOwnerReg = () => {
                   className="w-100"
                   disabled={isSubmitting}
                 >
-                  <FormattedMessage id="Register-Product-Owner-Info" />
+                  <SafeFormatMessage id="Register-Product-Owner-Info" />
                 </Button>
               </div>
             </Form>

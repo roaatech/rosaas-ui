@@ -43,6 +43,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Routes } from '../../routes.js'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export default function Product({ children }) {
   const dispatch = useDispatch()
@@ -115,16 +116,16 @@ export default function Product({ children }) {
       <BreadcrumbComponent breadcrumbInfo={'ProductList'} icon={BsBoxSeam} />
       <div className="main-container">
         <TableHead
-          label={<FormattedMessage id="Add-Product" />}
+          label={<SafeFormatMessage id="Add-Product" />}
           icon={'pi-box'}
           setSearchValue={setSearchValue}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
           setFirst={setFirst}
-          title={<FormattedMessage id="Product-List" />}
+          title={<SafeFormatMessage id="Product-List" />}
         >
           <ProductForm
-            popupLabel={<FormattedMessage id="Create-Product" />}
+            popupLabel={<SafeFormatMessage id="Create-Product" />}
             type={'create'}
             update={update}
             setUpdate={setUpdate}
@@ -146,7 +147,7 @@ export default function Product({ children }) {
                 field="displayName"
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Display-Name" />}
+                    text={<SafeFormatMessage id="Display-Name" />}
                     field="displayName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -162,7 +163,7 @@ export default function Product({ children }) {
                 field="systemName"
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="System-Name" />}
+                    text={<SafeFormatMessage id="System-Name" />}
                     field="systemName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -179,7 +180,7 @@ export default function Product({ children }) {
                 field={'client.systemName'}
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Client" />}
+                    text={<SafeFormatMessage id="Client" />}
                     field="client"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -203,7 +204,7 @@ export default function Product({ children }) {
                 style={{ width: '250px', maxidth: '250px' }}
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Date" />}
+                    text={<SafeFormatMessage id="Date" />}
                     field="editedDate"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -238,24 +239,24 @@ export default function Product({ children }) {
                         }
                       >
                         <FontAwesomeIcon icon={faEye} className="mx-2" />
-                        <FormattedMessage id="View-Details" />
+                        <SafeFormatMessage id="View-Details" />
                       </Dropdown.Item>
                       <Dropdown.Item onSelect={() => editForm(data.id)}>
                         <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                        <FormattedMessage id="Edit" />
+                        <SafeFormatMessage id="Edit" />
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => deleteConfirm(data.id)}
                         className="text-danger"
                       >
                         <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                        <FormattedMessage id="Delete" />
+                        <SafeFormatMessage id="Delete" />
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 )}
                 style={{ width: '60px', textAlign: 'center' }}
-                header={<FormattedMessage id="Actions" />}
+                header={<SafeFormatMessage id="Actions" />}
               />
             </DataTable>
             <CustomPaginator
@@ -267,7 +268,7 @@ export default function Product({ children }) {
 
             <ThemeDialog visible={visible} setVisible={setVisible}>
               <ProductForm
-                popupLabel={<FormattedMessage id="Edit-Product" />}
+                popupLabel={<SafeFormatMessage id="Edit-Product" />}
                 type={'edit'}
                 productData={listData[currentId]}
                 update={update}
@@ -278,7 +279,7 @@ export default function Product({ children }) {
 
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-product-confirmation-message" />
+                <SafeFormatMessage id="delete-product-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}

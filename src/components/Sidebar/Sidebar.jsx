@@ -56,6 +56,7 @@ import { FormattedMessage } from 'react-intl'
 import QuickActions from './QuickActions/QuickActions'
 import { setAllProductOwners } from '../../store/slices/productsOwners.js'
 import { MdCurrencyExchange, MdDiscount, MdInfo } from 'react-icons/md'
+import SafeFormatMessage from '../custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export default (props = {}) => {
   const navigate = useNavigate()
@@ -297,7 +298,7 @@ export default (props = {}) => {
                 </div>
                 <div className="d-block">
                   <h6>
-                    <FormattedMessage id="Hi" />, {userInfo.email}
+                    <SafeFormatMessage id="Hi" />, {userInfo.email}
                   </h6>
                   <Button
                     as={Link}
@@ -307,7 +308,7 @@ export default (props = {}) => {
                     className="text-dark"
                   >
                     <FontAwesomeIcon icon={faSignOutAlt} className="mx-2" />
-                    <FormattedMessage id="Sign-Out" />
+                    <SafeFormatMessage id="Sign-Out" />
                   </Button>
                 </div>
               </div>
@@ -337,7 +338,7 @@ export default (props = {}) => {
               {active.length ? (
                 <CollapsableNavItem
                   eventKey={activeIsOpen}
-                  title={<FormattedMessage id="Active-Tenant" />}
+                  title={<SafeFormatMessage id="Active-Tenant" />}
                   icon={BsFillPersonLinesFill}
                 >
                   {active.map((item, index) => (
@@ -353,7 +354,7 @@ export default (props = {}) => {
               {inactive.length ? (
                 <CollapsableNavItem
                   eventKey={inactiveIsOpen}
-                  title={<FormattedMessage id="Tenants" />}
+                  title={<SafeFormatMessage id="Tenants" />}
                   icon={<BsFillPersonLinesFill />}
                 >
                   {inactive.map((item, index) => (
@@ -395,7 +396,7 @@ export default (props = {}) => {
                   eventKey={productsIsOpen}
                   title={
                     <span onClick={() => navigate(Routes.products.path)}>
-                      <FormattedMessage id="Products" />
+                      <SafeFormatMessage id="Products" />
                     </span>
                   }
                   icon={
@@ -436,7 +437,7 @@ export default (props = {}) => {
                   eventKey={productsOwnersIsOpen}
                   title={
                     <span onClick={() => navigate(Routes.productsOwners.path)}>
-                      <FormattedMessage id="Products-Owners" />
+                      <SafeFormatMessage id="Products-Owners" />
                     </span>
                   }
                   icon={
@@ -466,25 +467,25 @@ export default (props = {}) => {
               {(userRole == 'superAdmin' || userRole == 'clientAdmin') && (
                 <CollapsableNavItem
                   eventKey={settingIsOpen}
-                  title={<FormattedMessage id="Settings" />}
+                  title={<SafeFormatMessage id="Settings" />}
                   icon={<BsGearFill />}
                 >
                   {userRole == 'superAdmin' && (
                     <>
                       <NavItem
-                        title={<FormattedMessage id="Health-Check-sidebar" />}
+                        title={<SafeFormatMessage id="Health-Check-sidebar" />}
                         link={Routes.Settings.path}
                         icon={<BsFillClipboard2CheckFill />}
                       />
 
                       <NavItem
-                        title={<FormattedMessage id="Subscriptions" />}
+                        title={<SafeFormatMessage id="Subscriptions" />}
                         link={Routes.SubscriptionsSettings.path}
                         icon={<BsPeople />}
                       />
 
                       <NavItem
-                        title={<FormattedMessage id="Product-Warnings" />}
+                        title={<SafeFormatMessage id="Product-Warnings" />}
                         link={Routes.ProductWarningsSettings.path}
                         icon={<BsExclamationTriangle />}
                       />
@@ -492,20 +493,20 @@ export default (props = {}) => {
                   )}
                   {userRole == 'superAdmin' && (
                     <NavItem
-                      title={<FormattedMessage id="Discounts" />}
+                      title={<SafeFormatMessage id="Discounts" />}
                       link={Routes.DiscountsPage.path}
                       icon={<MdDiscount />}
                     />
                   )}
                   <NavItem
-                    title={<FormattedMessage id="Currencies" />}
+                    title={<SafeFormatMessage id="Currencies" />}
                     link={Routes.CurrenciesPage.path}
                     icon={<MdCurrencyExchange />}
                   />
 
                   {userRole == 'superAdmin' && (
                     <NavItem
-                      title={<FormattedMessage id="Exchange-Rate-Providers" />}
+                      title={<SafeFormatMessage id="Exchange-Rate-Providers" />}
                       link={Routes.ExchangeRateProvidersSettings.path}
                       icon={<BsPercent />}
                     />
@@ -513,7 +514,7 @@ export default (props = {}) => {
 
                   {userRole == 'superAdmin' && (
                     <NavItem
-                      title={<FormattedMessage id="Profile" />}
+                      title={<SafeFormatMessage id="Profile" />}
                       link={Routes.Profile.path}
                       icon={<BsPersonFillGear />}
                     />
