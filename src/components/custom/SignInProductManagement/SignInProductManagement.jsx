@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import ReCAPTCHA from 'react-google-recaptcha'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 const SignInProductManagement = () => {
   const [recaptchaToken, setRecaptchaToken] = useState(null)
   const recaptchaRef = useRef(null)
