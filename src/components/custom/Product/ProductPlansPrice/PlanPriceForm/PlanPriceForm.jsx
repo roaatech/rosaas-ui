@@ -143,7 +143,7 @@ const PlanPriceForm = ({
     systemName: planPriceData ? planPriceData.systemName : '',
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
     price: planPriceData ? planPriceData.price : '',
-    oldPrice: planPriceData ? planPriceData.oldPrice : '',
+    oldPrice: planPriceData ? planPriceData.oldPrice : null,
     descriptionEn: planPriceData?.descriptionLocalizations?.en || '',
     descriptionAr: planPriceData?.descriptionLocalizations?.ar || '',
     cyclesYouDontHave: cyclesYouDontHave,
@@ -199,7 +199,7 @@ const PlanPriceForm = ({
             en: values.descriptionEn,
             ar: values.descriptionAr,
           },
-          oldPrice: parseFloat(values.oldPrice),
+          oldPrice: parseFloat(values.oldPrice) || null,
         })
 
         if (!allProducts[productId].plansPrice) {
@@ -224,7 +224,7 @@ const PlanPriceForm = ({
               cycle: values.cycle,
               price: values.price,
               systemName: values.systemName,
-              oldPrice: parseFloat(values.oldPrice),
+              oldPrice: parseFloat(values.oldPrice) || null,
               descriptionLocalizations: {
                 en: values.descriptionEn,
                 ar: values.descriptionAr,
@@ -245,7 +245,7 @@ const PlanPriceForm = ({
         const editPlan = await editPlanPriceRequest(productId, {
           data: {
             price: parseFloat(values.price),
-            oldPrice: parseFloat(values.oldPrice),
+            oldPrice: parseFloat(values.oldPrice) || null,
             descriptionLocalizations: {
               en: values.descriptionEn,
               ar: values.descriptionAr,
@@ -267,7 +267,7 @@ const PlanPriceForm = ({
               systemName: values.systemName,
               cycle: values.cycle,
               price: values.price,
-              oldPrice: values.oldPrice,
+              oldPrice: parseFloat(values.oldPrice) || null,
               descriptionLocalizations: {
                 en: values.descriptionEn,
                 ar: values.descriptionAr,

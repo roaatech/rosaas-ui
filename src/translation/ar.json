@@ -802,5 +802,7 @@
   "After-Trial": "بعد الفترة التجريبية",
   "The-word-enclosed-between-##-will-be-related-to-the-redirection-link.-for-example,-to-##Contact-Us##": "الكلمة المحصورة بين ## ستكون مرتبطة برابط التوجيه، على سبيل المثال، إلى ##اتصل بنا##.",
   "Provide-a-redirection-link-here.-This-link-will-be-used-in-the-marketplace-for-unselectable-plans-to-redirect-users,-for-example,-to-##Contact-Us##": "قدم رابط توجيه هنا. سيتم استخدام هذا الرابط في السوق للخطط التي لا يمكن اختيارها لتوجيه المستخدمين، على سبيل المثال، إلى ##اتصل بنا##.",
-  "Redirection-Link": "رابط التوجيه"
+  "Redirection-Link": "رابط التوجيه",
+  "Activate-Subscription": "تفعيل الاشتراك",
+  "Are-you-sure-you-want-to-activate-this-subscription?": "هل أنت متأكد أنك تريد تفعيل هذا الاشتراك؟"
 }

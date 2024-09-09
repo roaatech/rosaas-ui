@@ -79,21 +79,28 @@ export const ProductTenantsList = ({ productId, productName }) => {
   const [visible, setVisible] = useState(false)
   const [currentSubscriptionId, setCurrentSubscriptionId] = useState()
   const [currentSystemName, setCurrentSystemName] = useState()
-  const [popupLabel, setpopuplabel] = useState()
+  const [popupLabel, setPopupLabel] = useState()
   const [type, setType] = useState()
   const suspendSubscription = async (subscriptionId, systemName) => {
     setCurrentSubscriptionId(subscriptionId)
     setCurrentSystemName(systemName)
     setVisible(true)
     setType('suspend')
-    setpopuplabel(<SafeFormatMessage id="Suspend-Subscription" />)
+    setPopupLabel(<SafeFormatMessage id="Suspend-Subscription" />)
   }
   const cancelSubscription = async (subscriptionId, systemName) => {
     setCurrentSubscriptionId(subscriptionId)
     setCurrentSystemName(systemName)
     setVisible(true)
     setType('cancel')
-    setpopuplabel(<SafeFormatMessage id="Cancel-Subscription" />)
+    setPopupLabel(<SafeFormatMessage id="Cancel-Subscription" />)
+  }
+  const activateSubscription = async (subscriptionId, systemName) => {
+    setCurrentSubscriptionId(subscriptionId)
+    setCurrentSystemName(systemName)
+    setVisible(true)
+    setType('activate')
+    setPopupLabel(<SafeFormatMessage id="Activate-Subscription" />)
   }
 
   const intl = useIntl()
@@ -166,6 +173,18 @@ export const ProductTenantsList = ({ productId, productName }) => {
                   <SafeFormatMessage id="Manage" />
                 </Link>
               </Dropdown.Item>
+              {subscriptionStatusValue === 2 && (
+                <Dropdown.Item
+                  onSelect={() => {
+                    activateSubscription(subscriptionId, systemName)
+                  }}
+                >
+                  <span className="text-success">
+                    <MdOutlineCancel className="mx-2" />
+                    <SafeFormatMessage id="Activate-Subscription" />
+                  </span>
+                </Dropdown.Item>
+              )}
               {subscriptionStatusValue != 3 && (
                 <Dropdown.Item
                   onSelect={() => {

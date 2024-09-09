@@ -23,7 +23,11 @@ const CancelSubscriptionForm = ({
   type,
   productId,
 }) => {
-  const { cancelSubscriptionRequest, suspendSubscriptionRequest } = useRequest()
+  const {
+    cancelSubscriptionRequest,
+    suspendSubscriptionRequest,
+    activateSubscriptionRequest,
+  } = useRequest()
 
   const dispatch = useDispatch()
   const routeParams = useParams()
@@ -60,22 +64,21 @@ const CancelSubscriptionForm = ({
                 value === currentTenantsData?.systemName || value === systemName // Custom validation logic
             )
         : Yup.string(),
-    reason: Yup.number().required(
-      <SafeFormatMessage id="Reason-is-required" />
-    ),
-    comment:
-      type === 'cancel'
-        ? Yup.string()
-            .max(500, <SafeFormatMessage id="Must-be-maximum-500-digits" />)
-            .required(
-              <SafeFormatMessage id="Comment-is-required-for-cancellation" />
-            )
-        : Yup.string().max(
-            500,
-            <SafeFormatMessage id="Must-be-maximum-500-digits" />
-          ),
+    reason:
+      type === 'activate'
+        ? Yup.number()
+        : Yup.number().required(<SafeFormatMessage id="Reason-is-required" />),
+    comment: ['cancel', 'activate'].includes(type)
+      ? Yup.string()
+          .max(500, <SafeFormatMessage id="Must-be-maximum-500-digits" />)
+          .required(
+            <SafeFormatMessage id={`Comment-is-required-for-${type}`} />
+          )
+      : Yup.string().max(
+          500,
+          <SafeFormatMessage id="Must-be-maximum-500-digits" />
+        ),
   })
-  const listProduct = useSelector((state) => state.products.products)
 
   const formik = useFormik({
     initialValues,
@@ -98,17 +101,22 @@ const CancelSubscriptionForm = ({
               currentTenantsData?.subscriptions?.[0]?.subscriptionId ||
               subscriptionId,
           })
+        } else if (type === 'activate') {
+          await activateSubscriptionRequest({
+            comment: values.comment,
+            subscriptionId:
+              currentTenantsData?.subscriptions?.[0]?.subscriptionId ||
+              subscriptionId,
+          })
         }
 
         if (subscriptionId && productId) {
-          console.log('888888888888888')
-
           dispatch(
             changeSubscriptionAttr({
               productId: productId,
               subscriptionId: subscriptionId,
               attr: 'subscriptionStatus',
-              value: type === 'cancel' ? 3 : 2,
+              value: type === 'cancel' ? 3 : type === 'suspend' ? 2 : 1,
             })
           )
           setVisible && setVisible(false)
@@ -125,7 +133,7 @@ const CancelSubscriptionForm = ({
   })
 
   const reasonsOptions =
-    userRole == 'clientAdmin'
+    userRole == 'clientAdmin' && type !== 'activate'
       ? [
           { value: 1, label: 'Unpaid' },
           { value: 4, label: 'Product-Owner-Request' },
@@ -156,7 +164,11 @@ const CancelSubscriptionForm = ({
           <div>
             <div
               className={`alert alert-${
-                type === 'cancel' ? 'danger' : 'warning'
+                type === 'cancel'
+                  ? 'danger'
+                  : type === 'activate'
+                  ? 'success'
+                  : 'warning'
               }`}
               role="alert"
             >
@@ -165,85 +177,81 @@ const CancelSubscriptionForm = ({
                 id={
                   type === 'cancel'
                     ? 'Are-you-sure-you-want-to-cancel-this-subscription?'
-                    : 'Are-you-sure-you-want-to-suspend-this-subscription?'
+                    : type === 'suspend'
+                    ? 'Are-you-sure-you-want-to-suspend-this-subscription?'
+                    : 'Are-you-sure-you-want-to-activate-this-subscription?'
                 }
               />
             </div>
 
             {type === 'cancel' && (
-              <>
-                <Form.Group className="mb-3">
-                  <Form.Label>
-                    <SafeFormatMessage id="System-Name" />{' '}
-                    <span style={{ color: 'red' }}>*</span>
-                  </Form.Label>
-                  <div
-                    className="text-warning"
-                    // style={{ color: 'var(--second-color)' }}
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <SafeFormatMessage id="System-Name" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <div className="text-warning">
+                  <SafeFormatMessage id="Enter-the-system-name-of-the-subscription-to-cancel-it." />
+                </div>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="systemName"
+                  name="systemName"
+                  onChange={formik.handleChange}
+                  value={formik.values.systemName}
+                />
+                {formik.touched.systemName && formik.errors.systemName && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
                   >
-                    <SafeFormatMessage id="Enter-the-system-name-of-the-subscription-to-cancel-it." />
-                  </div>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="systemName"
-                    name="systemName"
-                    onChange={formik.handleChange}
-                    value={formik.values.systemName}
-                  />
-                  {formik.touched.systemName && formik.errors.systemName && (
-                    <Form.Control.Feedback
-                      type="invalid"
-                      style={{ display: 'block' }}
-                    >
-                      {formik.errors.systemName}
-                    </Form.Control.Feedback>
-                  )}
-                </Form.Group>
-              </>
+                    {formik.errors.systemName}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
             )}
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <SafeFormatMessage id="Reason" />{' '}
-                <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <select
-                className="form-control"
-                name="reason"
-                id="reason"
-                value={formik.values.reason}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              >
-                <option value="">
-                  <SafeFormatMessage id="Select-Option" />
-                </option>
-                {reasonsOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {<SafeFormatMessage id={option.label} />}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.reason && formik.errors.reason && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
+
+            {type !== 'activate' && (
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <SafeFormatMessage id="Reason" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <select
+                  className="form-control"
+                  name="reason"
+                  id="reason"
+                  value={formik.values.reason}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 >
-                  {formik.errors.reason}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
-          <div>
+                  <option value="">
+                    <SafeFormatMessage id="Select-Option" />
+                  </option>
+                  {reasonsOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {<SafeFormatMessage id={option.label} />}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.reason && formik.errors.reason && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.reason}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            )}
             <Form.Group className="mb-3">
               <Form.Label>
                 <SafeFormatMessage id="Comment" />
-                {'  '}
-                {type === 'cancel' && <span style={{ color: 'red' }}>*</span>}
+                {['cancel', 'activate'].includes(type) && (
+                  <span style={{ color: 'red' }}>*</span>
+                )}
               </Form.Label>
-
               <TextareaAndCounter
                 className="form-control"
                 id="comment"
@@ -267,7 +275,13 @@ const CancelSubscriptionForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant={type === 'cancel' ? 'danger' : 'warning'}
+            variant={
+              type === 'cancel'
+                ? 'danger'
+                : type === 'activate'
+                ? 'success'
+                : 'warning'
+            }
             type="submit"
           >
             <SafeFormatMessage id="Submit" />

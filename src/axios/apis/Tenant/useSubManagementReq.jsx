@@ -70,6 +70,12 @@ const useSubManagementReq = () => {
       data
     )
   }
+  const activateSubscriptionRequest = async (data) => {
+    return await Request.post(
+      `management/sadmin/v1/Subscriptions/Activate`,
+      data
+    )
+  }
   const getSubscriptionsList = async () => {
     return await Request.get(`management/sadmin/v1/Subscriptions`)
   }
@@ -89,6 +95,7 @@ const useSubManagementReq = () => {
     getAutoRenewalList,
     cancelSubscriptionRequest,
     suspendSubscriptionRequest,
+    activateSubscriptionRequest,
   }
 }
 export default useSubManagementReq

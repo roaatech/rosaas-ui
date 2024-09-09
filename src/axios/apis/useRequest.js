@@ -94,6 +94,7 @@ const useRequest = () => {
     getAutoRenewalList,
     cancelSubscriptionRequest,
     suspendSubscriptionRequest,
+    activateSubscriptionRequest,
   } = useSubManagementReq()
 
   const {
@@ -372,6 +373,7 @@ const useRequest = () => {
     suspendSubscriptionRequest,
     visiblePlan,
     visibleProduct,
+    activateSubscriptionRequest,
   }
 }
 export default useRequest

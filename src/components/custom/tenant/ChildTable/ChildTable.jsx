@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { statusConst } from '../../../../const'
-import { MdFactCheck, MdOutlineCancel } from 'react-icons/md'
+import { MdDone, MdFactCheck, MdOutlineCancel } from 'react-icons/md'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import { Routes } from '../../../../routes'
@@ -145,7 +145,10 @@ export default function ChildTable({
                           order: 4,
                           type: 'form',
                           label: 'Cancel-Subscription',
-                          component: 'cancelSubscription',
+                          component: 'subscriptionActionsForm',
+                          popupLabel: (
+                            <SafeFormatMessage id="Cancel-Subscription" />
+                          ),
                           updateTenant: updateTenant,
                           icon: <MdOutlineCancel />,
                           variant: 'text-danger',
@@ -155,11 +158,27 @@ export default function ChildTable({
                           order: 4,
                           type: 'form',
                           label: 'Suspend-Subscription',
-                          component: 'supsendsubscription',
+                          component: 'subscriptionActionsForm',
+                          popupLabel: (
+                            <SafeFormatMessage id="Suspend-Subscription" />
+                          ),
                           updateTenant: updateTenant,
                           icon: <MdOutlineCancel />,
                           variant: 'text-warning',
                           formType: 'suspend',
+                        },
+                        {
+                          order: 4,
+                          type: 'form',
+                          label: 'Activate-Subscription',
+                          component: 'subscriptionActionsForm',
+                          popupLabel: (
+                            <SafeFormatMessage id="Activate-Subscription" />
+                          ),
+                          updateTenant: updateTenant,
+                          icon: <MdDone />,
+                          variant: 'text-success',
+                          formType: 'activate',
                         },
                       ]
                     : []),

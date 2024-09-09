@@ -48,7 +48,7 @@ const MultilingualInput = ({
           )}
         </Form.Label>
         <TabView>
-          {languages.map((lang) => (
+          {languages?.map((lang) => (
             <TabPanel key={lang.code} header={lang.name}>
               <div className="form-group mt-3">
                 {inputType === 'input' ? (

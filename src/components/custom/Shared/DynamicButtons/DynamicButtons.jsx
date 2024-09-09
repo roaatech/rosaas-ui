@@ -69,7 +69,7 @@ const DynamicButtons = ({ buttons }) => {
   }
 
   useEffect(() => {
-    const checkMoreArray = buttons.map((button) => button.order > 3)
+    const checkMoreArray = buttons?.map((button) => button.order > 3)
     setMore(checkMoreArray.includes(true))
   }, [buttons])
   const handleToggle = (index, group) => {
@@ -105,6 +105,7 @@ const DynamicButtons = ({ buttons }) => {
         popupLabel={<SafeFormatMessage id="Edit-Product" />}
       />
     ),
+
     addTenant: () => (
       <TenantForm
         popupLabel={<SafeFormatMessage id="Create-Tenant" />}
@@ -114,6 +115,7 @@ const DynamicButtons = ({ buttons }) => {
         sideBar={true}
       />
     ),
+
     editTenant: () => (
       <TenantForm
         popupLabel={<SafeFormatMessage id="Edit-Tenant" />}
@@ -236,22 +238,15 @@ const DynamicButtons = ({ buttons }) => {
         setActiveIndex={buttons[currentButtonIndex].setActiveIndex}
       />
     ),
-    cancelSubscription: () => (
+    subscriptionActionsForm: () => (
       <CancelSubscriptionForm
-        popupLabel={<SafeFormatMessage id="Cancel-Subscription" />}
+        popupLabel={buttons[currentButtonIndex].popupLabel}
         setVisible={setVisible}
         updateTenant={buttons[currentButtonIndex].updateTenant}
         type={buttons[currentButtonIndex].formType}
       />
     ),
-    supsendsubscription: () => (
-      <CancelSubscriptionForm
-        popupLabel={<SafeFormatMessage id="Suspend-Subscription" />}
-        setVisible={setVisible}
-        updateTenant={buttons[currentButtonIndex].updateTenant}
-        type={buttons[currentButtonIndex].formType}
-      />
-    ),
+
     addFeature: () => (
       <FeatureForm
         popupLabel={<SafeFormatMessage id="Add-Feature" />}
@@ -339,7 +334,7 @@ const DynamicButtons = ({ buttons }) => {
             : '8px',
         }}
       >
-        {buttons.map((button, index) => {
+        {buttons?.map((button, index) => {
           button.variant = button.variant || 'secondary'
           if (button.order <= 3) {
             if (button.type === 'action') {
@@ -417,7 +412,7 @@ const DynamicButtons = ({ buttons }) => {
               </span>
             </Dropdown.Toggle>
             <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-1">
-              {buttons.map((button, index) => {
+              {buttons?.map((button, index) => {
                 if (button.order > 3) {
                   if (button.type === 'delete') {
                     return (
@@ -537,8 +532,8 @@ const DynamicButtons = ({ buttons }) => {
         }
       >
         {currentButtonIndex !== undefined &&
-        buttons[currentButtonIndex].type === 'form'
-          ? forms[buttons[currentButtonIndex]?.component]()
+        buttons?.[currentButtonIndex].type === 'form'
+          ? forms[buttons?.[currentButtonIndex]?.component]()
           : null}
       </ThemeDialog>
     </Wrapper>
