@@ -802,5 +802,9 @@
   "The-navigation-link-is-being-generated-or-unavailable-please-await-or-try-again-later": "The navigation link is being generated or unavailable, please await or try again later",
   "Contact-Us": "Contact Us",
   "Checkout": "Checkout",
-  "or": "or"
+  "or": "or",
+
+  "The-word-enclosed-between-##-will-be-related-to-the-redirection-link.-for-example,-to-##Contact-Us##": "The word enclosed between ## will be related to the redirection link, for example, to ##Contact Us##.",
+  "Provide-a-redirection-link-here.-This-link-will-be-used-in-the-marketplace-for-unselectable-plans-to-redirect-users,-for-example,-to-##Contact-Us##": "Provide a redirection link here. This link will be used in the marketplace for unselectable plans to redirect users, for example, to ##Contact Us##.",
+  "Redirection-Link": "Redirection Link"
 }
