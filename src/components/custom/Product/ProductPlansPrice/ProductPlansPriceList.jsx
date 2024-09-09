@@ -44,6 +44,8 @@ import { DataTransform } from '../../../../lib/sharedFun/Time'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import {
   BsCurrencyDollar,
+  BsEye,
+  BsEyeSlash,
   BsFillLockFill,
   BsFillUnlockFill,
   BsToggleOff,
@@ -61,6 +63,7 @@ export default function ProductPlansPriceList({ children }) {
     deletePlanPriceReq,
     PlansPricePublishedReq,
     publishPlan,
+    visiblePlan,
   } = useRequest()
   const [visible, setVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
@@ -238,6 +241,21 @@ export default function ProductPlansPriceList({ children }) {
       })
     )
   }
+  const toggleVisiblePlan = async (id, isVisible) => {
+    await visiblePlan(productId, {
+      id,
+      isVisible: !isVisible,
+    })
+
+    dispatch(
+      PlansChangeAttr({
+        productId,
+        planId: id,
+        attr: 'isVisible',
+        value: !isVisible,
+      })
+    )
+  }
 
   const TableRow = () => {
     return (
@@ -393,14 +411,13 @@ export default function ProductPlansPriceList({ children }) {
                 <tr>
                   <th className="border-bottom"></th>
                   {Object.keys(plansData).map((item, index) => (
-                    <th
-                      className="clickable-icon"
-                      key={index}
-                      onClick={() =>
-                        togglePublishPlan(item, plansData[item].isPublished)
-                      }
-                    >
-                      <span className="mr-2">
+                    <th className="clickable-icon" key={index}>
+                      <span
+                        onClick={() =>
+                          togglePublishPlan(item, plansData[item].isPublished)
+                        }
+                        className="mr-2"
+                      >
                         {plansData[item].isPublished ? (
                           <span className="label green">
                             <BsToggleOn />
@@ -411,6 +428,23 @@ export default function ProductPlansPriceList({ children }) {
                           </span>
                         )}
                       </span>
+                      <span
+                        onClick={() =>
+                          toggleVisiblePlan(item, plansData[item].isVisible)
+                        }
+                        className="mr-2"
+                      >
+                        {plansData[item].isVisible ? (
+                          <span className="label green">
+                            <BsEye />
+                          </span>
+                        ) : (
+                          <span className="label grey">
+                            <BsEyeSlash />
+                          </span>
+                        )}
+                      </span>
+
                       {
                         plansData[item].displayNameLocalizations[
                           selectedLanguage

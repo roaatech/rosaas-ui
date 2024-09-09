@@ -47,6 +47,7 @@ export default function SubsGeneralData(data) {
   )
   const price = subscriptionDatas.subscriptionId
   const product = tenantsData[routeParams.id].subscriptions[0].productId
+  const ShowActions = false
   return (
     <div className="info-card">
       <Row>
@@ -282,23 +283,25 @@ export default function SubsGeneralData(data) {
                         />
                       )}
 
-                      <FontAwesomeIcon
-                        icon={
-                          subscriptionDatas.autoRenewal
-                            ? faToggleOn
-                            : faToggleOff
-                        }
-                        className={`${
-                          direction == 'rtl'
-                            ? 'mr-2 pr-2 border-right-1 border-light '
-                            : 'ml-2 pl-2 border-left-1 border-light '
-                        }${
-                          subscriptionDatas.autoRenewal
-                            ? ' active-toggle  '
-                            : ' passive-toggle '
-                        }`}
-                        onClick={handleToggleClick}
-                      />
+                      {ShowActions && (
+                        <FontAwesomeIcon
+                          icon={
+                            subscriptionDatas.autoRenewal
+                              ? faToggleOn
+                              : faToggleOff
+                          }
+                          className={`${
+                            direction == 'rtl'
+                              ? 'mr-2 pr-2 border-right-1 border-light '
+                              : 'ml-2 pl-2 border-left-1 border-light '
+                          }${
+                            subscriptionDatas.autoRenewal
+                              ? ' active-toggle  '
+                              : ' passive-toggle '
+                          }`}
+                          onClick={handleToggleClick}
+                        />
+                      )}
                     </div>
                   </div>
 
@@ -352,17 +355,21 @@ export default function SubsGeneralData(data) {
                           }}
                         />
                       )}
-                      <FontAwesomeIcon
-                        className={`${
-                          direction == 'rtl'
-                            ? 'icon-container mr-2 pr-2 border-right-1 border-light '
-                            : 'icon-container ml-2 pl-2 border-left-1 border-light '
-                        } ${
-                          hasResetableValue ? 'active-reset ' : 'passive-reset '
-                        }`}
-                        icon={faArrowRotateBackward}
-                        onClick={handleResetLimit}
-                      />
+                      {ShowActions && (
+                        <FontAwesomeIcon
+                          className={`${
+                            direction == 'rtl'
+                              ? 'icon-container mr-2 pr-2 border-right-1 border-light '
+                              : 'icon-container ml-2 pl-2 border-left-1 border-light '
+                          } ${
+                            hasResetableValue
+                              ? 'active-reset '
+                              : 'passive-reset '
+                          }`}
+                          icon={faArrowRotateBackward}
+                          onClick={handleResetLimit}
+                        />
+                      )}
                     </div>
                   </div>
 
@@ -420,19 +427,21 @@ export default function SubsGeneralData(data) {
                                 : ''}
                             </span>
                           )}{' '}
-                          <FontAwesomeIcon
-                            className={`${
-                              direction == 'rtl'
-                                ? 'icon-container mr-2 pr-2 border-right-1 border-light '
-                                : 'icon-container ml-2 pl-2 border-left-1 border-light '
-                            } ${
-                              ResettableAllowed
-                                ? ' active-reset  '
-                                : ' passive-reset '
-                            }`}
-                            icon={faArrowRotateBackward}
-                            onClick={handleResetSubscription}
-                          />
+                          {ShowActions && (
+                            <FontAwesomeIcon
+                              className={`${
+                                direction == 'rtl'
+                                  ? 'icon-container mr-2 pr-2 border-right-1 border-light '
+                                  : 'icon-container ml-2 pl-2 border-left-1 border-light '
+                              } ${
+                                ResettableAllowed
+                                  ? ' active-reset  '
+                                  : ' passive-reset '
+                              }`}
+                              icon={faArrowRotateBackward}
+                              onClick={handleResetSubscription}
+                            />
+                          )}
                         </div>
                       ) : (
                         <div>
@@ -447,19 +456,21 @@ export default function SubsGeneralData(data) {
                               color: '#000000',
                             }}
                           />
-                          <FontAwesomeIcon
-                            className={`${
-                              direction == 'rtl'
-                                ? 'icon-container mr-2 pr-2 border-right-1 border-light '
-                                : 'icon-container ml-2 pl-2 border-left-1 border-light '
-                            } ${
-                              ResettableAllowed
-                                ? ' active-reset  '
-                                : ' passive-reset '
-                            }`}
-                            icon={faArrowRotateBackward}
-                            onClick={handleResetSubscription}
-                          />
+                          {ShowActions && (
+                            <FontAwesomeIcon
+                              className={`${
+                                direction == 'rtl'
+                                  ? 'icon-container mr-2 pr-2 border-right-1 border-light '
+                                  : 'icon-container ml-2 pl-2 border-left-1 border-light '
+                              } ${
+                                ResettableAllowed
+                                  ? ' active-reset  '
+                                  : ' passive-reset '
+                              }`}
+                              icon={faArrowRotateBackward}
+                              onClick={handleResetSubscription}
+                            />
+                          )}
                         </div>
                       )}{' '}
                     </div>

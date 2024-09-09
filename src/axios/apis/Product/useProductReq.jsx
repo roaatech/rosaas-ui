@@ -39,6 +39,12 @@ const useTenantReq = () => {
       data
     )
   }
+  const visibleProduct = async (productId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/Products/${productId}/Visibility`,
+      data
+    )
+  }
 
   return {
     createProductRequest,
@@ -50,6 +56,7 @@ const useTenantReq = () => {
     getProductWarnings,
     changeProductTrialType,
     publishProduct,
+    visibleProduct,
   }
 }
 

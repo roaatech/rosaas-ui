@@ -34,13 +34,8 @@ import { toast } from 'react-toastify'
 import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const CheckoutPage = (data) => {
-  const {
-    hasToPay,
-    setHasToPay,
-    displayName: tenantDisplayName,
-    priceData,
-  } = data
-
+  const { hasToPay, setHasToPay, tenantDisplayName, priceData } = data
+  console.log({ priceData })
   const [orderData, setOrderData] = useState()
   const [trialPlanId, setTrialPlanId] = useState()
 
@@ -241,11 +236,15 @@ const CheckoutPage = (data) => {
         <Card.Header>
           <SafeFormatMessage id={'Plan'} />{' '}
           <span className="fw-bold">
-            {priceData?.plan.displayName?.toUpperCase()}
+            {priceData?.plan.displayNameLocalizations?.[
+              intl.locale
+            ]?.toUpperCase()}
           </span>{' '}
           <SafeFormatMessage id={'of-Product'} />{' '}
           <span className="fw-bold">
-            {listProduct?.[productId]?.displayName?.toUpperCase()}
+            {listProduct?.[productId]?.displayNameLocalizations?.[
+              intl.locale
+            ]?.toUpperCase()}
           </span>
         </Card.Header>
         <Card.Body className="border-bottom ">
@@ -253,7 +252,8 @@ const CheckoutPage = (data) => {
             <div key={featurePlan.id}>
               <p>
                 <BsCheck2Circle style={{ color: 'var(--second-color)' }} />{' '}
-                {featurePlan.description || featurePlan.feature.displayName}
+                {featurePlan.descriptionLocalizations?.[intl.locale] ||
+                  featurePlan.feature.displayNameLocalizations?.[intl.locale]}
               </p>
             </div>
           ))}
@@ -375,7 +375,9 @@ const CheckoutPage = (data) => {
                       </OverlayTrigger>
                     </div>
                     <div className=" card-stats">
-                      {priceData?.product?.displayName}
+                      {priceData?.product?.displayNameLocalizations?.[
+                        intl.locale
+                      ] || priceData?.product?.displayName}
                     </div>
                   </div>
 
@@ -404,7 +406,9 @@ const CheckoutPage = (data) => {
                       </OverlayTrigger>
                     </div>
                     <div className=" card-stats">
-                      {priceData?.plan?.displayName}
+                      {priceData?.plan?.displayNameLocalizations?.[
+                        intl.locale
+                      ] || priceData?.plan?.displayName}
                     </div>
                   </div>
 

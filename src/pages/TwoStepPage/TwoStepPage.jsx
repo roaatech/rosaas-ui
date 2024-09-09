@@ -33,7 +33,7 @@ const TwoStepProcessPage = () => {
   )
 
   const dispatch = useDispatch()
-  const [displayName, setDisplayName] = useState()
+  const [tenantDisplayName, setTenantDisplayName] = useState()
   const step = useSelector((state) => state.tenants.currentStep)
   const [currentTenant, setCurrentTenant] = useState('')
   const [orderID, setOrderID] = useState('')
@@ -121,7 +121,7 @@ const TwoStepProcessPage = () => {
                   popupLabel={<SafeFormatMessage id="Enter-Your-Info" />}
                   setCurrentTenant={setCurrentTenant}
                   setHasToPay={setHasToPay}
-                  setDisplayName={setDisplayName}
+                  setDisplayName={setTenantDisplayName}
                   priceData={priceData}
                   setPriceData={setPriceData}
                 />
@@ -131,7 +131,7 @@ const TwoStepProcessPage = () => {
                   currentTenant={currentTenant}
                   hasToPay={hasToPay}
                   setHasToPay={setHasToPay}
-                  displayName={displayName}
+                  tenantDisplayName={tenantDisplayName}
                   priceData={priceData}
                   setPriceData={setPriceData}
                   trialPlanId={trialPlanId}

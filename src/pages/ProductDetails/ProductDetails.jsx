@@ -26,6 +26,8 @@ import {
   BsUiChecks,
   BsCurrencyDollar,
   BsRecycle,
+  BsEye,
+  BsEyeSlash,
 } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
 import ProductFeaturePlan from '../../components/custom/Product/ProductFeaturePlan/ProductFeaturePlan'
@@ -39,7 +41,7 @@ import {
   MdOutlinePublishedWithChanges,
   MdOutlineUnpublished,
 } from 'react-icons/md'
-import { PublishStatus, activeTab } from '../../const/product'
+import { PublishStatus, activeTab, visibilityStatus } from '../../const/product'
 import ProductWarnings from '../../components/custom/Product/ProductWarnings/ProductWarnings'
 import ClientCredentials from '../../components/custom/Product/ClientCredentials/ClientCredentials'
 import Label from '../../components/custom/Shared/label/Label.jsx'
@@ -60,7 +62,8 @@ const ProductDetails = () => {
   useEffect(() => {
     setActiveIndex(activeTab.details)
   }, [routeParams.id])
-  const { getProduct, deleteProductReq, publishProduct } = useRequest()
+  const { getProduct, deleteProductReq, publishProduct, visibleProduct } =
+    useRequest()
 
   useEffect(() => {
     ;(async () => {
@@ -89,6 +92,22 @@ const ProductDetails = () => {
       })
     )
   }
+  console.log({ productData })
+
+  const toggleVisibleProduct = async (isVisible) => {
+    await visibleProduct(routeParams.id, {
+      isVisible: !isVisible,
+    })
+
+    dispatch(
+      productsChangeAttr({
+        productId: routeParams.id,
+        attributes: {
+          isVisible: !isVisible,
+        },
+      })
+    )
+  }
 
   return (
     <Wrapper>
@@ -110,6 +129,9 @@ const ProductDetails = () => {
               <span className="ml-2">
                 <Label {...PublishStatus[productData?.isPublished]} />
               </span>
+              <span className="ml-2">
+                <Label {...visibilityStatus[productData?.isVisible]} />
+              </span>
             </h4>
             <DynamicButtons
               buttons={[
@@ -123,6 +145,13 @@ const ProductDetails = () => {
                   ) : (
                     <MdOutlinePublishedWithChanges />
                   ),
+                },
+                {
+                  order: 4,
+                  type: 'action',
+                  label: productData?.isVisible ? 'Hide' : 'Show',
+                  func: () => toggleVisibleProduct(productData?.isVisible),
+                  icon: productData?.isVisible ? <BsEyeSlash /> : <BsEye />,
                 },
                 {
                   order: 4,

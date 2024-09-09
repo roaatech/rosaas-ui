@@ -209,6 +209,9 @@ const CheckoutTenantReg = ({
         displayName: title,
         currencyId: currency.id,
       })
+      if (createTenant?.data?.data?.orderId) {
+        navigate(`#${createTenant.data.data.orderId}`)
+      }
       setDisplayName(title)
       setCurrentTenant(createTenant?.data.data.id)
       setHasToPay(createTenant?.data.data?.hasToPay)
@@ -232,6 +235,9 @@ const CheckoutTenantReg = ({
       allSpecificationsArray.filter((spec) => spec.isPublished === true)
     )
   }, [specifications, priceData, currentPrice])
+  console.log(
+    filteredSpecificationsArray && filteredSpecificationsArray.length === 0
+  )
 
   useEffect(() => {
     if (

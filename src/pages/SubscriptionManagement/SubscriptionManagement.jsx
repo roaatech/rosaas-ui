@@ -205,7 +205,7 @@ const SubscriptionManagement = (props) => {
       )
     })()
   }, [tenantId])
-
+  const showActions = false
   const [confirm, setConfirm] = useState(false)
   return (
     <Wrapper direction={direction}>
@@ -223,73 +223,75 @@ const SubscriptionManagement = (props) => {
               <SafeFormatMessage id="Subscription-Management" />:{' '}
               {tenantsData[routeParams.id]?.systemName}
             </h4>
-            <DynamicButtons
-              buttons={[
-                isChangablePlan
-                  ? {
-                      order: 1,
-                      type: 'form',
-                      id: routeParams.id,
-                      label: 'Change-Plan',
-                      component: 'upDowngradeSubscription',
-                      selectedProduct: currentProduct,
-                      update,
-                      setUpdate,
-                      icon: <MdChangeCircle />,
-                      formType: 'changeOrderPlan',
-                      currentOrderId: lastOrderId,
-                    }
-                  : {
-                      order: 1,
-                      type: 'form',
-                      id: routeParams.id,
-                      label: 'Upgrade-Subscription',
-                      component: 'upDowngradeSubscription',
-                      selectedProduct: currentProduct,
-                      update,
-                      setUpdate,
-                      icon: <BsUpload />,
-                      formType: 'upgrade',
-                      disable: !subscriptionData?.isPlanChangeAllowed,
-                    },
-                {
-                  order: 4,
-                  type: 'form',
-                  id: routeParams.id,
-                  label: 'Downgrade-Subscription',
-                  component: 'upDowngradeSubscription',
-                  selectedProduct: currentProduct,
-                  update,
-                  setUpdate,
-                  icon: <BsDownload />,
-                  formType: 'downgrade',
-                  disable: !subscriptionData?.isPlanChangeAllowed,
-                },
-                {
-                  order: 4,
-                  type: 'action',
-                  label: 'Auto-Renewal',
-                  func: handleToggleClick,
-                  icon: <MdOutlineAutorenew />,
-                },
-                {
-                  order: 4,
-                  type: 'action',
-                  label: 'Reset-Limit',
-                  func: handleResetLimit,
-                  icon: <BsArrowCounterclockwise />,
-                  disable: !hasResetableValue,
-                },
-                {
-                  order: 4,
-                  type: 'action',
-                  label: 'Reset-Subs',
-                  func: handleResetSubscription,
-                  icon: <BsArrowCounterclockwise />,
-                  disable: !ResettableAllowed,
-                },
-              ]}
-            />
+            {showActions && (
+              <DynamicButtons
+                buttons={[
+                  isChangablePlan
+                    ? {
+                        order: 1,
+                        type: 'form',
+                        id: routeParams.id,
+                        label: 'Change-Plan',
+                        component: 'upDowngradeSubscription',
+                        selectedProduct: currentProduct,
+                        update,
+                        setUpdate,
+                        icon: <MdChangeCircle />,
+                        formType: 'changeOrderPlan',
+                        currentOrderId: lastOrderId,
+                      }
+                    : {
+                        order: 1,
+                        type: 'form',
+                        id: routeParams.id,
+                        label: 'Upgrade-Subscription',
+                        component: 'upDowngradeSubscription',
+                        selectedProduct: currentProduct,
+                        update,
+                        setUpdate,
+                        icon: <BsUpload />,
+                        formType: 'upgrade',
+                        disable: !subscriptionData?.isPlanChangeAllowed,
+                      },
+                  {
+                    order: 4,
+                    type: 'form',
+                    id: routeParams.id,
+                    label: 'Downgrade-Subscription',
+                    component: 'upDowngradeSubscription',
+                    selectedProduct: currentProduct,
+                    update,
+                    setUpdate,
+                    icon: <BsDownload />,
+                    formType: 'downgrade',
+                    disable: !subscriptionData?.isPlanChangeAllowed,
+                  },
+                  {
+                    order: 4,
+                    type: 'action',
+                    label: 'Auto-Renewal',
+                    func: handleToggleClick,
+                    icon: <MdOutlineAutorenew />,
+                  },
+                  {
+                    order: 4,
+                    type: 'action',
+                    label: 'Reset-Limit',
+                    func: handleResetLimit,
+                    icon: <BsArrowCounterclockwise />,
+                    disable: !hasResetableValue,
+                  },
+                  {
+                    order: 4,
+                    type: 'action',
+                    label: 'Reset-Subs',
+                    func: handleResetSubscription,
+                    icon: <BsArrowCounterclockwise />,
+                    disable: !ResettableAllowed,
+                  },
+                ]}
+              />
+            )}
           </UpperContent>
 
           {subscriptionDatas.startDate && (

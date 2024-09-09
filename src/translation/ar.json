@@ -492,8 +492,8 @@
   "Set-As-Default": "تعيين كافتراضي",
   "After-Trial-Ends-On": "بعد انتهاء الفترة التجريبية في",
   "Remember-Card-Information": "احفظ تفاصيل بطاقتك للمعاملات المستقبلية",
-  "Auto-Start-Billing-After-Trial": "يبدأ الفوترة تلقائيًا بعد انتهاء الفترة التجريبية المجانية",
-  "Cancel-Before": "إلغاء قبل",
+  "Auto-Start-Billing-After-Trial": "تبدأ الفوترة تلقائيًا بعد انتهاء الفترة التجريبية المجانية",
+  "Cancel-Before": "ألغ اشتراكك قبل",
   "Billing-Starts": "لتجنب الفوترة",
   "Free-Trial-Terms": "شروط الفترة التجريبية المجانية",
   "Due-Now": "المستحق الآن",
@@ -788,12 +788,16 @@
   "Visible": "مرئي",
   "Link-in-progress": "الرابط قيد التنفيذ",
   "The-navigation-link-is-being-generated-or-unavailable-please-await-or-try-again-later": "يتم توليد رابط التنقل أو أنه غير متاح، يرجى الانتظار أو المحاولة مرة أخرى لاحقًا",
-
+  "Allow-Auto-Renewal": "السماح بالتجديد التلقائي",
+  "Checkout": "إتمام الشراء",
   "Planned": "مخطط",
   "Limited": "محدود",
   "invisible": "غير مرئي",
   "Show-Plan": "إظهار الخطة",
   "Hide-Plan": "إخفاء الخطة",
   "Is-Available-For-Selection": "متاح للاختيار",
-  "Contact-Us": "اتصل بنا"
+  "Contact-Us": "اتصل بنا",
+  "or": "أو",
+  "Ends-On": "ينتهي في",
+  "After-Trial": "بعد الفترة التجريبية"
 }

@@ -119,6 +119,7 @@ const useRequest = () => {
     getProductListPublic,
     changeProductTrialType,
     publishProduct,
+    visibleProduct,
   } = useProductReq()
 
   const {
@@ -370,6 +371,7 @@ const useRequest = () => {
     cancelSubscriptionRequest,
     suspendSubscriptionRequest,
     visiblePlan,
+    visibleProduct,
   }
 }
 export default useRequest
