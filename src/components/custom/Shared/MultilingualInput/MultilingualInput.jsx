@@ -19,6 +19,11 @@ const MultilingualInput = ({
   touched,
   inputLabel,
   placeholder,
+  onDrop,
+  onDragOver,
+  textareaApperance,
+  onDragLeave,
+  onDragStart,
 }) => {
   const intl = useIntl()
 
@@ -69,8 +74,12 @@ const MultilingualInput = ({
                     style={{
                       direction: lang.code === 'ar' ? 'rtl' : 'ltr',
                     }}
+                    onDrop={onDrop && onDrop}
+                    onDragOver={onDragOver && onDragOver}
+                    onDragLeave={onDragLeave && onDragLeave}
+                    onDragStart={onDragStart && onDragStart}
                   />
-                ) : (
+                ) : !textareaApperance ? (
                   <TextareaAndCounter
                     addTextarea={(field, value) =>
                       onChange({ target: { name: field, value } })
@@ -92,6 +101,36 @@ const MultilingualInput = ({
                     style={{
                       direction: lang.code === 'ar' ? 'rtl' : 'ltr',
                     }}
+                    onDrop={onDrop && onDrop}
+                    onDragOver={onDragOver && onDragOver}
+                  />
+                ) : (
+                  <textarea
+                    className={'form-control'}
+                    value={values?.[lang.code] || ''}
+                    onChange={(e) =>
+                      onChange({
+                        target: {
+                          name: inputIds?.[lang.code],
+                          value: e.target.value,
+                        },
+                      })
+                    }
+                    maxLength={maxLength}
+                    placeholder={
+                      placeholder?.[lang.code]
+                        ? intl.formatMessage({ id: placeholder?.[lang.code] })
+                        : ''
+                    }
+                    id={inputIds?.[lang.code]}
+                    name={inputIds?.[lang.code]}
+                    style={{
+                      direction: lang.code === 'ar' ? 'rtl' : 'ltr',
+                    }}
+                    onDrop={onDrop}
+                    onDragOver={onDragOver}
+                    onDragLeave={onDragLeave}
+                    onDragStart={onDragStart && onDragStart}
                   />
                 )}
               </div>

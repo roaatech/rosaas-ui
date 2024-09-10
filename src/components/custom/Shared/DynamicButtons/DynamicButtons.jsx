@@ -35,6 +35,7 @@ import DiscountForm from '../../Discounts/DiscountForm/DiscountForm'
 import AddValidationUrlForm from '../../Product/CustomSpecification/AddValidationUrlForm/AddValidationUrlForm'
 import CancelSubscriptionForm from '../../tenant/CancelSubscriptionForm/CancelSubscriptionForm'
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
+import TemplateForm from '../../Product/TemplateForm/TemplateForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -105,7 +106,14 @@ const DynamicButtons = ({ buttons }) => {
         popupLabel={<SafeFormatMessage id="Edit-Product" />}
       />
     ),
-
+    templateForm: () => (
+      <TemplateForm
+        visible={visible}
+        productId={buttons[currentButtonIndex]?.id}
+        setVisible={setVisible}
+        popupLabel={<SafeFormatMessage id="Edit-Template" />}
+      />
+    ),
     addTenant: () => (
       <TenantForm
         popupLabel={<SafeFormatMessage id="Create-Tenant" />}
@@ -525,9 +533,8 @@ const DynamicButtons = ({ buttons }) => {
         visible={visible}
         setVisible={setVisible}
         size={
-          buttons[currentButtonIndex]?.component === 'addSpecification' ||
-          buttons[currentButtonIndex]?.component === 'addEndpoint'
-            ? 'lg'
+          buttons[currentButtonIndex]?.size
+            ? buttons[currentButtonIndex]?.size
             : ''
         }
       >

@@ -35,6 +35,7 @@ import {
 import { activeTab } from '../../../../../const/product.js'
 import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
 import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import useSharedFunctions from '../../../Shared/SharedFunctions/SharedFunctions.jsx'
 
 const FeaturePlanForm = ({
   type,
@@ -78,6 +79,7 @@ const FeaturePlanForm = ({
   const allPlansfeatures = useSelector(
     (state) => state.products.products[productId]?.featurePlan
   )
+  const { getLocalizedString } = useSharedFunctions()
 
   if (allPlansArray) {
     allPlansArray = allPlansArray.filter((plan) => !plan.isSubscribed)
@@ -88,9 +90,7 @@ const FeaturePlanForm = ({
       ? allFeatureArray.map((item) => {
           return {
             value: item.id,
-            label: selectedLanguage
-              ? item?.displayNameLocalizations?.[selectedLanguage]
-              : item.displayName,
+            label: getLocalizedString(item?.displayNameLocalizations),
             type: item.type == 1 ? 'Number' : 'Boolean',
           }
         })
@@ -102,9 +102,7 @@ const FeaturePlanForm = ({
     ? allPlansArray.map((item) => {
         return {
           value: item.id,
-          label:
-            item.displayNameLocalizations?.[selectedLanguage] ||
-            item.displayName,
+          label: getLocalizedString(item.displayNameLocalizations),
         }
       })
     : []

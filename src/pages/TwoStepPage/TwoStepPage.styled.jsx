@@ -26,4 +26,7 @@ export const Wrapper = styled.div`
     background-color: var(--second-color);
     border-color: var(--second-color);
   }
+  .hidden {
+    display: none;
+  }
 `

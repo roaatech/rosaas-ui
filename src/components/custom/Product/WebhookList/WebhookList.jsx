@@ -164,6 +164,7 @@ export const WebhookList = ({}) => {
               component: 'addEndpoint',
               icon: <MdWeb />,
               formType: 'create',
+              size: 'lg',
             },
           ]}
         />

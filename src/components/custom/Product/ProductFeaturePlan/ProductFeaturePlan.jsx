@@ -39,6 +39,7 @@ import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import Label from '../../Shared/label/Label'
 import { GiShadowFollower } from 'react-icons/gi'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
 
 export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [currentPlanId, setCurrentPlanId] = useState('')
@@ -73,6 +74,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   )
   const listData = { ...listDataStore }
   const intl = useIntl()
+  const { getLocalizedString } = useSharedFunctions()
 
   // Remove default key from list
   listData['00000000-0000-0000-0000-000000000000'] &&
@@ -133,19 +135,14 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
 
   const handleData = (data) => {
     return {
-      Feature:
-        data.feature.displayNameLocalizations[selectedLanguage] ||
-        data.feature.displayName,
-      Plan:
-        data.plan.displayNameLocalizations[selectedLanguage] ||
-        data.plan.displayName,
+      Feature: getLocalizedString(data.feature.displayNameLocalizations),
+      Plan: getLocalizedString(data.plan.displayNameLocalizations),
       Limit: data.limit,
       Unit: featureUnitMap[data.unit],
       'Unit-Display-Name':
         data.unitDisplayName?.[selectedLanguage] || data.unitDisplayName?.en,
       Reset: featureResetMap[data.reset],
-      Description:
-        data.descriptionLocalizations[selectedLanguage] || data.description,
+      Description: getLocalizedString(data.descriptionLocalizations),
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
     }
@@ -181,9 +178,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         featureId: item.feature.id,
-        displayName:
-          item.feature?.displayNameLocalizations?.[selectedLanguage] ||
-          item.feature.displayName,
+        displayName: getLocalizedString(item.feature?.displayNameLocalizations),
         systemName: item.feature.systemName,
         type: item.feature.type,
         index: Object.keys(featuresObj).length,
@@ -424,9 +419,9 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                           </span>
                         )}
                         <span className="mr-1">
-                          {planList[item].displayNameLocalizations[
-                            selectedLanguage
-                          ] || planList[item].displayName}
+                          {getLocalizedString(
+                            planList[item].displayNameLocalizations
+                          )}
                         </span>
 
                         {planList[item].subscribers && (

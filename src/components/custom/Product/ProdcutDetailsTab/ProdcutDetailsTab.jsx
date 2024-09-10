@@ -15,6 +15,7 @@ import Label from '../../Shared/label/Label'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
+import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions'
 
 const ProductDetailsTab = ({ data }) => {
   const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
@@ -30,7 +31,7 @@ const ProductDetailsTab = ({ data }) => {
   let direction = useSelector((state) => state.main.direction)
   const listData = useSelector((state) => state.products.products)
   const dispatch = useDispatch()
-
+  const { getLocalizedString } = useSharedFunctions()
   const params = useParams()
   const { getProductPlans } = useRequest()
   const productId = params.id
@@ -79,8 +80,7 @@ const ProductDetailsTab = ({ data }) => {
                     <SafeFormatMessage id="Display-Name" />
                   </td>
                   <td className="card-stats">
-                    {data.displayNameLocalizations?.[selectedLanguage] ||
-                      data.displayName}
+                    {getLocalizedString(data.displayNameLocalizations)}
                   </td>
                 </tr>
                 <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
@@ -100,9 +100,13 @@ const ProductDetailsTab = ({ data }) => {
                     <SafeFormatMessage id="Description" />
                   </td>
                   <td className="card-stats">
-                    {data.descriptionLocalizations?.[selectedLanguage] || (
-                      <DescriptionCell data={data} />
-                    )}
+                    <DescriptionCell
+                      data={{
+                        description: getLocalizedString(
+                          data.descriptionLocalizations
+                        ),
+                      }}
+                    />
                   </td>
                 </tr>
                 {data?.trialType === 2 && (
@@ -175,11 +179,11 @@ const ProductDetailsTab = ({ data }) => {
                       <SafeFormatMessage id="Trial-Plan" />
                     </td>
                     <td className="card-stats">
-                      {(listData[productId].plans &&
-                        listData[productId].plans?.[data?.trialPlanId]
-                          ?.displayNameLocalizations?.[selectedLanguage]) ||
-                        listData[productId].plans?.[data?.trialPlanId]
-                          ?.displayName}
+                      {listData[productId].plans &&
+                        getLocalizedString(
+                          listData[productId].plans?.[data?.trialPlanId]
+                            ?.displayNameLocalizations
+                        )}
                     </td>
                   </tr>
                 )}

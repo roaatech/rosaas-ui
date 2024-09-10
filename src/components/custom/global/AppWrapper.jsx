@@ -19,6 +19,7 @@ import {
 import useRequest from '../../../axios/apis/useRequest'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import Loader from '../../../components/custom/global/Loader'
 
 const AppWrapper = ({ children, customHistory }) => {
   const { userData } = useRequest()
@@ -60,6 +61,7 @@ const AppWrapper = ({ children, customHistory }) => {
   const messages = direction === 'rtl' ? arFile : enFile
   return (
     <>
+      <Loader />
       <Preloader show={loaded} />
       <ToastContainer />
       <GlobalStyles direction={direction} key={direction} darkMode={false} />

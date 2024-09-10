@@ -28,6 +28,7 @@ import {
   BsRecycle,
   BsEye,
   BsEyeSlash,
+  BsFillPencilFill,
 } from 'react-icons/bs'
 import { AiFillEdit } from 'react-icons/ai'
 import ProductFeaturePlan from '../../components/custom/Product/ProductFeaturePlan/ProductFeaturePlan'
@@ -52,6 +53,7 @@ import ProductsUsersManagement from '../../components/custom/Product/ProductsUse
 import WebhookList from '../../components/custom/Product/WebhookList/WebhookList.jsx'
 import IntegrationUrlsTab from '../../components/custom/Product/IntegrationUrlsTab/IntegrationUrlsTab.jsx'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import { size } from 'lodash'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -146,12 +148,22 @@ const ProductDetails = () => {
                     <MdOutlinePublishedWithChanges />
                   ),
                 },
+
                 {
                   order: 4,
                   type: 'action',
                   label: productData?.isVisible ? 'Hide' : 'Show',
                   func: () => toggleVisibleProduct(productData?.isVisible),
                   icon: productData?.isVisible ? <BsEyeSlash /> : <BsEye />,
+                },
+                {
+                  order: 4,
+                  type: 'form',
+                  component: 'templateForm',
+                  id: routeParams.id,
+                  label: 'Add-Template',
+                  icon: <BsFillPencilFill />,
+                  size: 'lg',
                 },
                 {
                   order: 4,

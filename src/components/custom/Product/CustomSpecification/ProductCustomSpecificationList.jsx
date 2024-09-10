@@ -41,6 +41,7 @@ import {
 import { PublishStatus } from '../../../../const'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import { size } from 'lodash'
 
 export const ProductCustomSpecificationList = (
   { productId },
@@ -265,6 +266,7 @@ export const ProductCustomSpecificationList = (
               component: 'addSpecification',
               icon: <MdEditNote />,
               setActiveIndex: setActiveIndex,
+              size: 'lg',
             },
             {
               order: 4,

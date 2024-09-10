@@ -25,6 +25,19 @@ import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
 import { setProductOwner } from '../../store/slices/main'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
+import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions'
+import {
+  deleteAllPlanPriceBySystemNamePublic,
+  deleteAllPlanPriceBySystemNamepublic,
+  setAllFeaturePlanPublic,
+  setAllFeaturePlanpublic,
+  setAllPlansPricePublic,
+  setAllPlansPricepublic,
+  setAllPlansPublic,
+  setAllPlanspublic,
+  setAllProductPublic,
+  setAllProductpublic,
+} from '../../store/slices/publicProductsSlice'
 
 const PricingPage = () => {
   const dispatch = useDispatch()
@@ -44,7 +57,7 @@ const PricingPage = () => {
   //   dispatch(setProductOwner(productOwnerSystemName))
   // }, [productOwnerSystemName])
 
-  const listProduct = useSelector((state) => state.products.products)
+  const listProduct = useSelector((state) => state.publicProducts.products)
 
   const productData = Object.values(
     Object.fromEntries(
@@ -85,6 +98,7 @@ const PricingPage = () => {
       )
     })
   console.log({ groupedByCycle })
+  const { getLocalizedString } = useSharedFunctions()
 
   let userRole = useSelector((state) => state.auth.userInfo.userType)
   const [redirectPath, setRedirectPath] = useState('')
@@ -116,7 +130,7 @@ const PricingPage = () => {
 
     ;(async () => {
       const productList = await getProductListPublic()
-      dispatch(setAllProduct(productList.data.data))
+      dispatch(setAllProductPublic(productList.data.data))
     })()
   }, [
     Object.values(listProduct).length > 0,
@@ -155,7 +169,9 @@ const PricingPage = () => {
   }, [planList])
 
   useEffect(() => {
-    dispatch(deleteAllPlanPriceBySystemName({ systemName: productSystemName }))
+    dispatch(
+      deleteAllPlanPriceBySystemNamePublic({ systemName: productSystemName })
+    )
   }, [currency])
 
   useEffect(() => {
@@ -181,7 +197,7 @@ const PricingPage = () => {
             Object.keys(featurePlanData.data.data > 0)
           ) {
             dispatch(
-              setAllFeaturePlan({
+              setAllFeaturePlanPublic({
                 productId: productId,
                 data: featurePlanData.data.data,
               })
@@ -198,7 +214,7 @@ const PricingPage = () => {
           )
           if (allPlanData.data.data && Object.keys(allPlanData.data.data > 0))
             dispatch(
-              setAllPlans({
+              setAllPlansPublic({
                 productId: productId,
                 data: allPlanData.data.data,
               })
@@ -214,7 +230,7 @@ const PricingPage = () => {
             Object.keys(allPlansPrices.data.data > 0)
           )
             dispatch(
-              setAllPlansPrice({
+              setAllPlansPricePublic({
                 productId: productId,
                 data: allPlansPrices.data.data,
               })
@@ -247,9 +263,9 @@ const PricingPage = () => {
       Object.values(listData).map((featurePlan) => ({
         id: featurePlan.feature.id,
         displayNameLocalizations: {
-          [intl.locale]:
-            featurePlan.feature?.displayNameLocalizations?.[intl.locale] ||
-            featurePlan.feature?.displayName,
+          [intl.locale]: getLocalizedString(
+            featurePlan.feature?.displayNameLocalizations
+          ),
         },
       }))
     ),
@@ -333,7 +349,9 @@ const PricingPage = () => {
         featureStatusMap[featurePlan?.feature?.id] = {
           status: true,
           descriptionLocalizations: {
-            [intl.locale]: featurePlan?.descriptionLocalizations?.[intl.locale],
+            [intl.locale]: getLocalizedString(
+              featurePlan?.descriptionLocalizations
+            ),
           },
         }
       })
@@ -342,8 +360,11 @@ const PricingPage = () => {
     // Extract redirection link and formatted description if not available for selection
     let formattedDescription = ''
     if (!isAvailableForSelection) {
+      const descriptionLocalizations = getLocalizedString(
+        planList[planId]?.descriptionLocalizations
+      )
       const { cleanedDescription } = extractRedirectionLinkFromDescription(
-        planList[planId]?.descriptionLocalizations?.[intl.locale] || ''
+        descriptionLocalizations || ''
       )
       formattedDescription = cleanedDescription
     }
@@ -377,9 +398,9 @@ const PricingPage = () => {
                 planId == listProduct?.[productId]?.trialPlanId ? (
                   <SafeFormatMessage id="Trial" />
                 ) : (
-                  planList[planId]?.displayNameLocalizations?.[
-                    intl.locale
-                  ]?.toUpperCase() ||
+                  getLocalizedString(
+                    planList[planId]?.displayNameLocalizations
+                  )?.toUpperCase() ||
                   planList[planId]?.displayName?.toUpperCase()
                 )}
 
@@ -451,9 +472,9 @@ const PricingPage = () => {
                       }}
                       className=" mr-1 "
                     >
-                      {filteredPrices?.descriptionLocalizations?.[
-                        intl.locale
-                      ] || filteredPrices?.description}
+                      {getLocalizedString(
+                        filteredPrices?.descriptionLocalizations
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -480,17 +501,18 @@ const PricingPage = () => {
                         <BsCheck2Circle
                           style={{ color: 'var(--second-color)' }}
                         />{' '}
-                        {featureStatusMap?.[feature.id]
-                          ?.descriptionLocalizations?.[intl.locale] ||
-                          featureStatusMap?.[feature.id]?.description ||
-                          feature.displayNameLocalizations?.[intl.locale] ||
-                          feature.displayName}{' '}
+                        {getLocalizedString(
+                          featureStatusMap?.[feature.id]
+                            ?.descriptionLocalizations
+                        ) ||
+                          getLocalizedString(
+                            feature.displayNameLocalizations
+                          )}{' '}
                       </span>
                     ) : (
                       <span>
                         <BsXCircle style={{ color: 'var(--silver-gray)' }} />{' '}
-                        {feature.displayNameLocalizations?.[intl.locale] ||
-                          feature.displayName}
+                        {getLocalizedString(feature.displayNameLocalizations)}
                       </span>
                     )}{' '}
                   </p>
@@ -629,13 +651,9 @@ const PricingPage = () => {
                       >
                         <>
                           <SafeFormatMessage id="Start-With" />{' '}
-                          {planList[planId]?.displayNameLocalizations?.[
-                            intl.locale
-                          ]
-                            ? planList[planId]?.displayNameLocalizations?.[
-                                intl.locale
-                              ]?.toUpperCase()
-                            : planList[planId]?.displayName?.toUpperCase()}
+                          {getLocalizedString(
+                            planList[planId]?.displayNameLocalizations
+                          )?.toUpperCase()}
                         </>
                       </Button>
                     </>
@@ -717,14 +735,12 @@ const PricingPage = () => {
                   icon={faBox}
                   className="mr-2 product-icon ml-2"
                 />
-                {listProduct?.[productId]?.displayNameLocalizations?.[
-                  intl.locale
-                ]?.toUpperCase() ||
-                  listProduct?.[productId]?.displayName?.toUpperCase()}
-                {(listProduct?.[productId]?.description ||
-                  listProduct?.[productId]?.descriptionLocalizations?.[
-                    intl.locale
-                  ]) && (
+                {getLocalizedString(
+                  listProduct?.[productId]?.displayNameLocalizations
+                )?.toUpperCase()}
+                {getLocalizedString(
+                  listProduct?.[productId]?.descriptionLocalizations
+                ) && (
                   <div
                     style={{
                       fontSize: 'var(--largeFont)',
@@ -735,9 +751,9 @@ const PricingPage = () => {
                     }}
                     className="text-center pb-3 mt-2"
                   >
-                    {listProduct?.[productId]?.descriptionLocalizations?.[
-                      intl.locale
-                    ] || listProduct?.[productId]?.description}
+                    {getLocalizedString(
+                      listProduct?.[productId]?.descriptionLocalizations
+                    )}
                   </div>
                 )}
               </h4>

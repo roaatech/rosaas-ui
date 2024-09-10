@@ -12,6 +12,8 @@ export const mainSlice = createSlice({
       currencyCode: localStorage.getItem('currencyCode'),
       id: localStorage.getItem('currencyId'),
     },
+    pOSystemName: null,
+    isLoading: false,
   },
   reducers: {
     directionFun: (state, action) => {
@@ -33,11 +35,12 @@ export const mainSlice = createSlice({
     },
     setProductOwner: (state, action) => {
       state.pOSystemName = action.payload
-
-      // PO-System-Name
     },
     deleteProductOwner: (state) => {
-      state.pOSystemName = null // Resetting pOSystemName to null
+      state.pOSystemName = null
+    },
+    setLoading: (state, action) => {
+      state.isLoading = action.payload
     },
   },
 })
@@ -51,5 +54,7 @@ export const {
   addToHistory,
   setCurrentCurrencyCodeAndId,
   setProductOwner,
+  setLoading,
 } = mainSlice.actions
+
 export default mainSlice.reducer

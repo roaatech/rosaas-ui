@@ -8,7 +8,7 @@ export const tenantsSlice = createSlice({
     createdTenant: {},
     subscriptionData: {},
     currentTab: 0,
-    currentStep: 1,
+    currentStep: null,
   },
 
   reducers: {

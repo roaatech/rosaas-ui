@@ -21,6 +21,7 @@ import { setStep } from '../../../store/slices/tenants'
 import { cycle } from '../../../const'
 import { Routes } from '../../../routes'
 import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
+import { setLoading } from '../../../store/slices/main'
 
 const CheckoutTenantReg = ({
   type,
@@ -50,6 +51,12 @@ const CheckoutTenantReg = ({
   const { productOwnerSystemName, productSystemName, priceName } = useParams()
 
   const step = useSelector((state) => state.tenants.currentStep)
+  useEffect(() => {
+    if (step == 2) {
+      return
+    }
+    dispatch(setLoading(true))
+  }, [])
 
   const productId = priceData?.product?.id
 
@@ -152,6 +159,7 @@ const CheckoutTenantReg = ({
           // dispatch(setStep(2))
           const id = createTenant?.data?.data?.orderId
           if (id) {
+            dispatch(setLoading(false))
             navigate(`#${id}`)
           }
         } else {
@@ -210,6 +218,7 @@ const CheckoutTenantReg = ({
         currencyId: currency.id,
       })
       if (createTenant?.data?.data?.orderId) {
+        dispatch(setLoading(false))
         navigate(`#${createTenant.data.data.orderId}`)
       }
       setDisplayName(title)
@@ -249,6 +258,11 @@ const CheckoutTenantReg = ({
       }, 1000)
 
       return () => clearTimeout(timeoutId)
+    } else if (
+      filteredSpecificationsArray &&
+      filteredSpecificationsArray.length !== 0
+    ) {
+      dispatch(setLoading(false))
     }
   }, [filteredSpecificationsArray])
 

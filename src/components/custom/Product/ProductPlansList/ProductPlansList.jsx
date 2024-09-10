@@ -62,6 +62,7 @@ import {
 } from '../../../../const/product.js'
 import { dynamicButtonsLanguages } from '../../../../const/const.js'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
 
 export const ProductPlansList = ({ productId }) => {
   const { getProductPlans, deletePlanReq, publishPlan, visiblePlan } =
@@ -190,15 +191,16 @@ export const ProductPlansList = ({ productId }) => {
       isVisible,
     } = props
     const publishStatus = isPublished ? true : false
-    const filteredDescription =
-      filterRedirectionLink(descriptionLocalizations?.[selectedLanguage]) ||
-      filterRedirectionLink(description)
+    // const filteredDescription =
+    //   filterRedirectionLink(descriptionLocalizations?.[selectedLanguage]) ||
+    //   filterRedirectionLink(description)
+    const { getLocalizedString } = useSharedFunctions()
 
     return (
       <tr>
         <td>
           <span className="fw-normal">
-            {displayNameLocalizations?.[selectedLanguage] || displayName}
+            {getLocalizedString(displayNameLocalizations)}
           </span>
         </td>
         <td>

@@ -60,6 +60,8 @@ const TwoStepProcessPage = () => {
 
   const [hasToPay, setHasToPay] = useState()
   const [priceData, setPriceData] = useState()
+  console.log({ ssss: priceData })
+
   const [trialPlanId, setTrialPlanId] = useState('')
   const currency = useSelector((state) => state.main.currency)
   // useEffect(() => {

@@ -14,6 +14,8 @@ const TextareaAndCounter = ({
   onChange,
   disableMainClass,
   style,
+  onDrop,
+  onDragOver,
 }) => {
   const [characterCount, setCharacterCount] = useState(inputValue?.length)
   const [value, setValue] = useState(inputValue)
@@ -57,6 +59,8 @@ const TextareaAndCounter = ({
           id={id}
           name={name}
           style={style}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
         />
 
         {showCharCount && (

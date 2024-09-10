@@ -32,6 +32,8 @@ import ThemeDialog from '../Shared/ThemeDialog/ThemeDialog'
 import GenerateNavigationLinkModal from './GenerateNavigationLinkModal/GenerateNavigationLinkModal'
 import { toast } from 'react-toastify'
 import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
+import useSharedFunctions from '../Shared/SharedFunctions/SharedFunctions'
+import { setLoading } from '../../../store/slices/main'
 
 const CheckoutPage = (data) => {
   const { hasToPay, setHasToPay, tenantDisplayName, priceData } = data
@@ -71,7 +73,7 @@ const CheckoutPage = (data) => {
     applyDiscountCode,
   } = useRequest()
 
-  const listProduct = useSelector((state) => state.products.products)
+  const listProduct = useSelector((state) => state.publicProducts.products)
 
   const productData = Object.values(
     Object.fromEntries(
@@ -157,8 +159,11 @@ const CheckoutPage = (data) => {
   const handleDiscountCodeStatus = () => {
     setDiscountCodeStatus(!discountCodeStatus)
   }
+  const { getLocalizedString } = useSharedFunctions()
   const [navigationLink, setNavigationLink] = useState()
   const handlePayment = async () => {
+    !visible && dispatch(setLoading(true))
+
     const payment = visible
       ? await paymentCheckout({
           orderID,
@@ -175,6 +180,7 @@ const CheckoutPage = (data) => {
           allowStoringCardInfo: rememberCardInfo,
           enableAutoRenewal: autoRenewal,
         })
+
     if (hasToPay && paymentMethod === 2) {
       const navigationUrl = payment?.data.data.navigationUrl
       setNavigationLink(navigationUrl)
@@ -188,6 +194,7 @@ const CheckoutPage = (data) => {
       payment && navigate('/success')
       dispatch(setStep(1))
     }
+    !visible && dispatch(setLoading(false))
   }
 
   const [trialEndDate, setTrialEndDate] = useState(null)
@@ -236,27 +243,38 @@ const CheckoutPage = (data) => {
         <Card.Header>
           <SafeFormatMessage id={'Plan'} />{' '}
           <span className="fw-bold">
-            {priceData?.plan.displayNameLocalizations?.[
-              intl.locale
-            ]?.toUpperCase()}
+            {getLocalizedString(
+              priceData?.plan.displayNameLocalizations
+            )?.toUpperCase() ||
+              getLocalizedString(
+                priceData?.product?.displayNameLocalizations
+              )?.toUpperCase()}
           </span>{' '}
           <SafeFormatMessage id={'of-Product'} />{' '}
           <span className="fw-bold">
-            {listProduct?.[productId]?.displayNameLocalizations?.[
-              intl.locale
-            ]?.toUpperCase()}
+            {getLocalizedString(
+              listProduct?.[productId]?.displayNameLocalizations
+            )?.toUpperCase()}
           </span>
         </Card.Header>
         <Card.Body className="border-bottom ">
-          {featurePlans?.map((featurePlan) => (
-            <div key={featurePlan.id}>
-              <p>
-                <BsCheck2Circle style={{ color: 'var(--second-color)' }} />{' '}
-                {featurePlan.descriptionLocalizations?.[intl.locale] ||
-                  featurePlan.feature.displayNameLocalizations?.[intl.locale]}
-              </p>
-            </div>
-          ))}
+          {featurePlans?.map((featurePlan) => {
+            console.log(featurePlan) // Log the featurePlan outside of the return
+
+            return (
+              <div key={featurePlan.id}>
+                <p>
+                  <BsCheck2Circle style={{ color: 'var(--second-color)' }} />{' '}
+                  {getLocalizedString(
+                    featurePlan.feature.descriptionLocalizations
+                  ) ||
+                    getLocalizedString(
+                      featurePlan.feature.displayNameLocalizations
+                    )}
+                </p>
+              </div>
+            )
+          })}
         </Card.Body>
       </>
     )
@@ -375,9 +393,9 @@ const CheckoutPage = (data) => {
                       </OverlayTrigger>
                     </div>
                     <div className=" card-stats">
-                      {priceData?.product?.displayNameLocalizations?.[
-                        intl.locale
-                      ] || priceData?.product?.displayName}
+                      {getLocalizedString(
+                        priceData?.product?.displayNameLocalizations
+                      )}
                     </div>
                   </div>
 
@@ -406,9 +424,9 @@ const CheckoutPage = (data) => {
                       </OverlayTrigger>
                     </div>
                     <div className=" card-stats">
-                      {priceData?.plan?.displayNameLocalizations?.[
-                        intl.locale
-                      ] || priceData?.plan?.displayName}
+                      {getLocalizedString(
+                        priceData?.plan?.displayNameLocalizations
+                      )}
                     </div>
                   </div>
 

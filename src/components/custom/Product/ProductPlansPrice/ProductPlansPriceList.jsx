@@ -54,6 +54,7 @@ import {
 import { setActiveIndex } from '../../../../store/slices/tenants'
 import { GiShadowFollower } from 'react-icons/gi'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
 export default function ProductPlansPriceList({ children }) {
   const intl = useIntl()
   const dispatch = useDispatch()
@@ -182,6 +183,7 @@ export default function ProductPlansPriceList({ children }) {
   list?.map((item) => {
     tableData[item.plan?.id + ',' + item.cycle] = item.id
   })
+  const { getLocalizedString } = useSharedFunctions()
 
   const handleCreatePlanPrice = (plan, cycle) => {
     if (plansData?.[plan].tenancyType == 3 && (cycle == 10 || cycle == 11)) {
@@ -221,7 +223,7 @@ export default function ProductPlansPriceList({ children }) {
       Cycle: cycle[data.cycle],
       Published: data.isPublished ? 'Yes' : 'No',
       Subscribed: data.isSubscribed ? 'Yes' : 'No',
-      Description: data.descriptionLocalizations[selectedLanguage],
+      Description: getLocalizedString(data.descriptionLocalizations),
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
     }
@@ -445,11 +447,9 @@ export default function ProductPlansPriceList({ children }) {
                         )}
                       </span>
 
-                      {
-                        plansData[item].displayNameLocalizations[
-                          selectedLanguage
-                        ]
-                      }
+                      {getLocalizedString(
+                        plansData[item].displayNameLocalizations
+                      )}
                       <span className="ml-2 ">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}

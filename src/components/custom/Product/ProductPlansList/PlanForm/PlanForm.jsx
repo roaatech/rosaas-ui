@@ -45,6 +45,8 @@ const PlanForm = ({
   const [redirectionLink, setRedirectionLink] = useState(
     planData?.descriptionLocalizations?.en
       ? extractRedirectionLink(planData.descriptionLocalizations.en)
+      : '' || planData?.descriptionLocalizations?.ar
+      ? extractRedirectionLink(planData.descriptionLocalizations.ar)
       : ''
   )
 

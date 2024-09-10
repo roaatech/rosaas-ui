@@ -18,28 +18,39 @@ import { Wrapper } from './Marketplace.styled'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import { BsBoxSeam } from 'react-icons/bs'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
+import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions'
+import {
+  updateAllProductPublic,
+  updateAllProductpublic,
+} from '../../store/slices/publicProductsSlice'
 
 const Marketplace = () => {
   const { getProductListPublic, getProductPlanPricePublicbyId } = useRequest()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const intl = useIntl()
+  const { getLocalizedString } = useSharedFunctions()
   const [language, setLanguage] = useState()
-  const listData = useSelector((state) => state.products.products)
+  const listData = useSelector((state) => state.publicProducts.products)
+
   useEffect(() => {
-    if (language == intl.locale && Object.keys(listData).length > 0) {
+    if (
+      language == intl.locale &&
+      listData &&
+      Object.keys(listData).length > 0
+    ) {
       return
     }
     ;(async () => {
       try {
         const productList = await getProductListPublic()
-        dispatch(updateAllProduct(productList.data.data))
+        dispatch(updateAllProductPublic(productList.data.data))
         setLanguage(intl.locale)
       } catch (error) {
         console.error('Error fetching product list:', error)
       }
     })()
-  }, [Object.keys(listData).length > 0, language == intl.locale])
+  }, [listData && Object.keys(listData).length > 0, language == intl.locale])
 
   let userRole = useSelector((state) => state.auth.userInfo.userType)
 
@@ -80,7 +91,8 @@ const Marketplace = () => {
           {/* <Card>
             <Card.Body> */}
           <Row>
-            {Object.values(listData).length > 0 &&
+            {listData &&
+              Object.values(listData).length > 0 &&
               Object.values(listData).map((product) => (
                 <Col key={product.id} sm={6} md={4} lg={3}>
                   <Card
@@ -109,7 +121,9 @@ const Marketplace = () => {
                                 className="product-icon"
                               />
                               <span className="product-name ml-2 mr-2">
-                                {product?.displayName}
+                                {getLocalizedString(
+                                  product?.displayNameLocalizations
+                                )}
                               </span>
                             </h6>
                             <div className=" mb-0  ">
@@ -126,7 +140,9 @@ const Marketplace = () => {
                           </div>
                         </div>
                         <Card.Text className="product-description">
-                          {product.description || '----'}
+                          {getLocalizedString(
+                            product.descriptionLocalizations
+                          ) || '----'}
                         </Card.Text>
                       </Card.Body>
                     </Link>

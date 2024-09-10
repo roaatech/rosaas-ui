@@ -36,6 +36,7 @@ import { toast } from 'react-toastify'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { BsStars } from 'react-icons/bs'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
 
 export const ProductFeaturesList = ({ productId }) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
@@ -106,25 +107,26 @@ export const ProductFeaturesList = ({ productId }) => {
 
     const mappedType = featureTypeMap[type]
     const mappedReset = featureResetMap[reset]
+    const { getLocalizedString } = useSharedFunctions()
 
     return (
       <tr>
         <td>
           <span className="fw-normal">
-            {displayNameLocalizations?.[selectedLanguage]}
+            {getLocalizedString(displayNameLocalizations)}
           </span>
         </td>
         <td>
           <span className="fw-normal">{systemName}</span>
         </td>
         <td className="description">
-          {descriptionLocalizations?.[selectedLanguage] && (
+          {
             <DescriptionCell
               data={{
-                description: descriptionLocalizations?.[selectedLanguage],
+                description: getLocalizedString(descriptionLocalizations),
               }}
             />
-          )}
+          }
         </td>
         <td>
           <span className={`fw-normal`}>{mappedType}</span>
