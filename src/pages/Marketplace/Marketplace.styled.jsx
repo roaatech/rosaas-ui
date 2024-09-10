@@ -7,7 +7,9 @@ export const Wrapper = styled.div`
   .product-name {
     color: #ffbc2b;
   }
-
+  .main-container {
+    margin-top: 90px;
+  }
   .product-link:hover {
     background-color: #cccccc49;
   }

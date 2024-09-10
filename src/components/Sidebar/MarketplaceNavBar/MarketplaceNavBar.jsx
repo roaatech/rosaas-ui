@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Menubar } from 'primereact/menubar'
 import { Wrapper } from './MarketplaceNavBar.styled'
-import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../axios/apis/useRequest'
-import { directionFun } from '../../../store/slices/main'
 import useGlobal from '../../../lib/hocks/global'
 import { logOut } from '../../../store/slices/auth'
 import { matchPath, useLocation, useNavigate } from 'react-router-dom'
@@ -26,7 +24,7 @@ const MarketplaceNavBar = ({ profile }) => {
     matchPath(
       {
         path: Routes.CheckOut.path,
-        end: true, // or false if you want partial match
+        end: true,
       },
       location.pathname
     )
@@ -90,7 +88,6 @@ const MarketplaceNavBar = ({ profile }) => {
           const currencies = response.data.data
           dispatch(setPublicCurrenciesList(currencies))
 
-          // Find and store the primary currency
           const primaryCurrency = Object.values(currencies).find(
             (currency) => currency.isPrimaryCurrency
           )
@@ -109,10 +106,11 @@ const MarketplaceNavBar = ({ profile }) => {
 
   const showToast = (message, severity) => {
     setToast({ message, severity })
-    setTimeout(() => setToast(null), 3000) // Hide toast after 3 seconds
+    setTimeout(() => setToast(null), 3000)
   }
 
-  const items = isRunningInIframe
+  // Left side menu items
+  const leftSideItems = isRunningInIframe
     ? [
         {
           label: `Currency (${selectedCurrency})`,
@@ -131,31 +129,12 @@ const MarketplaceNavBar = ({ profile }) => {
         },
       ]
     : [
-        ...(profile && userInfo.email
-          ? [
-              {
-                label: userInfo.email,
-                icon: 'pi pi-fw pi-user',
-                items: [
-                  {
-                    label: <SafeFormatMessage id="Logout" />,
-                    icon: 'pi pi-fw pi-sign-out',
-                    command: () => dispatch(logOut()),
-                  },
-                ],
-              },
-            ]
-          : []),
         {
           label: <SafeFormatMessage id="Home" />,
           icon: 'pi pi-fw pi-home',
           command: () => navigate(Routes.mainPage.path),
         },
-        {
-          label: <SafeFormatMessage id="Marketplace" />,
-          icon: 'pi pi-fw pi-shopping-cart',
-          command: () => navigate(Routes.marketPlacePage.path),
-        },
+
         {
           label:
             direction === 'rtl' ? (
@@ -167,11 +146,51 @@ const MarketplaceNavBar = ({ profile }) => {
           command: () => changeDirection(direction === 'rtl' ? 'ltr' : 'rtl'),
         },
         {
-          label: `Currency (${selectedCurrency})`,
+          label: (
+            <span>
+              <SafeFormatMessage id="Currency" /> ({selectedCurrency})
+            </span>
+          ),
+
           icon: 'pi pi-fw pi-money-bill',
           items: currencyItems,
         },
+        {
+          label: <SafeFormatMessage id="Marketplace" />,
+          icon: 'pi pi-fw pi-shopping-cart',
+          command: () => navigate(Routes.marketPlacePage.path),
+        },
       ]
+
+  // Right side menu items
+  const rightSideItems = !isRunningInIframe && [
+    ...(profile && userInfo.email
+      ? [
+          {
+            label: userInfo.email,
+            icon: 'pi pi-fw pi-user',
+            items: [
+              {
+                label: <SafeFormatMessage id="Logout" />,
+                icon: 'pi pi-fw pi-sign-out',
+                command: () => dispatch(logOut()),
+              },
+            ],
+          },
+        ]
+      : [
+          {
+            label: <SafeFormatMessage id="Product-Management-Area" />,
+            icon: 'pi pi-fw pi-cog',
+            command: () => navigate(Routes.ProductManagementSignIn.path),
+          },
+          {
+            label: <SafeFormatMessage id="signIn" />,
+            icon: 'pi pi-fw pi-sign-in',
+            command: () => navigate(Routes.SignInTenantAdmin.path),
+          },
+        ]),
+  ]
 
   useEffect(() => {
     const storedCurrency = localStorage.getItem('currencyCode')
@@ -183,9 +202,34 @@ const MarketplaceNavBar = ({ profile }) => {
   return (
     <Wrapper>
       <div className="card">
-        {loading && <div className="progress-indicator">Loading...</div>}{' '}
-        {/* Show a progress indicator */}
-        <Menubar model={items} />
+        {loading && <div className="progress-indicator">Loading...</div>}
+        <Menubar
+          model={leftSideItems}
+          end={
+            <ul className="p-menubar-root-list">
+              {rightSideItems &&
+                rightSideItems.map((item, index) => (
+                  <li
+                    key={index}
+                    onClick={item.command}
+                    className="p-menuitem-link"
+                    style={{
+                      borderRadius: '6px',
+                      padding: '8px 15px',
+                    }}
+                  >
+                    <span
+                      className={item.icon}
+                      style={{ marginRight: '5px' }}
+                    ></span>
+                    <span>{item.label}</span>
+                  </li>
+                ))}
+            </ul>
+          }
+          style={{ justifyContent: 'space-between', display: 'flex' }}
+        />
+
         {toast && (
           <Toast
             severity={toast.severity}

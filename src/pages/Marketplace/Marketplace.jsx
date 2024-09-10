@@ -23,6 +23,7 @@ import {
   updateAllProductPublic,
   updateAllProductpublic,
 } from '../../store/slices/publicProductsSlice'
+import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
 
 const Marketplace = () => {
   const { getProductListPublic, getProductPlanPricePublicbyId } = useRequest()
@@ -68,9 +69,7 @@ const Marketplace = () => {
   return (
     <Wrapper>
       <section style={{ minHeight: '92vh' }}>
-        {!isRunningInIframe && (
-          <BreadcrumbComponent breadcrumbInfo={'Home'} icon={BsBoxSeam} />
-        )}
+        <MarketplaceNavBar />
         <div className="main-container">
           <section className=" mt-4 mb-4 pb-3">
             <div className="row justify-content-center">

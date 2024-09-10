@@ -18,6 +18,7 @@ import { FormattedMessage } from 'react-intl'
 import { signinRedirectPath } from '../../store/slices/auth'
 import { Routes } from '../../routes'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
+import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
 
 const MainPage = () => {
   const dispatch = useDispatch()
@@ -39,9 +40,7 @@ const MainPage = () => {
   return (
     <Wrapper>
       <section style={{ minHeight: '92vh' }}>
-        {!isRunningInIframe && (
-          <BreadcrumbComponent breadcrumbInfo={'Home'} icon={BsBoxSeam} />
-        )}
+        <MarketplaceNavBar />
         <div className="main-container">
           <section className="mt-4 mb-4 pb-3">
             <div className="row justify-content-center">

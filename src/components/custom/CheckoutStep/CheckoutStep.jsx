@@ -187,12 +187,9 @@ const CheckoutPage = (data) => {
       if (navigationUrl && !visible) {
         const decodedUrl = decodeURIComponent(navigationUrl)
         window.location.href = decodedUrl
-
-        dispatch(setStep(1))
       }
     } else {
       payment && navigate('/success')
-      dispatch(setStep(1))
     }
     !visible && dispatch(setLoading(false))
   }
