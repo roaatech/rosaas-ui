@@ -10,6 +10,7 @@ import { Routes } from '../../../routes'
 import { setPublicCurrenciesList } from '../../../store/slices/currenciesSlice'
 import { Toast } from 'primereact/toast'
 import SafeFormatMessage from '../../custom/Shared/SafeFormatMessage/SafeFormatMessage'
+import { useIntl } from 'react-intl'
 
 const MarketplaceNavBar = ({ profile }) => {
   const isRunningInIframe = window.self !== window.top
@@ -30,6 +31,9 @@ const MarketplaceNavBar = ({ profile }) => {
     )
   )
   const step = useSelector((state) => state.tenants.currentStep)
+  const { locale } = useIntl()
+  const isRtl = locale === 'ar'
+  console.log({ isRtl })
 
   const [selectedCurrency, setSelectedCurrency] = useState(() =>
     localStorage.getItem('currencyCode')
@@ -161,10 +165,11 @@ const MarketplaceNavBar = ({ profile }) => {
           command: () => navigate(Routes.marketPlacePage.path),
         },
       ]
+  console.log({ profile, sss: userInfo.email })
 
   // Right side menu items
   const rightSideItems = !isRunningInIframe && [
-    ...(profile && userInfo.email
+    ...(userInfo.email
       ? [
           {
             label: userInfo.email,
@@ -176,6 +181,10 @@ const MarketplaceNavBar = ({ profile }) => {
                 command: () => dispatch(logOut()),
               },
             ],
+          },
+          {
+            icon: 'pi pi-fw pi-sign-out',
+            command: () => dispatch(logOut()),
           },
         ]
       : [
@@ -216,11 +225,15 @@ const MarketplaceNavBar = ({ profile }) => {
                     style={{
                       borderRadius: '6px',
                       padding: '8px 15px',
+                      textAlign: isRtl ? 'right' : 'left',
                     }}
                   >
                     <span
                       className={item.icon}
-                      style={{ marginRight: '5px' }}
+                      style={{
+                        marginRight: isRtl ? '0' : '5px',
+                        marginLeft: isRtl ? '5px' : '0',
+                      }}
                     ></span>
                     <span>{item.label}</span>
                   </li>

@@ -24,6 +24,8 @@ const Loader = () => {
   return (
     <div
       style={{
+        opacity: isLoading ? 1 : 0,
+        transition: 'opacity 0.3s ease',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -34,6 +36,7 @@ const Loader = () => {
         width: '100%',
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
         zIndex: 1000,
+        pointerEvents: isLoading ? 'auto' : 'none',
       }}
     >
       <FontAwesomeIcon

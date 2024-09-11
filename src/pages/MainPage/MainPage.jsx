@@ -41,7 +41,7 @@ const MainPage = () => {
     <Wrapper>
       <section style={{ minHeight: '92vh' }}>
         <MarketplaceNavBar />
-        <div className="main-container">
+        <div className="main-container" style={{ marginTop: '12vh' }}>
           <section className="mt-4 mb-4 pb-3">
             <div className="row justify-content-center">
               <div className="col-lg-12 text-center mb-3">

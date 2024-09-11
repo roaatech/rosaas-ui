@@ -25,6 +25,10 @@ export const Wrapper = styled.div`
     .p-menuitem-icon {
     color: var(--second-color) !important;
   }
+  .p-menubar .p-menubar-custom,
+  .p-menubar .p-menubar-end {
+    margin-left: 0px;
+  }
 
   .p-menubar
     .p-menubar-root-list
