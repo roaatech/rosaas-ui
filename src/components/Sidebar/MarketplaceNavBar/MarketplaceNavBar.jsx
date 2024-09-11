@@ -112,6 +112,7 @@ const MarketplaceNavBar = ({ profile }) => {
     setToast({ message, severity })
     setTimeout(() => setToast(null), 3000)
   }
+  const signInShow = false
 
   // Left side menu items
   const leftSideItems = isRunningInIframe
@@ -187,7 +188,8 @@ const MarketplaceNavBar = ({ profile }) => {
             command: () => dispatch(logOut()),
           },
         ]
-      : [
+      : signInShow
+      ? [
           {
             label: <SafeFormatMessage id="Product-Management-Area" />,
             icon: 'pi pi-fw pi-cog',
@@ -197,6 +199,13 @@ const MarketplaceNavBar = ({ profile }) => {
             label: <SafeFormatMessage id="signIn" />,
             icon: 'pi pi-fw pi-sign-in',
             command: () => navigate(Routes.SignInTenantAdmin.path),
+          },
+        ]
+      : [
+          {
+            label: <SafeFormatMessage id="Product-Management-Area" />,
+            icon: 'pi pi-fw pi-cog',
+            command: () => navigate(Routes.ProductManagementSignIn.path),
           },
         ]),
   ]
