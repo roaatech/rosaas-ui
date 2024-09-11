@@ -43,7 +43,7 @@ export default function ChildTable({
   const currentTenantsData = useSelector(
     (state) => state.tenants.tenants?.[currentTenantId]
   )
-
+  const subscriptionStatusValue = currentTenantsData.subscriptionStatus
   const listProducts = useSelector((state) => state.products.products)
   useEffect(() => {
     ;(async () => {
@@ -117,7 +117,52 @@ export default function ChildTable({
       description: metadata ? rowExpansionTemplate(JSON.parse(metadata)) : null,
     },
   ])
+  const subscriptionButtons = []
 
+  // Conditional button for Cancel Subscription
+  if (subscriptionStatusValue !== 3) {
+    subscriptionButtons.push({
+      order: 4,
+      type: 'form',
+      label: 'Cancel-Subscription',
+      component: 'subscriptionActionsForm',
+      popupLabel: <SafeFormatMessage id="Cancel-Subscription" />,
+      updateTenant: updateTenant,
+      icon: <MdOutlineCancel />,
+      variant: 'text-danger',
+      formType: 'cancel',
+    })
+  }
+
+  // Conditional button for Suspend Subscription
+  if (subscriptionStatusValue !== 2 && subscriptionStatusValue !== 3) {
+    subscriptionButtons.push({
+      order: 4,
+      type: 'form',
+      label: 'Suspend-Subscription',
+      component: 'subscriptionActionsForm',
+      popupLabel: <SafeFormatMessage id="Suspend-Subscription" />,
+      updateTenant: updateTenant,
+      icon: <MdOutlineCancel />,
+      variant: 'text-warning',
+      formType: 'suspend',
+    })
+  }
+
+  // Conditional button for Activate Subscription
+  if (subscriptionStatusValue === 2) {
+    subscriptionButtons.push({
+      order: 4,
+      type: 'form',
+      label: 'Activate-Subscription',
+      component: 'subscriptionActionsForm',
+      popupLabel: <SafeFormatMessage id="Activate-Subscription" />,
+      updateTenant: updateTenant,
+      icon: <MdDone />,
+      variant: 'text-success',
+      formType: 'activate',
+    })
+  }
   return (
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
@@ -140,47 +185,7 @@ export default function ChildTable({
                   ...(currentTenantsData.subscriptions?.[0].status != 11 &&
                   currentTenantsData.subscriptions?.[0].status != 12 &&
                   currentTenantsData.subscriptions?.[0].status != 13
-                    ? [
-                        {
-                          order: 4,
-                          type: 'form',
-                          label: 'Cancel-Subscription',
-                          component: 'subscriptionActionsForm',
-                          popupLabel: (
-                            <SafeFormatMessage id="Cancel-Subscription" />
-                          ),
-                          updateTenant: updateTenant,
-                          icon: <MdOutlineCancel />,
-                          variant: 'text-danger',
-                          formType: 'cancel',
-                        },
-                        {
-                          order: 4,
-                          type: 'form',
-                          label: 'Suspend-Subscription',
-                          component: 'subscriptionActionsForm',
-                          popupLabel: (
-                            <SafeFormatMessage id="Suspend-Subscription" />
-                          ),
-                          updateTenant: updateTenant,
-                          icon: <MdOutlineCancel />,
-                          variant: 'text-warning',
-                          formType: 'suspend',
-                        },
-                        {
-                          order: 4,
-                          type: 'form',
-                          label: 'Activate-Subscription',
-                          component: 'subscriptionActionsForm',
-                          popupLabel: (
-                            <SafeFormatMessage id="Activate-Subscription" />
-                          ),
-                          updateTenant: updateTenant,
-                          icon: <MdDone />,
-                          variant: 'text-success',
-                          formType: 'activate',
-                        },
-                      ]
+                    ? [...subscriptionButtons]
                     : []),
                   {
                     order: 5, // Adjusted order to avoid duplication
