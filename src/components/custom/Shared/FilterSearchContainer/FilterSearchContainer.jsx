@@ -105,9 +105,9 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
           {intl.formatMessage({ id: 'Submit' })}
         </Button>
       </Card.Header>
-      <div className=" d-flex flex-column flex-sm-row justify-content-between align-items-center ">
+      <div className=" d-flex flex-column flex-sm-row justify-content-between align-items-start ">
         {/* MultiSelect components */}
-        <Row className="p-0 m-0">
+        <Row className="p-0 my-2 m-0">
           <Col className="m-0 my-2 p-0">
             <FilteringMultiSelect
               optionsArray={productsLookup && Object.values(productsLookup)}
@@ -159,7 +159,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
             </Col>
           )}
         </Row>
-        <Row>
+        <Row className="p-0 my-2 m-0">
           <Col className="m-0 my-2 p-0">
             <FilteringMultiSelect
               optionsArray={subscriptionMode}

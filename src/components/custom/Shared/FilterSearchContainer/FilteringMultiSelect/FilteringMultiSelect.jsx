@@ -45,10 +45,7 @@ const FilteringMultiSelect = ({
   }
 
   return (
-    <div
-      className="filtering-multi-select mx-2 d-flex flex-column flex-sm-row"
-      style={{ position: 'relative' }}
-    >
+    <div className="filtering-multi-select mx-2 d-flex flex-column flex-sm-row">
       <span className="mb-0">
         <SafeFormatMessage id={label} />
       </span>
