@@ -34,6 +34,7 @@ import DiscountDetails from './components/custom/Discounts/DiscountDetails'
 import CurrenciesPage from './pages/CurrenciesPage/CurrenciesPage'
 import SignInPage from './pages/signIn/signIn'
 import ExchangeRateProvidersSettings from './pages/Settings/ExchangeRateProvidersSettings/ExchangeRateProvidersSettings'
+import UpdatedTenantsPage from './pages/UpdatedTenantsPage/UpdatedTenantsPage'
 const adminPanel = '/admin-panel'
 
 export const Routes = {
@@ -94,6 +95,11 @@ export const Routes = {
   Tenant: {
     path: `${adminPanel}/tenants`,
     component: () => <POwnerChecker page={<Tenant />} />,
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+  },
+  UpdatedTenantsPage: {
+    path: `${adminPanel}/updated-tenants`,
+    component: () => <POwnerChecker page={<UpdatedTenantsPage />} />,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
 

@@ -95,6 +95,7 @@ const useRequest = () => {
     cancelSubscriptionRequest,
     suspendSubscriptionRequest,
     activateSubscriptionRequest,
+    subscriptionFilteredList,
   } = useSubManagementReq()
 
   const {
@@ -121,6 +122,7 @@ const useRequest = () => {
     changeProductTrialType,
     publishProduct,
     visibleProduct,
+    getProductsLookup,
   } = useProductReq()
 
   const {
@@ -374,6 +376,8 @@ const useRequest = () => {
     visiblePlan,
     visibleProduct,
     activateSubscriptionRequest,
+    subscriptionFilteredList,
+    getProductsLookup,
   }
 }
 export default useRequest

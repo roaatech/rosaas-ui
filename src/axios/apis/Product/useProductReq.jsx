@@ -15,6 +15,9 @@ const useTenantReq = () => {
   const getProduct = async (id) => {
     return await Request.get(`management/sadmin/v1/Products/${id}`)
   }
+  const getProductsLookup = async () => {
+    return await Request.get(`management/sadmin/v1/Products/Lookup`)
+  }
   const getProductWarnings = async (id) => {
     return await Request.get(`management/sadmin/v1/Products/${id}/Warnings`)
   }
@@ -57,6 +60,7 @@ const useTenantReq = () => {
     changeProductTrialType,
     publishProduct,
     visibleProduct,
+    getProductsLookup,
   }
 }
 

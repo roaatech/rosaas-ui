@@ -60,7 +60,7 @@ import SafeFormatMessage from '../custom/Shared/SafeFormatMessage/SafeFormatMess
 
 export default (props = {}) => {
   const navigate = useNavigate()
-
+  const showComponent = false
   const location = useLocation()
   const { pathname } = location
   const [show, setShow] = useState(false)
@@ -323,7 +323,9 @@ export default (props = {}) => {
             <Nav className="flex-column pt-3 pt-md-0">
               <img src={selectedLogo} alt="logo" className="my-3 logo" />
 
-              <QuickActions setSearchValue={setSearchValues} />
+              {showComponent && (
+                <QuickActions setSearchValue={setSearchValues} />
+              )}
               {userRole == 'clientAdmin' && (
                 <NavItem
                   key={'details'}
@@ -335,55 +337,65 @@ export default (props = {}) => {
                   )}
                 />
               )}
-              {active.length ? (
-                <CollapsableNavItem
-                  eventKey={activeIsOpen}
-                  title={<SafeFormatMessage id="Active-Tenant" />}
-                  icon={BsFillPersonLinesFill}
-                >
-                  {active.map((item, index) => (
-                    <NavItem
-                      key={index}
-                      title={item.displayName}
-                      link={`${Routes.Tenant.path}/${item.id}`}
-                      icon={<BsFillPersonFill />}
-                    />
-                  ))}
-                </CollapsableNavItem>
-              ) : null}
-              {inactive.length ? (
-                <CollapsableNavItem
-                  eventKey={inactiveIsOpen}
-                  title={<SafeFormatMessage id="Tenants" />}
-                  icon={<BsFillPersonLinesFill />}
-                >
-                  {inactive.map((item, index) => (
-                    <NavItem
-                      key={index}
-                      title={item.displayName}
-                      link={`${Routes.Tenant.path}/${item.id}`}
-                      icon={<BsFillPersonFill />}
-                    />
-                  ))}
-                </CollapsableNavItem>
-              ) : null}
+              {showComponent && (
+                <>
+                  {active.length ? (
+                    <CollapsableNavItem
+                      eventKey={activeIsOpen}
+                      title={<SafeFormatMessage id="Active-Tenant" />}
+                      icon={BsFillPersonLinesFill}
+                    >
+                      {active.map((item, index) => (
+                        <NavItem
+                          key={index}
+                          title={item.displayName}
+                          link={`${Routes.Tenant.path}/${item.id}`}
+                          icon={<BsFillPersonFill />}
+                        />
+                      ))}
+                    </CollapsableNavItem>
+                  ) : null}
+                  {inactive.length ? (
+                    <CollapsableNavItem
+                      eventKey={inactiveIsOpen}
+                      title={<SafeFormatMessage id="Tenants" />}
+                      icon={<BsFillPersonLinesFill />}
+                    >
+                      {inactive.map((item, index) => (
+                        <NavItem
+                          key={index}
+                          title={item.displayName}
+                          link={`${Routes.Tenant.path}/${item.id}`}
+                          icon={<BsFillPersonFill />}
+                        />
+                      ))}
+                    </CollapsableNavItem>
+                  ) : null}
 
-              {archived.length ? (
-                <CollapsableNavItem
-                  eventKey={archivedIsOpen}
-                  title="Archived Tenants"
-                  icon={<BsFillPersonLinesFill />}
-                >
-                  {archived.map((item, index) => (
-                    <NavItem
-                      key={index}
-                      title={item.displayName}
-                      link={`/tenants/${item.id}`}
-                    />
-                  ))}
-                </CollapsableNavItem>
-              ) : null}
-
+                  {archived.length ? (
+                    <CollapsableNavItem
+                      eventKey={archivedIsOpen}
+                      title="Archived Tenants"
+                      icon={<BsFillPersonLinesFill />}
+                    >
+                      {archived.map((item, index) => (
+                        <NavItem
+                          key={index}
+                          title={item.displayName}
+                          link={`/tenants/${item.id}`}
+                        />
+                      ))}
+                    </CollapsableNavItem>
+                  ) : null}
+                </>
+              )}
+              <NavItem
+                key={'Tenants'}
+                link={`${Routes.Tenant.path}`}
+                isActive={location.pathname.includes('tenants')}
+                title={<SafeFormatMessage id="Tenants" />}
+                icon={<BsFillPersonLinesFill />}
+              />
               {(userRole == 'productOwner' ||
                 userRole == 'superAdmin' ||
                 userRole == 'clientAdmin') &&

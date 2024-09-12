@@ -108,19 +108,32 @@ export const subscriptionStatus = {
     background: 'var(--green2)',
     value: <SafeFormatMessage id="Active" />,
     color: 'var(--teal-green)',
+    displaName: 'Active',
   },
   2: {
     background: 'var(--yellow2)',
     value: <SafeFormatMessage id="Suspended" />,
     color: 'var(--yellow-brown)',
+    displaName: 'Suspended',
   },
   3: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Canceled" />,
     color: 'var(--orange-brown)',
+    displaName: 'Canceled',
   },
 }
-
+export const subscriptionMode = [
+  { id: 1, label: 'Subscription' },
+  { id: 2, label: 'Trial' },
+  { id: 3, label: 'Payment' },
+]
+export const tenantStep = [
+  { id: 1, label: 'Creation' },
+  { id: 2, label: 'Activation' },
+  { id: 3, label: 'Deactivation' },
+  { id: 4, label: 'Deletion' },
+]
 export const isMajorStatus = {
   true: {
     background: 'var(--green2)',
