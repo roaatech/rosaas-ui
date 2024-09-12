@@ -90,5 +90,6 @@ export const {
   setSearchTerm,
   changeSubscriptionAttr,
   setAllProductsLookup,
+  setAllPlansLookup,
 } = productsSlice.actions
 export default productsSlice.reducer

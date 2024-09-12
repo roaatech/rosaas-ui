@@ -14,6 +14,18 @@ const setAllPlans = (state, action) => {
   allProduct[action.payload.productId].plans = allPlans
   state.products = allProduct
 }
+const setAllPlansLookup = (state, action) => {
+  const allPlans = {}
+
+  const planData = action.payload
+
+  planData &&
+    planData.map((item) => {
+      allPlans[item.id] = item
+    })
+
+  state.lookup.plansLookup = allPlans
+}
 
 const PlanInfo = (state, action) => {
   const { productId, planId, data } = action.payload
@@ -57,4 +69,11 @@ const deleteAllPlan = (state, action) => {
   delete allProduct[action.payload.productId].plans
   state.products = allProduct
 }
-export { setAllPlans, PlanInfo, PlansChangeAttr, deletePlan, deleteAllPlan }
+export {
+  setAllPlans,
+  PlanInfo,
+  PlansChangeAttr,
+  deletePlan,
+  deleteAllPlan,
+  setAllPlansLookup,
+}

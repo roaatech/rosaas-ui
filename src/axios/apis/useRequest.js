@@ -147,6 +147,7 @@ const useRequest = () => {
     deletePlanReq,
     getProductPlansPublic,
     visiblePlan,
+    getPlanFilteredList,
   } = usePlanReq()
   const {
     getProductSpecification,
@@ -378,6 +379,7 @@ const useRequest = () => {
     activateSubscriptionRequest,
     subscriptionFilteredList,
     getProductsLookup,
+    getPlanFilteredList,
   }
 }
 export default useRequest

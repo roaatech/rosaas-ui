@@ -13,6 +13,8 @@ const FilteringMultiSelect = ({
   width,
 }) => {
   const [selectedValues, setSelectedValues] = useState()
+  console.log({ optionsArray })
+
   useEffect(() => {
     if (optionsArray?.length) {
       const allIds = optionsArray.map((option) => option.id)
@@ -45,7 +47,7 @@ const FilteringMultiSelect = ({
   }
 
   return (
-    <div className="filtering-multi-select mx-2 d-flex flex-column flex-sm-row">
+    <div className="filtering-multi-select mx-2 d-flex flex-column ">
       <span className="mb-0">
         <SafeFormatMessage id={label} />
       </span>
@@ -55,9 +57,8 @@ const FilteringMultiSelect = ({
         options={optionsArray}
         onChange={handleSelectionChange}
         optionLabel={(option) =>
-          getLocalizedString(option?.displayNameLocalizations) || (
-            <SafeFormatMessage id={option?.label} />
-          )
+          getLocalizedString(option?.displayNameLocalizations) ||
+          option?.systemName || <SafeFormatMessage id={option?.label} />
         }
         optionValue="id"
         placeholder={intl.formatMessage({ id: 'Select' })}

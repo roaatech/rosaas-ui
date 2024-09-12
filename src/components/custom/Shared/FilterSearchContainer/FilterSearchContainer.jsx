@@ -16,7 +16,10 @@ import { FaFilter } from 'react-icons/fa'
 import { Calendar } from 'primereact/calendar'
 import useRequest from '../../../../axios/apis/useRequest'
 import { useDispatch, useSelector } from 'react-redux'
-import { setAllProductsLookup } from '../../../../store/slices/products/productsSlice'
+import {
+  setAllPlansLookup,
+  setAllProductsLookup,
+} from '../../../../store/slices/products/productsSlice'
 import {
   subscriptionMode,
   subscriptionStatus,
@@ -27,16 +30,16 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
     useState([]) // For MultiSelect 1
   const [SubscriptionModeIds, setSubscriptionModeIds] = useState([]) // For MultiSelect 2
   const [selectedProducts, setSelectedProducts] = useState([]) // For MultiSelect 3
-  const [SelectedTenantStepsIds, setSelectedTenantStepsIds] = useState([]) // For MultiSelect 3
-  const [selectedIds5, setSelectedIds5] = useState([]) // For MultiSelect 3
-  const [selectedIds6, setSelectedIds6] = useState([]) // For MultiSelect 3
+  const [selectedTenantStepsIds, setSelectedTenantStepsIds] = useState([]) // For MultiSelect 3
+  const [selectedPlansIds, setSelectedPlansIds] = useState([]) // For MultiSelect 3
   const [minPrice, setMinPrice] = useState('') // Minimum price
   const [maxPrice, setMaxPrice] = useState('') // Maximum price
 
   const intl = useIntl()
-  const { getProductsLookup } = useRequest()
+  const { getProductsLookup, getPlanFilteredList } = useRequest()
   const dispatch = useDispatch()
   const productsLookup = useSelector((state) => state.products?.lookup)
+  const plansLookup = productsLookup?.plansLookup
   const viewComponent = false
 
   useEffect(() => {
@@ -45,6 +48,47 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
       dispatch(setAllProductsLookup(listData.data.data))
     })()
   }, [])
+
+  const DEBOUNCE_DELAY = 1000
+  useEffect(() => {
+    let query = ''
+    let debounceTimer = null
+
+    if (Object.values(selectedProducts).length > 0) {
+      selectedProducts &&
+        Object.values(selectedProducts).forEach((item, index) => {
+          if (index === 0) {
+            query += `?productIds=${item.value}`
+          } else {
+            query += `&productIds=${item.value}`
+          }
+        })
+    }
+
+    const sendRequest = () => {
+      ;(async () => {
+        const listData = await getPlanFilteredList(query || '')
+
+        dispatch(
+          setAllPlansLookup(
+            listData.data.data && Object.values(listData.data.data)
+          )
+        )
+      })()
+    }
+
+    if (query) {
+      debounceTimer = setTimeout(() => {
+        sendRequest()
+      }, DEBOUNCE_DELAY)
+    } else {
+      sendRequest()
+    }
+
+    return () => {
+      if (debounceTimer) clearTimeout(debounceTimer)
+    }
+  }, [selectedProducts])
 
   const optionsArray6 = [
     { label: 'Item X', id: 'idX' },
@@ -74,7 +118,8 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
       ...selectedSubscriptionStatusIds,
       ...SubscriptionModeIds,
       ...selectedProducts,
-      ...SelectedTenantStepsIds,
+      ...selectedTenantStepsIds,
+      ...selectedPlansIds,
     })
   }
   const transformedSubscriptionStatus = Object.entries(
@@ -119,8 +164,8 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
           </Col>
           <Col className="m-0 my-2 p-0">
             <FilteringMultiSelect
-              optionsArray={optionsArray6}
-              onSubmit={(ids) => setSelectedIds6(ids)}
+              optionsArray={plansLookup && Object.values(plansLookup)}
+              onSubmit={(ids) => setSelectedPlansIds(ids)}
               label="Plan"
               width={width1stRow}
             />
