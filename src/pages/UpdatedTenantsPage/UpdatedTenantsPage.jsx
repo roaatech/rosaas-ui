@@ -10,7 +10,6 @@ import TableDate from '../../components/custom/Shared/TableDate/TableDate.jsx'
 import TenantForm from '../../components/custom/tenant/TenantForm/TenantForm.jsx'
 import useRequest from '../../axios/apis/useRequest.js'
 import { Dialog } from 'primereact/dialog'
-import TenantStatus from '../../components/custom/tenant/TenantStatus/TenantStatus.jsx'
 import DeleteConfirmation from '../../components/custom/global/DeleteConfirmation/DeleteConfirmation.jsx'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Wrapper } from './UpdatedTenantsPage.styled.jsx'
@@ -32,6 +31,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { removeTenant, tenantInfo } from '../../store/slices/tenants.js'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import FilterSearchContainer from '../../components/custom/Shared/FilterSearchContainer/FilterSearchContainer.jsx'
+import DataLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLabelWhite.jsx'
+import Label from '../../components/custom/Shared/label/Label.jsx'
+import { subscriptionMode, subscriptionStatus } from '../../const/product.js'
+import TenantStatus from '../../components/custom/tenant/TenantStatus/TenantStatus.jsx'
+import { formatDate } from '../../lib/sharedFun/Time.js'
+import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel.jsx'
 export default function UpdatedTenantsPage({ children }) {
   const {
     getTenant,
@@ -117,10 +122,6 @@ export default function UpdatedTenantsPage({ children }) {
     selectedData,
   ])
 
-  const statusBodyTemplate = (rowData) => {
-    return <TenantStatus statusValue={rowData.status} key={rowData.id} />
-  }
-
   /******************************* */
   const updateTenant = async () => {
     await dispatch(removeTenant(currentId))
@@ -139,7 +140,8 @@ export default function UpdatedTenantsPage({ children }) {
     setTenantData(tenantData.data)
     setVisible(true)
   }
-  console.log({ selectedData })
+  const viewSystemNameColumn = false
+  console.log({ ssss: SafeFormatMessage({ id: 'Active' }) })
 
   return (
     <Wrapper>
@@ -196,10 +198,9 @@ export default function UpdatedTenantsPage({ children }) {
               size={'small'}
             >
               <Column
-                field="tenant.displayName"
                 header={
                   <ColumnSortHeader
-                    text="Display Name"
+                    text="Display Name / System Name"
                     field="tenant.displayName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -210,13 +211,20 @@ export default function UpdatedTenantsPage({ children }) {
                     setFirst={setFirst}
                   />
                 }
+                body={(rowData) => (
+                  <div>
+                    <div>{rowData.tenant.displayName}</div>
+                    <small style={{ color: 'gray' }}>
+                      {<DataLabelWhite text={rowData.tenant.systemName} />}
+                    </small>
+                  </div>
+                )}
               ></Column>
               <Column
-                field="tenant.systemName"
                 header={
                   <ColumnSortHeader
-                    text="System Name"
-                    field="tenant.systemName"
+                    text="Subscription-Mode"
+                    field="subscriptionMode"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -226,7 +234,100 @@ export default function UpdatedTenantsPage({ children }) {
                     setFirst={setFirst}
                   />
                 }
-              />
+                body={(rowData) => (
+                  <Label {...subscriptionMode[rowData.subscriptionMode]} />
+                )}
+              ></Column>
+              <Column
+                header={
+                  <ColumnSortHeader
+                    text="Subscription-Status"
+                    field="subscriptionStatus"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) => (
+                  <Label {...subscriptionStatus[rowData.subscriptionStatus]} />
+                )}
+              ></Column>
+              <Column
+                header={
+                  <ColumnSortHeader
+                    text="Tenant-Status"
+                    field="status"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) => (
+                  <TenantStatus statusValue={rowData.status} key={rowData.id} />
+                )}
+              ></Column>
+              <Column
+                header={
+                  <ColumnSortHeader
+                    text="Created-Date"
+                    field="createdDate"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) => (
+                  <DataLabelWhite text={formatDate(rowData.createdDate)} />
+                )}
+              ></Column>
+              <Column
+                header={
+                  <ColumnSortHeader
+                    text="End-Date"
+                    field="endDate"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) => (
+                  <DateLabel text={formatDate(rowData.enddate)} />
+                )}
+              ></Column>
+              {viewSystemNameColumn && (
+                <Column
+                  field="tenant.systemName"
+                  header={
+                    <ColumnSortHeader
+                      text="System Name"
+                      field="tenant.systemName"
+                      rebase={rebase}
+                      setRebase={setRebase}
+                      sortField={sortField}
+                      sortValue={sortValue}
+                      setSortField={setSortField}
+                      setSortValue={setSortValue}
+                      setFirst={setFirst}
+                    />
+                  }
+                />
+              )}
               {/* <Column
                 field="status"
                 header={

@@ -108,26 +108,43 @@ export const subscriptionStatus = {
     background: 'var(--green2)',
     value: <SafeFormatMessage id="Active" />,
     color: 'var(--teal-green)',
-    displaName: 'Active',
+    displayName: 'Active',
   },
   2: {
-    background: 'var(--yellow2)',
+    background: 'var(--yellow-light)',
     value: <SafeFormatMessage id="Suspended" />,
-    color: 'var(--yellow-brown)',
-    displaName: 'Suspended',
+    color: 'var(--yellow2)',
+    displayName: 'Suspended',
   },
   3: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Canceled" />,
     color: 'var(--orange-brown)',
-    displaName: 'Canceled',
+    displayName: 'Canceled',
   },
 }
-export const subscriptionMode = [
-  { id: 1, label: 'Subscription' },
-  { id: 2, label: 'Trial' },
-  { id: 3, label: 'Payment' },
-]
+
+export const subscriptionMode = {
+  1: {
+    background: 'var(--green2)',
+    value: <SafeFormatMessage id="Subscription" />,
+    color: 'var(--teal-green)',
+    displayName: 'Subscription',
+  },
+  2: {
+    background: 'var(--light-blue)',
+    value: <SafeFormatMessage id="Trial" />,
+    color: 'var(--blue-2)',
+    displayName: 'Trial',
+  },
+  3: {
+    background: 'var(--yellow-light)',
+    value: <SafeFormatMessage id="Payment" />,
+    color: 'var(--yellow2)',
+    displayName: 'Payment',
+  },
+}
+
 export const tenantStep = [
   { id: 1, label: 'Creation' },
   { id: 2, label: 'Activation' },

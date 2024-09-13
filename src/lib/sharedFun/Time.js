@@ -44,8 +44,11 @@ export const DataTransform = (dateTime) => {
 
   return formattedDateTime
 }
-
 export const formatDate = (dateTime) => {
+  if (!dateTime || isNaN(new Date(dateTime).getTime())) {
+    return ''
+  }
+
   const utcDateTime = dateTime ? new Date(dateTime + 'Z') : ''
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = dateTime ? utcToZonedTime(utcDateTime, timeZone) : ''
@@ -58,7 +61,6 @@ export const formatDate = (dateTime) => {
 
   return formattedDate
 }
-
 export const timeDifferenceFromNow = (targetDate) => {
   // Convert the targetDate parameter to a Date object if it is not already
   if (!(targetDate instanceof Date)) {

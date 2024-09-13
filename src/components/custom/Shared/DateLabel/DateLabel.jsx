@@ -8,6 +8,10 @@ function isDateExpired(endDate) {
 }
 
 const DateLabel = ({ endDate, formatedDate }) => {
+  if (!endDate || isNaN(new Date(endDate).getTime())) {
+    return ''
+  }
+
   const DateStatus = {
     true: {
       background: 'rgba(255, 104, 104, 0.208)',

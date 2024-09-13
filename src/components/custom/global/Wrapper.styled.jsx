@@ -47,6 +47,10 @@ const GlobalStyles = createGlobalStyle`
   --second-color-1:#ffe8b9;
   --second-color-2:#ffe8b934;
  --table-hover:#eff0f2;
+ --light-blue: #add8e676; /* Light Blue color */
+  --blue-2: #1E90FF;     /* Dodger Blue color */
+  --yellow2: #ceaf00;    /* Gold color */
+  --yellow-light: #fff8d1;    /* Gold color */
    --themeBackground:${(props) =>
      props.darkMode ? darkBackground : lightBackground};
   --themeColor:${(props) => (props.darkMode ? lightColor : darkColor)};

@@ -54,7 +54,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
     let query = ''
     let debounceTimer = null
 
-    if (Object.values(selectedProducts).length > 0) {
+    if (selectedProducts && Object.values(selectedProducts).length > 0) {
       selectedProducts &&
         Object.values(selectedProducts).forEach((item, index) => {
           if (index === 0) {
@@ -122,15 +122,22 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
       ...selectedPlansIds,
     })
   }
-  const transformedSubscriptionStatus = Object.entries(
-    subscriptionStatus
-  ).reduce((acc, [key, status], index) => {
-    acc[index + 1] = {
-      id: index + 1,
-      label: status.displaName,
-    }
-    return acc
-  }, {})
+  const transformToOptionsObject = (data) => {
+    return Object.entries(data).reduce((acc, [key, status], index) => {
+      console.log({ acc, entry: [key, status], index, data })
+      acc[index + 1] = {
+        id: index + 1,
+        label: status?.displayName,
+      }
+      return acc
+    }, {})
+  }
+
+  // Usage
+  const transformedSubscriptionMode = transformToOptionsObject(subscriptionMode)
+
+  const transformedSubscriptionStatus =
+    transformToOptionsObject(subscriptionStatus)
   return (
     <Card
       className="mt-1 mb-1  p-3"
@@ -207,7 +214,10 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
         <Row className="p-0 my-2 m-0">
           <Col className="m-0 my-2 p-0">
             <FilteringMultiSelect
-              optionsArray={subscriptionMode}
+              optionsArray={
+                transformedSubscriptionMode &&
+                Object.values(transformedSubscriptionMode)
+              }
               onSubmit={(ids) => setSubscriptionModeIds(ids)}
               label="Subscription-Mode"
               width={width}
