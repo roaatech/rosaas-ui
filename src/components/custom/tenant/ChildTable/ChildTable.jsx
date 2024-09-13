@@ -43,7 +43,10 @@ export default function ChildTable({
   const currentTenantsData = useSelector(
     (state) => state.tenants.tenants?.[currentTenantId]
   )
-  const subscriptionStatusValue = currentTenantsData.subscriptionStatus
+  const subscriptionStatusValue =
+    currentTenantsData.subscriptions?.[0].subscriptionStatus
+  console.log({ subscriptionStatusValue })
+
   const listProducts = useSelector((state) => state.products.products)
   useEffect(() => {
     ;(async () => {

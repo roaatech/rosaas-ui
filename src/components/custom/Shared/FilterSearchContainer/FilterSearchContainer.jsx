@@ -27,13 +27,13 @@ import {
 } from '../../../../const/product'
 const FilterSearchContainer = ({ setAllSelectedData }) => {
   const [selectedSubscriptionStatusIds, setSelectedSubscriptionStatusIds] =
-    useState([]) // For MultiSelect 1
-  const [SubscriptionModeIds, setSubscriptionModeIds] = useState([]) // For MultiSelect 2
-  const [selectedProducts, setSelectedProducts] = useState([]) // For MultiSelect 3
-  const [selectedTenantStepsIds, setSelectedTenantStepsIds] = useState([]) // For MultiSelect 3
-  const [selectedPlansIds, setSelectedPlansIds] = useState([]) // For MultiSelect 3
-  const [minPrice, setMinPrice] = useState('') // Minimum price
-  const [maxPrice, setMaxPrice] = useState('') // Maximum price
+    useState([])
+  const [SubscriptionModeIds, setSubscriptionModeIds] = useState([])
+  const [selectedProducts, setSelectedProducts] = useState([])
+  const [selectedTenantStepsIds, setSelectedTenantStepsIds] = useState([])
+  const [selectedPlansIds, setSelectedPlansIds] = useState([])
+  const [minPrice, setMinPrice] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
 
   const intl = useIntl()
   const { getProductsLookup, getPlanFilteredList } = useRequest()
