@@ -80,7 +80,7 @@ const useSubManagementReq = () => {
     )
   }
   const getSubscriptionsList = async () => {
-    return await Request.get(`management/sadmin/v1/Subscriptions`)
+    return await Request.get(`management/sadmin/v1/Subscriptions/All`)
   }
 
   return {

@@ -15,6 +15,7 @@ const FilteringMultiSelect = ({
   label,
   width,
   setSearchField,
+  hasSelectAll,
 }) => {
   const [selectedValues, setSelectedValues] = useState()
 
@@ -77,33 +78,15 @@ const FilteringMultiSelect = ({
           {React.cloneElement(checkboxElement, {
             checked: selectedValues?.length === optionsArray?.length,
           })}
-          <label style={{ marginLeft: '8px' }}>
+          <span>
+            {' '}
             <SafeFormatMessage id="SelectAll" />
-          </label>
+          </span>
         </div>
       </div>
     )
   }
-  const valueTemplate = (selectedItems) => {
-    if (selectedItems && selectedItems.length === optionsArray.length) {
-      return <span>All selected</span>
-    } else if (selectedItems && selectedItems.length > 0) {
-      if (selectedItems.length <= 3) {
-        // Display individual labels for 3 or fewer items
-        return selectedItems.map((item, index) => (
-          <span key={item}>
-            {index > 0 && ', '}
-            {filteredOptions.find((option) => option.id === item)?.label}
-          </span>
-        ))
-      } else {
-        // Display the number of selected items for more than 3 items
-        return <span>{selectedItems.length} items selected</span>
-      }
-    } else {
-      return <span>{intl.formatMessage({ id: 'Select' })}</span>
-    }
-  }
+
   return (
     <div className="filtering-multi-select mx-2 d-flex flex-column ">
       <span className="mb-0">
@@ -127,9 +110,9 @@ const FilteringMultiSelect = ({
         placeholder={SafeFormatMessage({ id: 'Select' })}
         display="chip"
         className={!width ? 'md:w-15rem ' : `md:w-${width}rem`}
-        // panelHeaderTemplate={panelHeaderTemplate}
         dropdownIcon={FaFilter}
         itemCheckboxIcon={MdSelectAll}
+        panelHeaderTemplate={hasSelectAll && panelHeaderTemplate}
       />
     </div>
   )

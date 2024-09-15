@@ -90,15 +90,9 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
     }
   }, [selectedProducts])
 
-  const optionsArray6 = [
-    { label: 'Item X', id: 'idX' },
-    { label: 'Item Y', id: 'idY' },
-  ]
   const width = 30
   const width1stRow = 30
-  const [createdDateRange, setCreatedDateRange] = useState(null)
-  const [endDateRange, setEndDateRange] = useState(null)
-  // Submit handler for search and selected IDs from all multi-selects
+
   const convertDateRangeToTimestamps = (dateRange) => {
     if (dateRange && dateRange.length === 2) {
       const [startDate, endDate] = dateRange
@@ -109,10 +103,14 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
     }
     return { startTimestamp: null, endTimestamp: null }
   }
+
+  const [createdDateRange, setCreatedDateRange] = useState(null)
+  const [endDateRange, setEndDateRange] = useState(null)
   const { createdStartTimestamp, createdEndTimestamp } =
     convertDateRangeToTimestamps(createdDateRange)
   const { endedStartTimestamp, endedEndTimestamp } =
     convertDateRangeToTimestamps(endDateRange)
+
   const handleSubmit = () => {
     setAllSelectedData({
       ...selectedSubscriptionStatusIds,
@@ -133,23 +131,16 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
     }, {})
   }
 
-  // Usage
   const transformedSubscriptionMode = transformToOptionsObject(subscriptionMode)
-
   const transformedSubscriptionStatus =
     transformToOptionsObject(subscriptionStatus)
+
   return (
-    <Card
-      className="mt-1 mb-1  p-3"
-      // style={{ backgroundColor: '#ffffff59', borderColor: '#8282821b' }}
-    >
+    <Card className="mt-1 mb-1  p-3">
       <Card.Header className="d-flex justify-content-between align-items-center">
         <span className="mb-2">
           <Card.Title>
-            <FaFilter
-              className="mx-2 "
-              // style={{ position: 'absolute', left: '10px', top: '10px' }}
-            />{' '}
+            <FaFilter className="mx-2 " />{' '}
             <SafeFormatMessage id="Advanced-Filter" />
           </Card.Title>
         </span>
@@ -187,6 +178,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
               label="Subscription-Status"
               width={width1stRow}
               field="SubscriptionStatus"
+              hasSelectAll={true}
             />
           </Col>
 
@@ -199,13 +191,12 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
                   className={width ? `md:w-${width}rem ` : `md:w-15rem `}
                   value={endDateRange}
                   onChange={(e) => setEndDateRange(e.value)}
-                  selectionMode="range" // Enables range selection
-                  showTime // Shows time in the picker
+                  selectionMode="range"
+                  showTime
                   dateFormat="yy/mm/dd"
-                  hourFormat="24" // 24-hour format for time selection
+                  hourFormat="24"
                   placeholder={intl.formatMessage({ id: 'Select-Date-Range' })}
                   style={{ height: '50px' }}
-                  // className="w-100"
                 />
               </div>
             </Col>
@@ -222,6 +213,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
               label="Subscription-Mode"
               width={width}
               field="SubscriptionMode"
+              hasSelectAll={true}
             />
           </Col>
           <Col className="m-0 my-2 p-0">
@@ -231,6 +223,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
               label="Tenant-Step"
               width={width}
               field={'TenantStep'}
+              hasSelectAll={true}
             />
           </Col>
 
@@ -243,19 +236,17 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
                   className={width ? `md:w-${width}rem ` : `md:w-15rem `}
                   value={createdDateRange}
                   onChange={(e) => setCreatedDateRange(e.value)}
-                  selectionMode="range" // Enables range selection
-                  showTime // Shows time in the picker
+                  selectionMode="range"
+                  showTime
                   dateFormat="yy/mm/dd"
-                  hourFormat="24" // 24-hour format for time selection
+                  hourFormat="24"
                   placeholder={intl.formatMessage({ id: 'Select-Date-Range' })}
                   style={{ height: '50px' }}
                   maxDate={new Date()}
-                  // className="w-100"
                 />
               </div>
             </Col>
           )}
-          {/* Price Range Filter with a single label */}
           {viewComponent && (
             <Col className="m-0 my-2 p-0">
               <div
