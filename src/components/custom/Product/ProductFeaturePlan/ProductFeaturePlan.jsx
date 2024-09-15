@@ -40,12 +40,14 @@ import Label from '../../Shared/label/Label'
 import { GiShadowFollower } from 'react-icons/gi'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
+import { textLocale } from '../../../../const/product.js'
 
 export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [currentPlanId, setCurrentPlanId] = useState('')
   const [currentFeatureId, setCurrentFeatureId] = useState('')
   let direction = useSelector((state) => state.main.direction)
 
+  const intl = useIntl()
   const dispatch = useDispatch()
   const {
     getFeaturePlanList,
@@ -60,9 +62,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [type, setType] = useState('')
   const [show, setShow] = useState(false)
   const [popUpLable, setPopUpLable] = useState('')
-  const [selectedLanguage, setSelectedLanguage] = useState('en')
-
-  console.log({ sRRRRRRRRRRRR: selectedLanguage })
+  const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
 
   const productId = routeParams.id
   const listDataStore = useSelector(
@@ -73,8 +73,6 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
     (state) => state.products.products[productId]?.plans
   )
   const listData = { ...listDataStore }
-  const intl = useIntl()
-  const { getLocalizedString } = useSharedFunctions()
 
   // Remove default key from list
   listData['00000000-0000-0000-0000-000000000000'] &&
@@ -135,14 +133,26 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
 
   const handleData = (data) => {
     return {
-      Feature: getLocalizedString(data.feature.displayNameLocalizations),
-      Plan: getLocalizedString(data.plan.displayNameLocalizations),
+      Feature: textLocale(
+        data.feature.displayNameLocalizations,
+        selectedLanguage,
+        intl
+      ),
+      Plan: textLocale(
+        data.plan.displayNameLocalizations,
+        selectedLanguage,
+        intl
+      ),
       Limit: data.limit,
       Unit: featureUnitMap[data.unit],
       'Unit-Display-Name':
         data.unitDisplayName?.[selectedLanguage] || data.unitDisplayName?.en,
       Reset: featureResetMap[data.reset],
-      Description: getLocalizedString(data.descriptionLocalizations),
+      Description: textLocale(
+        data.descriptionLocalizations,
+        selectedLanguage,
+        intl
+      ),
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
     }
@@ -178,7 +188,11 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         featureId: item.feature.id,
-        displayName: getLocalizedString(item.feature?.displayNameLocalizations),
+        displayName: textLocale(
+          item.feature?.displayNameLocalizations,
+          selectedLanguage,
+          intl
+        ),
         systemName: item.feature.systemName,
         type: item.feature.type,
         index: Object.keys(featuresObj).length,
@@ -419,8 +433,10 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                           </span>
                         )}
                         <span className="mr-1">
-                          {getLocalizedString(
-                            planList[item].displayNameLocalizations
+                          {textLocale(
+                            planList[item].displayNameLocalizations,
+                            selectedLanguage,
+                            intl
                           )}
                         </span>
 

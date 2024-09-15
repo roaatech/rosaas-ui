@@ -59,6 +59,7 @@ import {
   booleanStatus,
   visibilityStatus,
   SelectabilityStatus,
+  textLocale,
 } from '../../../../const/product.js'
 import { dynamicButtonsLanguages } from '../../../../const/const.js'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
@@ -77,7 +78,7 @@ export const ProductPlansList = ({ productId }) => {
   const [popUpLable, setPopUpLable] = useState('')
   const intl = useIntl()
   const ProductTrialType = list.trialType
-  const [selectedLanguage, setSelectedLanguage] = useState('en')
+  const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
   console.log({ selectedLanguage })
 
   const handleDeletePlan = async () => {
@@ -194,13 +195,12 @@ export const ProductPlansList = ({ productId }) => {
     // const filteredDescription =
     //   filterRedirectionLink(descriptionLocalizations?.[selectedLanguage]) ||
     //   filterRedirectionLink(description)
-    const { getLocalizedString } = useSharedFunctions()
 
     return (
       <tr>
         <td>
           <span className="fw-normal">
-            {getLocalizedString(displayNameLocalizations)}
+            {textLocale(displayNameLocalizations, selectedLanguage, intl)}
           </span>
         </td>
         <td>

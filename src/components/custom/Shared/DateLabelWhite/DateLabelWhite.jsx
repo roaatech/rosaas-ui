@@ -2,10 +2,12 @@ import React from 'react'
 import { Wrapper } from './DateLabelWhite.styled'
 import { formatDate } from '../../../../lib/sharedFun/Time'
 
-const DataLabelWhite = ({ text }) => {
+const DataLabelWhite = ({ text, style }) => {
   return (
     <Wrapper>
-      <span className="label-white">{text}</span>
+      <span className="label-white" style={style}>
+        {text}
+      </span>
     </Wrapper>
   )
 }

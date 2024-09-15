@@ -15,7 +15,7 @@ import {
   deleteFeature,
   setAllFeatures,
 } from '../../../../store/slices/products/productsSlice.js'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import {
   faEdit,
   faEllipsisH,
@@ -37,6 +37,7 @@ import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { BsStars } from 'react-icons/bs'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
+import { textLocale } from '../../../../const/product.js'
 
 export const ProductFeaturesList = ({ productId }) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
@@ -48,9 +49,9 @@ export const ProductFeaturesList = ({ productId }) => {
   const [visible, setVisible] = useState(false)
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
-
+  const intl = useIntl()
   // State for language selection
-  const [selectedLanguage, setSelectedLanguage] = useState('en') // Default language
+  const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
 
   const handleDeleteFeature = async () => {
     if (list?.features[currentId]?.isSubscribed) {
@@ -107,13 +108,12 @@ export const ProductFeaturesList = ({ productId }) => {
 
     const mappedType = featureTypeMap[type]
     const mappedReset = featureResetMap[reset]
-    const { getLocalizedString } = useSharedFunctions()
 
     return (
       <tr>
         <td>
           <span className="fw-normal">
-            {getLocalizedString(displayNameLocalizations)}
+            {textLocale(displayNameLocalizations, selectedLanguage, intl)}
           </span>
         </td>
         <td>
@@ -123,7 +123,11 @@ export const ProductFeaturesList = ({ productId }) => {
           {
             <DescriptionCell
               data={{
-                description: getLocalizedString(descriptionLocalizations),
+                description: textLocale(
+                  descriptionLocalizations,
+                  selectedLanguage,
+                  intl
+                ),
               }}
             />
           }

@@ -35,8 +35,9 @@ import DataLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLa
 import Label from '../../components/custom/Shared/label/Label.jsx'
 import { subscriptionMode, subscriptionStatus } from '../../const/product.js'
 import TenantStatus from '../../components/custom/tenant/TenantStatus/TenantStatus.jsx'
-import { formatDate } from '../../lib/sharedFun/Time.js'
+import { DataTransform, formatDate } from '../../lib/sharedFun/Time.js'
 import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel.jsx'
+import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions.jsx'
 export default function UpdatedTenantsPage({ children }) {
   const {
     getTenant,
@@ -49,6 +50,9 @@ export default function UpdatedTenantsPage({ children }) {
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)
   const [list, setList] = useState([])
+  console.log({ list })
+  const { getLocalizedString } = useSharedFunctions()
+
   const [rebase, setRebase] = useState(0)
   const [searchValue, setSearchValue] = useState('')
   const [sortField, setSortField] = useState('')
@@ -73,13 +77,6 @@ export default function UpdatedTenantsPage({ children }) {
   }
   const tenantsData = useSelector((state) => state.tenants.tenants)
   const [selectedData, setAllSelectedData] = useState()
-  console.log({
-    we:
-      selectedData &&
-      (Array.isArray(selectedData)
-        ? selectedData?.length > 0
-        : Object.keys(selectedData)?.length > 0),
-  })
 
   useEffect(() => {
     let query = `?page=${Math.ceil(
@@ -94,8 +91,6 @@ export default function UpdatedTenantsPage({ children }) {
         ? selectedData?.length > 0
         : Object.keys(selectedData)?.length > 0)
     ) {
-      console.log({ weeeee: Object.values(selectedData) })
-
       selectedData &&
         Object.values(selectedData).forEach((item, index) => {
           query += `&filters[${index + 1}].Field=${item.field}&filters[${
@@ -141,7 +136,6 @@ export default function UpdatedTenantsPage({ children }) {
     setVisible(true)
   }
   const viewSystemNameColumn = false
-  console.log({ ssss: SafeFormatMessage({ id: 'Active' }) })
 
   return (
     <Wrapper>
@@ -185,8 +179,9 @@ export default function UpdatedTenantsPage({ children }) {
             setSelectedProduct={setSelectedProduct}
           /> */}
         </TableHead>
-        <FilterSearchContainer setAllSelectedData={setAllSelectedData} />
-
+        <div className="mb-4">
+          <FilterSearchContainer setAllSelectedData={setAllSelectedData} />
+        </div>
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
@@ -260,7 +255,7 @@ export default function UpdatedTenantsPage({ children }) {
                 header={
                   <ColumnSortHeader
                     text="Tenant-Status"
-                    field="status"
+                    field="tenant.status"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -271,14 +266,17 @@ export default function UpdatedTenantsPage({ children }) {
                   />
                 }
                 body={(rowData) => (
-                  <TenantStatus statusValue={rowData.status} key={rowData.id} />
+                  <TenantStatus
+                    statusValue={rowData.tenant.status}
+                    key={rowData.id}
+                  />
                 )}
               ></Column>
               <Column
                 header={
                   <ColumnSortHeader
-                    text="Created-Date"
-                    field="createdDate"
+                    text="plan"
+                    field="Plan.SystemName"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -288,10 +286,11 @@ export default function UpdatedTenantsPage({ children }) {
                     setFirst={setFirst}
                   />
                 }
-                body={(rowData) => (
-                  <DataLabelWhite text={formatDate(rowData.createdDate)} />
-                )}
+                body={(rowData) =>
+                  getLocalizedString(rowData.plan.displayNameLocalizations)
+                }
               ></Column>
+
               <Column
                 header={
                   <ColumnSortHeader
@@ -306,9 +305,7 @@ export default function UpdatedTenantsPage({ children }) {
                     setFirst={setFirst}
                   />
                 }
-                body={(rowData) => (
-                  <DateLabel text={formatDate(rowData.enddate)} />
-                )}
+                body={(rowData) => <DateLabel endDate={rowData.endDate} />}
               ></Column>
               {viewSystemNameColumn && (
                 <Column
@@ -348,10 +345,29 @@ export default function UpdatedTenantsPage({ children }) {
               />*/}
               <Column
                 body={(data, options) => (
-                  <TableDate
-                    createdDate={data.createdDate}
-                    editedDate={data.editedDate}
-                  />
+                  <>
+                    <div className="mb-1">
+                      <DataLabelWhite
+                        style={{ flexWrap: 'nowrap' }}
+                        text={
+                          <>
+                            <SafeFormatMessage id="Last-Update-At" />{' '}
+                            {DataTransform(data.editedDate)}
+                          </>
+                        }
+                      />
+                    </div>
+                    <div className="">
+                      <DataLabelWhite
+                        text={
+                          <>
+                            <SafeFormatMessage id="Created-At" />{' '}
+                            {DataTransform(data.createdDate)}
+                          </>
+                        }
+                      />
+                    </div>
+                  </>
                 )}
                 style={{ width: '250px', maxidth: '250px' }}
                 header={
@@ -387,13 +403,13 @@ export default function UpdatedTenantsPage({ children }) {
                     <Dropdown.Menu>
                       <Dropdown.Item
                         onSelect={() =>
-                          navigate(`${Routes.Tenant.path}/${data.id}`)
+                          navigate(`${Routes.Tenant.path}/${data.tenant.id}`)
                         }
                       >
                         <FontAwesomeIcon icon={faEye} className="mr-2" /> View
                         Details
                       </Dropdown.Item>
-                      <Dropdown.Item onSelect={() => editForm(data.id)}>
+                      <Dropdown.Item onSelect={() => editForm(data.tenant.id)}>
                         <FontAwesomeIcon icon={faEdit} className="mx-2" /> Edit
                       </Dropdown.Item>
                     </Dropdown.Menu>

@@ -103,6 +103,9 @@ export const activeStatus = {
     color: 'var(--orange-brown)',
   },
 }
+export const textLocale = (textLoclizations, selectedLanguage, intl) => {
+  return textLoclizations?.[selectedLanguage] || textLoclizations?.[intl.locale]
+}
 export const subscriptionStatus = {
   1: {
     background: 'var(--green2)',

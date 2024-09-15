@@ -55,6 +55,7 @@ import { setActiveIndex } from '../../../../store/slices/tenants'
 import { GiShadowFollower } from 'react-icons/gi'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
+import { textLocale } from '../../../../const/product.js'
 export default function ProductPlansPriceList({ children }) {
   const intl = useIntl()
   const dispatch = useDispatch()
@@ -75,7 +76,7 @@ export default function ProductPlansPriceList({ children }) {
   const [type, setType] = useState('')
   const [show, setShow] = useState(false)
   const [popUpLable, setPopUpLable] = useState('')
-  const [selectedLanguage, setSelectedLanguage] = useState('en') // State for language selection
+  const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
 
   const productId = routeParams.id
   const listProductDataStore = useSelector(
@@ -183,7 +184,6 @@ export default function ProductPlansPriceList({ children }) {
   list?.map((item) => {
     tableData[item.plan?.id + ',' + item.cycle] = item.id
   })
-  const { getLocalizedString } = useSharedFunctions()
 
   const handleCreatePlanPrice = (plan, cycle) => {
     if (plansData?.[plan].tenancyType == 3 && (cycle == 10 || cycle == 11)) {
@@ -223,7 +223,11 @@ export default function ProductPlansPriceList({ children }) {
       Cycle: cycle[data.cycle],
       Published: data.isPublished ? 'Yes' : 'No',
       Subscribed: data.isSubscribed ? 'Yes' : 'No',
-      Description: getLocalizedString(data.descriptionLocalizations),
+      Description: textLocale(
+        data.descriptionLocalizations,
+        selectedLanguage,
+        intl
+      ),
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
     }
@@ -446,9 +450,10 @@ export default function ProductPlansPriceList({ children }) {
                           </span>
                         )}
                       </span>
-
-                      {getLocalizedString(
-                        plansData[item].displayNameLocalizations
+                      {textLocale(
+                        plansData[item].displayNameLocalizations,
+                        selectedLanguage,
+                        intl
                       )}
                       <span className="ml-2 ">
                         <OverlayTrigger

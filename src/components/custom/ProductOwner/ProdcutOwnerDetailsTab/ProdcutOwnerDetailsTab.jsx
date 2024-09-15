@@ -43,6 +43,7 @@ import { object } from 'yup'
 import { update } from 'lodash'
 import ProductOwnerLimitsTab from '../ProductOwnerLimitsTab/ProductOwnerLimitsTab'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
+import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 
 const ProductOwnerDetails = () => {
   const routeParams = useParams()
@@ -196,14 +197,14 @@ const ProductOwnerDetails = () => {
                               Object.values(productOwner.products).map(
                                 (product, index) => (
                                   <span
+                                    className="mx-1"
                                     key={index}
-                                    className="p-1 border-round border-1 border-400 mx-2"
                                     onClick={() =>
                                       handleProductClick(product.id)
                                     }
                                     style={{ cursor: 'pointer' }}
                                   >
-                                    {product.systemName}
+                                    <DataLabelWhite text={product.systemName} />
                                   </span>
                                 )
                               )}

@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { Card, OverlayTrigger, Row, Tooltip } from '@themesberg/react-bootstrap'
 import { Wrapper } from './ProdcutDetailsTab.styled'
 import UrlItemList from '../../../../components/custom/Product/UrlItemList/UrlItemList'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
-import { ProductTrialType } from '../../../../const/product'
+import { textLocale, ProductTrialType } from '../../../../const/product'
 import { useParams } from 'react-router-dom'
 import useRequest from '../../../../axios/apis/useRequest'
 import { setAllPlans } from '../../../../store/slices/products/productsSlice'
@@ -19,7 +19,9 @@ import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions'
 
 const ProductDetailsTab = ({ data }) => {
   const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
-  const [selectedLanguage, setSelectedLanguage] = useState('en') // State for language selection
+  const intl = useIntl()
+
+  const [selectedLanguage, setSelectedLanguage] = useState(intl.locale) // State for language selection
 
   const handleCopy = () => {
     setToolTipText('Copied')
@@ -27,11 +29,9 @@ const ProductDetailsTab = ({ data }) => {
       setToolTipText('Copy-to-clipboard')
     }, 2000)
   }
-
   let direction = useSelector((state) => state.main.direction)
   const listData = useSelector((state) => state.products.products)
   const dispatch = useDispatch()
-  const { getLocalizedString } = useSharedFunctions()
   const params = useParams()
   const { getProductPlans } = useRequest()
   const productId = params.id
@@ -80,7 +80,11 @@ const ProductDetailsTab = ({ data }) => {
                     <SafeFormatMessage id="Display-Name" />
                   </td>
                   <td className="card-stats">
-                    {getLocalizedString(data.displayNameLocalizations)}
+                    {textLocale(
+                      data.displayNameLocalizations,
+                      selectedLanguage,
+                      intl
+                    )}
                   </td>
                 </tr>
                 <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
@@ -102,8 +106,10 @@ const ProductDetailsTab = ({ data }) => {
                   <td className="card-stats">
                     <DescriptionCell
                       data={{
-                        description: getLocalizedString(
-                          data.descriptionLocalizations
+                        description: textLocale(
+                          data.descriptionLocalizations,
+                          selectedLanguage,
+                          intl
                         ),
                       }}
                     />
@@ -180,9 +186,11 @@ const ProductDetailsTab = ({ data }) => {
                     </td>
                     <td className="card-stats">
                       {listData[productId].plans &&
-                        getLocalizedString(
+                        textLocale(
                           listData[productId].plans?.[data?.trialPlanId]
-                            ?.displayNameLocalizations
+                            ?.displayNameLocalizations,
+                          selectedLanguage,
+                          intl
                         )}
                     </td>
                   </tr>

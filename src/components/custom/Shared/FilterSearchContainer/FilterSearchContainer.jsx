@@ -90,8 +90,8 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
     }
   }, [selectedProducts])
 
-  const width = 30
-  const width1stRow = 30
+  const width = 15
+  const width1stRow = 25
 
   const convertDateRangeToTimestamps = (dateRange) => {
     if (dateRange && dateRange.length === 2) {
@@ -137,14 +137,12 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
 
   return (
     <Card className="mt-1 mb-1  p-3">
-      <Card.Header className="d-flex justify-content-between align-items-center">
-        <span className="mb-2">
-          <Card.Title>
-            <FaFilter className="mx-2 " />{' '}
-            <SafeFormatMessage id="Advanced-Filter" />
-          </Card.Title>
-        </span>
-        <Button className="px-6" variant="primary" onClick={handleSubmit}>
+      <Card.Header className="d-flex justify-content-between align-items-baseline p-0 pb-2">
+        <Card.Title>
+          <FaFilter className="mx-2 " />{' '}
+          <SafeFormatMessage id="Advanced-Filter" />
+        </Card.Title>
+        <Button className="px-5 m-0" variant="primary" onClick={handleSubmit}>
           {intl.formatMessage({ id: 'Submit' })}
         </Button>
       </Card.Header>
@@ -201,8 +199,6 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
               </div>
             </Col>
           )}
-        </Row>
-        <Row className="p-0 my-2 m-0">
           <Col className="m-0 my-2 p-0">
             <FilteringMultiSelect
               optionsArray={
@@ -211,17 +207,18 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
               }
               onSubmit={(ids) => setSubscriptionModeIds(ids)}
               label="Subscription-Mode"
-              width={width}
+              width={width1stRow}
               field="SubscriptionMode"
               hasSelectAll={true}
             />
           </Col>
+
           <Col className="m-0 my-2 p-0">
             <FilteringMultiSelect
               optionsArray={tenantStep}
               onSubmit={(ids) => setSelectedTenantStepsIds(ids)}
               label="Tenant-Step"
-              width={width}
+              width={width1stRow}
               field={'TenantStep'}
               hasSelectAll={true}
             />
