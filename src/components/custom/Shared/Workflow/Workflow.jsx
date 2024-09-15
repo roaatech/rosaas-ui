@@ -131,7 +131,21 @@ const Workflow = ({ productId, updateDetails, productIndex, refresh }) => {
                             )}
                           </div>
                           <div className="author mb-2">
-                            <SafeFormatMessage id={Owner[item?.ownerType]} />
+                            {item?.ownerType < 100 ? (
+                              <>
+                                <SafeFormatMessage id={`RoSaaS`} /> (
+                                <SafeFormatMessage
+                                  id={Owner[item?.ownerType]}
+                                />
+                                )
+                              </>
+                            ) : (
+                              <>
+                                <SafeFormatMessage
+                                  id={Owner[item?.ownerType]}
+                                />
+                              </>
+                            )}
                           </div>
                         </div>
                         <div className="flex justify-content-between flex-wrap">
