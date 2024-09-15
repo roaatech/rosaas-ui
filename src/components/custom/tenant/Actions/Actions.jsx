@@ -28,7 +28,8 @@ const useActions = () => {
       }
       actions &&
         actions.map((item) => {
-          const actionIcon = statusConst[item.status].icon || 'pi-star'
+          const actionIcon =
+            item?.icon || statusConst[item.status].icon || 'pi-star'
           let button = {
             type: 'action',
             func: () => statusConfirm(item.status, item.actionType),
