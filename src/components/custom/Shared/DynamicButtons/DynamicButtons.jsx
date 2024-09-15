@@ -424,6 +424,10 @@ const DynamicButtons = ({ buttons }) => {
                 if (button.order > 3) {
                   if (button.type === 'delete') {
                     return (
+                      <>
+                      {button.separator && button.separator === true && ( 
+                          <Dropdown.Divider />  
+                      )}
                       <span key={index}>
                         <Dropdown.Divider />
                         <Dropdown.Item
@@ -439,27 +443,35 @@ const DynamicButtons = ({ buttons }) => {
                           )}
                         </Dropdown.Item>
                       </span>
+                      </>
                     )
                   } else if (button.type === 'form') {
                     return (
-                      <Dropdown.Item
-                        className={`${button.variant && button.variant}`}
-                        key={index}
-                        onClick={() => {
-                          setVisible(true)
-                          setCurrentButtonIndex(index)
-                        }}
-                        disabled={button.disable}
-                      >
-                        {button.icon}{' '}
-                        {button.label && (
-                          <SafeFormatMessage id={button.label} />
-                        )}
-                      </Dropdown.Item>
-                    )
-                  } else if (button.type == 'action') {
+                      <>
+                      {button.separator && button.separator === true && ( 
+                          <Dropdown.Divider />  
+                      )}
+                        <Dropdown.Item
+                          className={`${button.variant && button.variant}`}
+                          key={index}
+                          onClick={() => {
+                            setVisible(true);
+                            setCurrentButtonIndex(index);
+                          }}
+                          disabled={button.disable}
+                        >
+                          {button.icon}{' '}
+                          {button.label && <SafeFormatMessage id={button.label} />}
+                        </Dropdown.Item>
+                      </>
+                    );
+                  }else if (button.type == 'action') {
                     if (button.label != 'Delete') {
                       return (
+                        <>
+                        {button.separator && button.separator === true && ( 
+                            <Dropdown.Divider />  
+                        )}
                         <Dropdown.Item
                           key={index}
                           onClick={button.func}
@@ -470,11 +482,15 @@ const DynamicButtons = ({ buttons }) => {
                             <SafeFormatMessage id={button.label} />
                           )}
                         </Dropdown.Item>
+                        </>
                       )
                     } else {
                       return (
-                        <span key={index}>
-                          <Dropdown.Divider />
+                        <>
+                        {button.separator && button.separator === true && ( 
+                            <Dropdown.Divider />  
+                        )}
+                        <span key={index}> 
                           <Dropdown.Item
                             onClick={button.func}
                             className="redColor"
@@ -486,10 +502,15 @@ const DynamicButtons = ({ buttons }) => {
                             )}
                           </Dropdown.Item>
                         </span>
+                      </>
                       )
                     }
                   } else if (button.type === 'toggle') {
                     return (
+                      <>
+                      {button.separator && button.separator === true && ( 
+                          <Dropdown.Divider />  
+                      )}
                       <Dropdown.Item
                         key={index}
                         onClick={() => handleToggle(index, button.group)}
@@ -508,6 +529,7 @@ const DynamicButtons = ({ buttons }) => {
                           <FontAwesomeIcon icon={faToggleOff} />
                         )}
                       </Dropdown.Item>
+                      </>
                     )
                   }
                 }

@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { statusConst } from '../../../../const'
-import { MdDone, MdFactCheck, MdOutlineCancel } from 'react-icons/md'
+import { MdDone, MdFactCheck, MdOutlineCancel, MdGppBad,MdGppGood,MdGppMaybe } from 'react-icons/md'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import { Routes } from '../../../../routes'
@@ -130,9 +130,10 @@ export default function ChildTable({
       component: 'subscriptionActionsForm',
       popupLabel: <SafeFormatMessage id="Cancel-Subscription" />,
       updateTenant: updateTenant,
-      icon: <MdOutlineCancel />,
+      icon: <MdGppBad />,
       variant: 'text-danger',
       formType: 'cancel',
+      separator: true,
     })
   }
 
@@ -145,9 +146,9 @@ export default function ChildTable({
       component: 'subscriptionActionsForm',
       popupLabel: <SafeFormatMessage id="Suspend-Subscription" />,
       updateTenant: updateTenant,
-      icon: <MdOutlineCancel />,
+      icon: <MdGppMaybe />,
       variant: 'text-warning',
-      formType: 'suspend',
+      formType: 'suspend', 
     })
   }
 
@@ -160,9 +161,9 @@ export default function ChildTable({
       component: 'subscriptionActionsForm',
       popupLabel: <SafeFormatMessage id="Activate-Subscription" />,
       updateTenant: updateTenant,
-      icon: <MdDone />,
+      icon: <MdGppGood />,
       variant: 'text-success',
-      formType: 'activate',
+      formType: 'activate', 
     })
   }
   return (
@@ -183,6 +184,12 @@ export default function ChildTable({
                     disable: !checkSpecificationsArray,
                     icon: <AiFillEdit />,
                   },
+                  ...renderActions(
+                    tenantObject,
+                    productData.actions,
+                    chagneStatus,
+                    statusConfirm
+                  ),
                   // Ensure the condition returns an object or nothing
                   ...(currentTenantsData.subscriptions?.[0].status != 11 &&
                   currentTenantsData.subscriptions?.[0].status != 12 &&
@@ -198,14 +205,9 @@ export default function ChildTable({
                         `${Routes.Tenant.path}/${routeParams?.id}/Subscription-Management`
                       )
                     },
-                    icon: <MdFactCheck />,
+                    icon: <MdFactCheck />, 
+                    separator: true,
                   },
-                  ...renderActions(
-                    tenantObject,
-                    productData.actions,
-                    chagneStatus,
-                    statusConfirm
-                  ),
                 ]
               : renderActions(
                   tenantObject,
