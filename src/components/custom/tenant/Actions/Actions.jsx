@@ -31,7 +31,7 @@ const useActions = () => {
           const actionIcon = statusConst[item.status].icon || 'pi-star'
           let button = {
             type: 'action',
-            func: () => statusConfirm(item.status),
+            func: () => statusConfirm(item.status, item.actionType),
             label: item.name,
             icon: <i className={'pi ' + actionIcon}></i>,
             order: 4,
