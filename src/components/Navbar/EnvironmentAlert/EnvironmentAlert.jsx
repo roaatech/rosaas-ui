@@ -21,15 +21,15 @@ const EnvironmentAlert = () => {
 
   const currentUrl = window.location.href
   const urlObject = new URL(currentUrl)
-  const frontendHost = urlObject.hostname
 
-  const nodeEnv = process.env.NODE_ENV
+  const _nodeEnv = process.env.NODE_ENV 
+
 
   const getEnvironmentNameByApiHost = (apiHost) => {
     switch (apiHost) {
       case 'dev.rosas.roaa.tech':
         return 'development'
-      case 'api-stg.rosaas.app':
+      case "api-stg.rosaas.app":
         return 'stage'
       case 'api-sb.rosaas.app':
         return 'sandbox'
@@ -60,7 +60,7 @@ const EnvironmentAlert = () => {
   }
 
   const getLabelDetails = (env) => {
-    const lowerCasedEnv = lowerCase(env)
+    const lowerCasedEnv =  String(env).toLowerCase()
     switch (lowerCasedEnv) {
       case 'development':
         return {
@@ -102,7 +102,7 @@ const EnvironmentAlert = () => {
   }
 
   useEffect(() => {
-    if (!currentUrl || !nodeEnv) {
+    if (!currentUrl || !_nodeEnv) {
       return
     }
     const fetchEnvironmentData = async () => {
@@ -110,13 +110,12 @@ const EnvironmentAlert = () => {
         const response = await getEnvironment()
         const endpointRequestUrl = response?.config.baseURL
         const endpointUrlObject = new URL(endpointRequestUrl)
-        const apiHost = endpointUrlObject.hostname
 
         const environmentDetails = {
+          nodeEnv: process.env.NODE_ENV,
+          frontendHost: getEnvironmentNameByFrontendHost(String(urlObject.hostname).toLowerCase()) ,
           apiEnv: response?.data,
-          nodeEnv,
-          frontendHost: getEnvironmentNameByFrontendHost(lowerCase(frontendHost)),
-          apiHost: getEnvironmentNameByApiHost(lowerCase(apiHost)),
+          apiHost: getEnvironmentNameByApiHost(String(endpointUrlObject.hostname).toLowerCase()),
         }
 
         setEnvironmentData(environmentDetails)
@@ -128,27 +127,22 @@ const EnvironmentAlert = () => {
     }
 
     fetchEnvironmentData()
-  }, [currentUrl, nodeEnv])
-
+  }, [currentUrl, _nodeEnv])
+/*
   if (
-    nodeEnv &&
-    (lowerCase(nodeEnv) === 'production' || lowerCase(nodeEnv) === 'prod')
+    _nodeEnv &&
+    ( String(_nodeEnv).toLowerCase() === 'production' || String(_nodeEnv).toLowerCase()  === 'prod')
   ) {
     return null
   }
-
+*/
   if (!environmentData || !showAlert) {
     return null
   }
 
-  const { apiEnv, apiHost } = environmentData
-
-  const currentEnvironment = getEnvironmentNameByApiHost(lowerCase(frontendHost))
-  const requestEnvironment = getEnvironmentNameByFrontendHost(lowerCase(apiHost))
-
   return (
     <Alert
-      variant={getLabelDetails(currentEnvironment).variant}
+      variant={getLabelDetails(environmentData.apiHost).variant}
       dismissible
       onClose={() => setShowAlert(false)}
       style={{
@@ -156,7 +150,7 @@ const EnvironmentAlert = () => {
         top: 0,
         left: 0,
         width: '100%',
-        backgroundColor: 'var(--second-color-1)',
+        backgroundColor: '#ffab03d4',
         zIndex: 1000,
         borderRadius: 0,
         border: 'none',
@@ -166,19 +160,19 @@ const EnvironmentAlert = () => {
       <div className="d-flex flex-row justify-content-around">
         <div>
           <strong>Dashboard Host:</strong>
-          <Label className={'mx-2'} {...getLabelDetails(frontendHost)} />
+          <Label className={'mx-2'} {...getLabelDetails(environmentData.frontendHost)} />
         </div>
         <div>
           <strong>NODE ENVIRONMENT:</strong>
-          <Label className={'mx-2'} {...getLabelDetails(nodeEnv)} />
+          <Label className={'mx-2'} {...getLabelDetails(environmentData.nodeEnv)} />
         </div>
         <div>
           <strong>API ENVIRONMENT:</strong>
-          <Label className={'mx-2'} {...getLabelDetails(apiEnv)} />
+          <Label className={'mx-2'} {...getLabelDetails(environmentData.apiEnv)} />
         </div>
         <div>
           <strong>API Host:</strong>
-          <Label className={'mx-2'} {...getLabelDetails(requestEnvironment)} />
+          <Label className={'mx-2'} {...getLabelDetails(environmentData.apiHost)} />
         </div>
       </div>
     </Alert>

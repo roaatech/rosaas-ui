@@ -535,7 +535,7 @@ export default (props = {}) => {
                   )}
                   <NavItem
                     title={'Environment Info'}
-                    link={Routes.EnvironmentDataList.path}
+                    link={Routes.EnvironmentInfo.path}
                     icon={<BsInfoSquare />}
                   />
                 </CollapsableNavItem>

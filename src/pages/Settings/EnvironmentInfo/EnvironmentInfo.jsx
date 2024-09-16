@@ -5,14 +5,14 @@ import useRequest from '../../../axios/apis/useRequest'
 import { setEnvironmentAlertData } from '../../../store/slices/main'
 import { lowerCase } from 'lodash'
 import Label from '../../../components/custom/Shared/label/Label'
-import { Wrapper } from './EnvironmentDataList.styled'
+import { Wrapper } from './EnvironmentInfo.styled'
 import BreadcrumbComponent from '../../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import { BsGearFill } from 'react-icons/bs'
 import SafeFormatMessage from '../../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 import UpperContent from '../../../components/custom/Shared/UpperContent/UpperContent'
 import { object } from 'yup'
 
-const EnvironmentDataList = () => {
+const EnvironmentInfo = () => {
   const dispatch = useDispatch()
   const { getEnvironment } = useRequest()
 
@@ -21,8 +21,8 @@ const EnvironmentDataList = () => {
     (state) => state.main.environmentAlertData
   )
 
-  const getEnvironmentNameFromDomain = (urlDomain) => {
-    switch (urlDomain) {
+  const getEnvironmentNameByFrontendHost = (apiHost) => {
+    switch (apiHost) {
       case 'dev.rosas.roaa.tech':
         return 'development'
       case 'api-stg.rosaas.app':
@@ -34,12 +34,12 @@ const EnvironmentDataList = () => {
       case 'localhost':
         return 'localhost'
       default:
-        return 'unknown'
+        return apiHost
     }
   }
 
-  const getEnvironmentNameFromRequestDomain = (requestDomain) => {
-    switch (requestDomain) {
+  const getEnvironmentNameByApiHost = (frontendHost) => {
+    switch (frontendHost) {
       case 'dev-fe.rosas.roaatech.com':
         return 'development'
       case 'stg.rosaas.app':
@@ -51,7 +51,7 @@ const EnvironmentDataList = () => {
       case 'localhost':
         return 'localhost'
       default:
-        return 'unknown'
+        return frontendHost
     }
   }
   useEffect(() => {
@@ -74,8 +74,8 @@ const EnvironmentDataList = () => {
         const environmentDetails = {
           apiEnv: response?.data,
           nodeEnv,
-          frontendHost: getEnvironmentNameFromDomain(lowerCase(frontendHost)),
-          apiHost: getEnvironmentNameFromRequestDomain(lowerCase(apiHost)),
+          frontendHost: getEnvironmentNameByFrontendHost(lowerCase(frontendHost)),
+          apiHost: getEnvironmentNameByApiHost(lowerCase(apiHost)),
         }
 
         dispatch(setEnvironmentAlertData(environmentDetails))
@@ -91,17 +91,41 @@ const EnvironmentDataList = () => {
     const lowerCasedEnv = lowerCase(env)
     switch (lowerCasedEnv) {
       case 'development':
-        return { color: '#856404', background: '#fff3cd', value: 'Development' }
+        return {
+          color: '#ffffff',
+          background: '#00b1f7',
+          value: 'Development',
+        }
       case 'stage':
-        return { color: '#0c5460', background: '#d1ecf1', value: 'Stage' }
+        return {
+          color: '#ffffff',
+          background: '#9623db',
+          value: 'Stage',
+        }
       case 'production':
-        return { color: '#155724', background: '#d4edda', value: 'Production' }
+        return {
+          color: '#963131',
+          background: '#1ca57b',
+          value: 'Production',
+        }
       case 'sandbox':
-        return { color: '#383d41', background: '#e2e3e5', value: 'Sandbox' }
+        return {
+          color: '#ffffff',
+          background: '#f7a200',
+          value: 'Sandbox',
+        }
       case 'localhost':
-        return { color: '#004085', background: '#cce5ff', value: 'Localhost' }
+        return {
+          color: '#ffffff',
+          background: '#db2323',
+          value: 'Localhost',
+        }
       default:
-        return { color: '#004085', background: '#cce5ff', value: 'Unknown' }
+        return {
+          color: '#171a26',
+          background: '#c7c5c5',
+          value: env,
+        }
     }
   }
 
@@ -111,7 +135,7 @@ const EnvironmentDataList = () => {
       {environmentData && (
         <Wrapper>
           <BreadcrumbComponent
-            breadcrumbInfo={'EnvironmentDataList'}
+            breadcrumbInfo={'EnvironmentInfo'}
             icon={BsGearFill}
           />
           <UpperContent>
@@ -162,4 +186,4 @@ const EnvironmentDataList = () => {
   )
 }
 
-export default EnvironmentDataList
+export default EnvironmentInfo

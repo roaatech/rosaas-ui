@@ -10,7 +10,7 @@ export const breadcrumbFun = (routeParams, data) => {
       active: 'Settings',
       icon: {},
     },
-    EnvironmentDataList: {
+    EnvironmentInfo: {
       title: 'Settings',
       name: 'Environment Info',
       navigation: '/settings/environment-info',
