@@ -10,21 +10,21 @@ import {
   FaCheckCircle,
   FaCogs,
   FaHome,
-} from 'react-icons/fa' // Icons for different environments
+} from 'react-icons/fa'
 import Label from '../../custom/Shared/label/Label'
 
 const EnvironmentAlert = () => {
   const { getEnvironment } = useRequest()
   const [environmentData, setEnvironmentData] = useState(null)
-  const [showAlert, setShowAlert] = useState(true) // State to control alert visibility
-  const dispatch = useDispatch() // Initialize dispatch
+  const [showAlert, setShowAlert] = useState(true)
+  const dispatch = useDispatch()
 
-  const currentUrl = window.location.href // Get the current URL
+  const currentUrl = window.location.href
   const urlObject = new URL(currentUrl)
-  const domain = urlObject.hostname // Extract the domain
+  const domain = urlObject.hostname
 
   const environmentFromEnv =
-    process.env.NODE_ENV || process.env.ASPNETCORE_ENVIRONMENT // Get environment from process.env
+    process.env.NODE_ENV || process.env.ASPNETCORE_ENVIRONMENT
 
   const getEnvironmentNameFromDomain = (urlDomain) => {
     switch (urlDomain) {
@@ -122,7 +122,7 @@ const EnvironmentAlert = () => {
 
         setEnvironmentData(environmentDetails)
 
-        dispatch(setEnvironmentAlertData(environmentDetails)) // Dispatch to Redux store
+        dispatch(setEnvironmentAlertData(environmentDetails))
       } catch (error) {
         console.error('Error fetching environment data:', error)
       }
@@ -149,7 +149,7 @@ const EnvironmentAlert = () => {
     <Alert
       variant={getLabelDetails(currentEnvironment).variant}
       dismissible
-      onClose={() => setShowAlert(false)} // Handle closing of the alert
+      onClose={() => setShowAlert(false)}
       style={{
         position: 'sticky',
         top: 0,
