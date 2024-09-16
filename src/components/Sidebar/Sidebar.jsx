@@ -23,6 +23,8 @@ import {
   BsBuilding,
   BsBuildings,
   BsPercent,
+  BsInfo,
+  BsInfoSquare,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -531,6 +533,11 @@ export default (props = {}) => {
                       icon={<BsPersonFillGear />}
                     />
                   )}
+                  <NavItem
+                    title={'Environment Info'}
+                    link={Routes.EnvironmentDataList.path}
+                    icon={<BsInfoSquare />}
+                  />
                 </CollapsableNavItem>
               )}
             </Nav>

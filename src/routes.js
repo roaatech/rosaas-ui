@@ -35,6 +35,7 @@ import CurrenciesPage from './pages/CurrenciesPage/CurrenciesPage'
 import SignInPage from './pages/signIn/signIn'
 import ExchangeRateProvidersSettings from './pages/Settings/ExchangeRateProvidersSettings/ExchangeRateProvidersSettings'
 import UpdatedTenantsPage from './pages/UpdatedTenantsPage/UpdatedTenantsPage'
+import EnvironmentDataList from './pages/Settings/EnvironmentDataList/EnvironmentDataList'
 const adminPanel = '/admin-panel'
 
 export const Routes = {
@@ -128,6 +129,11 @@ export const Routes = {
   ExchangeRateProvidersSettings: {
     path: `${adminPanel}/settings/exchange-rate-providers`,
     component: ExchangeRateProvidersSettings,
+    roles: ['superAdmin'],
+  },
+  EnvironmentDataList: {
+    path: `${adminPanel}/settings/environment-data-list`,
+    component: EnvironmentDataList,
     roles: ['superAdmin'],
   },
 

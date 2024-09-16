@@ -21,10 +21,9 @@ const EnvironmentAlert = () => {
 
   const currentUrl = window.location.href
   const urlObject = new URL(currentUrl)
-  const domain = urlObject.hostname
+  const frontendHost = urlObject.hostname
 
-  const environmentFromEnv =
-    process.env.NODE_ENV || process.env.ASPNETCORE_ENVIRONMENT
+  const nodeEnv = process.env.NODE_ENV
 
   const getEnvironmentNameFromDomain = (urlDomain) => {
     switch (urlDomain) {
@@ -103,7 +102,7 @@ const EnvironmentAlert = () => {
   }
 
   useEffect(() => {
-    if (!currentUrl || !environmentFromEnv) {
+    if (!currentUrl || !nodeEnv) {
       return
     }
     const fetchEnvironmentData = async () => {
@@ -111,13 +110,13 @@ const EnvironmentAlert = () => {
         const response = await getEnvironment()
         const endpointRequestUrl = response?.config.baseURL
         const endpointUrlObject = new URL(endpointRequestUrl)
-        const requestDomain = endpointUrlObject.hostname
+        const apiHost = endpointUrlObject.hostname
 
         const environmentDetails = {
-          environmentFromRequest: response?.data,
-          environmentFromProcessEnv: environmentFromEnv,
-          urlDomain: domain,
-          requestDomain,
+          apiEnv: response?.data,
+          nodeEnv,
+          frontendHost,
+          apiHost,
         }
 
         setEnvironmentData(environmentDetails)
@@ -129,9 +128,12 @@ const EnvironmentAlert = () => {
     }
 
     fetchEnvironmentData()
-  }, [currentUrl, environmentFromEnv])
+  }, [currentUrl, nodeEnv])
 
-  if (environmentFromEnv === 'production') {
+  if (
+    nodeEnv &&
+    (lowerCase(nodeEnv) === 'production' || lowerCase(nodeEnv) === 'prod')
+  ) {
     return null
   }
 
@@ -139,10 +141,11 @@ const EnvironmentAlert = () => {
     return null
   }
 
-  const { environmentFromRequest, requestDomain } = environmentData
-  const currentEnvironment = getEnvironmentNameFromDomain(domain)
+  const { apiEnv, apiHost } = environmentData
+
+  const currentEnvironment = getEnvironmentNameFromDomain(frontendHost)
   const requestEnvironment = getEnvironmentNameFromRequestDomain(
-    lowerCase(requestDomain)
+    lowerCase(apiHost)
   )
 
   return (
@@ -164,22 +167,19 @@ const EnvironmentAlert = () => {
     >
       <div className="d-flex flex-row justify-content-around">
         <div>
-          <strong>Dashboard:</strong>
-          <Label className={'mx-2'} {...getLabelDetails(domain)} />
+          <strong>Dashboard Host:</strong>
+          <Label className={'mx-2'} {...getLabelDetails(frontendHost)} />
         </div>
         <div>
           <strong>NODE ENVIRONMENT:</strong>
-          <Label className={'mx-2'} {...getLabelDetails(environmentFromEnv)} />
+          <Label className={'mx-2'} {...getLabelDetails(nodeEnv)} />
         </div>
         <div>
           <strong>API ENVIRONMENT:</strong>
-          <Label
-            className={'mx-2'}
-            {...getLabelDetails(environmentFromRequest)}
-          />
+          <Label className={'mx-2'} {...getLabelDetails(apiEnv)} />
         </div>
         <div>
-          <strong>API URL:</strong>
+          <strong>API Host:</strong>
           <Label className={'mx-2'} {...getLabelDetails(requestEnvironment)} />
         </div>
       </div>
