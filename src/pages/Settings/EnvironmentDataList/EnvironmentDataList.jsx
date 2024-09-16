@@ -10,6 +10,7 @@ import BreadcrumbComponent from '../../../components/custom/Shared/Breadcrumb/Br
 import { BsGearFill } from 'react-icons/bs'
 import SafeFormatMessage from '../../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 import UpperContent from '../../../components/custom/Shared/UpperContent/UpperContent'
+import { object } from 'yup'
 
 const EnvironmentDataList = () => {
   const dispatch = useDispatch()
@@ -20,7 +21,43 @@ const EnvironmentDataList = () => {
     (state) => state.main.environmentAlertData
   )
 
+  const getEnvironmentNameFromDomain = (urlDomain) => {
+    switch (urlDomain) {
+      case 'dev.rosas.roaa.tech':
+        return 'development'
+      case 'api-stg.rosaas.app':
+        return 'stage'
+      case 'api-sb.rosaas.app':
+        return 'sandbox'
+      case 'api.rosaas.app':
+        return 'production'
+      case 'localhost':
+        return 'localhost'
+      default:
+        return 'unknown'
+    }
+  }
+
+  const getEnvironmentNameFromRequestDomain = (requestDomain) => {
+    switch (requestDomain) {
+      case 'dev-fe.rosas.roaatech.com':
+        return 'development'
+      case 'stg.rosaas.app':
+        return 'stage'
+      case 'sb.rosaas.app':
+        return 'sandbox'
+      case 'dashboard.rosaas.app':
+        return 'production'
+      case 'localhost':
+        return 'localhost'
+      default:
+        return 'unknown'
+    }
+  }
   useEffect(() => {
+    if (environmentData || Object.values(environmentData).length > 0) {
+      return
+    }
     const fetchEnvironmentData = async () => {
       try {
         const response = await getEnvironment()
@@ -37,8 +74,8 @@ const EnvironmentDataList = () => {
         const environmentDetails = {
           apiEnv: response?.data,
           nodeEnv,
-          frontendHost,
-          apiHost,
+          frontendHost: getEnvironmentNameFromDomain(lowerCase(frontendHost)),
+          apiHost: getEnvironmentNameFromRequestDomain(lowerCase(apiHost)),
         }
 
         dispatch(setEnvironmentAlertData(environmentDetails))
@@ -48,7 +85,7 @@ const EnvironmentDataList = () => {
     }
 
     fetchEnvironmentData()
-  }, [dispatch])
+  }, [Object.keys(environmentData).length > 0])
 
   const getLabelDetails = (env) => {
     const lowerCasedEnv = lowerCase(env)
@@ -69,52 +106,59 @@ const EnvironmentDataList = () => {
   }
 
   return (
-    <Wrapper>
-      <BreadcrumbComponent
-        breadcrumbInfo={'EnvironmentDataList'}
-        icon={BsGearFill}
-      />
-      <UpperContent>
-        <h4 className="m-0">
-          <SafeFormatMessage id="Environment Info" />
-        </h4>
-      </UpperContent>
-      <Card
-        border="light"
-        className="border-light table-wrapper table-responsive shadow-sm"
-      >
-        <Card.Body className="pt-0">
-          <Table hover className="user-table align-items-center">
-            <thead>
-              <tr>
-                <th>Frontend Host</th>
-                <th>Node Environment</th>
-                <th>API Environment</th>
-                <th>API Host</th>
-              </tr>
-            </thead>
-            <tbody>
-              {environmentData && (
-                <tr>
-                  <td>
-                    <Label {...getLabelDetails(environmentData.frontendHost)} />
-                  </td>
-                  <td>
-                    <Label {...getLabelDetails(environmentData.nodeEnv)} />
-                  </td>
-                  <td>
-                    <Label {...getLabelDetails(environmentData.apiEnv)} />
-                  </td>
-                  <td>
-                    <Label {...getLabelDetails(environmentData.apiHost)} />
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </Table>
-        </Card.Body>
-      </Card>
-    </Wrapper>
+    <>
+      {' '}
+      {environmentData && (
+        <Wrapper>
+          <BreadcrumbComponent
+            breadcrumbInfo={'EnvironmentDataList'}
+            icon={BsGearFill}
+          />
+          <UpperContent>
+            <h4 className="m-0">
+              <SafeFormatMessage id="Environment Info" />
+            </h4>
+          </UpperContent>
+          <Card
+            border="light"
+            className="border-light table-wrapper table-responsive shadow-sm"
+          >
+            <Card.Body className="pt-0">
+              <Table hover className="user-table align-items-center">
+                <thead>
+                  <tr>
+                    <th>Frontend Host</th>
+                    <th>Node Environment</th>
+                    <th>API Environment</th>
+                    <th>API Host</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {environmentData && (
+                    <tr>
+                      <td>
+                        <Label
+                          {...getLabelDetails(environmentData.frontendHost)}
+                        />
+                      </td>
+                      <td>
+                        <Label {...getLabelDetails(environmentData.nodeEnv)} />
+                      </td>
+                      <td>
+                        <Label {...getLabelDetails(environmentData.apiEnv)} />
+                      </td>
+                      <td>
+                        <Label {...getLabelDetails(environmentData.apiHost)} />
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Wrapper>
+      )}
+    </>
   )
 }
 
