@@ -159,6 +159,7 @@ const EnvironmentAlert = () => {
         zIndex: 1000,
         borderRadius: 0,
         border: 'none',
+        marginBottom: '0px',
       }}
     >
       <div className="d-flex flex-row justify-content-around">
