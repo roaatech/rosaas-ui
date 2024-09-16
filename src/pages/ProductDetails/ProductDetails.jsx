@@ -140,7 +140,7 @@ const ProductDetails = () => {
                 {
                   order: 4,
                   type: 'action',
-                  label: productData?.isPublished ? 'Unpublished' : 'Published',
+                  label: productData?.isPublished ? 'Deactivate' : 'Activate',
                   func: () => togglePublishProduct(productData?.isPublished),
                   icon: productData?.isPublished ? (
                     <MdOutlineUnpublished />
@@ -161,7 +161,7 @@ const ProductDetails = () => {
                   type: 'form',
                   component: 'templateForm',
                   id: routeParams.id,
-                  label: 'Add-Template',
+                  label: 'Add-Name-Template',
                   icon: <BsFillPencilFill />,
                   size: 'lg',
                 },

@@ -341,12 +341,12 @@ export default function ProductPlansPriceList({ children }) {
                             ?.isPublished ? (
                             <span className="label">
                               <MdOutlineUnpublished className="mx-2" />{' '}
-                              <SafeFormatMessage id="Unpublish" />
+                              <SafeFormatMessage id="Deactivate" />
                             </span>
                           ) : (
                             <span className="label">
                               <MdOutlinePublishedWithChanges className="mx-2" />{' '}
-                              <SafeFormatMessage id="Publish" />
+                              <SafeFormatMessage id="Activate" />
                             </span>
                           )}
                         </Dropdown.Item>
@@ -418,44 +418,7 @@ export default function ProductPlansPriceList({ children }) {
                   <th className="border-bottom"></th>
                   {Object.keys(plansData).map((item, index) => (
                     <th className="clickable-icon" key={index}>
-                      <span
-                        onClick={() =>
-                          togglePublishPlan(item, plansData[item].isPublished)
-                        }
-                        className="mr-2"
-                      >
-                        {plansData[item].isPublished ? (
-                          <span className="label green">
-                            <BsToggleOn />
-                          </span>
-                        ) : (
-                          <span className="label grey">
-                            <BsToggleOff />
-                          </span>
-                        )}
-                      </span>
-                      <span
-                        onClick={() =>
-                          toggleVisiblePlan(item, plansData[item].isVisible)
-                        }
-                        className="mr-2"
-                      >
-                        {plansData[item].isVisible ? (
-                          <span className="label green">
-                            <BsEye />
-                          </span>
-                        ) : (
-                          <span className="label grey">
-                            <BsEyeSlash />
-                          </span>
-                        )}
-                      </span>
-                      {textLocale(
-                        plansData[item].displayNameLocalizations,
-                        selectedLanguage,
-                        intl
-                      )}
-                      <span className="ml-2 ">
+                      <span className=" ">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
@@ -488,6 +451,75 @@ export default function ProductPlansPriceList({ children }) {
                           </span>
                         </OverlayTrigger>
                       </span>
+                      <span className="mx-2">
+                        {textLocale(
+                          plansData[item].displayNameLocalizations,
+                          selectedLanguage,
+                          intl
+                        )}
+                      </span>
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            {plansData[item].isPublished
+                              ? intl.formatMessage({
+                                  id: 'Activated',
+                                })
+                              : intl.formatMessage({
+                                  id: 'Deactivated',
+                                })}
+                          </Tooltip>
+                        }
+                      >
+                        <span
+                          onClick={() =>
+                            togglePublishPlan(item, plansData[item].isPublished)
+                          }
+                          className="mr-2"
+                        >
+                          {plansData[item].isPublished ? (
+                            <span className="label green">
+                              <MdOutlinePublishedWithChanges />
+                            </span>
+                          ) : (
+                            <span className="label red ">
+                              <MdOutlineUnpublished />
+                            </span>
+                          )}
+                        </span>
+                      </OverlayTrigger>
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            {plansData[item].isVisible
+                              ? intl.formatMessage({
+                                  id: 'Visible',
+                                })
+                              : intl.formatMessage({
+                                  id: 'Invisible',
+                                })}
+                          </Tooltip>
+                        }
+                      >
+                        <span
+                          onClick={() =>
+                            toggleVisiblePlan(item, plansData[item].isVisible)
+                          }
+                          className="mr-2"
+                        >
+                          {plansData[item].isVisible ? (
+                            <span className="label green">
+                              <BsEye />
+                            </span>
+                          ) : (
+                            <span className="label red">
+                              <BsEyeSlash />
+                            </span>
+                          )}
+                        </span>
+                      </OverlayTrigger>
                     </th>
                   ))}
                 </tr>

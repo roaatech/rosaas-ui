@@ -288,12 +288,12 @@ export const ProductPlansList = ({ productId }) => {
                 {isPublished ? (
                   <span className=" ">
                     <MdOutlineUnpublished className="mx-2" />
-                    <SafeFormatMessage id="Unpublish" />
+                    <SafeFormatMessage id="Deactivate" />
                   </span>
                 ) : (
                   <span className=" ">
                     <MdOutlinePublishedWithChanges className="mx-2" />
-                    <SafeFormatMessage id="Publish" />
+                    <SafeFormatMessage id="Activate" />
                   </span>
                 )}
               </Dropdown.Item>
@@ -327,19 +327,20 @@ export const ProductPlansList = ({ productId }) => {
   return (
     <Wrapper>
       <div className="dynamicButtons pt-0 mt-0 mb-1 d-flex justify-content-end">
-        <DynamicButtons
-          buttons={Object.keys(dynamicButtonsLanguages).map((lang, index) => ({
-            order: 1,
-            type: 'toggle',
-            label: lang,
-            toggleValue: selectedLanguage === lang,
-            toggleFunc: () => setSelectedLanguage(lang), // Update selected language
-            variant: 'primary',
-          }))}
-        />
         <span className="mx-2">
           <DynamicButtons
             buttons={[
+              ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+                (lang, index) => ({
+                  order: 1,
+                  type: 'toggle',
+                  label: lang,
+                  group: 'language',
+                  toggleValue: selectedLanguage === lang,
+                  toggleFunc: () => setSelectedLanguage(lang),
+                  variant: 'primary',
+                })
+              ),
               {
                 order: 1,
                 type: 'form',

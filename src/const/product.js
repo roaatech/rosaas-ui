@@ -52,13 +52,13 @@ export const DateStatus = {
 export const PublishStatus = {
   true: {
     background: 'var(--green2)',
-    value: <SafeFormatMessage id="Published" />,
+    value: <SafeFormatMessage id="Active" />,
     color: 'var(--teal-green)',
     icon: <MdOutlinePublishedWithChanges />,
   },
   false: {
     background: 'var(--red2)',
-    value: <SafeFormatMessage id="Unpublished" />,
+    value: <SafeFormatMessage id="Inactive" />,
     color: 'var(--orange-brown)',
     icon: <MdOutlineUnpublished />,
   },

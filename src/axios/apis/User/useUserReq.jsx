@@ -43,8 +43,12 @@ const useUserReq = () => {
   const userData = async () => {
     return await Request.get('identity/sadmin/v1/Account')
   }
+  const getEnvironment = async () => {
+    return await Request.get('v1/Environment')
+  }
 
   return {
+    getEnvironment,
     SignInAdminAsync,
     SignInProductOwnerAsync,
     SignInTenantAdminAsync,

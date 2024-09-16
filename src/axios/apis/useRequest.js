@@ -33,6 +33,7 @@ const useRequest = () => {
     confirmEmail,
     requestPasswordReset,
     resetPassword,
+    getEnvironment,
   } = useUserReq()
   const {
     getDiscounts,
@@ -380,6 +381,7 @@ const useRequest = () => {
     subscriptionFilteredList,
     getProductsLookup,
     getPlanFilteredList,
+    getEnvironment,
   }
 }
 export default useRequest

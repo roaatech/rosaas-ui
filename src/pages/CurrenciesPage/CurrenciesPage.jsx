@@ -284,7 +284,7 @@ export default function CurrenciesPage() {
                     </span>
                   )
                 }}
-                header={<SafeFormatMessage id="published" />}
+                header={<SafeFormatMessage id="Status" />}
               />
               <Column
                 body={(data) => (
@@ -356,12 +356,12 @@ export default function CurrenciesPage() {
                             {data.isPublished ? (
                               <span className=" ">
                                 <MdOutlineUnpublished className="mx-2" />
-                                <SafeFormatMessage id="Unpublish" />
+                                <SafeFormatMessage id="Deactivate" />
                               </span>
                             ) : (
                               <span className=" ">
                                 <MdOutlinePublishedWithChanges className="mx-2" />
-                                <SafeFormatMessage id="Publish" />
+                                <SafeFormatMessage id="Activate" />
                               </span>
                             )}
                           </Dropdown.Item>

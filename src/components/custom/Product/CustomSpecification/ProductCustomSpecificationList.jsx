@@ -229,12 +229,12 @@ export const ProductCustomSpecificationList = (
                   {isPublished ? (
                     <span className=" ">
                       <MdOutlineUnpublished className="mx-2" />
-                      <SafeFormatMessage id="Unpublish" />
+                      <SafeFormatMessage id="Deactivate" />
                     </span>
                   ) : (
                     <span className=" ">
                       <MdOutlinePublishedWithChanges className="mx-2" />
-                      <SafeFormatMessage id="Publish" />
+                      <SafeFormatMessage id="Activate" />
                     </span>
                   )}
                 </Dropdown.Item>

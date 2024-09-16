@@ -14,6 +14,7 @@ export const mainSlice = createSlice({
     },
     pOSystemName: null,
     isLoading: false,
+    environmentAlertData: [],
   },
   reducers: {
     directionFun: (state, action) => {
@@ -42,6 +43,11 @@ export const mainSlice = createSlice({
     setLoading: (state, action) => {
       state.isLoading = action.payload
     },
+    setEnvironmentAlertData: (state, action) => {
+      console.log({ action })
+
+      state.environmentAlertData = action.payload
+    },
   },
 })
 
@@ -55,6 +61,7 @@ export const {
   setCurrentCurrencyCodeAndId,
   setProductOwner,
   setLoading,
+  setEnvironmentAlertData,
 } = mainSlice.actions
 
 export default mainSlice.reducer

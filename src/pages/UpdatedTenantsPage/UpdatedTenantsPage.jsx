@@ -229,9 +229,26 @@ export default function UpdatedTenantsPage({ children }) {
                     setFirst={setFirst}
                   />
                 }
-                body={(rowData) => (
-                  <Label {...subscriptionMode[rowData.subscriptionMode]} />
-                )}
+                body={(rowData) =>
+                  rowData.subscriptionMode != 2 ? (
+                    <Label {...subscriptionMode[rowData.subscriptionMode]} />
+                  ) : (
+                    <Label
+                      background="var(--light-blue)"
+                      value={
+                        <>
+                          <span className="fw-bold">
+                            {' '}
+                            <SafeFormatMessage id="Trial" />{' '}
+                            <SafeFormatMessage id="Ends-On" />{' '}
+                          </span>
+                          {DataTransform(rowData.endDate)}
+                        </>
+                      }
+                      color="var(--blue-2)"
+                    />
+                  )
+                }
               ></Column>
               <Column
                 header={
@@ -286,9 +303,59 @@ export default function UpdatedTenantsPage({ children }) {
                     setFirst={setFirst}
                   />
                 }
-                body={(rowData) =>
-                  getLocalizedString(rowData.plan.displayNameLocalizations)
-                }
+                body={(rowData) => (
+                  <>
+                    <span
+                      className="fw-bold mb-1"
+                      style={{ color: 'var(--second-color)', fontSize: '17px' }}
+                    >
+                      {getLocalizedString(
+                        rowData.plan.displayNameLocalizations
+                      )}
+                    </span>
+                    <span
+                      className="mt-2 fw-bold small"
+                      style={{ color: 'var(--gray-600)' }}
+                    >
+                      {' '}
+                      / Monthly
+                    </span>
+                    <div>
+                      {' '}
+                      <DataLabelWhite
+                        variant={'gray'}
+                        text={
+                          <>
+                            <span>
+                              {' '}
+                              <SafeFormatMessage id="Next-Plan" />{' '}
+                            </span>
+                            <span className="fw-bold">
+                              {getLocalizedString(
+                                rowData.plan.displayNameLocalizations
+                              )}
+                            </span>
+                          </>
+                        }
+                      />
+                      {/* <Label
+                        background="var(--light-blue)"
+                        value={
+                          <>
+                            <span className="fw-bold">
+                              {' '}
+                              <SafeFormatMessage id="Next-Plan" />{' '}
+                            </span>
+                            {getLocalizedString(
+                              rowData.plan.displayNameLocalizations
+                            )}
+                          </>
+                        }
+                        color="var(--blue-2)"
+                      /> */}
+                    </div>
+                  </>
+                )}
               ></Column>
 
               <Column

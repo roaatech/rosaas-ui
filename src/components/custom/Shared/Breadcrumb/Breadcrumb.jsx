@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { breadcrumbFun } from '../../../../const/breadcrumb'
 import { Routes } from '../../../../routes'
-
+import EnvironmentAlert from '../../../Navbar/EnvironmentAlert/EnvironmentAlert'
 const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
   const routeParams = useParams()
   let direction = useSelector((state) => state.main.direction)
@@ -43,6 +43,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
 
   return (
     <>
+      <EnvironmentAlert />
       <Wrapper
         direction={direction}
         className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2"
