@@ -25,8 +25,8 @@ const EnvironmentAlert = () => {
 
   const nodeEnv = process.env.NODE_ENV
 
-  const getEnvironmentNameFromDomain = (urlDomain) => {
-    switch (urlDomain) {
+  const getEnvironmentNameByApiHost = (apiHost) => {
+    switch (apiHost) {
       case 'dev.rosas.roaa.tech':
         return 'development'
       case 'api-stg.rosaas.app':
@@ -38,12 +38,12 @@ const EnvironmentAlert = () => {
       case 'localhost':
         return 'localhost'
       default:
-        return 'unknown'
+        return apiHost
     }
   }
 
-  const getEnvironmentNameFromRequestDomain = (requestDomain) => {
-    switch (requestDomain) {
+  const getEnvironmentNameByFrontendHost = (frontendHost) => {
+    switch (frontendHost) {
       case 'dev-fe.rosas.roaatech.com':
         return 'development'
       case 'stg.rosaas.app':
@@ -55,7 +55,7 @@ const EnvironmentAlert = () => {
       case 'localhost':
         return 'localhost'
       default:
-        return 'unknown'
+        return frontendHost
     }
   }
 
@@ -64,39 +64,39 @@ const EnvironmentAlert = () => {
     switch (lowerCasedEnv) {
       case 'development':
         return {
-          color: '#856404',
-          background: '#fff3cd',
+          color: '#ffffff',
+          background: '#00b1f7',
           value: 'Development',
         }
       case 'stage':
         return {
-          color: '#0c5460',
-          background: '#d1ecf1',
+          color: '#ffffff',
+          background: '#9623db',
           value: 'Stage',
         }
       case 'production':
         return {
-          color: '#155724',
-          background: '#d4edda',
+          color: '#963131',
+          background: '#1ca57b',
           value: 'Production',
         }
       case 'sandbox':
         return {
-          color: '#383d41',
-          background: '#e2e3e5',
+          color: '#ffffff',
+          background: '#f7a200',
           value: 'Sandbox',
         }
       case 'localhost':
         return {
-          color: '#004085',
-          background: '#cce5ff',
+          color: '#ffffff',
+          background: '#db2323',
           value: 'Localhost',
         }
       default:
         return {
-          color: '#004085',
-          background: '#cce5ff',
-          value: 'Unknown',
+          color: '#171a26',
+          background: '#c7c5c5',
+          value: env,
         }
     }
   }
@@ -115,8 +115,8 @@ const EnvironmentAlert = () => {
         const environmentDetails = {
           apiEnv: response?.data,
           nodeEnv,
-          frontendHost,
-          apiHost,
+          frontendHost: getEnvironmentNameByFrontendHost(lowerCase(frontendHost)),
+          apiHost: getEnvironmentNameByApiHost(lowerCase(apiHost)),
         }
 
         setEnvironmentData(environmentDetails)
@@ -143,10 +143,8 @@ const EnvironmentAlert = () => {
 
   const { apiEnv, apiHost } = environmentData
 
-  const currentEnvironment = getEnvironmentNameFromDomain(frontendHost)
-  const requestEnvironment = getEnvironmentNameFromRequestDomain(
-    lowerCase(apiHost)
-  )
+  const currentEnvironment = getEnvironmentNameByApiHost(lowerCase(frontendHost))
+  const requestEnvironment = getEnvironmentNameByFrontendHost(lowerCase(apiHost))
 
   return (
     <Alert
