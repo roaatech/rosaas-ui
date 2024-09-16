@@ -76,7 +76,7 @@ const EnvironmentAlert = () => {
         }
       case 'production':
         return {
-          color: '#963131',
+          color: '#ffffff',
           background: '#1ca57b',
           value: 'Production',
         }
@@ -94,7 +94,7 @@ const EnvironmentAlert = () => {
         }
       default:
         return {
-          color: '#171a26',
+          color: '#ffffff',
           background: '#c7c5c5',
           value: env,
         }
