@@ -291,7 +291,9 @@ export default function UpdatedTenantsPage({ children }) {
               <Column
                 header={
                   <ColumnSortHeader
-                    text={SafeFormatMessage({ id: 'Tenant-Status' })}
+                    text={SafeFormatMessage({
+                      id: 'Tenant-Operational-Status',
+                    })}
                     field="tenant.status"
                     rebase={rebase}
                     setRebase={setRebase}

@@ -816,5 +816,6 @@
   "Old-Price": "السعر القديم",
   "Advanced-Filter": "تصفية متقدمة",
   "Tenants-List": "قائمة المستأجرين",
-  "Tenant-subscription-Step": "خطوة اشتراك المستأجر"
+  "Tenant-subscription-Step": "خطوة اشتراك المستأجر",
+  "Tenant-Operational-Status": "الحالة التشغيلية للمستأجر"
 }

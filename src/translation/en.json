@@ -819,5 +819,6 @@
   "Old-Price": "Old Price",
   "Advanced-Filter": "Advanced Filter",
   "Tenants-List": "Tenants List",
-  "Tenant-Subscription-Step": "Tenant Subscription Step"
+  "Tenant-subscription-Step": "Tenant Subscription Step",
+  "Tenant-Operational-Status": "Tenant Operational Status"
 }

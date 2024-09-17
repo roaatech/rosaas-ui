@@ -220,7 +220,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
             <FilteringMultiSelect
               optionsArray={tenantStep}
               onSubmit={(ids) => setSelectedTenantStepsIds(ids)}
-              label="Tenant-subscription-Step"
+              label="Tenant-Operational-Status"
               width={width1stRow}
               field={'TenantStep'}
               hasSelectAll={true}
