@@ -14,4 +14,7 @@ export const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
   }
+  .name {
+    min-width: 238.13px;
+  }
 `

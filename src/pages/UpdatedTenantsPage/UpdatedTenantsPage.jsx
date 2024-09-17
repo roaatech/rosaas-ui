@@ -206,7 +206,11 @@ export default function UpdatedTenantsPage({ children }) {
                           </div>
                           <DataLabelWhite
                             variant={'gray'}
-                            text={SafeFormatMessage({ id: 'System-Name' })}
+                            text={
+                              <span className="fw-bold">
+                                {SafeFormatMessage({ id: 'System-Name' })}
+                              </span>
+                            }
                           />
                         </div>
                       </div>
@@ -228,12 +232,17 @@ export default function UpdatedTenantsPage({ children }) {
                       {
                         <DataLabelWhite
                           variant={'gray'}
-                          text={rowData.tenant.systemName}
+                          text={
+                            <span className="fw-bold">
+                              {rowData.tenant.systemName}
+                            </span>
+                          }
                         />
                       }
                     </small>
                   </div>
                 )}
+                className="name"
               ></Column>
               <Column
                 header={
@@ -394,14 +403,24 @@ export default function UpdatedTenantsPage({ children }) {
                     setFirst={setFirst}
                   />
                 }
-                body={(rowData) => <DateLabel endDate={rowData.endDate} />}
+                body={(rowData) => (
+                  <DateLabel
+                    endDate={rowData.endDate}
+                    uppercaseMonthDateFormat={true}
+                    bold={true}
+                  />
+                )}
               ></Column>
               {viewSystemNameColumn && (
                 <Column
                   field="tenant.systemName"
                   header={
                     <ColumnSortHeader
-                      text={SafeFormatMessage({ id: 'System-Name' })}
+                      text={
+                        <span className="fw-bold">
+                          {SafeFormatMessage({ id: 'System-Name' })}
+                        </span>
+                      }
                       field="tenant.systemName"
                       rebase={rebase}
                       setRebase={setRebase}
@@ -442,7 +461,9 @@ export default function UpdatedTenantsPage({ children }) {
                         text={
                           <>
                             <SafeFormatMessage id="Last-Update-At" />{' '}
-                            {DataTransform(data.editedDate)}
+                            <span className="fw-bold">
+                              {UppercaseMonthDateFormat(data.editedDate)}
+                            </span>
                           </>
                         }
                       />
@@ -453,7 +474,9 @@ export default function UpdatedTenantsPage({ children }) {
                         text={
                           <>
                             <SafeFormatMessage id="Created-At" />{' '}
-                            {DataTransform(data.createdDate)}
+                            <span className="fw-bold">
+                              {UppercaseMonthDateFormat(data.createdDate)}
+                            </span>
                           </>
                         }
                       />

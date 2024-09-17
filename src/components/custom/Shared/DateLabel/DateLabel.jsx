@@ -1,13 +1,21 @@
 import React from 'react'
 import { Wrapper } from './DateLabel.styled'
-import { formatDate } from '../../../../lib/sharedFun/Time'
+import {
+  formatDate,
+  UppercaseMonthDateFormat,
+} from '../../../../lib/sharedFun/Time'
 
 function isDateExpired(endDate) {
   const currentDate = new Date()
   return endDate !== 'Unlimited' && currentDate > new Date(endDate)
 }
 
-const DateLabel = ({ endDate, formatedDate }) => {
+const DateLabel = ({
+  endDate,
+  formatedDate,
+  uppercaseMonthDateFormat,
+  bold,
+}) => {
   if (!endDate || isNaN(new Date(endDate).getTime())) {
     return ''
   }
@@ -25,13 +33,19 @@ const DateLabel = ({ endDate, formatedDate }) => {
   return (
     <Wrapper>
       <span
-        className="label"
+        className={!bold ? 'label' : 'label fw-bold'}
         style={{
           color: expired ? 'rgb(255, 104, 104)' : 'var(--teal-green)',
           background: DateStatus[expired].background,
         }}
       >
-        {endDate ? (formatedDate ? endDate : formatDate(endDate)) : 'Unlimited'}
+        {endDate
+          ? formatedDate
+            ? endDate
+            : uppercaseMonthDateFormat
+            ? UppercaseMonthDateFormat(endDate)
+            : formatDate(endDate)
+          : 'Unlimited'}
       </span>
     </Wrapper>
   )

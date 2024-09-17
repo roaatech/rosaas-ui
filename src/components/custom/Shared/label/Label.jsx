@@ -19,6 +19,7 @@ const Label = ({
         style={{
           color,
           background,
+          borderColor: color,
         }}
       >
         {icon ? icon : null} {value}

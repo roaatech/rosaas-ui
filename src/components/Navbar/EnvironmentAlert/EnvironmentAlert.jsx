@@ -21,6 +21,7 @@ const EnvironmentAlert = () => {
   const urlObject = new URL(currentUrl)
 
   const _nodeEnv = process.env.NODE_ENV
+  console.log({ _nodeEnv: process.env })
 
   useEffect(() => {
     if (!currentUrl || !_nodeEnv) {
