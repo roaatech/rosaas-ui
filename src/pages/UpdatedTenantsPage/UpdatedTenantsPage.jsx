@@ -201,8 +201,12 @@ export default function UpdatedTenantsPage({ children }) {
                     text={
                       <div>
                         <div className="d-flex flex-column align-items-center">
-                          <div>Display Name </div>
-                          <DataLabelWhite text={'System Name'} />
+                          <div>
+                            {SafeFormatMessage({ id: 'Display-Name' })}{' '}
+                          </div>
+                          <DataLabelWhite
+                            text={SafeFormatMessage({ id: 'System-Name' })}
+                          />
                         </div>
                       </div>
                     }
@@ -228,7 +232,7 @@ export default function UpdatedTenantsPage({ children }) {
               <Column
                 header={
                   <ColumnSortHeader
-                    text="Subscription-Mode"
+                    text={SafeFormatMessage({ id: 'Subscription-Mode' })}
                     field="subscriptionMode"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -493,7 +497,7 @@ export default function UpdatedTenantsPage({ children }) {
                   </Dropdown>
                 )}
                 style={{ width: '60px', textAlign: 'center' }}
-                header="Actions"
+                header={<SafeFormatMessage id="Actions" />}
               />
             </DataTable>
 

@@ -813,5 +813,8 @@
   "Payment": "الدفع",
   "SelectAll": "تحديد الكل",
   "Invisible": "غير مرئي",
-  "Old-Price": "السعر القديم"
+  "Old-Price": "السعر القديم",
+  "Advanced-Filter": "تصفية متقدمة",
+  "Tenants-List": "قائمة المستأجرين",
+  "Tenant-subscription-Step": "خطوة اشتراك المستأجر"
 }

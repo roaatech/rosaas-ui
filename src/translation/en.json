@@ -816,5 +816,8 @@
   "SelectAll": "Select All",
   "Invisible": "Invisible",
   "Visible": "Visible",
-  "Old-Price": "Old Price"
+  "Old-Price": "Old Price",
+  "Advanced-Filter": "Advanced Filter",
+  "Tenants-List": "Tenants List",
+  "Tenant-Subscription-Step": "Tenant Subscription Step"
 }
