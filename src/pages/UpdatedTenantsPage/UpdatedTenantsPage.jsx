@@ -35,7 +35,11 @@ import DataLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLa
 import Label from '../../components/custom/Shared/label/Label.jsx'
 import { subscriptionMode, subscriptionStatus } from '../../const/product.js'
 import TenantStatus from '../../components/custom/tenant/TenantStatus/TenantStatus.jsx'
-import { DataTransform, formatDate } from '../../lib/sharedFun/Time.js'
+import {
+  DataTransform,
+  formatDate,
+  UppercaseMonthDateFormat,
+} from '../../lib/sharedFun/Time.js'
 import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel.jsx'
 import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions.jsx'
 export default function UpdatedTenantsPage({ children }) {
@@ -50,7 +54,6 @@ export default function UpdatedTenantsPage({ children }) {
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)
   const [list, setList] = useState([])
-  console.log({ list })
   const { getLocalizedString } = useSharedFunctions()
 
   const [rebase, setRebase] = useState(0)
@@ -195,7 +198,14 @@ export default function UpdatedTenantsPage({ children }) {
               <Column
                 header={
                   <ColumnSortHeader
-                    text="Display Name / System Name"
+                    text={
+                      <div>
+                        <div className="d-flex flex-column align-items-center">
+                          <div>Display Name </div>
+                          <DataLabelWhite text={'System Name'} />
+                        </div>
+                      </div>
+                    }
                     field="tenant.displayName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -242,7 +252,7 @@ export default function UpdatedTenantsPage({ children }) {
                             <SafeFormatMessage id="Trial" />{' '}
                             <SafeFormatMessage id="Ends-On" />{' '}
                           </span>
-                          {DataTransform(rowData.endDate)}
+                          {UppercaseMonthDateFormat(rowData.endDate)}
                         </>
                       }
                       color="var(--blue-2)"
@@ -307,15 +317,15 @@ export default function UpdatedTenantsPage({ children }) {
                   <>
                     <span
                       className="fw-bold mb-1"
-                      style={{ color: 'var(--second-color)', fontSize: '17px' }}
+                      style={{ color: 'var(--second-color)' }}
                     >
                       {getLocalizedString(
                         rowData.plan.displayNameLocalizations
                       )}
                     </span>
                     <span
-                      className="mt-2 fw-bold small"
-                      style={{ color: 'var(--gray-600)' }}
+                      className="mt-2 fw-bold "
+                      style={{ color: 'var(--gray-600)', fontSize: '10px' }}
                     >
                       {' '}
                       / Monthly

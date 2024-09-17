@@ -17,14 +17,14 @@ export const Wrapper = styled.span`
   } */
 
   .price-container {
-    font-size: 1rem;
+    font-size: var(--defaultFont);
     font-weight: bold;
     color: var(--primary-color);
     padding: 0px 10px;
   }
 
   .old-price {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--gray-500); /* Use a lighter gray for the old price */
     text-decoration: line-through; /* Strikethrough effect for the old price */
     margin-right: 8px; /* Add space between the old price and new price */

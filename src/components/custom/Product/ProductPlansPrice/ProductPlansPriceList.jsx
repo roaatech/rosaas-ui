@@ -297,13 +297,35 @@ export default function ProductPlansPriceList({ children }) {
                         </span>
                         {listData[tableData[planItem + ',' + item]]
                           ?.isPublished ? (
-                          <span className="label green">
-                            <MdOutlinePublishedWithChanges />
-                          </span>
+                          <OverlayTrigger
+                            trigger={['hover', 'focus']}
+                            overlay={
+                              <Tooltip>
+                                {intl.formatMessage({
+                                  id: 'Active',
+                                })}
+                              </Tooltip>
+                            }
+                          >
+                            <span className="label green">
+                              <MdOutlinePublishedWithChanges />
+                            </span>
+                          </OverlayTrigger>
                         ) : (
-                          <span className="label red">
-                            <MdOutlineUnpublished />
-                          </span>
+                          <OverlayTrigger
+                            trigger={['hover', 'focus']}
+                            overlay={
+                              <Tooltip>
+                                {intl.formatMessage({
+                                  id: 'Inactive',
+                                })}
+                              </Tooltip>
+                            }
+                          >
+                            <span className="label red">
+                              <MdOutlineUnpublished />
+                            </span>
+                          </OverlayTrigger>
                         )}
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
@@ -464,10 +486,10 @@ export default function ProductPlansPriceList({ children }) {
                           <Tooltip>
                             {plansData[item].isPublished
                               ? intl.formatMessage({
-                                  id: 'Activated',
+                                  id: 'Active',
                                 })
                               : intl.formatMessage({
-                                  id: 'Deactivated',
+                                  id: 'Inactive',
                                 })}
                           </Tooltip>
                         }

@@ -55,17 +55,18 @@ const TenantDetails = () => {
     setUpdateDetails(updateDetails + 1)
   }
   const [status, setStatus] = useState()
-  const chagneStatus = async (actionStatus, comment) => {
+  const chagneStatus = async (data, comment) => {
     await editTenantStatus({
       TenantId: routeParams.id,
-      status: actionStatus,
+      status: data?.status,
+      actionType: data?.actionType,
       comment: comment,
     })
     updateTenant()
   }
-  const statusConfirm = (data) => {
+  const statusConfirm = (status, actionType) => {
     setConfirm(true)
-    setStatus(data)
+    setStatus({ status, actionType })
   }
 
   const deleteConfirm = (id) => {
@@ -287,7 +288,7 @@ const TenantDetails = () => {
                       confirmFunction={chagneStatus}
                       message={intl.formatMessage({
                         id:
-                          statusConst[status].message ||
+                          statusConst[status]?.status?.message ||
                           'default-status-message',
                       })}
                       data={status}

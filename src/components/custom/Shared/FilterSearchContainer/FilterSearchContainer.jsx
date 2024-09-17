@@ -142,7 +142,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
           <FaFilter className="mx-2 " />{' '}
           <SafeFormatMessage id="Advanced-Filter" />
         </Card.Title>
-        <Button className="px-5 m-0" variant="primary" onClick={handleSubmit}>
+        <Button className="px-6 m-0" variant="primary" onClick={handleSubmit}>
           {intl.formatMessage({ id: 'Submit' })}
         </Button>
       </Card.Header>

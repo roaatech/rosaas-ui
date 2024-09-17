@@ -44,6 +44,23 @@ export const DataTransform = (dateTime) => {
 
   return formattedDateTime
 }
+
+export const UppercaseMonthDateFormat = (dateTime) => {
+  const utcDateTime = new Date(dateTime + 'Z')
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const localDateTime = utcToZonedTime(utcDateTime, timeZone)
+
+  const currentYear = new Date().getFullYear()
+  const dateYear = localDateTime.getFullYear()
+
+  const formattedDateTime =
+    currentYear === dateYear
+      ? format(localDateTime, 'MMM dd', { timeZone })
+      : format(localDateTime, 'MMM dd, yyyy', { timeZone })
+
+  return formattedDateTime.toUpperCase()
+}
+
 export const formatDate = (dateTime) => {
   if (!dateTime || isNaN(new Date(dateTime).getTime())) {
     return ''

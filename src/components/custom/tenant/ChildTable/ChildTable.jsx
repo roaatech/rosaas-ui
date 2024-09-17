@@ -23,7 +23,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { statusConst } from '../../../../const'
-import { MdDone, MdFactCheck, MdOutlineCancel, MdGppBad,MdGppGood,MdGppMaybe } from 'react-icons/md'
+import {
+  MdDone,
+  MdFactCheck,
+  MdOutlineCancel,
+  MdGppBad,
+  MdGppGood,
+  MdGppMaybe,
+} from 'react-icons/md'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import { Routes } from '../../../../routes'
@@ -82,18 +89,19 @@ export default function ChildTable({
 
   let direction = useSelector((state) => state.main.direction)
 
-  const chagneStatus = async (actionStatus, notes) => {
+  const chagneStatus = async (data, notes) => {
     await editTenantStatus({
       TenantId: tenantId,
-      status: actionStatus,
+      status: data?.status,
+      actionType: data?.actionType,
       comment: notes,
       productId: productData.id,
     })
     updateTenant()
   }
-  const statusConfirm = (data) => {
+  const statusConfirm = (status, actionType) => {
     setConfirm(true)
-    setStatus(data)
+    setStatus({ status, actionType })
   }
 
   const intl = useIntl()
@@ -148,7 +156,7 @@ export default function ChildTable({
       updateTenant: updateTenant,
       icon: <MdGppMaybe />,
       variant: 'text-warning',
-      formType: 'suspend', 
+      formType: 'suspend',
     })
   }
 
@@ -163,7 +171,7 @@ export default function ChildTable({
       updateTenant: updateTenant,
       icon: <MdGppGood />,
       variant: 'text-success',
-      formType: 'activate', 
+      formType: 'activate',
     })
   }
   return (
@@ -205,7 +213,7 @@ export default function ChildTable({
                         `${Routes.Tenant.path}/${routeParams?.id}/Subscription-Management`
                       )
                     },
-                    icon: <MdFactCheck />, 
+                    icon: <MdFactCheck />,
                     separator: true,
                   },
                 ]
@@ -360,7 +368,9 @@ export default function ChildTable({
             setConfirm={setConfirm}
             confirmFunction={chagneStatus}
             message={intl.formatMessage({
-              id: statusConst[status].message || 'default-status-message',
+              id:
+                statusConst[status]?.status?.message ||
+                'default-status-message',
             })}
             data={status}
             placeholder={intl.formatMessage({ id: 'Comment' })}

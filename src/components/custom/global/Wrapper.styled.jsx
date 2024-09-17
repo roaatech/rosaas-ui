@@ -72,6 +72,14 @@ const GlobalStyles = createGlobalStyle`
 --orange-yellow-blend : #FFC966FF;
 --mocha-brown:#5c472e;
 --pale-moonlight-gray: #f8f9faea;
+--dark-blue: #00b1f7;
+--purple-shade: #9623db;
+--green-primary: #1ca57b;
+--orange-warm: #f7a200;
+--red-alert: #db2323;
+--gray-neutral: #c7c5c5;
+--white-pure: #ffffff;
+--alert-background: #ffab03d4;
 }
  
  
