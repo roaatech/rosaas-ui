@@ -20,7 +20,7 @@ const EnvironmentAlert = () => {
   const currentUrl = window.location.href
   const urlObject = new URL(currentUrl)
 
-  const _nodeEnv = process.env.NODE_ENV
+  const _nodeEnv = process.env.REACT_APP_ENV
   console.log({ _nodeEnv: process.env })
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const EnvironmentAlert = () => {
 
         const frontendHost = String(urlObject.hostname).toLowerCase()
         const environmentDetails = {
-          nodeEnv: process.env.NODE_ENV,
+          nodeEnv: process.env.REACT_APP_ENV,
           frontendHost: getEnvironmentNameByFrontendHost(frontendHost),
           apiEnv: response?.data,
           apiHost: getEnvironmentNameByApiHost(

@@ -40,7 +40,7 @@ const EnvironmentInfo = () => {
         const urlObject = new URL(currentUrl)
         const frontendHost = urlObject.hostname
 
-        const nodeEnv = process.env.NODE_ENV
+        const nodeEnv = process.env.REACT_APP_ENV
 
         const environmentDetails = {
           apiEnv: response?.data,
