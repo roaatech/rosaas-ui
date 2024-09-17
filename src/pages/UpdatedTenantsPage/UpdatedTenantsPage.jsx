@@ -205,6 +205,7 @@ export default function UpdatedTenantsPage({ children }) {
                             {SafeFormatMessage({ id: 'Display-Name' })}{' '}
                           </div>
                           <DataLabelWhite
+                            variant={'gray'}
                             text={SafeFormatMessage({ id: 'System-Name' })}
                           />
                         </div>
@@ -224,7 +225,12 @@ export default function UpdatedTenantsPage({ children }) {
                   <div>
                     <div>{rowData.tenant.displayName}</div>
                     <small style={{ color: 'gray' }}>
-                      {<DataLabelWhite text={rowData.tenant.systemName} />}
+                      {
+                        <DataLabelWhite
+                          variant={'gray'}
+                          text={rowData.tenant.systemName}
+                        />
+                      }
                     </small>
                   </div>
                 )}
@@ -429,6 +435,7 @@ export default function UpdatedTenantsPage({ children }) {
                   <>
                     <div className="mb-1">
                       <DataLabelWhite
+                        variant={'gray'}
                         style={{ flexWrap: 'nowrap' }}
                         text={
                           <>
@@ -440,6 +447,7 @@ export default function UpdatedTenantsPage({ children }) {
                     </div>
                     <div className="">
                       <DataLabelWhite
+                        variant={'gray'}
                         text={
                           <>
                             <SafeFormatMessage id="Created-At" />{' '}

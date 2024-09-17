@@ -95,12 +95,12 @@ export const Routes = {
 
   Tenant: {
     path: `${adminPanel}/tenants`,
-    component: () => <POwnerChecker page={<Tenant />} />,
+    component: () => <POwnerChecker page={<UpdatedTenantsPage />} />,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
   UpdatedTenantsPage: {
-    path: `${adminPanel}/updated-tenants`,
-    component: () => <POwnerChecker page={<UpdatedTenantsPage />} />,
+    path: `${adminPanel}/old-tenants`,
+    component: () => <POwnerChecker page={<Tenant />} />,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
 
