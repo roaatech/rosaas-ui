@@ -105,14 +105,13 @@ const FilteringMultiSelect = ({
         showSelectAll={true}
         selectAllLabel={<SafeFormatMessage id="SelectAll" />}
         filter={(option) => (option?.label ? true : false)}
-        onFilter={handleFilter} // Attach custom filter handler
+        onFilter={handleFilter}
         optionValue="id"
         placeholder={SafeFormatMessage({ id: 'Select' })}
-        display="chip"
-        className="xl:max-w-34rem lg:max-w-35rem md:max-w-30rem sm:max-w-30rem xs:max-w-20rem"
         dropdownIcon={FaFilter}
         itemCheckboxIcon={MdSelectAll}
         panelHeaderTemplate={hasSelectAll && panelHeaderTemplate}
+        maxSelectedLabels={3}
       />
     </div>
   )

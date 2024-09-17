@@ -145,143 +145,139 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
         <Button className="px-6 m-0" variant="primary" onClick={handleSubmit}>
           {intl.formatMessage({ id: 'Submit' })}
         </Button>
-      </Card.Header>
-      <div className="d-flex flex-wrap justify-content-start">
-        {' '}
-        {/* MultiSelect components */}
-        <Row className="p-0 my-2 m-0">
-          <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 ">
-            <FilteringMultiSelect
-              optionsArray={productsLookup && Object.values(productsLookup)}
-              onSubmit={(ids) => setSelectedProducts(ids)}
-              label="Product"
-              width={width1stRow}
-              field="ProductId"
-            />
+      </Card.Header>{' '}
+      {/* MultiSelect components */}
+      <Row className="p-0 my-2 m-0">
+        <Col md={4} lg={3} className="m-0 my-2 p-0  ">
+          <FilteringMultiSelect
+            optionsArray={productsLookup && Object.values(productsLookup)}
+            onSubmit={(ids) => setSelectedProducts(ids)}
+            label="Product"
+            width={width1stRow}
+            field="ProductId"
+          />
+        </Col>
+        <Col md={4} lg={3} className="m-0 my-2 p-0  ">
+          <FilteringMultiSelect
+            optionsArray={plansLookup && Object.values(plansLookup)}
+            onSubmit={(ids) => setSelectedPlansIds(ids)}
+            label="Plan"
+            width={width1stRow}
+          />
+        </Col>
+        <Col md={4} lg={3} className="m-0 my-2 p-0  ">
+          <FilteringMultiSelect
+            optionsArray={
+              transformedSubscriptionStatus &&
+              Object.values(transformedSubscriptionStatus)
+            }
+            onSubmit={(ids) => setSelectedSubscriptionStatusIds(ids)}
+            label="Subscription-Status"
+            width={width1stRow}
+            field="SubscriptionStatus"
+            hasSelectAll={true}
+          />
+        </Col>
+
+        {viewComponent && (
+          <Col md={4} lg={3} className="m-0 my-2 p-0  ">
+            <div className="d-flex flex-column mx-2  ">
+              <SafeFormatMessage id="End-Date" />
+
+              <Calendar
+                className={width ? `md:w-${width}rem ` : `md:w-15rem `}
+                value={endDateRange}
+                onChange={(e) => setEndDateRange(e.value)}
+                selectionMode="range"
+                showTime
+                dateFormat="yy/mm/dd"
+                hourFormat="24"
+                placeholder={intl.formatMessage({ id: 'Select-Date-Range' })}
+                style={{ height: '50px' }}
+              />
+            </div>
           </Col>
-          <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 ">
-            <FilteringMultiSelect
-              optionsArray={plansLookup && Object.values(plansLookup)}
-              onSubmit={(ids) => setSelectedPlansIds(ids)}
-              label="Plan"
-              width={width1stRow}
-            />
+        )}
+
+        <Col md={4} lg={3} className="m-0 my-2 p-0  ">
+          <FilteringMultiSelect
+            optionsArray={
+              transformedSubscriptionMode &&
+              Object.values(transformedSubscriptionMode)
+            }
+            onSubmit={(ids) => setSubscriptionModeIds(ids)}
+            label="Subscription-Mode"
+            width={width1stRow}
+            field="SubscriptionMode"
+            hasSelectAll={true}
+          />
+        </Col>
+
+        <Col md={4} lg={3} className="m-0 my-2 p-0  ">
+          <FilteringMultiSelect
+            optionsArray={tenantStep}
+            onSubmit={(ids) => setSelectedTenantStepsIds(ids)}
+            label="Tenant-Operational-Status"
+            width={width1stRow}
+            field={'TenantStep'}
+            hasSelectAll={true}
+          />
+        </Col>
+
+        {viewComponent && (
+          <Col md={4} lg={3} className="m-0 my-2 p-0  ">
+            <div className="d-flex flex-column mx-2  ">
+              <SafeFormatMessage id="Created-Date" />
+
+              <Calendar
+                className={width ? `md:w-${width}rem ` : `md:w-15rem `}
+                value={createdDateRange}
+                onChange={(e) => setCreatedDateRange(e.value)}
+                selectionMode="range"
+                showTime
+                dateFormat="yy/mm/dd"
+                hourFormat="24"
+                placeholder={intl.formatMessage({ id: 'Select-Date-Range' })}
+                style={{ height: '50px' }}
+                maxDate={new Date()}
+              />
+            </div>
           </Col>
-          <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 ">
-            <FilteringMultiSelect
-              optionsArray={
-                transformedSubscriptionStatus &&
-                Object.values(transformedSubscriptionStatus)
+        )}
+        {viewComponent && (
+          <Col md={4} lg={3} className="m-0 my-2 p-0  ">
+            <div
+              className={
+                width
+                  ? `d-flex flex-column mx-2 md:w-${width}rem `
+                  : `d-flex flex-column mx-2 md:w-15rem `
               }
-              onSubmit={(ids) => setSelectedSubscriptionStatusIds(ids)}
-              label="Subscription-Status"
-              width={width1stRow}
-              field="SubscriptionStatus"
-              hasSelectAll={true}
-            />
-          </Col>
-
-          {viewComponent && (
-            <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 ">
-              <div className="d-flex flex-column mx-2  ">
-                <SafeFormatMessage id="End-Date" />
-
-                <Calendar
-                  className={width ? `md:w-${width}rem ` : `md:w-15rem `}
-                  value={endDateRange}
-                  onChange={(e) => setEndDateRange(e.value)}
-                  selectionMode="range"
-                  showTime
-                  dateFormat="yy/mm/dd"
-                  hourFormat="24"
-                  placeholder={intl.formatMessage({ id: 'Select-Date-Range' })}
+            >
+              <SafeFormatMessage id="Price-Range" />
+              <div className="d-flex align-items-center justify-content-between">
+                <input
+                  type="number"
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  placeholder={intl.formatMessage({ id: 'Min-Price' })}
+                  className="form-control"
                   style={{ height: '50px' }}
                 />
-              </div>
-            </Col>
-          )}
-        </Row>
-        <Row className="p-0 my-2 m-0">
-          <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 ">
-            <FilteringMultiSelect
-              optionsArray={
-                transformedSubscriptionMode &&
-                Object.values(transformedSubscriptionMode)
-              }
-              onSubmit={(ids) => setSubscriptionModeIds(ids)}
-              label="Subscription-Mode"
-              width={width1stRow}
-              field="SubscriptionMode"
-              hasSelectAll={true}
-            />
-          </Col>
-
-          <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 ">
-            <FilteringMultiSelect
-              optionsArray={tenantStep}
-              onSubmit={(ids) => setSelectedTenantStepsIds(ids)}
-              label="Tenant-Operational-Status"
-              width={width1stRow}
-              field={'TenantStep'}
-              hasSelectAll={true}
-            />
-          </Col>
-
-          {viewComponent && (
-            <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 ">
-              <div className="d-flex flex-column mx-2  ">
-                <SafeFormatMessage id="Created-Date" />
-
-                <Calendar
-                  className={width ? `md:w-${width}rem ` : `md:w-15rem `}
-                  value={createdDateRange}
-                  onChange={(e) => setCreatedDateRange(e.value)}
-                  selectionMode="range"
-                  showTime
-                  dateFormat="yy/mm/dd"
-                  hourFormat="24"
-                  placeholder={intl.formatMessage({ id: 'Select-Date-Range' })}
+                <span className="mx-2">-</span>{' '}
+                {/* Separator between min and max */}
+                <input
+                  type="number"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  placeholder={intl.formatMessage({ id: 'Max-Price' })}
                   style={{ height: '50px' }}
-                  maxDate={new Date()}
+                  className="form-control"
                 />
               </div>
-            </Col>
-          )}
-          {viewComponent && (
-            <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 ">
-              <div
-                className={
-                  width
-                    ? `d-flex flex-column mx-2 md:w-${width}rem `
-                    : `d-flex flex-column mx-2 md:w-15rem `
-                }
-              >
-                <SafeFormatMessage id="Price-Range" />
-                <div className="d-flex align-items-center justify-content-between">
-                  <input
-                    type="number"
-                    value={minPrice}
-                    onChange={(e) => setMinPrice(e.target.value)}
-                    placeholder={intl.formatMessage({ id: 'Min-Price' })}
-                    className="form-control"
-                    style={{ height: '50px' }}
-                  />
-                  <span className="mx-2">-</span>{' '}
-                  {/* Separator between min and max */}
-                  <input
-                    type="number"
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
-                    placeholder={intl.formatMessage({ id: 'Max-Price' })}
-                    style={{ height: '50px' }}
-                    className="form-control"
-                  />
-                </div>
-              </div>
-            </Col>
-          )}
-        </Row>
-      </div>
+            </div>
+          </Col>
+        )}
+      </Row>
     </Card>
   )
 }
