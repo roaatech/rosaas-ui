@@ -790,7 +790,6 @@
   "Comment-is-required-for-cancellation": "Comment is required for cancellation",
   "Selection-Availability": "Available for Selection",
   "Visibility-Status": "Visibility Status",
-  "Invisible": "invisible",
   "Free-Trial-Plan": "Free Trial Plan",
   "Planned": "Planned",
   "Limited": "Limited",
@@ -810,5 +809,12 @@
   "Are-you-sure-you-want-to-activate-this-subscription?": "Are you sure you want to activate this subscription?",
   "Currency": "Currency",
   "Home": "Home",
-  "Marketplace": "Marketplace"
+  "Marketplace": "Marketplace",
+  "Canceled": "Canceled",
+  "Next-Plan": "Next Plan",
+  "Payment": "Payment",
+  "SelectAll": "Select All",
+  "Invisible": "Invisible",
+  "Visible": "Visible",
+  "Old-Price": "Old Price"
 }

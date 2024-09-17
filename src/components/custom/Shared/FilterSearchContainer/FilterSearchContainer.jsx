@@ -146,10 +146,11 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
           {intl.formatMessage({ id: 'Submit' })}
         </Button>
       </Card.Header>
-      <div className=" d-flex flex-column flex-sm-row justify-content-between align-items-start ">
+      <div className="d-flex flex-wrap justify-content-start">
+        {' '}
         {/* MultiSelect components */}
         <Row className="p-0 my-2 m-0">
-          <Col className="m-0 my-2 p-0">
+          <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 text-left">
             <FilteringMultiSelect
               optionsArray={productsLookup && Object.values(productsLookup)}
               onSubmit={(ids) => setSelectedProducts(ids)}
@@ -158,7 +159,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
               field="ProductId"
             />
           </Col>
-          <Col className="m-0 my-2 p-0">
+          <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 text-left">
             <FilteringMultiSelect
               optionsArray={plansLookup && Object.values(plansLookup)}
               onSubmit={(ids) => setSelectedPlansIds(ids)}
@@ -166,7 +167,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
               width={width1stRow}
             />
           </Col>
-          <Col className="m-0 my-2 p-0">
+          <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 text-left">
             <FilteringMultiSelect
               optionsArray={
                 transformedSubscriptionStatus &&
@@ -181,7 +182,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
           </Col>
 
           {viewComponent && (
-            <Col className="m-0 my-2 p-0">
+            <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 text-left">
               <div className="d-flex flex-column mx-2  ">
                 <SafeFormatMessage id="End-Date" />
 
@@ -199,7 +200,9 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
               </div>
             </Col>
           )}
-          <Col className="m-0 my-2 p-0">
+        </Row>
+        <Row className="p-0 my-2 m-0">
+          <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 text-left">
             <FilteringMultiSelect
               optionsArray={
                 transformedSubscriptionMode &&
@@ -213,7 +216,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
             />
           </Col>
 
-          <Col className="m-0 my-2 p-0">
+          <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 text-left">
             <FilteringMultiSelect
               optionsArray={tenantStep}
               onSubmit={(ids) => setSelectedTenantStepsIds(ids)}
@@ -225,7 +228,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
           </Col>
 
           {viewComponent && (
-            <Col className="m-0 my-2 p-0">
+            <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 text-left">
               <div className="d-flex flex-column mx-2  ">
                 <SafeFormatMessage id="Created-Date" />
 
@@ -245,7 +248,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
             </Col>
           )}
           {viewComponent && (
-            <Col className="m-0 my-2 p-0">
+            <Col className="m-0 my-2 p-0 col-md-6 col-lg-4 text-left">
               <div
                 className={
                   width

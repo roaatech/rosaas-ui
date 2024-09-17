@@ -263,7 +263,7 @@ export default function UpdatedTenantsPage({ children }) {
               <Column
                 header={
                   <ColumnSortHeader
-                    text="Subscription-Status"
+                    text={SafeFormatMessage({ id: 'Subscription-Status' })}
                     field="subscriptionStatus"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -281,7 +281,7 @@ export default function UpdatedTenantsPage({ children }) {
               <Column
                 header={
                   <ColumnSortHeader
-                    text="Tenant-Status"
+                    text={SafeFormatMessage({ id: 'Tenant-Status' })}
                     field="tenant.status"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -302,7 +302,7 @@ export default function UpdatedTenantsPage({ children }) {
               <Column
                 header={
                   <ColumnSortHeader
-                    text="plan"
+                    text={SafeFormatMessage({ id: 'Plan' })}
                     field="Plan.SystemName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -371,7 +371,7 @@ export default function UpdatedTenantsPage({ children }) {
               <Column
                 header={
                   <ColumnSortHeader
-                    text="End-Date"
+                    text={SafeFormatMessage({ id: 'End-Date' })}
                     field="endDate"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -389,7 +389,7 @@ export default function UpdatedTenantsPage({ children }) {
                   field="tenant.systemName"
                   header={
                     <ColumnSortHeader
-                      text="System Name"
+                      text={SafeFormatMessage({ id: 'System-Name' })}
                       field="tenant.systemName"
                       rebase={rebase}
                       setRebase={setRebase}
@@ -449,7 +449,7 @@ export default function UpdatedTenantsPage({ children }) {
                 style={{ width: '250px', maxidth: '250px' }}
                 header={
                   <ColumnSortHeader
-                    text="Date"
+                    text={SafeFormatMessage({ id: 'Date' })}
                     field="editedDate"
                     rebase={rebase}
                     setRebase={setRebase}

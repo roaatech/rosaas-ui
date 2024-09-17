@@ -807,5 +807,11 @@
   "Are-you-sure-you-want-to-activate-this-subscription?": "هل أنت متأكد أنك تريد تفعيل هذا الاشتراك؟",
   "Currency": "العملة",
   "Home": "الصفحة الرئيسية",
-  "Marketplace": "السوق"
+  "Marketplace": "السوق",
+  "Canceled": "تم الإلغاء",
+  "Next-Plan": "الخطة التالية",
+  "Payment": "الدفع",
+  "SelectAll": "تحديد الكل",
+  "Invisible": "غير مرئي",
+  "Old-Price": "السعر القديم"
 }
