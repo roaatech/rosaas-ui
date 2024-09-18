@@ -25,6 +25,7 @@ import HomePage from './pages/HomePage'
 import AppWrapper from './components/custom/global/AppWrapper'
 import { Provider } from 'react-redux'
 import store from './store/store'
+import EnvironmentAlert from './components/Navbar/EnvironmentAlert/EnvironmentAlert'
 
 fetch(`${process.env.PUBLIC_URL}/config.json`)
   .then((res) => res.json())

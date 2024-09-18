@@ -124,6 +124,7 @@ const useRequest = () => {
     publishProduct,
     visibleProduct,
     getProductsLookup,
+    updateCompositeTemplateRequest,
   } = useProductReq()
 
   const {
@@ -382,6 +383,7 @@ const useRequest = () => {
     getProductsLookup,
     getPlanFilteredList,
     getEnvironment,
+    updateCompositeTemplateRequest,
   }
 }
 export default useRequest

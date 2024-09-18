@@ -116,13 +116,7 @@ const PricingPage = () => {
   const listData = productData?.featurePlan
 
   useEffect(() => {
-    if (
-      Object.values(listProduct).length > 0
-      // ||
-      // !pOSystemName ||
-      // !pOSystemName === '' ||
-      // productOwnerSystemName !== pOSystemName
-    ) {
+    if (Object.values(listProduct).length > 0) {
       return
     }
 
@@ -130,11 +124,7 @@ const PricingPage = () => {
       const productList = await getProductListPublic()
       dispatch(setAllProductPublic(productList.data.data))
     })()
-  }, [
-    Object.values(listProduct).length > 0,
-    // // pOSystemName,
-    // productOwnerSystemName,
-  ])
+  }, [Object.values(listProduct).length > 0])
 
   const [selectedCycle, setSelectedCycle] = useState('')
 
@@ -302,6 +292,7 @@ const PricingPage = () => {
       </Card.Header>
     )
   }
+
   const currencyCode = currency.currencyCode
   const direction = useSelector((state) => state.main.direction)
   const extractRedirectionLinkFromDescription = (description) => {
@@ -321,6 +312,8 @@ const PricingPage = () => {
 
     return { cleanedDescription, redirectionLink }
   }
+
+  /* RenderFeaturePlans */
   const renderFeaturePlans = (planId) => {
     const featurePlans =
       listData &&
@@ -355,7 +348,6 @@ const PricingPage = () => {
       })
     const isAvailableForSelection = planList[planId]?.isAvailableForSelection
 
-    // Extract redirection link and formatted description if not available for selection
     let formattedDescription = ''
     if (!isAvailableForSelection) {
       const descriptionLocalizations = getLocalizedString(
@@ -446,7 +438,7 @@ const PricingPage = () => {
                         fontSize: '1.5rem',
                         fontWeight: 'bold',
                         transition: 'all 0.9s',
-                        whiteSpace: 'nowrap',
+                        // whiteSpace: 'nowrap',
                       }}
                     >
                       {filteredPrices?.priceDetails?.formattedPrice}
@@ -481,7 +473,7 @@ const PricingPage = () => {
                       fontSize: '1.5rem',
                       fontWeight: 'bold',
                       transition: 'all 0.9s',
-                      whiteSpace: 'nowrap',
+                      // whiteSpace: 'nowrap',
                       color: 'var(--second-color)',
                     }}
                   >
@@ -520,8 +512,8 @@ const PricingPage = () => {
 
             <Card.Footer
               style={{
-                whiteSpace:
-                  listProduct?.[productId]?.trialType === 2 ? 'nowrap' : '',
+                // whiteSpace:
+                //   listProduct?.[productId]?.trialType === 2 ? 'nowrap' : '',
                 minHeight:
                   listProduct?.[productId]?.trialType === 2 ? '150px' : '',
                 backgroundColor: !isAvailableForSelection
@@ -683,36 +675,69 @@ const PricingPage = () => {
       </div>
     )
   }
-  const [md, setMd] = useState(4) // Default value for `md` is 4 (3 columns)
-  const [colsPerRow, setColsPerRow] = useState(3) // Initial assumption based on md={4}
 
-  // Function to update the column size (`md`) based on window width
-  const updateMd = () => {
-    const width = window.innerWidth
-    let newMd = 4
-
-    if (width < 576) {
-      newMd = 12
-    } else if (width >= 576 && width < 768) {
-      newMd = 6 // sm: 2 columns
-    } else if (width >= 768 && width < 992) {
-      newMd = 4 // md: 3 columns
-    } else {
-      newMd = 3 // lg and above: 4 columns
-    }
-
-    setMd(newMd) // Update the `md` value
-    setColsPerRow(Math.floor(12 / newMd)) // Calculate columns per row
-  }
   let localeDirection = useSelector((state) => state.main.direction)
 
-  useEffect(() => {
-    updateMd() // Set initial `md` and `colsPerRow` values based on current window width
-    window.addEventListener('resize', updateMd) // Adjust on window resize
+  /* ResponsivePlans*/
+  const getColumnsPerRow = () => {
+    if (window.innerWidth >= 1506) {
+      return 4
+    } else if (window.innerWidth >= 1149) {
+      return 3
+    } else if (window.innerWidth >= 794) {
+      return 2
+    } else {
+      return 1
+    }
+  }
 
-    // Cleanup event listener on component unmount
-    return () => window.removeEventListener('resize', updateMd)
-  }, [])
+  const ResponsivePlans = ({ groupedByCycle, selectedCycle }) => {
+    const [columnsPerRow, setColumnsPerRow] = useState(getColumnsPerRow() || 4)
+
+    useEffect(() => {
+      const handleResize = () => {
+        setColumnsPerRow(getColumnsPerRow())
+      }
+
+      window.addEventListener('resize', handleResize)
+
+      return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+    return (
+      <Row className="justify-content-center">
+        {groupedByCycle &&
+          groupedByCycle[selectedCycle] &&
+          Object.keys(groupedByCycle[selectedCycle]).map(
+            (plansPrice, index, arr) => {
+              const renderedPlans = renderFeaturePlans(
+                groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
+              )
+
+              const isAloneInRow =
+                arr.length % columnsPerRow === 1 && index === arr.length - 1
+
+              return (
+                renderedPlans && (
+                  <Col
+                    className={`mt-3 ${
+                      isAloneInRow ? 'align-start-alone' : ''
+                    }`}
+                    key={groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id}
+                    lg={columnsPerRow && 12 / columnsPerRow}
+                    md={columnsPerRow && 12 / columnsPerRow}
+                    sm={columnsPerRow && 12 / columnsPerRow}
+                    xs={columnsPerRow && 12 / columnsPerRow}
+                  >
+                    {renderedPlans}
+                  </Col>
+                )
+              )
+            }
+          )}
+      </Row>
+    )
+  }
 
   return (
     <Wrapper direction={localeDirection}>
@@ -743,10 +768,10 @@ const PricingPage = () => {
                   <div
                     style={{
                       fontSize: 'var(--largeFont)',
-                      maxWidth: '900px', // Adjust the width as needed
-                      margin: '0 auto', // Center horizontally
-                      textAlign: 'center', // Center text within the container
-                      padding: '0 1rem', // Add some padding for spacing
+                      maxWidth: '900px',
+                      margin: '0 auto',
+                      textAlign: 'center',
+                      padding: '0 1rem',
                     }}
                     className="text-center pb-3 mt-2"
                   >
@@ -762,36 +787,12 @@ const PricingPage = () => {
             <Card.Body>
               <div className="text-center">{renderCycleRadioButtons()}</div>
               <Row className="justify-content-center">
-                {groupedByCycle &&
-                  groupedByCycle[selectedCycle] &&
-                  Object.keys(groupedByCycle[selectedCycle]).map(
-                    (plansPrice, index, arr) => {
-                      const renderedPlans = renderFeaturePlans(
-                        groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
-                      )
-
-                      // Check if this is the last row with one card
-                      const isAloneInRow =
-                        arr.length % 4 === 1 && index === arr.length - 1
-
-                      return (
-                        renderedPlans && (
-                          <Col
-                            className={`mt-3 ${
-                              isAloneInRow ? 'align-start-alone' : ''
-                            }`}
-                            key={
-                              groupedByCycle[selectedCycle]?.[plansPrice]?.plan
-                                .id
-                            }
-                            md={3}
-                          >
-                            {renderedPlans}
-                          </Col>
-                        )
-                      )
-                    }
-                  )}
+                {groupedByCycle && groupedByCycle[selectedCycle] && (
+                  <ResponsivePlans
+                    groupedByCycle={groupedByCycle}
+                    selectedCycle={selectedCycle}
+                  />
+                )}
               </Row>
             </Card.Body>
           </Card>

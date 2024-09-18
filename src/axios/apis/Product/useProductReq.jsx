@@ -12,6 +12,12 @@ const useTenantReq = () => {
       data.data
     )
   }
+  const updateCompositeTemplateRequest = async (data) => {
+    return await Request.put(
+      `management/sadmin/v1/Products/${data.id}/CompositeTemplates`,
+      data
+    )
+  }
   const getProduct = async (id) => {
     return await Request.get(`management/sadmin/v1/Products/${id}`)
   }
@@ -61,6 +67,7 @@ const useTenantReq = () => {
     publishProduct,
     visibleProduct,
     getProductsLookup,
+    updateCompositeTemplateRequest,
   }
 }
 

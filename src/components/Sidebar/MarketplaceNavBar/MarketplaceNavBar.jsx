@@ -11,6 +11,7 @@ import { setPublicCurrenciesList } from '../../../store/slices/currenciesSlice'
 import { Toast } from 'primereact/toast'
 import SafeFormatMessage from '../../custom/Shared/SafeFormatMessage/SafeFormatMessage'
 import { useIntl } from 'react-intl'
+import EnvironmentAlert from '../../Navbar/EnvironmentAlert/EnvironmentAlert'
 
 const MarketplaceNavBar = ({ profile }) => {
   const isRunningInIframe = window.self !== window.top

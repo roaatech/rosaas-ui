@@ -37,7 +37,8 @@ import ExchangeRateProvidersSettings from './pages/Settings/ExchangeRateProvider
 import UpdatedTenantsPage from './pages/UpdatedTenantsPage/UpdatedTenantsPage'
 import EnvironmentInfo from './pages/Settings/EnvironmentInfo/EnvironmentInfo'
 import CanceledTenant from './pages/CanceledTenants/CanceledTenants'
-const adminPanel = '/admin-panel'
+
+export const adminPanel = '/admin-panel'
 
 export const Routes = {
   Dashboard: {

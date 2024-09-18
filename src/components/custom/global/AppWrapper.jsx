@@ -18,8 +18,10 @@ import {
 } from '../../../store/slices/main'
 import useRequest from '../../../axios/apis/useRequest'
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import Loader from '../../../components/custom/global/Loader'
+import EnvironmentAlert from '../../Navbar/EnvironmentAlert/EnvironmentAlert.jsx'
+import { adminPanel } from '../../../routes.js'
 
 const AppWrapper = ({ children, customHistory }) => {
   const { userData } = useRequest()
@@ -53,7 +55,8 @@ const AppWrapper = ({ children, customHistory }) => {
       dispatch(changePreloader(false))
     })()
   }, [])
-
+  const location = useLocation()
+  const atAdminPanel = location.pathname.includes(adminPanel)
   useEffect(() => {
     dispatch(addToHistory(window.location.pathname))
   }, [window.location.pathname])
@@ -61,7 +64,7 @@ const AppWrapper = ({ children, customHistory }) => {
   const messages = direction === 'rtl' ? arFile : enFile
   return (
     <>
-      {/* <Loader /> */}
+      {!atAdminPanel && <EnvironmentAlert />}
       <Preloader show={loaded} />
       <ToastContainer />
       <GlobalStyles direction={direction} key={direction} darkMode={false} />

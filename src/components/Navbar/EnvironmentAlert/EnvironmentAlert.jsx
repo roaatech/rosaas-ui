@@ -20,7 +20,7 @@ const EnvironmentAlert = () => {
   const currentUrl = window.location.href
   const urlObject = new URL(currentUrl)
 
-  const _nodeEnv = process.env.REACT_APP_ENV 
+  const _nodeEnv = process.env.REACT_APP_ENV
 
   useEffect(() => {
     if (!currentUrl || !_nodeEnv) {

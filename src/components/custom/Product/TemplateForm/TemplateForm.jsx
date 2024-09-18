@@ -29,7 +29,7 @@ const TemplateForm = ({
   popupLabel,
   setActiveIndex,
 }) => {
-  const { createCompositeTemplateRequest } = useRequest()
+  const { updateCompositeTemplateRequest } = useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
   const productId = routeParams.id
@@ -40,13 +40,13 @@ const TemplateForm = ({
 
   // Dropdown options as an object
   const labelOptions = {
-    ProductOwnerName: 'ProductOwnerName',
-    ProductName: 'ProductName',
-    PlanName: 'PlanName',
-    PlanCycle: 'PlanCycle',
-    ProductOwnerSystemName: 'ProductOwnerSystemName',
-    ProductSystemName: 'ProductSystemName',
-    PlanSystemName: 'PlanSystemName',
+    ProductOwnerName: '##ProductOwnerName##',
+    ProductName: '##ProductName##',
+    PlanName: '##PlanName##',
+    PlanCycle: '##PlanCycle##',
+    ProductOwnerSystemName: '##ProductOwnerSystemName##',
+    ProductSystemName: '##ProductSystemName##',
+    PlanSystemName: '##PlanSystemName##',
   }
 
   const initialValues = {
@@ -61,33 +61,33 @@ const TemplateForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    systemName: Yup.string()
-      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
-      .required(<SafeFormatMessage id="Unique-Name-is-required" />)
-      .matches(
-        /^[a-zA-Z0-9_-]+$/,
-        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
-      ),
-    compositeNameTemplateEn: Yup.string().test({
-      name: 'compositeNameTemplateRequired',
-      message: <SafeFormatMessage id="Display-Name-is-required" />,
-      test: (value, context) => {
-        const { parent } = context
-        const compositeNameTemplateEn = parent.compositeNameTemplateEn
-        const compositeNameTemplateAr = parent.compositeNameTemplateAr
-        return !!compositeNameTemplateEn || !!compositeNameTemplateAr
-      },
-    }),
-    compositeNameTemplateAr: Yup.string().test({
-      name: 'compositeNameTemplateRequired',
-      message: <SafeFormatMessage id="Display-Name-is-required" />,
-      test: (value, context) => {
-        const { parent } = context
-        const compositeNameTemplateEn = parent.compositeNameTemplateEn
-        const compositeNameTemplateAr = parent.compositeNameTemplateAr
-        return !!compositeNameTemplateEn || !!compositeNameTemplateAr
-      },
-    }),
+    // systemName: Yup.string()
+    //   .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+    //   .required(<SafeFormatMessage id="Unique-Name-is-required" />)
+    //   .matches(
+    //     /^[a-zA-Z0-9_-]+$/,
+    //     <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+    //   ),
+    // compositeNameTemplateEn: Yup.string().test({
+    //   name: 'compositeNameTemplateRequired',
+    //   message: <SafeFormatMessage id="Display-Name-is-required" />,
+    //   test: (value, context) => {
+    //     const { parent } = context
+    //     const compositeNameTemplateEn = parent.compositeNameTemplateEn
+    //     const compositeNameTemplateAr = parent.compositeNameTemplateAr
+    //     return !!compositeNameTemplateEn || !!compositeNameTemplateAr
+    //   },
+    // }),
+    // compositeNameTemplateAr: Yup.string().test({
+    //   name: 'compositeNameTemplateRequired',
+    //   message: <SafeFormatMessage id="Display-Name-is-required" />,
+    //   test: (value, context) => {
+    //     const { parent } = context
+    //     const compositeNameTemplateEn = parent.compositeNameTemplateEn
+    //     const compositeNameTemplateAr = parent.compositeNameTemplateAr
+    //     return !!compositeNameTemplateEn || !!compositeNameTemplateAr
+    //   },
+    // }),
     compositeDescriptionTemplateEn: Yup.string().max(
       250,
       <SafeFormatMessage id="Must-be-maximum-250-digits" />
@@ -113,13 +113,10 @@ const TemplateForm = ({
         },
       }
 
-      const CompositeTemplateRequest = await createCompositeTemplateRequest(
-        productId,
-        {
-          ...dataToSubmit,
-          productId: productId,
-        }
-      )
+      const CompositeTemplateRequest = await updateCompositeTemplateRequest({
+        ...dataToSubmit,
+        id: productId,
+      })
 
       dispatch(productsChangeAttr({ productId, attributes: dataToSubmit }))
 
@@ -140,7 +137,7 @@ const TemplateForm = ({
 
     if (label) {
       // Format the label with hashes
-      const formattedLabel = `##${label}##`
+      const formattedLabel = `${label}`
 
       // Get the current input field ID and its current value
       const fieldId = event.target.id
@@ -180,23 +177,21 @@ const TemplateForm = ({
         <Modal.Body>
           {/* Draggable Labels with Copy-to-Clipboard */}
           <Row className="d-flex align-items-center">
-            <Col md={6}>
+            <Col md={12}>
               <Card border="light" className="shadow-sm p-0 m-0">
-                <Card.Body className="">
+                <Card.Body className="px-3 py-2 ">
                   <Row>
-                    {Object.keys(labelOptions).map((key) => (
-                      <Col md={12} key={key}>
+                    {Object.entries(labelOptions).map(([key, value]) => (
+                      <Col md={4} key={key}>
                         <div
                           draggable
-                          onDragStart={(event) => handleDragStart(event, key)}
+                          onDragStart={(event) => handleDragStart(event, value)}
                           className="form-control d-flex justify-content-between align-items-center my-2 mx-0"
                         >
-                          <span style={{ marginRight: '5px' }}>
-                            {labelOptions[key]}
-                          </span>
+                          <span style={{ marginRight: '5px' }}>{key}</span>
 
                           <OverlayTrigger
-                            key={key}
+                            key={value}
                             style={{ minWidth: '150px' }}
                             trigger={['hover', 'focus']}
                             placement="top"
@@ -211,7 +206,7 @@ const TemplateForm = ({
                             }
                           >
                             <CopyToClipboard
-                              text={labelOptions[key]}
+                              text={`${labelOptions[key]}`}
                               onCopy={() =>
                                 console.log(`Copied ${labelOptions[key]}`)
                               }
@@ -233,7 +228,7 @@ const TemplateForm = ({
                 </Card.Body>
               </Card>
             </Col>
-            <Col md={6}>
+            <Col md={12}>
               {/* MultilingualInput for Display Name */}
               <MultilingualInput
                 inputLabel="composite-Name-Template"
@@ -293,7 +288,8 @@ const TemplateForm = ({
                 }}
                 onChange={formik.handleChange}
                 isRequired={false}
-                inputType="input"
+                inputType="textareaApperance"
+                textareaApperance={true}
                 errors={{
                   en: formik.errors.compositeDescriptionTemplateEn,
                   ar: formik.errors.compositeDescriptionTemplateAr,
