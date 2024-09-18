@@ -68,7 +68,6 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const listDataStore = useSelector(
     (state) => state.products.products[productId]?.featurePlan
   )
-  console.log('listDataStore', listDataStore)
   const planList = useSelector(
     (state) => state.products.products[productId]?.plans
   )

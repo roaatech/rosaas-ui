@@ -33,7 +33,6 @@ const MarketplaceNavBar = ({ profile }) => {
   const step = useSelector((state) => state.tenants.currentStep)
   const { locale } = useIntl()
   const isRtl = locale === 'ar'
-  console.log({ isRtl })
 
   const [selectedCurrency, setSelectedCurrency] = useState(() =>
     localStorage.getItem('currencyCode')
@@ -166,7 +165,6 @@ const MarketplaceNavBar = ({ profile }) => {
           command: () => navigate(Routes.marketPlacePage.path),
         },
       ]
-  console.log({ profile, sss: userInfo.email })
 
   // Right side menu items
   const rightSideItems = !isRunningInIframe && [

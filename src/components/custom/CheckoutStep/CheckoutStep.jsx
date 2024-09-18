@@ -37,7 +37,6 @@ import { setLoading } from '../../../store/slices/main'
 
 const CheckoutPage = (data) => {
   const { hasToPay, setHasToPay, tenantDisplayName, priceData } = data
-  console.log({ priceData })
   const [orderData, setOrderData] = useState()
   const [trialPlanId, setTrialPlanId] = useState()
 
@@ -256,8 +255,6 @@ const CheckoutPage = (data) => {
         </Card.Header>
         <Card.Body className="border-bottom ">
           {featurePlans?.map((featurePlan) => {
-            console.log(featurePlan) // Log the featurePlan outside of the return
-
             return (
               <div key={featurePlan.id}>
                 <p>

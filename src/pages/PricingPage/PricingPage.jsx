@@ -73,7 +73,6 @@ const PricingPage = () => {
   const plansPriceList = productData?.plansPrice
 
   const planList = productData?.plans
-  console.log({ planList })
 
   const groupedByCycle =
     plansPriceList &&
@@ -97,7 +96,6 @@ const PricingPage = () => {
         )
       )
     })
-  console.log({ groupedByCycle })
   const { getLocalizedString } = useSharedFunctions()
 
   let userRole = useSelector((state) => state.auth.userInfo.userType)

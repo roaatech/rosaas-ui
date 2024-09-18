@@ -44,8 +44,6 @@ export const mainSlice = createSlice({
       state.isLoading = action.payload
     },
     setEnvironmentAlertData: (state, action) => {
-      console.log({ action })
-
       state.environmentAlertData = action.payload
     },
   },

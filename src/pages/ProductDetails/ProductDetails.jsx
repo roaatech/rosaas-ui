@@ -94,7 +94,6 @@ const ProductDetails = () => {
       })
     )
   }
-  console.log({ productData })
 
   const toggleVisibleProduct = async (isVisible) => {
     await visibleProduct(routeParams.id, {

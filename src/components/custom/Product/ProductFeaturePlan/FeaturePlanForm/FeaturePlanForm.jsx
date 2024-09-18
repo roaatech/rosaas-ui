@@ -70,7 +70,6 @@ const FeaturePlanForm = ({
   const allProducts = useSelector((state) => state.products.products)
   const listFeatureData = allProducts[productId]?.features
   let allFeatureArray = listFeatureData && Object.values(listFeatureData)
-  console.log({ allFeatureArray })
 
   const allPlans = useSelector(
     (state) => state.products.products[productId]?.plans
@@ -317,7 +316,6 @@ const FeaturePlanForm = ({
 
         setAvailableFeatures(updatedAvailableFeatures)
       }
-      console.log(featuresAssignedToPlan)
     }
   }, [formik.values.plan, FeaturePlanData?.plan?.id, featureOptions])
   useEffect(() => {

@@ -122,7 +122,6 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
   }
   const transformToOptionsObject = (data) => {
     return Object.entries(data).reduce((acc, [key, status], index) => {
-      console.log({ acc, entry: [key, status], index, data })
       acc[index + 1] = {
         id: index + 1,
         label: status?.displayName,

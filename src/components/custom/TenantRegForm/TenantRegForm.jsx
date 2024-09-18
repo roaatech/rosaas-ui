@@ -244,9 +244,6 @@ const CheckoutTenantReg = ({
       allSpecificationsArray.filter((spec) => spec.isPublished === true)
     )
   }, [specifications, priceData, currentPrice])
-  console.log(
-    filteredSpecificationsArray && filteredSpecificationsArray.length === 0
-  )
 
   useEffect(() => {
     if (

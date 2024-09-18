@@ -79,7 +79,6 @@ export const ProductPlansList = ({ productId }) => {
   const intl = useIntl()
   const ProductTrialType = list.trialType
   const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
-  console.log({ selectedLanguage })
 
   const handleDeletePlan = async () => {
     if (list?.plans[currentId]?.isSubscribed) {

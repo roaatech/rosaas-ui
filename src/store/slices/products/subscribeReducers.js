@@ -64,19 +64,7 @@ export const setSearchTerm = (state, action) => {
 }
 
 export const changeSubscriptionAttr = (state, action) => {
-  console.log('99999999')
-
   const { productId, subscriptionId, attr, value } = action.payload
-  console.log(
-    { datassssssss: state.products[productId].subscribe[subscriptionId][attr] },
-    productId,
-    subscriptionId,
-    attr,
-    value
-  )
-  console.log({ actionsssss: action.payload })
-
-  console.log('*****************')
 
   if (state.products[productId]?.subscribe) {
     state.products[productId].subscribe[subscriptionId][attr] = value
