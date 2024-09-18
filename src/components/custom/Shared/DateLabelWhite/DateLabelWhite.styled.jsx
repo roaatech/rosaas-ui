@@ -18,5 +18,6 @@ export const Wrapper = styled.span`
     min-width: auto;
     background-color: #f2f2f2;
     color: #666666;
+    white-space: nowrap;
   }
 `

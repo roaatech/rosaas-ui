@@ -245,82 +245,7 @@ export default function UpdatedTenantsPage({ children }) {
                 className="name"
               ></Column>
               <Column
-                header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({ id: 'Subscription-Mode' })}
-                    field="subscriptionMode"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
-                body={(rowData) =>
-                  rowData.subscriptionMode != 2 ? (
-                    <Label {...subscriptionMode[rowData.subscriptionMode]} />
-                  ) : (
-                    <Label
-                      background="var(--light-blue)"
-                      value={
-                        <>
-                          <span className="fw-bold">
-                            {' '}
-                            <SafeFormatMessage id="Trial" />{' '}
-                            <SafeFormatMessage id="Ends-On" />{' '}
-                          </span>
-                          {UppercaseMonthDateFormat(rowData.endDate)}
-                        </>
-                      }
-                      color="var(--blue-2)"
-                    />
-                  )
-                }
-              ></Column>
-              <Column
-                header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({ id: 'Subscription-Status' })}
-                    field="subscriptionStatus"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
-                body={(rowData) => (
-                  <Label {...subscriptionStatus[rowData.subscriptionStatus]} />
-                )}
-              ></Column>
-              <Column
-                header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({
-                      id: 'Tenant-Operational-Status',
-                    })}
-                    field="tenant.status"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
-                body={(rowData) => (
-                  <TenantStatus
-                    statusValue={rowData.tenant.status}
-                    key={rowData.id}
-                  />
-                )}
-              ></Column>
-              <Column
+                className="plan"
                 header={
                   <ColumnSortHeader
                     text={SafeFormatMessage({ id: 'Plan' })}
@@ -388,11 +313,92 @@ export default function UpdatedTenantsPage({ children }) {
                   </>
                 )}
               ></Column>
+              <Column
+                header={
+                  <ColumnSortHeader
+                    text={SafeFormatMessage({ id: 'Subscription-Mode' })}
+                    field="subscriptionMode"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) =>
+                  rowData.subscriptionMode != 2 ? (
+                    <Label {...subscriptionMode[rowData.subscriptionMode]} />
+                  ) : (
+                    <Label
+                      background="var(--light-blue)"
+                      value={
+                        <>
+                          <span className="fw-bold ">
+                            <SafeFormatMessage id="Trial" />
+                          </span>
+                          <span className="mx-1">
+                            {' '}
+                            <SafeFormatMessage id="Ends" />
+                          </span>
+                          <span className="fw-bold ">
+                            {UppercaseMonthDateFormat(rowData.endDate)}
+                          </span>
+                        </>
+                      }
+                      color="var(--blue-2)"
+                      lighter={true}
+                    />
+                  )
+                }
+              ></Column>
+              <Column
+                header={
+                  <ColumnSortHeader
+                    text={SafeFormatMessage({ id: 'Subscription-Status' })}
+                    field="subscriptionStatus"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) => (
+                  <Label {...subscriptionStatus[rowData.subscriptionStatus]} />
+                )}
+              ></Column>
+              <Column
+                header={
+                  <ColumnSortHeader
+                    text={SafeFormatMessage({
+                      id: 'Tenant-Operational-Status',
+                    })}
+                    field="tenant.status"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) => (
+                  <TenantStatus
+                    statusValue={rowData.tenant.status}
+                    key={rowData.id}
+                  />
+                )}
+              ></Column>
 
               <Column
                 header={
                   <ColumnSortHeader
-                    text={SafeFormatMessage({ id: 'End-Date' })}
+                    text={SafeFormatMessage({ id: 'Subscription-Period' })}
                     field="endDate"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -404,11 +410,25 @@ export default function UpdatedTenantsPage({ children }) {
                   />
                 }
                 body={(rowData) => (
-                  <DateLabel
-                    endDate={rowData.endDate}
-                    uppercaseMonthDateFormat={true}
-                    bold={true}
-                  />
+                  <div className="d-flex align-items-center flex-column justify-content-center">
+                    <DataLabelWhite
+                      text={
+                        <>
+                          <span>{SafeFormatMessage({ id: 'Started-on' })}</span>{' '}
+                          <span className="fw-bold">
+                            {UppercaseMonthDateFormat(rowData.createdDate)}
+                          </span>
+                        </>
+                      }
+                      variant={'gray'}
+                    />
+                    <DateLabel
+                      endDate={rowData.endDate}
+                      uppercaseMonthDateFormat={true}
+                      hasTitle={true}
+                      hasBorder={true}
+                    />
+                  </div>
                 )}
               ></Column>
               {viewSystemNameColumn && (

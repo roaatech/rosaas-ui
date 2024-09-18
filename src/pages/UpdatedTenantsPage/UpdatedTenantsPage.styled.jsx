@@ -17,4 +17,7 @@ export const Wrapper = styled.div`
   .name {
     min-width: 238.13px;
   }
+  .plan {
+    min-width: 177px;
+  }
 `

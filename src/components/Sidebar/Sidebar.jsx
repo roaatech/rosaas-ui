@@ -306,7 +306,10 @@ export default (props = {}) => {
                     as={Link}
                     variant="secondary"
                     size="xs"
-                    onClick={() => dispatch(logOut())}
+                    onClick={() => {
+                      dispatch(logOut())
+                      navigate(Routes.mainPage.path)
+                    }}
                     className="text-dark"
                   >
                     <FontAwesomeIcon icon={faSignOutAlt} className="mx-2" />

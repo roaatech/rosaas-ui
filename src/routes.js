@@ -36,6 +36,7 @@ import SignInPage from './pages/signIn/signIn'
 import ExchangeRateProvidersSettings from './pages/Settings/ExchangeRateProvidersSettings/ExchangeRateProvidersSettings'
 import UpdatedTenantsPage from './pages/UpdatedTenantsPage/UpdatedTenantsPage'
 import EnvironmentInfo from './pages/Settings/EnvironmentInfo/EnvironmentInfo'
+import CanceledTenant from './pages/CanceledTenants/CanceledTenants'
 const adminPanel = '/admin-panel'
 
 export const Routes = {
@@ -98,9 +99,15 @@ export const Routes = {
     component: () => <POwnerChecker page={<UpdatedTenantsPage />} />,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
+
   UpdatedTenantsPage: {
     path: `${adminPanel}/old-tenants`,
     component: () => <POwnerChecker page={<Tenant />} />,
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+  },
+  CanceledTenantsPage: {
+    path: `${adminPanel}/canceled-tenants`,
+    component: () => <POwnerChecker page={<CanceledTenant />} />,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
 

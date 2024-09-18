@@ -13,7 +13,6 @@ import { Dialog } from 'primereact/dialog'
 import TenantStatus from '../../components/custom/tenant/TenantStatus/TenantStatus'
 import DeleteConfirmation from '../../components/custom/global/DeleteConfirmation/DeleteConfirmation.jsx'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Wrapper } from './Tenant.styled'
 import CustomPaginator from '../../components/custom/Shared/CustomPaginator/CustomPaginator'
 import AutoCompleteFiled from '../../components/custom/Shared/AutoCompleteFiled/AutoCompleteFiled'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -31,6 +30,7 @@ import TenantFormOnboarding from '../../components/custom/tenant/TenantFormOnboa
 import { useDispatch, useSelector } from 'react-redux'
 import { removeTenant, tenantInfo } from '../../store/slices/tenants.js'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import { Wrapper } from './Tenant.styled.jsx'
 export default function Tenant({ children }) {
   const { getTenant, getTenantList, deleteTenantReq } = useRequest()
   const [visible, setVisible] = useState(false)

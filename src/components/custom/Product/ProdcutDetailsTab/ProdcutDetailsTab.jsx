@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Card, OverlayTrigger, Row, Tooltip } from '@themesberg/react-bootstrap'
+import {
+  Card,
+  Col,
+  Container,
+  OverlayTrigger,
+  Row,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
 import { Wrapper } from './ProdcutDetailsTab.styled'
 import UrlItemList from '../../../../components/custom/Product/UrlItemList/UrlItemList'
 import { FormattedMessage, useIntl } from 'react-intl'
@@ -74,128 +81,153 @@ const ProductDetailsTab = ({ data }) => {
         <div className="main">
           <div className="details">
             <Row>
-              <Card.Body className="py-0 px-3">
-                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                  <td className="mb-0 w-50 fw-bold">
-                    <SafeFormatMessage id="Display-Name" />
-                  </td>
-                  <td className="card-stats">
-                    {textLocale(
-                      data.displayNameLocalizations,
-                      selectedLanguage,
-                      intl
-                    )}
-                  </td>
-                </tr>
-                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                  <td className="mb-0 w-50 fw-bold">
-                    <SafeFormatMessage id="System-Name" />
-                  </td>
-                  <td className="card-stats">{data.systemName}</td>
-                </tr>
-                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                  <td className="mb-0 w-50 fw-bold">
-                    <SafeFormatMessage id="Client" />
-                  </td>
-                  <td className="card-stats">{data.client?.systemName}</td>
-                </tr>
-                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                  <td className="mb-0 w-50 fw-bold">
-                    <SafeFormatMessage id="Description" />
-                  </td>
-                  <td className="card-stats">
-                    <DescriptionCell
-                      data={{
-                        description: textLocale(
-                          data.descriptionLocalizations,
-                          selectedLanguage,
-                          intl
-                        ),
-                      }}
-                    />
-                  </td>
-                </tr>
-                {data?.trialType === 2 && (
-                  <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                    <td className="mb-0 w-50 fw-bold">
-                      <SafeFormatMessage id="Trial-Period-In-Days" />
-                    </td>
-                    <td className="card-stats">{data?.trialPeriodInDays}</td>
-                  </tr>
-                )}
-              </Card.Body>
-              <Card.Body className="py-0 px-3">
-                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                  <td className="mb-0 w-50 fw-bold">
-                    <SafeFormatMessage id="Created-Date" />
-                  </td>
-                  <td className="card-stats">
-                    {DataTransform(data?.createdDate)}
-                  </td>
-                </tr>
-                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                  <td className="mb-0 w-50 fw-bold">
-                    <SafeFormatMessage id="Last-Updated-Date" />
-                  </td>
-                  <td className="card-stats">
-                    {DataTransform(data?.editedDate)}
-                  </td>
-                </tr>
-                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                  <td className="mb-0 w-50 fw-bold">
-                    <SafeFormatMessage id="Api-key" />
-                  </td>
-                  <td className="apikeyTd card-stats">
-                    <span>{data.apiKey}</span>
-                    <span className="relative">
-                      <OverlayTrigger
-                        style={{ minWidth: '150px' }}
-                        trigger={['hover', 'focus']}
-                        placement="top"
-                        overlay={
-                          <Tooltip>
-                            <div style={{ minWidth: '100px' }}>
-                              {<SafeFormatMessage id={toolTipText} />}
-                            </div>
-                          </Tooltip>
-                        }
-                      >
-                        <CopyToClipboard text={data.apiKey} onCopy={handleCopy}>
-                          <span className="copyItem ml-1">
-                            <AiFillCopy />
-                          </span>
-                        </CopyToClipboard>
-                      </OverlayTrigger>
-                    </span>
-                  </td>
-                </tr>
-                <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                  <td className="mb-0 w-50 fw-bold">
-                    <SafeFormatMessage id="Trial-Type" />
-                  </td>
-                  <td className="card-stats">
-                    {ProductTrialType[data?.trialType] && (
-                      <Label {...ProductTrialType[data?.trialType]} />
-                    )}
-                  </td>
-                </tr>
-                {data?.trialType === 2 && (
-                  <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
-                    <td className="mb-0 w-50 fw-bold">
-                      <SafeFormatMessage id="Trial-Plan" />
-                    </td>
-                    <td className="card-stats">
-                      {listData[productId].plans &&
-                        textLocale(
-                          listData[productId].plans?.[data?.trialPlanId]
-                            ?.displayNameLocalizations,
+              <Col md={6} className="my-2">
+                <Card>
+                  <Card.Body className="py-0 px-3">
+                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                      <td className="mb-0 w-50 fw-bold">
+                        <SafeFormatMessage id="Display-Name" />
+                      </td>
+                      <td className="card-stats">
+                        {textLocale(
+                          data.displayNameLocalizations,
                           selectedLanguage,
                           intl
                         )}
-                    </td>
-                  </tr>
-                )}
-              </Card.Body>
+                      </td>
+                    </tr>
+                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                      <td className="mb-0 w-50 fw-bold">
+                        <SafeFormatMessage id="System-Name" />
+                      </td>
+                      <td className="card-stats">{data.systemName}</td>
+                    </tr>
+                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                      <td className="mb-0 w-50 fw-bold">
+                        <SafeFormatMessage id="Client" />
+                      </td>
+                      <td className="card-stats">{data.client?.systemName}</td>
+                    </tr>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col md={6} className="my-2">
+                <Card>
+                  <Card.Body className="py-0 px-3">
+                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                      <td className="mb-0 w-50 fw-bold">
+                        <SafeFormatMessage id="Created-Date" />
+                      </td>
+                      <td className="card-stats">
+                        {DataTransform(data?.createdDate)}
+                      </td>
+                    </tr>
+                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                      <td className="mb-0 w-50 fw-bold">
+                        <SafeFormatMessage id="Last-Updated-Date" />
+                      </td>
+                      <td className="card-stats">
+                        {DataTransform(data?.editedDate)}
+                      </td>
+                    </tr>
+                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                      <td className="mb-0 w-50 fw-bold">
+                        <SafeFormatMessage id="Api-key" />
+                      </td>
+                      <td className="apikeyTd card-stats">
+                        <span>{data.apiKey}</span>
+                        <span className="relative">
+                          <OverlayTrigger
+                            style={{ minWidth: '150px' }}
+                            trigger={['hover', 'focus']}
+                            placement="top"
+                            overlay={
+                              <Tooltip>
+                                <div style={{ minWidth: '100px' }}>
+                                  {<SafeFormatMessage id={toolTipText} />}
+                                </div>
+                              </Tooltip>
+                            }
+                          >
+                            <CopyToClipboard
+                              text={data.apiKey}
+                              onCopy={handleCopy}
+                            >
+                              <span className="copyItem ml-1">
+                                <AiFillCopy />
+                              </span>
+                            </CopyToClipboard>
+                          </OverlayTrigger>
+                        </span>
+                      </td>
+                    </tr>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col md={6} className="my-3 mx-0 ">
+                <Card>
+                  <Card.Body className="py-0 px-3">
+                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                      <td className="mb-0 w-50 fw-bold">
+                        <SafeFormatMessage id="Trial-Type" />
+                      </td>
+                      <td className="card-stats">
+                        {ProductTrialType[data?.trialType] && (
+                          <Label {...ProductTrialType[data?.trialType]} />
+                        )}
+                      </td>
+                    </tr>
+                    {data?.trialType === 2 && (
+                      <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                        <td className="mb-0 w-50 fw-bold">
+                          <SafeFormatMessage id="Trial-Period-In-Days" />
+                        </td>
+                        <td className="card-stats">
+                          {data?.trialPeriodInDays}
+                        </td>
+                      </tr>
+                    )}
+                    {data?.trialType === 2 && (
+                      <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                        <td className="mb-0 w-50 fw-bold">
+                          <SafeFormatMessage id="Trial-Plan" />
+                        </td>
+                        <td className="card-stats">
+                          {listData[productId].plans &&
+                            textLocale(
+                              listData[productId].plans?.[data?.trialPlanId]
+                                ?.displayNameLocalizations,
+                              selectedLanguage,
+                              intl
+                            )}
+                        </td>
+                      </tr>
+                    )}{' '}
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col md={6} className="my-3 mx-0 ">
+                <Card>
+                  <Card.Body className="py-0 px-3">
+                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                      <td className="mb-0 w-50 fw-bold">
+                        <SafeFormatMessage id="Description" />
+                      </td>
+                      <td className="card-stats">
+                        <DescriptionCell
+                          data={{
+                            description: textLocale(
+                              data.descriptionLocalizations,
+                              selectedLanguage,
+                              intl
+                            ),
+                          }}
+                        />
+                      </td>
+                    </tr>{' '}
+                  </Card.Body>
+                </Card>
+              </Col>
             </Row>
           </div>
         </div>

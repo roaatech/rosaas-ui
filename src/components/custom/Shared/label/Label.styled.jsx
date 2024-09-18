@@ -13,7 +13,6 @@ export const Wrapper = styled.span`
     border-radius: 5px;
     font-size: var(--smallFont);
     background-color: var(--primary1);
-    border: 1px solid;
   }
   .small {
     padding: 3px 5px;

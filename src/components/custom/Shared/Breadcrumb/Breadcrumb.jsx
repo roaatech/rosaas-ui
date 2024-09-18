@@ -20,7 +20,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
   let navigation = '#'
   const breadcrumbConst = breadcrumbFun(routeParams, data)
   if (breadcrumbInfo) {
-    if (breadcrumbConst[breadcrumbInfo].navigation) {
+    if (breadcrumbConst?.[breadcrumbInfo]?.navigation) {
       navigation = breadcrumbConst[breadcrumbInfo].navigation
       if (param1) {
         navigation = breadcrumbConst[breadcrumbInfo].navigation.replace(
@@ -32,7 +32,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
   }
   useEffect(() => {
     if (breadcrumbInfo) {
-      if (breadcrumbConst[breadcrumbInfo].name || parent) {
+      if (breadcrumbConst[breadcrumbInfo]?.name || parent) {
         document.title = `RoSaaS - ${intl.formatMessage({
           id: breadcrumbConst[breadcrumbInfo].name,
         })}`
@@ -63,7 +63,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
               {pathname != ('/' || Routes.workSpace.path) &&
                 userRole != 'tenantAdmin' && (
                   <>
-                    {breadcrumbConst[breadcrumbInfo].title && (
+                    {breadcrumbConst[breadcrumbInfo]?.title && (
                       <Breadcrumb.Item
                         // href={navigation}
                         active={
@@ -77,7 +77,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                       </Breadcrumb.Item>
                     )}
 
-                    {breadcrumbConst[breadcrumbInfo].parent && (
+                    {breadcrumbConst[breadcrumbInfo]?.parent && (
                       <Breadcrumb.Item
                         href={
                           breadcrumbConst[breadcrumbInfo]?.parentNavigation ||
@@ -96,7 +96,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                       </Breadcrumb.Item>
                     )}
 
-                    {breadcrumbConst[breadcrumbInfo].name && (
+                    {breadcrumbConst[breadcrumbInfo]?.name && (
                       <Breadcrumb.Item
                         href={navigation}
                         active={
@@ -112,7 +112,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                       </Breadcrumb.Item>
                     )}
 
-                    {breadcrumbConst[breadcrumbInfo].child && (
+                    {breadcrumbConst[breadcrumbInfo]?.child && (
                       <Breadcrumb.Item
                         href={navigation}
                         active={

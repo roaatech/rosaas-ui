@@ -157,6 +157,13 @@ export const breadcrumbFun = (routeParams, data) => {
       active: 'Tenants',
       icon: {},
     },
+    CanceledTenantList: {
+      title: 'Tenant-Management',
+      name: 'Canceled-Tenants',
+      navigation: Routes.CanceledTenantsPage.path,
+      active: 'Canceled-Tenants',
+      icon: {},
+    },
     TenantDetails: {
       title: 'Tenants',
       name: 'Tenant-Management',

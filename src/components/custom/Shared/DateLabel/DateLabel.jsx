@@ -4,6 +4,7 @@ import {
   formatDate,
   UppercaseMonthDateFormat,
 } from '../../../../lib/sharedFun/Time'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 
 function isDateExpired(endDate) {
   const currentDate = new Date()
@@ -15,6 +16,8 @@ const DateLabel = ({
   formatedDate,
   uppercaseMonthDateFormat,
   bold,
+  hasTitle,
+  hasBorder,
 }) => {
   if (!endDate || isNaN(new Date(endDate).getTime())) {
     return ''
@@ -37,15 +40,25 @@ const DateLabel = ({
         style={{
           color: expired ? 'rgb(255, 104, 104)' : 'var(--teal-green)',
           background: DateStatus[expired].background,
+          borderColor:
+            hasBorder && (expired ? 'rgb(255, 104, 104)' : 'var(--teal-green)'),
+          border: hasBorder && '1px solid',
         }}
       >
-        {endDate
-          ? formatedDate
-            ? endDate
-            : uppercaseMonthDateFormat
-            ? UppercaseMonthDateFormat(endDate)
-            : formatDate(endDate)
-          : 'Unlimited'}
+        {hasTitle &&
+          (expired
+            ? SafeFormatMessage({ id: 'Ended-on' })
+            : SafeFormatMessage({ id: 'Ends-on' }))}
+        {'  '}
+        <span className={hasTitle ? 'fw-bold' : ''}>
+          {endDate
+            ? formatedDate
+              ? endDate
+              : uppercaseMonthDateFormat
+              ? UppercaseMonthDateFormat(endDate)
+              : formatDate(endDate)
+            : 'Unlimited'}
+        </span>
       </span>
     </Wrapper>
   )

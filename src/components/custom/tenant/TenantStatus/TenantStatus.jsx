@@ -13,6 +13,7 @@ const TenantStatus = ({ statusValue }) => {
           statusConst[statusValue]?.color + statusConst[statusValue]?.opacity
         }
         value={<SafeFormatMessage id={statusConst[statusValue]?.string} />}
+        hasBorder={true}
       />
     </Wrapper>
   )

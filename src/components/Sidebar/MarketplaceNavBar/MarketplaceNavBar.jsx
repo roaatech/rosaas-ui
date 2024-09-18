@@ -179,13 +179,19 @@ const MarketplaceNavBar = ({ profile }) => {
               {
                 label: <SafeFormatMessage id="Logout" />,
                 icon: 'pi pi-fw pi-sign-out',
-                command: () => dispatch(logOut()),
+                command: () => {
+                  dispatch(logOut())
+                  navigate(Routes.mainPage.path)
+                },
               },
             ],
           },
           {
             icon: 'pi pi-fw pi-sign-out',
-            command: () => dispatch(logOut()),
+            command: () => {
+              dispatch(logOut())
+              navigate(Routes.mainPage.path)
+            },
           },
         ]
       : signInShow

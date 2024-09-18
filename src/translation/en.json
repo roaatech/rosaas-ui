@@ -820,5 +820,10 @@
   "Advanced-Filter": "Advanced Filter",
   "Tenants-List": "Tenants List",
   "Tenant-subscription-Step": "Tenant Subscription Step",
-  "Tenant-Operational-Status": "Tenant Operational Status"
+  "Tenant-Operational-Status": "Tenant Operational Status",
+  "Ended-on": "Ended on",
+  "Ends-on": "Ends on",
+  "Ends": "Ends",
+  "Started-on": "Started on",
+  "Subscription-Period": "Subscription Period"
 }

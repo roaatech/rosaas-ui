@@ -273,7 +273,10 @@ export default (props) => {
                           <Dropdown.Divider />
                           <Dropdown.Item
                             className="fw-bold"
-                            onClick={() => dispatch(logOut())}
+                            onClick={() => {
+                              dispatch(logOut())
+                              navigate(Routes.mainPage.path)
+                            }}
                           >
                             {/* <FontAwesomeIcon
                     icon={faSignOutAlt}
