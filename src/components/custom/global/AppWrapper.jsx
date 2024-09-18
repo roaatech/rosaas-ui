@@ -61,7 +61,7 @@ const AppWrapper = ({ children, customHistory }) => {
   const messages = direction === 'rtl' ? arFile : enFile
   return (
     <>
-      <Loader />
+      {/* <Loader /> */}
       <Preloader show={loaded} />
       <ToastContainer />
       <GlobalStyles direction={direction} key={direction} darkMode={false} />

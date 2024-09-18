@@ -186,10 +186,10 @@ export default function SubsGeneralData(data) {
                         <Label
                           className=" card-stats"
                           {...{
-                            background: 'var(--red2)',
+                            background: 'var(--light-blue)',
                             value: intl.formatMessage({ id: 'Trial' }),
 
-                            color: 'red',
+                            color: 'var(--blue-2)',
                           }}
                         />
                       )}

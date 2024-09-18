@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 import Navbar from '../../../Navbar/Navbar'
 import { useIntl, FormattedMessage } from 'react-intl'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { breadcrumbFun } from '../../../../const/breadcrumb'
 import { Routes } from '../../../../routes'
 import EnvironmentAlert from '../../../Navbar/EnvironmentAlert/EnvironmentAlert'
@@ -18,6 +18,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
   const intl = useIntl()
   const hasInfo = breadcrumbInfo ? 'yes' : null
   let navigation = '#'
+  const navigate = useNavigate()
   const breadcrumbConst = breadcrumbFun(routeParams, data)
   if (breadcrumbInfo) {
     if (breadcrumbConst?.[breadcrumbInfo]?.navigation) {
@@ -56,7 +57,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                 className: 'breadcrumb-dark breadcrumb-transparent',
               }}
             >
-              <Breadcrumb.Item href={Routes.mainPage.path}>
+              <Breadcrumb.Item onClick={() => navigate(Routes.mainPage.path)}>
                 <BsFillHouseDoorFill />
               </Breadcrumb.Item>
 

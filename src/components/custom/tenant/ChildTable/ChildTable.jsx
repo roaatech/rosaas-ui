@@ -242,10 +242,10 @@ export default function ChildTable({
                     <Label
                       className="mr-2 fs-7"
                       {...{
-                        background: 'var(--red2)',
+                        background: 'var(--light-blue)',
                         value: intl.formatMessage({ id: 'Trial' }),
 
-                        color: 'red',
+                        color: 'var(--blue-2)',
                       }}
                     />
                   </td>

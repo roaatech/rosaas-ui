@@ -5,66 +5,36 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Card, Col, Row } from '@themesberg/react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import useRequest from '../../axios/apis/useRequest'
 import { useDispatch, useSelector } from 'react-redux'
-import { FormattedMessage, useIntl } from 'react-intl'
-import { useEffect, useState } from 'react'
-import {
-  setAllProduct,
-  updateAllProduct,
-} from '../../store/slices/products/productsSlice'
+import { useEffect } from 'react'
+
 import { Wrapper } from './Marketplace.styled'
-import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
-import { BsBoxSeam } from 'react-icons/bs'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions'
-import {
-  updateAllProductPublic,
-  updateAllProductpublic,
-} from '../../store/slices/publicProductsSlice'
+import { updateAllProductPublic } from '../../store/slices/publicProductsSlice'
 import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
 
 const Marketplace = () => {
-  const { getProductListPublic, getProductPlanPricePublicbyId } = useRequest()
+  const { getProductListPublic } = useRequest()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const intl = useIntl()
   const { getLocalizedString } = useSharedFunctions()
-  const [language, setLanguage] = useState()
   const listData = useSelector((state) => state.publicProducts.products)
 
   useEffect(() => {
-    if (
-      language == intl.locale &&
-      listData &&
-      Object.keys(listData).length > 0
-    ) {
+    if (listData && Object.keys(listData).length > 0) {
       return
     }
     ;(async () => {
       try {
         const productList = await getProductListPublic()
         dispatch(updateAllProductPublic(productList.data.data))
-        setLanguage(intl.locale)
       } catch (error) {
         console.error('Error fetching product list:', error)
       }
     })()
-  }, [listData && Object.keys(listData).length > 0, language == intl.locale])
-
-  let userRole = useSelector((state) => state.auth.userInfo.userType)
-
-  async function getPlanPriceName(id) {
-    try {
-      const planPrice = await getProductPlanPricePublicbyId(id)
-      return planPrice.data.data.systemName
-    } catch (error) {
-      console.error('Error fetching plan price:', error)
-      return null
-    }
-  }
-  const isRunningInIframe = window.self !== window.top
+  }, [listData && Object.keys(listData).length > 0])
 
   return (
     <Wrapper>
