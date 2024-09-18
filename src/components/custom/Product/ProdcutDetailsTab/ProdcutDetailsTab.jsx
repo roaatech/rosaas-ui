@@ -81,7 +81,7 @@ const ProductDetailsTab = ({ data }) => {
         <div className="main">
           <div className="details">
             <Row>
-              <Col md={6} className="my-2">
+              <Col md={4} className="my-2">
                 <Card>
                   <Card.Body className="py-0 px-3">
                     <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
@@ -111,7 +111,7 @@ const ProductDetailsTab = ({ data }) => {
                   </Card.Body>
                 </Card>
               </Col>
-              <Col md={6} className="my-2">
+              <Col md={4} className="my-2">
                 <Card>
                   <Card.Body className="py-0 px-3">
                     <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
@@ -164,7 +164,7 @@ const ProductDetailsTab = ({ data }) => {
                   </Card.Body>
                 </Card>
               </Col>
-              <Col md={6} className="my-3 mx-0 ">
+              <Col md={4} className="my-3 mx-0 ">
                 <Card>
                   <Card.Body className="py-0 px-3">
                     <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
@@ -206,7 +206,7 @@ const ProductDetailsTab = ({ data }) => {
                   </Card.Body>
                 </Card>
               </Col>
-              <Col md={6} className="my-3 mx-0 ">
+              <Col md={4} className="my-3 mx-0 ">
                 <Card>
                   <Card.Body className="py-0 px-3">
                     <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
