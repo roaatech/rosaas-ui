@@ -1,11 +1,11 @@
 export const getLabelDetails = (env) => {
   const lowerCasedEnv = String(env).toLowerCase()
   switch (lowerCasedEnv) {
-    case 'development':
+    case 'dev':
       return {
         color: 'var(--white-pure)',
         background: 'var(--dark-blue)',
-        value: 'Development',
+        value: 'Dev',
       }
     case 'stage':
       return {
@@ -25,12 +25,18 @@ export const getLabelDetails = (env) => {
         background: 'var(--orange-warm)',
         value: 'Sandbox',
       }
-    case 'localhost':
-      return {
-        color: 'var(--white-pure)',
-        background: 'var(--red-alert)',
-        value: 'Localhost',
-      }
+      case 'localhost':
+        return {
+          color: 'var(--white-pure)',
+          background: 'var(--red-alert)',
+          value: 'Localhost',
+        }
+        case 'development':
+          return {
+            color: 'var(--white-pure)',
+            background: 'var(--red-alert)',
+            value: 'Development',
+          }
     default:
       return {
         color: 'var(--white-pure)',
@@ -44,7 +50,7 @@ export const getEnvironmentNameByFrontendHost = (frontendHost) => {
 
   switch (lowerCasedHost) {
     case 'dev-fe.rosas.roaatech.com':
-      return 'development'
+      return 'dev'
     case 'stg.rosaas.app':
       return 'stage'
     case 'sb.rosaas.app':
@@ -60,7 +66,7 @@ export const getEnvironmentNameByFrontendHost = (frontendHost) => {
 export const getEnvironmentNameByApiHost = (apiHost) => {
   switch (apiHost) {
     case 'dev.rosas.roaa.tech':
-      return 'development'
+      return 'dev'
     case 'api-stg.rosaas.app':
       return 'stage'
     case 'api-sb.rosaas.app':
