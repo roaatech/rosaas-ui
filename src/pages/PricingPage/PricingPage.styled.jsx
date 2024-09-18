@@ -32,6 +32,12 @@ export const Wrapper = styled.div`
     margin-right: 5px; /* Adjust space between checkbox and text */
   }
 
+  .align-start-alone {
+    margin-right: ${(props) =>
+      props.direction == 'ltr' ? 'auto !important' : ''};
+    margin-left: ${(props) =>
+      props.direction == 'rtl' ? 'auto !important' : ''};
+  }
   .rtl .form-check-label {
     margin-right: 3px; /* Increase space between checkbox and label */
   }

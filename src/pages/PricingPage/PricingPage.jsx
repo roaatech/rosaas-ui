@@ -704,6 +704,7 @@ const PricingPage = () => {
     setMd(newMd) // Update the `md` value
     setColsPerRow(Math.floor(12 / newMd)) // Calculate columns per row
   }
+  let localeDirection = useSelector((state) => state.main.direction)
 
   useEffect(() => {
     updateMd() // Set initial `md` and `colsPerRow` values based on current window width
@@ -714,7 +715,7 @@ const PricingPage = () => {
   }, [])
 
   return (
-    <Wrapper>
+    <Wrapper direction={localeDirection}>
       <MarketplaceNavBar profile={userRole != 'notAuth'} />
       {/* {userRole != 'notAuth' && (
         <BreadcrumbComponent
@@ -760,29 +761,30 @@ const PricingPage = () => {
           <Card>
             <Card.Body>
               <div className="text-center">{renderCycleRadioButtons()}</div>
-              <Row className="justify-content-center mt-3 ">
-                {' '}
+              <Row className="justify-content-center">
                 {groupedByCycle &&
                   groupedByCycle[selectedCycle] &&
                   Object.keys(groupedByCycle[selectedCycle]).map(
-                    (plansPrice) => {
+                    (plansPrice, index, arr) => {
                       const renderedPlans = renderFeaturePlans(
                         groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id
                       )
 
+                      // Check if this is the last row with one card
+                      const isAloneInRow =
+                        arr.length % 4 === 1 && index === arr.length - 1
+
                       return (
                         renderedPlans && (
                           <Col
+                            className={`mt-3 ${
+                              isAloneInRow ? 'align-start-alone' : ''
+                            }`}
                             key={
                               groupedByCycle[selectedCycle]?.[plansPrice]?.plan
                                 .id
                             }
-                            md={
-                              Object.keys(groupedByCycle[selectedCycle])
-                                .length > 3
-                                ? groupedByCycle[selectedCycle].length
-                                : 3
-                            }
+                            md={3}
                           >
                             {renderedPlans}
                           </Col>
