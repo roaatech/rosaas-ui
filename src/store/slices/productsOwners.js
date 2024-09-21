@@ -38,9 +38,9 @@ export const productsOwners = createSlice({
       const { productOwnerId, attributes } = action.payload
       const { productsOwners } = state
 
-      if (productsOwners[productOwnerId]) {
-        Object.assign(productsOwners[productOwnerId], attributes)
-      }
+      // if (productsOwners[productOwnerId]) {
+      Object.assign(productsOwners[productOwnerId], attributes)
+      // }
     },
   },
 })

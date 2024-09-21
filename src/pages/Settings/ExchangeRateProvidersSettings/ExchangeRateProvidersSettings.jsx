@@ -66,10 +66,10 @@ const ExchangeRateProvidersSettings = () => {
 
   return (
     <>
-      {/* <BreadcrumbComponent
+      <BreadcrumbComponent
         breadcrumbInfo={'ExchangeRateProvidersSettings'}
         icon={BsGearFill}
-      /> */}
+      />
       <Wrapper>
         <Form onSubmit={formik.handleSubmit}>
           <UpperContent>

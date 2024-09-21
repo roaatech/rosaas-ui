@@ -825,5 +825,7 @@
   "Ends-on": "Ends on",
   "Ends": "Ends",
   "Started-on": "Started on",
-  "Subscription-Period": "Subscription Period"
+  "Subscription-Period": "Subscription Period",
+  "cancellation-Reason": "Cancellation Reason",
+  "cancellation-Date": "Cancellation Date"
 }

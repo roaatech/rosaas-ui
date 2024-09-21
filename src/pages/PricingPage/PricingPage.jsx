@@ -362,7 +362,8 @@ const PricingPage = () => {
     return (
       <div>
         {
-          <Card style={isAvailableForSelection ? {} : { minWidth: '340px' }}>
+          <Card>
+            {/* //style={isAvailableForSelection ? {} : { minWidth: '340px' }}> */}
             <Card.Header
               style={{
                 transition: 'all 0.9s',

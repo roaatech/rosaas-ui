@@ -10,6 +10,11 @@ const useSubManagementReq = () => {
   const subscriptionFilteredList = async (query) => {
     return await Request.get(`management/sadmin/v1/Subscriptions${query}`)
   }
+  const subscriptionCanceledFilteredList = async (query) => {
+    return await Request.get(
+      `management/sadmin/v1/Subscriptions/canceled${query}`
+    )
+  }
   const subscriptionFeturesList = async (subscriptionId) => {
     return await Request.get(
       `management/sadmin/v1/Subscriptions/${subscriptionId}/Features`
@@ -100,6 +105,7 @@ const useSubManagementReq = () => {
     suspendSubscriptionRequest,
     activateSubscriptionRequest,
     subscriptionFilteredList,
+    subscriptionCanceledFilteredList,
   }
 }
 export default useSubManagementReq

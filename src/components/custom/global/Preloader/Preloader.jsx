@@ -37,7 +37,7 @@ export default ({ show }) => {
                 left: 0,
                 width: '100%',
                 backgroundColor: 'rgb(255, 255, 255)',
-                zIndex: 1000,
+                zIndex: 1001,
               }}
             >
               <FontAwesomeIcon

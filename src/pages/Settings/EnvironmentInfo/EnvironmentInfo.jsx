@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Table, Card } from '@themesberg/react-bootstrap'
+import { Table, Card, Col, Row, Container } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import useRequest from '../../../axios/apis/useRequest'
 import { setEnvironmentAlertData } from '../../../store/slices/main'
@@ -62,7 +62,6 @@ const EnvironmentInfo = () => {
 
   return (
     <>
-      {' '}
       {environmentData && (
         <Wrapper>
           <BreadcrumbComponent
@@ -74,47 +73,68 @@ const EnvironmentInfo = () => {
               <SafeFormatMessage id="Environment Info" />
             </h4>
           </UpperContent>
-          <Card
-            border="light"
-            className="border-light table-wrapper table-responsive shadow-sm"
-          >
-            <Card.Body className="pt-0">
-              <Table
-                hover
-                className="user-table align-items-center"
-                style={{ backgroundColor: 'var(--alert-background)' }}
-              >
-                <thead>
-                  <tr>
-                    <th>Frontend Host</th>
-                    <th>Node Environment</th>
-                    <th>API Environment</th>
-                    <th>API Host</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {environmentData && (
-                    <tr>
-                      <td>
-                        <Label
-                          {...getLabelDetails(environmentData.frontendHost)}
-                        />
-                      </td>
-                      <td>
-                        <Label {...getLabelDetails(environmentData.nodeEnv)} />
-                      </td>
-                      <td>
-                        <Label {...getLabelDetails(environmentData.apiEnv)} />
-                      </td>
-                      <td>
-                        <Label {...getLabelDetails(environmentData.apiHost)} />
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </Table>
-            </Card.Body>
-          </Card>
+          <Container>
+            <Card border="light" className="shadow-sm">
+              <Card.Body className="py-2">
+                <Row className="border-bottom  align-items-center py-2">
+                  <Col
+                    xs={3}
+                    className="fw-bold d-flex align-items-center justify-content-center"
+                  >
+                    <SafeFormatMessage id="Frontend Host" />
+                  </Col>
+                  <Col
+                    xs={3}
+                    className="d-flex align-items-center justify-content-center"
+                  >
+                    <Label {...getLabelDetails(environmentData.frontendHost)} />
+                  </Col>
+                  <Col
+                    xs={3}
+                    className="d-flex align-items-center justify-content-center fw-bold"
+                  >
+                    {' '}
+                    <SafeFormatMessage id="Node Environment" />
+                  </Col>
+                  <Col
+                    xs={3}
+                    className="d-flex align-items-center justify-content-center"
+                  >
+                    <Label {...getLabelDetails(environmentData.nodeEnv)} />
+                  </Col>
+                </Row>
+
+                <Row className="align-items-center py-2">
+                  <Col
+                    xs={3}
+                    className="d-flex align-items-center justify-content-center fw-bold"
+                  >
+                    {' '}
+                    <SafeFormatMessage id="API Environment" />
+                  </Col>
+                  <Col
+                    xs={3}
+                    className="d-flex align-items-center justify-content-center"
+                  >
+                    <Label {...getLabelDetails(environmentData.apiEnv)} />
+                  </Col>
+                  <Col
+                    xs={3}
+                    className="d-flex align-items-center justify-content-center fw-bold"
+                  >
+                    {' '}
+                    <SafeFormatMessage id="API Host" />
+                  </Col>
+                  <Col
+                    xs={3}
+                    className="d-flex align-items-center justify-content-center"
+                  >
+                    <Label {...getLabelDetails(environmentData.apiHost)} />
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Container>
         </Wrapper>
       )}
     </>

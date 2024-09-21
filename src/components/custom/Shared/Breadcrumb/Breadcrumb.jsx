@@ -7,9 +7,9 @@ import { useEffect } from 'react'
 import Navbar from '../../../Navbar/Navbar'
 import { useIntl, FormattedMessage } from 'react-intl'
 import { useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { breadcrumbFun } from '../../../../const/breadcrumb'
-import { Routes } from '../../../../routes'
+import { adminPanel, Routes } from '../../../../routes'
 import EnvironmentAlert from '../../../Navbar/EnvironmentAlert/EnvironmentAlert'
 const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
   const routeParams = useParams()
@@ -41,10 +41,12 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
     }
   })
   const pathname = window.location.pathname
+  const location = useLocation()
+  const atAdminPanel = location.pathname.includes(adminPanel)
 
   return (
     <>
-      <EnvironmentAlert />
+      {atAdminPanel && <EnvironmentAlert />}
       <Wrapper
         direction={direction}
         className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2"

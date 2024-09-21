@@ -33,7 +33,11 @@ import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/
 import FilterSearchContainer from '../../components/custom/Shared/FilterSearchContainer/FilterSearchContainer.jsx'
 import DataLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLabelWhite.jsx'
 import Label from '../../components/custom/Shared/label/Label.jsx'
-import { subscriptionMode, subscriptionStatus } from '../../const/product.js'
+import {
+  featureResetMap,
+  subscriptionMode,
+  subscriptionStatus,
+} from '../../const/product.js'
 import TenantStatus from '../../components/custom/tenant/TenantStatus/TenantStatus.jsx'
 import {
   DataTransform,
@@ -42,6 +46,7 @@ import {
 } from '../../lib/sharedFun/Time.js'
 import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel.jsx'
 import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions.jsx'
+import { cancellationOrSuspensionReasons } from '../../const/subscriptionConsts.js'
 export default function UpdatedTenantsPage({ children }) {
   const {
     getTenant,
@@ -245,10 +250,82 @@ export default function UpdatedTenantsPage({ children }) {
                 className="name"
               ></Column>
               <Column
+                className="Product"
+                header={
+                  <ColumnSortHeader
+                    text={
+                      <div className="d-flex flex-column align-items-center">
+                        <div>
+                          <SafeFormatMessage id="Product" />{' '}
+                        </div>
+                        <DataLabelWhite
+                          variant={'gray'}
+                          text={
+                            <span className="fw-bold">
+                              {SafeFormatMessage({ id: 'System-Name' })}
+                            </span>
+                          }
+                        />
+                      </div>
+                    }
+                    field="Product.SystemName"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) => (
+                  <>
+                    <span
+                      className="fw-bold mb-1"
+                      style={{ color: 'var(--second-color)' }}
+                    >
+                      {getLocalizedString(
+                        rowData.product.displayNameLocalizations
+                      )}
+                    </span>
+
+                    <div>
+                      {' '}
+                      <DataLabelWhite
+                        variant={'gray'}
+                        text={
+                          <>
+                            <span className="fw-bold">
+                              {rowData.product.systemName}
+                            </span>
+                          </>
+                        }
+                      />
+                    </div>
+                  </>
+                )}
+              ></Column>
+              <Column
                 className="plan"
                 header={
                   <ColumnSortHeader
-                    text={SafeFormatMessage({ id: 'Plan' })}
+                    text={
+                      <div>
+                        <div className="d-flex flex-column align-items-center">
+                          <div>
+                            <SafeFormatMessage id="Plan" />{' '}
+                          </div>
+                          <DataLabelWhite
+                            variant={'gray'}
+                            text={
+                              <span className="fw-bold">
+                                {SafeFormatMessage({ id: 'System-Name' })}
+                              </span>
+                            }
+                          />
+                        </div>
+                      </div>
+                    }
                     field="Plan.SystemName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -274,7 +351,15 @@ export default function UpdatedTenantsPage({ children }) {
                       style={{ color: 'var(--gray-600)', fontSize: '10px' }}
                     >
                       {' '}
-                      / Monthly
+                      {featureResetMap[rowData?.plan?.cycle] && (
+                        <span>
+                          {' '}
+                          /{' '}
+                          {SafeFormatMessage({
+                            id: featureResetMap[rowData?.plan?.cycle],
+                          })}
+                        </span>
+                      )}
                     </span>
                     <div>
                       {' '}
@@ -282,14 +367,8 @@ export default function UpdatedTenantsPage({ children }) {
                         variant={'gray'}
                         text={
                           <>
-                            <span>
-                              {' '}
-                              <SafeFormatMessage id="Next-Plan" />{' '}
-                            </span>
                             <span className="fw-bold">
-                              {getLocalizedString(
-                                rowData.plan.displayNameLocalizations
-                              )}
+                              {rowData.plan.systemName}
                             </span>
                           </>
                         }
@@ -313,6 +392,7 @@ export default function UpdatedTenantsPage({ children }) {
                   </>
                 )}
               ></Column>
+
               <Column
                 header={
                   <ColumnSortHeader

@@ -113,8 +113,8 @@
   "Created-As-Active": "تم الإنشاء كنشط",
   "Active-request-is-sent": "تم إرسال طلب التنشيط",
   "Activating": "جاري التنشيط",
-  "Deactivate-request-is-sent": "تم إرسال طلب الإلغاء",
-  "Deactivating": "جاري الإلغاء",
+  "Deactivate-request-is-sent": "تم إرسال طلب إلغاء التنشيط",
+  "Deactivating": "جاري إلغاء التنشيط",
   "Inactive": "غير نشط",
   "Delete-request-is-sent": "تم إرسال طلب الحذف",
   "Deleting": "جاري الحذف",
@@ -822,5 +822,7 @@
   "Ends-on": "ينتهي في",
   "Ends": "ينتهي",
   "Started-on": "بدأ في",
-  "Subscription-Period": "فترة الاشتراك"
+  "Subscription-Period": "فترة الاشتراك",
+  "cancellation-Reason": "سبب الإلغاء",
+  "cancellation-Date": "تاريخ الإلغاء"
 }

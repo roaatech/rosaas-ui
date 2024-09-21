@@ -106,11 +106,6 @@ export const Routes = {
     component: () => <POwnerChecker page={<Tenant />} />,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
-  CanceledTenantsPage: {
-    path: `${adminPanel}/canceled-tenants`,
-    component: () => <POwnerChecker page={<CanceledTenant />} />,
-    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
-  },
 
   Settings: {
     path: `${adminPanel}/settings/health-check`,
@@ -281,6 +276,11 @@ export const Routes = {
 Routes.ProductDetails = {
   path: `${Routes.products.path}/:id`,
   component: ProductDetails,
+  roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+}
+Routes.CanceledTenantsPage = {
+  path: `${Routes.Tenant.path}/canceled`,
+  component: () => <POwnerChecker page={<CanceledTenant />} />,
   roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
 }
 

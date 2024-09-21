@@ -97,6 +97,7 @@ const useRequest = () => {
     suspendSubscriptionRequest,
     activateSubscriptionRequest,
     subscriptionFilteredList,
+    subscriptionCanceledFilteredList,
   } = useSubManagementReq()
 
   const {
@@ -384,6 +385,7 @@ const useRequest = () => {
     getPlanFilteredList,
     getEnvironment,
     updateCompositeTemplateRequest,
+    subscriptionCanceledFilteredList,
   }
 }
 export default useRequest

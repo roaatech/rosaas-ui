@@ -13,6 +13,7 @@ import { Routes } from '../../../../routes.js'
 import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import { changeSubscriptionAttr } from '../../../../store/slices/products/productsSlice.js'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import { cancellationOrSuspensionReasons } from '../../../../const/subscriptionConsts.js'
 
 const CancelSubscriptionForm = ({
   setVisible,
@@ -133,20 +134,17 @@ const CancelSubscriptionForm = ({
   })
 
   const reasonsOptions =
-    userRole == 'clientAdmin' && type !== 'activate'
-      ? [
-          { value: 1, label: 'Unpaid' },
-          { value: 4, label: 'Product-Owner-Request' },
-          { value: 5, label: 'Subscriber-Request' },
-        ]
-      : [
-          { value: 1, label: 'Unpaid' },
-          { value: 2, label: 'Super-Admin-Request' },
-          { value: 3, label: 'External-System-Request' },
-          { value: 4, label: 'Product-Owner-Request' },
-          { value: 5, label: 'Subscriber-Request' },
-          { value: 10, label: 'Other' },
-        ]
+    userRole === 'clientAdmin' && type !== 'activate'
+      ? [1, 4, 5].map((key) => ({
+          value: key,
+          label: cancellationOrSuspensionReasons[key].displayName, // or reasons[key].value if you need JSX
+        }))
+      : Object.entries(cancellationOrSuspensionReasons).map(
+          ([key, reason]) => ({
+            value: parseInt(key),
+            label: reason.displayName, // or reason.value if you need JSX
+          })
+        )
 
   return (
     <Wrapper>
@@ -231,7 +229,7 @@ const CancelSubscriptionForm = ({
                   </option>
                   {reasonsOptions.map((option) => (
                     <option key={option.value} value={option.value}>
-                      {<SafeFormatMessage id={option.label} />}
+                      {option.label}
                     </option>
                   ))}
                 </select>

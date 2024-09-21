@@ -16,11 +16,16 @@ const ProductOwnerLimitsTab = ({ productOwnerId }) => {
   const productOwnerLimits = useSelector(
     (state) => state.productsOwners.productsOwners?.[productOwnerId]?.limits
   )
+  const [productOwnerLimitsList, setProductOwnerLimitsList] = useState([])
 
   useEffect(() => {
+    if (productOwnerLimits && Object.keys(productOwnerLimits).length > 0) {
+      return setProductOwnerLimitsList(Object.values(productOwnerLimits))
+    }
     const fetchLimits = async () => {
       try {
         const response = await ProductOwnerLimits(productOwnerId)
+        setProductOwnerLimitsList(response.data.data)
         dispatch(
           productOwnerChangeAttr({
             productOwnerId,
@@ -32,7 +37,7 @@ const ProductOwnerLimitsTab = ({ productOwnerId }) => {
       }
     }
     fetchLimits()
-  }, [productOwnerId, dispatch])
+  }, [productOwnerId])
 
   return (
     <Wrapper>
@@ -62,8 +67,8 @@ const ProductOwnerLimitsTab = ({ productOwnerId }) => {
               </tr>
             </thead>
             <tbody>
-              {productOwnerLimits &&
-                Object.values(productOwnerLimits).map((limit, index) => (
+              {productOwnerLimitsList &&
+                Object.values(productOwnerLimitsList).map((limit, index) => (
                   <tr key={index}>
                     <td>{LimitType[limit.limitType]} </td>{' '}
                     <td>{limit.maxLimit}</td>
