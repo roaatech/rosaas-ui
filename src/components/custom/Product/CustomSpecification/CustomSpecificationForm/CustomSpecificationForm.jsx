@@ -63,6 +63,7 @@ const CustomSpecificationForm = ({
       specificationData?.validationFailureDescription?.ar || '',
     inlineDescriptionEn: specificationData?.inlineDescription?.en || '',
     inlineDescriptionAr: specificationData?.inlineDescription?.ar || '',
+    displayOrder: specificationData ? specificationData?.displayOrder : '0',
   }
 
   const allProducts = useSelector((state) => state.products.products)
@@ -98,6 +99,14 @@ const CustomSpecificationForm = ({
         return !!displayNameEn || !!displayNameAr
       },
     }),
+    displayOrder: Yup.number()
+      .typeError(<SafeFormatMessage id="Display-Order-must-be-a-number" />)
+      .integer(<SafeFormatMessage id="Display-Order-must-be-an-integer" />)
+      .min(
+        0,
+        <SafeFormatMessage id="Display-Order-must-be-a-positive-number" />
+      )
+      .default(0),
     regularExpression: Yup.string()
       .test(
         'isValidPattern',
@@ -140,6 +149,7 @@ const CustomSpecificationForm = ({
               en: values.descriptionEn,
               ar: values.descriptionAr,
             },
+            displayOrder: values.displayOrder || 0,
             isRequired: values.isRequired,
             isUserEditable: values.isUserEditable || false,
             isPublished: values.isPublished || false,
@@ -187,6 +197,8 @@ const CustomSpecificationForm = ({
             isPublished: values.isPublished || false,
             isRequired: values.isRequired || false,
             regularExpression: values.regularExpression,
+            displayOrder: values.displayOrder || 0,
+
             validationFailureDescription: {
               en: values.validationFailureDescriptionEn,
               ar: values.validationFailureDescriptionAr,
@@ -211,6 +223,7 @@ const CustomSpecificationForm = ({
                 en: values.descriptionEn,
                 ar: values.descriptionAr,
               },
+              displayOrder: values.displayOrder || 0,
               isUserEditable: values.isUserEditable || false,
               isPublished: values.isPublished || false,
               isRequired: values.isRequired || false,
@@ -548,7 +561,7 @@ const CustomSpecificationForm = ({
                   md={6}
                   className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
                 >
-                  {/* <div className="toggle-container d-flex align-items-center justify-content-between  mb-2">
+                  {/* <div className="toggle-container d-flex px-4align-items-center justify-content-between  mb-2">
                     <Form.Label>
                       <SafeFormatMessage id="Is-Required" />{' '}
                       <span className="fw-normal">
@@ -712,9 +725,209 @@ const CustomSpecificationForm = ({
               </Row>
             </Container>
           </Card>
-
-          {/* 2nd Card: Is Published and Is User Editable */}
           <Card
+            border="light"
+            className="table-wrapper table-responsive shadow-sm"
+            style={{ marginTop: '15px' }}
+          >
+            <Container>
+              <Row>
+                <Col
+                  md={6}
+                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
+                >
+                  <Form.Group className="">
+                    <Form.Label>
+                      <SafeFormatMessage id="Display-Order" />{' '}
+                      {/* <span style={{ color: 'red' }}>* </span> */}
+                      <span className="fw-normal">
+                        {/* <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {intl.formatMessage({
+                                id: 'JSON-Property-Name',
+                              })}
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger> */}
+                      </span>
+                    </Form.Label>
+                    <TabView className="mt-4"></TabView>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="displayOrder"
+                      name="displayOrder"
+                      onChange={formik.handleChange}
+                      value={formik.values.displayOrder}
+                    />
+                    {formik.touched.displayOrder &&
+                      formik.errors.displayOrder && (
+                        <Form.Control.Feedback
+                          type="invalid"
+                          style={{ display: 'block' }}
+                        >
+                          {formik.errors.displayOrder}
+                        </Form.Control.Feedback>
+                      )}
+                  </Form.Group>
+                </Col>
+                <Col md={6} className="d-flex align-items-center">
+                  {' '}
+                  <Container>
+                    <Row className="p-1 border-bottom ">
+                      <div className="toggle-container d-flex px-4 justify-content-between">
+                        <Form.Label>
+                          <SafeFormatMessage id="Is-Published" />{' '}
+                          <span className="fw-normal">
+                            <OverlayTrigger
+                              trigger={['hover', 'focus']}
+                              overlay={
+                                <Tooltip>
+                                  {intl.formatMessage({
+                                    id: 'Tenant-Specification-Display',
+                                  })}
+                                </Tooltip>
+                              }
+                            >
+                              <span>
+                                <BsFillQuestionCircleFill
+                                  className={
+                                    direction == 'rtl'
+                                      ? 'ar-questionCircle'
+                                      : ''
+                                  }
+                                />
+                              </span>
+                            </OverlayTrigger>
+                          </span>
+                        </Form.Label>
+                        <FontAwesomeIcon
+                          icon={
+                            formik.values.isPublished ? faToggleOn : faToggleOff
+                          }
+                          className={
+                            formik.values.isPublished
+                              ? 'active-toggle fa-lg'
+                              : 'passive-toggle fa-lg'
+                          }
+                          onClick={() =>
+                            formik.setFieldValue(
+                              'isPublished',
+                              !formik.values.isPublished
+                            )
+                          }
+                        />
+                      </div>
+                    </Row>
+                    <Row className="p-1 border-bottom ">
+                      <div className="toggle-container d-flex px-4 justify-content-between">
+                        <Form.Label>
+                          <SafeFormatMessage id="Is-User-Editable" />{' '}
+                          <span className="fw-normal">
+                            <OverlayTrigger
+                              trigger={['hover', 'focus']}
+                              overlay={
+                                <Tooltip>
+                                  {intl.formatMessage({
+                                    id: 'User-Editable-Value',
+                                  })}
+                                </Tooltip>
+                              }
+                            >
+                              <span>
+                                <BsFillQuestionCircleFill
+                                  className={
+                                    direction == 'rtl'
+                                      ? 'ar-questionCircle'
+                                      : ''
+                                  }
+                                />
+                              </span>
+                            </OverlayTrigger>
+                          </span>
+                        </Form.Label>
+                        <FontAwesomeIcon
+                          icon={
+                            formik.values.isUserEditable
+                              ? faToggleOn
+                              : faToggleOff
+                          }
+                          className={
+                            formik.values.isUserEditable
+                              ? 'active-toggle fa-lg'
+                              : 'passive-toggle fa-lg'
+                          }
+                          onClick={() =>
+                            formik.setFieldValue(
+                              'isUserEditable',
+                              !formik.values.isUserEditable
+                            )
+                          }
+                        />
+                      </div>
+                    </Row>
+                    <Row className="p-1 border-bottom ">
+                      <div className="toggle-container d-flex px-4 justify-content-between  ">
+                        <Form.Label>
+                          <SafeFormatMessage id="Is-Required" />{' '}
+                          <span className="fw-normal">
+                            <OverlayTrigger
+                              trigger={['hover', 'focus']}
+                              overlay={
+                                <Tooltip>
+                                  {intl.formatMessage({
+                                    id: 'Value-Presence-Required',
+                                  })}{' '}
+                                </Tooltip>
+                              }
+                            >
+                              <span>
+                                <BsFillQuestionCircleFill
+                                  className={
+                                    direction == 'rtl'
+                                      ? 'ar-questionCircle'
+                                      : ''
+                                  }
+                                />
+                              </span>
+                            </OverlayTrigger>
+                          </span>
+                        </Form.Label>
+                        <FontAwesomeIcon
+                          icon={
+                            formik.values.isRequired ? faToggleOn : faToggleOff
+                          }
+                          className={
+                            formik.values.isRequired
+                              ? 'active-toggle fa-lg'
+                              : 'passive-toggle fa-lg'
+                          }
+                          onClick={() =>
+                            formik.setFieldValue(
+                              'isRequired',
+                              !formik.values.isRequired
+                            )
+                          }
+                        />
+                      </div>
+                    </Row>
+                  </Container>
+                </Col>
+              </Row>
+            </Container>
+          </Card>
+          {/* 2nd Card: Is Published and Is User Editable */}
+          {/* <Card
             border="light"
             className="table-wrapper table-responsive shadow-sm bool-card"
             style={{ marginTop: '15px' }}
@@ -725,7 +938,7 @@ const CustomSpecificationForm = ({
                   md={4}
                   className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
                 >
-                  <div className="toggle-container d-flex  justify-content-between">
+                  <div className="toggle-container d-flex px-4 justify-content-between">
                     <Form.Label>
                       <SafeFormatMessage id="Is-Published" />{' '}
                       <span className="fw-normal">
@@ -771,7 +984,7 @@ const CustomSpecificationForm = ({
                   md={4}
                   className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
                 >
-                  <div className="toggle-container d-flex  justify-content-between">
+                  <div className="toggle-container d-flex px-4 justify-content-between">
                     <Form.Label>
                       <SafeFormatMessage id="Is-User-Editable" />{' '}
                       <span className="fw-normal">
@@ -817,7 +1030,7 @@ const CustomSpecificationForm = ({
                   md={4}
                   className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
                 >
-                  <div className="toggle-container d-flex  justify-content-between  ">
+                  <div className="toggle-container d-flex px-4 justify-content-between  ">
                     <Form.Label>
                       <SafeFormatMessage id="Is-Required" />{' '}
                       <span className="fw-normal">
@@ -859,7 +1072,7 @@ const CustomSpecificationForm = ({
                 </Col>
               </Row>
             </Container>
-          </Card>
+          </Card> */}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
