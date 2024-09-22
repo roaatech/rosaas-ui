@@ -36,12 +36,14 @@ import {
   MdOutlinePublishedWithChanges,
   MdEditNote,
   MdAdd,
+  MdSort,
 } from 'react-icons/md'
 
 import { PublishStatus } from '../../../../const'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import { size } from 'lodash'
+import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
 
 export const ProductCustomSpecificationList = (
   { productId },
@@ -137,6 +139,7 @@ export const ProductCustomSpecificationList = (
       isUserEditable,
       regularExpression,
       validationFailureDescription,
+      displayOrder,
     } = props
     const publishStatus = isPublished ? true : false
 
@@ -199,9 +202,24 @@ export const ProductCustomSpecificationList = (
           </td>
           <td>
             <span className="fw-normal">
+              <DataLabelWhite
+                variant={'gray'}
+                text={
+                  <>
+                    <MdSort />
+                    {'  '}
+                    {displayOrder}
+                  </>
+                }
+              />
+            </span>
+          </td>
+          <td>
+            <span className="fw-normal">
               <TableDate createdDate={createdDate} editedDate={editedDate} />
             </span>
           </td>
+
           <td>
             <Dropdown as={ButtonGroup}>
               <Dropdown.Toggle
@@ -314,6 +332,9 @@ export const ProductCustomSpecificationList = (
                   </th>
                   <th className="border-bottom">
                     <SafeFormatMessage id="Validation-Failure-Description" />
+                  </th>
+                  <th className="border-bottom">
+                    <SafeFormatMessage id="Display-Order" />
                   </th>
                   <th className="border-bottom">
                     <SafeFormatMessage id="Date" />

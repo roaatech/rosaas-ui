@@ -827,5 +827,7 @@
   "Started-on": "Started on",
   "Subscription-Period": "Subscription Period",
   "cancellation-Reason": "Cancellation Reason",
-  "cancellation-Date": "Cancellation Date"
+  "cancellation-Date": "Cancellation Date",
+  "Archived-Tenants": "Archived Tenants",
+  "Operational-Tenants": "Operational Tenants"
 }

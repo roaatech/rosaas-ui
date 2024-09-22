@@ -50,7 +50,7 @@ const FilteringMultiSelect = ({
     setFilteredOptions(filtered)
   }
   useEffect(() => {
-    if (selectedValues?.length === optionsArray?.length) {
+    if (selectedValues?.length === optionsArray?.length || !field) {
       onSubmit([])
       return
     }
@@ -63,7 +63,7 @@ const FilteringMultiSelect = ({
       }))
 
     onSubmit(formattedData)
-  }, [selectedValues?.length])
+  }, [selectedValues?.length, field])
 
   const handleSelectionChange = (e) => {
     const selectedIds = e.value?.map((option) => option)

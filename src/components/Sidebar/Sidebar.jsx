@@ -25,6 +25,8 @@ import {
   BsPercent,
   BsInfo,
   BsInfoSquare,
+  BsPeopleFill,
+  BsFillArchiveFill,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -156,7 +158,7 @@ export default (props = {}) => {
     const classNames = badgeText
       ? 'd-flex justify-content-start align-items-center justify-content-between'
       : ''
-    const navItemClassName = pathname.includes(link) || isActive ? 'active' : ''
+    const navItemClassName = isActive ? 'active' : ''
     const linkProps = external ? { href: link } : { as: Link, to: link }
 
     return (
@@ -224,6 +226,7 @@ export default (props = {}) => {
     : 'close'
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
   const settingIsOpen = sidebarStatus([{ id: 'setting' }]) ? 'open' : 'close'
+  const tenantsIsOpen = sidebarStatus([{ id: 'tenants' }]) ? 'open' : 'close'
   const [allProducts, setAllProducts] = useState([])
 
   useEffect(() => {
@@ -268,6 +271,10 @@ export default (props = {}) => {
   const productsOwnersIsOpen = pathname.includes('products-owners')
     ? 'open'
     : 'close'
+  console.log(
+    !location.pathname.includes('tenants/canceled') &&
+      location.pathname.includes('tenants')
+  )
 
   return (
     <SidebarWrapper>
@@ -394,13 +401,31 @@ export default (props = {}) => {
                   ) : null}
                 </>
               )}
-              <NavItem
-                key={'Tenants'}
-                link={`${Routes.Tenant.path}`}
-                isActive={location.pathname.includes('tenants')}
+              <CollapsableNavItem
+                eventKey={tenantsIsOpen}
                 title={<SafeFormatMessage id="Tenants" />}
-                icon={<BsFillPersonLinesFill />}
-              />
+                icon={<BsPeopleFill />}
+              >
+                <NavItem
+                  key={'Tenants-List'}
+                  link={`${Routes.Tenant.path}`}
+                  isActive={
+                    !location.pathname.includes('tenants/canceled')
+                      ? location.pathname.includes('tenants')
+                      : false
+                  }
+                  title={<SafeFormatMessage id="Operational-Tenants" />}
+                  icon={<BsFillPersonLinesFill />}
+                />
+                <NavItem
+                  key={'Archived-Tenants'}
+                  link={`${Routes.CanceledTenantsPage?.path}`}
+                  isActive={location.pathname.includes('tenants/canceled')}
+                  title={<SafeFormatMessage id="Archived-Tenants" />}
+                  icon={<BsFillArchiveFill />}
+                />
+              </CollapsableNavItem>
+
               {(userRole == 'productOwner' ||
                 userRole == 'superAdmin' ||
                 userRole == 'clientAdmin') &&

@@ -169,6 +169,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
             onSubmit={(ids) => setSelectedPlansIds(ids)}
             label="Plan"
             width={width1stRow}
+            field="PlanId"
           />
         </Col>
         <Col md={4} lg={3} sm={6} className="m-0 my-2 p-0  ">

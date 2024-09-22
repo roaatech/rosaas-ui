@@ -824,5 +824,7 @@
   "Started-on": "بدأ في",
   "Subscription-Period": "فترة الاشتراك",
   "cancellation-Reason": "سبب الإلغاء",
-  "cancellation-Date": "تاريخ الإلغاء"
+  "cancellation-Date": "تاريخ الإلغاء",
+  "Archived-Tenants": "المستأجرون المؤرشفون",
+  "Operational-Tenants": "المستأجرون النشطون"
 }

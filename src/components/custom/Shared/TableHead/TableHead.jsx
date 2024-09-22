@@ -47,7 +47,7 @@ const TableHead = ({
               </div>
             )}
           </div>
-          {children && (
+          {children && children?.length > 1 && (
             <ButtonGroup>
               <Button
                 variant="secondary"

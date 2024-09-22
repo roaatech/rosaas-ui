@@ -153,12 +153,12 @@ export default function UpdatedTenantsPage({ children }) {
       />
       <div className="main-container">
         <TableHead
-          label={<SafeFormatMessage id="Add-Tenant" />}
-          popupLabel={'Create Tenant'}
-          icon={'pi-user-plus'}
+          // label={<SafeFormatMessage id="Add-Tenant" />}
+          // popupLabel={'Create Tenant'}
+          // icon={'pi-user-plus'}
           setSearchValue={setSearchValue}
-          visibleHead={visibleHead}
-          setVisibleHead={setVisibleHead}
+          // visibleHead={visibleHead}
+          // setVisibleHead={setVisibleHead}
           setFirst={setFirst}
           search={true}
           title={<SafeFormatMessage id="Tenants-List" />}
@@ -491,17 +491,21 @@ export default function UpdatedTenantsPage({ children }) {
                 }
                 body={(rowData) => (
                   <div className="d-flex align-items-center flex-column justify-content-center">
-                    <DataLabelWhite
-                      text={
-                        <>
-                          <span>{SafeFormatMessage({ id: 'Started-on' })}</span>{' '}
-                          <span className="fw-bold">
-                            {UppercaseMonthDateFormat(rowData.createdDate)}
-                          </span>
-                        </>
-                      }
-                      variant={'gray'}
-                    />
+                    <span className="mb-1">
+                      <DataLabelWhite
+                        text={
+                          <>
+                            <span>
+                              {SafeFormatMessage({ id: 'Started-on' })}
+                            </span>{' '}
+                            <span className="fw-bold">
+                              {UppercaseMonthDateFormat(rowData.createdDate)}
+                            </span>
+                          </>
+                        }
+                        variant={'gray'}
+                      />
+                    </span>
                     <DateLabel
                       endDate={rowData.endDate}
                       uppercaseMonthDateFormat={true}
