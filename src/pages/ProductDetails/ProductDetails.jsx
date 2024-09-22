@@ -109,9 +109,9 @@ const ProductDetails = () => {
       })
     )
   }
-
+  const direction = useSelector((state) => state.main.direction)
   return (
-    <Wrapper>
+    <Wrapper direction={direction}>
       {productData && (
         <BreadcrumbComponent
           breadcrumbInfo={'ProductDetails'}
