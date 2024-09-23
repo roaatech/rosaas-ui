@@ -46,7 +46,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
 
   return (
     <>
-      {atAdminPanel && <EnvironmentAlert />}
+      {atAdminPanel && <EnvironmentAlert atAdminPanel={atAdminPanel} />}
       <Wrapper
         direction={direction}
         className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2"

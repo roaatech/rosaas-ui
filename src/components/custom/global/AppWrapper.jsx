@@ -64,7 +64,7 @@ const AppWrapper = ({ children, customHistory }) => {
   const messages = direction === 'rtl' ? arFile : enFile
   return (
     <>
-      {!atAdminPanel && <EnvironmentAlert />}
+      {!atAdminPanel && <EnvironmentAlert atAdminPanel={!atAdminPanel} />}
       <Preloader show={loaded} />
       <ToastContainer />
       <GlobalStyles direction={direction} key={direction} darkMode={false} />

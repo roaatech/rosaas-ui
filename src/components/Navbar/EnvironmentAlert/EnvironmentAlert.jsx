@@ -11,7 +11,7 @@ import {
   getLabelDetails,
 } from '../../custom/Shared/SharedFunctions/environmentFunctions'
 
-const EnvironmentAlert = () => {
+const EnvironmentAlert = ({ atAdminPanel }) => {
   const { getEnvironment } = useRequest()
   const [environmentData, setEnvironmentData] = useState(null)
   const [showAlert, setShowAlert] = useState(true)
@@ -52,14 +52,16 @@ const EnvironmentAlert = () => {
 
     fetchEnvironmentData()
   }, [currentUrl, _nodeEnv])
-  /*
+
   if (
     _nodeEnv &&
-    ( String(_nodeEnv).toLowerCase() === 'production' || String(_nodeEnv).toLowerCase()  === 'prod')
+    !atAdminPanel &&
+    (String(_nodeEnv).toLowerCase() === 'production' ||
+      String(_nodeEnv).toLowerCase() === 'prod')
   ) {
     return null
   }
-*/
+
   if (!environmentData || !showAlert) {
     return null
   }

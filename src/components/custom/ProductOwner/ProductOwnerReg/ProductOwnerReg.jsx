@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 import { Button, Card } from '@themesberg/react-bootstrap'
@@ -18,6 +18,9 @@ const ProductOwnerReg = () => {
   const { createPORequest } = useRequest()
   let userInfo = useSelector((state) => state.auth.userInfo)
   const dispatch = useDispatch()
+
+  const [success, setSuccess] = useState(false)
+
   const initialValues = {
     systemName: '',
     displayName: '',
@@ -46,6 +49,7 @@ const ProductOwnerReg = () => {
     }
     const createSuccess = await createPORequest(productOwnerData)
     if (createSuccess) {
+      setSuccess(true)
       dispatch(
         updateUserInfoAttribute({
           key: 'ProductOwnerInfo',
@@ -56,6 +60,7 @@ const ProductOwnerReg = () => {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 4000,
       })
+
       setTimeout(() => {
         navigate(Routes.Dashboard.path)
       }, 4000)
@@ -166,7 +171,7 @@ const ProductOwnerReg = () => {
                   variant="primary"
                   type="submit"
                   className="w-100"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || success} // Disable button when submitting or successful
                 >
                   <SafeFormatMessage id="Register-Product-Owner-Info" />
                 </Button>

@@ -51,18 +51,32 @@ export default function CanceledTenant() {
   const [sortValue, setSortValue] = useState('')
   const navigate = useNavigate()
 
-  const fetchData = useCallback(async () => {
-    let query = `?page=${Math.ceil((first + 1) / rows)}&pageSize=${rows}`
-    try {
-      const listData = await subscriptionCanceledFilteredList(query)
-      setList(listData.data.data.items)
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
-  }, [])
+  // const fetchData = useCallback(async () => {
+  //   let query = `?page=${Math.ceil((first + 1) / rows)}&pageSize=${rows}`
+  //   try {
+  //     const listData = await subscriptionCanceledFilteredList(query)
+  //     setList(listData.data.data.items)
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+  //   }
+  // }, [])
+
+  // useEffect(() => {
+  //   fetchData()
+  // }, [first, rows, searchValue, sortField, sortValue])
 
   useEffect(() => {
-    fetchData()
+    let query = `?page=${Math.ceil(
+      (first + 1) / rows
+    )}&pageSize=${rows}&filters[0].Field=SearchTerm`
+    if (searchValue) query += `&filters[0].Value=${searchValue}`
+    if (sortField) query += `&sort.Field=${sortField}`
+    if (sortValue) query += `&sort.Direction=${sortValue}`
+    ;(async () => {
+      const listData = await subscriptionCanceledFilteredList(query)
+      setTotalCount(listData.data.data.totalCount)
+      setList(listData.data.data.items)
+    })()
   }, [first, rows, searchValue, sortField, sortValue])
 
   const [visibleHead, setVisibleHead] = useState(false)
@@ -75,7 +89,7 @@ export default function CanceledTenant() {
   const [rebase, setRebase] = useState(0)
 
   const viewDetails = (id) => {
-    navigate(`${Routes.Tenant.path}/${id}`) // Update the route as needed
+    navigate(`${Routes.Tenant.path}/${id}`)
   }
 
   return (
@@ -280,19 +294,22 @@ export default function CanceledTenant() {
               ></Column>
               <Column
                 header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({
-                      id: 'cancellation-Reason',
-                    })}
-                    field="cancellationOrSuspensionReason"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
+                  SafeFormatMessage({
+                    id: 'cancellation-Reason',
+                  })
+                  // <ColumnSortHeader
+                  //   text={SafeFormatMessage({
+                  //     id: 'cancellation-Reason',
+                  //   })}
+                  //   field="cancellationOrSuspensionReason"
+                  //   rebase={rebase}
+                  //   setRebase={setRebase}
+                  //   sortField={sortField}
+                  //   sortValue={sortValue}
+                  //   setSortField={setSortField}
+                  //   setSortValue={setSortValue}
+                  //   setFirst={setFirst}
+                  // />
                 }
                 body={(rowData) => (
                   <>
@@ -349,39 +366,43 @@ export default function CanceledTenant() {
                 }
               ></Column>
               <Column
-                header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({ id: 'Subscription-Status' })}
-                    field="subscriptionStatus"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
+                header={SafeFormatMessage({ id: 'Subscription-Status' })}
+                // {
+                //   <ColumnSortHeader
+                //     text={SafeFormatMessage({ id: 'Subscription-Status' })}
+                //     field="subscriptionStatus"
+                //     rebase={rebase}
+                //     setRebase={setRebase}
+                //     sortField={sortField}
+                //     sortValue={sortValue}
+                //     setSortField={setSortField}
+                //     setSortValue={setSortValue}
+                //     setFirst={setFirst}
+                //   />
+                // }
                 body={(rowData) => (
                   <Label {...subscriptionStatus[rowData.subscriptionStatus]} />
                 )}
               ></Column>
               <Column
-                header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({
-                      id: 'Tenant-Operational-Status',
-                    })}
-                    field="tenant.status"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
+                header={SafeFormatMessage({
+                  id: 'Tenant-Operational-Status',
+                })}
+                // {
+                //   <ColumnSortHeader
+                //     text={SafeFormatMessage({
+                //       id: 'Tenant-Operational-Status',
+                //     })}
+                //     field="SubscriptionMode"
+                //     rebase={rebase}
+                //     setRebase={setRebase}
+                //     sortField={sortField}
+                //     sortValue={sortValue}
+                //     setSortField={setSortField}
+                //     setSortValue={setSortValue}
+                //     setFirst={setFirst}
+                //   />
+                // }
                 body={(rowData) => (
                   <TenantStatus
                     statusValue={rowData.tenant.status}
@@ -391,19 +412,22 @@ export default function CanceledTenant() {
               ></Column>
               <Column
                 header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({
-                      id: 'Comment',
-                    })}
-                    field="comment"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
+                  SafeFormatMessage({
+                    id: 'Comment',
+                  })
+                  // <ColumnSortHeader
+                  //   text={SafeFormatMessage({
+                  //     id: 'Comment',
+                  //   })}
+                  //   field="comment"
+                  //   rebase={rebase}
+                  //   setRebase={setRebase}
+                  //   sortField={sortField}
+                  //   sortValue={sortValue}
+                  //   setSortField={setSortField}
+                  //   setSortValue={setSortValue}
+                  //   setFirst={setFirst}
+                  // />
                 }
                 body={(rowData) => (
                   <>
@@ -423,23 +447,26 @@ export default function CanceledTenant() {
                     endDate={data.cancellationOrSuspensionDate}
                   />
                 )}
-                header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({
-                      id: 'cancellation-Date',
-                    })}
-                    field="cancellationOrSuspensionDate"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
+                header={SafeFormatMessage({
+                  id: 'cancellation-Date',
+                })}
+                // {
+                //   <ColumnSortHeader
+                //     text={SafeFormatMessage({
+                //       id: 'cancellation-Date',
+                //     })}
+                //     field="cancellationOrSuspensionDate"
+                //     rebase={rebase}
+                //     setRebase={setRebase}
+                //     sortField={sortField}
+                //     sortValue={sortValue}
+                //     setSortField={setSortField}
+                //     setSortValue={setSortValue}
+                //     setFirst={setFirst}
+                //   />
+                // }
               />
-              <Column
+              {/* <Column
                 className="text-dark "
                 body={(rowData) => (
                   <div className="d-flex align-items-center flex-column justify-content-center">
@@ -475,7 +502,7 @@ export default function CanceledTenant() {
                     setFirst={setFirst}
                   />
                 }
-              />
+              /> */}
               <Column
                 className="text-dark "
                 body={(data) => (
@@ -494,7 +521,9 @@ export default function CanceledTenant() {
                       </span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => viewDetails(data.id)}>
+                      <Dropdown.Item
+                        onClick={() => viewDetails(data.tenant.id)}
+                      >
                         <FontAwesomeIcon icon={faEye} className="mx-2" /> View
                         Details
                       </Dropdown.Item>
