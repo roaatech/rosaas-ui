@@ -55,7 +55,7 @@ const DateLabel = ({
             ? formatedDate
               ? endDate
               : uppercaseMonthDateFormat
-              ? UppercaseMonthDateFormat(endDate)
+              ? UppercaseMonthDateFormat(endDate, true)
               : formatDate(endDate)
             : 'Unlimited'}
         </span>

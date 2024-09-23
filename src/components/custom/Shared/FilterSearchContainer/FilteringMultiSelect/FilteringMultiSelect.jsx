@@ -24,7 +24,7 @@ const FilteringMultiSelect = ({
       const allIds = optionsArray?.map((option) => option?.id)
       setSelectedValues(allIds)
     }
-  }, [optionsArray?.length > 0])
+  }, [optionsArray?.length])
 
   const { getLocalizedString } = useSharedFunctions()
   const intl = useIntl()
@@ -50,7 +50,7 @@ const FilteringMultiSelect = ({
     setFilteredOptions(filtered)
   }
   useEffect(() => {
-    if (selectedValues?.length === optionsArray?.length || !field) {
+    if (selectedValues?.length === optionsArray?.length) {
       onSubmit([])
       return
     }
@@ -63,7 +63,7 @@ const FilteringMultiSelect = ({
       }))
 
     onSubmit(formattedData)
-  }, [selectedValues?.length, field])
+  }, [selectedValues?.length])
 
   const handleSelectionChange = (e) => {
     const selectedIds = e.value?.map((option) => option)

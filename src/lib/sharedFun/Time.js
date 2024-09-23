@@ -45,7 +45,7 @@ export const DataTransform = (dateTime) => {
   return formattedDateTime
 }
 
-export const UppercaseMonthDateFormat = (dateTime) => {
+export const UppercaseMonthDateFormat = (dateTime, withTime = false) => {
   const utcDateTime = new Date(dateTime + 'Z')
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = utcToZonedTime(utcDateTime, timeZone)
@@ -53,10 +53,14 @@ export const UppercaseMonthDateFormat = (dateTime) => {
   const currentYear = new Date().getFullYear()
   const dateYear = localDateTime.getFullYear()
 
-  const formattedDateTime =
-    currentYear === dateYear
-      ? format(localDateTime, 'MMM dd', { timeZone })
-      : format(localDateTime, 'MMM dd, yyyy', { timeZone })
+  const dateFormat = currentYear === dateYear ? 'MMM dd' : 'MMM dd, yyyy'
+  const timeFormat = 'hh:mm'
+
+  const formattedDateTime = format(
+    localDateTime,
+    withTime ? `${dateFormat}, ${timeFormat}` : dateFormat,
+    { timeZone }
+  )
 
   return formattedDateTime.toUpperCase()
 }

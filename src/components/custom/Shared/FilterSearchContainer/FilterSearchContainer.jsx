@@ -39,6 +39,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
   const { getProductsLookup, getPlanFilteredList } = useRequest()
   const dispatch = useDispatch()
   const productsLookup = useSelector((state) => state.products?.lookup)
+  console.log({ productsLookup })
   const plansLookup = productsLookup?.plansLookup
   const viewComponent = false
 
@@ -112,13 +113,13 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
     convertDateRangeToTimestamps(endDateRange)
 
   const handleSubmit = () => {
-    setAllSelectedData({
+    setAllSelectedData([
       ...selectedSubscriptionStatusIds,
       ...SubscriptionModeIds,
       ...selectedProducts,
       ...selectedTenantStepsIds,
       ...selectedPlansIds,
-    })
+    ])
   }
   const transformToOptionsObject = (data) => {
     return Object.entries(data).reduce((acc, [key, status], index) => {
@@ -156,7 +157,16 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
       <Row className="p-0 my-2 m-0">
         <Col md={4} lg={3} sm={6} className="m-0 my-2 p-0  ">
           <FilteringMultiSelect
-            optionsArray={productsLookup && Object.values(productsLookup)}
+            optionsArray={
+              productsLookup &&
+              Object.values(
+                Object.fromEntries(
+                  Object.entries(productsLookup).filter(
+                    ([key]) => key !== 'plansLookup'
+                  )
+                )
+              )
+            }
             onSubmit={(ids) => setSelectedProducts(ids)}
             label="Product"
             width={width1stRow}

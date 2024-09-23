@@ -47,6 +47,7 @@ import {
 import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel.jsx'
 import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions.jsx'
 import { cancellationOrSuspensionReasons } from '../../const/subscriptionConsts.js'
+import TruncateTextWithTooltip from '../../components/custom/Shared/SharedFunctions/textFormatFunctions.jsx'
 export default function UpdatedTenantsPage({ children }) {
   const {
     getTenant,
@@ -232,16 +233,19 @@ export default function UpdatedTenantsPage({ children }) {
                 }
                 body={(rowData) => (
                   <div>
-                    <div>{rowData.tenant.displayName}</div>
+                    <div>
+                      <TruncateTextWithTooltip
+                        text={rowData.tenant.displayName}
+                        maxCharSize={25}
+                      />
+                    </div>
                     <small style={{ color: 'gray' }}>
                       {
                         <DataLabelWhite
                           variant={'gray'}
-                          text={
-                            <span className="fw-bold">
-                              {rowData.tenant.systemName}
-                            </span>
-                          }
+                          maxCharSize={25}
+                          text={rowData.tenant.systemName}
+                          style={{ fontWeight: 'bold' }}
                         />
                       }
                     </small>
@@ -397,7 +401,7 @@ export default function UpdatedTenantsPage({ children }) {
                 header={
                   <ColumnSortHeader
                     text={SafeFormatMessage({ id: 'Subscription-Mode' })}
-                    field="subscriptionMode"
+                    field="SubscriptionMode"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -423,7 +427,7 @@ export default function UpdatedTenantsPage({ children }) {
                             <SafeFormatMessage id="Ends" />
                           </span>
                           <span className="fw-bold ">
-                            {UppercaseMonthDateFormat(rowData.endDate)}
+                            {UppercaseMonthDateFormat(rowData.endDate, true)}
                           </span>
                         </>
                       }
@@ -437,7 +441,7 @@ export default function UpdatedTenantsPage({ children }) {
                 header={
                   <ColumnSortHeader
                     text={SafeFormatMessage({ id: 'Subscription-Status' })}
-                    field="subscriptionStatus"
+                    field="SubscriptionStatus"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -457,7 +461,7 @@ export default function UpdatedTenantsPage({ children }) {
                     text={SafeFormatMessage({
                       id: 'Tenant-Operational-Status',
                     })}
-                    field="tenant.status"
+                    field="SubscriptionMod"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -499,7 +503,10 @@ export default function UpdatedTenantsPage({ children }) {
                               {SafeFormatMessage({ id: 'Started-on' })}
                             </span>{' '}
                             <span className="fw-bold">
-                              {UppercaseMonthDateFormat(rowData.createdDate)}
+                              {UppercaseMonthDateFormat(
+                                rowData.createdDate,
+                                true
+                              )}
                             </span>
                           </>
                         }
@@ -559,7 +566,7 @@ export default function UpdatedTenantsPage({ children }) {
                 body={(data, options) => (
                   <>
                     <div className="mb-1">
-                      <DataLabelWhite
+                      {/* <DataLabelWhite
                         variant={'gray'}
                         style={{ flexWrap: 'nowrap' }}
                         text={
@@ -570,9 +577,13 @@ export default function UpdatedTenantsPage({ children }) {
                             </span>
                           </>
                         }
+                      /> */}
+                      <TableDate
+                        createdDate={data.createdDate}
+                        editedDate={data.editedDate}
                       />
                     </div>
-                    <div className="">
+                    {/* <div className="">
                       <DataLabelWhite
                         variant={'gray'}
                         text={
@@ -584,7 +595,7 @@ export default function UpdatedTenantsPage({ children }) {
                           </>
                         }
                       />
-                    </div>
+                    </div> */}
                   </>
                 )}
                 style={{ width: '250px', maxidth: '250px' }}

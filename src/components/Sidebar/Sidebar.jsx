@@ -410,8 +410,10 @@ export default (props = {}) => {
                   key={'Tenants-List'}
                   link={`${Routes.Tenant.path}`}
                   isActive={
-                    !location.pathname.includes('tenants/canceled')
-                      ? location.pathname.includes('tenants')
+                    !location.pathname.includes(
+                      Routes.CanceledTenantsPage?.path
+                    )
+                      ? location.pathname.includes(Routes.Tenant.path)
                       : false
                   }
                   title={<SafeFormatMessage id="Operational-Tenants" />}
@@ -419,7 +421,7 @@ export default (props = {}) => {
                 />
                 <NavItem
                   key={'Archived-Tenants'}
-                  link={`${Routes.CanceledTenantsPage?.path}`}
+                  link={Routes.CanceledTenantsPage?.path}
                   isActive={location.pathname.includes('tenants/canceled')}
                   title={<SafeFormatMessage id="Archived-Tenants" />}
                   icon={<BsFillArchiveFill />}
