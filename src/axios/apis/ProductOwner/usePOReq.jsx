@@ -11,7 +11,7 @@ const usePOReq = () => {
   }
   const getProductOwnersList = async (params) => {
     return await Request.get(
-      `management/sadmin/v1/productowners/paged${params}`
+      `management/sadmin/v1/productowners${params}`
     )
   }
   const getProductOwner = async (POId) => {
