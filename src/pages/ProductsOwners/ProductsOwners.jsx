@@ -228,8 +228,12 @@ export default function ProductsOwners({ children }) {
                   />
                 }
                 body={(rowData) =>
-                  rowData?.subscription?.mode ? (
-                    <Label {...subscriptionMode[rowData?.subscription?.mode]} />
+                  rowData?.subscription?.subscriptionMode ? (
+                    <Label
+                      {...subscriptionMode[
+                        rowData?.subscription?.subscriptionMode
+                      ]}
+                    />
                   ) : (
                     '__'
                   )
