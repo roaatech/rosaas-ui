@@ -238,6 +238,12 @@ export const Routes = {
     roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
     type: 'noSidebar',
   },
+  successRegistrationPayment: {
+    path: '/success-registration-payment',
+    component: () => <POwnerChecker page={<PaymentSuccess />} />,
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
+    type: 'noSidebar',
+  },
 
   PaymentFailed: {
     path: '/failed',
