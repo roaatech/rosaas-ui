@@ -126,7 +126,32 @@ export const subscriptionStatus = {
     displayName: 'Canceled',
   },
 }
-
+export const actionTypeColors = {
+  GET: {
+    background: '#61affe', // Light blue for GET
+    value: <SafeFormatMessage id="GET" />,
+    color: 'var(--white-pure)',
+    displayName: 'GET',
+  },
+  PUT: {
+    background: '#fca130', // Orange for PUT
+    value: <SafeFormatMessage id="PUT" />,
+    color: 'var(--white-pure)',
+    displayName: 'PUT',
+  },
+  POST: {
+    background: '#49cc90', // Green for POST
+    value: <SafeFormatMessage id="POST" />,
+    color: 'var(--white-pure)',
+    displayName: 'POST',
+  },
+  DELETE: {
+    background: '#f93e3e', // Red for DELETE
+    value: <SafeFormatMessage id="DELETE" />,
+    color: 'var(--white-pure)',
+    displayName: 'DELETE',
+  },
+}
 export const subscriptionMode = {
   1: {
     background: 'var(--green2)',

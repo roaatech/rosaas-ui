@@ -22,6 +22,9 @@ const useUserReq = () => {
       data
     )
   }
+  const getAuditsList = async (data) => {
+    return await Request.get('management/sadmin/v1/Auditss', data)
+  }
   const signUp = async (data) => {
     return await Request.post('identity/tadmin/v1/Auth/Signup', data)
   }
@@ -59,6 +62,7 @@ const useUserReq = () => {
     confirmEmail,
     requestPasswordReset,
     resetPassword,
+    getAuditsList,
   }
 }
 

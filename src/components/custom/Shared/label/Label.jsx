@@ -10,6 +10,7 @@ const Label = ({
   small,
   className,
   hasBorder,
+  style,
 }) => {
   return (
     <Wrapper>
@@ -22,6 +23,7 @@ const Label = ({
           background,
           borderColor: hasBorder && background,
           border: hasBorder && '1px solid',
+          ...style,
         }}
       >
         {icon ? icon : null} {value}

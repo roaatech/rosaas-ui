@@ -107,6 +107,7 @@ export default function ProductsOwners({ children }) {
     setCurrentId(id)
     setVisible(true)
   }
+
   return (
     <Wrapper>
       <BreadcrumbComponent

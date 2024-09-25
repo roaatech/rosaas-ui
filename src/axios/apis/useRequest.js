@@ -27,6 +27,7 @@ const useRequest = () => {
     SignInProductOwnerAsync,
     userData,
     logOut,
+    getAuditsList,
     signUp,
     signUpPOwner,
     SignInAdminAsync,
@@ -386,6 +387,7 @@ const useRequest = () => {
     getEnvironment,
     updateCompositeTemplateRequest,
     subscriptionCanceledFilteredList,
+    getAuditsList,
   }
 }
 export default useRequest

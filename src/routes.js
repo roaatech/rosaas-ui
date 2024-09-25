@@ -37,6 +37,7 @@ import ExchangeRateProvidersSettings from './pages/Settings/ExchangeRateProvider
 import UpdatedTenantsPage from './pages/UpdatedTenantsPage/UpdatedTenantsPage'
 import EnvironmentInfo from './pages/Settings/EnvironmentInfo/EnvironmentInfo'
 import CanceledTenant from './pages/CanceledTenants/CanceledTenants'
+import Audits from './pages/Audits/Audits'
 
 export const adminPanel = '/admin-panel'
 
@@ -58,12 +59,18 @@ export const Routes = {
     component: () => <POwnerChecker page={<ProductsOwners />} />,
     roles: ['superAdmin'],
   },
+  audits: {
+    path: `${adminPanel}/audits`,
+    component: () => <POwnerChecker page={<Audits />} />,
+    roles: ['superAdmin'],
+  },
   EmailConfirmationPage: {
     path: `/email-confirmation`,
     component: EmailConfirmationPage,
     roles: '*',
     type: 'noSidebar',
   },
+
   ResetPasswordConfirmPage: {
     path: `/Reset-Password-confirmation`,
     component: ResetPasswordPage,
