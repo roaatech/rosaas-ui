@@ -168,30 +168,22 @@ const ClientCredentials = ({ data }) => {
         setPopupLabel(intl.formatMessage({ id: 'Revoke-Client' }))
         setConfirmationValue('REVOKE')
         setConfirmationMessage(
-          intl.formatMessage({ id: 'Type-REVOKE-to-confirm' })
+          intl.formatMessage({ id: 'Revoke-Client-Confirmation' })
         )
         setVariant('danger')
-        break
-      case 'regenerate':
-        setPopupLabel(intl.formatMessage({ id: 'Regenerate-Client' }))
-        setConfirmationValue('REGENERATE')
-        setConfirmationMessage(
-          intl.formatMessage({ id: 'Type-REGENERATE-to-confirm' })
-        )
-        setVariant('warning')
         break
 
       case 'activate':
         setPopupLabel(intl.formatMessage({ id: 'Activate-Client' }))
         setConfirmationMessage(
-          intl.formatMessage({ id: 'Type-Client-Id-to-confirm' })
+          intl.formatMessage({ id: 'Activate-Client-Confirmation' })
         )
         setVariant('success')
         break
       case 'deactivate':
         setPopupLabel(intl.formatMessage({ id: 'Deactivate-Client' }))
         setConfirmationMessage(
-          intl.formatMessage({ id: 'Type-Client-Id-to-confirm' })
+          intl.formatMessage({ id: 'Deactivate-Client-Confirmation' })
         )
         setVariant('warning')
         break
@@ -479,7 +471,7 @@ const ClientCredentials = ({ data }) => {
           setVisible={setvisibleSecret}
         />
       </ThemeDialog>
-      {confirmationValue && (
+      {
         <ThemeDialog
           visible={confirmationVisible}
           setVisible={setConfirmationVisible}
@@ -494,7 +486,7 @@ const ClientCredentials = ({ data }) => {
             setConfirmationValue={setConfirmationValue}
           />
         </ThemeDialog>
-      )}
+      }
     </Wrapper>
   )
 }

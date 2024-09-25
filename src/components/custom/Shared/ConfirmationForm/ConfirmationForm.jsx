@@ -18,7 +18,14 @@ const ConfirmationForm = ({
   const initialValues = {
     confirmationInput: '',
   }
-  console.log({ confirmationValue })
+  const [value, setValue] = useState(confirmationValue)
+  useEffect(() => {
+    if (confirmationValue == value || !confirmationValue) {
+      return
+    }
+
+    setValue(confirmationValue)
+  }, [confirmationValue])
 
   const validationSchema = Yup.object().shape({
     confirmationInput: Yup.string()

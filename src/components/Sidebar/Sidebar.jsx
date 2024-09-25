@@ -422,7 +422,9 @@ export default (props = {}) => {
                 <NavItem
                   key={'Archived-Tenants'}
                   link={Routes.CanceledTenantsPage?.path}
-                  isActive={location.pathname.includes('tenants/canceled')}
+                  isActive={location.pathname.includes(
+                    Routes.CanceledTenantsPage?.path
+                  )}
                   title={<SafeFormatMessage id="Archived-Tenants" />}
                   icon={<BsFillArchiveFill />}
                 />
@@ -520,18 +522,27 @@ export default (props = {}) => {
                         title={<SafeFormatMessage id="Health-Check-sidebar" />}
                         link={Routes.Settings.path}
                         icon={<BsFillClipboard2CheckFill />}
+                        isActive={location.pathname.includes(
+                          Routes.Settings.path
+                        )}
                       />
 
                       <NavItem
                         title={<SafeFormatMessage id="Subscriptions" />}
                         link={Routes.SubscriptionsSettings.path}
                         icon={<BsPeople />}
+                        isActive={location.pathname.includes(
+                          Routes.SubscriptionsSettings.path
+                        )}
                       />
 
                       <NavItem
                         title={<SafeFormatMessage id="Product-Warnings" />}
                         link={Routes.ProductWarningsSettings.path}
                         icon={<BsExclamationTriangle />}
+                        isActive={location.pathname.includes(
+                          Routes.ProductWarningsSettings.path
+                        )}
                       />
                     </>
                   )}
@@ -540,12 +551,18 @@ export default (props = {}) => {
                       title={<SafeFormatMessage id="Discounts" />}
                       link={Routes.DiscountsPage.path}
                       icon={<MdDiscount />}
+                      isActive={location.pathname.includes(
+                        Routes.DiscountsPage.path
+                      )}
                     />
                   )}
                   <NavItem
                     title={<SafeFormatMessage id="Currencies" />}
                     link={Routes.CurrenciesPage.path}
                     icon={<MdCurrencyExchange />}
+                    isActive={location.pathname.includes(
+                      Routes.CurrenciesPage.path
+                    )}
                   />
 
                   {userRole == 'superAdmin' && (
@@ -553,6 +570,9 @@ export default (props = {}) => {
                       title={<SafeFormatMessage id="Exchange-Rate-Providers" />}
                       link={Routes.ExchangeRateProvidersSettings.path}
                       icon={<BsPercent />}
+                      isActive={location.pathname.includes(
+                        Routes.ExchangeRateProvidersSettings.path
+                      )}
                     />
                   )}
 
@@ -561,12 +581,16 @@ export default (props = {}) => {
                       title={<SafeFormatMessage id="Profile" />}
                       link={Routes.Profile.path}
                       icon={<BsPersonFillGear />}
+                      isActive={location.pathname.includes(Routes.Profile.path)}
                     />
                   )}
                   <NavItem
                     title={'Environment Info'}
                     link={Routes.EnvironmentInfo.path}
                     icon={<BsInfoSquare />}
+                    isActive={location.pathname.includes(
+                      Routes.EnvironmentInfo.path
+                    )}
                   />
                 </CollapsableNavItem>
               )}
