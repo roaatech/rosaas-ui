@@ -46,6 +46,12 @@ import { Routes } from '../../routes.js'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import DataLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLabelWhite.jsx'
 import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions.jsx'
+import {
+  ProductTrialType,
+  PublishStatus,
+  visibilityStatus,
+} from '../../const/product.js'
+import Label from '../../components/custom/Shared/label/Label.jsx'
 
 export default function Product({ children }) {
   const dispatch = useDispatch()
@@ -216,38 +222,42 @@ export default function Product({ children }) {
                 }
                 showFilterMenu={false}
               />
+
               <Column
-                field={'productOwner.systemName'}
-                header={
-                  <ColumnSortHeader
-                    text={<SafeFormatMessage id="Product-Owner" />}
-                    field="productOwner"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
+                field={'trialType'}
+                header={<SafeFormatMessage id="Trial-Type" />}
+                // <ColumnSortHeader
+                //   text={<SafeFormatMessage id="Trial-Type" />}
+                //   field="trialType"
+                //   rebase={rebase}
+                //   setRebase={setRebase}
+                //   sortField={sortField}
+                //   sortValue={sortValue}
+                //   setSortField={setSortField}
+                //   setSortValue={setSortValue}
+                //   setFirst={setFirst}
+                // />
+                body={(rowData) =>
+                  ProductTrialType?.[rowData?.trialType] && (
+                    <Label {...ProductTrialType[rowData?.trialType]} />
+                  )
                 }
                 showFilterMenu={false}
               />
               <Column
-                field={'trialType'}
-                header={
-                  <ColumnSortHeader
-                    text={<SafeFormatMessage id="Product-Owner" />}
-                    field="productOwner"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
+                field={'isPublished'}
+                header={<SafeFormatMessage id="Status" />}
+                body={(rowData) => (
+                  <Label {...PublishStatus[rowData?.isPublished]} />
+                )}
+                showFilterMenu={false}
+              />
+              <Column
+                field={'isVisible'}
+                header={<SafeFormatMessage id="Visibility-Status" />}
+                body={(rowData) => (
+                  <Label {...visibilityStatus[rowData?.isVisible]} />
+                )}
                 showFilterMenu={false}
               />
 

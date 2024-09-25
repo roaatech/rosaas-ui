@@ -43,6 +43,9 @@ import { FormattedMessage } from 'react-intl'
 import { Routes } from '../../routes.js'
 import ProductOwnerForm from '../../components/custom/ProductOwner/ProductOwnerForm.jsx'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import Label from '../../components/custom/Shared/label/Label.jsx'
+import { ProductOwnerStatus } from '../../const/productOwnerConsts.js'
+import { subscriptionMode, subscriptionStatus } from '../../const/product.js'
 
 export default function ProductsOwners({ children }) {
   const dispatch = useDispatch()
@@ -164,6 +167,90 @@ export default function ProductsOwners({ children }) {
                   />
                 }
               ></Column>
+              <Column
+                field="status"
+                header={
+                  <ColumnSortHeader
+                    text={<SafeFormatMessage id="Status" />}
+                    field="status"
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) => (
+                  <Label {...ProductOwnerStatus[rowData?.status]} />
+                )}
+              />
+              <Column
+                field="subscription.subscriptionStatus"
+                header={
+                  <ColumnSortHeader
+                    text="Subscription Status"
+                    field="subscription.subscriptionStatus"
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) =>
+                  rowData?.subscription?.subscriptionStatus ? (
+                    <Label
+                      {...subscriptionStatus[
+                        rowData?.subscription?.subscriptionStatus
+                      ]}
+                    />
+                  ) : (
+                    '__'
+                  )
+                }
+              />
+              <Column
+                field="subscription.subscriptionMode"
+                header={
+                  <ColumnSortHeader
+                    text="Subscription Mode"
+                    field="subscription.subscriptionMode"
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) =>
+                  rowData?.subscription?.mode ? (
+                    <Label {...subscriptionMode[rowData?.subscription?.mode]} />
+                  ) : (
+                    '__'
+                  )
+                }
+              />
+              <Column
+                body={(data) => (
+                  <TableDate
+                    createdDate={data.createdDate}
+                    editedDate={data.editedDate}
+                  />
+                )}
+                header={
+                  <ColumnSortHeader
+                    text="Date"
+                    field="editedDate"
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                  />
+                }
+              />
 
               <Column
                 body={(data, options) => (
