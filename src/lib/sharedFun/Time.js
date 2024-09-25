@@ -46,6 +46,9 @@ export const DataTransform = (dateTime) => {
 }
 
 export const UppercaseMonthDateFormat = (dateTime, withTime = false) => {
+  if (!dateTime || isNaN(new Date(dateTime).getTime())) {
+    return ''
+  }
   const utcDateTime = new Date(dateTime + 'Z')
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = utcToZonedTime(utcDateTime, timeZone)

@@ -581,6 +581,7 @@ export default function UpdatedTenantsPage({ children }) {
                       <TableDate
                         createdDate={data.createdDate}
                         editedDate={data.editedDate}
+                        hasLabel={true}
                       />
                     </div>
                     {/* <div className="">

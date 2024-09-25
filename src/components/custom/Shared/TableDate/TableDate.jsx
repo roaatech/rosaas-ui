@@ -2,13 +2,18 @@ import React from 'react'
 import { Wrapper } from './TableDate.styled'
 import { OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
-import { DataTransform } from '../../../../lib/sharedFun/Time'
+import {
+  DataTransform,
+  UppercaseMonthDateFormat,
+} from '../../../../lib/sharedFun/Time'
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
+import DataLabelWhite from '../DateLabelWhite/DateLabelWhite'
 
 const TableDate = ({
   createdDate = '10/18/200, 11:42AM',
   editedDate = '10/18/200, 11:42AM',
   className,
+  hasLabel,
 }) => {
   return (
     <Wrapper>
@@ -28,7 +33,15 @@ const TableDate = ({
       >
         <span className={className ? className : ''}>
           {' '}
-          {DataTransform(editedDate)}
+          {hasLabel ? (
+            <DataLabelWhite
+              style={{ fontWeight: 'bold' }}
+              text={UppercaseMonthDateFormat(createdDate, true)}
+              variant={'gray'}
+            />
+          ) : (
+            DataTransform(createdDate)
+          )}
         </span>
       </OverlayTrigger>
     </Wrapper>

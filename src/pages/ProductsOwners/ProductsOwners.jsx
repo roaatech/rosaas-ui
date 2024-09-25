@@ -46,6 +46,11 @@ import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/
 import Label from '../../components/custom/Shared/label/Label.jsx'
 import { ProductOwnerStatus } from '../../const/productOwnerConsts.js'
 import { subscriptionMode, subscriptionStatus } from '../../const/product.js'
+import DataLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLabelWhite.jsx'
+import { UppercaseMonthDateFormat } from '../../lib/sharedFun/Time.js'
+import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel.jsx'
+import { MdEmail } from 'react-icons/md'
+import { FiSettings } from 'react-icons/fi'
 
 export default function ProductsOwners({ children }) {
   const dispatch = useDispatch()
@@ -191,7 +196,7 @@ export default function ProductsOwners({ children }) {
                 field="subscription.subscriptionStatus"
                 header={
                   <ColumnSortHeader
-                    text="Subscription Status"
+                    text={<SafeFormatMessage id="Subscription-Status" />}
                     field="subscription.subscriptionStatus"
                     setRebase={setRebase}
                     sortField={sortField}
@@ -214,11 +219,11 @@ export default function ProductsOwners({ children }) {
                 }
               />
               <Column
-                field="subscription.subscriptionMode"
                 header={
                   <ColumnSortHeader
-                    text="Subscription Mode"
-                    field="subscription.subscriptionMode"
+                    text={SafeFormatMessage({ id: 'Subscription-Period' })}
+                    field="endDate"
+                    rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
                     sortValue={sortValue}
@@ -228,30 +233,65 @@ export default function ProductsOwners({ children }) {
                   />
                 }
                 body={(rowData) =>
-                  rowData?.subscription?.subscriptionMode ? (
-                    <Label
-                      {...subscriptionMode[
-                        rowData?.subscription?.subscriptionMode
-                      ]}
-                    />
-                  ) : (
+                  !rowData.subscription?.endDate &&
+                  !rowData.subscription?.startDate ? (
                     '__'
+                  ) : (
+                    <div className="d-flex align-items-center flex-column justify-content-center">
+                      <span className="mb-1">
+                        {rowData.subscription?.startDate && (
+                          <DataLabelWhite
+                            text={
+                              <>
+                                <span>
+                                  {SafeFormatMessage({ id: 'Started-on' })}
+                                </span>{' '}
+                                <span className="fw-bold">
+                                  {UppercaseMonthDateFormat(
+                                    rowData.subscription?.startDate,
+                                    true
+                                  )}
+                                </span>
+                              </>
+                            }
+                            variant={'gray'}
+                          />
+                        )}
+                      </span>
+                      <DateLabel
+                        endDate={rowData.subscription?.endDate}
+                        uppercaseMonthDateFormat={true}
+                        hasTitle={true}
+                        hasBorder={true}
+                      />
+                    </div>
                   )
                 }
-              />
+              ></Column>
 
               <Column
                 body={(data, options) => (
-                  <TableDate
-                    createdDate={data.createdDate}
-                    editedDate={data.editedDate}
-                  />
+                  <>
+                    {data.administrator?.email ? (
+                      <DataLabelWhite
+                        text={
+                          <>
+                            <MdEmail className="mx-1" />
+                            {data.administrator?.email}
+                          </>
+                        }
+                        variant={'gray'}
+                      />
+                    ) : (
+                      '__'
+                    )}
+                  </>
                 )}
                 style={{ width: '250px', maxidth: '250px' }}
                 header={
                   <ColumnSortHeader
-                    text={<SafeFormatMessage id="Date" />}
-                    field="editedDate"
+                    text={<SafeFormatMessage id="Administrator-Email" />}
+                    field="administrator.email"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -262,6 +302,31 @@ export default function ProductsOwners({ children }) {
                   />
                 }
               />
+
+              <Column
+                body={(data, options) => (
+                  <TableDate
+                    createdDate={data.createdDate}
+                    editedDate={data.editedDate}
+                    hasLabel={true}
+                  />
+                )}
+                style={{ width: '250px', maxidth: '250px' }}
+                header={
+                  <ColumnSortHeader
+                    text={<SafeFormatMessage id="Date" />}
+                    field="createdDate"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+              />
+
               <Column
                 body={(data, options) => (
                   <Dropdown as={ButtonGroup}>
@@ -287,6 +352,18 @@ export default function ProductsOwners({ children }) {
                         <FontAwesomeIcon icon={faEye} className="mx-2" />
                         <SafeFormatMessage id="View-Details" />
                       </Dropdown.Item>
+                      {data?.subscription?.tenantId && (
+                        <Dropdown.Item
+                          onSelect={() =>
+                            navigate(
+                              `${Routes.Tenant.path}/${data?.subscription?.tenantId}`
+                            )
+                          }
+                        >
+                          <FiSettings className="mx-2" />
+                          <SafeFormatMessage id="Tenant-Management" />
+                        </Dropdown.Item>
+                      )}
                       <Dropdown.Item onSelect={() => editForm(data.id)}>
                         <FontAwesomeIcon icon={faEdit} className="mx-2" />
                         <SafeFormatMessage id="Edit" />
