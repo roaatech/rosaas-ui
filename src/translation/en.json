@@ -843,5 +843,6 @@
   "Regenerate-Client-Confirmation": "Regenerating this client will create a new secret and invalidate the old one, affecting any services using the old secret. Type 'REGENERATE' to confirm.",
   "Revoke-Secret": "Revoke Secret",
   "Revoke-Secret-Confirmation": "Revoking this secret will prevent it from being used to access resources and cannot be undone. Type 'REVOKE' to confirm.",
-  "Regenerate-Secret-Confirmation": "Regenerating this secret will create a new secret and invalidate the old one. Services using the old secret will need to be updated. Type 'REGENERATE' to confirm."
+  "Regenerate-Secret-Confirmation": "Regenerating this secret will create a new secret and invalidate the old one. Services using the old secret will need to be updated. Type 'REGENERATE' to confirm.",
+  "Administrator-Email": "Administrator Email"
 }

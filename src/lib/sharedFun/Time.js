@@ -45,7 +45,11 @@ export const DataTransform = (dateTime) => {
   return formattedDateTime
 }
 
-export const UppercaseMonthDateFormat = (dateTime, withTime = false) => {
+export const UppercaseMonthDateFormat = (
+  dateTime,
+  withTime = false,
+  withSeconds = false
+) => {
   if (!dateTime || isNaN(new Date(dateTime).getTime())) {
     return ''
   }
@@ -57,7 +61,7 @@ export const UppercaseMonthDateFormat = (dateTime, withTime = false) => {
   const dateYear = localDateTime.getFullYear()
 
   const dateFormat = currentYear === dateYear ? 'MMM dd' : 'MMM dd, yyyy'
-  const timeFormat = 'hh:mm'
+  const timeFormat = withSeconds ? 'hh:mm:ss' : 'hh:mm'
 
   const formattedDateTime = format(
     localDateTime,

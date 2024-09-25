@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb.jsx'
-import { BsFillPersonLinesFill } from 'react-icons/bs'
+import {
+  BsCheck,
+  BsCheckCircle,
+  BsCheckCircleFill,
+  BsFillPersonLinesFill,
+} from 'react-icons/bs'
 
 import ColumnSortHeader from '../../components/custom/Shared/ColumnSortHeader/ColumnSortHeader.jsx'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead.jsx'
@@ -48,6 +53,10 @@ import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel.jsx'
 import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions.jsx'
 import { cancellationOrSuspensionReasons } from '../../const/subscriptionConsts.js'
 import TruncateTextWithTooltip from '../../components/custom/Shared/SharedFunctions/textFormatFunctions.jsx'
+import DynamicButtons from '../../components/custom/Shared/DynamicButtons/DynamicButtons.jsx'
+import { icon } from '@fortawesome/fontawesome-svg-core'
+import { MdHistory } from 'react-icons/md'
+import ArchivedTenantsTable from './ArchivedTenants/ArchivedTenantsTable.jsx'
 export default function UpdatedTenantsPage({ children }) {
   const {
     getTenant,
@@ -139,6 +148,7 @@ export default function UpdatedTenantsPage({ children }) {
 
   /****************************** */
   const [tenantData, setTenantData] = useState()
+  const [selectedTable, setSelectedTable] = useState('Active')
   const editForm = async (id) => {
     const tenantData = await getTenant(id)
     setTenantData(tenantData.data)
@@ -153,231 +163,246 @@ export default function UpdatedTenantsPage({ children }) {
         icon={BsFillPersonLinesFill}
       />
       <div className="main-container">
-        <TableHead
-          // label={<SafeFormatMessage id="Add-Tenant" />}
-          // popupLabel={'Create Tenant'}
-          // icon={'pi-user-plus'}
-          setSearchValue={setSearchValue}
-          // visibleHead={visibleHead}
-          // setVisibleHead={setVisibleHead}
-          setFirst={setFirst}
-          search={true}
-          title={<SafeFormatMessage id="Tenants-List" />}
-        >
-          {/* <DeleteConfirmation
-            message="Do you want to delete this Tenant?"
-            icon="pi pi-exclamation-triangle"
-            confirm={confirm}
-            setConfirm={setConfirm}
-            confirmFunction={deleteTenant}
-            sideBar={true}
-          /> */}
-          <TenantFormOnboarding
-            type={'create'}
-            popupLabel={<SafeFormatMessage id="Create-Tenant" />}
-            update={update}
-            setUpdate={setUpdate}
-            visible={visibleHead}
-            setVisible={setVisibleHead}
-            sideBar={false}
-          />
+        {selectedTable === 'Active' && (
+          <>
+            <div className="">
+              <TableHead
+                setSearchValue={setSearchValue}
+                setFirst={setFirst}
+                search={true}
+                button={false}
+                title={<SafeFormatMessage id="Tenants-List" />}
+              >
+                <TenantFormOnboarding
+                  type={'create'}
+                  popupLabel={<SafeFormatMessage id="Create-Tenant" />}
+                  update={update}
+                  setUpdate={setUpdate}
+                  visible={visibleHead}
+                  setVisible={setVisibleHead}
+                  sideBar={false}
+                />
+                <DynamicButtons
+                  buttons={[
+                    ...Object.keys({
+                      Archived: 'Archived',
+                      Active: 'Active',
+                    }).map((table) => ({
+                      order: 1,
+                      type: 'toggle',
+                      label: table,
+                      icon:
+                        table === 'Active' ? (
+                          <BsCheckCircleFill />
+                        ) : (
+                          <MdHistory />
+                        ),
+                      tooltip:
+                        table === 'Active' ? (
+                          <SafeFormatMessage id="Active" />
+                        ) : (
+                          <SafeFormatMessage id="Archived" />
+                        ),
+                      group: 'language',
+                      toggleValue: selectedTable === table,
+                      toggleFunc: () => setSelectedTable(table),
+                      variant: 'primary',
+                    })),
+                  ]}
+                />
+              </TableHead>
+            </div>
 
-          {/* <AutoCompleteFiled
-            placeHolder="Select Product"
-            dataFunction={productOptions}
-            setSelectedProduct={setSelectedProduct}
-          /> */}
-        </TableHead>
-        <div className="mb-4">
-          <FilterSearchContainer setAllSelectedData={setAllSelectedData} />
-        </div>
-        <Card
-          border="light"
-          className="table-wrapper table-responsive shadow-sm"
-        >
-          <Card.Body className="pt-0">
-            <DataTable
-              value={list}
-              tableStyle={{ minWidth: '50rem' }}
-              size={'small'}
+            <div className="mb-4">
+              <FilterSearchContainer setAllSelectedData={setAllSelectedData} />
+            </div>
+            <Card
+              border="light"
+              className="table-wrapper table-responsive shadow-sm"
             >
-              <Column
-                header={
-                  <ColumnSortHeader
-                    text={
-                      <div>
-                        <div className="d-flex flex-column align-items-center">
+              <Card.Body className="pt-0">
+                <DataTable
+                  value={list}
+                  tableStyle={{ minWidth: '50rem' }}
+                  size={'small'}
+                >
+                  <Column
+                    header={
+                      <ColumnSortHeader
+                        text={
                           <div>
-                            {SafeFormatMessage({ id: 'Display-Name' })}{' '}
+                            <div className="d-flex flex-column align-items-center">
+                              <div>
+                                {SafeFormatMessage({ id: 'Display-Name' })}{' '}
+                              </div>
+                              <DataLabelWhite
+                                variant={'gray'}
+                                text={
+                                  <span className="fw-bold">
+                                    {SafeFormatMessage({ id: 'System-Name' })}
+                                  </span>
+                                }
+                              />
+                            </div>
                           </div>
-                          <DataLabelWhite
-                            variant={'gray'}
-                            text={
-                              <span className="fw-bold">
-                                {SafeFormatMessage({ id: 'System-Name' })}
-                              </span>
-                            }
-                          />
-                        </div>
-                      </div>
-                    }
-                    field="tenant.displayName"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
-                body={(rowData) => (
-                  <div>
-                    <div>
-                      <TruncateTextWithTooltip
-                        text={rowData.tenant.displayName}
-                        maxCharSize={25}
+                        }
+                        field="tenant.displayName"
+                        rebase={rebase}
+                        setRebase={setRebase}
+                        sortField={sortField}
+                        sortValue={sortValue}
+                        setSortField={setSortField}
+                        setSortValue={setSortValue}
+                        setFirst={setFirst}
                       />
-                    </div>
-                    <small style={{ color: 'gray' }}>
-                      {
-                        <DataLabelWhite
-                          variant={'gray'}
-                          maxCharSize={25}
-                          text={rowData.tenant.systemName}
-                          style={{ fontWeight: 'bold' }}
-                        />
-                      }
-                    </small>
-                  </div>
-                )}
-                className="name"
-              ></Column>
-              <Column
-                className="Product"
-                header={
-                  <ColumnSortHeader
-                    text={
-                      <div className="d-flex flex-column align-items-center">
+                    }
+                    body={(rowData) => (
+                      <div>
                         <div>
-                          <SafeFormatMessage id="Product" />{' '}
+                          <TruncateTextWithTooltip
+                            text={rowData.tenant.displayName}
+                            maxCharSize={25}
+                          />
                         </div>
-                        <DataLabelWhite
-                          variant={'gray'}
-                          text={
-                            <span className="fw-bold">
-                              {SafeFormatMessage({ id: 'System-Name' })}
-                            </span>
+                        <small style={{ color: 'gray' }}>
+                          {
+                            <DataLabelWhite
+                              variant={'gray'}
+                              maxCharSize={25}
+                              text={rowData.tenant.systemName}
+                              style={{ fontWeight: 'bold' }}
+                            />
                           }
-                        />
+                        </small>
                       </div>
-                    }
-                    field="Product.SystemName"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
-                body={(rowData) => (
-                  <>
-                    <span
-                      className="fw-bold mb-1"
-                      style={{ color: 'var(--second-color)' }}
-                    >
-                      {getLocalizedString(
-                        rowData.product.displayNameLocalizations
-                      )}
-                    </span>
-
-                    <div>
-                      {' '}
-                      <DataLabelWhite
-                        variant={'gray'}
+                    )}
+                    className="name"
+                  ></Column>
+                  <Column
+                    className="Product"
+                    header={
+                      <ColumnSortHeader
                         text={
-                          <>
-                            <span className="fw-bold">
-                              {rowData.product.systemName}
-                            </span>
-                          </>
-                        }
-                      />
-                    </div>
-                  </>
-                )}
-              ></Column>
-              <Column
-                className="plan"
-                header={
-                  <ColumnSortHeader
-                    text={
-                      <div>
-                        <div className="d-flex flex-column align-items-center">
-                          <div>
-                            <SafeFormatMessage id="Plan" />{' '}
+                          <div className="d-flex flex-column align-items-center">
+                            <div>
+                              <SafeFormatMessage id="Product" />{' '}
+                            </div>
+                            <DataLabelWhite
+                              variant={'gray'}
+                              text={
+                                <span className="fw-bold">
+                                  {SafeFormatMessage({ id: 'System-Name' })}
+                                </span>
+                              }
+                            />
                           </div>
+                        }
+                        field="Product.SystemName"
+                        rebase={rebase}
+                        setRebase={setRebase}
+                        sortField={sortField}
+                        sortValue={sortValue}
+                        setSortField={setSortField}
+                        setSortValue={setSortValue}
+                        setFirst={setFirst}
+                      />
+                    }
+                    body={(rowData) => (
+                      <>
+                        <span
+                          className="fw-bold mb-1"
+                          style={{ color: 'var(--second-color)' }}
+                        >
+                          {getLocalizedString(
+                            rowData.product.displayNameLocalizations
+                          )}
+                        </span>
+
+                        <div>
+                          {' '}
                           <DataLabelWhite
                             variant={'gray'}
                             text={
-                              <span className="fw-bold">
-                                {SafeFormatMessage({ id: 'System-Name' })}
-                              </span>
+                              <>
+                                <span className="fw-bold">
+                                  {rowData.product.systemName}
+                                </span>
+                              </>
                             }
                           />
                         </div>
-                      </div>
-                    }
-                    field="Plan.SystemName"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
-                body={(rowData) => (
-                  <>
-                    <span
-                      className="fw-bold mb-1"
-                      style={{ color: 'var(--second-color)' }}
-                    >
-                      {getLocalizedString(
-                        rowData.plan.displayNameLocalizations
-                      )}
-                    </span>
-                    <span
-                      className="mt-2 fw-bold "
-                      style={{ color: 'var(--gray-600)', fontSize: '10px' }}
-                    >
-                      {' '}
-                      {featureResetMap[rowData?.plan?.cycle] && (
-                        <span>
-                          {' '}
-                          /{' '}
-                          {SafeFormatMessage({
-                            id: featureResetMap[rowData?.plan?.cycle],
-                          })}
-                        </span>
-                      )}
-                    </span>
-                    <div>
-                      {' '}
-                      <DataLabelWhite
-                        variant={'gray'}
+                      </>
+                    )}
+                  ></Column>
+                  <Column
+                    className="plan"
+                    header={
+                      <ColumnSortHeader
                         text={
-                          <>
-                            <span className="fw-bold">
-                              {rowData.plan.systemName}
-                            </span>
-                          </>
+                          <div>
+                            <div className="d-flex flex-column align-items-center">
+                              <div>
+                                <SafeFormatMessage id="Plan" />{' '}
+                              </div>
+                              <DataLabelWhite
+                                variant={'gray'}
+                                text={
+                                  <span className="fw-bold">
+                                    {SafeFormatMessage({ id: 'System-Name' })}
+                                  </span>
+                                }
+                              />
+                            </div>
+                          </div>
                         }
+                        field="Plan.SystemName"
+                        rebase={rebase}
+                        setRebase={setRebase}
+                        sortField={sortField}
+                        sortValue={sortValue}
+                        setSortField={setSortField}
+                        setSortValue={setSortValue}
+                        setFirst={setFirst}
                       />
-                      {/* <Label
+                    }
+                    body={(rowData) => (
+                      <>
+                        <span
+                          className="fw-bold mb-1"
+                          style={{ color: 'var(--second-color)' }}
+                        >
+                          {getLocalizedString(
+                            rowData.plan.displayNameLocalizations
+                          )}
+                        </span>
+                        <span
+                          className="mt-2 fw-bold "
+                          style={{ color: 'var(--gray-600)', fontSize: '10px' }}
+                        >
+                          {' '}
+                          {featureResetMap[rowData?.plan?.cycle] && (
+                            <span>
+                              {' '}
+                              /{' '}
+                              {SafeFormatMessage({
+                                id: featureResetMap[rowData?.plan?.cycle],
+                              })}
+                            </span>
+                          )}
+                        </span>
+                        <div>
+                          {' '}
+                          <DataLabelWhite
+                            variant={'gray'}
+                            text={
+                              <>
+                                <span className="fw-bold">
+                                  {rowData.plan.systemName}
+                                </span>
+                              </>
+                            }
+                          />
+                          {/* <Label
                         background="var(--light-blue)"
                         value={
                           <>
@@ -392,159 +417,166 @@ export default function UpdatedTenantsPage({ children }) {
                         }
                         color="var(--blue-2)"
                       /> */}
-                    </div>
-                  </>
-                )}
-              ></Column>
+                        </div>
+                      </>
+                    )}
+                  ></Column>
 
-              <Column
-                header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({ id: 'Subscription-Mode' })}
-                    field="SubscriptionMode"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
-                body={(rowData) =>
-                  rowData.subscriptionMode != 2 ? (
-                    <Label {...subscriptionMode[rowData.subscriptionMode]} />
-                  ) : (
-                    <Label
-                      background="var(--light-blue)"
-                      value={
-                        <>
-                          <span className="fw-bold ">
-                            <SafeFormatMessage id="Trial" />
-                          </span>
-                          <span className="mx-1">
-                            {' '}
-                            <SafeFormatMessage id="Ends" />
-                          </span>
-                          <span className="fw-bold ">
-                            {UppercaseMonthDateFormat(rowData.endDate, true)}
-                          </span>
-                        </>
-                      }
-                      color="var(--blue-2)"
-                      lighter={true}
-                    />
-                  )
-                }
-              ></Column>
-              <Column
-                header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({ id: 'Subscription-Status' })}
-                    field="SubscriptionStatus"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
-                body={(rowData) => (
-                  <Label {...subscriptionStatus[rowData.subscriptionStatus]} />
-                )}
-              ></Column>
-              <Column
-                header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({
-                      id: 'Tenant-Operational-Status',
-                    })}
-                    field="SubscriptionMod"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
-                body={(rowData) => (
-                  <TenantStatus
-                    statusValue={rowData.tenant.status}
-                    key={rowData.id}
-                  />
-                )}
-              ></Column>
-
-              <Column
-                header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({ id: 'Subscription-Period' })}
-                    field="endDate"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
-                body={(rowData) => (
-                  <div className="d-flex align-items-center flex-column justify-content-center">
-                    <span className="mb-1">
-                      <DataLabelWhite
-                        text={
-                          <>
-                            <span>
-                              {SafeFormatMessage({ id: 'Started-on' })}
-                            </span>{' '}
-                            <span className="fw-bold">
-                              {UppercaseMonthDateFormat(
-                                rowData.createdDate,
-                                true
-                              )}
-                            </span>
-                          </>
-                        }
-                        variant={'gray'}
+                  <Column
+                    header={
+                      <ColumnSortHeader
+                        text={SafeFormatMessage({ id: 'Subscription-Mode' })}
+                        field="SubscriptionMode"
+                        rebase={rebase}
+                        setRebase={setRebase}
+                        sortField={sortField}
+                        sortValue={sortValue}
+                        setSortField={setSortField}
+                        setSortValue={setSortValue}
+                        setFirst={setFirst}
                       />
-                    </span>
-                    <DateLabel
-                      endDate={rowData.endDate}
-                      uppercaseMonthDateFormat={true}
-                      hasTitle={true}
-                      hasBorder={true}
-                    />
-                  </div>
-                )}
-              ></Column>
-              {viewSystemNameColumn && (
-                <Column
-                  field="tenant.systemName"
-                  header={
-                    <ColumnSortHeader
-                      text={
-                        <span className="fw-bold">
-                          {SafeFormatMessage({ id: 'System-Name' })}
+                    }
+                    body={(rowData) =>
+                      rowData.subscriptionMode != 2 ? (
+                        <Label
+                          {...subscriptionMode[rowData.subscriptionMode]}
+                        />
+                      ) : (
+                        <Label
+                          background="var(--light-blue)"
+                          value={
+                            <>
+                              <span className="fw-bold ">
+                                <SafeFormatMessage id="Trial" />
+                              </span>
+                              <span className="mx-1">
+                                {' '}
+                                <SafeFormatMessage id="Ends" />
+                              </span>
+                              <span className="fw-bold ">
+                                {UppercaseMonthDateFormat(
+                                  rowData.endDate,
+                                  true
+                                )}
+                              </span>
+                            </>
+                          }
+                          color="var(--blue-2)"
+                          lighter={true}
+                        />
+                      )
+                    }
+                  ></Column>
+                  <Column
+                    header={
+                      <ColumnSortHeader
+                        text={SafeFormatMessage({ id: 'Subscription-Status' })}
+                        field="SubscriptionStatus"
+                        rebase={rebase}
+                        setRebase={setRebase}
+                        sortField={sortField}
+                        sortValue={sortValue}
+                        setSortField={setSortField}
+                        setSortValue={setSortValue}
+                        setFirst={setFirst}
+                      />
+                    }
+                    body={(rowData) => (
+                      <Label
+                        {...subscriptionStatus[rowData.subscriptionStatus]}
+                      />
+                    )}
+                  ></Column>
+                  <Column
+                    header={
+                      <ColumnSortHeader
+                        text={SafeFormatMessage({
+                          id: 'Tenant-Operational-Status',
+                        })}
+                        field="SubscriptionMod"
+                        rebase={rebase}
+                        setRebase={setRebase}
+                        sortField={sortField}
+                        sortValue={sortValue}
+                        setSortField={setSortField}
+                        setSortValue={setSortValue}
+                        setFirst={setFirst}
+                      />
+                    }
+                    body={(rowData) => (
+                      <TenantStatus
+                        statusValue={rowData.tenant.status}
+                        key={rowData.id}
+                      />
+                    )}
+                  ></Column>
+
+                  <Column
+                    header={
+                      <ColumnSortHeader
+                        text={SafeFormatMessage({ id: 'Subscription-Period' })}
+                        field="endDate"
+                        rebase={rebase}
+                        setRebase={setRebase}
+                        sortField={sortField}
+                        sortValue={sortValue}
+                        setSortField={setSortField}
+                        setSortValue={setSortValue}
+                        setFirst={setFirst}
+                      />
+                    }
+                    body={(rowData) => (
+                      <div className="d-flex align-items-center flex-column justify-content-center">
+                        <span className="mb-1">
+                          <DataLabelWhite
+                            text={
+                              <>
+                                <span>
+                                  {SafeFormatMessage({ id: 'Started-on' })}
+                                </span>{' '}
+                                <span className="fw-bold">
+                                  {UppercaseMonthDateFormat(
+                                    rowData.createdDate,
+                                    true
+                                  )}
+                                </span>
+                              </>
+                            }
+                            variant={'gray'}
+                          />
                         </span>
-                      }
+                        <DateLabel
+                          endDate={rowData.endDate}
+                          uppercaseMonthDateFormat={true}
+                          hasTitle={true}
+                          hasBorder={true}
+                        />
+                      </div>
+                    )}
+                  ></Column>
+                  {viewSystemNameColumn && (
+                    <Column
                       field="tenant.systemName"
-                      rebase={rebase}
-                      setRebase={setRebase}
-                      sortField={sortField}
-                      sortValue={sortValue}
-                      setSortField={setSortField}
-                      setSortValue={setSortValue}
-                      setFirst={setFirst}
+                      header={
+                        <ColumnSortHeader
+                          text={
+                            <span className="fw-bold">
+                              {SafeFormatMessage({ id: 'System-Name' })}
+                            </span>
+                          }
+                          field="tenant.systemName"
+                          rebase={rebase}
+                          setRebase={setRebase}
+                          sortField={sortField}
+                          sortValue={sortValue}
+                          setSortField={setSortField}
+                          setSortValue={setSortValue}
+                          setFirst={setFirst}
+                        />
+                      }
                     />
-                  }
-                />
-              )}
-              {/* <Column
+                  )}
+                  {/* <Column
                 field="status"
                 header={
                   <ColumnSortHeader
@@ -562,11 +594,11 @@ export default function UpdatedTenantsPage({ children }) {
                 showFilterMenu={false}
                 body={statusBodyTemplate}
               />*/}
-              <Column
-                body={(data, options) => (
-                  <>
-                    <div className="mb-1">
-                      {/* <DataLabelWhite
+                  <Column
+                    body={(data, options) => (
+                      <>
+                        <div className="mb-1">
+                          {/* <DataLabelWhite
                         variant={'gray'}
                         style={{ flexWrap: 'nowrap' }}
                         text={
@@ -578,13 +610,13 @@ export default function UpdatedTenantsPage({ children }) {
                           </>
                         }
                       /> */}
-                      <TableDate
-                        createdDate={data.createdDate}
-                        editedDate={data.editedDate}
-                        hasLabel={true}
-                      />
-                    </div>
-                    {/* <div className="">
+                          <TableDate
+                            createdDate={data.createdDate}
+                            editedDate={data.editedDate}
+                            hasLabel={true}
+                          />
+                        </div>
+                        {/* <div className="">
                       <DataLabelWhite
                         variant={'gray'}
                         text={
@@ -597,97 +629,110 @@ export default function UpdatedTenantsPage({ children }) {
                         }
                       />
                     </div> */}
-                  </>
-                )}
-                style={{ width: '250px', maxidth: '250px' }}
-                header={
-                  <ColumnSortHeader
-                    text={SafeFormatMessage({ id: 'Date' })}
-                    field="editedDate"
-                    rebase={rebase}
-                    setRebase={setRebase}
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
+                      </>
+                    )}
+                    style={{ width: '250px', maxidth: '250px' }}
+                    header={
+                      <ColumnSortHeader
+                        text={SafeFormatMessage({ id: 'Date' })}
+                        field="editedDate"
+                        rebase={rebase}
+                        setRebase={setRebase}
+                        sortField={sortField}
+                        sortValue={sortValue}
+                        setSortField={setSortField}
+                        setSortValue={setSortValue}
+                        setFirst={setFirst}
+                      />
+                    }
                   />
-                }
-              />
-              <Column
-                body={(data, options) => (
-                  <Dropdown as={ButtonGroup}>
-                    <Dropdown.Toggle
-                      as={Button}
-                      split
-                      variant="link"
-                      className="text-dark m-0 p-0"
-                    >
-                      <span className="icon icon-sm">
-                        <FontAwesomeIcon
-                          icon={faEllipsisH}
-                          className="icon-dark"
-                        />
-                      </span>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item
-                        onSelect={() =>
-                          navigate(`${Routes.Tenant.path}/${data.tenant.id}`)
-                        }
-                      >
-                        <FontAwesomeIcon icon={faEye} className="mr-2" /> View
-                        Details
-                      </Dropdown.Item>
-                      <Dropdown.Item onSelect={() => editForm(data.tenant.id)}>
-                        <FontAwesomeIcon icon={faEdit} className="mx-2" /> Edit
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                )}
-                style={{ width: '60px', textAlign: 'center' }}
-                header={<SafeFormatMessage id="Actions" />}
-              />
-            </DataTable>
+                  <Column
+                    body={(data, options) => (
+                      <Dropdown as={ButtonGroup}>
+                        <Dropdown.Toggle
+                          as={Button}
+                          split
+                          variant="link"
+                          className="text-dark m-0 p-0"
+                        >
+                          <span className="icon icon-sm">
+                            <FontAwesomeIcon
+                              icon={faEllipsisH}
+                              className="icon-dark"
+                            />
+                          </span>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <Dropdown.Item
+                            onSelect={() =>
+                              navigate(
+                                `${Routes.Tenant.path}/${data.tenant.id}`
+                              )
+                            }
+                          >
+                            <FontAwesomeIcon icon={faEye} className="mr-2" />{' '}
+                            View Details
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            onSelect={() => editForm(data.tenant.id)}
+                          >
+                            <FontAwesomeIcon icon={faEdit} className="mx-2" />{' '}
+                            Edit
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    )}
+                    style={{ width: '60px', textAlign: 'center' }}
+                    header={<SafeFormatMessage id="Actions" />}
+                  />
+                </DataTable>
 
-            <CustomPaginator
-              first={first}
-              rows={rows}
-              totalCount={totalCount}
-              onPageChange={onPageChange}
-            />
+                <CustomPaginator
+                  first={first}
+                  rows={rows}
+                  totalCount={totalCount}
+                  onPageChange={onPageChange}
+                />
 
-            <ThemeDialog
-              headerClassName="pb-0"
-              className="tenantForm"
-              header={'Edit Tenant'}
-              visible={visible}
-              style={{ width: '30vw', minWidth: '300px' }}
-              onHide={() => setVisible(false)}
-            >
-              <TenantForm
-                type={'edit'}
-                popupLabel={<SafeFormatMessage id="Edit-Tenant" />}
-                tenantData={tenantData?.data}
-                updateTenant={updateTenant}
-                setUpdate={setUpdate}
-                setVisible={setVisible}
-                sideBar={false}
-              />
-            </ThemeDialog>
+                <ThemeDialog
+                  headerClassName="pb-0"
+                  className="tenantForm"
+                  header={'Edit Tenant'}
+                  visible={visible}
+                  style={{ width: '30vw', minWidth: '300px' }}
+                  onHide={() => setVisible(false)}
+                >
+                  <TenantForm
+                    type={'edit'}
+                    popupLabel={<SafeFormatMessage id="Edit-Tenant" />}
+                    tenantData={tenantData?.data}
+                    updateTenant={updateTenant}
+                    setUpdate={setUpdate}
+                    setVisible={setVisible}
+                    sideBar={false}
+                  />
+                </ThemeDialog>
 
-            <DeleteConfirmation
-              message="Do you want to delete this Tenant?"
-              icon="pi pi-exclamation-triangle"
-              confirm={confirm}
-              setConfirm={setConfirm}
-              confirmFunction={deleteTenant}
-              update={update}
-              setUpdate={setUpdate}
-              sideBar={false}
-            />
-          </Card.Body>
-        </Card>
+                <DeleteConfirmation
+                  message="Do you want to delete this Tenant?"
+                  icon="pi pi-exclamation-triangle"
+                  confirm={confirm}
+                  setConfirm={setConfirm}
+                  confirmFunction={deleteTenant}
+                  update={update}
+                  setUpdate={setUpdate}
+                  sideBar={false}
+                />
+              </Card.Body>
+            </Card>
+          </>
+        )}
+        {selectedTable === 'Archived' && (
+          <ArchivedTenantsTable
+            selectedTable={selectedTable}
+            setSelectedTable={setSelectedTable}
+          />
+        )}
       </div>
     </Wrapper>
   )

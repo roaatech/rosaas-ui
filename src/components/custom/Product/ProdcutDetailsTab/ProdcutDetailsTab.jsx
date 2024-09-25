@@ -28,7 +28,7 @@ const ProductDetailsTab = ({ data }) => {
   const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
   const intl = useIntl()
 
-  const [selectedLanguage, setSelectedLanguage] = useState(intl.locale) // State for language selection
+  const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
 
   const handleCopy = () => {
     setToolTipText('Copied')

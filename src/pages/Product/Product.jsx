@@ -238,8 +238,10 @@ export default function Product({ children }) {
                 //   setFirst={setFirst}
                 // />
                 body={(rowData) =>
-                  ProductTrialType?.[rowData?.trialType] && (
+                  ProductTrialType?.[rowData?.trialType] ? (
                     <Label {...ProductTrialType[rowData?.trialType]} />
+                  ) : (
+                    '__'
                   )
                 }
                 showFilterMenu={false}
@@ -266,13 +268,14 @@ export default function Product({ children }) {
                   <TableDate
                     createdDate={data.createdDate}
                     editedDate={data.editedDate}
+                    hasLabel={true}
                   />
                 )}
                 style={{ width: '250px', maxidth: '250px' }}
                 header={
                   <ColumnSortHeader
                     text={<SafeFormatMessage id="Date" />}
-                    field="editedDate"
+                    field="createdDate"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}

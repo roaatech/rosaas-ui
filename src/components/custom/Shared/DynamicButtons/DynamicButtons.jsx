@@ -7,7 +7,12 @@ import useRequest from '../../../../axios/apis/useRequest'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import TenantForm from '../../tenant/TenantForm/TenantForm'
-import { Dropdown, Button } from '@themesberg/react-bootstrap'
+import {
+  Dropdown,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChevronDown,
@@ -387,23 +392,64 @@ const DynamicButtons = ({ buttons }) => {
             } else if (button.type === 'toggle') {
               return (
                 <span key={index}>
-                  <Button
-                    variant={
-                      toggleStates[button.group][index]
-                        ? button.variant
-                        : `${button.variant} transparent`
-                    }
-                    onClick={() => handleToggle(index, button.group)}
-                    style={{
-                      opacity: toggleStates[button.group][index] ? 1 : 0.5,
-                      color: toggleStates[button.group][index]
-                        ? 'var(--second-color) !important'
-                        : '',
-                    }}
-                  >
-                    {button.icon}
-                    {button.label && <SafeFormatMessage id={button.label} />}
-                  </Button>
+                  {button.tooltip ? (
+                    <OverlayTrigger
+                      trigger={['hover', 'focus']}
+                      overlay={<Tooltip>{button.tooltip}</Tooltip>}
+                    >
+                      <Button
+                        variant={
+                          toggleStates[button.group][index]
+                            ? button.variant
+                            : `${button.variant} transparent`
+                        }
+                        onClick={() => handleToggle(index, button.group)}
+                        style={{
+                          opacity: toggleStates[button.group][index] ? 1 : 0.8,
+                          color: toggleStates[button.group][index]
+                            ? 'var(--second-color) !important'
+                            : '',
+                          borderColor: toggleStates[button.group][index]
+                            ? 'var(--second-color) !important'
+                            : '',
+                          boxShadow: toggleStates[button.group][index]
+                            ? `inset 0 0 0 2px var(--second-color) !important`
+                            : 'none',
+                        }}
+                      >
+                        {button.icon}
+                        {'  '}
+                        {button.label && (
+                          <SafeFormatMessage id={button.label} />
+                        )}
+                      </Button>
+                    </OverlayTrigger>
+                  ) : (
+                    <Button
+                      variant={
+                        toggleStates[button.group][index]
+                          ? button.variant
+                          : `${button.variant} transparent`
+                      }
+                      onClick={() => handleToggle(index, button.group)}
+                      style={{
+                        opacity: toggleStates[button.group][index] ? 1 : 0.8,
+                        color: toggleStates[button.group][index]
+                          ? 'var(--second-color) !important'
+                          : '',
+                        borderColor: toggleStates[button.group][index]
+                          ? 'var(--second-color) !important'
+                          : '',
+                        boxShadow: toggleStates[button.group][index]
+                          ? `inset 0 0 0 2px var(--second-color) !important`
+                          : 'none',
+                      }}
+                    >
+                      {button.icon}
+                      {'  '}
+                      {button.label && <SafeFormatMessage id={button.label} />}
+                    </Button>
+                  )}
                 </span>
               )
             }
@@ -425,76 +471,17 @@ const DynamicButtons = ({ buttons }) => {
                   if (button.type === 'delete') {
                     return (
                       <>
-                      {button.separator && button.separator === true && ( 
-                          <Dropdown.Divider />  
-                      )}
-                      <span key={index}>
-                        <Dropdown.Divider />
-                        <Dropdown.Item
-                          className="redColor"
-                          onClick={() => {
-                            setConfirm(true)
-                            setCurrentButtonIndex(index)
-                          }}
-                        >
-                          {button.icon}{' '}
-                          {button.label && (
-                            <SafeFormatMessage id={button.label} />
-                          )}
-                        </Dropdown.Item>
-                      </span>
-                      </>
-                    )
-                  } else if (button.type === 'form') {
-                    return (
-                      <>
-                      {button.separator && button.separator === true && ( 
-                          <Dropdown.Divider />  
-                      )}
-                        <Dropdown.Item
-                          className={`${button.variant && button.variant}`}
-                          key={index}
-                          onClick={() => {
-                            setVisible(true);
-                            setCurrentButtonIndex(index);
-                          }}
-                          disabled={button.disable}
-                        >
-                          {button.icon}{' '}
-                          {button.label && <SafeFormatMessage id={button.label} />}
-                        </Dropdown.Item>
-                      </>
-                    );
-                  }else if (button.type == 'action') {
-                    if (button.label != 'Delete') {
-                      return (
-                        <>
-                        {button.separator && button.separator === true && ( 
-                            <Dropdown.Divider />  
+                        {button.separator && button.separator === true && (
+                          <Dropdown.Divider />
                         )}
-                        <Dropdown.Item
-                          key={index}
-                          onClick={button.func}
-                          disabled={button.disable}
-                        >
-                          {button.icon}{' '}
-                          {button.label && (
-                            <SafeFormatMessage id={button.label} />
-                          )}
-                        </Dropdown.Item>
-                        </>
-                      )
-                    } else {
-                      return (
-                        <>
-                        {button.separator && button.separator === true && ( 
-                            <Dropdown.Divider />  
-                        )}
-                        <span key={index}> 
+                        <span key={index}>
+                          <Dropdown.Divider />
                           <Dropdown.Item
-                            onClick={button.func}
                             className="redColor"
-                            disabled={button.disable}
+                            onClick={() => {
+                              setConfirm(true)
+                              setCurrentButtonIndex(index)
+                            }}
                           >
                             {button.icon}{' '}
                             {button.label && (
@@ -503,32 +490,95 @@ const DynamicButtons = ({ buttons }) => {
                           </Dropdown.Item>
                         </span>
                       </>
+                    )
+                  } else if (button.type === 'form') {
+                    return (
+                      <>
+                        {button.separator && button.separator === true && (
+                          <Dropdown.Divider />
+                        )}
+                        <Dropdown.Item
+                          className={`${button.variant && button.variant}`}
+                          key={index}
+                          onClick={() => {
+                            setVisible(true)
+                            setCurrentButtonIndex(index)
+                          }}
+                          disabled={button.disable}
+                        >
+                          {button.icon}{' '}
+                          {button.label && (
+                            <SafeFormatMessage id={button.label} />
+                          )}
+                        </Dropdown.Item>
+                      </>
+                    )
+                  } else if (button.type == 'action') {
+                    if (button.label != 'Delete') {
+                      return (
+                        <>
+                          {button.separator && button.separator === true && (
+                            <Dropdown.Divider />
+                          )}
+                          <Dropdown.Item
+                            key={index}
+                            onClick={button.func}
+                            disabled={button.disable}
+                          >
+                            {button.icon}{' '}
+                            {button.label && (
+                              <SafeFormatMessage id={button.label} />
+                            )}
+                          </Dropdown.Item>
+                        </>
+                      )
+                    } else {
+                      return (
+                        <>
+                          {button.separator && button.separator === true && (
+                            <Dropdown.Divider />
+                          )}
+                          <span key={index}>
+                            <Dropdown.Item
+                              onClick={button.func}
+                              className="redColor"
+                              disabled={button.disable}
+                            >
+                              {button.icon}{' '}
+                              {button.label && (
+                                <SafeFormatMessage id={button.label} />
+                              )}
+                            </Dropdown.Item>
+                          </span>
+                        </>
                       )
                     }
                   } else if (button.type === 'toggle') {
                     return (
                       <>
-                      {button.separator && button.separator === true && ( 
-                          <Dropdown.Divider />  
-                      )}
-                      <Dropdown.Item
-                        key={index}
-                        onClick={() => handleToggle(index, button.group)}
-                        className={`${button.variant && button.variant}`}
-                        style={{
-                          opacity: toggleStates[button.group][index] ? 1 : 0.5, // Transparent style
-                        }}
-                      >
-                        {button.icon}{' '}
-                        {button.label && (
-                          <SafeFormatMessage id={button.label} />
+                        {button.separator && button.separator === true && (
+                          <Dropdown.Divider />
                         )}
-                        {toggleStates[button.group][index] ? (
-                          <FontAwesomeIcon icon={faToggleOn} />
-                        ) : (
-                          <FontAwesomeIcon icon={faToggleOff} />
-                        )}
-                      </Dropdown.Item>
+                        <Dropdown.Item
+                          key={index}
+                          onClick={() => handleToggle(index, button.group)}
+                          className={`${button.variant && button.variant}`}
+                          style={{
+                            opacity: toggleStates[button.group][index]
+                              ? 1
+                              : 0.5,
+                          }}
+                        >
+                          {button.icon}{' '}
+                          {button.label && (
+                            <SafeFormatMessage id={button.label} />
+                          )}
+                          {toggleStates[button.group][index] ? (
+                            <FontAwesomeIcon icon={faToggleOn} />
+                          ) : (
+                            <FontAwesomeIcon icon={faToggleOff} />
+                          )}
+                        </Dropdown.Item>
                       </>
                     )
                   }

@@ -36,7 +36,7 @@ const TableDate = ({
           {hasLabel ? (
             <DataLabelWhite
               style={{ fontWeight: 'bold' }}
-              text={UppercaseMonthDateFormat(createdDate, true)}
+              text={UppercaseMonthDateFormat(createdDate, true, true)}
               variant={'gray'}
             />
           ) : (
