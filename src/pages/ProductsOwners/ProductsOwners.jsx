@@ -233,24 +233,6 @@ export default function ProductsOwners({ children }) {
                   )
                 }
               />
-              <Column
-                body={(data) => (
-                  <TableDate
-                    createdDate={data.createdDate}
-                    editedDate={data.editedDate}
-                  />
-                )}
-                header={
-                  <ColumnSortHeader
-                    text="Date"
-                    field="editedDate"
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                  />
-                }
-              />
 
               <Column
                 body={(data, options) => (
