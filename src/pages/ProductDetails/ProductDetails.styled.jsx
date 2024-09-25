@@ -29,6 +29,9 @@ export const Wrapper = styled.div`
     right: ${(props) => (props.direction == 'rtl' ? 'auto !important' : '')};
     rotate: ${(props) => (props.direction == 'rtl' ? '180deg' : '')};
   }
+  .dynamicButtons {
+    margin-bottom: 20px !important;
+  }
 
   .card-body {
     padding: 0px;

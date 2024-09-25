@@ -44,6 +44,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Routes } from '../../routes.js'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import DataLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLabelWhite.jsx'
+import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions.jsx'
 
 export default function Product({ children }) {
   const dispatch = useDispatch()
@@ -100,7 +102,7 @@ export default function Product({ children }) {
     setFirst(event.first)
     setRows(event.rows)
   }
-
+  const { getLocalizedString } = useSharedFunctions()
   /****************************** */
   const editForm = async (id) => {
     if (!listData[id].creationEndpoint) {
@@ -158,6 +160,11 @@ export default function Product({ children }) {
                     setFirst={setFirst}
                   />
                 }
+                body={(rowData) => (
+                  <div>
+                    {getLocalizedString(rowData.displayNameLocalizations)}
+                  </div>
+                )}
               ></Column>
               <Column
                 field="systemName"
@@ -174,14 +181,64 @@ export default function Product({ children }) {
                     setFirst={setFirst}
                   />
                 }
+                body={(rowData) => (
+                  <div>
+                    <small style={{ color: 'gray' }}>
+                      {
+                        <DataLabelWhite
+                          variant={'gray'}
+                          text={
+                            <span className="fw-bold">
+                              {rowData.systemName}
+                            </span>
+                          }
+                        />
+                      }
+                    </small>{' '}
+                  </div>
+                )}
               ></Column>
 
               <Column
-                field={'client.systemName'}
+                field={'productOwner.systemName'}
                 header={
                   <ColumnSortHeader
-                    text={<SafeFormatMessage id="Client" />}
-                    field="client"
+                    text={<SafeFormatMessage id="Product-Owner" />}
+                    field="productOwner"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                showFilterMenu={false}
+              />
+              <Column
+                field={'productOwner.systemName'}
+                header={
+                  <ColumnSortHeader
+                    text={<SafeFormatMessage id="Product-Owner" />}
+                    field="productOwner"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                showFilterMenu={false}
+              />
+              <Column
+                field={'trialType'}
+                header={
+                  <ColumnSortHeader
+                    text={<SafeFormatMessage id="Product-Owner" />}
+                    field="productOwner"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}

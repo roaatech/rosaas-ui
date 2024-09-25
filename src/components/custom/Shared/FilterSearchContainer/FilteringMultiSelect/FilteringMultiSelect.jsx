@@ -39,12 +39,12 @@ const FilteringMultiSelect = ({
     const filtered =
       optionsArray &&
       optionsArray.filter((option) => {
-        const label =
+        const filterLabel =
           getLocalizedString(option?.displayNameLocalizations) ||
           option?.systemName ||
           option?.label
 
-        return label.toLowerCase().includes(filterValue)
+        return filterLabel.toLowerCase().includes(filterValue)
       })
 
     setFilteredOptions(filtered)

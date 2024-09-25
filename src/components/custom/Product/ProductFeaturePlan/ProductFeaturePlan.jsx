@@ -21,7 +21,13 @@ import { useParams } from 'react-router-dom'
 import { FormattedMessage, useIntl } from 'react-intl'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
-import { BsToggleOff, BsToggleOn, BsUiChecks } from 'react-icons/bs'
+import {
+  BsEye,
+  BsEyeSlash,
+  BsToggleOff,
+  BsToggleOn,
+  BsUiChecks,
+} from 'react-icons/bs'
 
 import {
   PlansChangeAttr,
@@ -41,6 +47,10 @@ import { GiShadowFollower } from 'react-icons/gi'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
 import { textLocale } from '../../../../const/product.js'
+import {
+  MdOutlinePublishedWithChanges,
+  MdOutlineUnpublished,
+} from 'react-icons/md'
 
 export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [currentPlanId, setCurrentPlanId] = useState('')
@@ -54,6 +64,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
     deleteFeaturePlanReq,
     publishPlan,
     getProductPlans,
+    visiblePlan,
   } = useRequest()
   const [visible, setVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
@@ -347,7 +358,21 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
       })
     )
   }
+  const toggleVisiblePlan = async (id, isVisible) => {
+    await visiblePlan(productId, {
+      id,
+      isVisible: !isVisible,
+    })
 
+    dispatch(
+      PlansChangeAttr({
+        productId,
+        planId: id,
+        attr: 'isVisible',
+        value: !isVisible,
+      })
+    )
+  }
   const handleCreateFeaturePlan = (featureId, planId) => {
     const matchingPlan = Object.values(listData).find(
       (item) => item.plan.id === planId
@@ -415,22 +440,73 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                   </th>
                   {planList &&
                     Object.keys(planList)?.map((item, index) => (
-                      <th
-                        className="border-bottom clickable-icon"
-                        key={index}
-                        onClick={() =>
-                          togglePublishPlan(item, planList[item].isPublished)
-                        }
-                      >
-                        {planList[item].isPublished ? (
-                          <span className="label green">
-                            <BsToggleOn />
+                      <th className="border-bottom clickable-icon" key={index}>
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {planList[item].isPublished
+                                ? intl.formatMessage({
+                                    id: 'Active',
+                                  })
+                                : intl.formatMessage({
+                                    id: 'Inactive',
+                                  })}
+                            </Tooltip>
+                          }
+                        >
+                          <span
+                            onClick={() =>
+                              togglePublishPlan(
+                                item,
+                                planList[item].isPublished
+                              )
+                            }
+                            className="mr-2"
+                          >
+                            {planList[item].isPublished ? (
+                              <span className="label green">
+                                <MdOutlinePublishedWithChanges />
+                              </span>
+                            ) : (
+                              <span className="label red ">
+                                <MdOutlineUnpublished />
+                              </span>
+                            )}
                           </span>
-                        ) : (
-                          <span className="label grey">
-                            <BsToggleOff />
+                        </OverlayTrigger>
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {planList[item].isVisible
+                                ? intl.formatMessage({
+                                    id: 'Visible',
+                                  })
+                                : intl.formatMessage({
+                                    id: 'Invisible',
+                                  })}
+                            </Tooltip>
+                          }
+                        >
+                          <span
+                            onClick={() =>
+                              toggleVisiblePlan(item, planList[item].isVisible)
+                            }
+                            className="mr-2"
+                          >
+                            {planList[item].isVisible ? (
+                              <span className="label green">
+                                <BsEye />
+                              </span>
+                            ) : (
+                              <span className="label red">
+                                <BsEyeSlash />
+                              </span>
+                            )}
                           </span>
-                        )}
+                        </OverlayTrigger>
+
                         <span className="mr-1">
                           {textLocale(
                             planList[item].displayNameLocalizations,

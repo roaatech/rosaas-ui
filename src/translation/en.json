@@ -829,5 +829,8 @@
   "cancellation-Reason": "Cancellation Reason",
   "cancellation-Date": "Cancellation Date",
   "Archived-Tenants": "Archived Tenants",
-  "Operational-Tenants": "Operational Tenants"
+  "Operational-Tenants": "Operational Tenants",
+  "during-trial": "During the trial,",
+  "no-charges": "No charges will apply;",
+  "card-info-securely-saved": "Your card information will be securely collected for future use."
 }

@@ -21,4 +21,7 @@ export const Wrapper = styled.div`
   .icon-rotate {
     transform: rotate(180deg);
   }
+  tr.SecretMangements {
+    transition: transform 0.6s ease;
+  }
 `

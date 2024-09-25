@@ -40,17 +40,33 @@ import CreateSecretForm from './SecretMangements/CreateSecretForm/CreateSecretFo
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
-
+import ConfirmationForm from '../../Shared/ConfirmationForm/ConfirmationForm'
+import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 const ClientCredentials = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
   const [currentClientId, setCurrentClientId] = useState('')
+
   const [currentClientIdManagement, setCurrentClientIdManagement] = useState('')
   const [type, setType] = useState('')
+  const [confirmationVisible, setConfirmationVisible] = useState(false)
+  const [confirmationType, setConfirmationType] = useState('')
+  const [popupLabel, setPopupLabel] = useState('')
+  const [confirmationValue, setConfirmationValue] = useState('')
+  const [confirmationMessage, setConfirmationMessage] = useState('')
+  const [variant, setVariant] = useState('')
   const intl = useIntl()
   const { deleteClient, getClientsListByProduct, activateClient } = useRequest()
   const dispatch = useDispatch()
   const allProducts = useSelector((state) => state.products.products)
   const productId = data?.id
+  useEffect(() => {
+    if (confirmationVisible) {
+      return
+    }
+    console.log('***********')
+
+    !confirmationVisible && setConfirmationValue('')
+  }, [confirmationVisible])
 
   const id =
     allProducts[productId]?.client?.id ||
@@ -58,7 +74,20 @@ const ClientCredentials = ({ data }) => {
 
   const deleteConfirm = (id) => {
     setCurrentClientId(id)
-    setConfirm(true)
+    setConfirmationType('revoke')
+    setConfirmationVisible(true)
+  }
+  const deactivateConfirm = (id, clientFriendlyId) => {
+    setConfirmationValue(clientFriendlyId)
+    setCurrentClientId(id)
+    setConfirmationType('deactivate')
+    setConfirmationVisible(true)
+  }
+  const activateConfirm = (id, clientFriendlyId) => {
+    setConfirmationValue(clientFriendlyId)
+    setCurrentClientId(id)
+    setConfirmationType('activate')
+    setConfirmationVisible(true)
   }
   const editForm = (id) => {
     setType('edit')
@@ -119,10 +148,65 @@ const ClientCredentials = ({ data }) => {
   const [visible, setVisible] = useState(false)
   const [visibleSecret, setvisibleSecret] = useState(false)
   const [SecretManagementVisible, setSecretManagementVisible] = useState(false)
-  const handleDeleteSecret = async () => {
-    await deleteClient(productId, currentClientId)
-    dispatch(deleteClientCredentials({ productId, itemId: currentClientId }))
+
+  const handleConfirm = async () => {
+    if (confirmationType === 'revoke') {
+      await deleteClient(productId, currentClientId)
+      dispatch(deleteClientCredentials({ productId, itemId: currentClientId }))
+    } else if (confirmationType === 'deactivate') {
+      toggleActiveClient(currentClientId, true)
+    } else if (confirmationType === 'activate') {
+      toggleActiveClient(currentClientId, false)
+    }
+    setConfirmationVisible(false)
   }
+
+  // Function to set confirmation dialog properties based on type
+  const setConfirmationDialog = (type) => {
+    switch (type) {
+      case 'revoke':
+        setPopupLabel(intl.formatMessage({ id: 'Revoke-Client' }))
+        setConfirmationValue('REVOKE')
+        setConfirmationMessage(
+          intl.formatMessage({ id: 'Type-REVOKE-to-confirm' })
+        )
+        setVariant('danger')
+        break
+      case 'regenerate':
+        setPopupLabel(intl.formatMessage({ id: 'Regenerate-Client' }))
+        setConfirmationValue('REGENERATE')
+        setConfirmationMessage(
+          intl.formatMessage({ id: 'Type-REGENERATE-to-confirm' })
+        )
+        setVariant('warning')
+        break
+
+      case 'activate':
+        setPopupLabel(intl.formatMessage({ id: 'Activate-Client' }))
+        setConfirmationMessage(
+          intl.formatMessage({ id: 'Type-Client-Id-to-confirm' })
+        )
+        setVariant('success')
+        break
+      case 'deactivate':
+        setPopupLabel(intl.formatMessage({ id: 'Deactivate-Client' }))
+        setConfirmationMessage(
+          intl.formatMessage({ id: 'Type-Client-Id-to-confirm' })
+        )
+        setVariant('warning')
+        break
+      // Add more cases as needed
+      default:
+        break
+    }
+  }
+
+  // When confirmationType changes, update the confirmation dialog properties
+  useEffect(() => {
+    if (confirmationType) {
+      setConfirmationDialog(confirmationType)
+    }
+  }, [confirmationType])
   const TableRow = (props) => {
     const {
       id,
@@ -167,7 +251,14 @@ const ClientCredentials = ({ data }) => {
             <span className="fw-normal">{displayName}</span>
           </td>
           <td>
-            <span className="fw-normal">{clientId}</span>
+            <span className="fw-normal">
+              <DataLabelWhite
+                text={clientId}
+                showCopyButton={true}
+                style={{ fontWeight: 'bold' }}
+                variant={'gray'}
+              />
+            </span>
           </td>
 
           <td>
@@ -213,19 +304,6 @@ const ClientCredentials = ({ data }) => {
                 </span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item onClick={() => toggleActiveClient(id, isActive)}>
-                  {!isActive ? (
-                    <span className=" ">
-                      <AiOutlineCheckCircle className="mx-2" />
-                      <SafeFormatMessage id="Activate" />
-                    </span>
-                  ) : (
-                    <span className=" ">
-                      <AiOutlineCloseCircle className="mx-2" />
-                      <SafeFormatMessage id="Deactivate" />
-                    </span>
-                  )}
-                </Dropdown.Item>
                 <Dropdown.Item
                   onSelect={() => {
                     editForm(id)
@@ -234,6 +312,28 @@ const ClientCredentials = ({ data }) => {
                   <FontAwesomeIcon icon={faEdit} className="mx-2" />
                   <SafeFormatMessage id="Edit" />
                 </Dropdown.Item>
+                <Dropdown.Divider />
+
+                <Dropdown.Item
+                  onClick={() =>
+                    isActive
+                      ? deactivateConfirm(id, clientId)
+                      : activateConfirm(id, clientId)
+                  }
+                >
+                  {!isActive ? (
+                    <span className="text-success">
+                      <AiOutlineCheckCircle className="mx-2" />
+                      <SafeFormatMessage id="Activate" />
+                    </span>
+                  ) : (
+                    <span className="text-danger">
+                      <AiOutlineCloseCircle className="mx-2" />
+                      <SafeFormatMessage id="Deactivate" />
+                    </span>
+                  )}
+                </Dropdown.Item>
+
                 <Dropdown.Item
                   onClick={() => deleteConfirm(id)}
                   className="text-danger"
@@ -241,6 +341,7 @@ const ClientCredentials = ({ data }) => {
                   <FontAwesomeIcon icon={faBan} className="mx-2" />
                   <SafeFormatMessage id="Revoke" />
                 </Dropdown.Item>
+                <Dropdown.Divider />
                 <Dropdown.Item onClick={() => createNewSecret(id)}>
                   <BsPlusCircleFill className="mx-2" />{' '}
                   <SafeFormatMessage id="New-Secret" />
@@ -343,14 +444,14 @@ const ClientCredentials = ({ data }) => {
             </tbody>
           </Table>
 
-          <DeleteConfirmation
+          {/* <DeleteConfirmation
             message="Are you sure you want to revoke this secret?"
             icon="pi pi-exclamation-triangle"
             confirm={confirm}
             setConfirm={setConfirm}
             confirmFunction={handleDeleteSecret}
             sideBar={false}
-          />
+          /> */}
         </Card.Body>
       </Card>
 
@@ -378,6 +479,22 @@ const ClientCredentials = ({ data }) => {
           setVisible={setvisibleSecret}
         />
       </ThemeDialog>
+      {confirmationValue && (
+        <ThemeDialog
+          visible={confirmationVisible}
+          setVisible={setConfirmationVisible}
+        >
+          <ConfirmationForm
+            setVisible={setConfirmationVisible}
+            popupLabel={popupLabel}
+            confirmationValue={confirmationValue}
+            confirmationMessage={confirmationMessage}
+            onConfirm={handleConfirm}
+            variant={variant}
+            setConfirmationValue={setConfirmationValue}
+          />
+        </ThemeDialog>
+      )}
     </Wrapper>
   )
 }

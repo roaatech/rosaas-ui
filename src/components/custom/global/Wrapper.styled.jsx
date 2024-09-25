@@ -48,6 +48,7 @@ const GlobalStyles = createGlobalStyle`
   --second-color-2:#ffe8b934;
  --table-hover:#eff0f2;
  --light-blue: #add8e676; /* Light Blue color */
+ --light-blue-2: #1e8fff15; /* Light Blue color */
   --blue-2: #1E90FF;     /* Dodger Blue color */
   --yellow2: #ceaf00;    /* Gold color */
   --yellow-light: #fff8d1;    /* Gold color */
