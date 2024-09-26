@@ -203,7 +203,7 @@ export default function UpdatedTenantsPage({ children }) {
                         ) : (
                           <SafeFormatMessage id="Archived" />
                         ),
-                      group: 'language',
+                      group: 'grid-switcher',
                       toggleValue: selectedTable === table,
                       toggleFunc: () => setSelectedTable(table),
                       variant: 'primary',

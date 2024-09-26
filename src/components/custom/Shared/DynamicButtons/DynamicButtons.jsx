@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
 import ThemeDialog from '../ThemeDialog/ThemeDialog'
@@ -389,42 +390,10 @@ const DynamicButtons = ({ buttons }) => {
                   </Button>
                 </span>
               )
-            } else if (button.type === 'toggle') {
-              return (
-                <span key={index}>
-                  {button.tooltip ? (
-                    <OverlayTrigger
-                      trigger={['hover', 'focus']}
-                      overlay={<Tooltip>{button.tooltip}</Tooltip>}
-                    >
-                      <Button
-                        variant={
-                          toggleStates[button.group][index]
-                            ? button.variant
-                            : `${button.variant} transparent`
-                        }
-                        onClick={() => handleToggle(index, button.group)}
-                        style={{
-                          opacity: toggleStates[button.group][index] ? 1 : 0.8,
-                          color: toggleStates[button.group][index]
-                            ? 'var(--second-color) !important'
-                            : '',
-                          borderColor: toggleStates[button.group][index]
-                            ? 'var(--second-color) !important'
-                            : '',
-                          boxShadow: toggleStates[button.group][index]
-                            ? `inset 0 0 0 2px var(--second-color) !important`
-                            : 'none',
-                        }}
-                      >
-                        {button.icon}
-                        {'  '}
-                        {button.label && (
-                          <SafeFormatMessage id={button.label} />
-                        )}
-                      </Button>
-                    </OverlayTrigger>
-                  ) : (
+            } else if (button.type === 'toggle') { 
+              console.log(button.group)
+              return ( 
+                <span key={index}> 
                     <Button
                       variant={
                         toggleStates[button.group][index]
@@ -432,24 +401,19 @@ const DynamicButtons = ({ buttons }) => {
                           : `${button.variant} transparent`
                       }
                       onClick={() => handleToggle(index, button.group)}
-                      style={{
-                        opacity: toggleStates[button.group][index] ? 1 : 0.8,
-                        color: toggleStates[button.group][index]
-                          ? 'var(--second-color) !important'
-                          : '',
-                        borderColor: toggleStates[button.group][index]
-                          ? 'var(--second-color) !important'
-                          : '',
-                        boxShadow: toggleStates[button.group][index]
-                          ? `inset 0 0 0 2px var(--second-color) !important`
-                          : 'none',
-                      }}
+                      className={classNames({
+                        'tog-btn-on': toggleStates[button.group][index],
+                        'tog-btn-off': !toggleStates[button.group][index],
+                        'first-tog-btn': index == 0,
+                        'last-tog-btn': index == (buttons?.length || 0) - 1,
+                        'dark-tog-btn': button.group !=  'grid-switcher', 
+                        'light-tog-btn': button.group == 'grid-switcher',
+                      })} 
                     >
                       {button.icon}
                       {'  '}
                       {button.label && <SafeFormatMessage id={button.label} />}
-                    </Button>
-                  )}
+                    </Button> 
                 </span>
               )
             }
