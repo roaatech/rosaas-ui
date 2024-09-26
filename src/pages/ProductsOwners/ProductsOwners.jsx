@@ -238,7 +238,7 @@ export default function ProductsOwners({ children }) {
                   !rowData.subscription?.startDate ? (
                     '__'
                   ) : (
-                    <div className="d-flex align-items-center flex-column justify-content-center">
+                    <div className="d-flex  flex-column ">
                       <span className="mb-1">
                         {rowData.subscription?.startDate && (
                           <DataLabelWhite
@@ -379,7 +379,6 @@ export default function ProductsOwners({ children }) {
                     </Dropdown.Menu>
                   </Dropdown>
                 )}
-                style={{ width: '60px', textAlign: 'center' }}
                 header={<SafeFormatMessage id="Actions" />}
               />
             </DataTable>

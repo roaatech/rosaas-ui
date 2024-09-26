@@ -48,12 +48,14 @@ export const DataTransform = (dateTime) => {
 export const UppercaseMonthDateFormat = (
   dateTime,
   withTime = false,
-  withSeconds = false
+  withSeconds = false,
+  withMilliseconds = false
 ) => {
   if (!dateTime || isNaN(new Date(dateTime).getTime())) {
     return ''
   }
-  const utcDateTime = new Date(dateTime + 'Z')
+
+  const utcDateTime = new Date(dateTime) // Removed 'Z' to preserve the original milliseconds
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = utcToZonedTime(utcDateTime, timeZone)
 
@@ -61,7 +63,15 @@ export const UppercaseMonthDateFormat = (
   const dateYear = localDateTime.getFullYear()
 
   const dateFormat = currentYear === dateYear ? 'MMM dd' : 'MMM dd, yyyy'
-  const timeFormat = withSeconds ? 'hh:mm:ss' : 'hh:mm'
+
+  // Add milliseconds to the time format based on the flags
+  let timeFormat = 'hh:mm'
+  if (withSeconds) {
+    timeFormat += ':ss'
+  }
+  if (withMilliseconds) {
+    timeFormat += '.SSS'
+  }
 
   const formattedDateTime = format(
     localDateTime,

@@ -27,6 +27,7 @@ import {
   BsInfoSquare,
   BsPeopleFill,
   BsFillArchiveFill,
+  BsFillPeopleFill,
 } from 'react-icons/bs'
 import {
   Nav,
@@ -271,10 +272,6 @@ export default (props = {}) => {
   const productsOwnersIsOpen = pathname.includes('products-owners')
     ? 'open'
     : 'close'
-  console.log(
-    !location.pathname.includes('tenants/canceled') &&
-      location.pathname.includes('tenants')
-  )
 
   return (
     <SidebarWrapper>
@@ -401,34 +398,18 @@ export default (props = {}) => {
                   ) : null}
                 </>
               )}
-              <CollapsableNavItem
-                eventKey={tenantsIsOpen}
+
+              <NavItem
+                key={'Tenants'}
+                link={`${Routes.Tenant.path}`}
+                isActive={
+                  !location.pathname.includes(Routes.CanceledTenantsPage?.path)
+                    ? location.pathname.includes(Routes.Tenant.path)
+                    : false
+                }
                 title={<SafeFormatMessage id="Tenants" />}
-                icon={<BsPeopleFill />}
-              >
-                <NavItem
-                  key={'Tenants-List'}
-                  link={`${Routes.Tenant.path}`}
-                  isActive={
-                    !location.pathname.includes(
-                      Routes.CanceledTenantsPage?.path
-                    )
-                      ? location.pathname.includes(Routes.Tenant.path)
-                      : false
-                  }
-                  title={<SafeFormatMessage id="Operational-Tenants" />}
-                  icon={<BsFillPersonLinesFill />}
-                />
-                <NavItem
-                  key={'Archived-Tenants'}
-                  link={Routes.CanceledTenantsPage?.path}
-                  isActive={location.pathname.includes(
-                    Routes.CanceledTenantsPage?.path
-                  )}
-                  title={<SafeFormatMessage id="Archived-Tenants" />}
-                  icon={<BsFillArchiveFill />}
-                />
-              </CollapsableNavItem>
+                icon={<BsFillPeopleFill />}
+              />
 
               {(userRole == 'productOwner' ||
                 userRole == 'superAdmin' ||

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, current } from '@reduxjs/toolkit'
 
 export const mainSlice = createSlice({
   name: 'main',
@@ -15,6 +15,7 @@ export const mainSlice = createSlice({
     pOSystemName: null,
     isLoading: false,
     environmentAlertData: [],
+    audits: { items: [], totalCount: 0 },
   },
   reducers: {
     directionFun: (state, action) => {
@@ -46,6 +47,20 @@ export const mainSlice = createSlice({
     setEnvironmentAlertData: (state, action) => {
       state.environmentAlertData = action.payload
     },
+    setAuditsData: (state, action) => {
+      const allAudits = JSON.parse(JSON.stringify(current(state.audits)))
+      if (action?.payload?.items) {
+        action.payload.items.forEach((item) => {
+          // Add new item if it doesn't already exist
+          if (!allAudits.items[item.id]) {
+            console.log({ item })
+            allAudits.items[item.id] = item
+          }
+        })
+      }
+
+      state.audits.items = allAudits.items
+    },
   },
 })
 
@@ -60,6 +75,7 @@ export const {
   setProductOwner,
   setLoading,
   setEnvironmentAlertData,
+  setAuditsData,
 } = mainSlice.actions
 
 export default mainSlice.reducer

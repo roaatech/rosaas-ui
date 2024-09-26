@@ -28,6 +28,7 @@ const useRequest = () => {
     userData,
     logOut,
     getAuditsList,
+    getAuditById,
     signUp,
     signUpPOwner,
     SignInAdminAsync,
@@ -388,6 +389,7 @@ const useRequest = () => {
     updateCompositeTemplateRequest,
     subscriptionCanceledFilteredList,
     getAuditsList,
+    getAuditById,
   }
 }
 export default useRequest

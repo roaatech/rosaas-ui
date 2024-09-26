@@ -22,8 +22,11 @@ const useUserReq = () => {
       data
     )
   }
-  const getAuditsList = async (data) => {
-    return await Request.get('management/sadmin/v1/Auditss', data)
+  const getAuditsList = async (query) => {
+    return await Request.get(`management/sadmin/v1/Audits${query}`)
+  }
+  const getAuditById = async (id) => {
+    return await Request.get(`management/sadmin/v1/Audits/${id}`)
   }
   const signUp = async (data) => {
     return await Request.post('identity/tadmin/v1/Auth/Signup', data)
@@ -63,6 +66,7 @@ const useUserReq = () => {
     requestPasswordReset,
     resetPassword,
     getAuditsList,
+    getAuditById,
   }
 }
 

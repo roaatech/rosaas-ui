@@ -1,11 +1,21 @@
 import React from 'react'
 import { Modal, Button, Card, Table } from '@themesberg/react-bootstrap'
 import { Wrapper } from './ShowDetails.styled.jsx'
-import { FormattedMessage } from 'react-intl'
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage.jsx'
+import MetaDataAccordion from '../../tenant/MetaDataAccordion/MetaDataAccordion.jsx'
+import DescriptionCell from '../DescriptionCell/DescriptionCell.jsx'
 
 const ShowDetails = ({ data, setVisible, popupLabel }) => {
-  // console.log({ data })
+  // Render logic for specific fields like 'Action Details' or 'Description'
+  const renderField = (key, value) => {
+    console.log({ key })
+    if (key === 'Action Details') {
+      // Return the DescriptionCell component
+      return <DescriptionCell data={{ description: value }} />
+    }
+    return value
+  }
+
   return (
     <Wrapper>
       <div>
@@ -25,17 +35,19 @@ const ShowDetails = ({ data, setVisible, popupLabel }) => {
               style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}
             >
               <tbody>
-                {Object.keys(data).map((item, index) => (
+                {Object.keys(data).map((key, index) => (
                   <tr key={index}>
                     <td>
-                      <SafeFormatMessage id={item} />
+                      <SafeFormatMessage id={key} />
                     </td>
                     <td
                       className={`fw-bold ${
-                        item === 'Description' ? 'description' : ''
+                        key === 'Description' || key == 'Action Details'
+                          ? 'description'
+                          : ''
                       }`}
                     >
-                      {data[item]}
+                      {renderField(key, data[key])}
                     </td>
                   </tr>
                 ))}
