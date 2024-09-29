@@ -149,7 +149,7 @@ export const Routes = {
     roles: ['superAdmin'],
   },
   EnvironmentInfo: {
-    path: `${adminPanel}/settings/environment-info`,
+    path: `${adminPanel}/system/environment-info`,
     component: EnvironmentInfo,
     roles: ['superAdmin'],
   },

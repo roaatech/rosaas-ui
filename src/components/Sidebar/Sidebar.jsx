@@ -576,14 +576,6 @@ export default (props = {}) => {
                       isActive={location.pathname.includes(Routes.Profile.path)}
                     />
                   )}
-                  <NavItem
-                    title={'Environment Info'}
-                    link={Routes.EnvironmentInfo.path}
-                    icon={<BsInfoSquare />}
-                    isActive={location.pathname.includes(
-                      Routes.EnvironmentInfo.path
-                    )}
-                  />
                 </CollapsableNavItem>
               )}
 
@@ -605,6 +597,14 @@ export default (props = {}) => {
                       link={Routes.Logs.path}
                       icon={<MdMonitorHeart />}
                       isActive={location.pathname.includes(Routes.Logs.path)}
+                    />
+                    <NavItem
+                      title={'Environment Info'}
+                      link={Routes.EnvironmentInfo.path}
+                      icon={<BsInfoSquare />}
+                      isActive={location.pathname.includes(
+                        Routes.EnvironmentInfo.path
+                      )}
                     />
                   </CollapsableNavItem>
                 </>

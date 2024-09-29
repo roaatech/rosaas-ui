@@ -9,7 +9,7 @@ export const Wrapper = styled.span`
   }
 
   .label {
-    padding: 4px 6px;
+    padding: 3px 6px;
     border-radius: 5px;
     font-size: var(--smallFont);
     background-color: var(--primary1);
