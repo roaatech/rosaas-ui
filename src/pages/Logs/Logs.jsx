@@ -87,7 +87,8 @@ export default function Logs() {
           <div>
             <BsCalendar2Fill className="ml-0 mb-1 mr-1" />
             {UppercaseMonthDateFormat(
-              logDetailResponse.data.data.createdDate,
+              logDetailResponse.data.data.stringDate,
+              true,
               true,
               true
             )}
@@ -96,7 +97,21 @@ export default function Logs() {
       )
     }
   }
+  const handleData = (data) => {
+    if (!data) return {}
 
+    const { level, template, message, exception, properties, createdDate } =
+      data
+
+    return {
+      Level: level,
+      Template: template,
+      Message: message,
+      Exception: exception,
+      Properties: properties,
+      createdDate: UppercaseMonthDateFormat(createdDate, true, true),
+    }
+  }
   return (
     <Wrapper>
       <BreadcrumbComponent
@@ -219,13 +234,13 @@ export default function Logs() {
         <ThemeDialog visible={visible} setVisible={setVisible} size={'xl'}>
           <ShowDetails
             popupLabel={popUpLabel}
-            data={logDetails}
+            data={handleData(logDetails)}
             setVisible={setVisible}
             className={{
-              message: 'description',
-              template: 'description',
-              exception: 'description',
-              properties: 'description',
+              Message: 'description',
+              Template: 'description',
+              Exception: 'description',
+              Properties: 'description',
             }}
           />
         </ThemeDialog>
