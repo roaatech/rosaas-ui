@@ -41,7 +41,7 @@ const ShowDetails = ({
   }
 
   const renderField = (key, value) => {
-    if (key === 'Action Details') {
+    if (key === 'Action-Details') {
       return <RowExpansionTemplate data={value} />
     }
     return value
@@ -73,7 +73,7 @@ const ShowDetails = ({
                     </td>
                     <td
                       className={`fw-bold ${className[key] || ''} ${
-                        key === 'Description' || key === 'Action Details'
+                        key === 'Description' || key === 'Action-Details'
                           ? 'description'
                           : ''
                       }`}

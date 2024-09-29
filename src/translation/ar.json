@@ -852,5 +852,16 @@
   "Deletion": "حذف",
   "Deactivation": "إلغاء التفعيل",
   "Activation": "تفعيل",
-  "Creation": "إنشاء"
+  "Creation": "إنشاء",
+  "Logs-List": "قائمة السجلات",
+  "Logs": "السجلات",
+  "System": "النظام",
+  "Level": "المستوى",
+  "Message": "الرسالة",
+  "Template": "قالب",
+  "Properties": "خصائص",
+  "Exception": "استثناء",
+  "Audits": "التدقيقات",
+  "Duration-(ms)": "المدة (مللي ثانية)",
+  "Action-Details": "تفاصيل الإجراء"
 }

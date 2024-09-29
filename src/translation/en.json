@@ -857,5 +857,16 @@
   "Deletion": "Deletion",
   "Deactivation": "Deactivation",
   "Activation": "Activation",
-  "Creation": "Creation"
+  "Creation": "Creation",
+  "Logs-List": "Logs List",
+  "Logs": "Logs",
+  "System": "System",
+  "Level": "Level",
+  "Message": "Message",
+  "Template": "Template",
+  "Properties": "Properties",
+  "Exception": "Exception",
+  "Audits": "Audits",
+  "Duration-(ms)": "Duration (ms)",
+  "Action-Details": "Action Details"
 }

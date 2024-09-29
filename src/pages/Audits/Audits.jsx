@@ -108,14 +108,14 @@ export default function Audits() {
 
     return {
       Method: method,
-      'Created Date': createdDate,
-      'Action Type': actionType,
-      'Action Category': actionCategory,
-      'Action Name': actionName,
-      'User Type': userType,
-      'Client ID': clientId,
-      'Duration (ms)': duration,
-      'Action Details': jsonData,
+      'Created-Date': createdDate,
+      'Action-Type': actionType,
+      'Action-Category': actionCategory,
+      'Action-Name': actionName,
+      'User-Type': userType,
+      'Client-ID': clientId,
+      'Duration-(ms)': duration,
+      'Action-Details': jsonData,
     }
   }
 
