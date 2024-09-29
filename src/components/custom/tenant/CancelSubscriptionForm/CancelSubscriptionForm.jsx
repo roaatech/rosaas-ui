@@ -137,12 +137,12 @@ const CancelSubscriptionForm = ({
     userRole === 'clientAdmin' && type !== 'activate'
       ? [1, 4, 5].map((key) => ({
           value: key,
-          label: cancellationOrSuspensionReasons[key].displayName, // or reasons[key].value if you need JSX
+          label: cancellationOrSuspensionReasons[key].value, // or reasons[key].value if you need JSX
         }))
       : Object.entries(cancellationOrSuspensionReasons).map(
           ([key, reason]) => ({
             value: parseInt(key),
-            label: reason.displayName, // or reason.value if you need JSX
+            label: reason.value, // or reason.value if you need JSX
           })
         )
 

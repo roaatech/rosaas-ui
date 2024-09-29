@@ -129,25 +129,25 @@ export const subscriptionStatus = {
 export const actionTypeColors = {
   GET: {
     background: '#61affe', // Light blue for GET
-    value: <SafeFormatMessage id="GET" />,
+    value: 'GET',
     color: 'var(--white-pure)',
     displayName: 'GET',
   },
   PUT: {
     background: '#fca130', // Orange for PUT
-    value: <SafeFormatMessage id="PUT" />,
+    value: 'PUT',
     color: 'var(--white-pure)',
     displayName: 'PUT',
   },
   POST: {
     background: '#49cc90', // Green for POST
-    value: <SafeFormatMessage id="POST" />,
+    value: 'POST',
     color: 'var(--white-pure)',
     displayName: 'POST',
   },
   DELETE: {
     background: '#f93e3e', // Red for DELETE
-    value: <SafeFormatMessage id="DELETE" />,
+    value: 'DELETE',
     color: 'var(--white-pure)',
     displayName: 'DELETE',
   },
@@ -174,10 +174,10 @@ export const subscriptionMode = {
 }
 
 export const tenantStep = [
-  { id: 1, label: 'Creation' },
-  { id: 2, label: 'Activation' },
-  { id: 3, label: 'Deactivation' },
-  { id: 4, label: 'Deletion' },
+  { id: 1, label: <SafeFormatMessage id="Creation" /> },
+  { id: 2, label: <SafeFormatMessage id="Activation" /> },
+  { id: 3, label: <SafeFormatMessage id="Deactivation" /> },
+  { id: 4, label: <SafeFormatMessage id="Deletion" /> },
 ]
 export const isMajorStatus = {
   true: {

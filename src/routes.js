@@ -38,6 +38,7 @@ import UpdatedTenantsPage from './pages/UpdatedTenantsPage/UpdatedTenantsPage'
 import EnvironmentInfo from './pages/Settings/EnvironmentInfo/EnvironmentInfo'
 import CanceledTenant from './pages/CanceledTenants/CanceledTenants'
 import Audits from './pages/Audits/Audits'
+import Logs from './pages/Logs/Logs'
 
 export const adminPanel = '/admin-panel'
 
@@ -45,6 +46,12 @@ export const Routes = {
   Dashboard: {
     path: `${adminPanel}/dashboard`,
     component: () => <POwnerChecker page={<Dashboard />} />,
+
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+  },
+  Logs: {
+    path: `${adminPanel}/system/logs`,
+    component: () => <POwnerChecker page={<Logs />} />,
 
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
@@ -60,7 +67,7 @@ export const Routes = {
     roles: ['superAdmin'],
   },
   audits: {
-    path: `${adminPanel}/audits`,
+    path: `${adminPanel}/system/audits`,
     component: () => <POwnerChecker page={<Audits />} />,
     roles: ['superAdmin'],
   },

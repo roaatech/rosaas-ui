@@ -166,7 +166,7 @@ const ClientCredentials = ({ data }) => {
     switch (type) {
       case 'revoke':
         setPopupLabel(intl.formatMessage({ id: 'Revoke-Client' }))
-        setConfirmationValue('REVOKE')
+        setConfirmationValue(currentClientId)
         setConfirmationMessage(
           intl.formatMessage({ id: 'Revoke-Client-Confirmation' })
         )

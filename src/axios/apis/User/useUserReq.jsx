@@ -25,8 +25,17 @@ const useUserReq = () => {
   const getAuditsList = async (query) => {
     return await Request.get(`management/sadmin/v1/Audits${query}`)
   }
+  const getLogsList = async (query) => {
+    return await Request.get(`management/sadmin/v1/Logs${query}`)
+  }
   const getAuditById = async (id) => {
     return await Request.get(`management/sadmin/v1/Audits/${id}`)
+  }
+  const getLogById = async (id) => {
+    return await Request.get(`management/sadmin/v1/Logs/${id}`)
+  }
+  const deleteLogBeforeDate = async (data) => {
+    return await Request.delete(`management/sadmin/v1/Logs`, data)
   }
   const signUp = async (data) => {
     return await Request.post('identity/tadmin/v1/Auth/Signup', data)
@@ -67,6 +76,9 @@ const useUserReq = () => {
     resetPassword,
     getAuditsList,
     getAuditById,
+    getLogsList,
+    getLogById,
+    deleteLogBeforeDate,
   }
 }
 

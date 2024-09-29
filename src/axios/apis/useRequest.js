@@ -28,6 +28,9 @@ const useRequest = () => {
     userData,
     logOut,
     getAuditsList,
+    getLogsList,
+    getLogById,
+    deleteLogBeforeDate,
     getAuditById,
     signUp,
     signUpPOwner,
@@ -390,6 +393,9 @@ const useRequest = () => {
     subscriptionCanceledFilteredList,
     getAuditsList,
     getAuditById,
+    getLogsList,
+    getLogById,
+    deleteLogBeforeDate,
   }
 }
 export default useRequest

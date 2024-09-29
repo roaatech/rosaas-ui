@@ -10,6 +10,21 @@ export const breadcrumbFun = (routeParams, data) => {
       active: 'Settings',
       icon: {},
     },
+    AuditsList: {
+      title: 'System',
+      name: 'Audits-List',
+      navigation: Routes && Routes?.audits?.path,
+      active: 'System',
+      icon: {},
+    },
+    LogsList: {
+      title: 'System',
+      name: 'Logs-List',
+      navigation: Routes && Routes?.Logs?.path,
+      active: 'System',
+      icon: {},
+    },
+
     EnvironmentInfo: {
       title: 'Settings',
       name: 'Environment Info',

@@ -41,4 +41,7 @@ export const Wrapper = styled.div`
   .grey {
     color: var(--passive-color);
   }
+  .red {
+    color: var(--red);
+  }
 `

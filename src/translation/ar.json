@@ -839,5 +839,18 @@
   "Revoke-Secret": "إلغاء السر",
   "Revoke-Secret-Confirmation": "إلغاء هذا السر سيمنعه من الوصول إلى الموارد ولا يمكن التراجع عنه. اكتب 'REVOKE' للتأكيد.",
   "Regenerate-Secret-Confirmation": "إعادة إنشاء هذا السر ستولد سرًا جديدًا وتلغي السر القديم. سيتعين تحديث الخدمات التي تستخدم السر القديم. اكتب 'REGENERATE' للتأكيد.",
-  "Administrator-Email": "البريد الإلكتروني للمدير"
+  "Administrator-Email": "البريد الإلكتروني للمدير",
+  "SubscriberRequest": "طلب المشترك",
+  "ProductOwnerRequest": "طلب مالك المنتج",
+  "ExternalSystemRequest": "طلب النظام الخارجي",
+  "SuperAdminRequest": "طلب المدير العام",
+  "Action-Category": "فئة الإجراء",
+  "Action-Type": "نوع الإجراء",
+  "Action-Name": "اسم الإجراء",
+  "Audits-List": "قائمة التدقيقات",
+  "Suspended": "معلقة",
+  "Deletion": "حذف",
+  "Deactivation": "إلغاء التفعيل",
+  "Activation": "تفعيل",
+  "Creation": "إنشاء"
 }

@@ -834,7 +834,7 @@
   "no-charges": "No charges will apply;",
   "card-info-securely-saved": "Your card information will be securely collected for future use.",
   "Revoke-Client": "Revoke Client",
-  "Revoke-Client-Confirmation": "Revoking this client will permanently prevent it from accessing any resources and will delete all its associated data. This action cannot be undone. Type 'REVOKE' to confirm.",
+  "Revoke-Client-Confirmation": "Revoking this client will permanently prevent it from accessing any resources and will delete all its associated data. This action cannot be undone.Type the Client ID to confirm.",
   "Deactivate-Client": "Deactivate Client",
   "Deactivate-Client-Confirmation": "Deactivating this client will temporarily prevent it from accessing resources. You can reactivate it later. Type the Client ID to confirm.",
   "Activate-Client": "Activate Client",
@@ -844,5 +844,18 @@
   "Revoke-Secret": "Revoke Secret",
   "Revoke-Secret-Confirmation": "Revoking this secret will prevent it from being used to access resources and cannot be undone. Type 'REVOKE' to confirm.",
   "Regenerate-Secret-Confirmation": "Regenerating this secret will create a new secret and invalidate the old one. Services using the old secret will need to be updated. Type 'REGENERATE' to confirm.",
-  "Administrator-Email": "Administrator Email"
+  "Administrator-Email": "Administrator Email",
+  "Action-Category": "Action Category",
+  "Action-Type": "Action Type",
+  "Action-Name": "Action Name",
+  "Audits-List": "Audits List",
+  "SubscriberRequest": "Subscriber Request",
+  "ProductOwnerRequest": "Product Owner Request",
+  "ExternalSystemRequest": "External System Request",
+  "SuperAdminRequest": "Super Admin Request",
+  "Suspended": "Suspended",
+  "Deletion": "Deletion",
+  "Deactivation": "Deactivation",
+  "Activation": "Activation",
+  "Creation": "Creation"
 }

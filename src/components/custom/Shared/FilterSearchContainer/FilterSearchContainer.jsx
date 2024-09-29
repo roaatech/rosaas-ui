@@ -123,10 +123,10 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
   }
   const transformToOptionsObject = (data) => {
     return Object.entries(data).reduce((acc, [key, status], index) => {
-      if (status?.displayName !== 'Canceled') {
+      if (status?.value !== 'Canceled') {
         acc[index + 1] = {
           id: index + 1,
-          label: status?.displayName,
+          label: status?.value,
         }
       }
       return acc

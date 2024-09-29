@@ -8,6 +8,6 @@ export const Wrapper = styled.div`
     position: relative;
     min-height: 47px;
     display: block;
-    max-width: 500px;
+    max-width: 800px;
   }
 `

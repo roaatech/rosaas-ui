@@ -56,12 +56,22 @@ import {
   faSignOutAlt,
   faExclamationTriangle,
   faBuildingUser,
+  faTools,
+  faCogs,
 } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
 import QuickActions from './QuickActions/QuickActions'
 import { setAllProductOwners } from '../../store/slices/productsOwners.js'
-import { MdCurrencyExchange, MdDiscount, MdInfo } from 'react-icons/md'
+import {
+  MdCurrencyExchange,
+  MdDiscount,
+  MdInfo,
+  MdMonitor,
+  MdMonitorHeart,
+  MdSettingsSuggest,
+} from 'react-icons/md'
 import SafeFormatMessage from '../custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import { AiOutlineAudit } from 'react-icons/ai'
 
 export default (props = {}) => {
   const navigate = useNavigate()
@@ -227,6 +237,7 @@ export default (props = {}) => {
     : 'close'
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
   const settingIsOpen = sidebarStatus([{ id: 'setting' }]) ? 'open' : 'close'
+  const systemIsOpen = sidebarStatus([{ id: 'system' }]) ? 'open' : 'close'
   const tenantsIsOpen = sidebarStatus([{ id: 'tenants' }]) ? 'open' : 'close'
   const [allProducts, setAllProducts] = useState([])
 
@@ -495,7 +506,7 @@ export default (props = {}) => {
                 <CollapsableNavItem
                   eventKey={settingIsOpen}
                   title={<SafeFormatMessage id="Settings" />}
-                  icon={<BsGearFill />}
+                  icon={<FontAwesomeIcon icon={faTools} />}
                 >
                   {userRole == 'superAdmin' && (
                     <>
@@ -574,6 +585,29 @@ export default (props = {}) => {
                     )}
                   />
                 </CollapsableNavItem>
+              )}
+
+              {userRole === 'superAdmin' && (
+                <>
+                  <CollapsableNavItem
+                    eventKey={systemIsOpen}
+                    title={<SafeFormatMessage id="System" />}
+                    icon={<FontAwesomeIcon icon={faCogs} />}
+                  >
+                    <NavItem
+                      title={<SafeFormatMessage id="Audits" />}
+                      link={Routes.audits.path}
+                      icon={<AiOutlineAudit />}
+                      isActive={location.pathname.includes(Routes.audits.path)}
+                    />
+                    <NavItem
+                      title={<SafeFormatMessage id="Logs" />}
+                      link={Routes.Logs.path}
+                      icon={<MdMonitorHeart />}
+                      isActive={location.pathname.includes(Routes.Logs.path)}
+                    />
+                  </CollapsableNavItem>
+                </>
               )}
             </Nav>
           </div>

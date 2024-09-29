@@ -1,17 +1,48 @@
 import React from 'react'
-import { Modal, Button, Card, Table } from '@themesberg/react-bootstrap'
+import {
+  Modal,
+  Button,
+  Card,
+  Table,
+  Container,
+  Row,
+  Col,
+} from '@themesberg/react-bootstrap'
 import { Wrapper } from './ShowDetails.styled.jsx'
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage.jsx'
-import MetaDataAccordion from '../../tenant/MetaDataAccordion/MetaDataAccordion.jsx'
-import DescriptionCell from '../DescriptionCell/DescriptionCell.jsx'
+import ReactJson from 'react-json-view'
 
-const ShowDetails = ({ data, setVisible, popupLabel }) => {
-  // Render logic for specific fields like 'Action Details' or 'Description'
+const ShowDetails = ({
+  data,
+  setVisible,
+  popupLabel,
+  style = {},
+  titleStyle = {},
+  className = {},
+}) => {
+  const RowExpansionTemplate = ({ data }) => {
+    let parsedData
+    try {
+      parsedData = JSON.parse(data)
+    } catch (error) {
+      console.error('Error parsing JSON:', error)
+      parsedData = { ERROR: 'Invalid JSON data' }
+    }
+
+    return (
+      <div>
+        <Card border="light" className="border-0">
+          <Card.Body className="p-0 description">
+            <ReactJson src={parsedData} name={false} />
+          </Card.Body>
+        </Card>
+      </div>
+    )
+  }
+
   const renderField = (key, value) => {
-    console.log({ key })
     if (key === 'Action Details') {
-      // Return the DescriptionCell component
-      return <DescriptionCell data={{ description: value }} />
+      return <RowExpansionTemplate data={value} />
     }
     return value
   }
@@ -37,15 +68,16 @@ const ShowDetails = ({ data, setVisible, popupLabel }) => {
               <tbody>
                 {Object.keys(data).map((key, index) => (
                   <tr key={index}>
-                    <td>
+                    <td style={titleStyle[key] || {}}>
                       <SafeFormatMessage id={key} />
                     </td>
                     <td
-                      className={`fw-bold ${
-                        key === 'Description' || key == 'Action Details'
+                      className={`fw-bold ${className[key] || ''} ${
+                        key === 'Description' || key === 'Action Details'
                           ? 'description'
                           : ''
                       }`}
+                      style={style[key] || {}}
                     >
                       {renderField(key, data[key])}
                     </td>

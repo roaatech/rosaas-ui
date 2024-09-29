@@ -11,6 +11,7 @@ const Label = ({
   className,
   hasBorder,
   style,
+  sameWidth,
 }) => {
   return (
     <Wrapper>
@@ -19,10 +20,13 @@ const Label = ({
           small ? 'small' : ''
         } ${className} `}
         style={{
+          display: 'inline-block',
           color,
           background,
           borderColor: hasBorder && background,
           border: hasBorder && '1px solid',
+          width: sameWidth ? `${sameWidth}px` : 'auto',
+          textAlign: sameWidth ? 'center' : '',
           ...style,
         }}
       >

@@ -111,7 +111,7 @@ const FilteringMultiSelect = ({
         dropdownIcon={FaFilter}
         itemCheckboxIcon={MdSelectAll}
         panelHeaderTemplate={hasSelectAll && panelHeaderTemplate}
-        maxSelectedLabels={3}
+        maxSelectedLabels={0}
       />
     </div>
   )

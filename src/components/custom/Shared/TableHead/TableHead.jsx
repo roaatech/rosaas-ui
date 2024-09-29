@@ -30,7 +30,7 @@ const TableHead = ({
           <h4 className="m-0">{title}</h4>
         </div>
         <div className="d-flex flex-wrap">
-          <div>
+          <div className="d-flex align-items-center">
             {search && (
               <div className={`p-input-icon-left mx-2`}>
                 <BsSearch />
@@ -45,7 +45,7 @@ const TableHead = ({
               </div>
             )}
             {children && children?.length > 1 ? (
-              <div className="p-input-icon-left mt-2 mr-2">{children[1]}</div>
+              <div className="p-input-icon-left mx-2">{children[1]}</div>
             ) : null}
           </div>
           {children && children?.length > 1 && button && (
