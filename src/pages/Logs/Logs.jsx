@@ -107,8 +107,8 @@ export default function Logs() {
       Level: level,
       Template: template,
       Message: message,
-      Exception: exception,
       Properties: properties,
+      Exception: exception,
       createdDate: UppercaseMonthDateFormat(createdDate, true, true),
     }
   }

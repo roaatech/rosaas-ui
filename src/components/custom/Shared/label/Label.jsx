@@ -11,7 +11,7 @@ const Label = ({
   className,
   hasBorder,
   style,
-  sameWidth,
+  sameWidth = false,
 }) => {
   return (
     <Wrapper>
@@ -25,7 +25,7 @@ const Label = ({
           background,
           borderColor: hasBorder && background,
           border: hasBorder && '1px solid',
-          width: sameWidth ? `${sameWidth}px` : 'auto',
+          width: sameWidth ? `${sameWidth}px` : '',
           textAlign: sameWidth ? 'center' : '',
           ...style,
         }}
