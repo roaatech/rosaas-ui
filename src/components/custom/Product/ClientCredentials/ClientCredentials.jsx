@@ -38,10 +38,15 @@ import SecretMangements from './SecretMangements/SecretMangements'
 import { GiThreeKeys } from 'react-icons/gi'
 import CreateSecretForm from './SecretMangements/CreateSecretForm/CreateSecretForm'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
-import { AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai'
+import {
+  AiFillWarning,
+  AiOutlineCheckCircle,
+  AiOutlineCloseCircle,
+} from 'react-icons/ai'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 import ConfirmationForm from '../../Shared/ConfirmationForm/ConfirmationForm'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
+import { set } from 'lodash'
 const ClientCredentials = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
   const [currentClientId, setCurrentClientId] = useState('')
@@ -54,6 +59,9 @@ const ClientCredentials = ({ data }) => {
   const [confirmationValue, setConfirmationValue] = useState('')
   const [confirmationMessage, setConfirmationMessage] = useState('')
   const [variant, setVariant] = useState('')
+  const [confirmationInputLabel, setConfirmationInputLabel] = useState('')
+  const [confirmationTooltipMessage, setConfirmationTooltipMessage] =
+    useState('')
   const intl = useIntl()
   const { deleteClient, getClientsListByProduct, activateClient } = useRequest()
   const dispatch = useDispatch()
@@ -72,12 +80,15 @@ const ClientCredentials = ({ data }) => {
     allProducts[productId]?.client?.id ||
     allProducts[productId]?.productOwner?.id
 
-  const deleteConfirm = (id) => {
+  const deleteConfirm = (id, clientFriendlyId) => {
     setCurrentClientId(id)
+    setConfirmationValue(clientFriendlyId)
     setConfirmationType('revoke')
     setConfirmationVisible(true)
   }
   const deactivateConfirm = (id, clientFriendlyId) => {
+    console.log({ clientFriendlyId })
+
     setConfirmationValue(clientFriendlyId)
     setCurrentClientId(id)
     setConfirmationType('deactivate')
@@ -166,24 +177,85 @@ const ClientCredentials = ({ data }) => {
     switch (type) {
       case 'revoke':
         setPopupLabel(intl.formatMessage({ id: 'Revoke-Client' }))
-        setConfirmationValue(currentClientId)
         setConfirmationMessage(
-          intl.formatMessage({ id: 'Revoke-Client-Confirmation' })
+          <>
+            <AiFillWarning className="mx-1 mb-1" />
+            <SafeFormatMessage id="Warning" /> !{' '}
+            <SafeFormatMessage id="Revoke-Client-Confirmation" />
+          </>
         )
         setVariant('danger')
+        setConfirmationInputLabel(
+          SafeFormatMessage({
+            id: 'type-the-ClientID-to-confirm',
+            boldValue: 'ClientID',
+            values: { ClientID: 'Client ID' },
+          })
+        )
+        setConfirmationTooltipMessage(
+          SafeFormatMessage({
+            id: 'To-revoke-the-Client-enter-ClientID',
+            values: { ClientID: confirmationValue },
+            boldValue: 'ClientID',
+          })
+        )
         break
 
       case 'activate':
         setPopupLabel(intl.formatMessage({ id: 'Activate-Client' }))
         setConfirmationMessage(
-          intl.formatMessage({ id: 'Activate-Client-Confirmation' })
+          <>
+            <AiFillWarning className="mx-1 mb-1" />
+            <SafeFormatMessage id="Warning" /> !{' '}
+            <SafeFormatMessage
+              boldValue="ClientID"
+              values={{ ClientID: 'Client ID' }}
+              id="Activate-Client-Confirmation"
+            />
+          </>
         )
         setVariant('success')
+        setConfirmationTooltipMessage(
+          SafeFormatMessage({
+            id: 'To-activate-the-Client-enter-ClientID',
+            values: { ClientID: confirmationValue },
+            boldValue: 'ClientID',
+          })
+        )
+        setConfirmationInputLabel(
+          SafeFormatMessage({
+            id: 'type-the-ClientID-to-confirm',
+            boldValue: 'ClientID',
+            values: { ClientID: 'Client ID' },
+          })
+        )
         break
       case 'deactivate':
-        setPopupLabel(intl.formatMessage({ id: 'Deactivate-Client' }))
+        setPopupLabel(SafeFormatMessage({ id: 'Deactivate-Client' }))
         setConfirmationMessage(
-          intl.formatMessage({ id: 'Deactivate-Client-Confirmation' })
+          <>
+            <AiFillWarning className="mx-1 mb-1" />
+            <SafeFormatMessage id="Warning" /> !{' '}
+            <SafeFormatMessage
+              boldValue="ClientID"
+              values={{ ClientID: 'Client ID' }}
+              id="Deactivate-Client-Confirmation"
+            />
+          </>
+        )
+        setConfirmationInputLabel(
+          SafeFormatMessage({
+            id: 'type-the-ClientID-to-confirm',
+            boldValue: 'ClientID',
+            values: { ClientID: 'Client ID' },
+          })
+        )
+        setConfirmationTooltipMessage(
+          SafeFormatMessage({
+            id: 'To-deactivate-the-Client-enter-ClientID',
+            values: { ClientID: confirmationValue },
+            boldValue: 'ClientID',
+          })
         )
         setVariant('warning')
         break
@@ -319,7 +391,7 @@ const ClientCredentials = ({ data }) => {
                       <SafeFormatMessage id="Activate" />
                     </span>
                   ) : (
-                    <span className="text-danger">
+                    <span className="text-warning">
                       <AiOutlineCloseCircle className="mx-2" />
                       <SafeFormatMessage id="Deactivate" />
                     </span>
@@ -327,7 +399,7 @@ const ClientCredentials = ({ data }) => {
                 </Dropdown.Item>
 
                 <Dropdown.Item
-                  onClick={() => deleteConfirm(id)}
+                  onClick={() => deleteConfirm(id, clientId)}
                   className="text-danger"
                 >
                   <FontAwesomeIcon icon={faBan} className="mx-2" />
@@ -484,6 +556,8 @@ const ClientCredentials = ({ data }) => {
             onConfirm={handleConfirm}
             variant={variant}
             setConfirmationValue={setConfirmationValue}
+            confirmationInputLabel={confirmationInputLabel}
+            tooltipMessage={confirmationTooltipMessage}
           />
         </ThemeDialog>
       }

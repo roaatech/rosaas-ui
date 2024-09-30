@@ -13,8 +13,7 @@ const FilteringMultiSelect = ({
   optionsArray,
   onSubmit,
   label,
-  width,
-  setSearchField,
+
   hasSelectAll,
 }) => {
   const [selectedValues, setSelectedValues] = useState()

@@ -32,6 +32,12 @@ export const dynamicButtonsLanguages = {
   en: 'English',
   ar: 'Arabic',
 }
+export const roles = [
+  'superAdmin',
+  'clientAdmin',
+  'ProductAdmin',
+  'tenantAdmin',
+]
 
 export const PrimaryExchangeRateCurrencyStatus = {
   true: {

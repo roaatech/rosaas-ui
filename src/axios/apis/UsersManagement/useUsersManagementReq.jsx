@@ -14,6 +14,9 @@ export default function useUsersManagementReq() {
   const createClientAdmin = async (data) => {
     return await Request.post('identity/sadmin/v1/Users/ClientAdmin', data)
   }
+  const clientsLookup = async () => {
+    return await Request.get('identity/sadmin/v1/ClientCredential/Lookup')
+  }
 
   const validateEmail = async (email) => {
     return await Request.get('identity/sadmin/v1/Users/ValidateEmail', {
@@ -28,5 +31,6 @@ export default function useUsersManagementReq() {
     validateEmail,
     createProductAdmin,
     createClientAdmin,
+    clientsLookup,
   }
 }

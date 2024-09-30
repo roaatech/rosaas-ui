@@ -73,7 +73,7 @@ const EnvironmentAlert = ({ atAdminPanel }) => {
 
   return (
     <>
-      {environmentData && (
+      {envData && Object.keys(envData).length > 0 && (
         <Alert
           variant={getLabelDetails(environmentData.apiHost).variant}
           dismissible

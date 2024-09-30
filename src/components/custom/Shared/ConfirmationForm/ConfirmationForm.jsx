@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { Modal, Button } from '@themesberg/react-bootstrap'
+import {
+  Modal,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 import { set } from 'lodash'
+import { BsInfo, BsInfoCircle } from 'react-icons/bs'
 
 const ConfirmationForm = ({
   setVisible,
@@ -14,18 +20,29 @@ const ConfirmationForm = ({
   setConfirmationValue,
   onConfirm,
   variant,
+  tooltipMessage,
+  confirmationInputLabel,
 }) => {
   const initialValues = {
     confirmationInput: '',
   }
+  console.log({ tooltipMessage })
   const [value, setValue] = useState(confirmationValue)
+  const [confirmLabel, setConfirmLabel] = useState(confirmationInputLabel)
+  const [tooltipConfirmMessage, setTooltipConfirmMessage] =
+    useState(tooltipMessage)
   useEffect(() => {
-    if (confirmationValue == value || !confirmationValue) {
-      return
+    if (confirmationValue && confirmationValue != value) {
+      setValue(confirmationValue)
+    } else if (
+      confirmationInputLabel &&
+      confirmLabel != confirmationInputLabel
+    ) {
+      setConfirmLabel(confirmationInputLabel)
+    } else if (tooltipMessage && tooltipMessage != tooltipConfirmMessage) {
+      setTooltipConfirmMessage(tooltipMessage)
     }
-
-    setValue(confirmationValue)
-  }, [confirmationValue])
+  }, [confirmationValue, confirmationInputLabel, tooltipMessage])
 
   const validationSchema = Yup.object().shape({
     confirmationInput: Yup.string()
@@ -69,8 +86,16 @@ const ConfirmationForm = ({
         </div>
         <Form.Group className="mb-3">
           <Form.Label>
-            <SafeFormatMessage id="Confirmation-Input" />{' '}
+            {confirmationInputLabel}
             <span style={{ color: 'red' }}>*</span>
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              overlay={<Tooltip>{tooltipMessage}</Tooltip>}
+            >
+              <span>
+                <BsInfoCircle className="mx-2" style={{ color: '#6c757d' }} />
+              </span>
+            </OverlayTrigger>
           </Form.Label>
           <input
             className="form-control"

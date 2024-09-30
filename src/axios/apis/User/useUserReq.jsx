@@ -25,6 +25,9 @@ const useUserReq = () => {
   const getAuditsList = async (query) => {
     return await Request.get(`management/sadmin/v1/Audits${query}`)
   }
+  const getAditsActionListLookup = async () => {
+    return await Request.get(`management/sadmin/v1/Audits/Actions`)
+  }
   const getLogsList = async (query) => {
     return await Request.get(`management/sadmin/v1/Logs${query}`)
   }
@@ -79,6 +82,7 @@ const useUserReq = () => {
     getLogsList,
     getLogById,
     deleteLogBeforeDate,
+    getAditsActionListLookup,
   }
 }
 

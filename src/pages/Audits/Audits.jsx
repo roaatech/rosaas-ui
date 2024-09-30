@@ -35,6 +35,7 @@ import { Routes } from '../../routes'
 import { useNavigate } from 'react-router-dom'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import ShowDetails from '../../components/custom/Shared/ShowDetails/ShowDetails'
+import AuditsFilterSearchContainer from '../../components/custom/Shared/FilterSearchContainer/AuditFilterSearchContainer/AuditFilterSearchContainer'
 
 export default function Audits() {
   const dispatch = useDispatch()
@@ -50,6 +51,9 @@ export default function Audits() {
   const [currentId, setCurrentId] = useState('')
   const [visible, setVisible] = useState(false)
   const [popUpLable, setPopUpLable] = useState('')
+  const [selectedData, setAllSelectedData] = useState()
+  console.log({ selectedData })
+
   // const listData = useSelector((state) => state.main.audits?.items)
   const [list, setList] = useState([])
   useEffect(() => {
@@ -59,7 +63,19 @@ export default function Audits() {
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     if (sortField) query += `&sort.Field=${sortField}`
     if (sortValue) query += `&sort.Direction=${sortValue}`
-
+    if (
+      selectedData &&
+      (Array.isArray(selectedData)
+        ? selectedData?.length > 0
+        : Object.keys(selectedData)?.length > 0)
+    ) {
+      selectedData &&
+        Object.values(selectedData).forEach((item, index) => {
+          query += `&filters[${index + 1}].Field=${item.field}&filters[${
+            index + 1
+          }].Value=${item.value}`
+        })
+    }
     const fetchAuditsList = async () => {
       dispatch(setLoading(true))
 
@@ -76,7 +92,7 @@ export default function Audits() {
     }
 
     fetchAuditsList()
-  }, [first, rows, searchValue, sortField, sortValue])
+  }, [first, rows, searchValue, sortField, sortValue, selectedData])
 
   const onPageChange = (event) => {
     setFirst(event.first)
@@ -160,6 +176,11 @@ export default function Audits() {
           title={<SafeFormatMessage id="Audits-List" />}
           icon={'pi-box'}
         />
+        <div className="mb-4">
+          <AuditsFilterSearchContainer
+            setAllSelectedData={setAllSelectedData}
+          />
+        </div>
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"

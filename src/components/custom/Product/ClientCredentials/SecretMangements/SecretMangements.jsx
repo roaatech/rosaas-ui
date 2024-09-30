@@ -29,6 +29,7 @@ import { clientCredentialsSecrets } from '../../../../../store/slices/products/p
 import DateLabel from '../../../Shared/DateLabel/DateLabel'
 import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage'
 import ConfirmationForm from '../../../Shared/ConfirmationForm/ConfirmationForm'
+import { AiFillWarning } from 'react-icons/ai'
 
 const SecretMangements = ({ data, currentClientId }) => {
   const [currentId, setCurrentId] = useState('')
@@ -42,7 +43,9 @@ const SecretMangements = ({ data, currentClientId }) => {
   const [confirmationValue, setConfirmationValue] = useState('')
   const [confirmationMessage, setConfirmationMessage] = useState('')
   const [variant, setVariant] = useState('')
-
+  const [confirmationInputLabel, setConfirmationInputLabel] = useState('')
+  const [confirmationTooltipMessage, setConfirmationTooltipMessage] =
+    useState('')
   const { getClientSecrets, DeleteClientSecret: DeleteClientSecretReq } =
     useRequest()
   const dispatch = useDispatch()
@@ -112,17 +115,53 @@ const SecretMangements = ({ data, currentClientId }) => {
         setPopupLabel(intl.formatMessage({ id: 'Revoke-Secret' }))
         setConfirmationValue('REVOKE')
         setConfirmationMessage(
-          intl.formatMessage({ id: 'Revoke-Secret-Confirmation' })
+          <>
+            <AiFillWarning className="mx-1 mb-1" />
+            <SafeFormatMessage id="Warning" /> !{' '}
+            <SafeFormatMessage id="Revoke-Secret-Confirmation" />
+          </>
         )
         setVariant('danger')
+        setConfirmationInputLabel(
+          SafeFormatMessage({
+            id: 'type-REVOKE-to-confirm',
+            values: { Revoke: 'REVOKE' },
+            boldValue: 'Revoke',
+          })
+        )
+        setConfirmationTooltipMessage(
+          SafeFormatMessage({
+            id: 'To-revoke-the-Secret-enter-Revoke',
+            values: { Revoke: 'REVOKE' },
+            boldValue: 'Revoke',
+          })
+        )
         break
       case 'regenerate':
         setPopupLabel(intl.formatMessage({ id: 'Regenerate-Secret' }))
         setConfirmationValue('REGENERATE')
         setConfirmationMessage(
-          intl.formatMessage({ id: 'Regenerate-Secret-Confirmation' })
+          <>
+            <AiFillWarning className="mx-1 mb-1" />
+            <SafeFormatMessage id="Warning" /> !{' '}
+            <SafeFormatMessage id="Regenerate-Secret-Confirmation" />
+          </>
         )
         setVariant('warning')
+        setConfirmationInputLabel(
+          SafeFormatMessage({
+            id: 'type-REGENERATE-to-confirm',
+            boldValue: 'REGENERATE',
+            values: { REGENERATE: 'REGENERATE' },
+          })
+        )
+        setConfirmationTooltipMessage(
+          SafeFormatMessage({
+            id: 'To-regenerate-the-Client-enter-Regenerate',
+            values: { REGENERATE: 'REGENERATE' },
+            boldValue: 'REGENERATE',
+          })
+        )
         break
       default:
         break
@@ -147,8 +186,7 @@ const SecretMangements = ({ data, currentClientId }) => {
   }
 
   const TableRow = (props) => {
-    const { clientId, description, id, created, clientRecordId, expiration } =
-      props
+    const { description, id, created, clientRecordId, expiration } = props
     const createdDate = created && new Date(created)
     const expirationDate = expiration && new Date(expiration)
     useEffect(() => {
@@ -223,8 +261,10 @@ const SecretMangements = ({ data, currentClientId }) => {
                   <SafeFormatMessage id="Revoke" />
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => regenerateConfirm(id)}>
-                  <FontAwesomeIcon icon={faSyncAlt} className="mx-2" />
-                  <SafeFormatMessage id="Regenerate-Secret" />
+                  <span className="text-warning">
+                    <FontAwesomeIcon icon={faSyncAlt} className="mx-2 " />
+                    <SafeFormatMessage id="Regenerate-Secret" />
+                  </span>
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -300,6 +340,8 @@ const SecretMangements = ({ data, currentClientId }) => {
                 onConfirm={handleConfirm}
                 variant={variant}
                 setConfirmationValue={setConfirmationValue}
+                confirmationInputLabel={confirmationInputLabel}
+                tooltipMessage={confirmationTooltipMessage}
               />
             </ThemeDialog>
           )}

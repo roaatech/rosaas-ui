@@ -28,6 +28,7 @@ const useRequest = () => {
     userData,
     logOut,
     getAuditsList,
+    getAditsActionListLookup,
     getLogsList,
     getLogById,
     deleteLogBeforeDate,
@@ -109,6 +110,7 @@ const useRequest = () => {
     createTenantAdmin,
     createProductAdmin,
     createClientAdmin,
+    clientsLookup,
     validateEmail,
   } = useUsersManagementReq()
   const {
@@ -396,6 +398,8 @@ const useRequest = () => {
     getLogsList,
     getLogById,
     deleteLogBeforeDate,
+    getAditsActionListLookup,
+    clientsLookup,
   }
 }
 export default useRequest
