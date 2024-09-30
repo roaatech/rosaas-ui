@@ -66,7 +66,7 @@ export default function Logs() {
         })
     }
     const fetchLogs = async () => {
-      dispatch(setLoading(true)) // Start loading
+      dispatch(setLoading(true))
       try {
         const logsList = await getLogsList(query)
         setList(logsList.data.data.items)
@@ -75,7 +75,7 @@ export default function Logs() {
       } catch (error) {
         console.error('Error fetching logs:', error)
       } finally {
-        dispatch(setLoading(false)) // End loading
+        dispatch(setLoading(false))
       }
     }
 
