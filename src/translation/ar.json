@@ -869,5 +869,7 @@
   "Exception": "استثناء",
   "Audits": "التدقيقات",
   "Duration-(ms)": "المدة (مللي ثانية)",
-  "Action-Details": "تفاصيل الإجراء"
+  "Action-Details": "تفاصيل الإجراء",
+  "Date-Range": "النطاق الزمني",
+  "Select-Date-Range": "اختر النطاق الزمني"
 }

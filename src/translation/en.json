@@ -877,5 +877,7 @@
   "Exception": "Exception",
   "Audits": "Audits",
   "Duration-(ms)": "Duration (ms)",
-  "Action-Details": "Action Details"
+  "Action-Details": "Action Details",
+  "Date-Range": "Date Range",
+  "Select-Date-Range": "Select Date Range"
 }

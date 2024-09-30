@@ -48,7 +48,7 @@ const TableHead = ({
               <div className="p-input-icon-left mx-2">{children[1]}</div>
             ) : null}
           </div>
-          {children && children?.length > 1 && button && (
+          {children && button && (
             <ButtonGroup>
               <Button
                 variant="secondary"

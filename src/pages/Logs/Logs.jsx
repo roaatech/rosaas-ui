@@ -24,6 +24,7 @@ import { setLoading, setLogsData } from '../../store/slices/main'
 import { BsCalendar2Fill, BsFillPersonLinesFill } from 'react-icons/bs'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
+import LogsFilterSearchContainer from '../../components/custom/Shared/FilterSearchContainer/LogsFilterSearchContainer/LogsFilterSearchContainer'
 
 export default function Logs() {
   const dispatch = useDispatch()
@@ -41,6 +42,8 @@ export default function Logs() {
   const [popUpLabel, setPopUpLabel] = useState('')
   // const listData = useSelector((state) => state.main.logs?.items)
   const [list, setList] = useState([])
+  const [selectedData, setAllSelectedData] = useState()
+  console.log({ lll: selectedData })
 
   useEffect(() => {
     let query = `?page=${Math.ceil(
@@ -49,7 +52,19 @@ export default function Logs() {
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     if (sortField) query += `&sort.Field=${sortField}`
     if (sortValue) query += `&sort.Direction=${sortValue}`
-
+    if (
+      selectedData &&
+      (Array.isArray(selectedData)
+        ? selectedData?.length > 0
+        : Object.keys(selectedData)?.length > 0)
+    ) {
+      selectedData &&
+        Object.values(selectedData).forEach((item, index) => {
+          query += `&filters[${index + 1}].Field=${item.field}&filters[${
+            index + 1
+          }].Value=${item.value}`
+        })
+    }
     const fetchLogs = async () => {
       dispatch(setLoading(true)) // Start loading
       try {
@@ -65,7 +80,7 @@ export default function Logs() {
     }
 
     fetchLogs()
-  }, [first, rows, searchValue, sortField, sortValue])
+  }, [first, rows, searchValue, sortField, sortValue, selectedData])
 
   const onPageChange = (event) => {
     setFirst(event.first)
@@ -127,6 +142,9 @@ export default function Logs() {
           title={<SafeFormatMessage id="Logs-List" />}
           icon={'pi-box'}
         />
+        <div className="mb-4">
+          <LogsFilterSearchContainer setAllSelectedData={setAllSelectedData} />
+        </div>
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"

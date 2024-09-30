@@ -38,7 +38,14 @@ export const roles = [
   'ProductAdmin',
   'tenantAdmin',
 ]
-
+export const logLevels = [
+  'Trace',
+  'Debug',
+  'Information',
+  'Warning',
+  'Error',
+  'Critical',
+]
 export const PrimaryExchangeRateCurrencyStatus = {
   true: {
     background: 'var(--green2)',

@@ -123,16 +123,8 @@ export default function ProductsOwners({ children }) {
           setVisibleHead={setVisibleHead}
           setFirst={setFirst}
           title={<SafeFormatMessage id="Product-Owner-List" />}
-        >
-          <ProductOwnerForm
-            popupLabel={<SafeFormatMessage id="Create-Product-Owner" />}
-            type={'create'}
-            update={update}
-            setUpdate={setUpdate}
-            visible={visibleHead}
-            setVisible={setVisibleHead}
-          />
-        </TableHead>
+        />
+
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"

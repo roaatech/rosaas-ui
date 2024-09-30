@@ -131,6 +131,7 @@ export default function Product({ children }) {
           setVisibleHead={setVisibleHead}
           setFirst={setFirst}
           title={<SafeFormatMessage id="Product-List" />}
+          button={true}
         >
           <ProductForm
             popupLabel={<SafeFormatMessage id="Create-Product" />}
