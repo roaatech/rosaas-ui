@@ -460,7 +460,7 @@ export default (props = {}) => {
                   ))}
                 </CollapsableNavItem>
               ) : (
-                <navItem
+                <NavItem
                   key={'products'}
                   title={<SafeFormatMessage id="Products" />}
                   link={Routes.products.path}
