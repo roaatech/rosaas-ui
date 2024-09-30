@@ -459,7 +459,20 @@ export default (props = {}) => {
                     />
                   ))}
                 </CollapsableNavItem>
-              ) : null}
+              ) : (
+                <navItem
+                  key={'products'}
+                  title={<SafeFormatMessage id="Products" />}
+                  link={Routes.products.path}
+                  icon={
+                    <span onClick={() => navigate(Routes.products.path)}>
+                      <BsBoxes />
+                    </span>
+                  }
+                  style={{}}
+                  isActive={location.pathname.includes(Routes.products.path)}
+                />
+              )}
 
               {userRole == 'superAdmin' &&
               Array.isArray(
