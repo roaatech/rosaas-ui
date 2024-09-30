@@ -352,9 +352,12 @@ export default (props = {}) => {
                   title={'Info'}
                   link={`${Routes.productsOwners.path}/info`}
                   icon={<MdInfo />}
-                  isActive={location.pathname.includes(
-                    `${Routes.productsOwners.path}/info`
-                  )}
+                  isActive={
+                    !Routes.products.path &&
+                    location.pathname.includes(
+                      `${Routes.productsOwners.path}/info`
+                    )
+                  }
                 />
               )}
               {showComponent && (

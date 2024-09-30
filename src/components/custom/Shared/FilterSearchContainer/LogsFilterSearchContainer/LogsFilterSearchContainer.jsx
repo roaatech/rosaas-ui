@@ -19,13 +19,10 @@ const LogsFilterSearchContainer = ({ setAllSelectedData }) => {
 
   const intl = useIntl()
 
-  const dispatch = useDispatch()
-
   const transformedLogLevels = logLevels.map((level, index) => ({
     id: level,
     label: level,
   }))
-  // console.log(tr);
 
   const convertDateRangeToTimestamps = (dateRange) => {
     if (dateRange && dateRange.length === 2) {

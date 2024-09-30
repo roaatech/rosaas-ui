@@ -80,7 +80,7 @@ const AuditsFilterSearchContainer = ({ setAllSelectedData }) => {
       if (endDate) {
         result.push({
           field: 'toDate',
-          value: new Date(endDate).getTime()(),
+          value: new Date(endDate).getTime(),
         })
       }
 
