@@ -230,6 +230,7 @@ const useRequest = () => {
     isProductOwnerRegistered,
     GetCurrentProductOwnerByUserId,
     ProductOwnerLimits,
+    getProductOwnerLookupList,
   } = usePOReq()
   return {
     SignInTenantAdminAsync,
@@ -400,6 +401,7 @@ const useRequest = () => {
     deleteLogBeforeDate,
     getAditsActionListLookup,
     clientsLookup,
+    getProductOwnerLookupList,
   }
 }
 export default useRequest

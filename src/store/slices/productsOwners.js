@@ -3,6 +3,7 @@ export const productsOwners = createSlice({
   name: 'productsOwners',
   initialState: {
     productsOwners: {},
+    lookup: {},
   },
   reducers: {
     setAllProductOwners: (state, action) => {
@@ -22,6 +23,22 @@ export const productsOwners = createSlice({
       })
 
       state.productsOwners = allProductOwners
+    },
+    setAllProductOwnersLookup: (state, action) => {
+      const allProductOwnersLookup = JSON.parse(
+        JSON.stringify(current(state.lookup))
+      )
+      action?.payload?.forEach((item) => {
+        if (allProductOwnersLookup[item.id]) {
+          allProductOwnersLookup[item.id] = {
+            ...allProductOwnersLookup[item.id],
+            ...item,
+          }
+        } else {
+          allProductOwnersLookup[item.id] = item
+        }
+      })
+      state.lookup = allProductOwnersLookup
     },
 
     productOwnerInfo: (state, action) => {
@@ -48,6 +65,7 @@ export const productsOwners = createSlice({
 // Action creators are generated for each case reducer function
 export const {
   setAllProductOwners,
+  setAllProductOwnersLookup,
   productOwnerInfo,
   removeProductOwnerStore,
   productOwnerChangeAttr,

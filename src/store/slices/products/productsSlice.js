@@ -17,7 +17,7 @@ export const productsSlice = createSlice({
       path: 'https://example.com/validate',
       method: 'Post',
     },
-    lookup: {},
+    lookup: { productsLookup: {}, plansLookup: {} },
   },
 
   reducers: {

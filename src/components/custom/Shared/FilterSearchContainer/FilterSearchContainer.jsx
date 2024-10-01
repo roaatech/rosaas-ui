@@ -38,12 +38,15 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
   const intl = useIntl()
   const { getProductsLookup, getPlanFilteredList } = useRequest()
   const dispatch = useDispatch()
-  const productsLookup = useSelector((state) => state.products?.lookup)
-  console.log({ productsLookup })
-  const plansLookup = productsLookup?.plansLookup
+  const LookupData = useSelector((state) => state.products?.lookup)
+  const productsLookup = LookupData?.productsLookup
+  const plansLookup = LookupData?.plansLookup
   const viewComponent = false
 
   useEffect(() => {
+    if (productsLookup && Object.keys(productsLookup).length > 0) {
+      return
+    }
     ;(async () => {
       const listData = await getProductsLookup()
       dispatch(setAllProductsLookup(listData.data.data))
@@ -82,7 +85,7 @@ const FilterSearchContainer = ({ setAllSelectedData }) => {
       debounceTimer = setTimeout(() => {
         sendRequest()
       }, DEBOUNCE_DELAY)
-    } else {
+    } else if (!selectedProducts) {
       sendRequest()
     }
 

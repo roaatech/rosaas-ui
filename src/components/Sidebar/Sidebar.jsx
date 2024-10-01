@@ -49,7 +49,10 @@ import { SidebarWrapper, Wrapper } from './Sidebar.styled'
 import useRequest from '../../axios/apis/useRequest'
 import { useParams } from 'react-router-dom'
 import { setAllTenant } from '../../store/slices/tenants'
-import { setAllProduct } from '../../store/slices/products/productsSlice.js'
+import {
+  setAllProduct,
+  setAllProductsLookup,
+} from '../../store/slices/products/productsSlice.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faTimes,
@@ -61,7 +64,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
 import QuickActions from './QuickActions/QuickActions'
-import { setAllProductOwners } from '../../store/slices/productsOwners.js'
+import {
+  setAllProductOwners,
+  setAllProductOwnersLookup,
+} from '../../store/slices/productsOwners.js'
 import {
   MdCurrencyExchange,
   MdDiscount,
@@ -82,12 +88,11 @@ export default (props = {}) => {
   const showClass = show ? 'show' : ''
   const dispatch = useDispatch()
   const userInfo = useSelector((state) => state.auth.userInfo)
-  const productsOwnersData = useSelector(
-    (state) => state.productsOwners.productsOwners
-  )
+  const productsOwnersData = useSelector((state) => state.productsOwners.lookup)
 
   const tenantsData = useSelector((state) => state.tenants.tenants)
-  const productsData = useSelector((state) => state.products.products)
+  const lookupData = useSelector((state) => state.products.lookup)
+  const productsData = lookupData?.productsLookup
   const [searchValue, setSearchValue] = useState('')
   const [filteredTenant, setFilteredTenant] = useState(
     Object.values(tenantsData)
@@ -116,7 +121,13 @@ export default (props = {}) => {
   }
   const [visibleHead, setVisibleHead] = useState(false)
   const [first, setFirst] = useState(0)
-  const { getTenantList, getProductList, getProductOwnersList } = useRequest()
+  const {
+    getTenantList,
+    getProductList,
+    getProductOwnersList,
+    getProductOwnerLookupList,
+    getProductsLookup,
+  } = useRequest()
   const [update, setUpdate] = useState(1)
 
   const onCollapse = () => setShow(!show)
@@ -251,12 +262,15 @@ export default (props = {}) => {
     })()
   }, [first, searchValue, update, paramsID])
   useEffect(() => {
+    if (productsData && Object.keys(productsData).length > 0) {
+      return
+    }
     let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     ;(async () => {
-      const listData = await getProductList(query)
-      dispatch(setAllProduct(listData.data.data.items))
-      setFilteredProducts(listData.data.data.items)
+      const listData = await getProductsLookup()
+      dispatch(setAllProductsLookup(listData.data.data))
+      setFilteredProducts(listData.data.data)
     })()
   }, [searchValue, allProducts])
   useEffect(() => {
@@ -266,9 +280,9 @@ export default (props = {}) => {
     let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     ;(async () => {
-      const listData = await getProductOwnersList(query)
-      dispatch(setAllProductOwners(listData.data.data.items))
-      setFilteredProductsOwner(listData.data.data.items)
+      const listData = await getProductOwnerLookupList()
+      dispatch(setAllProductOwnersLookup(listData.data.data))
+      setFilteredProductsOwner(listData.data.data)
     })()
   }, [searchValue])
 

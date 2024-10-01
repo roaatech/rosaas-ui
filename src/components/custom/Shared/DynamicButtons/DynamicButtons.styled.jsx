@@ -14,18 +14,26 @@ export const Wrapper = styled.div`
   .dynamicAction .tog-btn-on {
     color: var(--bs-btn-color) !important;
   }
-  .dynamicAction .tog-btn-off {
+  .dark-tog-btn.tog-btn-off.last-tog-btn {
     background-color: var(--bs-btn-color);
     color: var(--bs-btn-bg);
     border: 1px solid var(--bs-btn-border-color);
+    border-right: 0px;
+    border-left: 0px;
   }
+  .dark-tog-btn.tog-btn-off.first-tog-btn {
+    background-color: var(--bs-btn-color);
+    color: var(--bs-btn-bg);
+    border: 1px solid var(--bs-btn-border-color) !important;
+  }
+
   .dynamicAction .first-tog-btn {
     border-radius: 0.5rem 0rem 0rem 0.5rem;
     border-width: 1px 0 1px 1px !important;
   }
   .dynamicAction .last-tog-btn {
-    border-radius: 0rem 0.5rem 0.5rem 0rem;
-    border-width: 1px 1px 1px 0px !important;
+    /* border-radius: 0rem 0.5rem 0.5rem 0rem; */
+    /* border-width: 1px 1px 1px 0px !important; */
   }
 
   .dynamicAction .tog-btn-on:active,

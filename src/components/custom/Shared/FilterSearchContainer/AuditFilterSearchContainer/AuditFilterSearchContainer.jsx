@@ -24,12 +24,15 @@ const AuditsFilterSearchContainer = ({ setAllSelectedData }) => {
   const { getProductsLookup, getAditsActionListLookup, clientsLookup } =
     useRequest()
   const dispatch = useDispatch()
-  const productsLookup = useSelector((state) => state.products?.lookup)
-
+  const LookupData = useSelector((state) => state.products?.lookup)
+  const productsLookup = LookupData?.productsLookup
   const [auditsActionListLookup, setAuditsActionListLookup] = useState()
   const [clientsLookupList, setClientsLookupList] = useState({})
 
   useEffect(() => {
+    if (productsLookup && Object.keys(productsLookup).length > 0) {
+      return
+    }
     ;(async () => {
       const listData = await getProductsLookup()
       console.log({ listData })

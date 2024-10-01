@@ -44,6 +44,7 @@ import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import { size } from 'lodash'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
+import { textLocale } from '../../../../const/product.js'
 
 export const ProductCustomSpecificationList = (
   { productId },
@@ -64,6 +65,7 @@ export const ProductCustomSpecificationList = (
   const [popUpLable, setPopUpLable] = useState('')
   const intl = useIntl()
   const direction = useSelector((state) => state.main.direction)
+  const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
 
   const handleDeleteSpecification = async () => {
     if (list?.specifications[currentId]?.isSubscribed) {
@@ -151,13 +153,7 @@ export const ProductCustomSpecificationList = (
           </td>
           <td>
             <span className="fw-normal">
-              {direction === 'rtl'
-                ? displayName.ar
-                  ? displayName.ar
-                  : displayName.en
-                : displayName.en
-                ? displayName.en
-                : displayName.ar}
+              {textLocale(displayName, selectedLanguage, intl)}
             </span>
           </td>
           <td>
@@ -167,13 +163,7 @@ export const ProductCustomSpecificationList = (
           </td>
 
           <td className="description">
-            {direction === 'rtl'
-              ? description.ar
-                ? description.ar
-                : description.en
-              : description.en
-              ? description.en
-              : description.ar}
+            {textLocale(description, selectedLanguage, intl)}
           </td>
 
           <td>
@@ -191,18 +181,13 @@ export const ProductCustomSpecificationList = (
           </td>
           <td>
             <span className="fw-normal">
-              {direction === 'rtl'
-                ? validationFailureDescription.ar
-                  ? validationFailureDescription.ar
-                  : validationFailureDescription.en
-                : validationFailureDescription.en
-                ? validationFailureDescription.en
-                : validationFailureDescription.ar}
+              {textLocale(validationFailureDescription, selectedLanguage, intl)}
             </span>
           </td>
           <td>
             <span className="fw-normal">
-              <DataLabelWhite
+              {displayOrder}
+              {/* <DataLabelWhite
                 variant={'gray'}
                 text={
                   <>
@@ -211,7 +196,7 @@ export const ProductCustomSpecificationList = (
                     {displayOrder}
                   </>
                 }
-              />
+              /> */}
             </span>
           </td>
           <td>
@@ -276,6 +261,17 @@ export const ProductCustomSpecificationList = (
       <div className="dynamicButtons pt-0 mt-0 mb-1 ">
         <DynamicButtons
           buttons={[
+            ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+              (lang, index) => ({
+                order: 1,
+                type: 'toggle',
+                label: lang,
+                group: 'language',
+                toggleValue: selectedLanguage === lang,
+                toggleFunc: () => setSelectedLanguage(lang),
+                variant: 'primary',
+              })
+            ),
             {
               order: 1,
               type: 'form',

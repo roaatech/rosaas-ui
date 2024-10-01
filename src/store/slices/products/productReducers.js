@@ -13,13 +13,15 @@ const setAllProduct = (state, action) => {
   state.products = allProduct
 }
 const setAllProductsLookup = (state, action) => {
-  const allProduct = JSON.parse(JSON.stringify(current(state.lookup)))
+  const allProduct = JSON.parse(
+    JSON.stringify(current(state.lookup.productsLookup))
+  )
   action?.payload?.forEach((item) => {
-    if (!{ ...current(state.lookup) }[item.id]) {
+    if (!{ ...current(state.lookup.productsLookup) }[item.id]) {
       allProduct[item.id] = item
     }
   })
-  state.lookup = allProduct
+  state.lookup.productsLookup = allProduct
 }
 const updateAllProduct = (state, action) => {
   const allProduct = JSON.parse(JSON.stringify(current(state.products)))
