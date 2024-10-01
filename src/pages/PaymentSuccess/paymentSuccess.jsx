@@ -9,6 +9,7 @@ import { BsCheckCircleFill } from 'react-icons/bs'
 import { useSelector } from 'react-redux'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 import { useLocation } from 'react-router-dom'
+import { MdEmail } from 'react-icons/md'
 
 const PaymentSuccess = () => {
   const userRole = useSelector((state) => state.auth.userInfo.userType)
@@ -51,7 +52,7 @@ const PaymentSuccess = () => {
                           {location.pathname ===
                           Routes.successRegistrationPayment.path ? (
                             <span style={{ color: 'green', marginLeft: '5px' }}>
-                              Payment and Registration Successful.
+                              Payment Successful.
                             </span>
                           ) : (
                             <span style={{ color: 'green', marginLeft: '5px' }}>
@@ -67,11 +68,30 @@ const PaymentSuccess = () => {
                         {location.pathname ===
                         Routes.successRegistrationPayment.path ? (
                           <>
-                            <span>
-                              Thank you for your payment and registration.
-                              Please check your email to confirm your email
-                              address and set your password.
-                            </span>
+                            <div>
+                              <div
+                                style={{
+                                  backgroundColor: 'var(--second-color-2)',
+                                  padding: '5px',
+                                  margin: '20px',
+                                }}
+                              >
+                                Thank you for your{' '}
+                                <span
+                                  style={{ color: 'var(--second-color)' }}
+                                  className="fw-bold"
+                                >
+                                  Subscriping to RoSaaS.
+                                </span>
+                              </div>
+                              <h4>
+                                Please check your{' '}
+                                <span style={{ color: 'var(--second-color)' }}>
+                                  <MdEmail /> email
+                                </span>{' '}
+                                to set your password.
+                              </h4>
+                            </div>
                           </>
                         ) : (
                           <>
