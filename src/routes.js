@@ -260,7 +260,7 @@ export const Routes = {
   },
 
   PaymentFailed: {
-    path: '/failed',
+    path: '/payment/failed',
     component: () => <POwnerChecker page={<PaymentFailed />} />,
     roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
     type: 'noSidebar',
