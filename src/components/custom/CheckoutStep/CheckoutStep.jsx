@@ -180,16 +180,13 @@ const CheckoutPage = (data) => {
           enableAutoRenewal: autoRenewal,
         })
 
-    if (hasToPay && paymentMethod === 2) {
+   
       const navigationUrl = payment?.data.data.navigationUrl
       setNavigationLink(navigationUrl)
       if (navigationUrl && !visible) {
         const decodedUrl = decodeURIComponent(navigationUrl)
         window.location.href = decodedUrl
-      }
-    } else {
-      payment && navigate('/success')
-    }
+      } 
     !visible && dispatch(setLoading(false))
   }
 
@@ -493,7 +490,7 @@ const CheckoutPage = (data) => {
                   )} */}
                   {/* Labels and prices table */}
                   <Card.Body>
-                    {paymentMethod && hasToPay && (
+                    { (
                       <table className="table no-border p-0">
                         <tbody className="p-0">
                           <tr>
@@ -583,7 +580,7 @@ const CheckoutPage = (data) => {
                         </tbody>
                       </table>
                     )}
-                    {paymentMethod && hasToPay && (
+                    { (
                       <Form>
                         <div className=" mr-3">
                           <Form.Group className="mb-3 merged-form-group">
@@ -612,7 +609,8 @@ const CheckoutPage = (data) => {
                             )}
                           </Form.Group>
                         </div>
-
+                              
+                        { hasToPay && 
                         <Form.Group className="mb-3">
                           <Form.Check
                             type="checkbox"
@@ -626,6 +624,7 @@ const CheckoutPage = (data) => {
                             className="font-small"
                           />
                         </Form.Group>
+                        }
 
                         <Form.Group className="mb-3">
                           <Form.Check
@@ -641,28 +640,28 @@ const CheckoutPage = (data) => {
                         </Form.Group>
                       </Form>
                     )}
-                    <div className="button-container">
+                    <div className={hasToPay? "button-container-center" :"button-container"  }>
                       <Button
-                        variant="primary"
+                        variant="secondary"
                         type="button"
                         onClick={handlePayment}
-                      >
+                        className={hasToPay? 'px-6':'px-6'}                      >
                         {hasToPay ? (
                           <SafeFormatMessage id={`Checkout`} />
                         ) : (
                           <SafeFormatMessage id="Complete" />
                         )}
                       </Button>
-                      {hasToPay && (
+                      { hasToPay && (
                         <>
                           <span className="underline m-2">
                             <SafeFormatMessage id="or" />
                           </span>
                           <Button
-                            variant="secondary"
+                            variant="primary"
                             type="button"
                             onClick={() => setVisible(true)}
-                            className="mx-2"
+                            className="mx-2 "
                           >
                             <SafeFormatMessage id="Create-Payment-Link" />
                           </Button>
@@ -757,8 +756,8 @@ const CheckoutPage = (data) => {
                     )}
                     
                   </Card.Body> */}
-                  {orderData?.orderItems[0]?.trialPeriodInDays ? (
                     <Card.Footer>
+                  {orderData?.orderItems[0]?.trialPeriodInDays ? (
                       <div className="free-trial-terms">
                         <p className="fw-bold">
                           <SafeFormatMessage id="Free-Trial-Terms" />
@@ -779,11 +778,11 @@ const CheckoutPage = (data) => {
                             values={{ trialEndDate }}
                           />
                         </p>
-                      </div>
-                    </Card.Footer>
-                  ) : (
+                      </div>   
+                        ) : (
                     ''
                   )}
+                    </Card.Footer> 
                 </div>
               </Col>
             </Row>
