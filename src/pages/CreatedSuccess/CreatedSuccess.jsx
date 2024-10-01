@@ -54,7 +54,7 @@ const CreatedSuccess = () => {
                           style={{ color: 'green', marginLeft: '5px' }}
                         >
                           {' '}
-                          confirmed
+                          completed
                         </span>
                       </div>
                     </div>

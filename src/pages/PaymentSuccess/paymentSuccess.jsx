@@ -49,16 +49,10 @@ const PaymentSuccess = () => {
                           <BsCheckCircleFill
                             style={{ color: 'green', marginLeft: '5px' }}
                           />
-                          {location.pathname ===
-                          Routes.successRegistrationPayment.path ? (
-                            <span style={{ color: 'green', marginLeft: '5px' }}>
-                              Payment Successful.
-                            </span>
-                          ) : (
-                            <span style={{ color: 'green', marginLeft: '5px' }}>
-                              Payment Successful.
-                            </span>
-                          )}
+
+                          <span style={{ color: 'green', marginLeft: '5px' }}>
+                            Payment Successful.
+                          </span>
                         </h2>
                       </div>
                       <div
@@ -71,9 +65,8 @@ const PaymentSuccess = () => {
                             <div>
                               <div
                                 style={{
-                                  backgroundColor: 'var(--second-color-2)',
                                   padding: '5px',
-                                  margin: '20px',
+                                  margin: '10px',
                                 }}
                               >
                                 Thank you for your{' '}
@@ -84,13 +77,17 @@ const PaymentSuccess = () => {
                                   Subscriping to RoSaaS.
                                 </span>
                               </div>
-                              <h4>
+                              <div
+                                style={{
+                                  backgroundColor: 'var(--second-color-2)',
+                                }}
+                              >
                                 Please check your{' '}
                                 <span style={{ color: 'var(--second-color)' }}>
                                   <MdEmail /> email
                                 </span>{' '}
                                 to set your password.
-                              </h4>
+                              </div>
                             </div>
                           </>
                         ) : (
