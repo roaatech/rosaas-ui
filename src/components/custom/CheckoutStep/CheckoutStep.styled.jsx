@@ -34,6 +34,12 @@ export const Wrapper = styled.div`
   }
   .button-container {
     display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+    
+  .button-container-center {
+    display: flex;
     justify-content: center;
     align-items: center;
   }

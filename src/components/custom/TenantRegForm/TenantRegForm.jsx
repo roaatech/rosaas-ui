@@ -141,20 +141,10 @@ const CheckoutTenantReg = ({
             displayName: title,
           })
 
-          if (
-            !createTenant?.data.data?.hasToPay &&
-            createTenant?.data.data.tenantId
-          ) {
-            return userRole != 'notAuth'
-              ? navigate(
-                  `${Routes.Tenant.path}/${createTenant?.data.data.tenantId}`
-                )
-              : navigate(`/created-successfully`)
-          } else {
+          
             setDisplayName(title)
             setCurrentTenant(createTenant?.data.data.tenantId)
-            setHasToPay(createTenant?.data.data?.hasToPay)
-          }
+            setHasToPay(createTenant?.data.data?.hasToPay) 
 
           // dispatch(setStep(2))
           const id = createTenant?.data?.data?.orderId
