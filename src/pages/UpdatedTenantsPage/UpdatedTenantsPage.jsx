@@ -493,7 +493,7 @@ export default function UpdatedTenantsPage({ children }) {
                         text={SafeFormatMessage({
                           id: 'Tenant-Operational-Status',
                         })}
-                        field="SubscriptionMod"
+                        field="Tenant.Status"
                         rebase={rebase}
                         setRebase={setRebase}
                         sortField={sortField}

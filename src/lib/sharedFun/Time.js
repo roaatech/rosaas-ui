@@ -55,7 +55,7 @@ export const UppercaseMonthDateFormat = (
     return ''
   }
 
-  const utcDateTime = new Date(dateTime) // Removed 'Z' to preserve the original milliseconds
+  const utcDateTime = dateTime ? new Date(dateTime + 'Z') : ''
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = utcToZonedTime(utcDateTime, timeZone)
 

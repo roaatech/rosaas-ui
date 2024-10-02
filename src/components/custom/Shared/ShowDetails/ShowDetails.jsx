@@ -11,6 +11,7 @@ import {
 import { Wrapper } from './ShowDetails.styled.jsx'
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage.jsx'
 import ReactJson from 'react-json-view'
+import EmptyFallbackRendering from '../EmptyFallbackRendering/EmptyFallbackRendering.jsx'
 
 const ShowDetails = ({
   data,
@@ -79,7 +80,9 @@ const ShowDetails = ({
                       }`}
                       style={style[key] || {}}
                     >
-                      {renderField(key, data[key])}
+                      <EmptyFallbackRendering data={data[key]}>
+                        {renderField(key, data[key])}
+                      </EmptyFallbackRendering>
                     </td>
                   </tr>
                 ))}

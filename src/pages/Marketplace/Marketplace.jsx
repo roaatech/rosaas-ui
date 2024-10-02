@@ -124,7 +124,7 @@ const Marketplace = () => {
         </div>
       </section>
       <div className="copy">
-        COPYRIGHT <span className="yellow">&copy;</span> 2023 ROAA INFORMATION
+        COPYRIGHT <span className="yellow">&copy;</span> 2024 ROAA INFORMATION
         TECHNOLOGY
       </div>
     </Wrapper>

@@ -36,6 +36,8 @@ import { useNavigate } from 'react-router-dom'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import ShowDetails from '../../components/custom/Shared/ShowDetails/ShowDetails'
 import AuditsFilterSearchContainer from '../../components/custom/Shared/FilterSearchContainer/AuditFilterSearchContainer/AuditFilterSearchContainer'
+import EmptyFallbackRendering from '../../components/custom/Shared/EmptyFallbackRendering/EmptyFallbackRendering'
+import { arraysEqual } from '../../components/custom/Shared/SharedFunctions/sharedFunctionConsts'
 
 export default function Audits() {
   const dispatch = useDispatch()
@@ -51,7 +53,8 @@ export default function Audits() {
   const [currentId, setCurrentId] = useState('')
   const [visible, setVisible] = useState(false)
   const [popUpLable, setPopUpLable] = useState('')
-  const [selectedData, setAllSelectedData] = useState()
+  const [selectedData, setAllSelectedData] = useState([])
+  const [selectedFilters, setSelectedFilters] = useState([])
   console.log({ selectedData })
 
   // const listData = useSelector((state) => state.main.audits?.items)
@@ -75,6 +78,7 @@ export default function Audits() {
             index + 1
           }].Value=${item.value}`
         })
+      setSelectedFilters(selectedData)
     }
     const fetchAuditsList = async () => {
       dispatch(setLoading(true))
@@ -92,7 +96,15 @@ export default function Audits() {
     }
 
     fetchAuditsList()
-  }, [first, rows, searchValue, sortField, sortValue, selectedData])
+  }, [
+    first,
+    rows,
+    searchValue,
+    sortField,
+    sortValue,
+    !arraysEqual(selectedFilters, selectedData) && selectedData,
+  ])
+  console.log(arraysEqual(selectedFilters, selectedData))
 
   const onPageChange = (event) => {
     setFirst(event.first)
@@ -211,30 +223,41 @@ export default function Audits() {
                     setFirst={setFirst}
                   />
                 }
-                body={(rowData) =>
-                  rowData && (
-                    <Label
-                      {...actionTypeColors[rowData?.actionType]}
-                      sameWidth={55}
-                    />
-                  )
-                }
+                body={(rowData) => (
+                  <EmptyFallbackRendering data={rowData?.actionType}>
+                    {rowData && (
+                      <Label
+                        {...actionTypeColors[rowData?.actionType]}
+                        sameWidth={55}
+                      />
+                    )}
+                  </EmptyFallbackRendering>
+                )}
               />
 
               <Column
                 field="actionCategory"
                 header={<SafeFormatMessage id="Action-Category" />}
+                body={(rowData) => (
+                  <EmptyFallbackRendering data={rowData?.actionCategory}>
+                    {rowData?.actionCategory}
+                  </EmptyFallbackRendering>
+                )}
               />
 
               <Column
                 field="clientId"
                 header={<SafeFormatMessage id="Client-ID" />}
-                body={(rowData) =>
-                  rowData &&
-                  rowData?.clientId && (
-                    <DataLabelWhite text={rowData?.clientId} variant={'gray'} />
-                  )
-                }
+                body={(rowData) => (
+                  <EmptyFallbackRendering data={rowData?.clientId}>
+                    {rowData && rowData?.clientId && (
+                      <DataLabelWhite
+                        text={rowData?.clientId}
+                        variant={'gray'}
+                      />
+                    )}
+                  </EmptyFallbackRendering>
+                )}
                 className="clientId"
               />
 
@@ -253,6 +276,16 @@ export default function Audits() {
                     setFirst={setFirst}
                   />
                 }
+                body={(rowData) => (
+                  <EmptyFallbackRendering data={rowData?.userType}>
+                    {rowData && rowData?.userType && (
+                      <DataLabelWhite
+                        text={rowData?.userType}
+                        variant={'gray'}
+                      />
+                    )}
+                  </EmptyFallbackRendering>
+                )}
               />
               <Column
                 field="timeStamp"
@@ -270,13 +303,15 @@ export default function Audits() {
                   />
                 }
                 body={(rowData) => (
-                  <div>
-                    {rowData?.timeStamp && (
-                      <DataLabelWhite
-                        text={convertTicksToDate(rowData?.timeStamp)}
-                      />
-                    )}
-                  </div>
+                  <EmptyFallbackRendering data={rowData?.timeStamp}>
+                    <div>
+                      {rowData?.timeStamp && (
+                        <DataLabelWhite
+                          text={convertTicksToDate(rowData?.timeStamp)}
+                        />
+                      )}
+                    </div>
+                  </EmptyFallbackRendering>
                 )}
               />
               <Column

@@ -14,7 +14,11 @@ import { DataTransform } from '../../../../lib/sharedFun/Time'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
-import { textLocale, ProductTrialType } from '../../../../const/product'
+import {
+  textLocale,
+  ProductTrialType,
+  activeStatus,
+} from '../../../../const/product'
 import { useParams } from 'react-router-dom'
 import useRequest from '../../../../axios/apis/useRequest'
 import { setAllPlans } from '../../../../store/slices/products/productsSlice'
@@ -209,6 +213,18 @@ const ProductDetailsTab = ({ data }) => {
               <Col md={4} className="my-3 mx-0 ">
                 <Card>
                   <Card.Body className="py-0 px-3">
+                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                      <td className="mb-0 w-50 fw-bold">
+                        <SafeFormatMessage id="Auto-Provisioning" />
+                      </td>
+                      <td className="card-stats">
+                        <Label
+                          {...activeStatus[
+                            listData[productId]?.isTenantAutoProvisioning
+                          ]}
+                        />
+                      </td>
+                    </tr>
                     <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                       <td className="mb-0 w-50 fw-bold">
                         <SafeFormatMessage id="Description" />

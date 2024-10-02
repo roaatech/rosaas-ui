@@ -50,7 +50,7 @@ const ProductManagementSignInPage = () => {
             </Col>
           </Row>
           <div className="copy text-center mt-4">
-            COPYRIGHT <span className="yellow">&copy;</span> 2023 ROAA
+            COPYRIGHT <span className="yellow">&copy;</span> 2024 ROAA
             INFORMATION TECHNOLOGY
           </div>
         </Container>

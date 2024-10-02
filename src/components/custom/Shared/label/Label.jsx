@@ -11,7 +11,7 @@ const Label = ({
   className,
   hasBorder,
   style,
-  sameWidth = false,
+  sameWidth,
 }) => {
   return (
     <Wrapper>

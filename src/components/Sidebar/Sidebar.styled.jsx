@@ -3,7 +3,7 @@ export const Wrapper = styled.div`
   max-width: 100%;
 
   * {
-    max-width: 100%;
+    /* max-width: 100%; */
   }
   .accordion-item {
   }
@@ -11,6 +11,20 @@ export const Wrapper = styled.div`
     white-space: break-spaces;
     text-wrap: wrap;
     word-wrap: break-word;
+  }
+  .sidebar-inner {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0.5rem;
+    min-height: 93vh;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 1rem;
+    background-color: var(--primary6);
+    border-top: 1px solid var(--primary4);
+    flex-shrink: 0;
   }
   .accordion-item > * {
     transition: 0.5s;

@@ -60,7 +60,7 @@ const EnvironmentAlert = ({ atAdminPanel }) => {
 
   if (
     _nodeEnv &&
-    !atAdminPanel &&
+    // !atAdminPanel &&
     (String(_nodeEnv).toLowerCase() === 'production' ||
       String(_nodeEnv).toLowerCase() === 'prod')
   ) {

@@ -39,6 +39,8 @@ import EnvironmentInfo from './pages/Settings/EnvironmentInfo/EnvironmentInfo'
 import CanceledTenant from './pages/CanceledTenants/CanceledTenants'
 import Audits from './pages/Audits/Audits'
 import Logs from './pages/Logs/Logs'
+import ProcessFailed from './pages/ProcessFailed/ProcessFailed'
+import CanceledAccount from './pages/CanceledAccount/CanceledAccount'
 
 export const adminPanel = '/admin-panel'
 
@@ -265,7 +267,18 @@ export const Routes = {
     roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
     type: 'noSidebar',
   },
-
+  ProcessFailed: {
+    path: '/process-failed',
+    component: () => <POwnerChecker page={<ProcessFailed />} />,
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
+    type: 'noSidebar',
+  },
+  CanceledAccount: {
+    path: '/product-owner/canceled-account',
+    component: () => <POwnerChecker page={<CanceledAccount />} />,
+    roles: ['superAdmin', 'clientAdmin'],
+    type: 'noSidebar',
+  },
   CreatedSuccess: {
     path: '/created-successfully',
     component: CreatedSuccess,

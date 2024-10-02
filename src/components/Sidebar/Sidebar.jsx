@@ -72,12 +72,15 @@ import {
   MdCurrencyExchange,
   MdDiscount,
   MdInfo,
+  MdLiveTv,
   MdMonitor,
   MdMonitorHeart,
   MdSettingsSuggest,
 } from 'react-icons/md'
 import SafeFormatMessage from '../custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import { AiOutlineAudit } from 'react-icons/ai'
+import { WarningType } from '../../const/WarningsSettings.js'
+import Label from '../custom/Shared/label/Label.jsx'
 
 export default (props = {}) => {
   const navigate = useNavigate()
@@ -289,6 +292,30 @@ export default (props = {}) => {
   const setSearchValues = (searchValue) => {
     setSearchValue(searchValue)
   }
+  const envData = useSelector((state) => state.main.environmentAlertData)
+  const [isProductionEnv, setIsProductionEnv] = useState(false)
+  useEffect(() => {
+    const checkEnvDataValidity = () => {
+      // Check if envData is defined and is an object
+      if (!envData || typeof envData !== 'object') {
+        return setIsProductionEnv(false)
+      }
+
+      // Check if the object has exactly 4 keys
+      if (Object.keys(envData).length !== 4) {
+        return setIsProductionEnv(false)
+      }
+
+      // Check if all values are 'production' or 'prod'
+      const allValuesValid = Object.values(envData).every(
+        (value) => value === 'production' || value === 'prod'
+      )
+
+      setIsProductionEnv(allValuesValid) // Set state based on the validity check
+    }
+
+    checkEnvDataValidity() // Call the function to perform the check
+  }, [envData])
 
   const productsIsOpen =
     !pathname.includes('productsOwners') && pathname.includes('products/')
@@ -299,350 +326,379 @@ export default (props = {}) => {
     : 'close'
 
   return (
-    <SidebarWrapper>
-      <Navbar
-        expand={false}
-        collapseOnSelect
-        variant="dark"
-        className="navbar-theme-primary px-4 d-md-none"
-      >
-        <Navbar.Toggle
-          as={Button}
-          aria-controls="main-navbar"
-          onClick={onCollapse}
+    <Wrapper>
+      <SidebarWrapper>
+        <Navbar
+          expand={false}
+          collapseOnSelect
+          variant="dark"
+          className="navbar-theme-primary px-4 d-md-none"
         >
-          <span className="navbar-toggler-icon" />
-        </Navbar.Toggle>
-      </Navbar>
-      <CSSTransition timeout={300} in={show} classNames="sidebar-transition">
-        <SimpleBar
-          className={`collapse ${showClass} sidebar d-md-block bg-primary text-white`}
-        >
-          <div className="sidebar-inner px-2 pt-3 pb-6">
-            <div className="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
-              <div className="d-flex align-items-center">
-                <div className="user-avatar lg-avatar me-4">
-                  <Image
-                    src={ProfilePicture}
-                    className="card-img-top rounded-circle border-white"
-                  />
-                </div>
-                <div className="d-block">
-                  <h6>
-                    <SafeFormatMessage id="Hi" />, {userInfo.email}
-                  </h6>
-                  <Button
-                    as={Link}
-                    variant="secondary"
-                    size="xs"
-                    onClick={() => {
-                      dispatch(logOut())
-                      navigate(Routes.mainPage.path)
-                    }}
-                    className="text-dark"
-                  >
-                    <FontAwesomeIcon icon={faSignOutAlt} className="mx-2" />
-                    <SafeFormatMessage id="Sign-Out" />
-                  </Button>
-                </div>
-              </div>
-              <Nav.Link
-                className="collapse-close d-md-none"
-                onClick={onCollapse}
-              >
-                <FontAwesomeIcon icon={faTimes} />
-              </Nav.Link>
-            </div>
-
-            <Nav className="flex-column pt-3 pt-md-0">
-              <img src={selectedLogo} alt="logo" className="my-3 logo" />
-
-              {showComponent && (
-                <QuickActions setSearchValue={setSearchValues} />
-              )}
-              {userRole == 'clientAdmin' && (
-                <NavItem
-                  key={'details'}
-                  title={'Info'}
-                  link={`${Routes.productsOwners.path}/info`}
-                  icon={<MdInfo />}
-                  isActive={
-                    !Routes.products.path &&
-                    location.pathname.includes(
-                      `${Routes.productsOwners.path}/info`
-                    )
-                  }
-                />
-              )}
-              {showComponent && (
-                <>
-                  {active.length ? (
-                    <CollapsableNavItem
-                      eventKey={activeIsOpen}
-                      title={<SafeFormatMessage id="Active-Tenant" />}
-                      icon={BsFillPersonLinesFill}
-                    >
-                      {active.map((item, index) => (
-                        <NavItem
-                          key={index}
-                          title={item.displayName}
-                          link={`${Routes.Tenant.path}/${item.id}`}
-                          icon={<BsFillPersonFill />}
-                        />
-                      ))}
-                    </CollapsableNavItem>
-                  ) : null}
-                  {inactive.length ? (
-                    <CollapsableNavItem
-                      eventKey={inactiveIsOpen}
-                      title={<SafeFormatMessage id="Tenants" />}
-                      icon={<BsFillPersonLinesFill />}
-                    >
-                      {inactive.map((item, index) => (
-                        <NavItem
-                          key={index}
-                          title={item.displayName}
-                          link={`${Routes.Tenant.path}/${item.id}`}
-                          icon={<BsFillPersonFill />}
-                        />
-                      ))}
-                    </CollapsableNavItem>
-                  ) : null}
-
-                  {archived.length ? (
-                    <CollapsableNavItem
-                      eventKey={archivedIsOpen}
-                      title="Archived Tenants"
-                      icon={<BsFillPersonLinesFill />}
-                    >
-                      {archived.map((item, index) => (
-                        <NavItem
-                          key={index}
-                          title={item.displayName}
-                          link={`/tenants/${item.id}`}
-                        />
-                      ))}
-                    </CollapsableNavItem>
-                  ) : null}
-                </>
-              )}
-
-              <NavItem
-                key={'Tenants'}
-                link={`${Routes.Tenant.path}`}
-                isActive={
-                  !location.pathname.includes(Routes.CanceledTenantsPage?.path)
-                    ? location.pathname.includes(Routes.Tenant.path)
-                    : false
-                }
-                title={<SafeFormatMessage id="Tenants" />}
-                icon={<BsFillPeopleFill />}
-              />
-
-              {(userRole == 'productOwner' ||
-                userRole == 'superAdmin' ||
-                userRole == 'clientAdmin') &&
-              Array.isArray(
-                searchValue.length ? filteredProducts : unFilteredProducts
-              ) &&
-              (searchValue.length ? filteredProducts : unFilteredProducts)
-                .length > 0 ? (
-                <CollapsableNavItem
-                  eventKey={productsIsOpen}
-                  title={
-                    <span onClick={() => navigate(Routes.products.path)}>
-                      <SafeFormatMessage id="Products" />
-                    </span>
-                  }
-                  icon={
-                    <span onClick={() => navigate(Routes.products.path)}>
-                      <BsBoxes />
-                    </span>
-                  }
-                  style={{}}
-                >
-                  {(searchValue.length
-                    ? filteredProducts
-                    : unFilteredProducts
-                  ).map((product, index) => (
-                    <NavItem
-                      key={index}
-                      title={product.systemName}
-                      link={`${Routes.products.path}/${product.id}`}
-                      icon={<BsBoxSeam />}
-                      isActive={location.pathname.includes(
-                        `${Routes.products.path}/${product.id}`
-                      )}
+          <Navbar.Toggle
+            as={Button}
+            aria-controls="main-navbar"
+            onClick={onCollapse}
+          >
+            <span className="navbar-toggler-icon" />
+          </Navbar.Toggle>
+        </Navbar>
+        <CSSTransition timeout={300} in={show} classNames="sidebar-transition">
+          <SimpleBar
+            className={`collapse ${showClass} sidebar d-md-block bg-primary text-white`}
+          >
+            <div className="sidebar-inner px-2 pt-3 pb-6">
+              <div className="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
+                <div className="d-flex align-items-center">
+                  <div className="user-avatar lg-avatar me-4">
+                    <Image
+                      src={ProfilePicture}
+                      className="card-img-top rounded-circle border-white"
                     />
-                  ))}
-                </CollapsableNavItem>
-              ) : (
-                <NavItem
-                  key={'products'}
-                  title={<SafeFormatMessage id="Products" />}
-                  link={Routes.products.path}
-                  icon={
-                    <span onClick={() => navigate(Routes.products.path)}>
-                      <BsBoxes />
-                    </span>
-                  }
-                  style={{}}
-                  isActive={location.pathname.includes(Routes.products.path)}
-                />
-              )}
-
-              {userRole == 'superAdmin' &&
-              Array.isArray(
-                searchValue.length
-                  ? filteredProductsOwner
-                  : unFilteredProductsOwners
-              ) &&
-              (searchValue.length
-                ? filteredProductsOwner
-                : unFilteredProductsOwners
-              ).length > 0 ? (
-                <CollapsableNavItem
-                  eventKey={productsOwnersIsOpen}
-                  title={
-                    <span onClick={() => navigate(Routes.productsOwners.path)}>
-                      <SafeFormatMessage id="Products-Owners" />
-                    </span>
-                  }
-                  icon={
-                    <span onClick={() => navigate(Routes.productsOwners.path)}>
-                      <BsBuildings />
-                    </span>
-                  }
-                  style={{}}
+                  </div>
+                  <div className="d-block">
+                    <h6>
+                      <SafeFormatMessage id="Hi" />, {userInfo.email}
+                    </h6>
+                    <Button
+                      as={Link}
+                      variant="secondary"
+                      size="xs"
+                      onClick={() => {
+                        dispatch(logOut())
+                        navigate(Routes.mainPage.path)
+                      }}
+                      className="text-dark"
+                    >
+                      <FontAwesomeIcon icon={faSignOutAlt} className="mx-2" />
+                      <SafeFormatMessage id="Sign-Out" />
+                    </Button>
+                  </div>
+                </div>
+                <Nav.Link
+                  className="collapse-close d-md-none"
+                  onClick={onCollapse}
                 >
-                  {(searchValue.length
+                  <FontAwesomeIcon icon={faTimes} />
+                </Nav.Link>
+              </div>
+
+              <Nav className="flex-column pt-3 pt-md-0">
+                <img src={selectedLogo} alt="logo" className="my-3 logo" />
+
+                {showComponent && (
+                  <QuickActions setSearchValue={setSearchValues} />
+                )}
+                {userRole == 'clientAdmin' && (
+                  <NavItem
+                    key={'details'}
+                    title={'Info'}
+                    link={`${Routes.productsOwners.path}/info`}
+                    icon={<MdInfo />}
+                    isActive={
+                      !Routes.products.path &&
+                      location.pathname.includes(
+                        `${Routes.productsOwners.path}/info`
+                      )
+                    }
+                  />
+                )}
+                {showComponent && (
+                  <>
+                    {active.length ? (
+                      <CollapsableNavItem
+                        eventKey={activeIsOpen}
+                        title={<SafeFormatMessage id="Active-Tenant" />}
+                        icon={BsFillPersonLinesFill}
+                      >
+                        {active.map((item, index) => (
+                          <NavItem
+                            key={index}
+                            title={item.displayName}
+                            link={`${Routes.Tenant.path}/${item.id}`}
+                            icon={<BsFillPersonFill />}
+                          />
+                        ))}
+                      </CollapsableNavItem>
+                    ) : null}
+                    {inactive.length ? (
+                      <CollapsableNavItem
+                        eventKey={inactiveIsOpen}
+                        title={<SafeFormatMessage id="Tenants" />}
+                        icon={<BsFillPersonLinesFill />}
+                      >
+                        {inactive.map((item, index) => (
+                          <NavItem
+                            key={index}
+                            title={item.displayName}
+                            link={`${Routes.Tenant.path}/${item.id}`}
+                            icon={<BsFillPersonFill />}
+                          />
+                        ))}
+                      </CollapsableNavItem>
+                    ) : null}
+
+                    {archived.length ? (
+                      <CollapsableNavItem
+                        eventKey={archivedIsOpen}
+                        title="Archived Tenants"
+                        icon={<BsFillPersonLinesFill />}
+                      >
+                        {archived.map((item, index) => (
+                          <NavItem
+                            key={index}
+                            title={item.displayName}
+                            link={`/tenants/${item.id}`}
+                          />
+                        ))}
+                      </CollapsableNavItem>
+                    ) : null}
+                  </>
+                )}
+
+                <NavItem
+                  key={'Tenants'}
+                  link={`${Routes.Tenant.path}`}
+                  isActive={
+                    !location.pathname.includes(
+                      Routes.CanceledTenantsPage?.path
+                    )
+                      ? location.pathname.includes(Routes.Tenant.path)
+                      : false
+                  }
+                  title={<SafeFormatMessage id="Tenants" />}
+                  icon={<BsFillPeopleFill />}
+                />
+
+                {(userRole == 'productOwner' ||
+                  userRole == 'superAdmin' ||
+                  userRole == 'clientAdmin') &&
+                Array.isArray(
+                  searchValue.length ? filteredProducts : unFilteredProducts
+                ) &&
+                (searchValue.length ? filteredProducts : unFilteredProducts)
+                  .length > 0 ? (
+                  <CollapsableNavItem
+                    eventKey={productsIsOpen}
+                    title={
+                      <span onClick={() => navigate(Routes.products.path)}>
+                        <SafeFormatMessage id="Products" />
+                      </span>
+                    }
+                    icon={
+                      <span onClick={() => navigate(Routes.products.path)}>
+                        <BsBoxes />
+                      </span>
+                    }
+                    style={{}}
+                  >
+                    {(searchValue.length
+                      ? filteredProducts
+                      : unFilteredProducts
+                    ).map((product, index) => (
+                      <NavItem
+                        key={index}
+                        title={product.systemName}
+                        link={`${Routes.products.path}/${product.id}`}
+                        icon={<BsBoxSeam />}
+                        isActive={location.pathname.includes(
+                          `${Routes.products.path}/${product.id}`
+                        )}
+                      />
+                    ))}
+                  </CollapsableNavItem>
+                ) : (
+                  <NavItem
+                    key={'products'}
+                    title={<SafeFormatMessage id="Products" />}
+                    link={Routes.products.path}
+                    icon={
+                      <span onClick={() => navigate(Routes.products.path)}>
+                        <BsBoxes />
+                      </span>
+                    }
+                    style={{}}
+                    isActive={location.pathname.includes(Routes.products.path)}
+                  />
+                )}
+
+                {userRole == 'superAdmin' &&
+                Array.isArray(
+                  searchValue.length
                     ? filteredProductsOwner
                     : unFilteredProductsOwners
-                  ).map((productsOwner, index) => (
-                    <NavItem
-                      key={index}
-                      title={productsOwner?.systemName}
-                      link={`${Routes.productsOwners.path}/${productsOwner?.id}`}
-                      icon={<FontAwesomeIcon icon={faBuildingUser} />}
-                      isActive={location.pathname.includes(
-                        `${Routes.productsOwners.path}/${productsOwner?.id}`
-                      )}
-                    />
-                  ))}
-                </CollapsableNavItem>
-              ) : null}
-
-              {(userRole == 'superAdmin' || userRole == 'clientAdmin') && (
-                <CollapsableNavItem
-                  eventKey={settingIsOpen}
-                  title={<SafeFormatMessage id="Settings" />}
-                  icon={<FontAwesomeIcon icon={faTools} />}
-                >
-                  {userRole == 'superAdmin' && (
-                    <>
-                      <NavItem
-                        title={<SafeFormatMessage id="Health-Check-sidebar" />}
-                        link={Routes.Settings.path}
-                        icon={<BsFillClipboard2CheckFill />}
-                        isActive={location.pathname.includes(
-                          Routes.Settings.path
-                        )}
-                      />
-
-                      <NavItem
-                        title={<SafeFormatMessage id="Subscriptions" />}
-                        link={Routes.SubscriptionsSettings.path}
-                        icon={<BsPeople />}
-                        isActive={location.pathname.includes(
-                          Routes.SubscriptionsSettings.path
-                        )}
-                      />
-
-                      <NavItem
-                        title={<SafeFormatMessage id="Product-Warnings" />}
-                        link={Routes.ProductWarningsSettings.path}
-                        icon={<BsExclamationTriangle />}
-                        isActive={location.pathname.includes(
-                          Routes.ProductWarningsSettings.path
-                        )}
-                      />
-                    </>
-                  )}
-                  {userRole == 'superAdmin' && (
-                    <NavItem
-                      title={<SafeFormatMessage id="Discounts" />}
-                      link={Routes.DiscountsPage.path}
-                      icon={<MdDiscount />}
-                      isActive={location.pathname.includes(
-                        Routes.DiscountsPage.path
-                      )}
-                    />
-                  )}
-                  <NavItem
-                    title={<SafeFormatMessage id="Currencies" />}
-                    link={Routes.CurrenciesPage.path}
-                    icon={<MdCurrencyExchange />}
-                    isActive={location.pathname.includes(
-                      Routes.CurrenciesPage.path
-                    )}
-                  />
-
-                  {userRole == 'superAdmin' && (
-                    <NavItem
-                      title={<SafeFormatMessage id="Exchange-Rate-Providers" />}
-                      link={Routes.ExchangeRateProvidersSettings.path}
-                      icon={<BsPercent />}
-                      isActive={location.pathname.includes(
-                        Routes.ExchangeRateProvidersSettings.path
-                      )}
-                    />
-                  )}
-
-                  {userRole == 'superAdmin' && (
-                    <NavItem
-                      title={<SafeFormatMessage id="Profile" />}
-                      link={Routes.Profile.path}
-                      icon={<BsPersonFillGear />}
-                      isActive={location.pathname.includes(Routes.Profile.path)}
-                    />
-                  )}
-                </CollapsableNavItem>
-              )}
-
-              {userRole === 'superAdmin' && (
-                <>
+                ) &&
+                (searchValue.length
+                  ? filteredProductsOwner
+                  : unFilteredProductsOwners
+                ).length > 0 ? (
                   <CollapsableNavItem
-                    eventKey={systemIsOpen}
-                    title={<SafeFormatMessage id="System" />}
-                    icon={<FontAwesomeIcon icon={faCogs} />}
+                    eventKey={productsOwnersIsOpen}
+                    title={
+                      <span
+                        onClick={() => navigate(Routes.productsOwners.path)}
+                      >
+                        <SafeFormatMessage id="Products-Owners" />
+                      </span>
+                    }
+                    icon={
+                      <span
+                        onClick={() => navigate(Routes.productsOwners.path)}
+                      >
+                        <BsBuildings />
+                      </span>
+                    }
+                    style={{}}
                   >
+                    {(searchValue.length
+                      ? filteredProductsOwner
+                      : unFilteredProductsOwners
+                    ).map((productsOwner, index) => (
+                      <NavItem
+                        key={index}
+                        title={productsOwner?.systemName}
+                        link={`${Routes.productsOwners.path}/${productsOwner?.id}`}
+                        icon={<FontAwesomeIcon icon={faBuildingUser} />}
+                        isActive={location.pathname.includes(
+                          `${Routes.productsOwners.path}/${productsOwner?.id}`
+                        )}
+                      />
+                    ))}
+                  </CollapsableNavItem>
+                ) : null}
+
+                {(userRole == 'superAdmin' || userRole == 'clientAdmin') && (
+                  <CollapsableNavItem
+                    eventKey={settingIsOpen}
+                    title={<SafeFormatMessage id="Settings" />}
+                    icon={<FontAwesomeIcon icon={faTools} />}
+                  >
+                    {userRole == 'superAdmin' && (
+                      <>
+                        <NavItem
+                          title={
+                            <SafeFormatMessage id="Health-Check-sidebar" />
+                          }
+                          link={Routes.Settings.path}
+                          icon={<BsFillClipboard2CheckFill />}
+                          isActive={location.pathname.includes(
+                            Routes.Settings.path
+                          )}
+                        />
+
+                        <NavItem
+                          title={<SafeFormatMessage id="Subscriptions" />}
+                          link={Routes.SubscriptionsSettings.path}
+                          icon={<BsPeople />}
+                          isActive={location.pathname.includes(
+                            Routes.SubscriptionsSettings.path
+                          )}
+                        />
+
+                        <NavItem
+                          title={<SafeFormatMessage id="Product-Warnings" />}
+                          link={Routes.ProductWarningsSettings.path}
+                          icon={<BsExclamationTriangle />}
+                          isActive={location.pathname.includes(
+                            Routes.ProductWarningsSettings.path
+                          )}
+                        />
+                      </>
+                    )}
+                    {userRole == 'superAdmin' && (
+                      <NavItem
+                        title={<SafeFormatMessage id="Discounts" />}
+                        link={Routes.DiscountsPage.path}
+                        icon={<MdDiscount />}
+                        isActive={location.pathname.includes(
+                          Routes.DiscountsPage.path
+                        )}
+                      />
+                    )}
                     <NavItem
-                      title={<SafeFormatMessage id="Audits" />}
-                      link={Routes.audits.path}
-                      icon={<AiOutlineAudit />}
-                      isActive={location.pathname.includes(Routes.audits.path)}
-                    />
-                    <NavItem
-                      title={<SafeFormatMessage id="Logs" />}
-                      link={Routes.Logs.path}
-                      icon={<MdMonitorHeart />}
-                      isActive={location.pathname.includes(Routes.Logs.path)}
-                    />
-                    <NavItem
-                      title={'Environment Info'}
-                      link={Routes.EnvironmentInfo.path}
-                      icon={<BsInfoSquare />}
+                      title={<SafeFormatMessage id="Currencies" />}
+                      link={Routes.CurrenciesPage.path}
+                      icon={<MdCurrencyExchange />}
                       isActive={location.pathname.includes(
-                        Routes.EnvironmentInfo.path
+                        Routes.CurrenciesPage.path
                       )}
                     />
+
+                    {userRole == 'superAdmin' && (
+                      <NavItem
+                        title={
+                          <SafeFormatMessage id="Exchange-Rate-Providers" />
+                        }
+                        link={Routes.ExchangeRateProvidersSettings.path}
+                        icon={<BsPercent />}
+                        isActive={location.pathname.includes(
+                          Routes.ExchangeRateProvidersSettings.path
+                        )}
+                      />
+                    )}
+
+                    {userRole == 'superAdmin' && (
+                      <NavItem
+                        title={<SafeFormatMessage id="Profile" />}
+                        link={Routes.Profile.path}
+                        icon={<BsPersonFillGear />}
+                        isActive={location.pathname.includes(
+                          Routes.Profile.path
+                        )}
+                      />
+                    )}
                   </CollapsableNavItem>
-                </>
-              )}
-            </Nav>
-          </div>
-        </SimpleBar>
-      </CSSTransition>
-    </SidebarWrapper>
+                )}
+
+                {userRole === 'superAdmin' && (
+                  <>
+                    <CollapsableNavItem
+                      eventKey={systemIsOpen}
+                      title={<SafeFormatMessage id="System" />}
+                      icon={<FontAwesomeIcon icon={faCogs} />}
+                    >
+                      <NavItem
+                        title={<SafeFormatMessage id="Audits" />}
+                        link={Routes.audits.path}
+                        icon={<AiOutlineAudit />}
+                        isActive={location.pathname.includes(
+                          Routes.audits.path
+                        )}
+                      />
+                      <NavItem
+                        title={<SafeFormatMessage id="Logs" />}
+                        link={Routes.Logs.path}
+                        icon={<MdMonitorHeart />}
+                        isActive={location.pathname.includes(Routes.Logs.path)}
+                      />
+                      <NavItem
+                        title={'Environment Info'}
+                        link={Routes.EnvironmentInfo.path}
+                        icon={<BsInfoSquare />}
+                        isActive={location.pathname.includes(
+                          Routes.EnvironmentInfo.path
+                        )}
+                      />
+                    </CollapsableNavItem>
+                  </>
+                )}
+              </Nav>
+            </div>
+            {/* Sidebar Footer */}
+            {/* {isProductionEnv && ( */}
+            <div className="sidebar-footer">
+              <span className="d-flex justify-content-center align-items-center">
+                <Label
+                  sameWidth={'90'}
+                  value="live"
+                  color="var(--pure-white)"
+                  background="var(--green)"
+                />
+              </span>
+            </div>
+            {/* )} */}
+          </SimpleBar>
+        </CSSTransition>
+      </SidebarWrapper>{' '}
+    </Wrapper>
   )
 }

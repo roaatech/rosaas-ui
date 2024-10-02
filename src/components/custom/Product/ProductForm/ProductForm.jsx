@@ -8,6 +8,7 @@ import {
   Button,
   OverlayTrigger,
   Tooltip,
+  Card,
 } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { productInfo } from '../../../../store/slices/products/productsSlice.js'
@@ -21,7 +22,7 @@ import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.
 import { removeSubscriptionDataByProductId } from '../../../../store/slices/tenants.js'
 import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import MultilingualInput from '../../Shared/MultilingualInput/MultilingualInput.jsx' // Import MultilingualInput
-import { BsFillQuestionCircleFill } from 'react-icons/bs'
+import { BsFillQuestionCircleFill, BsQuestionCircleFill } from 'react-icons/bs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 import { Routes } from '../../../../routes.js'
@@ -40,7 +41,7 @@ const ProductForm = ({
   const { createProductRequest, editProductRequest } = useRequest()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const listData = useSelector((state) => state.productsOwners.productsOwners)
+  const listData = useSelector((state) => state.productsOwners.lookup)
   let userInfo = useSelector((state) => state.auth.userInfo)
 
   const initialValues = {
@@ -70,6 +71,9 @@ const ProductForm = ({
         : userInfo.userType == 'clientAdmin'
         ? userInfo.ProductOwnerInfo?.id
         : '',
+    isTenantAutoProvisioning: productData
+      ? productData?.isTenantAutoProvisioning
+      : true,
   }
 
   const createValidation = {
@@ -160,6 +164,7 @@ const ProductForm = ({
             : values.clientId
             ? values.clientId
             : Product_Client_id,
+        isTenantAutoProvisioning: values.isTenantAutoProvisioning,
       }
 
       if (type == 'create') {
@@ -220,7 +225,6 @@ const ProductForm = ({
               en: 'English-Name',
               ar: 'Arabic-Name',
             }}
-            tooltipMessageId="Friendly-Name-Label"
             values={{
               en: formik.values.displayNameEn,
               ar: formik.values.displayNameAr,
@@ -307,38 +311,39 @@ const ProductForm = ({
           )}
 
           {/* Description Field using MultilingualInput */}
-          <MultilingualInput
-            inputLabel="Description"
-            languages={[
-              { code: 'en', name: 'English' },
-              { code: 'ar', name: 'Arabic' },
-            ]}
-            inputIds={{
-              en: 'descriptionEn',
-              ar: 'descriptionAr',
-            }}
-            placeholder={{
-              en: 'English-Description',
-              ar: 'Arabic-Description',
-            }}
-            tooltipMessageId="Description-Tooltip"
-            values={{
-              en: formik.values.descriptionEn,
-              ar: formik.values.descriptionAr,
-            }}
-            onChange={formik.handleChange}
-            isRequired={false}
-            inputType="TextareaAndCounter"
-            maxLength={450}
-            errors={{
-              en: formik.errors.descriptionEn,
-              ar: formik.errors.descriptionAr,
-            }}
-            touched={{
-              en: formik.touched.descriptionEn,
-              ar: formik.touched.descriptionAr,
-            }}
-          />
+          <div className="mb-3">
+            <MultilingualInput
+              inputLabel="Description"
+              languages={[
+                { code: 'en', name: 'English' },
+                { code: 'ar', name: 'Arabic' },
+              ]}
+              inputIds={{
+                en: 'descriptionEn',
+                ar: 'descriptionAr',
+              }}
+              placeholder={{
+                en: 'English-Description',
+                ar: 'Arabic-Description',
+              }}
+              values={{
+                en: formik.values.descriptionEn,
+                ar: formik.values.descriptionAr,
+              }}
+              onChange={formik.handleChange}
+              isRequired={false}
+              inputType="TextareaAndCounter"
+              maxLength={450}
+              errors={{
+                en: formik.errors.descriptionEn,
+                ar: formik.errors.descriptionAr,
+              }}
+              touched={{
+                en: formik.touched.descriptionEn,
+                ar: formik.touched.descriptionAr,
+              }}
+            />
+          </div>
 
           {type !== 'create' && (
             <div>
@@ -385,6 +390,55 @@ const ProductForm = ({
               </Form.Group>
             </div>
           )}
+          <div className="mb-3">
+            <Card>
+              <Card.Body>
+                <Form.Group className="d-flex justify-content-between">
+                  <Form.Label>
+                    <SafeFormatMessage id="Auto-Provisioning" />
+                    <OverlayTrigger
+                      style={{ minWidth: '150px' }}
+                      trigger={['hover', 'focus']}
+                      placement="top"
+                      overlay={
+                        <Tooltip>
+                          <SafeFormatMessage id="Auto-Provisioning-Tooltip" />
+                        </Tooltip>
+                      }
+                    >
+                      <BsQuestionCircleFill className="mx-1" />
+                    </OverlayTrigger>
+                  </Form.Label>
+                  {/* <div className="inputIcon"> */}
+                  <Form.Check
+                    type="checkbox"
+                    id="isTenantAutoProvisioning"
+                    name="isTenantAutoProvisioning"
+                    onChange={formik.handleChange}
+                    value={formik.values.isTenantAutoProvisioning}
+                  />
+                  {/* <input
+                  type="checkbox"
+                  // className="form-control"
+                  id="isTenantAutoProvisioning"
+                  name="isTenantAutoProvisioning"
+                  onChange={formik.handleChange}
+                  value={formik.values.isTenantAutoProvisioning}
+                /> */}
+                  {/* </div> */}
+
+                  {formik.touched.apiKey && formik.errors.apiKey && (
+                    <Form.Control.Feedback
+                      type="invalid"
+                      style={{ display: 'block' }}
+                    >
+                      {formik.errors.apiKey}
+                    </Form.Control.Feedback>
+                  )}
+                </Form.Group>
+              </Card.Body>
+            </Card>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">

@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Dropdown } from 'primereact/dropdown'
 import { useIntl } from 'react-intl'
 import SafeFormatMessage from '../../SafeFormatMessage/SafeFormatMessage'
-import { Form } from '@themesberg/react-bootstrap'
-import useSharedFunctions from '../../SharedFunctions/SharedFunctions'
 import { FaFilter } from 'react-icons/fa'
 import { Wrapper } from './FilteringDropdown.styled'
-import { tr } from 'date-fns/locale'
+import useSharedFunctions from '../../SharedFunctions/SharedFunctions'
 
 const FilteringDropdown = ({
   field,
@@ -15,42 +13,51 @@ const FilteringDropdown = ({
   label,
   filter = true,
 }) => {
-  const [selectedValue, setSelectedValue] = useState()
-
   const { getLocalizedString } = useSharedFunctions()
   const intl = useIntl()
-  const [filteredOptions, setFilteredOptions] = useState()
+  const [filteredOptions, setFilteredOptions] = useState([])
+  const [selectedValue, setSelectedValue] = useState(null)
+
+  const defaultOption = {
+    id: null,
+    label: intl.formatMessage({ id: 'Select' }),
+  }
 
   useEffect(() => {
-    setFilteredOptions(optionsArray)
-  }, [optionsArray])
+    const validOptionsArray = Array.isArray(optionsArray) ? optionsArray : []
+
+    const optionsWithDefault = [defaultOption, ...validOptionsArray]
+
+    setFilteredOptions(optionsWithDefault)
+    setSelectedValue(defaultOption.id)
+  }, [optionsArray && optionsArray.length])
 
   const handleFilter = (event) => {
     const filterValue = event.query.trim().toLowerCase()
 
-    const filtered =
-      optionsArray &&
-      optionsArray.filter((option) => {
-        const filterLabel =
-          getLocalizedString(option?.displayNameLocalizations) ||
-          option?.systemName ||
-          option?.label
+    const filtered = filteredOptions.filter((option) => {
+      const filterLabel =
+        getLocalizedString(option?.displayNameLocalizations) ||
+        option?.systemName ||
+        option?.label
 
-        return filterLabel.toLowerCase().includes(filterValue)
-      })
+      return filterLabel.toLowerCase().includes(filterValue)
+    })
 
     setFilteredOptions(filtered)
   }
 
   useEffect(() => {
-    const formattedData = selectedValue
-      ? [
-          {
-            field,
-            value: selectedValue,
-          },
-        ]
-      : []
+    // Submit data only if a valid option is selected (not the default)
+    const formattedData =
+      selectedValue !== null
+        ? [
+            {
+              field,
+              value: selectedValue,
+            },
+          ]
+        : []
 
     onSubmit(formattedData)
   }, [selectedValue])
@@ -69,7 +76,7 @@ const FilteringDropdown = ({
 
         <Dropdown
           value={selectedValue}
-          options={filteredOptions ? Object.values(filteredOptions) : []}
+          options={filteredOptions}
           onChange={handleSelectionChange}
           optionLabel={(option) =>
             option.label ||
@@ -81,11 +88,6 @@ const FilteringDropdown = ({
           optionValue="id"
           placeholder={SafeFormatMessage({ id: 'Select' })}
           dropdownIcon={FaFilter}
-          style={
-            {
-              // height: '50px',
-            }
-          }
         />
       </div>
     </Wrapper>
