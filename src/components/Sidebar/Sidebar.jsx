@@ -296,25 +296,22 @@ export default (props = {}) => {
   const [isProductionEnv, setIsProductionEnv] = useState(false)
   useEffect(() => {
     const checkEnvDataValidity = () => {
-      // Check if envData is defined and is an object
       if (!envData || typeof envData !== 'object') {
         return setIsProductionEnv(false)
       }
 
-      // Check if the object has exactly 4 keys
       if (Object.keys(envData).length !== 4) {
         return setIsProductionEnv(false)
       }
 
-      // Check if all values are 'production' or 'prod'
       const allValuesValid = Object.values(envData).every(
         (value) => value === 'production' || value === 'prod'
       )
 
-      setIsProductionEnv(allValuesValid) // Set state based on the validity check
+      setIsProductionEnv(allValuesValid)
     }
 
-    checkEnvDataValidity() // Call the function to perform the check
+    checkEnvDataValidity()
   }, [envData])
 
   const productsIsOpen =
@@ -684,18 +681,18 @@ export default (props = {}) => {
               </Nav>
             </div>
             {/* Sidebar Footer */}
-            {/* {isProductionEnv && ( */}
-            <div className="sidebar-footer">
-              <span className="d-flex justify-content-center align-items-center">
-                <Label
-                  sameWidth={'90'}
-                  value="live"
-                  color="var(--pure-white)"
-                  background="var(--green)"
-                />
-              </span>
-            </div>
-            {/* )} */}
+            {isProductionEnv && (
+              <div className="sidebar-footer">
+                <span className="d-flex justify-content-center align-items-center">
+                  <Label
+                    sameWidth={'90'}
+                    value="live"
+                    color="var(--white-pure)"
+                    background="var(--green-primary)"
+                  />
+                </span>
+              </div>
+            )}{' '}
           </SimpleBar>
         </CSSTransition>
       </SidebarWrapper>{' '}
