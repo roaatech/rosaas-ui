@@ -109,4 +109,8 @@ export const SidebarWrapper = styled.div`
   .sidebar .nav-link:focus {
     box-shadow: none;
   }
+
+  .sidebar-footer .label{
+  font-size: var(--smallFont);
+  }
 `

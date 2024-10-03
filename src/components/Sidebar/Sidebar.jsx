@@ -76,6 +76,8 @@ import {
   MdMonitor,
   MdMonitorHeart,
   MdSettingsSuggest,
+  MdOutlineVerifiedUser,
+  MdOutlineVerified,
 } from 'react-icons/md'
 import SafeFormatMessage from '../custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import { AiOutlineAudit } from 'react-icons/ai'
@@ -686,9 +688,12 @@ export default (props = {}) => {
                 <span className="d-flex justify-content-center align-items-center">
                   <Label
                     sameWidth={'90'}
-                    value="live"
+                    value="Live"
                     color="var(--white-pure)"
                     background="var(--green-primary)"
+                    lighter= {true}
+                    style={{ fontSize: 'var(--normalFont)' }}
+                    icon={<MdOutlineVerified />}
                   />
                 </span>
               </div>
