@@ -32,7 +32,7 @@ export const SubscriptionPlanChangeStatus = {
   4: {
     background: 'var(--green2)',
     value: <SafeFormatMessage id="Failure" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
   },
 }
 
@@ -55,7 +55,7 @@ export const SubscriptionResetStatus = {
   4: {
     background: 'var(--green2)',
     value: <SafeFormatMessage id="Failure" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
   },
 }
 
@@ -94,7 +94,7 @@ export const paymentStatus = {
     background: 'var(--primary-color)',
     value: <SafeFormatMessage id="Failed" />,
     icon: <AiOutlineIssuesClose />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
   },
   600: {
     background: 'var(--primary-color)',
@@ -116,7 +116,7 @@ export const orderStatus = {
   },
   2: {
     value: 'Pending-To-Pay',
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
   },
   3: {
     value: 'Complete',
@@ -138,7 +138,7 @@ export const subscriptionStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Inactive" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
     // icon: <MdOutlinePayments />,
   },
 }

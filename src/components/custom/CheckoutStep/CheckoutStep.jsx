@@ -325,7 +325,7 @@ const CheckoutPage = (data) => {
                         >
                           <span>
                             <BsFillQuestionCircleFill
-                              style={{ color: '#6c757d' }}
+                              style={{ color: 'var(--slate-gray)' }}
                               className={
                                 direction == 'rtl'
                                   ? 'ar-questionCircle mr-2'
@@ -353,7 +353,7 @@ const CheckoutPage = (data) => {
                       >
                         <span>
                           <BsFillQuestionCircleFill
-                            style={{ color: '#6c757d' }}
+                            style={{ color: 'var(--slate-gray)' }}
                             className={
                               direction == 'rtl'
                                 ? 'ar-questionCircle mr-2'
@@ -380,7 +380,7 @@ const CheckoutPage = (data) => {
                         >
                           <span>
                             <BsFillQuestionCircleFill
-                              style={{ color: '#6c757d' }}
+                              style={{ color: 'var(--slate-gray)' }}
                               className={
                                 direction == 'rtl'
                                   ? 'ar-questionCircle mr-2'
@@ -411,7 +411,7 @@ const CheckoutPage = (data) => {
                         >
                           <span>
                             <BsFillQuestionCircleFill
-                              style={{ color: '#6c757d' }}
+                              style={{ color: 'var(--slate-gray)' }}
                               className={
                                 direction == 'rtl'
                                   ? 'ar-questionCircle mr-2'
@@ -442,7 +442,7 @@ const CheckoutPage = (data) => {
                         >
                           <span>
                             <BsFillQuestionCircleFill
-                              style={{ color: '#6c757d' }}
+                              style={{ color: 'var(--slate-gray)' }}
                               className={
                                 direction == 'rtl'
                                   ? 'ar-questionCircle mr-2'

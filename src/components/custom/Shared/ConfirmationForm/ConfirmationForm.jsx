@@ -93,7 +93,10 @@ const ConfirmationForm = ({
               overlay={<Tooltip>{tooltipMessage}</Tooltip>}
             >
               <span>
-                <BsInfoCircle className="mx-2" style={{ color: '#6c757d' }} />
+                <BsInfoCircle
+                  className="mx-2"
+                  style={{ color: 'var(--slate-gray)' }}
+                />
               </span>
             </OverlayTrigger>
           </Form.Label>

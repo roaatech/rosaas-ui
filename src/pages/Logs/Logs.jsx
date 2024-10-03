@@ -19,12 +19,18 @@ import { UppercaseMonthDateFormat } from '../../lib/sharedFun/Time'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import ShowDetails from '../../components/custom/Shared/ShowDetails/ShowDetails'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisH, faNewspaper } from '@fortawesome/free-solid-svg-icons'
+import {
+  faEllipsisH,
+  faNewspaper,
+  faTrashAlt,
+} from '@fortawesome/free-solid-svg-icons'
 import { setLoading, setLogsData } from '../../store/slices/main'
 import { BsCalendar2Fill, BsFillPersonLinesFill } from 'react-icons/bs'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import LogsFilterSearchContainer from '../../components/custom/Shared/FilterSearchContainer/LogsFilterSearchContainer/LogsFilterSearchContainer'
+import DeleteLogsForm from './DeleteLogsForm/DeleteLogsForm'
+import { vi } from 'date-fns/locale'
 
 export default function Logs() {
   const dispatch = useDispatch()
@@ -86,6 +92,7 @@ export default function Logs() {
     setFirst(event.first)
     setRows(event.rows)
   }
+  const [visibleHead, setVisibleHead] = useState(false)
 
   const descriptionPop = async (id) => {
     setCurrentId(id)
@@ -138,10 +145,16 @@ export default function Logs() {
           setSearchValue={setSearchValue}
           setFirst={setFirst}
           search={true}
-          button={false}
           title={<SafeFormatMessage id="Logs-List" />}
-          icon={'pi-box'}
-        />
+          icon={faTrashAlt}
+          button={true}
+          visibleHead={visibleHead}
+          setVisibleHead={setVisibleHead}
+          label={SafeFormatMessage({ id: 'Delete-older-than-date' })}
+          variant="danger"
+        >
+          <DeleteLogsForm setVisible={setVisibleHead} />
+        </TableHead>
         <div className="mb-4">
           <LogsFilterSearchContainer setAllSelectedData={setAllSelectedData} />
         </div>

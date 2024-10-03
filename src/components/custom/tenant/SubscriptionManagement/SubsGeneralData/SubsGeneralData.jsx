@@ -70,7 +70,7 @@ export default function SubsGeneralData(data) {
                       >
                         <span>
                           <BsFillQuestionCircleFill
-                            style={{ color: '#6c757d' }}
+                            style={{ color: 'var(--slate-gray)' }}
                             className={
                               direction == 'rtl'
                                 ? 'ar-questionCircle mr-2'
@@ -102,7 +102,7 @@ export default function SubsGeneralData(data) {
                       >
                         <span>
                           <BsFillQuestionCircleFill
-                            style={{ color: '#6c757d' }}
+                            style={{ color: 'var(--slate-gray)' }}
                             className={
                               direction == 'rtl'
                                 ? 'ar-questionCircle mr-2'
@@ -131,7 +131,7 @@ export default function SubsGeneralData(data) {
                       >
                         <span>
                           <BsFillQuestionCircleFill
-                            style={{ color: '#6c757d' }}
+                            style={{ color: 'var(--slate-gray)' }}
                             className={
                               direction == 'rtl'
                                 ? 'ar-questionCircle mr-2'
@@ -165,7 +165,7 @@ export default function SubsGeneralData(data) {
                         >
                           <span>
                             <BsFillQuestionCircleFill
-                              style={{ color: '#6c757d' }}
+                              style={{ color: 'var(--slate-gray)' }}
                               className={
                                 direction == 'rtl'
                                   ? 'ar-questionCircle mr-2'
@@ -209,7 +209,7 @@ export default function SubsGeneralData(data) {
                       >
                         <span>
                           <BsFillQuestionCircleFill
-                            style={{ color: '#6c757d' }}
+                            style={{ color: 'var(--slate-gray)' }}
                             className={
                               direction == 'rtl'
                                 ? 'ar-questionCircle mr-2'
@@ -247,7 +247,7 @@ export default function SubsGeneralData(data) {
                       >
                         <span>
                           <BsFillQuestionCircleFill
-                            style={{ color: '#6c757d' }}
+                            style={{ color: 'var(--slate-gray)' }}
                             className={
                               direction == 'rtl'
                                 ? 'ar-questionCircle mr-2'
@@ -319,7 +319,7 @@ export default function SubsGeneralData(data) {
                       >
                         <span>
                           <BsFillQuestionCircleFill
-                            style={{ color: '#6c757d' }}
+                            style={{ color: 'var(--slate-gray)' }}
                             className={
                               direction == 'rtl'
                                 ? 'ar-questionCircle mr-2'
@@ -387,7 +387,7 @@ export default function SubsGeneralData(data) {
                       >
                         <span>
                           <BsFillQuestionCircleFill
-                            style={{ color: '#6c757d' }}
+                            style={{ color: 'var(--slate-gray)' }}
                             className={
                               direction == 'rtl'
                                 ? 'ar-questionCircle mr-2'
@@ -507,7 +507,7 @@ export default function SubsGeneralData(data) {
                                 ? 'ar-questionCircle mr-2'
                                 : 'ml-2'
                             }
-                            style={{ color: '#6c757d' }}
+                            style={{ color: 'var(--slate-gray)' }}
                           />
                         </span>
                       </OverlayTrigger>
@@ -575,7 +575,7 @@ export default function SubsGeneralData(data) {
                                 ? 'ar-questionCircle mr-2'
                                 : 'ml-2'
                             }
-                            style={{ color: '#6c757d' }}
+                            style={{ color: 'var(--slate-gray)' }}
                           />
                         </span>
                       </OverlayTrigger>

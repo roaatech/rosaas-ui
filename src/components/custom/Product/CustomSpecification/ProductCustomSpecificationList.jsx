@@ -186,8 +186,7 @@ export const ProductCustomSpecificationList = (
           </td>
           <td>
             <span className="fw-normal">
-              {displayOrder}
-              {/* <DataLabelWhite
+              <DataLabelWhite
                 variant={'gray'}
                 text={
                   <>
@@ -196,7 +195,7 @@ export const ProductCustomSpecificationList = (
                     {displayOrder}
                   </>
                 }
-              /> */}
+              />
             </span>
           </td>
           <td>

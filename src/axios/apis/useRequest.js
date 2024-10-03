@@ -111,6 +111,7 @@ const useRequest = () => {
     createProductAdmin,
     createClientAdmin,
     clientsLookup,
+    getUserById,
     validateEmail,
   } = useUsersManagementReq()
   const {
@@ -401,6 +402,7 @@ const useRequest = () => {
     deleteLogBeforeDate,
     getAditsActionListLookup,
     clientsLookup,
+    getUserById,
     getProductOwnerLookupList,
   }
 }

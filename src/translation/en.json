@@ -879,5 +879,18 @@
   "Duration-(ms)": "Duration (ms)",
   "Action-Details": "Action Details",
   "Date-Range": "Date Range",
-  "Select-Date-Range": "Select Date Range"
+  "Select-Date-Range": "Select Date Range",
+  "Delete-Logs-older-than-date": "Delete logs older than date",
+  "Delete-older-than-date": "Delete older than date",
+  "type-'DELETE'-to-confirm": "Type 'DELETE' to confirm",
+  "Date-is-required": "Date is required",
+  "Level-is-required": "Level is required",
+  "Must-enter-Trace": "Must enter Trace",
+  "Confirmation-is-required": "Confirmation is required",
+  "Must-enter-DELETE": "Must enter 'DELETE'",
+  "This-action-will-delete-all-logs-before-specified-date-and-cannot-be-undone": "This action will delete all logs before the specified date and cannot be undone",
+  "Logs-deleted-successfully": "Logs deleted successfully",
+  "Error-deleting-logs": "Error deleting logs",
+  "Auto-Provisioning-Tooltip": "Once this feature is enabled, and as soon as a new tenant is created, the RoSaaS system will automatically, without any administrator intervention, invoke the external system to provision the tenant's resources.",
+  "Auto-Provisioning": "Automatic provisioning"
 }

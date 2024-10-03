@@ -25,6 +25,9 @@ export default function useUsersManagementReq() {
       },
     })
   }
+  const getUserById = async (userId) => {
+    return await Request.get(`identity/sadmin/v1/Users/${userId}`)
+  }
 
   return {
     createTenantAdmin,
@@ -32,5 +35,6 @@ export default function useUsersManagementReq() {
     createProductAdmin,
     createClientAdmin,
     clientsLookup,
+    getUserById,
   }
 }

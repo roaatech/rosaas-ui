@@ -10,10 +10,8 @@ const SafeFormatMessage = ({
     return defaultMessage ? defaultMessage : ''
   }
 
-  // Create a copy of the values object to modify
   const formattedValues = { ...values }
 
-  // Wrap the specified value in bold tags if boldValue is provided
   if (boldValue && formattedValues[boldValue]) {
     formattedValues[boldValue] = <strong>{formattedValues[boldValue]}</strong>
   }

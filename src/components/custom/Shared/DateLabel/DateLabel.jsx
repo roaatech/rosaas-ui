@@ -25,7 +25,7 @@ const DateLabel = ({
 
   const DateStatus = {
     true: {
-      background: 'rgba(255, 104, 104, 0.208)',
+      background: 'var(--red2)',
     },
     false: {
       background: 'rgb(239, 249, 246)',
@@ -38,10 +38,10 @@ const DateLabel = ({
       <span
         className={!bold ? 'label' : 'label fw-bold'}
         style={{
-          color: expired ? 'rgb(255, 104, 104)' : 'var(--teal-green)',
+          color: expired ? 'var(--red)' : 'var(--teal-green)',
           background: DateStatus[expired].background,
           borderColor:
-            hasBorder && (expired ? 'rgb(255, 104, 104)' : 'var(--teal-green)'),
+            hasBorder && (expired ? 'var(--red)' : 'var(--teal-green)'),
           border: hasBorder && '1px solid',
         }}
       >

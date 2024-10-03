@@ -8,7 +8,7 @@ export const CanceledAccountWrapper = styled(Container)`
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: #6c757d;
+  color: var(--slate-gray);
 `
 
 export const CanceledAccountMessage = styled.div`

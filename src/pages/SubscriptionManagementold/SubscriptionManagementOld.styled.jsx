@@ -51,7 +51,7 @@ export const Wrapper = styled.div`
     margin-bottom: -17px;
     border-top: 0;
     border-radius: 0%;
-    color: #6c757d;
+    color: var(--slate-gray);
 
     transition:
       border-color 0.3s,
@@ -160,7 +160,7 @@ export const Wrapper = styled.div`
       margin-bottom: -17px;
       border-top: 0;
       border-radius: 0%;
-      color: #6c757d;
+      color: var(--slate-gray);
 
       transition:
         border-color 0.3s,
@@ -169,7 +169,7 @@ export const Wrapper = styled.div`
         background-color 0.3s;
     }
     .custom-nav-link .nav-link:hover {
-      border-bottom: 2px solid #6c757d;
+      border-bottom: 2px solid var(--slate-gray);
 
       transition:
         border-color 0.3s,

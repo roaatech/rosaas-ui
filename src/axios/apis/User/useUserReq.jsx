@@ -38,7 +38,7 @@ const useUserReq = () => {
     return await Request.get(`management/sadmin/v1/Logs/${id}`)
   }
   const deleteLogBeforeDate = async (data) => {
-    return await Request.delete(`management/sadmin/v1/Logs`, data)
+    return await Request.delete(`management/sadmin/v1/Logs`, { data })
   }
   const signUp = async (data) => {
     return await Request.post('identity/tadmin/v1/Auth/Signup', data)

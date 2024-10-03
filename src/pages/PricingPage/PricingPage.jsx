@@ -3,25 +3,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { redirect, useNavigate, useParams } from 'react-router-dom'
 import useRequest from '../../axios/apis/useRequest'
 import { Card, Col, Row, Button, Form } from '@themesberg/react-bootstrap'
+
 import {
-  setAllProduct,
-  setAllPlans,
-  setAllFeaturePlan,
-  setAllPlansPrice,
-  deleteAllPlanPrice,
-  deleteAllPlanPriceBySystemName,
-} from '../../store/slices/products/productsSlice'
-import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
-import {
-  BsBoxSeam,
   BsCheck2Circle,
   BsCheckCircleFill,
-  BsCheckSquareFill,
   BsStarFill,
   BsXCircle,
 } from 'react-icons/bs'
 import { useState } from 'react'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { useIntl } from 'react-intl'
 import { cycle } from '../../const'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBox, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
@@ -30,22 +20,15 @@ import { setStep } from '../../store/slices/tenants'
 import { Wrapper } from './PricingPage.styled'
 import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
-import { setProductOwner } from '../../store/slices/main'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions'
 import {
   deleteAllPlanPriceBySystemNamePublic,
-  deleteAllPlanPriceBySystemNamepublic,
   setAllFeaturePlanPublic,
-  setAllFeaturePlanpublic,
   setAllPlansPricePublic,
-  setAllPlansPricepublic,
   setAllPlansPublic,
-  setAllPlanspublic,
   setAllProductPublic,
-  setAllProductpublic,
 } from '../../store/slices/publicProductsSlice'
-import { set } from 'lodash'
 
 const PricingPage = () => {
   const dispatch = useDispatch()

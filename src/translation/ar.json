@@ -871,5 +871,17 @@
   "Duration-(ms)": "المدة (مللي ثانية)",
   "Action-Details": "تفاصيل الإجراء",
   "Date-Range": "النطاق الزمني",
-  "Select-Date-Range": "اختر النطاق الزمني"
+  "Select-Date-Range": "اختر النطاق الزمني",
+  "Delete-Logs-older-than-date": "حذف السجلات الأقدم من التاريخ",
+  "type-'DELETE'-to-confirm": "اكتب 'DELETE' للتأكيد",
+  "Date-is-required": "التاريخ مطلوب",
+  "Level-is-required": "المستوى مطلوب",
+  "Must-enter-Trace": "يجب إدخال التتبع",
+  "Confirmation-is-required": "التأكيد مطلوب",
+  "Must-enter-DELETE": "يجب إدخال 'DELETE'",
+  "This-action-will-delete-all-logs-before-specified-date-and-cannot-be-undone": "ستؤدي هذه العملية إلى حذف جميع السجلات قبل التاريخ المحدد ولا يمكن التراجع عنها",
+  "Logs-deleted-successfully": "تم حذف السجلات بنجاح",
+  "Error-deleting-logs": "خطأ في حذف السجلات",
+  "Delete-older-than-date": "حذف أقدم من تاريخ",
+  "Auto-Provisioning-Tooltip": "عند تفعيل هذه الخاصية، وبمجرد إنشاء مستأجر جديد، سيقوم نظام رصاص تلقائيًا، وبدون تدخل من المسؤول، باستدعاء النظام الخارجي لتوفير موارد المستأجر"
 }

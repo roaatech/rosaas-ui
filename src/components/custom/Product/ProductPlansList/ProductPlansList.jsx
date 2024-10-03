@@ -47,6 +47,7 @@ import Label from '../../Shared/label/Label'
 import {
   MdOutlineUnpublished,
   MdOutlinePublishedWithChanges,
+  MdSort,
 } from 'react-icons/md'
 
 import { PublishStatus } from '../../../../const'
@@ -64,6 +65,7 @@ import {
 import { dynamicButtonsLanguages } from '../../../../const/const.js'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
+import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
 
 export const ProductPlansList = ({ productId }) => {
   const { getProductPlans, deletePlanReq, publishPlan, visiblePlan } =
@@ -246,7 +248,18 @@ export const ProductPlansList = ({ productId }) => {
           />
         </td>*/}
         <td>
-          <span className={`fw-normal`}>{displayOrder}</span>
+          <span className={`fw-normal`}>
+            <DataLabelWhite
+              variant={'gray'}
+              text={
+                <>
+                  <MdSort />
+                  {'  '}
+                  {displayOrder}
+                </>
+              }
+            />
+          </span>
         </td>
         <td>
           <span>{list.plans?.[alternativePlanID]?.displayName}</span>

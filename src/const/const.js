@@ -10,7 +10,7 @@ export const labelYesNoStyle = {
   },
   false: {
     background: 'var(--red2)',
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
     value: 'No',
   },
 }
@@ -24,7 +24,7 @@ export const PrimaryCurrencyStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Not-Primary-Currency" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
     icon: <MdStarBorder />,
   },
 }
@@ -56,7 +56,7 @@ export const PrimaryExchangeRateCurrencyStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Not-Primary-Exchange-Rate-Currency" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
     icon: <MdMoneyOff />,
   },
 }

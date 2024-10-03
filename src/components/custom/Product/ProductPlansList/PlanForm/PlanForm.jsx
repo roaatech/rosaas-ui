@@ -434,7 +434,7 @@ const PlanForm = ({
               >
                 <span>
                   <BsFillQuestionCircleFill
-                    style={{ color: '#6c757d' }}
+                    style={{ color: 'var(--slate-gray)' }}
                     className={
                       direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
                     }

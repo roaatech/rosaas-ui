@@ -21,7 +21,10 @@ import {
   BsCalendar,
   BsCalendar2Check,
   BsCalendar2Fill,
+  BsFillPersonFill,
   BsFillPersonLinesFill,
+  BsPerson,
+  BsPersonFill,
 } from 'react-icons/bs'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import DataLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLabelWhite'
@@ -38,10 +41,11 @@ import ShowDetails from '../../components/custom/Shared/ShowDetails/ShowDetails'
 import AuditsFilterSearchContainer from '../../components/custom/Shared/FilterSearchContainer/AuditFilterSearchContainer/AuditFilterSearchContainer'
 import EmptyFallbackRendering from '../../components/custom/Shared/EmptyFallbackRendering/EmptyFallbackRendering'
 import { arraysEqual } from '../../components/custom/Shared/SharedFunctions/sharedFunctionConsts'
+import { MdEmail } from 'react-icons/md'
 
 export default function Audits() {
   const dispatch = useDispatch()
-  const { getAuditsList, getAuditById } = useRequest()
+  const { getAuditsList, getAuditById, getUserById } = useRequest()
   const [totalCount, setTotalCount] = useState(0)
   const [searchValue, setSearchValue] = useState('')
   const [sortField, setSortField] = useState('')
@@ -55,7 +59,7 @@ export default function Audits() {
   const [popUpLable, setPopUpLable] = useState('')
   const [selectedData, setAllSelectedData] = useState([])
   const [selectedFilters, setSelectedFilters] = useState([])
-  console.log({ selectedData })
+  const listData = useSelector((state) => state.productsOwners.lookup)
 
   // const listData = useSelector((state) => state.main.audits?.items)
   const [list, setList] = useState([])
@@ -104,7 +108,6 @@ export default function Audits() {
     sortValue,
     !arraysEqual(selectedFilters, selectedData) && selectedData,
   ])
-  console.log(arraysEqual(selectedFilters, selectedData))
 
   const onPageChange = (event) => {
     setFirst(event.first)
@@ -132,6 +135,7 @@ export default function Audits() {
       userType,
       clientId,
       duration,
+      externalSystem,
     } = data
 
     return {
@@ -140,6 +144,8 @@ export default function Audits() {
       'Action-Type': actionType,
       'Action-Category': actionCategory,
       'Action-Name': actionName,
+      'External-System':
+        externalSystem && listData?.[externalSystem]?.systemName,
       'User-Type': userType,
       'Client-ID': clientId,
       'Duration-(ms)': duration,
@@ -154,24 +160,49 @@ export default function Audits() {
     const auditDetailResponse = await getAuditById(id)
     auditDetailResponse.data.data &&
       setAuditDetails(auditDetailResponse.data.data)
-    setPopUpLable(
-      <>
-        <div>
-          Action: <span>{auditDetailResponse.data.data.action}</span>
-        </div>
-        <div>
-          <BsCalendar2Fill className="ml-0 mb-1 mr-1" />
-          {UppercaseMonthDateFormat(
-            auditDetailResponse.data.data.createdDate,
-            true,
-            true,
-            true
-          )}
-        </div>
-      </>
-    )
+    if (auditDetailResponse.data.data.userId) {
+      const userData = await getUserById(auditDetailResponse.data.data.userId)
+      setPopUpLable(
+        <>
+          <div style={{ fontSize: 'var(--largeFont)' }}>
+            Action: <span>{auditDetailResponse.data.data.action}</span>
+          </div>
+          <div className="d-flex align-items-center flex-row mt-2">
+            <div>
+              <BsCalendar2Fill className="ml-0 mb-1 mr-1" />
+              {UppercaseMonthDateFormat(
+                auditDetailResponse.data.data.createdDate,
+                true,
+                true,
+                true
+              )}
+            </div>
+            <div className="mx-2">
+              <BsPersonFill className="ml-0 mb-1 mx-1" />
+              {userData.data?.data?.userAccount?.email}
+            </div>
+          </div>
+        </>
+      )
+    } else if (auditDetailResponse.data.data.userType === null) {
+      setPopUpLable(
+        <>
+          <div>
+            Action: <span>{auditDetailResponse.data.data.action}</span>
+          </div>
+          <div>
+            <BsCalendar2Fill className="ml-0 mb-1 mr-1" />
+            {UppercaseMonthDateFormat(
+              auditDetailResponse.data.data.createdDate,
+              true,
+              true,
+              true
+            )}
+          </div>
+        </>
+      )
+    }
   }
-
   return (
     <Wrapper>
       <BreadcrumbComponent

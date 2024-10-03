@@ -11,7 +11,7 @@ export const webhhookActiveStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Inactive" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
   },
 }
 export const NodeService = {

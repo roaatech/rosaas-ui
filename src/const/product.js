@@ -35,7 +35,7 @@ export const HealthStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Unavailable" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
     icon: <BsFillExclamationCircleFill />,
   },
 }
@@ -59,7 +59,7 @@ export const PublishStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Inactive" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
     icon: <MdOutlineUnpublished />,
   },
 }
@@ -73,7 +73,7 @@ export const SelectabilityStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Unselectable" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
     icon: <MdCheckBoxOutlineBlank />,
   },
 }
@@ -87,7 +87,7 @@ export const systemLockStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Unlocked" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
     icon: <BsFillUnlockFill />,
   },
 }
@@ -100,7 +100,7 @@ export const activeStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Inactive" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
   },
 }
 export const textLocale = (textLoclizations, selectedLanguage, intl) => {
@@ -122,7 +122,7 @@ export const subscriptionStatus = {
   3: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Canceled" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
     displayName: 'Canceled',
   },
 }
@@ -146,7 +146,7 @@ export const actionTypeColors = {
     displayName: 'POST',
   },
   DELETE: {
-    background: '#f93e3e', // Red for DELETE
+    background: 'var(--red)', // Red for DELETE
     value: 'DELETE',
     color: 'var(--white-pure)',
     displayName: 'DELETE',
@@ -188,7 +188,7 @@ export const isMajorStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="false" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
   },
 }
 export const booleanStatus = {
@@ -200,7 +200,7 @@ export const booleanStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="no" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
   },
 }
 
@@ -214,7 +214,7 @@ export const visibilityStatus = {
   false: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="invisible" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
     icon: <BsEyeSlash />,
   },
 }
@@ -249,7 +249,7 @@ export const ProductTrialType = {
   },
   2: {
     value: <SafeFormatMessage id="Product-Has-Trial-Plan" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
     background: 'var(--misty-blue)',
   },
   3: {
@@ -324,8 +324,8 @@ export const urlStyle = {
   },
   DELETE: {
     method: 'DELETE',
-    darkColor: '#f93e3e',
-    lightColor: '#fae7e7',
+    darkColor: 'var(--red)',
+    lightColor: 'var(--red-2)',
   },
   DISABLED: {
     method: 'DISABLED',

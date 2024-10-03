@@ -14,11 +14,11 @@ export const Wrapper = styled.div`
     cursor: pointer;
   }
   .active-toggle:hover {
-    color: #ffab03b4;
+    color: var(--second-color-1);
     cursor: pointer;
   }
   .total {
-    background-color: #ffab032a;
+    background-color: var(--second-color-1);
   }
   .merged-form-group {
     display: flex;
@@ -37,7 +37,7 @@ export const Wrapper = styled.div`
     justify-content: flex-end;
     align-items: center;
   }
-    
+
   .button-container-center {
     display: flex;
     justify-content: center;

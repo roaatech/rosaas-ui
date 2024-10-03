@@ -125,7 +125,6 @@ export default function Product({ children }) {
       <div className="main-container">
         <TableHead
           label={<SafeFormatMessage id="Add-Product" />}
-          icon={'pi-box'}
           setSearchValue={setSearchValue}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}

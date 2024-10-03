@@ -38,6 +38,8 @@ import { BsStars } from 'react-icons/bs'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
 import { textLocale } from '../../../../const/product.js'
+import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
+import { MdSort } from 'react-icons/md'
 
 export const ProductFeaturesList = ({ productId }) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
@@ -136,7 +138,18 @@ export const ProductFeaturesList = ({ productId }) => {
           <span className={`fw-normal`}>{mappedType}</span>
         </td>
         <td>
-          <span className="fw-normal">{displayOrder}</span>
+          <span className="fw-normal">
+            <DataLabelWhite
+              variant={'gray'}
+              text={
+                <>
+                  <MdSort />
+                  {'  '}
+                  {displayOrder}
+                </>
+              }
+            />
+          </span>
         </td>
         <td>
           <span className="fw-normal">

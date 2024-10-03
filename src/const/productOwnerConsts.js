@@ -14,6 +14,6 @@ export const ProductOwnerStatus = {
   3: {
     background: 'var(--red2)',
     value: <SafeFormatMessage id="Canceled" />,
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
   },
 }

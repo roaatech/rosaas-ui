@@ -152,7 +152,7 @@ const HealthCheckAccordion = ({ defaultKey, data = [], className = '' }) => {
                                 className="mr-2"
                                 background="var(--red2)"
                                 value={item.healthCheckStatus.unhealthyCount}
-                                color="var(--orange-brown)"
+                                color="var(--red)"
                                 icon={<BsFillExclamationCircleFill />}
                               />
                             )}

@@ -19,6 +19,8 @@ const TableHead = ({
   search = true,
   title,
   button = true,
+  icon,
+  variant,
 }) => {
   const { searchWait } = useGlobal()
   const [inputValue, setInputValue] = useState('')
@@ -51,11 +53,11 @@ const TableHead = ({
           {children && button && (
             <ButtonGroup>
               <Button
-                variant="secondary"
+                variant={variant ? variant : 'secondary'}
                 className="addButton"
                 onClick={() => setVisibleHead(true)}
               >
-                <FontAwesomeIcon icon={faPlus} className="mx-2" />
+                <FontAwesomeIcon icon={icon ? icon : faPlus} className="mx-2" />
                 {label}
               </Button>
             </ButtonGroup>
