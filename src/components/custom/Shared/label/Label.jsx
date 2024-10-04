@@ -23,7 +23,7 @@ const Label = ({
           display: sameWidth && 'inline-block',
           color,
           background,
-          borderColor: hasBorder && background,
+          borderColor: hasBorder && color,
           border: hasBorder && '1px solid',
           width: sameWidth && `${sameWidth}px`,
           textAlign: sameWidth && 'center',

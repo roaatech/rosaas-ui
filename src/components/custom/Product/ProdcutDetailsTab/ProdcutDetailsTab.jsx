@@ -27,6 +27,7 @@ import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions'
+import { text } from '@fortawesome/fontawesome-svg-core'
 
 const ProductDetailsTab = ({ data }) => {
   const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
@@ -108,7 +109,7 @@ const ProductDetailsTab = ({ data }) => {
                     </tr>
                     <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                       <td className="mb-0 w-50 fw-bold">
-                        <SafeFormatMessage id="Client" />
+                        <SafeFormatMessage id="Product-Owner" />
                       </td>
                       <td className="card-stats">{data.client?.systemName}</td>
                     </tr>
@@ -225,11 +226,11 @@ const ProductDetailsTab = ({ data }) => {
                         />
                       </td>
                     </tr>
-                    <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
+                    <tr className="d-flex justify-content-between border-bottom border-light py-2">
                       <td className="mb-0 w-50 fw-bold">
                         <SafeFormatMessage id="Description" />
                       </td>
-                      <td className="card-stats">
+                      <td className="card-stats w-100">
                         <DescriptionCell
                           data={{
                             description: textLocale(
@@ -237,6 +238,9 @@ const ProductDetailsTab = ({ data }) => {
                               selectedLanguage,
                               intl
                             ),
+                            textStyle: {
+                              textAlign: 'justify',
+                            },
                           }}
                         />
                       </td>

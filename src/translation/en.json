@@ -892,5 +892,7 @@
   "Logs-deleted-successfully": "Logs deleted successfully",
   "Error-deleting-logs": "Error deleting logs",
   "Auto-Provisioning-Tooltip": "Once this feature is enabled, and as soon as a new tenant is created, the RoSaaS system will automatically, without any administrator intervention, invoke the external system to provision the tenant's resources.",
-  "Auto-Provisioning": "Automatic provisioning"
+  "Auto-Provisioning": "Automatic provisioning",
+  "Subscription-Details": "Subscription Details",
+  "Subscription-Plan": "Subscription Plan"
 }

@@ -64,6 +64,9 @@ export default function Audits() {
   // const listData = useSelector((state) => state.main.audits?.items)
   const [list, setList] = useState([])
   useEffect(() => {
+    if (arraysEqual(selectedFilters, selectedData)) {
+      return
+    }
     let query = `?page=${Math.ceil(
       (first + 1) / rows
     )}&pageSize=${rows}&filters[0].Field=actionType&filters[0].Operator=contains`
@@ -108,6 +111,7 @@ export default function Audits() {
     sortValue,
     !arraysEqual(selectedFilters, selectedData) && selectedData,
   ])
+  console.log(arraysEqual(selectedFilters, selectedData))
 
   const onPageChange = (event) => {
     setFirst(event.first)

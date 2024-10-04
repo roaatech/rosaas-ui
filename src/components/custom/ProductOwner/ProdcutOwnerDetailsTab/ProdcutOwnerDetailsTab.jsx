@@ -106,7 +106,7 @@ const ProductOwnerDetails = () => {
     dispatch(removeProductOwnerStore(current))
   }
   const handleProductClick = (productId) => {
-    navigate(`${Routes.products.path}/${productId}`) // Navigate to product details page
+    navigate(`${Routes.products.path}/${productId}`)
   }
 
   return (
