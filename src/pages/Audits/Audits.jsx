@@ -59,12 +59,15 @@ export default function Audits() {
   const [popUpLable, setPopUpLable] = useState('')
   const [selectedData, setAllSelectedData] = useState([])
   const [selectedFilters, setSelectedFilters] = useState([])
+  const [isInitialized, setIsInitialized] = useState(false)
+
   const listData = useSelector((state) => state.productsOwners.lookup)
+  console.log({ selectedData, selectedFilters })
 
   // const listData = useSelector((state) => state.main.audits?.items)
   const [list, setList] = useState([])
   useEffect(() => {
-    if (arraysEqual(selectedFilters, selectedData)) {
+    if (arraysEqual(selectedFilters, selectedData) && isInitialized) {
       return
     }
     let query = `?page=${Math.ceil(
@@ -85,7 +88,7 @@ export default function Audits() {
             index + 1
           }].Value=${item.value}`
         })
-      setSelectedFilters(selectedData)
+      setSelectedFilters(selectedData.length > 0 ? selectedData : [])
     }
     const fetchAuditsList = async () => {
       dispatch(setLoading(true))
@@ -103,6 +106,7 @@ export default function Audits() {
     }
 
     fetchAuditsList()
+    setIsInitialized(true)
   }, [
     first,
     rows,
