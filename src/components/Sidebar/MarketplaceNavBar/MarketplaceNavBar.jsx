@@ -97,8 +97,8 @@ const MarketplaceNavBar = ({ profile }) => {
             (currency) => currency.isPrimaryCurrency
           )
           if (
-            (primaryCurrency && !selectedCurrency) ||
-            selectedCurrency == 'null'
+            primaryCurrency &&
+            (!selectedCurrency || selectedCurrency == 'null')
           ) {
             setCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
             setSelectedCurrency(primaryCurrency.currencyCode)
