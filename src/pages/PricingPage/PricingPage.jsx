@@ -29,6 +29,7 @@ import {
   setAllPlansPublic,
   setAllProductPublic,
 } from '../../store/slices/publicProductsSlice'
+import useGlobal from '../../lib/hocks/global'
 
 const PricingPage = () => {
   const dispatch = useDispatch()
@@ -37,6 +38,18 @@ const PricingPage = () => {
   const [showOldPrice, setShowOldPrice] = useState(true)
   const [language, setLanguage] = useState()
   const [trialEndDate, setTrialEndDate] = useState(null)
+  const { setCurrency, changeDirection } = useGlobal()
+  const params = new URLSearchParams(window.location.search)
+  const paramDirection = params.get('direction')
+  const paramCurrencyCode = params.get('currencyCode')
+  useEffect(() => {
+    if (paramDirection) {
+      changeDirection(paramDirection)
+    }
+    if (currencyCode) {
+      setCurrency(paramCurrencyCode, params.get('currencyId'))
+    }
+  }, [paramDirection, paramCurrencyCode])
 
   const productSystemName = routeParams.productSystemName
   const productOwnerSystemName = routeParams.productOwnerSystemName || ''
@@ -819,10 +832,12 @@ const PricingPage = () => {
 
               return (
                 renderedPlans && (
+                  //   ${
+                  //   isAloneInRow ? 'align-start-alone' : ''
+                  // }
                   <Col
-                    className={`mt-3 ${
-                      isAloneInRow ? 'align-start-alone' : ''
-                    }`}
+                    className={`mt-3 
+                    `}
                     key={groupedByCycle[selectedCycle]?.[plansPrice]?.plan.id}
                     lg={columnsPerRow && 12 / columnsPerRow}
                     md={columnsPerRow && 12 / columnsPerRow}

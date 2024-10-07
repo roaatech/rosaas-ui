@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Wrapper } from './CurrenciesPage.styled'
 import {
   Button,
@@ -45,6 +45,7 @@ import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import CurrencyForm from '../../components/custom/Currency/CurrencyForm'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
+import useGlobal from '../../lib/hocks/global'
 
 export default function CurrenciesPage() {
   const dispatch = useDispatch()

@@ -1,11 +1,6 @@
 import { FormattedMessage } from 'react-intl'
 
-const SafeFormatMessage = ({
-  id,
-  values,
-  defaultMessage = 'No translation available',
-  boldValue,
-}) => {
+const SafeFormatMessage = ({ id, values, defaultMessage, boldValue }) => {
   if (!id) {
     return defaultMessage ? defaultMessage : ''
   }
@@ -19,7 +14,7 @@ const SafeFormatMessage = ({
   return values ? (
     <FormattedMessage values={formattedValues} id={id} />
   ) : (
-    <FormattedMessage id={id} />
+    <FormattedMessage id={id} defaultMessage={defaultMessage} />
   )
 }
 
