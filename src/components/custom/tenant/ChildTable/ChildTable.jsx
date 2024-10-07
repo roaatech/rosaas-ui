@@ -681,8 +681,8 @@ export default function ChildTable({
               }
             />
           </button>
-          {!maximizedPanel ||
-            (maximizedPanel == 'metaData' && options.togglerElement)}
+          {(!maximizedPanel || maximizedPanel == 'metaData') &&
+            options.togglerElement}
         </div>
       </div>
     )

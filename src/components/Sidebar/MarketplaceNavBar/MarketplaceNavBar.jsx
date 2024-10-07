@@ -38,6 +38,7 @@ const MarketplaceNavBar = ({ profile }) => {
   const [selectedCurrency, setSelectedCurrency] = useState(() =>
     localStorage.getItem('currencyCode')
   )
+
   const [loading, setLoading] = useState(false)
 
   const [toast, setToast] = useState(null)
@@ -95,7 +96,10 @@ const MarketplaceNavBar = ({ profile }) => {
           const primaryCurrency = Object.values(currencies).find(
             (currency) => currency.isPrimaryCurrency
           )
-          if (primaryCurrency && !selectedCurrency) {
+          if (
+            (primaryCurrency && !selectedCurrency) ||
+            selectedCurrency == 'null'
+          ) {
             setCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
             setSelectedCurrency(primaryCurrency.currencyCode)
           }

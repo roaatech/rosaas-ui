@@ -40,16 +40,21 @@ const PricingPage = () => {
   const [trialEndDate, setTrialEndDate] = useState(null)
   const { setCurrency, changeDirection } = useGlobal()
   const params = new URLSearchParams(window.location.search)
-  const paramDirection = params.get('direction')
   const paramCurrencyCode = params.get('currencyCode')
+  const paramLanguage = params.get('lang')
+  const isRunningInIframe = window.self !== window.top
+
   useEffect(() => {
-    if (paramDirection) {
-      changeDirection(paramDirection)
+    if (paramLanguage === 'ar' || isRunningInIframe) {
+      changeDirection('rtl')
+    } else {
+      changeDirection('ltr')
     }
-    if (currencyCode) {
+
+    if (paramCurrencyCode) {
       setCurrency(paramCurrencyCode, params.get('currencyId'))
     }
-  }, [paramDirection, paramCurrencyCode])
+  }, [paramLanguage, paramCurrencyCode])
 
   const productSystemName = routeParams.productSystemName
   const productOwnerSystemName = routeParams.productOwnerSystemName || ''
