@@ -25,7 +25,14 @@ const Wrapper = styled.div`
       font-weight: 400;
     }
   }
-
+  .p-panel .p-panel-content {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  .p-panel .p-panel-footer {
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+  }
   .status {
     padding: 1rem 0;
     display: flex;
@@ -35,16 +42,16 @@ const Wrapper = styled.div`
       /* text-transform: capitalize; */
     }
   }
-  .accordions   {
-    padding-left: 0.75rem   !important;
-    padding-right: 0.75rem   !important;
-    padding-top: 0.25rem   !important;
-    padding-bottom: 0.25rem   !important;
+  .accordions {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
   }
   .accordions .collapsed {
-  /* background-color: #ffffff !important; */
-    border: 0px !important; 
-  } 
+    /* background-color: #ffffff !important; */
+    border: 0px !important;
+  }
   .accordions .accordion {
     --bs-accordion-border-color: #ffffff !important;
   }
@@ -74,7 +81,6 @@ const Wrapper = styled.div`
     }
   }
 
-  
   .accordion-button {
     background-color: var(--primary0);
     padding: 0.75rem 1rem;
@@ -82,7 +88,7 @@ const Wrapper = styled.div`
   }
   .content-details .accordion-button {
     background-color: var(--themeSecColor);
-    padding: 0.50rem  0.75rem  ;
+    padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
   }
   .accordion-button:focus {
@@ -137,8 +143,6 @@ const Wrapper = styled.div`
   .checksCount svg {
     margin-top: -3px;
   }
-
-   
 `
 
 export { Wrapper }

@@ -608,6 +608,7 @@ const PricingPage = () => {
                         handleStartWithTrialChange(event, planId)
                       }
                       className="font-small"
+                      style={{ cursor: 'pointer' }}
                     />
                   )}
                   {startWithTrial[planId] && (
@@ -639,9 +640,16 @@ const PricingPage = () => {
                 // whiteSpace:
                 //   listProduct?.[productId]?.trialType === 2 ? 'nowrap' : '',
                 minHeight:
-                  listProduct?.[productId]?.trialType === 2 ? '150px' : '',
+                  listProduct?.[productId]?.trialType === 2
+                    ? '180px'
+                    : listProduct?.[productId]?.trialType === 3
+                    ? '137px'
+                    : '',
                 backgroundColor: !isAvailableForSelection
                   ? 'rgb(255 201 102 / 8%)'
+                  : listProduct?.[productId]?.trialType == 3 &&
+                    planList[planId]?.trialPeriodInDays > 0
+                  ? 'var(--light-blue-2)'
                   : '',
                 display: 'flex',
                 flexDirection: 'column',
@@ -692,37 +700,65 @@ const PricingPage = () => {
                             )}
                           </Form.Group>
                         )}
-                      {listProduct?.[productId]?.trialType !== 2 && (
-                        <div className="small mb-3">
-                          <span
-                            className={`info-icon ${convertMargin('mr')}-1`}
-                          >
-                            <FontAwesomeIcon icon={faInfoCircle} />
-                          </span>{' '}
-                          <SafeFormatMessage id="start-your" />{' '}
-                          <strong style={{ color: 'var(--second-color)' }}>
-                            <SafeFormatMessage id="trial" />
-                          </strong>{' '}
-                          ,
-                          <span>
-                            {' '}
-                            <SafeFormatMessage id="then" />{' '}
-                            <strong style={{ color: 'var(--second-color)' }}>
-                              <SafeFormatMessage id="switch-plans" />{' '}
-                            </strong>
+                      {listProduct?.[productId]?.trialType !== 2 &&
+                        (!(
+                          listProduct?.[productId]?.trialType == 3 &&
+                          planList[planId]?.trialPeriodInDays > 0
+                        ) ? (
+                          <div className="small mb-3">
                             <span
-                              className="info-icon"
-                              style={{
-                                color: 'var(--info-color)',
-                                marginLeft: '5px',
-                              }}
+                              className={`info-icon ${convertMargin('mr')}-1`}
                             >
-                              <i className="bi bi-info-circle"></i>
+                              <FontAwesomeIcon icon={faInfoCircle} />
+                            </span>{' '}
+                            <SafeFormatMessage id="start-your" />{' '}
+                            <strong style={{ color: 'var(--second-color)' }}>
+                              <SafeFormatMessage id="trial" />
+                            </strong>{' '}
+                            ,
+                            <span>
+                              {' '}
+                              <SafeFormatMessage id="then" />{' '}
+                              <strong style={{ color: 'var(--second-color)' }}>
+                                <SafeFormatMessage id="switch-plans" />{' '}
+                              </strong>
+                              <span
+                                className="info-icon"
+                                style={{
+                                  color: 'var(--info-color)',
+                                  marginLeft: '5px',
+                                }}
+                              >
+                                <i className="bi bi-info-circle"></i>
+                              </span>
+                              <SafeFormatMessage id="seamlessly" />
                             </span>
-                            <SafeFormatMessage id="seamlessly" />
-                          </span>
-                        </div>
-                      )}
+                          </div>
+                        ) : (
+                          <p className="font-small pb-0 mb-2">
+                            <BsCheck2Circle
+                              className={`check-circle ${convertMargin(
+                                'mr'
+                              )}-2`}
+                            />{' '}
+                            <SafeFormatMessage
+                              id="Cancel-Before"
+                              values={{ trialEndDate }}
+                            />{' '}
+                            {trialEndDate}{' '}
+                            <SafeFormatMessage
+                              id="Billing-Starts"
+                              values={{ trialEndDate }}
+                            />
+                            <br />{' '}
+                            <BsCheck2Circle
+                              className={`check-circle ${convertMargin(
+                                'mr'
+                              )}-2`}
+                            />{' '}
+                            <SafeFormatMessage id="Auto-Start-Billing-After-Trial" />
+                          </p>
+                        ))}
                       <Button
                         variant="primary"
                         type="submit"
@@ -917,25 +953,6 @@ const PricingPage = () => {
                 )}
               </Row>
             </Card.Body>
-            {listProduct?.[productId]?.trialType == 3 && (
-              <Card.Footer style={{ backgroundColor: 'var(--light-blue)' }}>
-                <p className=" pb-0 mb-0">
-                  <BsCheckCircleFill className="check-circle " />{' '}
-                  <SafeFormatMessage id="Auto-Start-Billing-After-Trial" />
-                  <br />
-                  <BsCheckCircleFill className="check-circle" />{' '}
-                  <SafeFormatMessage
-                    id="Cancel-Before"
-                    values={{ trialEndDate }}
-                  />{' '}
-                  {trialEndDate}{' '}
-                  <SafeFormatMessage
-                    id="Billing-Starts"
-                    values={{ trialEndDate }}
-                  />
-                </p>
-              </Card.Footer>
-            )}
           </Card>
         </div>
       </section>

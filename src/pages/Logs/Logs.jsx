@@ -31,6 +31,7 @@ import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import LogsFilterSearchContainer from '../../components/custom/Shared/FilterSearchContainer/LogsFilterSearchContainer/LogsFilterSearchContainer'
 import DeleteLogsForm from './DeleteLogsForm/DeleteLogsForm'
 import { vi } from 'date-fns/locale'
+import { arraysEqual } from '../../components/custom/Shared/SharedFunctions/sharedFunctionConsts'
 
 export default function Logs() {
   const dispatch = useDispatch()
@@ -49,9 +50,14 @@ export default function Logs() {
   // const listData = useSelector((state) => state.main.logs?.items)
   const [list, setList] = useState([])
   const [selectedData, setAllSelectedData] = useState()
-  console.log({ lll: selectedData })
+  const [selectedFilters, setSelectedFilters] = useState([])
+  const [isInitialized, setIsInitialized] = useState(false)
+  const [reset, setReset] = useState(false)
 
   useEffect(() => {
+    if (arraysEqual(selectedFilters, selectedData) && isInitialized) {
+      return
+    }
     let query = `?page=${Math.ceil(
       (first + 1) / rows
     )}&pageSize=${rows}&filters[0].Field=level&filters[0].Operator=contains`
@@ -71,6 +77,9 @@ export default function Logs() {
           }].Value=${item.value}`
         })
     }
+    setSelectedFilters(
+      selectedData && Object.values(selectedData).length > 0 ? selectedData : []
+    )
     const fetchLogs = async () => {
       dispatch(setLoading(true))
       try {
@@ -86,7 +95,8 @@ export default function Logs() {
     }
 
     fetchLogs()
-  }, [first, rows, searchValue, sortField, sortValue, selectedData])
+    setIsInitialized(true)
+  }, [first, rows, searchValue, sortField, sortValue, selectedData, reset])
 
   const onPageChange = (event) => {
     setFirst(event.first)
@@ -156,7 +166,11 @@ export default function Logs() {
           <DeleteLogsForm setVisible={setVisibleHead} />
         </TableHead>
         <div className="mb-4">
-          <LogsFilterSearchContainer setAllSelectedData={setAllSelectedData} />
+          <LogsFilterSearchContainer
+            reset={reset}
+            setReset={setReset}
+            setAllSelectedData={setAllSelectedData}
+          />
         </div>
         <Card
           border="light"

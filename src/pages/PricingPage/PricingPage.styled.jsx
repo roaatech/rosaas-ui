@@ -12,6 +12,9 @@ export const Wrapper = styled.div`
   .tab-header {
     transform: rotate(22deg);
   }
+  .form-check-input {
+    cursor: pointer;
+  }
   .tab-header.rtl {
     transform: rotate(-30deg) !important;
   }

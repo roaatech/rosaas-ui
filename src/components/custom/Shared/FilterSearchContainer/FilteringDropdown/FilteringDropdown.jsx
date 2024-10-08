@@ -12,6 +12,8 @@ const FilteringDropdown = ({
   onSubmit,
   label,
   filter = true,
+  reset,
+  setReset,
 }) => {
   const { getLocalizedString } = useSharedFunctions()
   const intl = useIntl()
@@ -31,6 +33,13 @@ const FilteringDropdown = ({
     setFilteredOptions(optionsWithDefault)
     setSelectedValue(defaultOption.id)
   }, [optionsArray && optionsArray.length])
+
+  useEffect(() => {
+    if (reset) {
+      setSelectedValue(defaultOption.id)
+      setReset(false)
+    }
+  }, [reset])
 
   const handleFilter = (event) => {
     const filterValue = event.query.trim().toLowerCase()

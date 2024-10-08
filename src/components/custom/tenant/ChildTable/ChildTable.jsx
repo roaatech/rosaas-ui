@@ -38,6 +38,8 @@ import {
   MdGppMaybe,
   MdEmail,
   MdHistory,
+  MdDataObject,
+  MdList,
 } from 'react-icons/md'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
@@ -59,6 +61,7 @@ import { Menu } from 'primereact/menu'
 import { Button } from 'primereact/button'
 import { HealthStatus, subscriptionMode } from '../../../../const/product'
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions'
+import { FaHeartbeat } from 'react-icons/fa'
 
 export default function ChildTable({
   productData,
@@ -354,22 +357,6 @@ export default function ChildTable({
               </td>
             </tr>
           )}
-          <tr>
-            <td className="accordions" colSpan={2}>
-              <MetaDataAccordion defaultKey="metaData" data={products} />
-            </td>
-          </tr>
-
-          {productData?.healthCheckStatus.showHealthStatus === true && (
-            <tr>
-              <td className="accordions" colSpan={2}>
-                <HealthCheckAccordion
-                  defaultKey="HealthCheckStatus"
-                  data={[productData]}
-                />
-              </td>
-            </tr>
-          )}
         </tbody>
       </Table>
     )
@@ -381,60 +368,66 @@ export default function ChildTable({
     return (
       <div className={className}>
         <div className="flex align-items-center gap-2">
-          <OverlayTrigger
-            trigger={['hover', 'focus']}
-            overlay={
-              <Tooltip>
-                <SafeFormatMessage id="Subscription-Mode" />
-              </Tooltip>
-            }
-          >
-            <span>
-              <Label {...subscriptionMode[productData.subscriptionMode]} />
-            </span>
-          </OverlayTrigger>
-          <OverlayTrigger
-            trigger={['hover', 'focus']}
-            overlay={
-              <Tooltip>
-                <SafeFormatMessage id="Status" />
-              </Tooltip>
-            }
-          >
-            <span>
-              <TenantStatus statusValue={productData.status} />{' '}
-            </span>
-          </OverlayTrigger>
+          {productData.subscriptionMode && (
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              overlay={
+                <Tooltip>
+                  <SafeFormatMessage id="Subscription-Mode" />
+                </Tooltip>
+              }
+            >
+              <span>
+                <Label {...subscriptionMode[productData.subscriptionMode]} />
+              </span>
+            </OverlayTrigger>
+          )}
+          {productData.status && (
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              overlay={
+                <Tooltip>
+                  <SafeFormatMessage id="Status" />
+                </Tooltip>
+              }
+            >
+              <span>
+                <TenantStatus statusValue={productData.status} />{' '}
+              </span>
+            </OverlayTrigger>
+          )}
         </div>
         <span className="p-text-secondary">
-          <OverlayTrigger
-            trigger={['hover', 'focus']}
-            overlay={
-              <Tooltip>
-                {colSize == 6 ? (
-                  <SafeFormatMessage id="Subscription-Plan" />
-                ) : (
-                  <SafeFormatMessage id="Subscription-Info" />
-                )}
-              </Tooltip>
-            }
-          >
-            <span>
+          {productData?.plan?.systemName && (
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              overlay={
+                <Tooltip>
+                  {colSize == 6 ? (
+                    <SafeFormatMessage id="Subscription-Plan" />
+                  ) : (
+                    <SafeFormatMessage id="Subscription-Info" />
+                  )}
+                </Tooltip>
+              }
+            >
               <span>
-                <DataLabelWhite text={productData.plan.systemName} />
+                <span>
+                  <DataLabelWhite text={productData.plan.systemName} />
+                </span>
+                {'   '}
+                {maximizedPanel == 'subscription' && (
+                  <>
+                    {' '}
+                    <SafeFormatMessage id="From" />{' '}
+                    <DataLabelWhite text={formatDate(productData.startDate)} />{' '}
+                    <SafeFormatMessage id="to" />{' '}
+                    <DateLabel endDate={productData.endDate} />
+                  </>
+                )}
               </span>
-              {'   '}
-              {colSize == 12 && (
-                <>
-                  {' '}
-                  <SafeFormatMessage id="From" />{' '}
-                  <DataLabelWhite text={formatDate(productData.startDate)} />{' '}
-                  <SafeFormatMessage id="to" />{' '}
-                  <DateLabel endDate={productData.endDate} />
-                </>
-              )}
-            </span>
-          </OverlayTrigger>
+            </OverlayTrigger>
+          )}
         </span>
       </div>
     )
@@ -448,6 +441,7 @@ export default function ChildTable({
       <div className={className}>
         <div className="flex align-items-center gap-2">
           <span className="font-bold">
+            <MdList className="mx-2 mb-1" />
             <SafeFormatMessage id="Specifications" />
           </span>
         </div>
@@ -490,20 +484,24 @@ export default function ChildTable({
               />
             </div>
           ) : (
-            productData.specifications.map((spec) => (
-              <OverlayTrigger
-                trigger={['hover', 'focus']}
-                overlay={
-                  <Tooltip>
-                    <span>{getLocalizedString(spec.displayName)}</span>
-                  </Tooltip>
-                }
-              >
-                <span style={{ marginRight: '8px' }}>
-                  <DataLabelWhite text={spec.value} />{' '}
-                </span>
-              </OverlayTrigger>
-            ))
+            productData.specifications.map((spec) => {
+              return (
+                spec.value && (
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <span>{getLocalizedString(spec.displayName)}</span>
+                      </Tooltip>
+                    }
+                  >
+                    <span style={{ marginRight: '8px' }}>
+                      <DataLabelWhite text={spec.value} />{' '}
+                    </span>
+                  </OverlayTrigger>
+                )
+              )
+            })
           )}
         </div>
       </div>
@@ -555,16 +553,24 @@ export default function ChildTable({
           </span>
         </div>
         <div>
+          {/* {currentPOwnerData && ( */}
           <button
             className="p-panel-header-icon p-link mr-2"
             onClick={() => {
-              navigate(
-                `${Routes.productsOwners.path}/${productData.productOwnerId}`
+              setMaximizedPanel(
+                maximizedPanel === 'productOwner' ? null : 'productOwner'
               )
             }}
           >
-            <span className={'pi pi-window-maximize'} />
+            <span
+              className={
+                maximizedPanel == 'productOwner'
+                  ? 'pi pi-window-minimize'
+                  : 'pi pi-window-maximize'
+              }
+            />
           </button>
+          {/* )} */}
           {!maximizedPanel && options.togglerElement}
         </div>
       </div>
@@ -661,6 +667,7 @@ export default function ChildTable({
       <div className={className}>
         <div className="flex align-items-center gap-2">
           <span className="font-bold">
+            <MdDataObject className="mx-2 mb-1" />
             <SafeFormatMessage id="Meta-Data" />
           </span>
         </div>
@@ -707,15 +714,15 @@ export default function ChildTable({
               trigger={['hover', 'focus']}
               overlay={
                 <Tooltip>
-                  <SafeFormatMessage id="Meta-Data-Updated" />
+                  <SafeFormatMessage
+                    id="Metadata-Available"
+                    defaultMessage="This item has metadata."
+                  />
                 </Tooltip>
               }
             >
               <span>
-                <DataLabelWhite
-                  text={DataTransform(new Date())}
-                  variant={'gray'}
-                />
+                <DataLabelWhite text="Metadata" variant={'gray'} />
               </span>
             </OverlayTrigger>
           </div>
@@ -730,6 +737,7 @@ export default function ChildTable({
       </div>
     )
   }
+
   const healthCheckHeaderTemplate = (options) => {
     const className = `${options.className} justify-content-space-between`
 
@@ -737,6 +745,7 @@ export default function ChildTable({
       <div className={className}>
         <div className="flex align-items-center gap-2">
           <span className="font-bold">
+            <FaHeartbeat className="mx-2 mb-1" />
             <SafeFormatMessage id="Health-Check" />
           </span>
         </div>
@@ -757,14 +766,25 @@ export default function ChildTable({
               }
             />
           </button>
-          {!maximizedPanel ||
-            (maximizedPanel == 'healthCheck' && options.togglerElement)}
+          {(!maximizedPanel || maximizedPanel == 'healthCheck') &&
+            options.togglerElement}
         </div>
       </div>
     )
   }
 
   const healthCheckBodyTemplate = () => {
+    if (productData?.healthCheckStatus.showHealthStatus != true) {
+      return (
+        <div className="text-center py-2">
+          <SafeFormatMessage
+            id="No-health-check-status-found"
+            defaultMessage="There is no health check status found."
+          />
+        </div>
+      )
+    }
+
     return Object.values(productData).map((item) => (
       <Card key={item.id} className="shadow-sm mt-3">
         <Card.Body>
@@ -890,6 +910,39 @@ export default function ChildTable({
       </Card>
     ))
   }
+  const healthCheckFooterTamplate = (options) => {
+    const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`
+
+    return (
+      <div className={className}>
+        {productData?.healthCheckStatus.showHealthStatus != true ? (
+          <div className="text-center ">
+            <SafeFormatMessage
+              id="No-health-check-status-found"
+              defaultMessage="There is no health check status found."
+            />
+          </div>
+        ) : (
+          productData &&
+          Object.values(productData).map((item) => (
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              overlay={
+                <Tooltip>
+                  <SafeFormatMessage id="Health-Check-Status" />{' '}
+                </Tooltip>
+              }
+            >
+              <span>
+                <Label {...HealthStatus[item.healthCheckStatus.isHealthy]} />
+              </span>
+            </OverlayTrigger>
+          ))
+        )}
+      </div>
+    )
+  }
+
   return (
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
@@ -945,6 +998,7 @@ export default function ChildTable({
       <div className="content-container">
         <div className="content-details">
           <Row>
+            {/* maximized Panel */}
             {maximizedPanel === 'subscription' && (
               <Col md={12} className="my-2">
                 <Panel
@@ -981,6 +1035,105 @@ export default function ChildTable({
                 </Panel>
               </Col>
             )}
+            {maximizedPanel === 'healthCheck' && (
+              <Col md={12} className="my-2">
+                <Panel
+                  headerTemplate={healthCheckHeaderTemplate}
+                  footerTemplate={healthCheckFooterTamplate}
+                  // collapsed={true}
+                  toggleable
+                >
+                  {healthCheckBodyTemplate()}
+                </Panel>
+              </Col>
+            )}
+            {maximizedPanel === 'productOwner' && (
+              <Col md={12} className="my-2">
+                <Panel
+                  headerTemplate={pOwnerHeaderTemplate}
+                  footerTemplate={pOwnerFooterTemplate}
+                  // collapsed={true}
+                  toggleable
+                >
+                  {currentPOwnerData ? (
+                    <Table
+                      responsive
+                      className="table-centered table-nowrap rounded mb-0 accordions "
+                    >
+                      <tbody>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="System-Name" />
+                          </td>
+                          <td>{currentPOwnerData?.systemName}</td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Display-Name" />
+                          </td>
+                          <td>{currentPOwnerData?.displayName}</td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Products" />
+                          </td>
+                          <td>
+                            {currentPOwnerData.products &&
+                              Object.values(currentPOwnerData.products).length >
+                                0 && (
+                                <div className="d-flex flex-wrap">
+                                  {' '}
+                                  {Object.values(
+                                    currentPOwnerData.products
+                                  ).map((product) => (
+                                    <span
+                                      className="mx-1 my-1"
+                                      key={product.id} // Use a unique id from the product
+                                      onClick={() =>
+                                        handleProductClick(product.id)
+                                      }
+                                      style={{ cursor: 'pointer' }}
+                                    >
+                                      <DataLabelWhite
+                                        text={product.systemName}
+                                      />
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Created-Date" />
+                          </td>
+                          <td>
+                            {DataTransform(currentPOwnerData.createdDate)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Last-Updated-Date" />
+                          </td>
+                          <td>{DataTransform(currentPOwnerData.editedDate)}</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  ) : (
+                    <div className="text-center ">
+                      <SafeFormatMessage
+                        id="There-are-no-product-Owner-Data-to-view."
+                        defaultMessage={
+                          'There are no product Owner Data to view.'
+                        }
+                      />
+                    </div>
+                  )}
+                </Panel>
+              </Col>
+            )}
+
+            {/* Minimized Panel */}
             {maximizedPanel !== 'subscription' && (
               <Col md={maximizedPanel ? 3 : 6} className="my-2">
                 <Panel
@@ -1019,8 +1172,20 @@ export default function ChildTable({
                 </Panel>
               </Col>
             )}
+            {maximizedPanel !== 'healthCheck' && (
+              <Col md={maximizedPanel ? 3 : 6} className="my-2  ">
+                <Panel
+                  headerTemplate={healthCheckHeaderTemplate}
+                  footerTemplate={!maximizedPanel && healthCheckFooterTamplate}
+                  collapsed={true}
+                  toggleable
+                >
+                  {healthCheckBodyTemplate()}
+                </Panel>
+              </Col>
+            )}
 
-            {
+            {maximizedPanel != 'productOwner' && (
               <Col md={maximizedPanel ? 3 : 6} className="my-2">
                 <Panel
                   headerTemplate={pOwnerHeaderTemplate}
@@ -1103,92 +1268,12 @@ export default function ChildTable({
                     </div>
                   )}
                 </Panel>
-                {/* <Card>
-                  <Card.Header className="fw-bold">
-                    <div>
-                      <h7>
-                        <thead className="border-bottom border-light">
-                          <FontAwesomeIcon
-                            icon={faBuildingUser}
-                            className="mx-2"
-                          />
-                          <SafeFormatMessage id="Product-Owner-Details" />
-                        </thead>
-                      </h7>
-                    </div>
-                  </Card.Header>
-                  <Card.Body className="">
-                    <Table
-                      responsive
-                      className="table-centered table-nowrap rounded mb-0 accordions "
-                    >
-                      <tbody>
-                        <tr>
-                          <td className="firstTd fw-bold">
-                            <SafeFormatMessage id="System-Name" />
-                          </td>
-                          <td>{currentPOwnerData?.systemName}</td>
-                        </tr>
-                        <tr>
-                          <td className="firstTd fw-bold">
-                            <SafeFormatMessage id="Display-Name" />
-                          </td>
-                          <td>{currentPOwnerData?.displayName}</td>
-                        </tr>
-                        <tr>
-                          <td className="firstTd fw-bold">
-                            <SafeFormatMessage id="Products" />
-                          </td>
-                          <td>
-                            {currentPOwnerData.products &&
-                              Object.values(currentPOwnerData.products).length >
-                                0 && (
-                                <div className="d-flex flex-wrap">
-                                  {' '}
-                                  {Object.values(
-                                    currentPOwnerData.products
-                                  ).map((product) => (
-                                    <span
-                                      className="mx-1 my-1"
-                                      key={product.id} // Use a unique id from the product
-                                      onClick={() =>
-                                        handleProductClick(product.id)
-                                      }
-                                      style={{ cursor: 'pointer' }}
-                                    >
-                                      <DataLabelWhite
-                                        text={product.systemName}
-                                      />
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="firstTd fw-bold">
-                            <SafeFormatMessage id="Created-Date" />
-                          </td>
-                          <td>
-                            {DataTransform(currentPOwnerData.createdDate)}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="firstTd fw-bold">
-                            <SafeFormatMessage id="Last-Updated-Date" />
-                          </td>
-                          <td>{DataTransform(currentPOwnerData.editedDate)}</td>
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </Card.Body>
-                </Card> */}
               </Col>
-            }
+            )}
           </Row>
         </div>
         <div className="content timeLine">
-          <Card className="shadow-sm mt-2">
+          <Card className="shadow-sm mt-2 ml-2">
             <Card.Header
               style={{ padding: '0.75rem 1.25rem' }}
               className="fs-6"

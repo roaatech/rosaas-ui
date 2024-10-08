@@ -3,7 +3,7 @@ import { Button, Card, Col, Row } from '@themesberg/react-bootstrap'
 import { useIntl } from 'react-intl'
 import './AuditFilterSearchContainer.styled' // Import your CSS
 import SafeFormatMessage from '../../SafeFormatMessage/SafeFormatMessage'
-import { FaFilter } from 'react-icons/fa'
+import { FaFilter, FaUndo } from 'react-icons/fa'
 import { Calendar } from 'primereact/calendar'
 import useRequest from '../../../../../axios/apis/useRequest'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,7 +14,15 @@ import {
 } from '../../../../../const/product'
 import { roles } from '../../../../../const/const'
 import FilteringDropdown from '../FilteringDropdown/FilteringDropdown'
-const AuditsFilterSearchContainer = ({ setAllSelectedData }) => {
+import DynamicButtons from '../../DynamicButtons/DynamicButtons'
+import { AiFillSave } from 'react-icons/ai'
+import { MdOutlineFilterList, MdRestartAlt, MdRestore } from 'react-icons/md'
+import { icon } from '@fortawesome/fontawesome-svg-core'
+const AuditsFilterSearchContainer = ({
+  setAllSelectedData,
+  reset,
+  setReset,
+}) => {
   const [selectedClientsIds, setSelectedClientsIds] = useState([])
   const [selectedUserTypes, setSelectedUserTypes] = useState([])
   const [selectedProducts, setSelectedProducts] = useState([])
@@ -40,6 +48,15 @@ const AuditsFilterSearchContainer = ({ setAllSelectedData }) => {
       dispatch(setAllProductsLookup(listData.data.data))
     })()
   }, [])
+
+  useEffect(() => {
+    if (reset) {
+      setCreatedDateRange(null)
+      setAllSelectedData([])
+      setReset(false)
+    }
+  }, [reset])
+
   useEffect(() => {
     ;(async () => {
       const AditsActionList = await getAditsActionListLookup()
@@ -65,7 +82,6 @@ const AuditsFilterSearchContainer = ({ setAllSelectedData }) => {
     })()
   }, [])
 
-  const width = 15
   const width1stRow = 25
 
   const convertDateRangeToTimestamps = (dateRange) => {
@@ -106,26 +122,12 @@ const AuditsFilterSearchContainer = ({ setAllSelectedData }) => {
       ...selectedCreatedDateRange,
     ])
   }
-  const transformToOptionsObject = (data) => {
-    return Object.entries(data).reduce((acc, [key, status], index) => {
-      if (status?.value !== 'Canceled') {
-        acc[index + 1] = {
-          id: index + 1,
-          label: status?.value,
-        }
-      }
-      return acc
-    }, {})
-  }
+
   // Transforming the array
   const transformedUserTypes = roles.map((userType, index) => ({
     id: userType,
     label: userType,
   }))
-  const transformedSubscriptionMode = transformToOptionsObject(subscriptionMode)
-  const transformedSubscriptionStatus =
-    transformToOptionsObject(subscriptionStatus)
-  console.log({ transformedSubscriptionMode })
 
   return (
     <Card className="mt-1 mb-1  p-3">
@@ -134,19 +136,40 @@ const AuditsFilterSearchContainer = ({ setAllSelectedData }) => {
           <FaFilter className="mx-2 " />{' '}
           <SafeFormatMessage id="Advanced-Filter" />
         </Card.Title>
-        <Button
+        {/* <Button
           style={{ padding: '8.8px 40px' }}
           className=" m-0"
           variant="primary"
           onClick={handleSubmit}
         >
           {intl.formatMessage({ id: 'Submit' })}
-        </Button>
+        </Button> */}
+
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'action',
+              label: 'Submit',
+              variant: 'secondary',
+              func: () => handleSubmit(),
+            },
+            {
+              order: 2,
+              type: 'action',
+              icon: <FaUndo />,
+              variant: 'primary',
+              func: () => setReset(true),
+            },
+          ]}
+        />
       </Card.Header>{' '}
       {/* MultiSelect components */}
       <Row className="p-0 my-2 m-0">
         <Col md={4} lg={3} sm={6} className="m-0 my-2 p-0  ">
           <FilteringDropdown
+            reset={reset}
+            setReset={setReset}
             optionsArray={
               productsLookup &&
               Object.values(
@@ -165,6 +188,8 @@ const AuditsFilterSearchContainer = ({ setAllSelectedData }) => {
         </Col>
         <Col md={4} lg={3} sm={6} className="m-0 my-2 p-0  ">
           <FilteringDropdown
+            reset={reset}
+            setReset={setReset}
             optionsArray={
               auditsActionListLookup && Object.values(auditsActionListLookup)
             }
@@ -177,6 +202,8 @@ const AuditsFilterSearchContainer = ({ setAllSelectedData }) => {
 
         <Col md={4} lg={3} sm={6} className="m-0 my-2 p-0  ">
           <FilteringDropdown
+            reset={reset}
+            setReset={setReset}
             optionsArray={clientsLookupList && Object.values(clientsLookupList)}
             onSubmit={(ids) => setSelectedClientsIds(ids)}
             label="Client"
@@ -188,6 +215,8 @@ const AuditsFilterSearchContainer = ({ setAllSelectedData }) => {
 
         <Col md={4} lg={3} sm={6} className="m-0 my-2 p-0  ">
           <FilteringDropdown
+            reset={reset}
+            setReset={setReset}
             optionsArray={
               transformedUserTypes && Object.values(transformedUserTypes)
             }

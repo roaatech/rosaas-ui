@@ -60,11 +60,10 @@ export default function Audits() {
   const [selectedData, setAllSelectedData] = useState([])
   const [selectedFilters, setSelectedFilters] = useState([])
   const [isInitialized, setIsInitialized] = useState(false)
+  const [reset, setReset] = useState(false)
 
   const listData = useSelector((state) => state.productsOwners.lookup)
-  console.log({ selectedData, selectedFilters })
 
-  // const listData = useSelector((state) => state.main.audits?.items)
   const [list, setList] = useState([])
   useEffect(() => {
     if (arraysEqual(selectedFilters, selectedData) && isInitialized) {
@@ -88,8 +87,10 @@ export default function Audits() {
             index + 1
           }].Value=${item.value}`
         })
-      setSelectedFilters(selectedData.length > 0 ? selectedData : [])
     }
+    setSelectedFilters(
+      selectedData && Object.values(selectedData).length > 0 ? selectedData : []
+    )
     const fetchAuditsList = async () => {
       dispatch(setLoading(true))
 
@@ -113,6 +114,7 @@ export default function Audits() {
     searchValue,
     sortField,
     sortValue,
+    reset,
     !arraysEqual(selectedFilters, selectedData) && selectedData,
   ])
   console.log(arraysEqual(selectedFilters, selectedData))
@@ -230,6 +232,8 @@ export default function Audits() {
         <div className="mb-4">
           <AuditsFilterSearchContainer
             setAllSelectedData={setAllSelectedData}
+            reset={reset}
+            setReset={setReset}
           />
         </div>
         <Card

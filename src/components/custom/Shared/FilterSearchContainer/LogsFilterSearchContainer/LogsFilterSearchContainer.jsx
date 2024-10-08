@@ -3,7 +3,7 @@ import { Button, Card, Col, Row } from '@themesberg/react-bootstrap'
 import { useIntl } from 'react-intl'
 import './LogsFilterSearchContainer.styled' // Import your CSS
 import SafeFormatMessage from '../../SafeFormatMessage/SafeFormatMessage'
-import { FaFilter } from 'react-icons/fa'
+import { FaFilter, FaUndo } from 'react-icons/fa'
 import { Calendar } from 'primereact/calendar'
 import useRequest from '../../../../../axios/apis/useRequest'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,7 +14,8 @@ import {
 } from '../../../../../const/product'
 import { logLevels, roles } from '../../../../../const/const'
 import FilteringDropdown from '../FilteringDropdown/FilteringDropdown'
-const LogsFilterSearchContainer = ({ setAllSelectedData }) => {
+import DynamicButtons from '../../DynamicButtons/DynamicButtons'
+const LogsFilterSearchContainer = ({ setAllSelectedData, reset, setReset }) => {
   const [selectedLogLevels, setSelectedLogLevels] = useState([])
 
   const intl = useIntl()
@@ -23,7 +24,13 @@ const LogsFilterSearchContainer = ({ setAllSelectedData }) => {
     id: level,
     label: level,
   }))
-
+  useEffect(() => {
+    if (reset) {
+      setCreatedDateRange(null)
+      setAllSelectedData([])
+      setReset(false)
+    }
+  }, [reset])
   const convertDateRangeToTimestamps = (dateRange) => {
     if (dateRange && dateRange.length === 2) {
       const [startDate, endDate] = dateRange
@@ -64,14 +71,24 @@ const LogsFilterSearchContainer = ({ setAllSelectedData }) => {
           <FaFilter className="mx-2 " />{' '}
           <SafeFormatMessage id="Advanced-Filter" />
         </Card.Title>
-        <Button
-          style={{ padding: '8.8px 40px' }}
-          className=" m-0"
-          variant="primary"
-          onClick={handleSubmit}
-        >
-          {intl.formatMessage({ id: 'Submit' })}
-        </Button>
+        <DynamicButtons
+          buttons={[
+            {
+              order: 1,
+              type: 'action',
+              label: 'Submit',
+              variant: 'secondary',
+              func: () => handleSubmit(),
+            },
+            {
+              order: 2,
+              type: 'action',
+              icon: <FaUndo />,
+              variant: 'primary',
+              func: () => setReset(true),
+            },
+          ]}
+        />
       </Card.Header>{' '}
       {/* MultiSelect components */}
       <Row className="p-0 my-2 m-0">
@@ -83,6 +100,8 @@ const LogsFilterSearchContainer = ({ setAllSelectedData }) => {
             onSubmit={(ids) => setSelectedLogLevels(ids)}
             label="Level"
             field="level"
+            reset={reset}
+            setReset={setReset}
           />
         </Col>
 
