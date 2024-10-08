@@ -792,7 +792,7 @@ export default function ChildTable({
             <span className="fw-bold">
               <SafeFormatMessage id="Health-Check-Status" />
             </span>
-            <Label {...HealthStatus[item.healthCheckStatus.isHealthy]} />
+            <Label {...HealthStatus[item?.healthCheckStatus?.isHealthy]} />
           </div>
 
           <div className="d-flex align-items-center justify-content-between mt-2">
@@ -800,7 +800,7 @@ export default function ChildTable({
               <SafeFormatMessage id="Status" />
             </div>
             <div className="small card-stats">
-              {item.healthCheckStatus.isHealthy ? (
+              {item?.healthCheckStatus?.isHealthy ? (
                 <span>
                   <OverlayTrigger
                     trigger={['hover', 'focus']}
@@ -878,7 +878,7 @@ export default function ChildTable({
             {item.healthCheckStatus.duration}
           </div>
 
-          {item.healthCheckStatus.isHealthy === false &&
+          {item?.healthCheckStatus?.isHealthy === false &&
             item.healthCheckStatus?.externalSystemDispatch && (
               <Card border="light" className="shadow-sm mt-3">
                 <Card.Body>
@@ -934,7 +934,7 @@ export default function ChildTable({
               }
             >
               <span>
-                <Label {...HealthStatus[item.healthCheckStatus.isHealthy]} />
+                <Label {...HealthStatus[item?.healthCheckStatus?.isHealthy]} />
               </span>
             </OverlayTrigger>
           ))
