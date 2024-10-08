@@ -774,7 +774,7 @@ export default function ChildTable({
   }
 
   const healthCheckBodyTemplate = () => {
-    if (productData?.healthCheckStatus.showHealthStatus !== true) {
+    if (!productData?.healthCheckStatus?.showHealthStatus) {
       return (
         <div className="text-center py-2">
           <SafeFormatMessage
@@ -786,144 +786,97 @@ export default function ChildTable({
     }
 
     return (
-      <>
-        {productData?.healthCheckStatus && (
-          <Card key={productData?.id} className="shadow-sm mt-3">
-            <Card.Body>
-              <div className="d-flex align-items-center justify-content-between">
-                <span className="fw-bold">
-                  <SafeFormatMessage id="Health-Check-Status" />
-                </span>
-                <Label
-                  {...HealthStatus[productData?.healthCheckStatus?.isHealthy]}
-                />
-              </div>
-
-              <div className="d-flex align-items-center justify-content-between mt-2">
-                <div className="mb-0 w-25">
-                  <SafeFormatMessage id="Status" />
-                </div>
-                <div className="small card-stats">
-                  {productData?.healthCheckStatus?.isHealthy ? (
-                    <span>
-                      <OverlayTrigger
-                        trigger={['hover', 'focus']}
-                        overlay={
-                          <Tooltip>
-                            {DataTransform(
-                              productData?.healthCheckStatus?.lastCheckDate
-                            )}
-                          </Tooltip>
-                        }
-                      >
-                        <span>
-                          {Time(
-                            productData?.healthCheckStatus?.lastCheckDate,
-                            intl.formatMessage({ id: 'Last-checked' })
-                          )}
-                        </span>
-                      </OverlayTrigger>
-                    </span>
-                  ) : (
-                    <span>
-                      <OverlayTrigger
-                        trigger={['hover', 'focus']}
-                        overlay={
-                          <Tooltip>
-                            <SafeFormatMessage id="Since" />{' '}
-                            {DataTransform(
-                              productData?.healthCheckStatus?.checkDate
-                            )}
-                            ,
-                            <SafeFormatMessage id="last-checked" />{' '}
-                            {DataTransform(
-                              productData?.healthCheckStatus?.lastCheckDate
-                            )}
-                          </Tooltip>
-                        }
-                      >
-                        <span className="date">
-                          {Time(
-                            productData?.healthCheckStatus?.checkDate,
-                            intl.formatMessage({ id: 'Since' })
-                          )}
-                          ,{' '}
-                          {Time(
-                            productData?.healthCheckStatus?.lastCheckDate,
-                            intl.formatMessage({ id: 'last-checked' })
-                          )}
-                        </span>
-                      </OverlayTrigger>
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <SafeFormatMessage id="Checks-Count" />:{' '}
-                {productData?.healthCheckStatus?.healthyCount}
-                <Label
-                  background="var(--green2)"
-                  value={productData?.healthCheckStatus?.healthyCount}
-                  color="var(--teal-green)"
-                  icon={<BsFillCheckCircleFill />}
-                />
-                {productData?.healthCheckStatus?.unhealthyCount > 0 && (
-                  <>
-                    <Label
-                      background="var(--red2)"
-                      value={productData?.healthCheckStatus?.unhealthyCount}
-                      color="var(--red)"
-                      icon={<BsFillExclamationCircleFill />}
-                    />
-                  </>
-                )}
-              </div>
-
-              <div className="mt-2">
-                <SafeFormatMessage id="Url" />:{' '}
-                {productData?.healthCheckStatus?.healthCheckUrl}
-              </div>
-              <div className="mt-2">
-                <SafeFormatMessage id="Duration" />:{' '}
-                {productData?.healthCheckStatus?.duration}
-              </div>
-
-              {productData?.healthCheckStatus?.isHealthy === false &&
-                productData?.healthCheckStatus?.externalSystemDispatch && (
-                  <Card border="light" className="shadow-sm mt-3">
-                    <Card.Body>
-                      <h6>
-                        <SafeFormatMessage id="External-System-Dispatch" />
-                      </h6>
-                      <div className="d-flex align-items-center justify-content-between">
-                        <div>
-                          <SafeFormatMessage id="Is-Successful" />:{' '}
-                          {productData?.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
-                        </div>
-                        <div>
-                          <SafeFormatMessage id="Url" />:{' '}
-                          {
-                            productData?.healthCheckStatus
-                              ?.externalSystemDispatch?.url
-                          }
-                        </div>
-                      </div>
-                      <div className="mt-2">
-                        <SafeFormatMessage id="Dispatch-Date" />:{' '}
-                        {Time(
-                          productData?.healthCheckStatus?.externalSystemDispatch
-                            ?.dispatchDate,
-                          intl.formatMessage({ id: 'Last-checked' })
-                        )}
-                      </div>
-                    </Card.Body>
-                  </Card>
-                )}
-            </Card.Body>
-          </Card>
-        )}
-      </>
+      <Table responsive className="table-centered table-nowrap rounded mb-0">
+        <tbody>
+          <tr>
+            <td className="fw-bold">
+              <SafeFormatMessage id="Health-Check-Status" />
+            </td>
+            <td>
+              <Label
+                {...HealthStatus[productData?.healthCheckStatus?.isHealthy]}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className="fw-bold">
+              <SafeFormatMessage id="Checks-Count" />
+            </td>
+            <td>
+              <Label
+                background="var(--green2)"
+                value={productData?.healthCheckStatus?.healthyCount}
+                color="var(--teal-green)"
+                icon={<BsFillCheckCircleFill />}
+              />
+              {productData?.healthCheckStatus?.unhealthyCount > 0 && (
+                <>
+                  <Label
+                    background="var(--red2)"
+                    value={productData?.healthCheckStatus?.unhealthyCount}
+                    color="var(--red)"
+                    icon={<BsFillExclamationCircleFill />}
+                  />
+                </>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td className="fw-bold">
+              <SafeFormatMessage id="Url" />
+            </td>
+            <td>{productData?.healthCheckStatus?.healthCheckUrl}</td>
+          </tr>
+          <tr>
+            <td className="fw-bold">
+              <SafeFormatMessage id="Last-Checked" />
+            </td>
+            <td>
+              {Time(
+                productData?.healthCheckStatus?.lastCheckDate,
+                intl.formatMessage({ id: 'Last-checked' })
+              )}
+            </td>
+          </tr>
+          {productData?.healthCheckStatus?.isHealthy === false &&
+            productData?.healthCheckStatus?.externalSystemDispatch && (
+              <>
+                <tr>
+                  <td className="fw-bold">
+                    <SafeFormatMessage id="External-System-Dispatch" />
+                  </td>
+                  <td>
+                    <SafeFormatMessage id="Is-Successful" />:{' '}
+                    {productData?.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="fw-bold">
+                    <SafeFormatMessage id="Dispatch-Url" />
+                  </td>
+                  <td>
+                    {
+                      productData?.healthCheckStatus?.externalSystemDispatch
+                        ?.url
+                    }
+                  </td>
+                </tr>
+                <tr>
+                  <td className="fw-bold">
+                    <SafeFormatMessage id="Dispatch-Date" />
+                  </td>
+                  <td>
+                    {Time(
+                      productData?.healthCheckStatus?.externalSystemDispatch
+                        ?.dispatchDate,
+                      intl.formatMessage({ id: 'Last-checked' })
+                    )}
+                  </td>
+                </tr>
+              </>
+            )}
+        </tbody>
+      </Table>
     )
   }
 
@@ -1164,6 +1117,18 @@ export default function ChildTable({
                 </Panel>
               </Col>
             )}
+            {maximizedPanel !== 'healthCheck' && (
+              <Col md={maximizedPanel ? 3 : 6} className="my-2  ">
+                <Panel
+                  headerTemplate={healthCheckHeaderTemplate}
+                  footerTemplate={!maximizedPanel && healthCheckFooterTamplate}
+                  collapsed={true}
+                  toggleable
+                >
+                  {healthCheckBodyTemplate()}
+                </Panel>
+              </Col>
+            )}
             {maximizedPanel !== 'specifications' && (
               <Col md={maximizedPanel ? 3 : 6} className="my-2">
                 <Panel
@@ -1187,18 +1152,6 @@ export default function ChildTable({
                   toggleable
                 >
                   {metaDataBodyTemplate()}
-                </Panel>
-              </Col>
-            )}
-            {maximizedPanel !== 'healthCheck' && (
-              <Col md={maximizedPanel ? 3 : 6} className="my-2  ">
-                <Panel
-                  headerTemplate={healthCheckHeaderTemplate}
-                  footerTemplate={!maximizedPanel && healthCheckFooterTamplate}
-                  collapsed={true}
-                  toggleable
-                >
-                  {healthCheckBodyTemplate()}
                 </Panel>
               </Col>
             )}

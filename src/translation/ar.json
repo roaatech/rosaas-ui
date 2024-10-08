@@ -884,6 +884,12 @@
   "Error-deleting-logs": "خطأ في حذف السجلات",
   "Delete-older-than-date": "حذف أقدم من تاريخ",
   "Auto-Provisioning-Tooltip": "عند تفعيل هذه الخاصية، وبمجرد إنشاء مستأجر جديد، سيقوم نظام رصاص تلقائيًا، وبدون تدخل من المسؤول، باستدعاء النظام الخارجي لتوفير موارد المستأجر",
-  "": "تفاصيل الاشتراك",
-  "Subscription-Plan": "خطة الاشتراك"
+
+  "Subscription-Plan": "خطة الاشتراك",
+
+  "No-health-check-status-found": "لا توجد حالة فحص صحي.",
+
+  "There-are-no-product-Owner-Data-to-view": "لا توجد بيانات مالك المنتج لعرضها.",
+
+  "Metadata-Available": "هذا العنصر يحتوي على بيانات وصفية."
 }
