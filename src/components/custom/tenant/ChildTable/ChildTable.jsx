@@ -786,128 +786,136 @@ export default function ChildTable({
     }
 
     return Object.values(productData).map((item) => (
-      <Card key={item.id} className="shadow-sm mt-3">
-        <Card.Body>
-          <div className="d-flex align-items-center justify-content-between">
-            <span className="fw-bold">
-              <SafeFormatMessage id="Health-Check-Status" />
-            </span>
-            <Label {...HealthStatus[item?.healthCheckStatus?.isHealthy]} />
-          </div>
+      <>
+        {item && item?.healthCheckStatus && (
+          <Card key={item?.id} className="shadow-sm mt-3">
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
+                <span className="fw-bold">
+                  <SafeFormatMessage id="Health-Check-Status" />
+                </span>
+                <Label {...HealthStatus[item?.healthCheckStatus?.isHealthy]} />
+              </div>
 
-          <div className="d-flex align-items-center justify-content-between mt-2">
-            <div className="mb-0 w-25">
-              <SafeFormatMessage id="Status" />
-            </div>
-            <div className="small card-stats">
-              {item?.healthCheckStatus?.isHealthy ? (
-                <span>
-                  <OverlayTrigger
-                    trigger={['hover', 'focus']}
-                    overlay={
-                      <Tooltip>
-                        {DataTransform(item.healthCheckStatus.lastCheckDate)}
-                      </Tooltip>
-                    }
-                  >
+              <div className="d-flex align-items-center justify-content-between mt-2">
+                <div className="mb-0 w-25">
+                  <SafeFormatMessage id="Status" />
+                </div>
+                <div className="small card-stats">
+                  {item?.healthCheckStatus?.isHealthy ? (
                     <span>
-                      {Time(
-                        item.healthCheckStatus.lastCheckDate,
-                        intl.formatMessage({ id: 'Last-checked' })
-                      )}
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            {DataTransform(
+                              item?.healthCheckStatus?.lastCheckDate
+                            )}
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          {Time(
+                            item?.healthCheckStatus?.lastCheckDate,
+                            intl.formatMessage({ id: 'Last-checked' })
+                          )}
+                        </span>
+                      </OverlayTrigger>
                     </span>
-                  </OverlayTrigger>
-                </span>
-              ) : (
-                <span>
-                  <OverlayTrigger
-                    trigger={['hover', 'focus']}
-                    overlay={
-                      <Tooltip>
-                        <SafeFormatMessage id="Since" />{' '}
-                        {DataTransform(item.healthCheckStatus.checkDate)},
-                        <SafeFormatMessage id="last-checked" />{' '}
-                        {DataTransform(item.healthCheckStatus.lastCheckDate)}
-                      </Tooltip>
-                    }
-                  >
-                    <span className="date">
-                      {Time(
-                        item.healthCheckStatus.checkDate,
-                        intl.formatMessage({ id: 'Since' })
-                      )}
-                      ,
-                      {Time(
-                        item.healthCheckStatus.lastCheckDate,
-                        intl.formatMessage({ id: 'last-checked' })
-                      )}
+                  ) : (
+                    <span>
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            <SafeFormatMessage id="Since" />{' '}
+                            {DataTransform(item?.healthCheckStatus?.checkDate)},
+                            <SafeFormatMessage id="last-checked" />{' '}
+                            {DataTransform(
+                              item?.healthCheckStatus?.lastCheckDate
+                            )}
+                          </Tooltip>
+                        }
+                      >
+                        <span className="date">
+                          {Time(
+                            item?.healthCheckStatus?.checkDate,
+                            intl.formatMessage({ id: 'Since' })
+                          )}
+                          ,
+                          {Time(
+                            item?.healthCheckStatus?.lastCheckDate,
+                            intl.formatMessage({ id: 'last-checked' })
+                          )}
+                        </span>
+                      </OverlayTrigger>
                     </span>
-                  </OverlayTrigger>
-                </span>
-              )}
-            </div>
-          </div>
+                  )}
+                </div>
+              </div>
 
-          <div className="mt-3">
-            <SafeFormatMessage id="Checks-Count" />:{' '}
-            {item.healthCheckStatus.healthyCount}
-            <Label
-              background="var(--green2)"
-              value={item.healthCheckStatus.healthyCount}
-              color="var(--teal-green)"
-              icon={<BsFillCheckCircleFill />}
-            />
-            {item.healthCheckStatus.unhealthyCount > 0 && (
-              <>
+              <div className="mt-3">
+                <SafeFormatMessage id="Checks-Count" />:{' '}
+                {item?.healthCheckStatus?.healthyCount}
                 <Label
-                  background="var(--red2)"
-                  value={item.healthCheckStatus.unhealthyCount}
-                  color="var(--red)"
-                  icon={<BsFillExclamationCircleFill />}
+                  background="var(--green2)"
+                  value={item?.healthCheckStatus?.healthyCount}
+                  color="var(--teal-green)"
+                  icon={<BsFillCheckCircleFill />}
                 />
-              </>
-            )}
-          </div>
+                {item?.healthCheckStatus?.unhealthyCount > 0 && (
+                  <>
+                    <Label
+                      background="var(--red2)"
+                      value={item?.healthCheckStatus?.unhealthyCount}
+                      color="var(--red)"
+                      icon={<BsFillExclamationCircleFill />}
+                    />
+                  </>
+                )}
+              </div>
 
-          <div className="mt-2">
-            <SafeFormatMessage id="Url" />:{' '}
-            {item.healthCheckStatus.healthCheckUrl}
-          </div>
-          <div className="mt-2">
-            <SafeFormatMessage id="Duration" />:{' '}
-            {item.healthCheckStatus.duration}
-          </div>
+              <div className="mt-2">
+                <SafeFormatMessage id="Url" />:{' '}
+                {item?.healthCheckStatus?.healthCheckUrl}
+              </div>
+              <div className="mt-2">
+                <SafeFormatMessage id="Duration" />:{' '}
+                {item?.healthCheckStatus?.duration}
+              </div>
 
-          {item?.healthCheckStatus?.isHealthy === false &&
-            item.healthCheckStatus?.externalSystemDispatch && (
-              <Card border="light" className="shadow-sm mt-3">
-                <Card.Body>
-                  <h6>
-                    <SafeFormatMessage id="External-System-Dispatch" />
-                  </h6>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <div>
-                      <SafeFormatMessage id="Is-Successful" />:{' '}
-                      {item.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
-                    </div>
-                    <div>
-                      <SafeFormatMessage id="Url" />:{' '}
-                      {item.healthCheckStatus?.externalSystemDispatch?.url}
-                    </div>
-                  </div>
-                  <div className="mt-2">
-                    <SafeFormatMessage id="Dispatch-Date" />:{' '}
-                    {Time(
-                      item.healthCheckStatus?.externalSystemDispatch
-                        ?.dispatchDate,
-                      intl.formatMessage({ id: 'Last-checked' })
-                    )}
-                  </div>
-                </Card.Body>
-              </Card>
-            )}
-        </Card.Body>
-      </Card>
+              {item?.healthCheckStatus?.isHealthy === false &&
+                item?.healthCheckStatus?.externalSystemDispatch && (
+                  <Card border="light" className="shadow-sm mt-3">
+                    <Card.Body>
+                      <h6>
+                        <SafeFormatMessage id="External-System-Dispatch" />
+                      </h6>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div>
+                          <SafeFormatMessage id="Is-Successful" />:{' '}
+                          {item?.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
+                        </div>
+                        <div>
+                          <SafeFormatMessage id="Url" />:{' '}
+                          {item?.healthCheckStatus?.externalSystemDispatch?.url}
+                        </div>
+                      </div>
+                      <div className="mt-2">
+                        <SafeFormatMessage id="Dispatch-Date" />:{' '}
+                        {Time(
+                          item?.healthCheckStatus?.externalSystemDispatch
+                            ?.dispatchDate,
+                          intl.formatMessage({ id: 'Last-checked' })
+                        )}
+                      </div>
+                    </Card.Body>
+                  </Card>
+                )}
+            </Card.Body>
+          </Card>
+        )}
+      </>
     ))
   }
   const healthCheckFooterTamplate = (options) => {
@@ -915,7 +923,7 @@ export default function ChildTable({
 
     return (
       <div className={className}>
-        {productData?.healthCheckStatus.showHealthStatus != true ? (
+        {productData?.healthCheckStatus?.showHealthStatus != true ? (
           <div className="text-center ">
             <SafeFormatMessage
               id="No-health-check-status-found"
