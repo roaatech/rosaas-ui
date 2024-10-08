@@ -8,7 +8,10 @@ import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 
 function isDateExpired(endDate) {
   const currentDate = new Date()
-  return endDate !== 'Unlimited' && currentDate > new Date(endDate)
+  return (
+    endDate !== 'Unlimited' &&
+    currentDate.getTime() > new Date(endDate).getTime()
+  )
 }
 
 const DateLabel = ({

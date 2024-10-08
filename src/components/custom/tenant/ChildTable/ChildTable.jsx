@@ -121,7 +121,7 @@ export default function ChildTable({
   }, [productData.productOwnerId])
   const currentPOwnerData = listData[productData.productOwnerId]
   const currentProduct = listProducts[productData.productId]
-  const [maximizedPanel, setMaximizedPanel] = useState(null)
+  const [maximizedPanel, setMaximizedPanel] = useState('subscription')
 
   const checkSpecificationsArray =
     (currentProduct?.specifications
@@ -774,7 +774,7 @@ export default function ChildTable({
   }
 
   const healthCheckBodyTemplate = () => {
-    if (productData?.healthCheckStatus.showHealthStatus != true) {
+    if (productData?.healthCheckStatus.showHealthStatus !== true) {
       return (
         <div className="text-center py-2">
           <SafeFormatMessage
@@ -785,16 +785,18 @@ export default function ChildTable({
       )
     }
 
-    return Object.values(productData).map((item) => (
+    return (
       <>
-        {item && item?.healthCheckStatus && (
-          <Card key={item?.id} className="shadow-sm mt-3">
+        {productData?.healthCheckStatus && (
+          <Card key={productData?.id} className="shadow-sm mt-3">
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
                 <span className="fw-bold">
                   <SafeFormatMessage id="Health-Check-Status" />
                 </span>
-                <Label {...HealthStatus[item?.healthCheckStatus?.isHealthy]} />
+                <Label
+                  {...HealthStatus[productData?.healthCheckStatus?.isHealthy]}
+                />
               </div>
 
               <div className="d-flex align-items-center justify-content-between mt-2">
@@ -802,21 +804,21 @@ export default function ChildTable({
                   <SafeFormatMessage id="Status" />
                 </div>
                 <div className="small card-stats">
-                  {item?.healthCheckStatus?.isHealthy ? (
+                  {productData?.healthCheckStatus?.isHealthy ? (
                     <span>
                       <OverlayTrigger
                         trigger={['hover', 'focus']}
                         overlay={
                           <Tooltip>
                             {DataTransform(
-                              item?.healthCheckStatus?.lastCheckDate
+                              productData?.healthCheckStatus?.lastCheckDate
                             )}
                           </Tooltip>
                         }
                       >
                         <span>
                           {Time(
-                            item?.healthCheckStatus?.lastCheckDate,
+                            productData?.healthCheckStatus?.lastCheckDate,
                             intl.formatMessage({ id: 'Last-checked' })
                           )}
                         </span>
@@ -829,22 +831,25 @@ export default function ChildTable({
                         overlay={
                           <Tooltip>
                             <SafeFormatMessage id="Since" />{' '}
-                            {DataTransform(item?.healthCheckStatus?.checkDate)},
+                            {DataTransform(
+                              productData?.healthCheckStatus?.checkDate
+                            )}
+                            ,
                             <SafeFormatMessage id="last-checked" />{' '}
                             {DataTransform(
-                              item?.healthCheckStatus?.lastCheckDate
+                              productData?.healthCheckStatus?.lastCheckDate
                             )}
                           </Tooltip>
                         }
                       >
                         <span className="date">
                           {Time(
-                            item?.healthCheckStatus?.checkDate,
+                            productData?.healthCheckStatus?.checkDate,
                             intl.formatMessage({ id: 'Since' })
                           )}
-                          ,
+                          ,{' '}
                           {Time(
-                            item?.healthCheckStatus?.lastCheckDate,
+                            productData?.healthCheckStatus?.lastCheckDate,
                             intl.formatMessage({ id: 'last-checked' })
                           )}
                         </span>
@@ -856,18 +861,18 @@ export default function ChildTable({
 
               <div className="mt-3">
                 <SafeFormatMessage id="Checks-Count" />:{' '}
-                {item?.healthCheckStatus?.healthyCount}
+                {productData?.healthCheckStatus?.healthyCount}
                 <Label
                   background="var(--green2)"
-                  value={item?.healthCheckStatus?.healthyCount}
+                  value={productData?.healthCheckStatus?.healthyCount}
                   color="var(--teal-green)"
                   icon={<BsFillCheckCircleFill />}
                 />
-                {item?.healthCheckStatus?.unhealthyCount > 0 && (
+                {productData?.healthCheckStatus?.unhealthyCount > 0 && (
                   <>
                     <Label
                       background="var(--red2)"
-                      value={item?.healthCheckStatus?.unhealthyCount}
+                      value={productData?.healthCheckStatus?.unhealthyCount}
                       color="var(--red)"
                       icon={<BsFillExclamationCircleFill />}
                     />
@@ -877,15 +882,15 @@ export default function ChildTable({
 
               <div className="mt-2">
                 <SafeFormatMessage id="Url" />:{' '}
-                {item?.healthCheckStatus?.healthCheckUrl}
+                {productData?.healthCheckStatus?.healthCheckUrl}
               </div>
               <div className="mt-2">
                 <SafeFormatMessage id="Duration" />:{' '}
-                {item?.healthCheckStatus?.duration}
+                {productData?.healthCheckStatus?.duration}
               </div>
 
-              {item?.healthCheckStatus?.isHealthy === false &&
-                item?.healthCheckStatus?.externalSystemDispatch && (
+              {productData?.healthCheckStatus?.isHealthy === false &&
+                productData?.healthCheckStatus?.externalSystemDispatch && (
                   <Card border="light" className="shadow-sm mt-3">
                     <Card.Body>
                       <h6>
@@ -894,17 +899,20 @@ export default function ChildTable({
                       <div className="d-flex align-items-center justify-content-between">
                         <div>
                           <SafeFormatMessage id="Is-Successful" />:{' '}
-                          {item?.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
+                          {productData?.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
                         </div>
                         <div>
                           <SafeFormatMessage id="Url" />:{' '}
-                          {item?.healthCheckStatus?.externalSystemDispatch?.url}
+                          {
+                            productData?.healthCheckStatus
+                              ?.externalSystemDispatch?.url
+                          }
                         </div>
                       </div>
                       <div className="mt-2">
                         <SafeFormatMessage id="Dispatch-Date" />:{' '}
                         {Time(
-                          item?.healthCheckStatus?.externalSystemDispatch
+                          productData?.healthCheckStatus?.externalSystemDispatch
                             ?.dispatchDate,
                           intl.formatMessage({ id: 'Last-checked' })
                         )}
@@ -916,8 +924,9 @@ export default function ChildTable({
           </Card>
         )}
       </>
-    ))
+    )
   }
+
   const healthCheckFooterTamplate = (options) => {
     const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`
 
@@ -931,8 +940,7 @@ export default function ChildTable({
             />
           </div>
         ) : (
-          productData &&
-          Object.values(productData).map((item) => (
+          productData && (
             <OverlayTrigger
               trigger={['hover', 'focus']}
               overlay={
@@ -942,10 +950,12 @@ export default function ChildTable({
               }
             >
               <span>
-                <Label {...HealthStatus[item?.healthCheckStatus?.isHealthy]} />
+                <Label
+                  {...HealthStatus[productData?.healthCheckStatus?.isHealthy]}
+                />
               </span>
             </OverlayTrigger>
-          ))
+          )
         )}
       </div>
     )
