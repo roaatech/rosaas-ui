@@ -3,19 +3,44 @@ export const productsOwners = createSlice({
   name: 'productsOwners',
   initialState: {
     productsOwners: {},
+    lookup: {},
   },
   reducers: {
     setAllProductOwners: (state, action) => {
       const allProductOwners = JSON.parse(
         JSON.stringify(current(state.productsOwners))
       )
+
       action?.payload?.forEach((item) => {
-        if (!{ ...current(state.productsOwners) }[item.id]) {
+        if (allProductOwners[item.id]) {
+          allProductOwners[item.id] = {
+            ...allProductOwners[item.id],
+            ...item,
+          }
+        } else {
           allProductOwners[item.id] = item
         }
       })
+
       state.productsOwners = allProductOwners
     },
+    setAllProductOwnersLookup: (state, action) => {
+      const allProductOwnersLookup = JSON.parse(
+        JSON.stringify(current(state.lookup))
+      )
+      action?.payload?.forEach((item) => {
+        if (allProductOwnersLookup[item.id]) {
+          allProductOwnersLookup[item.id] = {
+            ...allProductOwnersLookup[item.id],
+            ...item,
+          }
+        } else {
+          allProductOwnersLookup[item.id] = item
+        }
+      })
+      state.lookup = allProductOwnersLookup
+    },
+
     productOwnerInfo: (state, action) => {
       const { id, data } = action.payload
       state.productsOwners[id] = data
@@ -30,9 +55,9 @@ export const productsOwners = createSlice({
       const { productOwnerId, attributes } = action.payload
       const { productsOwners } = state
 
-      if (productsOwners[productOwnerId]) {
-        Object.assign(productsOwners[productOwnerId], attributes)
-      }
+      // if (productsOwners[productOwnerId]) {
+      Object.assign(productsOwners[productOwnerId], attributes)
+      // }
     },
   },
 })
@@ -40,6 +65,7 @@ export const productsOwners = createSlice({
 // Action creators are generated for each case reducer function
 export const {
   setAllProductOwners,
+  setAllProductOwnersLookup,
   productOwnerInfo,
   removeProductOwnerStore,
   productOwnerChangeAttr,

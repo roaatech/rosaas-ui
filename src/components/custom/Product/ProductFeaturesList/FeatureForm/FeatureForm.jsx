@@ -2,8 +2,7 @@ import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
-import { Modal, Button } from '@themesberg/react-bootstrap'
-import { Form } from '@themesberg/react-bootstrap'
+import { Modal, Button, Form } from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './FeatureForm.styled.jsx'
@@ -14,13 +13,15 @@ import {
 import { useParams } from 'react-router-dom'
 
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
-
 import {
   activeIndex,
   featureTypeMap,
   featureUnitMap,
 } from '../../../../../const/index.js'
 import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx' // Import MultilingualInput
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+
 const FeatureForm = ({
   type,
   featureData,
@@ -36,57 +37,82 @@ const FeatureForm = ({
   const allProducts = useSelector((state) => state.products.products)
 
   const initialValues = {
+    displayNameEn: featureData?.displayNameLocalizations?.en || '',
+    displayNameAr: featureData?.displayNameLocalizations?.ar || '',
+    descriptionEn: featureData?.descriptionLocalizations?.en || '',
+    descriptionAr: featureData?.descriptionLocalizations?.ar || '',
     systemName: featureData ? featureData.systemName : '',
-    displayName: featureData ? featureData.displayName : '',
-    description: featureData ? featureData.description : '',
     type: featureData ? featureData.type : '',
-    // unit: featureData ? featureData.unit : undefined,
     displayOrder: featureData ? featureData.displayOrder : '0',
   }
 
   const validationSchema = Yup.object().shape({
-    displayName: Yup.string()
-      .required(<FormattedMessage id="Title-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+    displayNameEn: Yup.string().test({
+      name: 'displayNameRequired',
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
+      test: (value, context) => {
+        const { parent } = context
+        const displayNameEn = parent.displayNameEn
+        const displayNameAr = parent.displayNameAr
+        return !!displayNameEn || !!displayNameAr
+      },
+    }),
+    displayNameAr: Yup.string().test({
+      name: 'displayNameRequired',
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
+      test: (value, context) => {
+        const { parent } = context
+        const displayNameEn = parent.displayNameEn
+        const displayNameAr = parent.displayNameAr
+        return !!displayNameEn || !!displayNameAr
+      },
+    }),
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="Unique-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
+    descriptionEn: Yup.string().max(
+      250,
+      <SafeFormatMessage id="Must-be-maximum-250-digits" />
+    ),
+    descriptionAr: Yup.string().max(
+      250,
+      <SafeFormatMessage id="Must-be-maximum-250-digits" />
+    ),
     type: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
+      <SafeFormatMessage id="This-field-is-required" />
     ),
     displayOrder: Yup.number()
       .typeError('Display Order must be a number')
       .integer('Display Order must be an integer')
       .min(0, 'Display Order must be a positive number')
       .default(0),
-
-    // unit: Yup.string().test(
-    //   'unit-validation',
-    //   'Unit is required when Type is Number',
-    //   function (value) {
-    //     const type = this.resolve(Yup.ref('type'))
-    //     if (type === '1') {
-    //       return value !== undefined && value !== ''
-    //     }
-    //     return true
-    //   }
-    // ),
   })
+
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
+      const dataToSubmit = {
+        systemName: values.systemName,
+        displayNameLocalizations: {
+          en: values.displayNameEn,
+          ar: values.displayNameAr,
+        },
+        descriptionLocalizations: {
+          en: values.descriptionEn,
+          ar: values.descriptionAr,
+        },
+        type: parseInt(values.type),
+        displayOrder: values.displayOrder || 0,
+      }
+
       if (type === 'create') {
         const createFeature = await createFeatureRequest(productId, {
-          systemName: values.systemName,
-          displayName: values.displayName,
-          description: values.description,
-          type: parseInt(values.type),
-          displayOrder: values.displayOrder || 0,
+          ...dataToSubmit,
         })
 
         if (!allProducts[productId].feature) {
@@ -104,12 +130,7 @@ const FeatureForm = ({
             featureId: createFeature.data.data.id,
             productId: productId,
             data: {
-              systemName: values.systemName,
-              displayName: values.displayName,
-              description: values.description,
-              type: values.type,
-              displayOrder: values.displayOrder || 0,
-              // unit: values.unit,
+              ...dataToSubmit,
               id: createFeature.data.data.id,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: new Date().toISOString().slice(0, 19),
@@ -121,15 +142,8 @@ const FeatureForm = ({
           setActiveIndex(activeIndex.features)
         }
       } else {
-        const editFeature = await editFeatureRequest(productId, {
-          data: {
-            systemName: values.systemName,
-            displayName: values.displayName,
-            description: values.description,
-            type: parseInt(values.type),
-            displayOrder: values.displayOrder || 0,
-            // unit: parseInt(values.unit),
-          },
+        await editFeatureRequest(productId, {
+          data: dataToSubmit,
           id: featureData.id,
         })
 
@@ -138,12 +152,7 @@ const FeatureForm = ({
             featureId: featureData.id,
             productId: productId,
             data: {
-              systemName: values.systemName,
-              displayName: values.displayName,
-              description: values.description,
-              type: values.type,
-              displayOrder: values.displayOrder || 0,
-              // unit: values.unit,
+              ...dataToSubmit,
               id: featureData.id,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: featureData.createdDate,
@@ -170,36 +179,44 @@ const FeatureForm = ({
         </Modal.Header>
 
         <Modal.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Display-Name" />{' '}
-              <span style={{ color: 'red' }}>*</span>
-            </Form.Label>
+          {/* MultilingualInput for Display Name */}
+          <MultilingualInput
+            inputLabel="Display-Name"
+            languages={[
+              { code: 'en', name: 'English' },
+              { code: 'ar', name: 'Arabic' },
+            ]}
+            inputIds={{
+              en: 'displayNameEn',
+              ar: 'displayNameAr',
+            }}
+            placeholder={{
+              en: 'English-Name',
+              ar: 'Arabic-Name',
+            }}
+            values={{
+              en: formik.values.displayNameEn,
+              ar: formik.values.displayNameAr,
+            }}
+            onChange={formik.handleChange}
+            isRequired={true}
+            inputType="input"
+            errors={{
+              en: formik.errors.displayNameEn,
+              ar: formik.errors.displayNameAr,
+            }}
+            touched={{
+              en: formik.touched.displayNameEn,
+              ar: formik.touched.displayNameAr,
+            }}
+          />
 
-            <input
-              className="form-control"
-              type="text"
-              id="displayName"
-              name="displayName"
-              onChange={formik.handleChange}
-              value={formik.values.displayName}
-            />
-
-            {formik.touched.displayName && formik.errors.displayName && (
-              <Form.Control.Feedback
-                type="invalid"
-                style={{ display: 'block' }}
-              >
-                {formik.errors.displayName}
-              </Form.Control.Feedback>
-            )}
-          </Form.Group>
-
+          {/* System Name Field */}
           <div className="mb-3">
             <AutoGenerateInput
-              label={<FormattedMessage id="System-Name" />}
+              label={<SafeFormatMessage id="System-Name" />}
               id="systemName"
-              value={formik.values.displayName}
+              value={formik.values.displayNameEn}
               name={formik.values.systemName}
               onChange={formik.handleChange}
               onGenerateUniqueName={(generatedUniqueName) => {
@@ -224,111 +241,77 @@ const FeatureForm = ({
             )}
           </div>
 
+          {/* MultilingualInput for Description */}
+          <MultilingualInput
+            inputLabel="Description"
+            languages={[
+              { code: 'en', name: 'English' },
+              { code: 'ar', name: 'Arabic' },
+            ]}
+            inputIds={{
+              en: 'descriptionEn',
+              ar: 'descriptionAr',
+            }}
+            placeholder={{
+              en: 'English-Description',
+              ar: 'Arabic-Description',
+            }}
+            values={{
+              en: formik.values.descriptionEn,
+              ar: formik.values.descriptionAr,
+            }}
+            onChange={formik.handleChange}
+            isRequired={false}
+            inputType="TextareaAndCounter"
+            maxLength={250}
+            errors={{
+              en: formik.errors.descriptionEn,
+              ar: formik.errors.descriptionAr,
+            }}
+            touched={{
+              en: formik.touched.descriptionEn,
+              ar: formik.touched.descriptionAr,
+            }}
+          />
+
+          {/* Type Field */}
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Description" />
+              <SafeFormatMessage id="Type" />{' '}
+              <span style={{ color: 'red' }}>*</span>
             </Form.Label>
-
-            <TextareaAndCounter
-              addTextarea={formik.setFieldValue}
-              maxLength={250}
-              showCharCount
-              inputValue={formik?.values?.description}
-            />
-
-            {formik.touched.description && formik.errors.description && (
+            <select
+              className="form-control"
+              id="type"
+              name="type"
+              onChange={formik.handleChange}
+              value={formik.values.type}
+            >
+              <option value="">
+                <SafeFormatMessage id="Select-Option" />
+              </option>
+              {Object.entries(featureTypeMap).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+            {/* Display validation error */}
+            {formik.touched.type && formik.errors.type && (
               <Form.Control.Feedback
                 type="invalid"
                 style={{ display: 'block' }}
               >
-                {formik.errors.description}
+                {formik.errors.type}
               </Form.Control.Feedback>
             )}
           </Form.Group>
 
-          {/* Repeat similar code blocks for other fields */}
-          <div>
-            {/* Type */}
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Type" />{' '}
-                <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <select
-                className="form-control"
-                id="type"
-                name="type"
-                onChange={formik.handleChange}
-                // onChange={(e) => {
-                //   formik.handleChange(e)
-                //   if (e.target.value === '2') {
-                //     formik.setFieldValue('unit', '')
-                //   }
-                // }}
-                value={formik.values.type}
-              >
-                <option value="">
-                  <FormattedMessage id="Select-Option" />
-                </option>
-                {Object.entries(featureTypeMap).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-              {/* Display validation error */}
-              {formik.touched.type && formik.errors.type && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.type}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
-          {/* <div>
-             <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Unit" />
-              </Form.Label>
-              <select
-                className="form-control"
-                id="unit"
-                name="unit"
-                onChange={formik.handleChange}
-                value={formik.values.unit}
-                disabled={formik.values.type != '1'}
-              >
-                <option value="">Select Unit</option>
-                {Object.entries(featureUnitMap).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-               {formik.touched.unit && formik.errors.unit && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.unit}
-                </Form.Control.Feedback>
-              )}
-               {formik.values.type === '1' &&
-                formik.touched.unit &&
-                !formik.values.unit && (
-                  <div className="invalid-feedback">
-                    Unit is required when Type is Number
-                  </div>
-                )}
-            </Form.Group>
-          </div> */}
-
+          {/* Display Order Field */}
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Display-Order" />
+                <SafeFormatMessage id="Display-Order" />
               </Form.Label>
               <input
                 type="text"
@@ -352,14 +335,14 @@ const FeatureForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

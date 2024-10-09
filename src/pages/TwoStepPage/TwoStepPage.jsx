@@ -17,6 +17,10 @@ import { Wrapper } from './TwoStepPage.styled'
 import { setStep } from '../../store/slices/tenants'
 import useRequest from '../../axios/apis/useRequest'
 import PaymentForm from '../../components/custom/PaymentForm/PaymentForm'
+import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
+import { setProductOwner } from '../../store/slices/main'
+import { deleteAllPlanPriceBySystemName } from '../../store/slices/products/productsSlice'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const TwoStepProcessPage = () => {
   const params = useParams()
@@ -29,28 +33,44 @@ const TwoStepProcessPage = () => {
   )
 
   const dispatch = useDispatch()
-  const [displayName, setDisplayName] = useState()
+  const [tenantDisplayName, setTenantDisplayName] = useState()
   const step = useSelector((state) => state.tenants.currentStep)
   const [currentTenant, setCurrentTenant] = useState('')
   const [orderID, setOrderID] = useState('')
   const { getProductPlanPricePublic } = useRequest()
   const { productSystemName, productOwnerSystemName, priceName } = useParams()
+
   useEffect(() => {
     if (!orderIDParam) {
+      dispatch(setStep(1))
       return
     }
     dispatch(setStep(2))
   }, [orderIDParam])
+
   let userRole = useSelector((state) => state.auth.userInfo.userType)
   if (userRole == undefined) userRole = 'notAuth'
 
-  const [hasToPay, setHasToPay] = useState()
-  const [priceData, setPriceData] = useState()
-  const [trialPlanId, setTrialPlanId] = useState('')
   useEffect(() => {
-    if (priceData || (priceData && Object.values(priceData).length) > 0) {
+    if (!productOwnerSystemName) {
       return
     }
+    dispatch(setProductOwner(productOwnerSystemName))
+  }, [productOwnerSystemName])
+
+  const [hasToPay, setHasToPay] = useState()
+  const [priceData, setPriceData] = useState()
+
+  const [trialPlanId, setTrialPlanId] = useState('')
+  const currency = useSelector((state) => state.main.currency)
+  // useEffect(() => {
+  //   dispatch(deleteAllPlanPriceBySystemName({ systemName: productSystemName }))
+  //   setPriceData(null)
+  // }, [currency])
+  useEffect(() => {
+    // if (priceData || (priceData && Object.values(priceData).length) > 0) {
+    //   return
+    // }
     ;(async () => {
       const price = await getProductPlanPricePublic(
         productOwnerSystemName,
@@ -60,13 +80,15 @@ const TwoStepProcessPage = () => {
       setPriceData(price.data.data)
       price.data.data && setTrialPlanId(price.data.data?.product.trialPlanId)
     })()
-  }, [productSystemName, priceName])
+  }, [productSystemName, priceName, currency])
   return (
     <Wrapper>
+      <MarketplaceNavBar />
+
       <div className="main-container">
-        {userRole != 'notAuth' && (
+        {/* {userRole != 'notAuth' && (
           <BreadcrumbComponent breadcrumbInfo={'ProductList'} />
-        )}{' '}
+        )}{' '} */}
         <Row>
           <Card>
             <Card.Body>
@@ -77,7 +99,7 @@ const TwoStepProcessPage = () => {
                       label: (
                         <>
                           <FontAwesomeIcon icon={faInfoCircle} />{' '}
-                          <FormattedMessage id="Subscribtion-Info" />
+                          <SafeFormatMessage id="Subscribtion-Info" />
                         </>
                       ),
                     },
@@ -85,7 +107,7 @@ const TwoStepProcessPage = () => {
                       label: (
                         <>
                           <FontAwesomeIcon icon={faMoneyCheckDollar} />{' '}
-                          <FormattedMessage id="Check-Out" />
+                          <SafeFormatMessage id="Check-Out" />
                         </>
                       ),
                     },
@@ -97,10 +119,10 @@ const TwoStepProcessPage = () => {
               {step === 1 && (
                 <CheckoutTenantReg
                   type="create"
-                  popupLabel={<FormattedMessage id="Enter-Your-Info" />}
+                  popupLabel={<SafeFormatMessage id="Enter-Your-Info" />}
                   setCurrentTenant={setCurrentTenant}
                   setHasToPay={setHasToPay}
-                  setDisplayName={setDisplayName}
+                  setDisplayName={setTenantDisplayName}
                   priceData={priceData}
                   setPriceData={setPriceData}
                 />
@@ -110,7 +132,7 @@ const TwoStepProcessPage = () => {
                   currentTenant={currentTenant}
                   hasToPay={hasToPay}
                   setHasToPay={setHasToPay}
-                  displayName={displayName}
+                  tenantDisplayName={tenantDisplayName}
                   priceData={priceData}
                   setPriceData={setPriceData}
                   trialPlanId={trialPlanId}

@@ -35,6 +35,7 @@ import {
 } from '../../../../store/slices/products/productsSlice'
 import { Owner } from '../../../../const'
 import { MdPersonAdd, MdPersonAddDisabled } from 'react-icons/md'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ProductsUsersManagement = () => {
   const productData = useSelector((state) => state.products.products)
@@ -101,7 +102,7 @@ const ProductsUsersManagement = () => {
           </td>
           <td>
             <span className="fw-normal">
-              {Owner?.[userType] && <FormattedMessage id={Owner[userType]} />}
+              {Owner?.[userType] && <SafeFormatMessage id={Owner[userType]} />}
             </span>
           </td>
           <td>
@@ -132,12 +133,12 @@ const ProductsUsersManagement = () => {
                   {isMajor ? (
                     <span className=" ">
                       <MdPersonAddDisabled className="mx-2" />{' '}
-                      <FormattedMessage id="Deauthorize" />
+                      <SafeFormatMessage id="Deauthorize" />
                     </span>
                   ) : (
                     <span className=" ">
                       <MdPersonAdd className="mx-2" />
-                      <FormattedMessage id="Authorize" />
+                      <SafeFormatMessage id="Authorize" />
                     </span>
                   )}
                 </Dropdown.Item>
@@ -146,7 +147,7 @@ const ProductsUsersManagement = () => {
                   className="text-danger"
                 >
                   <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                  <FormattedMessage id="Delete" />
+                  <SafeFormatMessage id="Delete" />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -161,7 +162,7 @@ const ProductsUsersManagement = () => {
         <DynamicButtons
           buttons={[
             {
-              popupLabel: <FormattedMessage id="Create-New-User" />,
+              popupLabel: <SafeFormatMessage id="Create-New-User" />,
               order: 1,
               type: 'form',
               label: 'New-User',
@@ -180,21 +181,21 @@ const ProductsUsersManagement = () => {
         <thead>
           <tr>
             <th className="border-bottom">
-              <FormattedMessage id="Email" />
+              <SafeFormatMessage id="Email" />
             </th>
             <th className="border-bottom">
-              <FormattedMessage id="User-Type" />
+              <SafeFormatMessage id="User-Type" />
             </th>
             <th className="border-bottom">
-              <FormattedMessage id="Status" />
-            </th>
-
-            <th className="border-bottom">
-              <FormattedMessage id="Created-Date" />
+              <SafeFormatMessage id="Status" />
             </th>
 
             <th className="border-bottom">
-              <FormattedMessage id="Actions" />
+              <SafeFormatMessage id="Created-Date" />
+            </th>
+
+            <th className="border-bottom">
+              <SafeFormatMessage id="Actions" />
             </th>
           </tr>
         </thead>
@@ -209,7 +210,7 @@ const ProductsUsersManagement = () => {
         </tbody>
       </Table>
       <DeleteConfirmation
-        message={<FormattedMessage id="remove-user-message" />}
+        message={<SafeFormatMessage id="remove-user-message" />}
         icon="pi pi-exclamation-triangle"
         confirm={confirm}
         setConfirm={setConfirm}

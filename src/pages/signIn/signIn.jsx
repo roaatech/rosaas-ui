@@ -9,6 +9,7 @@ import SignInSuperAdmin from '../../components/custom/SignInSuperAdmin/SignInSup
 import { Wrapper } from './signIn.styled'
 import logo from '../../assets/img/brand/rosas.svg'
 import ResetPassword from '../../components/custom/ResetPassword/ResetPassword'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const SignInPage = () => {
   const navigate = useNavigate()
@@ -23,6 +24,8 @@ const SignInPage = () => {
         return <SignInSuperAdmin />
       case Routes.ResetPasswordConfirm.path:
         return <ResetPassword />
+      case Routes.setPassword.path:
+        return <ResetPassword />
       case Routes.ResetPasswordRequest.path:
         return <ResetPassword />
       default:
@@ -36,9 +39,9 @@ const SignInPage = () => {
         return (
           <>
             <br />
-            <FormattedMessage id="Product-Management-Area" />
+            <SafeFormatMessage id="Product-Management-Area" />
             <div>
-              <FormattedMessage id="singInTo" />{' '}
+              <SafeFormatMessage id="singInTo" />{' '}
               <span className="rosaas">RoSaaS</span>
             </div>
           </>
@@ -47,7 +50,7 @@ const SignInPage = () => {
         return (
           <>
             <div>
-              <FormattedMessage id="singInTo" />{' '}
+              <SafeFormatMessage id="singInTo" />{' '}
               <span className="rosaas">RoSaaS</span>
             </div>
           </>
@@ -56,9 +59,9 @@ const SignInPage = () => {
         return (
           <>
             {'  '}
-            <FormattedMessage id="Admin-Panel" />
+            <SafeFormatMessage id="Admin-Panel" />
             <div>
-              <FormattedMessage id="singInTo" />{' '}
+              <SafeFormatMessage id="singInTo" />{' '}
               <span className="rosaas">RoSaaS</span>
             </div>
           </>
@@ -68,11 +71,29 @@ const SignInPage = () => {
           <>
             {'  '}
             <h3>
-              <FormattedMessage id="Forgot your password?" />
+              <SafeFormatMessage id="Forgot your password?" />
             </h3>
             <p>
-              <FormattedMessage id="Enter your email address and we will send you instructions to reset your password." />
+              <SafeFormatMessage id="Enter your email address and we will send you instructions to reset your password." />
             </p>{' '}
+          </>
+        )
+      case Routes.ResetPasswordConfirm.path:
+        return (
+          <>
+            {'  '}
+            <div>
+              <SafeFormatMessage id="Reset-Account-password" />
+            </div>{' '}
+          </>
+        )
+      case Routes.setPassword.path:
+        return (
+          <>
+            {'  '}
+            <div>
+              <SafeFormatMessage id="Set-Your-password" />
+            </div>{' '}
           </>
         )
       default:
@@ -81,14 +102,14 @@ const SignInPage = () => {
   }
 
   const shouldRenderCopyLink =
-    location.pathname !== Routes.ProductManagementSignIn.path &&
-    location.pathname !== Routes.SignInSuperAdmin.path
+    location.pathname == Routes.SignInTenantAdmin.path
 
   return (
     (location.pathname === Routes.SignInSuperAdmin.path ||
       location.pathname === Routes.ResetPasswordRequest.path ||
       location.pathname === Routes.ResetPasswordConfirm.path ||
       location.pathname === Routes.SignInTenantAdmin.path ||
+      location.pathname === Routes.setPassword.path ||
       location.pathname === Routes.ProductManagementSignIn.path) && (
       <Wrapper>
         <section
@@ -101,7 +122,13 @@ const SignInPage = () => {
                 xs={12}
                 className="d-flex align-items-center justify-content-center"
               >
-                <div className="cardCont shadow-soft border border-round border-light p-4 p-lg-5 w-100 fmxw-500">
+                <div
+                  className={`cardCont shadow-soft border border-round border-light p-4 p-lg-5 w-100 fmxw-500 ${
+                    location.pathname === Routes.SignInSuperAdmin.path
+                      ? 'super-admin-card'
+                      : ''
+                  }`}
+                >
                   <div className="text-center text-md-center mb-4 mt-md-0">
                     <img src={logo} alt="RoSaaS Logo" className="logo" />
                     <h3 className="mb-0">
@@ -119,12 +146,12 @@ const SignInPage = () => {
                   className="custom-div fw-bold"
                   onClick={() => navigate(Routes.ProductManagementSignIn.path)}
                 >
-                  <FormattedMessage id="Product-Management-Area" />
+                  <SafeFormatMessage id="Product-Management-Area" />
                 </span>
               </div>
             )}
             <div className="copy">
-              COPYRIGHT <span className="yellow">&copy;</span> 2023 ROAA
+              COPYRIGHT <span className="yellow">&copy;</span> 2024 ROAA
               INFORMATION TECHNOLOGY
             </div>
           </Container>

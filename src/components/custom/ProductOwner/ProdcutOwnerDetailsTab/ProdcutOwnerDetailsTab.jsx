@@ -41,6 +41,9 @@ import {
 import { Routes } from '../../../../routes'
 import { object } from 'yup'
 import { update } from 'lodash'
+import ProductOwnerLimitsTab from '../ProductOwnerLimitsTab/ProductOwnerLimitsTab'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
+import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 
 const ProductOwnerDetails = () => {
   const routeParams = useParams()
@@ -94,17 +97,16 @@ const ProductOwnerDetails = () => {
         })
       )
     })()
-  }, [visible, routeParams?.id])
+  }, [visible, routeParams?.id, update])
 
   const listData = useSelector((state) => state.productsOwners.productsOwners)
   let productOwner = listData?.[routeParams.id]
-  console.log({ productOwner })
   const deleteProductOwner = async () => {
     await deleteProductOwnerReq(current)
     dispatch(removeProductOwnerStore(current))
   }
   const handleProductClick = (productId) => {
-    navigate(`${Routes.products.path}/${productId}`) // Navigate to product details page
+    navigate(`${Routes.products.path}/${productId}`)
   }
 
   return (
@@ -122,7 +124,7 @@ const ProductOwnerDetails = () => {
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Product-Owner-Details" /> :{' '}
+              <SafeFormatMessage id="Product-Owner-Details" /> :{' '}
               {productOwner.systemName}{' '}
             </h4>
             <DynamicButtons
@@ -138,29 +140,29 @@ const ProductOwnerDetails = () => {
                   update: update,
                   setUpdate: setUpdate,
                 },
-                {
-                  order: 5,
-                  type: 'delete',
-                  confirmationMessage:
-                    'delete-product-owner-confirmation-message',
-                  id: routeParams.id,
-                  navAfterDelete: Routes.productsOwners.path,
-                  label: 'Delete-Product-Owner',
-                  request: deleteProductOwner,
-                  icon: <BsFillTrash3Fill />,
-                },
+                // {
+                //   order: 5,
+                //   type: 'delete',
+                //   confirmationMessage:
+                //     'delete-product-owner-confirmation-message',
+                //   id: routeParams.id,
+                //   navAfterDelete: Routes.productsOwners.path,
+                //   label: 'Delete-Product-Owner',
+                //   request: deleteProductOwner,
+                //   icon: <BsFillTrash3Fill />,
+                // },
               ]}
             />
           </UpperContent>
 
-          <TabView
-            scrollable
-            className="card"
-            activeIndex={activeIndex}
-            onTabChange={(e) => setActiveIndex(e.index)}
-          >
-            {productOwner && (
-              <TabPanel header={<FormattedMessage id="Details" />}>
+          {productOwner && (
+            <TabView
+              scrollable
+              className="card"
+              activeIndex={activeIndex}
+              onTabChange={(e) => setActiveIndex(e.index)}
+            >
+              <TabPanel header={<SafeFormatMessage id="Details" />}>
                 <div className="row-button">
                   <div className="dynamicButtons"></div>
                 </div>
@@ -173,7 +175,7 @@ const ProductOwnerDetails = () => {
                       <tbody>
                         <tr>
                           <td className="fw-bold line-cell">
-                            <FormattedMessage id="Display-Name" />
+                            <SafeFormatMessage id="Display-Name" />
                           </td>
                           <td className="line-cell">
                             {productOwner.displayName}
@@ -181,13 +183,13 @@ const ProductOwnerDetails = () => {
                         </tr>
                         <tr>
                           <td className="fw-bold">
-                            <FormattedMessage id="System-Name" />
+                            <SafeFormatMessage id="System-Name" />
                           </td>
                           <td>{productOwner.systemName}</td>
                         </tr>
                         <tr>
                           <td className="fw-bold">
-                            <FormattedMessage id="Products" />
+                            <SafeFormatMessage id="Products" />
                           </td>
                           <td>
                             {productOwner.products &&
@@ -195,14 +197,14 @@ const ProductOwnerDetails = () => {
                               Object.values(productOwner.products).map(
                                 (product, index) => (
                                   <span
+                                    className="mx-1"
                                     key={index}
-                                    className="p-1 border-round border-1 border-400 mx-2"
                                     onClick={() =>
                                       handleProductClick(product.id)
                                     }
                                     style={{ cursor: 'pointer' }}
                                   >
-                                    {product.systemName}
+                                    <DataLabelWhite text={product.systemName} />
                                   </span>
                                 )
                               )}
@@ -210,13 +212,13 @@ const ProductOwnerDetails = () => {
                         </tr>
                         <tr>
                           <td className="fw-bold">
-                            <FormattedMessage id="Created-Date" />
+                            <SafeFormatMessage id="Created-Date" />
                           </td>
                           <td>{DataTransform(productOwner.createdDate)}</td>
                         </tr>
                         <tr>
                           <td className="fw-bold">
-                            <FormattedMessage id="Last-Updated-Date" />
+                            <SafeFormatMessage id="Last-Updated-Date" />
                           </td>
                           <td>{DataTransform(productOwner.editedDate)}</td>
                         </tr>
@@ -225,8 +227,13 @@ const ProductOwnerDetails = () => {
                   </Card.Body>
                 </Card>
               </TabPanel>
-            )}
-          </TabView>
+              <TabPanel
+                header={<SafeFormatMessage id="Product-Owner-Limits" />}
+              >
+                <ProductOwnerLimitsTab productOwnerId={productOwner.id} />
+              </TabPanel>
+            </TabView>
+          )}
         </div>
       )}
     </Wrapper>

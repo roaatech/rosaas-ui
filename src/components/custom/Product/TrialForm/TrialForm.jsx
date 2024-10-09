@@ -14,6 +14,7 @@ import {
 import { Wrapper } from './TrialForm.styled.jsx'
 import { FormattedMessage } from 'react-intl'
 import { ProductTrialType } from '../../../../const/product.js'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const TrialForm = ({ setVisible, popupLabel }) => {
   const { changeProductTrialType, getProductList, getProductPlans } =
@@ -40,11 +41,11 @@ const TrialForm = ({ setVisible, popupLabel }) => {
 
   const createValidation = {
     trialType: Yup.number().required(
-      <FormattedMessage id="This-field-is-required" />
+      <SafeFormatMessage id="This-field-is-required" />
     ),
     trialPlanId: Yup.string().test(
       'unit-validation',
-      <FormattedMessage id="This-field-is-required" />,
+      <SafeFormatMessage id="This-field-is-required" />,
       function (value) {
         const trialType = this.resolve(Yup.ref('trialType'))
         if (trialType == '2') {
@@ -55,7 +56,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
     ),
     trialPeriodInDays: Yup.number().test(
       'unit-validation',
-      <FormattedMessage id="Trial-Period-In-Days-Required-Number" />,
+      <SafeFormatMessage id="Trial-Period-In-Days-Required-Number" />,
       function (value) {
         const trialType = this.resolve(Yup.ref('trialType'))
         if (trialType == '2') {
@@ -162,7 +163,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Trial-Type" />{' '}
+                <SafeFormatMessage id="Trial-Type" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
@@ -174,7 +175,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
                 onBlur={formik.handleBlur}
               >
                 <option value="">
-                  <FormattedMessage id="Select-Option" />{' '}
+                  <SafeFormatMessage id="Select-Option" />{' '}
                 </option>
                 {Object.entries(ProductTrialType).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -197,7 +198,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Trial-Plan" />{' '}
+                  <SafeFormatMessage id="Trial-Plan" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
@@ -214,7 +215,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
                   disabled={!productId}
                 >
                   <option value="">
-                    <FormattedMessage id="Select-Option" />
+                    <SafeFormatMessage id="Select-Option" />
                   </option>
                   {planOptions?.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -237,7 +238,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Trial-Period-In-Days" />{' '}
+                  <SafeFormatMessage id="Trial-Period-In-Days" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <input
@@ -268,14 +269,14 @@ const TrialForm = ({ setVisible, popupLabel }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

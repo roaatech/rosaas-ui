@@ -22,6 +22,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { AiFillCopy } from 'react-icons/ai'
 import PlanForm from '../PlanForm/PlanForm'
 import TableDate from '../../Shared/TableDate/TableDate'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const PlanDetailsTab = ({ data }) => {
   const [confirm, setConfirm] = useState(false)
@@ -72,20 +73,20 @@ const PlanDetailsTab = ({ data }) => {
                   <tbody>
                     <tr>
                       <td className="fw-bold">
-                        <FormattedMessage id="System-Name" />
+                        <SafeFormatMessage id="System-Name" />
                       </td>
                       <td>{data.systemName}</td>
                     </tr>
 
                     {/* <tr>
                       <td className="fw-bold">
-                        <FormattedMessage id="Description" />
+                        <SafeFormatMessage id="Description" />
                       </td>
                       <td>{data.client.systemName}</td>
                     </tr> */}
                     <tr>
                       <td className="fw-bold">
-                        <FormattedMessage id="Date" />
+                        <SafeFormatMessage id="Date" />
                       </td>
                       <td>
                         <TableDate
@@ -96,13 +97,13 @@ const PlanDetailsTab = ({ data }) => {
                     </tr>
                     <tr>
                       <td className="fw-bold">
-                        <FormattedMessage id="Display-Order" />
+                        <SafeFormatMessage id="Display-Order" />
                       </td>
                       <td>{data.displayOrder}</td>
                     </tr>
                     <tr>
                       <td className="fw-bold">
-                        <FormattedMessage id="Description" />
+                        <SafeFormatMessage id="Description" />
                       </td>
                       <td>
                         <textarea
@@ -116,7 +117,7 @@ const PlanDetailsTab = ({ data }) => {
 
                     {/* <tr>
                       <td className="fw-bold">
-                        <FormattedMessage id="Api-key" />
+                        <SafeFormatMessage id="Api-key" />
                       </td>
                       <td className="apikeyTd">
                         <span>{data.apiKey}</span>
@@ -128,7 +129,7 @@ const PlanDetailsTab = ({ data }) => {
                             overlay={
                               <Tooltip>
                                 <div style={{ minWidth: '100px' }}>
-                                  {<FormattedMessage id={toolTipText} />}
+                                  {<SafeFormatMessage id={toolTipText} />}
                                 </div>
                               </Tooltip>
                             }
@@ -150,7 +151,7 @@ const PlanDetailsTab = ({ data }) => {
             {/* <div className="action">
               <Button
                 className="mr-3"
-                label={<FormattedMessage id="Delete" />}
+                label={<SafeFormatMessage id="Delete" />}
                 icon="pi pi-trash"
                 onClick={() => deleteConfirm(data.id)}
                 style={{
@@ -160,7 +161,7 @@ const PlanDetailsTab = ({ data }) => {
               />
               <Button
                 className="mr-3"
-                label={<FormattedMessage id="Edit" />}
+                label={<SafeFormatMessage id="Edit" />}
                 icon="pi pi-pencil"
                 onClick={() => setVisible(true)}
                 style={{
@@ -171,7 +172,7 @@ const PlanDetailsTab = ({ data }) => {
             </div>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-plan-confirmation-message" />
+                <SafeFormatMessage id="delete-plan-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
@@ -186,7 +187,7 @@ const PlanDetailsTab = ({ data }) => {
                 visible={visible}
                 planData={data}
                 setVisible={setVisible}
-                popupLabel={<FormattedMessage id="Edit Plan" />}
+                popupLabel={<SafeFormatMessage id="Edit Plan" />}
               />
             </ThemeDialog> */}
           </div>

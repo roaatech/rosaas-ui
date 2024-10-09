@@ -30,6 +30,7 @@ const DescriptionCell = ({ data }) => {
         <div
           className={`description-text ${showMore ? 'expanded' : ''}`}
           ref={contentRef}
+          style={data?.textStyle && { ...data?.textStyle }}
         >
           {data.description}
         </div>

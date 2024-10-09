@@ -16,6 +16,7 @@ import {
   changeSubscriptionAttribute,
   setAllpaymentCards,
 } from '../../../../../store/slices/workSpace.js'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const WorkspaceRenewForm = ({
   setVisible,
@@ -33,7 +34,9 @@ const WorkspaceRenewForm = ({
     (state) => state.workspace.subscriptionData
   )
   const validationSchema = Yup.object().shape({
-    card: Yup.string().required(<FormattedMessage id="Please-select-a-card" />),
+    card: Yup.string().required(
+      <SafeFormatMessage id="Please-select-a-card" />
+    ),
   })
 
   const initialValues = {
@@ -99,7 +102,7 @@ const WorkspaceRenewForm = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Payment-Card" />
+                  <SafeFormatMessage id="Payment-Card" />
                 </Form.Label>
                 <ListBox
                   value={formik.values.card}
@@ -166,14 +169,14 @@ const WorkspaceRenewForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray"
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

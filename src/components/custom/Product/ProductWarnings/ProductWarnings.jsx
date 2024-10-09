@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { productWarningsStore } from '../../../../store/slices/products/productsSlice.js'
 import { WarningVariant } from '../../../../const/WarningsSettings'
 import { FormattedMessage } from 'react-intl'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export const ProductWarnings = ({ productId }) => {
   const { getProductWarnings } = useRequest()
@@ -61,7 +62,7 @@ export const ProductWarnings = ({ productId }) => {
                 <Alert variant={warningVariants}>
                   <FontAwesomeIcon icon={icon} className="mr-2" />
                   <strong>
-                    <FormattedMessage id={formattedProperty} /> :
+                    <SafeFormatMessage id={formattedProperty} /> :
                   </strong>{' '}
                   {message}
                 </Alert>

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { InputText } from 'primereact/inputtext'
-import { Button } from '@themesberg/react-bootstrap'
+import { Button, Toast } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import * as Yup from 'yup'
 import ReCAPTCHA from 'react-google-recaptcha'
 import useRequest from '../../../axios/apis/useRequest.js'
 import { Routes } from '../../../routes.js'
 import LoginWrapper from './ResetPassword.styled.jsx'
+import { toast } from 'react-toastify'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const ResetPassword = () => {
   const [step, setStep] = useState(null)
@@ -20,7 +22,10 @@ const ResetPassword = () => {
   useEffect(() => {
     if (location.pathname == Routes.ResetPasswordRequest.path) {
       setStep(1)
-    } else if (location.pathname == Routes.ResetPasswordConfirm.path) {
+    } else if (
+      location.pathname == Routes.ResetPasswordConfirm.path ||
+      location.pathname == Routes.setPassword.path
+    ) {
       setStep(2)
     }
   }, [location.pathname])
@@ -34,6 +39,7 @@ const ResetPassword = () => {
   const validationSchemaEmail = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
   })
+  const search = useLocation().search
 
   const validationSchemaPassword = Yup.object().shape({
     password: Yup.string().required('Password is required'),
@@ -71,11 +77,25 @@ const ResetPassword = () => {
       newPassword: values.password,
       code,
     })
-    if (response) {
-      ut == 'TenantAdmin'
-        ? navigate(Routes.SignInTenantAdmin.path)
-        : navigate(Routes.ProductManagementSignIn.path)
+
+    if (
+      response &&
+      response.status == 200 &&
+      location.pathname == Routes.setPassword.path
+    ) {
+      navigate(`${Routes.ConfirmAccountByPassword.path}${search}`)
+    } else if (response && response.status == 200) {
+      toast.success(<SafeFormatMessage id="Password-reset-successful" />, {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 4000,
+      })
+      setTimeout(() => {
+        ut == 'TenantAdmin'
+          ? navigate(Routes.SignInTenantAdmin.path)
+          : navigate(Routes.ProductManagementSignIn.path)
+      }, 4000)
     }
+
     setSubmitting(false)
   }
 
@@ -98,7 +118,7 @@ const ResetPassword = () => {
                 <>
                   <div>
                     <label htmlFor="email" className="pb-2">
-                      <FormattedMessage id="yourEmail" />
+                      <SafeFormatMessage id="yourEmail" />
                     </label>
                     <div className="inputContainer">
                       <div className="inputContainerWithIcon">
@@ -135,7 +155,7 @@ const ResetPassword = () => {
                       className="w-100"
                       disabled={isSubmitting}
                     >
-                      <FormattedMessage id="sendResetLink" />
+                      <SafeFormatMessage id="sendResetLink" />
                     </Button>
                   </div>
                 </>
@@ -143,7 +163,7 @@ const ResetPassword = () => {
                 <>
                   <div>
                     <label htmlFor="password" className="pb-2">
-                      <FormattedMessage id="newPassword" />
+                      <SafeFormatMessage id="newPassword" />
                     </label>
                     <div className="inputContainer">
                       <div className="inputContainerWithIcon">
@@ -163,7 +183,7 @@ const ResetPassword = () => {
                   </div>
                   <div>
                     <label htmlFor="confirmPassword" className="pb-2">
-                      <FormattedMessage id="confirmPassword" />
+                      <SafeFormatMessage id="confirmPassword" />
                     </label>
                     <div className="inputContainer">
                       <div className="inputContainerWithIcon">
@@ -188,7 +208,11 @@ const ResetPassword = () => {
                       className="w-100"
                       disabled={isSubmitting}
                     >
-                      <FormattedMessage id="resetPassword" />
+                      {location.pathname == Routes.setPassword.path ? (
+                        <SafeFormatMessage id="setPassword" />
+                      ) : (
+                        <SafeFormatMessage id="resetPassword" />
+                      )}
                     </Button>
                   </div>
                 </>

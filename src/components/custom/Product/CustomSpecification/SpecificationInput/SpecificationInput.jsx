@@ -1,6 +1,9 @@
 import React from 'react'
 import { Form, OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
-import { BsFillQuestionCircleFill } from 'react-icons/bs'
+import {
+  BsFillQuestionCircleFill,
+  BsExclamationTriangleFill,
+} from 'react-icons/bs'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { useIntl } from 'react-intl'
@@ -25,29 +28,6 @@ const SpecificationInput = ({
     onSubmit: (values) => {},
   })
 
-  // const getInputComponent = (dataType) => {
-  //   switch (dataType) {
-  //     case 1:
-  //       return (props) => (
-  //         <input
-  //           type="text"
-  //           value={props.value}
-  //           onChange={props.onChange}
-  //           className={props.className}
-  //         />
-  //       )
-  //     default:
-  //       return (props) => (
-  //         <input
-  //           type="text"
-  //           value={props.value}
-  //           onChange={props.onChange}
-  //           className={props.className}
-  //         />
-  //       )
-  //   }
-  // }
-
   return (
     <div>
       {specifications.map((specification) => {
@@ -58,10 +38,11 @@ const SpecificationInput = ({
           regularExpression,
           validationFailureDescription,
           description,
+          systemName,
+          inlineDescription,
           dataType,
         } = specification
 
-        // const InputComponent = getInputComponent(dataType)
         const fieldName = `specifications[${id}].value`
         const error = specValidationErrors[id]
 
@@ -94,6 +75,21 @@ const SpecificationInput = ({
               ''
             )}
             <div>
+              {inlineDescription &&
+              (inlineDescription.en || inlineDescription.ar) ? (
+                <div className="text-warning mt-0 d-flex align-items-center">
+                  <BsExclamationTriangleFill
+                    style={{ width: '14px', marginRight: '4px' }}
+                  />
+                  <span>
+                    {inlineDescription?.[intl.locale] ||
+                      (intl.locale === 'ar' && inlineDescription['en']) ||
+                      (intl.locale === 'en' && inlineDescription['ar'])}
+                  </span>
+                </div>
+              ) : (
+                ''
+              )}
               <input
                 type="text"
                 name={

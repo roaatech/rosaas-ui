@@ -8,6 +8,7 @@ import NotFoundImage from '../../assets/img/pages/404.svg'
 import rosasLogo from '../../assets/img/brand/rosas.svg'
 
 import { FormattedMessage } from 'react-intl'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const NotFound = () => {
   const handleButtonClick = () => {
@@ -62,11 +63,11 @@ const NotFound = () => {
                   icon="pi pi-trash"
                   onClick={handleButtonClick}
                 >
-                  <FormattedMessage id="Go-Back-Home" />
+                  <SafeFormatMessage id="Go-Back-Home" />
                 </Button>
               </div>
               <div className="text-center text-md-center mb-4 mt-md-0">
-                COPYRIGHT <span className="yellow">&copy;</span> 2023 ROAA
+                COPYRIGHT <span className="yellow">&copy;</span> 2024 ROAA
                 INFORMATION TECHNOLOGY
               </div>
             </div>

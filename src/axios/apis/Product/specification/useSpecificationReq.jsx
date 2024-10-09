@@ -38,7 +38,7 @@ const useSpecificationReq = () => {
     productName
   ) => {
     return await Request.get(
-      `/public/v1/ProductOwner/${productOwnerName}/Product/${productName}/Specifications`
+      `public/v1/ProductOwner/${productOwnerName}/Product/${productName}/Specifications`
     )
   }
 

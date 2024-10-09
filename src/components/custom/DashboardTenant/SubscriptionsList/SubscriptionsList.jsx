@@ -50,6 +50,7 @@ import { Carousel } from 'primereact/carousel'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
 import SubscriptionFeatureCard from '../../SubscriptionFeatureCard/SubscriptionFeatureCard.jsx'
 import { BsStars } from 'react-icons/bs'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export default function SubscriptionList() {
   const { getSubscriptionsList, cancelAutoRenewal, subscriptionFeturesList } =
@@ -87,12 +88,12 @@ export default function SubscriptionList() {
   // Object for mapping active status to icons and colors
   const activeStatus = {
     true: {
-      text: <FormattedMessage id="Active" />,
+      text: <SafeFormatMessage id="Active" />,
       icon: faCheckCircle,
       color: 'success',
     },
     false: {
-      text: <FormattedMessage id="Inactive" />,
+      text: <SafeFormatMessage id="Inactive" />,
       icon: faTimesCircle,
       color: 'danger',
     },
@@ -301,7 +302,7 @@ export default function SubscriptionList() {
       {/* UpperContent component for displaying the title */}
       <UpperContent>
         <h4>
-          <FormattedMessage id="Subscription-List" />
+          <SafeFormatMessage id="Subscription-List" />
         </h4>
       </UpperContent>
 
@@ -372,7 +373,7 @@ export default function SubscriptionList() {
                                       icon={faToggleOff}
                                       className="me-2"
                                     />
-                                    <FormattedMessage id="Enable-Auto-Renewal" />
+                                    <SafeFormatMessage id="Enable-Auto-Renewal" />
                                   </>
                                 </Dropdown.Item>
                               )}{' '}
@@ -389,7 +390,7 @@ export default function SubscriptionList() {
                                   className="me-2"
                                 />
                                 {/* Option 1: Cancel Auto-Renewal */}
-                                <FormattedMessage id="Cancel-Auto-Renewal" />
+                                <SafeFormatMessage id="Cancel-Auto-Renewal" />
                               </Dropdown.Item>
                             )}
                             {subscription.subscriptionRenewalAction
@@ -405,7 +406,7 @@ export default function SubscriptionList() {
                                   className="me-2"
                                 />
                                 {/* Option 2: Cancel Downgrading */}
-                                <FormattedMessage id="Cancel-Downgrading" />
+                                <SafeFormatMessage id="Cancel-Downgrading" />
                               </Dropdown.Item>
                             )}
                             {subscription.subscriptionRenewalAction
@@ -421,7 +422,7 @@ export default function SubscriptionList() {
                                   className="me-2"
                                 />
                                 {/* Option 3: Cancel Upgrading */}
-                                <FormattedMessage id="Cancel-Upgrading" />
+                                <SafeFormatMessage id="Cancel-Upgrading" />
                               </Dropdown.Item>
                             )}
                             {/* Upgrade subscription option */}
@@ -437,7 +438,7 @@ export default function SubscriptionList() {
                                     icon={faUpload}
                                     className="me-2"
                                   />
-                                  <FormattedMessage id="Upgrade-Subscription" />
+                                  <SafeFormatMessage id="Upgrade-Subscription" />
                                 </>
                               </Dropdown.Item>
                             )}
@@ -454,7 +455,7 @@ export default function SubscriptionList() {
                                     icon={faDownload}
                                     className="me-2"
                                   />
-                                  <FormattedMessage id="Downgrade-Subscription" />
+                                  <SafeFormatMessage id="Downgrade-Subscription" />
                                 </>
                               </Dropdown.Item>
                             )}
@@ -481,7 +482,7 @@ export default function SubscriptionList() {
                         } me-2`}
                       />
                       <strong>
-                        <FormattedMessage id="Status" />
+                        <SafeFormatMessage id="Status" />
                       </strong>{' '}
                       <span
                         className={`text-${
@@ -506,7 +507,7 @@ export default function SubscriptionList() {
                     <Card.Text>
                       <span>
                         <strong>
-                          <FormattedMessage id="Product" />
+                          <SafeFormatMessage id="Product" />
                         </strong>{' '}
                         {subscription.product.displayName}
                       </span>
@@ -522,19 +523,19 @@ export default function SubscriptionList() {
                             className="text-danger mr-2"
                           />
                           <strong>
-                            <FormattedMessage id="Trial" />
+                            <SafeFormatMessage id="Trial" />
                           </strong>{' '}
                           <span className="text-danger">
                             {calculateDaysRemaining(
                               subscription?.trial?.endDate
                             )}{' '}
-                            <FormattedMessage id="Days Remaining" />
+                            <SafeFormatMessage id="Days Remaining" />
                           </span>
                         </>
                       ) : (
                         <span>
                           <strong>
-                            <FormattedMessage id="Plan" />
+                            <SafeFormatMessage id="Plan" />
                           </strong>{' '}
                           {subscription.plan.displayName}
                         </span>
@@ -545,7 +546,7 @@ export default function SubscriptionList() {
                     <Card.Text>
                       <div className="d-flex align-items-center">
                         <strong>
-                          <FormattedMessage id="Created-Date" />
+                          <SafeFormatMessage id="Created-Date" />
                         </strong>
 
                         <TableDate
@@ -559,7 +560,7 @@ export default function SubscriptionList() {
                     <Card.Text>
                       <div className="d-flex align-items-center">
                         <strong>
-                          <FormattedMessage id="Expiration-Date" />
+                          <SafeFormatMessage id="Expiration-Date" />
                         </strong>
                         <span className="mx-2">
                           <DateLabel
@@ -581,11 +582,11 @@ export default function SubscriptionList() {
                             className="text-success me-2"
                           />
                           <strong>
-                            <FormattedMessage id="Auto-Renewal" />
+                            <SafeFormatMessage id="Auto-Renewal" />
                           </strong>
                           <span className="text-success">
                             {' '}
-                            <FormattedMessage id="Enabled" />
+                            <SafeFormatMessage id="Enabled" />
                           </span>{' '}
                           {formatDate(subscription.endDate)}
                         </p>
@@ -599,19 +600,19 @@ export default function SubscriptionList() {
                           className="text-info me-2"
                         />
                         <strong>
-                          <FormattedMessage id="Downgrade" />
+                          <SafeFormatMessage id="Downgrade" />
                         </strong>
                         <span className="text-info font-small">
                           {' '}
-                          <FormattedMessage id="Enabled" />
+                          <SafeFormatMessage id="Enabled" />
                         </span>{' '}
                         {formatDate(subscription.endDate)}
                         {subscription.autoRenewalIsEnabled && (
                           <span className="font-small">
                             {' '}
                             (
-                            <FormattedMessage id="Auto-Renewal" />{' '}
-                            <FormattedMessage id="Enabled" />)
+                            <SafeFormatMessage id="Auto-Renewal" />{' '}
+                            <SafeFormatMessage id="Enabled" />)
                           </span>
                         )}
                       </p>
@@ -624,19 +625,19 @@ export default function SubscriptionList() {
                           className="text-warning me-2"
                         />
                         <strong>
-                          <FormattedMessage id="Upgrade" />
+                          <SafeFormatMessage id="Upgrade" />
                         </strong>
                         <span className="text-warning font-small">
                           {' '}
-                          <FormattedMessage id="Enabled" />
+                          <SafeFormatMessage id="Enabled" />
                         </span>{' '}
                         {formatDate(subscription.endDate)}
                         {subscription.autoRenewalIsEnabled && (
                           <span className="font-small">
                             {' '}
                             (
-                            <FormattedMessage id="Auto-Renewal" />{' '}
-                            <FormattedMessage id="Enabled" />)
+                            <SafeFormatMessage id="Auto-Renewal" />{' '}
+                            <SafeFormatMessage id="Enabled" />)
                           </span>
                         )}
                       </p>
@@ -654,11 +655,11 @@ export default function SubscriptionList() {
                             className="text-danger me-2"
                           />
                           <strong>
-                            <FormattedMessage id="Renewal-Options" />{' '}
+                            <SafeFormatMessage id="Renewal-Options" />{' '}
                           </strong>
                           <strong className="text-danger">
                             {' '}
-                            <FormattedMessage id="Disabled" />
+                            <SafeFormatMessage id="Disabled" />
                           </strong>
                         </p>
                       )}
@@ -729,7 +730,7 @@ export default function SubscriptionList() {
                             'icon_Features' && (
                             <div className="">
                               {/* <strong>
-                                  <FormattedMessage id="Payment-Method" />
+                                  <SafeFormatMessage id="Payment-Method" />
                                 </strong> */}
                               <div className="p-3">
                                 <div>
@@ -759,7 +760,7 @@ export default function SubscriptionList() {
                             'icon_Features' && (
                             <div>
                               {/* <strong>
-                                <FormattedMessage id="Subscription-Features" />
+                                <SafeFormatMessage id="Subscription-Features" />
                               </strong> */}
                               <div className="p-3">
                                 <Carousel
@@ -795,7 +796,7 @@ export default function SubscriptionList() {
           confirm={confirm}
           setConfirm={setConfirm}
           confirmFunction={handleConfirmation}
-          message={<FormattedMessage id="cancel-renew-message" />}
+          message={<SafeFormatMessage id="cancel-renew-message" />}
           placeholder={'Comment'}
         />
       )}
@@ -806,7 +807,7 @@ export default function SubscriptionList() {
           {/* Dialog for renewing subscription with cycle */}
           <WorkspaceRenewFormWithCycle
             referenceId={referenceId}
-            popupLabel={<FormattedMessage id="Auto-Renewal" />}
+            popupLabel={<SafeFormatMessage id="Auto-Renewal" />}
             setVisible={setVisible}
             visible={visible}
             currentRenewal={currentSubscriptionId}
@@ -843,7 +844,7 @@ export default function SubscriptionList() {
             subscriptionData={currentSubscription}
             setVisible={setShowUpDowngradeForm}
             type="upgrade"
-            popupLabel={<FormattedMessage id="Upgrade" />}
+            popupLabel={<SafeFormatMessage id="Upgrade" />}
             setUpdate={setUpdate}
             update={update}
           />
@@ -860,7 +861,7 @@ export default function SubscriptionList() {
             setCanceledCardId={setCardDowngradeId}
             setVisible={setShowDowngradeForm}
             type="downgrade"
-            popupLabel={<FormattedMessage id="Downgarde" />}
+            popupLabel={<SafeFormatMessage id="Downgarde" />}
             setUpdate={setUpdate}
             update={update}
           />

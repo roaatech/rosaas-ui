@@ -8,6 +8,7 @@ import {
   Button,
   OverlayTrigger,
   Tooltip,
+  Card,
 } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
 import { productInfo } from '../../../../store/slices/products/productsSlice.js'
@@ -20,11 +21,13 @@ import { useNavigate } from 'react-router-dom'
 import AutoGenerateInput from '../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 import { removeSubscriptionDataByProductId } from '../../../../store/slices/tenants.js'
 import TextareaAndCounter from '../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
-import { BsFillQuestionCircleFill } from 'react-icons/bs'
+import MultilingualInput from '../../Shared/MultilingualInput/MultilingualInput.jsx' // Import MultilingualInput
+import { BsFillQuestionCircleFill, BsQuestionCircleFill } from 'react-icons/bs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 import { Routes } from '../../../../routes.js'
 import { Product_Client_id } from '../../../../const/product.js'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const ProductForm = ({
   type,
@@ -38,11 +41,14 @@ const ProductForm = ({
   const { createProductRequest, editProductRequest } = useRequest()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const listData = useSelector((state) => state.productsOwners.productsOwners)
+  const listData = useSelector((state) => state.productsOwners.lookup)
   let userInfo = useSelector((state) => state.auth.userInfo)
+
   const initialValues = {
-    displayName: productData ? productData.displayName : '',
-    description: productData ? productData.description : '',
+    displayNameEn: productData?.displayNameLocalizations?.en || '',
+    displayNameAr: productData?.displayNameLocalizations?.ar || '',
+    descriptionEn: productData?.descriptionLocalizations?.en || '',
+    descriptionAr: productData?.descriptionLocalizations?.ar || '',
     systemName: productData ? productData.systemName : '',
     isPublished: productData ? productData.isPublished : '',
     apiKey: productData ? productData.apiKey : '',
@@ -65,78 +71,112 @@ const ProductForm = ({
         : userInfo.userType == 'clientAdmin'
         ? userInfo.ProductOwnerInfo?.id
         : '',
+    isTenantAutoProvisioning: productData
+      ? productData?.isTenantAutoProvisioning
+      : true,
   }
 
-  const validationSchema = Yup.object().shape({
-    displayName: Yup.string()
-      .required(<FormattedMessage id="This-field-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
-
+  const createValidation = {
+    displayNameEn: Yup.string().test({
+      name: 'displayNameRequired',
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
+      test: (value, context) => {
+        const { parent } = context
+        const displayNameEn = parent.displayNameEn
+        const displayNameAr = parent.displayNameAr
+        return !!displayNameEn || !!displayNameAr
+      },
+    }),
+    displayNameAr: Yup.string().test({
+      name: 'displayNameRequired',
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
+      test: (value, context) => {
+        const { parent } = context
+        const displayNameEn = parent.displayNameEn
+        const displayNameAr = parent.displayNameAr
+        return !!displayNameEn || !!displayNameAr
+      },
+    }),
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="System-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="System-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
+  }
 
-    defaultHealthCheckUrl: Yup.string(),
-    healthStatusChangeUrl: Yup.string(),
-    subscriptionResetUrl: Yup.string(),
-    subscriptionDowngradeUrl: Yup.string(),
-    subscriptionUpgradeUrl: Yup.string(),
-  })
+  const editValidation = {
+    displayNameEn: Yup.string().test({
+      name: 'displayNameRequired',
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
+      test: (value, context) => {
+        const { parent } = context
+        const displayNameEn = parent.displayNameEn
+        const displayNameAr = parent.displayNameAr
+        return !!displayNameEn || !!displayNameAr
+      },
+    }),
+    displayNameAr: Yup.string().test({
+      name: 'displayNameRequired',
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
+      test: (value, context) => {
+        const { parent } = context
+        const displayNameEn = parent.displayNameEn
+        const displayNameAr = parent.displayNameAr
+        return !!displayNameEn || !!displayNameAr
+      },
+    }),
+  }
+
+  const validationSchema = Yup.object().shape(
+    type === 'create' ? createValidation : editValidation
+  )
 
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      setVisible(false)
+      const dataToSubmit = {
+        displayNameLocalizations: {
+          en: values.displayNameEn,
+          ar: values.displayNameAr,
+        },
+        descriptionLocalizations: {
+          en: values.descriptionEn,
+          ar: values.descriptionAr,
+        },
+        systemName: values.systemName,
+        isPublished: values.isPublished || false,
+        apiKey: values.apiKey,
+        defaultHealthCheckUrl: values.defaultHealthCheckUrl,
+        healthStatusChangeUrl: values.healthStatusChangeUrl,
+        subscriptionResetUrl: values.subscriptionResetUrl,
+        subscriptionUpgradeUrl: values.subscriptionUpgradeUrl,
+        subscriptionDowngradeUrl: values.subscriptionDowngradeUrl,
+        creationEndpoint: values.creationEndpoint,
+        activationEndpoint: values.activationEndpoint,
+        deactivationEndpoint: values.deactivationEndpoint,
+        deletionEndpoint: values.deletionEndpoint,
+        clientId:
+          userInfo.userType == 'clientAdmin'
+            ? userInfo.ProductOwnerInfo?.id
+            : values.clientId
+            ? values.clientId
+            : Product_Client_id,
+        isTenantAutoProvisioning: values.isTenantAutoProvisioning,
+      }
+
       if (type == 'create') {
-        const createProduct = await createProductRequest({
-          displayName: values.displayName,
-          description: values.description,
-          isPublished: values.isPublished || false,
-          systemName: values.systemName,
-          apiKey: values.apiKey,
-          defaultHealthCheckUrl: values.defaultHealthCheckUrl,
-          healthStatusChangeUrl: values.healthStatusChangeUrl,
-          subscriptionResetUrl: values.subscriptionResetUrl,
-          subscriptionUpgradeUrl: values.subscriptionUpgradeUrl,
-          subscriptionDowngradeUrl: values.subscriptionDowngradeUrl,
-          creationEndpoint: values.creationEndpoint,
-          activationEndpoint: values.activationEndpoint,
-          deactivationEndpoint: values.deactivationEndpoint,
-          deletionEndpoint: values.deletionEndpoint,
-          clientId:
-            userInfo.userType == 'clientAdmin'
-              ? userInfo.ProductOwnerInfo?.id
-              : values.clientId
-              ? values.clientId
-              : Product_Client_id,
-        })
+        const createProduct = await createProductRequest(dataToSubmit)
         if (sideBar) {
           navigate(`${Routes.products.path}/${createProduct.data.data.id}`)
         }
-        setUpdate(update + 1)
+        setUpdate && setUpdate(update + 1)
+        setVisible && setVisible(false)
       } else {
-        const editProduct = await editProductRequest({
-          data: {
-            displayName: values.displayName,
-            description: values.description,
-            systemName: values.systemName,
-            isPublished: values.isPublished || false,
-            apiKey: values.apiKey,
-            defaultHealthCheckUrl: values.defaultHealthCheckUrl,
-            healthStatusChangeUrl: values.healthStatusChangeUrl,
-            subscriptionResetUrl: values.subscriptionResetUrl,
-            subscriptionUpgradeUrl: values.subscriptionUpgradeUrl,
-            subscriptionDowngradeUrl: values.subscriptionDowngradeUrl,
-            creationEndpoint: values.creationEndpoint,
-            activationEndpoint: values.activationEndpoint,
-            deactivationEndpoint: values.deactivationEndpoint,
-            deletionEndpoint: values.deletionEndpoint,
-          },
+        await editProductRequest({
+          data: dataToSubmit,
           id: productData.id,
         })
         dispatch(
@@ -145,41 +185,19 @@ const ProductForm = ({
         dispatch(
           productInfo({
             id: productData.id,
-            displayName: values.displayName,
-            description: values.description,
-            systemName: values.systemName,
-            isPublished: values.isPublished || false,
-            apiKey: values.apiKey,
-            defaultHealthCheckUrl: values.defaultHealthCheckUrl,
-            healthStatusChangeUrl: values.healthStatusChangeUrl,
-            subscriptionResetUrl: values.subscriptionResetUrl,
-            subscriptionUpgradeUrl: values.subscriptionUpgradeUrl,
-            subscriptionDowngradeUrl: values.subscriptionDowngradeUrl,
-            creationEndpoint: values.creationEndpoint,
-            activationEndpoint: values.activationEndpoint,
-            deactivationEndpoint: values.deactivationEndpoint,
-            deletionEndpoint: values.deletionEndpoint,
+            ...dataToSubmit,
             editedDate: new Date().toISOString().slice(0, 19),
-            clientId: {
-              id:
-                userInfo.userType == 'clientAdmin'
-                  ? userInfo.ProductOwnerInfo?.id
-                  : values.clientId
-                  ? values.clientId
-                  : Product_Client_id,
-            },
           })
         )
+        setVisible && setVisible(false)
       }
-
-      setVisible && setVisible(false)
-      setVisible && setVisible(false)
     },
   })
 
   const RandomApiKey = () => {
     formik.setFieldValue('apiKey', generateApiKey())
   }
+
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
@@ -192,37 +210,45 @@ const ProductForm = ({
           />
         </Modal.Header>
         <Modal.Body>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Display-Name" />{' '}
-                <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <input
-                className="form-control"
-                type="text"
-                id="displayName"
-                name="displayName"
-                onChange={formik.handleChange}
-                value={formik.values.displayName}
-              />
+          {/* MultilingualInput for Display Name */}
+          <MultilingualInput
+            inputLabel="Display-Name"
+            languages={[
+              { code: 'en', name: 'English' },
+              { code: 'ar', name: 'Arabic' },
+            ]}
+            inputIds={{
+              en: 'displayNameEn',
+              ar: 'displayNameAr',
+            }}
+            placeholder={{
+              en: 'English-Name',
+              ar: 'Arabic-Name',
+            }}
+            values={{
+              en: formik.values.displayNameEn,
+              ar: formik.values.displayNameAr,
+            }}
+            onChange={formik.handleChange}
+            isRequired={true}
+            inputType="input"
+            errors={{
+              en: formik.errors.displayNameEn,
+              ar: formik.errors.displayNameAr,
+            }}
+            touched={{
+              en: formik.touched.displayNameEn,
+              ar: formik.touched.displayNameAr,
+            }}
+          />
 
-              {formik.touched.displayName && formik.errors.displayName && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.displayName}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
-          <div className="mb-3">
-            {type === 'create' && (
+          {/* System Name Field */}
+          {type === 'create' && (
+            <div className="mb-3">
               <AutoGenerateInput
-                label={<FormattedMessage id="System-Name" />}
+                label={<SafeFormatMessage id="System-Name" />}
                 id="systemName"
-                value={formik.values.displayName}
+                value={formik.values.displayNameEn}
                 name={formik.values.systemName}
                 onChange={formik.handleChange}
                 onGenerateUniqueName={(generatedUniqueName) => {
@@ -236,21 +262,22 @@ const ProductForm = ({
                 }}
                 isAutoGenerated={formik.values.isAutoGenerated}
               />
-            )}
-            {formik.touched.systemName && formik.errors.systemName && (
-              <Form.Control.Feedback
-                type="invalid"
-                style={{ display: 'block' }}
-              >
-                {formik.errors.systemName}
-              </Form.Control.Feedback>
-            )}
-          </div>
+              {formik.touched.systemName && formik.errors.systemName && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.systemName}
+                </Form.Control.Feedback>
+              )}
+            </div>
+          )}
+
           {userInfo.userType == 'superAdmin' && type === 'create' && (
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="ProductOwner" />{' '}
+                  <SafeFormatMessage id="ProductOwner" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
@@ -262,16 +289,14 @@ const ProductForm = ({
                   onBlur={formik.handleBlur}
                 >
                   <option value="">
-                    <FormattedMessage id="Select-Option" />
+                    <SafeFormatMessage id="Select-Option" />
                   </option>
                   {listData &&
-                    Object.values(listData).map((option) => {
-                      return (
-                        <option key={option.id} value={option.id}>
-                          {option.displayName}
-                        </option>
-                      )
-                    })}
+                    Object.values(listData).map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.displayName}
+                      </option>
+                    ))}
                 </select>
                 {formik.touched.clientId && formik.errors.clientId && (
                   <Form.Control.Feedback
@@ -285,338 +310,146 @@ const ProductForm = ({
             </div>
           )}
 
-          {/* <div className="card toggle-container p-2 mb-3">
-            <div className="d-flex align-items-center justify-content-between ">
-              <Form.Label className="flex-grow-1">
-                <FormattedMessage id="Is-Published" />{' '}
-              </Form.Label>
-              <span className="me-2">
-                <FontAwesomeIcon
-                  icon={formik.values.isPublished ? faToggleOn : faToggleOff}
-                  className={
-                    formik.values.isPublished
-                      ? 'active-toggle fa-lg'
-                      : 'passive-toggle fa-lg'
-                  }
-                  onClick={() =>
-                    formik.setFieldValue(
-                      'isPublished',
-                      !formik.values.isPublished
-                    )
-                  }
-                />{' '}
-              </span>
+          {/* Description Field using MultilingualInput */}
+          <div className="mb-3">
+            <MultilingualInput
+              inputLabel="Description"
+              languages={[
+                { code: 'en', name: 'English' },
+                { code: 'ar', name: 'Arabic' },
+              ]}
+              inputIds={{
+                en: 'descriptionEn',
+                ar: 'descriptionAr',
+              }}
+              placeholder={{
+                en: 'English-Description',
+                ar: 'Arabic-Description',
+              }}
+              values={{
+                en: formik.values.descriptionEn,
+                ar: formik.values.descriptionAr,
+              }}
+              onChange={formik.handleChange}
+              isRequired={false}
+              inputType="TextareaAndCounter"
+              maxLength={450}
+              errors={{
+                en: formik.errors.descriptionEn,
+                ar: formik.errors.descriptionAr,
+              }}
+              touched={{
+                en: formik.touched.descriptionEn,
+                ar: formik.touched.descriptionAr,
+              }}
+            />
+          </div>
+
+          {type !== 'create' && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <SafeFormatMessage id="Api-key" />
+                </Form.Label>
+                <div className="inputIcon">
+                  <span className="buttonCont">
+                    <OverlayTrigger
+                      style={{ minWidth: '150px' }}
+                      trigger={['hover', 'focus']}
+                      placement="top"
+                      overlay={
+                        <Tooltip>
+                          <SafeFormatMessage id="Random-api-key" />
+                        </Tooltip>
+                      }
+                    >
+                      <button type="button" onClick={RandomApiKey}>
+                        <GiPerspectiveDiceSixFacesRandom />
+                      </button>
+                    </OverlayTrigger>
+                  </span>
+
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="apiKey"
+                    name="apiKey"
+                    onChange={formik.handleChange}
+                    value={formik.values.apiKey}
+                  />
+                </div>
+
+                {formik.touched.apiKey && formik.errors.apiKey && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.apiKey}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
             </div>
-          </div> */}
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Description" />
-              </Form.Label>
-
-              <TextareaAndCounter
-                addTextarea={formik.setFieldValue}
-                maxLength={120}
-                showCharCount
-                inputValue={formik?.values?.description}
-              />
-
-              {formik.touched.description && formik.errors.description && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.description}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
-
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Api-key" />
-              </Form.Label>
-              <div className="inputIcon">
-                <span className="buttonCont">
-                  <OverlayTrigger
-                    style={{ minWidth: '150px' }}
-                    trigger={['hover', 'focus']}
-                    placement="top"
-                    overlay={
-                      <Tooltip>
-                        <FormattedMessage id="Random-api-key" />
-                      </Tooltip>
-                    }
-                  >
-                    <button type="button" onClick={RandomApiKey}>
-                      <GiPerspectiveDiceSixFacesRandom />
-                    </button>
-                  </OverlayTrigger>
-                </span>
-
-                <input
-                  type="text"
-                  className="form-control"
-                  id="apiKey"
-                  name="apiKey"
+          )}
+          <div className="mb-3">
+            <Card>
+              <Card.Body>
+                <Form.Group className="d-flex justify-content-between">
+                  <Form.Label>
+                    <SafeFormatMessage id="Auto-Provisioning" />
+                    <OverlayTrigger
+                      style={{ minWidth: '150px' }}
+                      trigger={['hover', 'focus']}
+                      placement="top"
+                      overlay={
+                        <Tooltip>
+                          <SafeFormatMessage id="Auto-Provisioning-Tooltip" />
+                        </Tooltip>
+                      }
+                    >
+                      <BsQuestionCircleFill className="mx-1" />
+                    </OverlayTrigger>
+                  </Form.Label>
+                  {/* <div className="inputIcon"> */}
+                  <Form.Check
+                    type="checkbox"
+                    id="isTenantAutoProvisioning"
+                    name="isTenantAutoProvisioning"
+                    onChange={formik.handleChange}
+                    value={formik.values.isTenantAutoProvisioning}
+                  />
+                  {/* <input
+                  type="checkbox"
+                  // className="form-control"
+                  id="isTenantAutoProvisioning"
+                  name="isTenantAutoProvisioning"
                   onChange={formik.handleChange}
-                  value={formik.values.apiKey}
-                />
-              </div>
+                  value={formik.values.isTenantAutoProvisioning}
+                /> */}
+                  {/* </div> */}
 
-              {formik.touched.apiKey && formik.errors.apiKey && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.apiKey}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
-
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Default-Health-Check-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="defaultHealthCheckUrl"
-                name="defaultHealthCheckUrl"
-                onChange={formik.handleChange}
-                value={formik.values.defaultHealthCheckUrl}
-              />
-
-              {formik.touched.defaultHealthCheckUrl &&
-                formik.errors.defaultHealthCheckUrl && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.defaultHealthCheckUrl}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Health-Status-Change-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="healthStatusChangeUrl"
-                name="healthStatusChangeUrl"
-                onChange={formik.handleChange}
-                value={formik.values.healthStatusChangeUrl}
-              />
-
-              {formik.touched.healthStatusChangeUrl &&
-                formik.errors.healthStatusChangeUrl && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.healthStatusChangeUrl}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Subscription-Reset-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="subscriptionResetUrl"
-                name="subscriptionResetUrl"
-                onChange={formik.handleChange}
-                value={formik.values.subscriptionResetUrl}
-              />
-
-              {formik.touched.subscriptionResetUrl &&
-                formik.errors.subscriptionResetUrl && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.subscriptionResetUrl}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Subscription-Upgrade-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="subscriptionUpgradeUrl"
-                name="subscriptionUpgradeUrl"
-                onChange={formik.handleChange}
-                value={formik.values.subscriptionUpgradeUrl}
-              />
-
-              {formik.touched.subscriptionUpgradeUrl &&
-                formik.errors.subscriptionUpgradeUrl && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.subscriptionUpgradeUrl}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Subscription-Downgrade-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="subscriptionDowngradeUrl"
-                name="subscriptionDowngradeUrl"
-                onChange={formik.handleChange}
-                value={formik.values.subscriptionDowngradeUrl}
-              />
-
-              {formik.touched.subscriptionDowngradeUrl &&
-                formik.errors.subscriptionDowngradeUrl && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.subscriptionDowngradeUrl}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
-          </div>
-
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Creation-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="creationEndpoint"
-                name="creationEndpoint"
-                onChange={formik.handleChange}
-                value={formik.values.creationEndpoint}
-              />
-
-              {formik.touched.creationEndpoint &&
-                formik.errors.creationEndpoint && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.creationEndpoint}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Activation-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="activationEndpoint"
-                name="activationEndpoint"
-                onChange={formik.handleChange}
-                value={formik.values.activationEndpoint}
-              />
-
-              {formik.touched.activationEndpoint &&
-                formik.errors.activationEndpoint && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.activationEndpoint}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Deactivation-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="deactivationEndpoint"
-                name="deactivationEndpoint"
-                onChange={formik.handleChange}
-                value={formik.values.deactivationEndpoint}
-              />
-
-              {formik.touched.deactivationEndpoint &&
-                formik.errors.deactivationEndpoint && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.deactivationEndpoint}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Deletion-Url" />
-              </Form.Label>
-              <input
-                type="text"
-                className="form-control"
-                id="deletionEndpoint"
-                name="deletionEndpoint"
-                onChange={formik.handleChange}
-                value={formik.values.deletionEndpoint}
-              />
-
-              {formik.touched.deletionEndpoint &&
-                formik.errors.deletionEndpoint && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.deletionEndpoint}
-                  </Form.Control.Feedback>
-                )}
-            </Form.Group>
+                  {formik.touched.apiKey && formik.errors.apiKey && (
+                    <Form.Control.Feedback
+                      type="invalid"
+                      style={{ display: 'block' }}
+                    >
+                      {formik.errors.apiKey}
+                    </Form.Control.Feedback>
+                  )}
+                </Form.Group>
+              </Card.Body>
+            </Card>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="secondary"
-            type="submit"
-            // disabled={submitLoading}
-          >
-            <FormattedMessage id="Submit" />
+          <Button variant="secondary" type="submit">
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

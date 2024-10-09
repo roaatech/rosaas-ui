@@ -10,12 +10,18 @@ const usePOReq = () => {
     return await Request.put(`management/sadmin/v1/productowners/${id}`, data)
   }
   const getProductOwnersList = async (params) => {
-    return await Request.get(
-      `management/sadmin/v1/productowners/paged${params}`
-    )
+    return await Request.get(`management/sadmin/v1/productowners${params}`)
+  }
+  const getProductOwnerLookupList = async () => {
+    return await Request.get(`management/sadmin/v1/productowners/Lookup`)
   }
   const getProductOwner = async (POId) => {
     return await Request.get(`management/sadmin/v1/productowners/${POId}`)
+  }
+  const ProductOwnerLimits = async (POId) => {
+    return await Request.get(
+      `management/sadmin/v1/productowners/${POId}/Limits`
+    )
   }
   const deleteProductOwnerReq = async (POId) => {
     return await Request.delete(`management/sadmin/v1/productowners/${POId}`)
@@ -35,6 +41,8 @@ const usePOReq = () => {
     deleteProductOwnerReq,
     isProductOwnerRegistered,
     GetCurrentProductOwnerByUserId,
+    ProductOwnerLimits,
+    getProductOwnerLookupList,
   }
 }
 

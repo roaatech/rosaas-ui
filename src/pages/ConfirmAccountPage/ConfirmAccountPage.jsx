@@ -8,6 +8,7 @@ import { BsCheckCircle, BsXCircle } from 'react-icons/bs'
 import { useEffect, useState } from 'react'
 import useRequest from '../../axios/apis/useRequest'
 import NotFound from '../NotFoundPage/NotFoundPage'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const ConfirmAccountPage = () => {
   const location = useLocation()
@@ -22,8 +23,27 @@ const ConfirmAccountPage = () => {
   const intl = useIntl()
 
   useEffect(() => {
-    if (!email || !code) {
+    if (
+      !email &&
+      !code &&
+      location.pathname !== Routes.ConfirmAccountByPassword.path
+    ) {
       navigate(Routes.NotFound.path)
+      return
+    }
+
+    if (location.pathname === Routes.ConfirmAccountByPassword.path) {
+      // Handle password reset confirmation
+      setIsVerified(true)
+      const countdown = setInterval(() => {
+        setCounter((prevCounter) => {
+          if (prevCounter === 1) {
+            clearInterval(countdown)
+            navigate(Routes.ProductManagementSignIn.path)
+          }
+          return prevCounter - 1
+        })
+      }, 1000)
       return
     }
 
@@ -49,11 +69,13 @@ const ConfirmAccountPage = () => {
     }
 
     confirmEmailRes()
-  }, [email, code])
+  }, [email, code, location.pathname])
 
   return (
     <>
-      {code && email && isVerified ? (
+      {((email && code) ||
+        location.pathname == Routes.ConfirmAccountByPassword.path) &&
+      isVerified !== undefined ? (
         <Wrapper>
           <section
             className="d-flex align-items-center"
@@ -68,48 +90,88 @@ const ConfirmAccountPage = () => {
                   <div className="cardCont shadow-soft border border-round border-light p-4 p-lg-5 w-100 fmxw-500 pb-0">
                     <div className="text-center text-md-center mb-4 mt-md-0">
                       <img src={logo} alt="RoSaaS Logo" className="logo" />
-                      <h3
-                        style={{ color: 'green', marginRight: '10px' }}
-                        className="mb-0"
-                      >
-                        <BsCheckCircle />
-                        {'  '}
-                        <FormattedMessage id="Account-Verified" />
-                      </h3>
+                      {location.pathname ===
+                      Routes.ConfirmAccountByPassword.path ? (
+                        <>
+                          <h3
+                            style={{ color: 'green', marginRight: '10px' }}
+                            className="mb-0"
+                          >
+                            <BsCheckCircle />
+                            {'  '}
+                            <SafeFormatMessage id="Account-and-Password-Set-Successfully" />
+                          </h3>
+                          <p className="text-center">
+                            <SafeFormatMessage id="Your-account-has-been-confirmed-and-password-set-successfully." />
+                          </p>
+                        </>
+                      ) : isVerified ? (
+                        <>
+                          <h3
+                            style={{ color: 'green', marginRight: '10px' }}
+                            className="mb-0"
+                          >
+                            <BsCheckCircle />
+                            {'  '}
+                            <SafeFormatMessage id="Account-Verified" />
+                          </h3>
+                          <p className="text-center">
+                            <SafeFormatMessage id="Your-account-has-been-confirmed-successfully." />{' '}
+                            <SafeFormatMessage id="You-can-now-log-in-with-your-account." />
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <h3
+                            style={{ color: 'red', marginRight: '10px' }}
+                            className="mb-0"
+                          >
+                            <BsXCircle />
+                            {'  '}
+                            <SafeFormatMessage id="Account-Not-Verified" />
+                          </h3>
+                          <p className="text-center">
+                            <SafeFormatMessage id="There-was-an-issue-confirming-your-account." />
+                          </p>
+                          <p className="text-center">
+                            <SafeFormatMessage id="Please-try-again-or-contact-support." />
+                          </p>
+                        </>
+                      )}
+                      <p className="text-center">
+                        <SafeFormatMessage
+                          id={
+                            isVerified
+                              ? 'You-will-be-redirected-to-the-login-page-shortly.-If-not-redirected,-please-click-the-link-below-in-x-seconds.'
+                              : 'Go-to-Login-Page'
+                          }
+                          values={{
+                            counter: (
+                              <span
+                                style={{
+                                  fontWeight: 'bold',
+                                  color: 'var(--second-color)',
+                                }}
+                              >
+                                {counter}
+                              </span>
+                            ),
+                          }}
+                        />
+                      </p>
+                      <p className="text-center">
+                        <a
+                          href={
+                            ut === 'TenantAdmin'
+                              ? Routes.SignInTenantAdmin.path
+                              : Routes.ProductManagementSignIn.path
+                          }
+                          style={{ color: 'var(--second-color)' }}
+                        >
+                          <SafeFormatMessage id="Go-to-Login-Page" />
+                        </a>
+                      </p>
                     </div>
-                    <p className="text-center">
-                      <FormattedMessage id="Your-account-has-been-confirmed-successfully." />{' '}
-                      <FormattedMessage id="You-can-now-log-in-with-your-account." />
-                    </p>
-                    <p className="text-center">
-                      <FormattedMessage
-                        id="You-will-be-redirected-to-the-login-page-shortly.-If-not-redirected,-please-click-the-link-below-in-x-seconds."
-                        values={{
-                          counter: (
-                            <span
-                              style={{
-                                fontWeight: 'bold',
-                                color: 'var(--second-color)',
-                              }}
-                            >
-                              {counter}
-                            </span>
-                          ),
-                        }}
-                      />
-                    </p>
-                    <p className="text-center">
-                      <a
-                        href={
-                          ut === 'TenantAdmin'
-                            ? Routes.SignInTenantAdmin.path
-                            : Routes.ProductManagementSignIn.path
-                        }
-                        style={{ color: 'var(--second-color)' }}
-                      >
-                        <FormattedMessage id="Go-to-Login-Page" />
-                      </a>
-                    </p>
                   </div>
                 </Col>
               </Row>
@@ -139,14 +201,14 @@ const ConfirmAccountPage = () => {
                           >
                             <BsXCircle />
                             {'  '}
-                            <FormattedMessage id="Account-Not-Verified" />
+                            <SafeFormatMessage id="Account-Not-Verified" />
                           </h3>
                         </div>
                         <p className="text-center">
-                          <FormattedMessage id="There-was-an-issue-confirming-your-account." />
+                          <SafeFormatMessage id="There-was-an-issue-confirming-your-account." />
                         </p>
                         <p className="text-center">
-                          <FormattedMessage id="Please-try-again-or-contact-support." />
+                          <SafeFormatMessage id="Please-try-again-or-contact-support." />
                         </p>
 
                         <p className="text-center">
@@ -158,7 +220,7 @@ const ConfirmAccountPage = () => {
                             }
                             style={{ color: 'var(--second-color)' }}
                           >
-                            <FormattedMessage id="Go-to-Login-Page" />
+                            <SafeFormatMessage id="Go-to-Login-Page" />
                           </a>
                         </p>
                       </div>

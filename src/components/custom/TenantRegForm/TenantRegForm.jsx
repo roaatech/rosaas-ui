@@ -20,6 +20,8 @@ import SpecificationInput from '../Product/CustomSpecification/SpecificationInpu
 import { setStep } from '../../../store/slices/tenants'
 import { cycle } from '../../../const'
 import { Routes } from '../../../routes'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
+import { setLoading } from '../../../store/slices/main'
 
 const CheckoutTenantReg = ({
   type,
@@ -42,12 +44,19 @@ const CheckoutTenantReg = ({
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const hash = window.location.hash
+  const currency = useSelector((state) => state.main.currency)
 
   const array = hash.split('#')
   const startWithTrial = array.find((element) => element == 'start-with-trial')
   const { productOwnerSystemName, productSystemName, priceName } = useParams()
 
   const step = useSelector((state) => state.tenants.currentStep)
+  useEffect(() => {
+    if (step == 2) {
+      return
+    }
+    dispatch(setLoading(true))
+  }, [])
 
   const productId = priceData?.product?.id
 
@@ -70,8 +79,8 @@ const CheckoutTenantReg = ({
   const createValidation = {}
   const editValidation = {
     displayName: Yup.string()
-      .required(<FormattedMessage id="Display-Name-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+      .required(<SafeFormatMessage id="Display-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />),
   }
   const validationSchema = Yup.object().shape(
     type === 'create' ? createValidation : editValidation
@@ -91,8 +100,8 @@ const CheckoutTenantReg = ({
     validationSchema: validationSchema,
 
     onSubmit: async (values) => {
-      const specificationsArray = priceData?.specifications
-        ? Object.values(priceData?.specifications).map((specification) => {
+      const specificationsArray = filteredSpecificationsArray
+        ? filteredSpecificationsArray.map((specification) => {
             const specificationId = specification.id
             const value =
               specificationValues[specificationId] !== undefined
@@ -101,10 +110,10 @@ const CheckoutTenantReg = ({
             return {
               specificationId,
               value,
-              productId: values.product,
             }
           })
         : []
+
       const specErrors = validateSpecifications(
         filteredSpecificationsArray,
         specificationValues,
@@ -127,28 +136,20 @@ const CheckoutTenantReg = ({
                 userEnabledTheTrial: startWithTrial == 'start-with-trial',
               },
             ],
+            currencyId: currency.id,
             systemName: uniqueName,
             displayName: title,
           })
 
-          if (
-            !createTenant?.data.data?.hasToPay &&
-            createTenant?.data.data.tenantId
-          ) {
-            return userRole != 'notAuth'
-              ? navigate(
-                  `${Routes.Tenant.path}/${createTenant?.data.data.tenantId}`
-                )
-              : navigate(`/created-successfully`)
-          } else {
+          
             setDisplayName(title)
             setCurrentTenant(createTenant?.data.data.tenantId)
-            setHasToPay(createTenant?.data.data?.hasToPay)
-          }
+            setHasToPay(createTenant?.data.data?.hasToPay) 
 
-          dispatch(setStep(2))
+          // dispatch(setStep(2))
           const id = createTenant?.data?.data?.orderId
           if (id) {
+            dispatch(setLoading(false))
             navigate(`#${id}`)
           }
         } else {
@@ -204,12 +205,17 @@ const CheckoutTenantReg = ({
         ],
         systemName: uniqueName,
         displayName: title,
+        currencyId: currency.id,
       })
+      if (createTenant?.data?.data?.orderId) {
+        dispatch(setLoading(false))
+        navigate(`#${createTenant.data.data.orderId}`)
+      }
       setDisplayName(title)
       setCurrentTenant(createTenant?.data.data.id)
       setHasToPay(createTenant?.data.data?.hasToPay)
 
-      dispatch(setStep(2))
+      // dispatch(setStep(2))
     } catch (error) {
       console.error('Error in createTenantRequest:', error)
     }
@@ -239,6 +245,11 @@ const CheckoutTenantReg = ({
       }, 1000)
 
       return () => clearTimeout(timeoutId)
+    } else if (
+      filteredSpecificationsArray &&
+      filteredSpecificationsArray.length !== 0
+    ) {
+      dispatch(setLoading(false))
     }
   }, [filteredSpecificationsArray])
 
@@ -288,7 +299,7 @@ const CheckoutTenantReg = ({
                     type="submit"
                     disabled={submitLoading}
                   >
-                    <FormattedMessage id="Submit" />
+                    <SafeFormatMessage id="Submit" />
                   </Button>
                 </Card.Footer>
               </Form>
@@ -296,13 +307,13 @@ const CheckoutTenantReg = ({
           </Col>
           <Col md={5}>
             <Card.Header className="fw-bold">
-              <FormattedMessage id="Your-Subscribe-Information" />
+              <SafeFormatMessage id="Your-Subscribe-Information" />
             </Card.Header>
             <Card.Body>
               {/* product */}
               <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-2 ">
                 <div className=" w-50 fw-bold">
-                  <FormattedMessage id="Product" />
+                  <SafeFormatMessage id="Product" />
                 </div>
                 <div className=" card-stats">
                   {priceData?.product?.displayName}
@@ -312,7 +323,7 @@ const CheckoutTenantReg = ({
               {/* plan */}
               <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                 <div className=" w-50 fw-bold">
-                  <FormattedMessage id="Plan" />
+                  <SafeFormatMessage id="Plan" />
                 </div>
                 <div className=" card-stats">{priceData?.plan?.systemName}</div>
               </div>
@@ -323,12 +334,12 @@ const CheckoutTenantReg = ({
                 priceData?.product?.trialType != 2) && (
                 <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                   <div className=" w-50 fw-bold">
-                    <FormattedMessage id="Subscription" />
+                    <SafeFormatMessage id="Subscription" />
                   </div>
                   {priceData && (
                     <div className=" card-stats">
-                      ${priceData?.price} /{' '}
-                      <FormattedMessage id={cycle[priceData?.cycle]} />
+                      {priceData?.priceDetails.formattedPrice} /{' '}
+                      <SafeFormatMessage id={cycle[priceData?.cycle]} />
                     </div>
                   )}
                 </div>

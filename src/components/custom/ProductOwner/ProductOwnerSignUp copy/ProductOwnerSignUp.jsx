@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux'
 import useRequest from '../../../../axios/apis/useRequest'
 import { Routes } from '../../../../routes'
 import Wrapper from './ProductOwnerSignUp.styled'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const CreateProductOwner = () => {
   let redirectPath = useSelector(
@@ -71,7 +72,7 @@ const CreateProductOwner = () => {
           <Form className="mt-4">
             <div>
               <label htmlFor="fullName" className="pb-2">
-                <FormattedMessage id="Admin-Full-Name" />
+                <SafeFormatMessage id="Admin-Full-Name" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -92,7 +93,7 @@ const CreateProductOwner = () => {
             </div>
             <div>
               <label htmlFor="mobileNumber" className="pb-2">
-                <FormattedMessage id="Admin-Phone" />
+                <SafeFormatMessage id="Admin-Phone" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -113,7 +114,7 @@ const CreateProductOwner = () => {
             </div>
             <div>
               <label htmlFor="email" className="pb-2">
-                <FormattedMessage id="Admin-Email" />
+                <SafeFormatMessage id="Admin-Email" />
                 <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
@@ -130,7 +131,7 @@ const CreateProductOwner = () => {
             </div>
             <div>
               <label htmlFor="password" className="pb-2">
-                <FormattedMessage id="Admin-Password" />
+                <SafeFormatMessage id="Admin-Password" />
                 <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
@@ -152,7 +153,7 @@ const CreateProductOwner = () => {
             </div>
             <div>
               <label htmlFor="confirmPassword" className="pb-2">
-                <FormattedMessage id="Admin-Confirm-Password" />
+                <SafeFormatMessage id="Admin-Confirm-Password" />
                 <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
@@ -179,7 +180,7 @@ const CreateProductOwner = () => {
                 className="w-100"
                 disabled={isSubmitting}
               >
-                <FormattedMessage id="Create-Product-Owner" />
+                <SafeFormatMessage id="Create-Product-Owner" />
               </Button>
             </div>
           </Form>

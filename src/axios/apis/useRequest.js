@@ -18,6 +18,8 @@ import useAdminPrivileges from './UsersManagement/useAdminPrivileges'
 import useAccountReq from './Account/Account'
 import useWebhookEndpointReq from './Product/webhookEndpoint/useWebhookEndpointReq'
 import usePOReq from './ProductOwner/usePOReq'
+import useDiscountReq from './Setting/discount/useDiscountReq'
+import useCurrencyReq from './Setting/currency/useCurrencyReq'
 
 const useRequest = () => {
   const {
@@ -25,13 +27,30 @@ const useRequest = () => {
     SignInProductOwnerAsync,
     userData,
     logOut,
+    getAuditsList,
+    getAditsActionListLookup,
+    getLogsList,
+    getLogById,
+    deleteLogBeforeDate,
+    getAuditById,
     signUp,
     signUpPOwner,
     SignInAdminAsync,
     confirmEmail,
     requestPasswordReset,
     resetPassword,
+    getEnvironment,
   } = useUserReq()
+  const {
+    getDiscounts,
+    createDiscount,
+    activeDiscount,
+    editDiscountRequest,
+    deleteDiscount,
+    getDiscountById,
+    deleteDiscountUsageHistoriesById,
+    getDiscountUsageHistoriesByDiscountId,
+  } = useDiscountReq()
   const {
     createTenantRequest,
     editTenantRequest,
@@ -45,6 +64,20 @@ const useRequest = () => {
     createTenantRequestPublic,
   } = useTenantReq()
   const { updateProfile, getCurrentProfile, changePassword } = useAccountReq()
+  const {
+    getCurrencies,
+    getCurrenciesPublishList,
+    createCurrency,
+    editCurrency,
+    deleteCurrency,
+    getCurrencyById,
+    publishCurrency,
+    markAsPrimaryCurrency,
+    markAsPrimaryExchangeRateCurrency,
+    markAsPrimaryCurrencyForProductOwner,
+    markAsPrimaryExchangeRateCurrencyForProductOwner,
+    getCurrenciesProductOwnerList,
+  } = useCurrencyReq()
   const {
     getWebhookEndpointsList,
     getWebhookEndpointbyId,
@@ -66,12 +99,19 @@ const useRequest = () => {
     subscriptionCycleById,
     getSubscriptionsList,
     getAutoRenewalList,
+    cancelSubscriptionRequest,
+    suspendSubscriptionRequest,
+    activateSubscriptionRequest,
+    subscriptionFilteredList,
+    subscriptionCanceledFilteredList,
   } = useSubManagementReq()
 
   const {
     createTenantAdmin,
     createProductAdmin,
     createClientAdmin,
+    clientsLookup,
+    getUserById,
     validateEmail,
   } = useUsersManagementReq()
   const {
@@ -91,6 +131,9 @@ const useRequest = () => {
     getProductListPublic,
     changeProductTrialType,
     publishProduct,
+    visibleProduct,
+    getProductsLookup,
+    updateCompositeTemplateRequest,
   } = useProductReq()
 
   const {
@@ -114,6 +157,8 @@ const useRequest = () => {
     editPlanRequest,
     deletePlanReq,
     getProductPlansPublic,
+    visiblePlan,
+    getPlanFilteredList,
   } = usePlanReq()
   const {
     getProductSpecification,
@@ -175,6 +220,7 @@ const useRequest = () => {
     getConfig,
     fetchPaymentIntent,
     getInvoicesList,
+    checkOrderCurrencyChange,
   } = usePaymentReq()
   const {
     createPORequest,
@@ -184,6 +230,8 @@ const useRequest = () => {
     deleteProductOwnerReq,
     isProductOwnerRegistered,
     GetCurrentProductOwnerByUserId,
+    ProductOwnerLimits,
+    getProductOwnerLookupList,
   } = usePOReq()
   return {
     SignInTenantAdminAsync,
@@ -314,6 +362,48 @@ const useRequest = () => {
     confirmEmail,
     requestPasswordReset,
     resetPassword,
+    getDiscounts,
+    createDiscount,
+    activeDiscount,
+    editDiscountRequest,
+    deleteDiscount,
+    getDiscountById,
+    deleteDiscountUsageHistoriesById,
+    getDiscountUsageHistoriesByDiscountId,
+    getCurrencies,
+    createCurrency,
+    editCurrency,
+    deleteCurrency,
+    getCurrencyById,
+    publishCurrency,
+    markAsPrimaryCurrency,
+    markAsPrimaryExchangeRateCurrency,
+    markAsPrimaryCurrencyForProductOwner,
+    markAsPrimaryExchangeRateCurrencyForProductOwner,
+    getCurrenciesPublishList,
+    checkOrderCurrencyChange,
+    ProductOwnerLimits,
+    getCurrenciesProductOwnerList,
+    cancelSubscriptionRequest,
+    suspendSubscriptionRequest,
+    visiblePlan,
+    visibleProduct,
+    activateSubscriptionRequest,
+    subscriptionFilteredList,
+    getProductsLookup,
+    getPlanFilteredList,
+    getEnvironment,
+    updateCompositeTemplateRequest,
+    subscriptionCanceledFilteredList,
+    getAuditsList,
+    getAuditById,
+    getLogsList,
+    getLogById,
+    deleteLogBeforeDate,
+    getAditsActionListLookup,
+    clientsLookup,
+    getUserById,
+    getProductOwnerLookupList,
   }
 }
 export default useRequest

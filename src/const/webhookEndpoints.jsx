@@ -1,16 +1,17 @@
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
+import SafeFormatMessage from '../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 export const webhhookActiveStatus = {
   true: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Active" />,
+    value: <SafeFormatMessage id="Active" />,
     color: 'var(--teal-green)',
   },
   false: {
     background: 'var(--red2)',
-    value: <FormattedMessage id="Inactive" />,
-    color: 'var(--orange-brown)',
+    value: <SafeFormatMessage id="Inactive" />,
+    color: 'var(--red)',
   },
 }
 export const NodeService = {

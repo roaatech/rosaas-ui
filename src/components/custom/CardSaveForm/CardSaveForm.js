@@ -11,6 +11,7 @@ import { Button, Modal } from '@themesberg/react-bootstrap'
 import { loadStripe } from '@stripe/stripe-js'
 import { FormattedMessage, useIntl } from 'react-intl'
 import useRequest from '../../../axios/apis/useRequest'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const CardSaveForm = ({
   setVisible,
@@ -32,7 +33,7 @@ const CardSaveForm = ({
   }
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required(<FormattedMessage id="name-required" />),
+    name: Yup.string().required(<SafeFormatMessage id="name-required" />),
   })
   const handleAutoRenewForm = async (cardReferenceId) => {
     try {
@@ -65,7 +66,7 @@ const CardSaveForm = ({
     } else {
       setStatus({
         success: true,
-        message: <FormattedMessage id="card-saved-successfully" />,
+        message: <SafeFormatMessage id="card-saved-successfully" />,
       })
       attachPaymentMethodCard(stripePayment?.paymentMethod?.id)
         .then(() => {
@@ -114,7 +115,7 @@ const CardSaveForm = ({
           <Modal.Body>
             <div className="mb-3">
               <label htmlFor="name">
-                <FormattedMessage id="name" />
+                <SafeFormatMessage id="name" />
               </label>
               <Field
                 type="text"
@@ -134,7 +135,7 @@ const CardSaveForm = ({
 
             <div className="mb-3">
               <label htmlFor="card">
-                <FormattedMessage id="card-details" />
+                <SafeFormatMessage id="card-details" />
               </label>
               <CardElement
                 id="card"
@@ -154,9 +155,9 @@ const CardSaveForm = ({
               disabled={!stripe || isSubmitting || status?.success == false}
             >
               {isSubmitting ? (
-                <FormattedMessage id="processing" />
+                <SafeFormatMessage id="processing" />
               ) : (
-                <FormattedMessage id="Submit" />
+                <SafeFormatMessage id="Submit" />
               )}
             </Button>
           </Modal.Body>

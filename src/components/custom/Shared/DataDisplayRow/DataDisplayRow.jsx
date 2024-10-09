@@ -1,6 +1,7 @@
 import { OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 
 const DataDisplayRow = ({ label, value, hideBorderBottom, tooltip }) => {
   return (
@@ -10,7 +11,7 @@ const DataDisplayRow = ({ label, value, hideBorderBottom, tooltip }) => {
       }`}
     >
       <div className="mb-0 w-50 fw-bold">
-        <FormattedMessage id={label} />
+        <SafeFormatMessage id={label} />
       </div>
       <div
         className="card-stats"

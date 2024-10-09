@@ -5,4 +5,7 @@ export const Wrapper = styled.div`
     width: fit-content;
     margin-bottom: 1.25rem;
   }
+  .sc-kXmcna.cKhqyf {
+    width: 600px;
+  }
 `

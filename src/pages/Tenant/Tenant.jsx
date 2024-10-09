@@ -12,8 +12,7 @@ import useRequest from '../../axios/apis/useRequest'
 import { Dialog } from 'primereact/dialog'
 import TenantStatus from '../../components/custom/tenant/TenantStatus/TenantStatus'
 import DeleteConfirmation from '../../components/custom/global/DeleteConfirmation/DeleteConfirmation.jsx'
-import { useNavigate } from 'react-router-dom'
-import { Wrapper } from './Tenant.styled'
+import { useNavigate, useParams } from 'react-router-dom'
 import CustomPaginator from '../../components/custom/Shared/CustomPaginator/CustomPaginator'
 import AutoCompleteFiled from '../../components/custom/Shared/AutoCompleteFiled/AutoCompleteFiled'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -25,6 +24,13 @@ import {
   Dropdown,
 } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
+import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog.jsx'
+import { Routes } from '../../routes.js'
+import TenantFormOnboarding from '../../components/custom/tenant/TenantFormOnboarding/TenantFormOnboarding.jsx'
+import { useDispatch, useSelector } from 'react-redux'
+import { removeTenant, tenantInfo } from '../../store/slices/tenants.js'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import { Wrapper } from './Tenant.styled.jsx'
 export default function Tenant({ children }) {
   const { getTenant, getTenantList, deleteTenantReq } = useRequest()
   const [visible, setVisible] = useState(false)
@@ -41,6 +47,10 @@ export default function Tenant({ children }) {
   const [currentId, setCurrentId] = useState('')
   const [update, setUpdate] = useState(1)
   const [selectedProduct, setSelectedProduct] = useState()
+  const [updateDetails, setUpdateDetails] = useState(0)
+  const routeParams = useParams()
+  const dispatch = useDispatch()
+
   const navigate = useNavigate()
   const deleteConfirm = (id) => {
     setCurrentId(id)
@@ -49,6 +59,7 @@ export default function Tenant({ children }) {
   const deleteTenant = async () => {
     await deleteTenantReq({ id: currentId })
   }
+  const tenantsData = useSelector((state) => state.tenants.tenants)
 
   useEffect(() => {
     let query = `?page=${Math.ceil(
@@ -64,40 +75,30 @@ export default function Tenant({ children }) {
       setTotalCount(listData.data.data.totalCount)
       setList(listData.data.data.items)
     })()
-  }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
+  }, [
+    first,
+    rows,
+    searchValue,
+    sortField,
+    sortValue,
+    update,
+    selectedProduct,
+    updateDetails,
+  ])
 
   const statusBodyTemplate = (rowData) => {
     return <TenantStatus statusValue={rowData.status} key={rowData.id} />
   }
 
   /******************************* */
+  const updateTenant = async () => {
+    await dispatch(removeTenant(currentId))
+    setUpdateDetails(updateDetails + 1)
+  }
 
   const onPageChange = (event) => {
     setFirst(event.first)
     setRows(event.rows)
-  }
-
-  const productOptions = async (text) => {
-    return {
-      data: [
-        {
-          id: 'asfdasf1',
-          name: 'product1',
-        },
-        {
-          id: 'asfdasf2',
-          name: 'product2',
-        },
-        {
-          id: 'asfdasf3',
-          name: 'product3',
-        },
-        {
-          id: 'asfdasf4',
-          name: 'product4',
-        },
-      ],
-    }
   }
 
   /****************************** */
@@ -116,7 +117,7 @@ export default function Tenant({ children }) {
       />
       <div className="main-container">
         <TableHead
-          label={<FormattedMessage id="Add-Tenant" />}
+          label={<SafeFormatMessage id="Add-Tenant" />}
           popupLabel={'Create Tenant'}
           icon={'pi-user-plus'}
           setSearchValue={setSearchValue}
@@ -124,28 +125,29 @@ export default function Tenant({ children }) {
           setVisibleHead={setVisibleHead}
           setFirst={setFirst}
         >
-          <DeleteConfirmation
+          {/* <DeleteConfirmation
             message="Do you want to delete this Tenant?"
             icon="pi pi-exclamation-triangle"
             confirm={confirm}
             setConfirm={setConfirm}
             confirmFunction={deleteTenant}
             sideBar={true}
-          />
-          <TenantForm
+          /> */}
+          <TenantFormOnboarding
             type={'create'}
+            popupLabel={<SafeFormatMessage id="Create-Tenant" />}
             update={update}
             setUpdate={setUpdate}
-            visibleHead={visibleHead}
-            setVisibleHead={setVisibleHead}
+            visible={visibleHead}
+            setVisible={setVisibleHead}
             sideBar={false}
           />
 
-          <AutoCompleteFiled
+          {/* <AutoCompleteFiled
             placeHolder="Select Product"
             dataFunction={productOptions}
             setSelectedProduct={setSelectedProduct}
-          />
+          /> */}
         </TableHead>
         <Card
           border="light"
@@ -247,7 +249,9 @@ export default function Tenant({ children }) {
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       <Dropdown.Item
-                        onSelect={() => navigate(`/tenants/${data.id}`)}
+                        onSelect={() =>
+                          navigate(`${Routes.Tenant.path}/${data.id}`)
+                        }
                       >
                         <FontAwesomeIcon icon={faEye} className="mx-2" /> View
                         Details
@@ -270,7 +274,7 @@ export default function Tenant({ children }) {
               onPageChange={onPageChange}
             />
 
-            <Dialog
+            <ThemeDialog
               headerClassName="pb-0"
               className="tenantForm"
               header={'Edit Tenant'}
@@ -280,13 +284,14 @@ export default function Tenant({ children }) {
             >
               <TenantForm
                 type={'edit'}
+                popupLabel={<SafeFormatMessage id="Edit-Tenant" />}
                 tenantData={tenantData?.data}
-                update={update}
+                updateTenant={updateTenant}
                 setUpdate={setUpdate}
                 setVisible={setVisible}
                 sideBar={false}
               />
-            </Dialog>
+            </ThemeDialog>
 
             <DeleteConfirmation
               message="Do you want to delete this Tenant?"

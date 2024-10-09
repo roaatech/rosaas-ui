@@ -23,10 +23,13 @@ import {
 } from '../../../../../store/slices/products/productsSlice.js'
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
 import { TabPanel, TabView } from 'primereact/tabview'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons'
 import { activeTab } from '../../../../../const/product.js'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+
 const CustomSpecificationForm = ({
   type,
   specificationData,
@@ -58,7 +61,11 @@ const CustomSpecificationForm = ({
       specificationData?.validationFailureDescription?.en || '',
     validationFailureDescriptionAr:
       specificationData?.validationFailureDescription?.ar || '',
+    inlineDescriptionEn: specificationData?.inlineDescription?.en || '',
+    inlineDescriptionAr: specificationData?.inlineDescription?.ar || '',
+    displayOrder: specificationData ? specificationData?.displayOrder : '0',
   }
+
   const allProducts = useSelector((state) => state.products.products)
   const direction = useSelector((state) => state.main.direction)
 
@@ -74,7 +81,7 @@ const CustomSpecificationForm = ({
       ),
     displayNameEn: Yup.string().test({
       name: 'displayNameRequired',
-      message: <FormattedMessage id="Display-Name-is-required" />,
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
       test: (value, context) => {
         const { parent } = context
         const displayNameEn = parent.displayNameEn
@@ -82,6 +89,24 @@ const CustomSpecificationForm = ({
         return !!displayNameEn || !!displayNameAr
       },
     }),
+    displayNameAr: Yup.string().test({
+      name: 'displayNameRequired',
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
+      test: (value, context) => {
+        const { parent } = context
+        const displayNameEn = parent.displayNameEn
+        const displayNameAr = parent.displayNameAr
+        return !!displayNameEn || !!displayNameAr
+      },
+    }),
+    displayOrder: Yup.number()
+      .typeError(<SafeFormatMessage id="Display-Order-must-be-a-number" />)
+      .integer(<SafeFormatMessage id="Display-Order-must-be-an-integer" />)
+      .min(
+        0,
+        <SafeFormatMessage id="Display-Order-must-be-a-positive-number" />
+      )
+      .default(0),
     regularExpression: Yup.string()
       .test(
         'isValidPattern',
@@ -124,6 +149,7 @@ const CustomSpecificationForm = ({
               en: values.descriptionEn,
               ar: values.descriptionAr,
             },
+            displayOrder: values.displayOrder || 0,
             isRequired: values.isRequired,
             isUserEditable: values.isUserEditable || false,
             isPublished: values.isPublished || false,
@@ -131,6 +157,10 @@ const CustomSpecificationForm = ({
             validationFailureDescription: {
               en: values.validationFailureDescriptionEn,
               ar: values.validationFailureDescriptionAr,
+            },
+            inlineDescription: {
+              en: values.inlineDescriptionEn,
+              ar: values.inlineDescriptionAr,
             },
             inputType: 1,
             dataType: 1,
@@ -165,12 +195,17 @@ const CustomSpecificationForm = ({
             },
             isUserEditable: values.isUserEditable || false,
             isPublished: values.isPublished || false,
-
             isRequired: values.isRequired || false,
             regularExpression: values.regularExpression,
+            displayOrder: values.displayOrder || 0,
+
             validationFailureDescription: {
               en: values.validationFailureDescriptionEn,
               ar: values.validationFailureDescriptionAr,
+            },
+            inlineDescription: {
+              en: values.inlineDescriptionEn,
+              ar: values.inlineDescriptionAr,
             },
             inputType: 1,
             dataType: 1,
@@ -188,14 +223,18 @@ const CustomSpecificationForm = ({
                 en: values.descriptionEn,
                 ar: values.descriptionAr,
               },
+              displayOrder: values.displayOrder || 0,
               isUserEditable: values.isUserEditable || false,
               isPublished: values.isPublished || false,
-
               isRequired: values.isRequired || false,
               regularExpression: values.regularExpression,
               validationFailureDescription: {
                 en: values.validationFailureDescriptionEn,
                 ar: values.validationFailureDescriptionAr,
+              },
+              inlineDescription: {
+                en: values.inlineDescriptionEn,
+                ar: values.inlineDescriptionAr,
               },
               displayName: {
                 en: values.displayNameEn,
@@ -227,6 +266,7 @@ const CustomSpecificationForm = ({
         </Modal.Header>
 
         <Modal.Body>
+          {/* 1st Card: System Name and Display Name */}
           <Card
             border="light"
             className="table-wrapper table-responsive shadow-sm"
@@ -237,9 +277,9 @@ const CustomSpecificationForm = ({
                   md={6}
                   className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
                 >
-                  <Form.Group className="mb-3">
+                  <Form.Group className="">
                     <Form.Label>
-                      <FormattedMessage id="System-Name" />{' '}
+                      <SafeFormatMessage id="System-Name" />{' '}
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
@@ -262,6 +302,7 @@ const CustomSpecificationForm = ({
                         </OverlayTrigger>
                       </span>
                     </Form.Label>
+                    <TabView className="mt-4"></TabView>
                     <input
                       type="text"
                       className="form-control"
@@ -280,17 +321,18 @@ const CustomSpecificationForm = ({
                     )}
                   </Form.Group>
                 </Col>
-                <Col md={6} className="pt-3">
-                  <div className="toggle-container d-flex align-items-center justify-content-between ">
+                <Col md={6}>
+                  {/* <Form.Group className="">
                     <Form.Label>
-                      <FormattedMessage id="Is-Published" />{' '}
+                      <SafeFormatMessage id="Display-Name" />{' '}
+                      <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
                               {intl.formatMessage({
-                                id: 'Tenant-Specification-Display',
+                                id: 'Friendly-Name-Label',
                               })}
                             </Tooltip>
                           }
@@ -305,73 +347,91 @@ const CustomSpecificationForm = ({
                         </OverlayTrigger>
                       </span>
                     </Form.Label>
-                    <FontAwesomeIcon
-                      icon={
-                        formik.values.isPublished ? faToggleOn : faToggleOff
-                      }
-                      className={
-                        formik.values.isPublished
-                          ? 'active-toggle fa-lg'
-                          : 'passive-toggle fa-lg'
-                      }
-                      onClick={() =>
-                        formik.setFieldValue(
-                          'isPublished',
-                          !formik.values.isPublished
-                        )
-                      }
-                    />
-                  </div>
-
-                  <div className="toggle-container d-flex align-items-center justify-content-between ">
-                    <Form.Label>
-                      <FormattedMessage id="Is-User-Editable" />{' '}
-                      <span className="fw-normal">
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              {' '}
-                              {intl.formatMessage({
-                                id: 'User-Editable-Value',
-                              })}
-                            </Tooltip>
-                          }
+                    <TabView>
+                      <TabPanel header="En">
+                        <div className="form-group mt-3">
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="displayNameEn"
+                            name="displayNameEn"
+                            onChange={formik.handleChange}
+                            value={formik.values.displayNameEn}
+                            placeholder={intl.formatMessage({
+                              id: 'English-Name',
+                            })}
+                          />
+                        </div>
+                      </TabPanel>
+                      <TabPanel header="Ar">
+                        <div className="form-group mt-3">
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="displayNameAr"
+                            name="displayNameAr"
+                            onChange={formik.handleChange}
+                            value={formik.values.displayNameAr}
+                            placeholder={intl.formatMessage({
+                              id: 'Arabic-Name',
+                            })}
+                          />
+                        </div>
+                      </TabPanel>
+                    </TabView>
+                    {(formik.touched.displayNameEn ||
+                      formik.touched.displayNameAr) &&
+                      (formik.errors.displayNameEn ||
+                        formik.errors.displayNameAr) && (
+                        <Form.Control.Feedback
+                          type="invalid"
+                          style={{ display: 'block' }}
                         >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              className={
-                                direction == 'rtl' ? 'ar-questionCircle' : ''
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </span>
-                    </Form.Label>
-                    <FontAwesomeIcon
-                      icon={
-                        formik.values.isUserEditable ? faToggleOn : faToggleOff
-                      }
-                      className={
-                        formik.values.isUserEditable
-                          ? 'active-toggle fa-lg'
-                          : 'passive-toggle fa-lg'
-                      }
-                      onClick={() =>
-                        formik.setFieldValue(
-                          'isUserEditable',
-                          !formik.values.isUserEditable
-                        )
-                      }
-                    />
-                  </div>
+                          {formik.errors.displayNameEn ||
+                            formik.errors.displayNameAr}
+                        </Form.Control.Feedback>
+                      )}
+                  </Form.Group> */}
+                  <MultilingualInput
+                    inputLabel="Display-Name"
+                    languages={[
+                      { code: 'en', name: 'English' },
+                      { code: 'ar', name: 'Arabic' },
+                    ]}
+                    inputIds={{
+                      en: 'displayNameEn',
+                      ar: 'displayNameAr',
+                    }}
+                    placeholder={{
+                      en: 'English-Name',
+                      ar: 'Arabic-Name',
+                    }}
+                    tooltipMessageId="Friendly-Name-Label"
+                    values={{
+                      en: formik.values.displayNameEn,
+                      ar: formik.values.displayNameAr,
+                    }}
+                    onChange={formik.handleChange}
+                    isRequired={true}
+                    inputType="input"
+                    errors={{
+                      en: formik.errors.displayNameEn,
+                      ar: formik.errors.displayNameAr,
+                    }}
+                    touched={{
+                      en: formik.touched.displayNameEn,
+                      ar: formik.touched.displayNameAr,
+                    }}
+                  />
                 </Col>
               </Row>
             </Container>
           </Card>
+
+          {/* 3rd Card: Hint Description and Inline Description */}
           <Card
             border="light"
-            className="table-wrapper table-responsive shadow-sm "
+            className="table-wrapper table-responsive shadow-sm"
             style={{ marginTop: '15px' }}
           >
             <Container>
@@ -380,158 +440,112 @@ const CustomSpecificationForm = ({
                   md={6}
                   className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
                 >
-                  <div>
-                    <Form.Group>
-                      <Form.Label className="mb-1">
-                        <FormattedMessage id="Display-Name" />{' '}
-                        <span style={{ color: 'red' }}>* </span>
-                        <span className="fw-normal">
-                          <OverlayTrigger
-                            trigger={['hover', 'focus']}
-                            overlay={
-                              <Tooltip>
-                                {intl.formatMessage({
-                                  id: 'Friendly-Name-Label',
-                                })}{' '}
-                              </Tooltip>
-                            }
-                          >
-                            <span>
-                              <BsFillQuestionCircleFill
-                                className={
-                                  direction == 'rtl' ? 'ar-questionCircle' : ''
-                                }
-                              />
-                            </span>
-                          </OverlayTrigger>
-                        </span>
-                      </Form.Label>
-
-                      <TabView>
-                        <TabPanel header="En">
-                          <div className="form-group mt-3">
-                            <input
-                              type="text"
-                              className="form-control"
-                              id="displayNameEn"
-                              name="displayNameEn"
-                              onChange={formik.handleChange}
-                              value={formik.values.displayNameEn}
-                              placeholder={intl.formatMessage({
-                                id: 'English-Name',
-                              })}
-                            />
-                          </div>
-                        </TabPanel>
-                        <TabPanel header="Ar">
-                          <div className="form-group mt-3">
-                            <input
-                              type="text"
-                              className="form-control"
-                              id="displayNameAr"
-                              name="displayNameAr"
-                              onChange={formik.handleChange}
-                              value={formik.values.displayNameAr}
-                              placeholder={intl.formatMessage({
-                                id: 'Arabic-Name',
-                              })}
-                            />
-                          </div>
-                        </TabPanel>
-                      </TabView>
-
-                      {(formik.touched.displayNameEn ||
-                        formik.touched.displayNameAr) &&
-                        (formik.errors.displayNameEn ||
-                          formik.errors.displayNameAr) && (
-                          <Form.Control.Feedback
-                            type="invalid"
-                            style={{ display: 'block' }}
-                          >
-                            {formik.errors.displayNameEn ||
-                              formik.errors.displayNameAr}
-                          </Form.Control.Feedback>
-                        )}
-                    </Form.Group>
-                  </div>
+                  <MultilingualInput
+                    inputLabel="Hint-description"
+                    languages={[
+                      { code: 'en', name: 'English' },
+                      { code: 'ar', name: 'Arabic' },
+                    ]}
+                    inputIds={{
+                      en: 'descriptionEn',
+                      ar: 'descriptionAr',
+                    }}
+                    placeholder={{
+                      en: 'English-Hint-Description',
+                      ar: 'Arabic-Hint-Description',
+                    }}
+                    tooltipMessageId="Friendly-Hint-Description"
+                    values={{
+                      en: formik.values.descriptionEn,
+                      ar: formik.values.descriptionAr,
+                    }}
+                    onChange={formik.handleChange}
+                    isRequired={false}
+                    inputType="TextareaAndCounter"
+                    maxLength={250}
+                    errors={{
+                      en: formik.errors.descriptionEn,
+                      ar: formik.errors.descriptionAr,
+                    }}
+                    touched={{
+                      en: formik.touched.descriptionEn,
+                      ar: formik.touched.descriptionAr,
+                    }}
+                  />
                 </Col>
                 <Col md={6}>
-                  <div>
-                    <Form.Group>
-                      <Form.Label className="mb-1 ">
-                        <FormattedMessage id="Description" />{' '}
-                        <span className="fw-normal">
-                          <OverlayTrigger
-                            trigger={['hover', 'focus']}
-                            overlay={
-                              <Tooltip>
-                                {intl.formatMessage({
-                                  id: 'Hint-Description',
-                                })}
-                              </Tooltip>
-                            }
-                          >
-                            <span>
-                              <BsFillQuestionCircleFill
-                                className={
-                                  direction == 'rtl' ? 'ar-questionCircle' : ''
-                                }
-                              />
-                            </span>
-                          </OverlayTrigger>
-                        </span>
-                      </Form.Label>
-
-                      <TabView>
-                        <TabPanel header="En">
-                          <div className="form-group mt-3">
-                            <TextareaAndCounter
-                              addTextarea={formik.setFieldValue}
-                              maxLength={250}
-                              showCharCount
-                              inputValue={formik.values.descriptionEn}
-                              placeholder={intl.formatMessage({
-                                id: 'English-Description',
+                  <Form.Group>
+                    <Form.Label className="mb-1">
+                      <SafeFormatMessage id="Inline-Description" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {intl.formatMessage({
+                                id: 'Friendly-Inline-Description',
                               })}
-                              id="descriptionEn"
-                              name="descriptionEn"
-                              onChange={formik.handleChange}
-                              disableMainClass={true}
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
                             />
-                          </div>
-                        </TabPanel>
-                        <TabPanel header="Ar">
-                          <div className="form-group mt-3">
-                            <TextareaAndCounter
-                              addTextarea={formik.setFieldValue}
-                              maxLength={250}
-                              showCharCount
-                              inputValue={formik?.values?.descriptionAr}
-                              placeholder={intl.formatMessage({
-                                id: 'Arabic-Description',
-                              })}
-                              id="descriptionAr"
-                              name="descriptionAr"
-                              onChange={formik.handleChange}
-                              disableMainClass={true}
-                            />
-                          </div>
-                        </TabPanel>
-                      </TabView>
+                          </span>
+                        </OverlayTrigger>
+                      </span>
+                    </Form.Label>
+                    <TabView>
+                      <TabPanel header="En">
+                        <div className="form-group mt-3">
+                          <TextareaAndCounter
+                            addTextarea={formik.setFieldValue}
+                            maxLength={250}
+                            showCharCount
+                            inputValue={formik.values.inlineDescriptionEn}
+                            placeholder={intl.formatMessage({
+                              id: 'English-Inline-Description',
+                            })}
+                            id="inlineDescriptionEn"
+                            name="inlineDescriptionEn"
+                            onChange={formik.handleChange}
+                            disableMainClass={true}
+                          />
+                        </div>
+                      </TabPanel>
+                      <TabPanel header="Ar">
+                        <div className="form-group mt-3">
+                          <TextareaAndCounter
+                            addTextarea={formik.setFieldValue}
+                            maxLength={250}
+                            showCharCount
+                            inputValue={formik?.values?.inlineDescriptionAr}
+                            placeholder={intl.formatMessage({
+                              id: 'Arabic-Inline-Description',
+                            })}
+                            id="inlineDescriptionAr"
+                            name="inlineDescriptionAr"
+                            onChange={formik.handleChange}
+                            disableMainClass={true}
+                          />
+                        </div>
+                      </TabPanel>
+                    </TabView>
 
-                      {formik.touched.descriptionEn &&
-                        formik.errors.descriptionEn && (
-                          <Form.Control.Feedback
-                            type="invalid"
-                            style={{ display: 'block' }}
-                          >
-                            {formik.errors.descriptionEn}
-                          </Form.Control.Feedback>
-                        )}
-                      {/* </Card> */}
-                    </Form.Group>
-                  </div>
-                </Col>{' '}
+                    {formik.touched.inlineDescriptionEn &&
+                      formik.errors.inlineDescriptionEn && (
+                        <Form.Control.Feedback
+                          type="invalid"
+                          style={{ display: 'block' }}
+                        >
+                          {formik.errors.inlineDescriptionEn}
+                        </Form.Control.Feedback>
+                      )}
+                  </Form.Group>
+                </Col>
               </Row>
             </Container>
           </Card>
@@ -547,9 +561,9 @@ const CustomSpecificationForm = ({
                   md={6}
                   className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
                 >
-                  <div className="toggle-container d-flex align-items-center justify-content-between  mb-2">
+                  {/* <div className="toggle-container d-flex px-4align-items-center justify-content-between  mb-2">
                     <Form.Label>
-                      <FormattedMessage id="Is-Required" />{' '}
+                      <SafeFormatMessage id="Is-Required" />{' '}
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
@@ -585,10 +599,10 @@ const CustomSpecificationForm = ({
                         )
                       }
                     />
-                  </div>
+                  </div> */}
                   <Form.Group>
                     <Form.Label>
-                      <FormattedMessage id="Regular-Expression" />{' '}
+                      <SafeFormatMessage id="Regular-Expression" />{' '}
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
@@ -610,6 +624,7 @@ const CustomSpecificationForm = ({
                         </OverlayTrigger>
                       </span>
                     </Form.Label>
+                    <TabView className="mt-3"></TabView>
                     <input
                       type="text"
                       className="form-control"
@@ -633,7 +648,7 @@ const CustomSpecificationForm = ({
                 <Col md={6}>
                   <Form.Group>
                     <Form.Label className="mb-1 ">
-                      <FormattedMessage id="Validation-Failure-Description" />{' '}
+                      <SafeFormatMessage id="Validation-Failure-Description" />{' '}
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
@@ -710,17 +725,365 @@ const CustomSpecificationForm = ({
               </Row>
             </Container>
           </Card>
+          <Card
+            border="light"
+            className="table-wrapper table-responsive shadow-sm"
+            style={{ marginTop: '15px' }}
+          >
+            <Container>
+              <Row>
+                <Col
+                  md={6}
+                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
+                >
+                  <Form.Group className="">
+                    <Form.Label>
+                      <SafeFormatMessage id="Display-Order" />{' '}
+                      {/* <span style={{ color: 'red' }}>* </span> */}
+                      <span className="fw-normal">
+                        {/* <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {intl.formatMessage({
+                                id: 'JSON-Property-Name',
+                              })}
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger> */}
+                      </span>
+                    </Form.Label>
+                    <TabView className="mt-4"></TabView>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="displayOrder"
+                      name="displayOrder"
+                      onChange={formik.handleChange}
+                      value={formik.values.displayOrder}
+                    />
+                    {formik.touched.displayOrder &&
+                      formik.errors.displayOrder && (
+                        <Form.Control.Feedback
+                          type="invalid"
+                          style={{ display: 'block' }}
+                        >
+                          {formik.errors.displayOrder}
+                        </Form.Control.Feedback>
+                      )}
+                  </Form.Group>
+                </Col>
+                <Col md={6} className="d-flex align-items-center">
+                  {' '}
+                  <Container>
+                    <Row className="p-1 border-bottom ">
+                      <div className="toggle-container d-flex px-4 justify-content-between">
+                        <Form.Label>
+                          <SafeFormatMessage id="Is-Published" />{' '}
+                          <span className="fw-normal">
+                            <OverlayTrigger
+                              trigger={['hover', 'focus']}
+                              overlay={
+                                <Tooltip>
+                                  {intl.formatMessage({
+                                    id: 'Tenant-Specification-Display',
+                                  })}
+                                </Tooltip>
+                              }
+                            >
+                              <span>
+                                <BsFillQuestionCircleFill
+                                  className={
+                                    direction == 'rtl'
+                                      ? 'ar-questionCircle'
+                                      : ''
+                                  }
+                                />
+                              </span>
+                            </OverlayTrigger>
+                          </span>
+                        </Form.Label>
+                        <FontAwesomeIcon
+                          icon={
+                            formik.values.isPublished ? faToggleOn : faToggleOff
+                          }
+                          className={
+                            formik.values.isPublished
+                              ? 'active-toggle fa-lg'
+                              : 'passive-toggle fa-lg'
+                          }
+                          onClick={() =>
+                            formik.setFieldValue(
+                              'isPublished',
+                              !formik.values.isPublished
+                            )
+                          }
+                        />
+                      </div>
+                    </Row>
+                    <Row className="p-1 border-bottom ">
+                      <div className="toggle-container d-flex px-4 justify-content-between">
+                        <Form.Label>
+                          <SafeFormatMessage id="Is-User-Editable" />{' '}
+                          <span className="fw-normal">
+                            <OverlayTrigger
+                              trigger={['hover', 'focus']}
+                              overlay={
+                                <Tooltip>
+                                  {intl.formatMessage({
+                                    id: 'User-Editable-Value',
+                                  })}
+                                </Tooltip>
+                              }
+                            >
+                              <span>
+                                <BsFillQuestionCircleFill
+                                  className={
+                                    direction == 'rtl'
+                                      ? 'ar-questionCircle'
+                                      : ''
+                                  }
+                                />
+                              </span>
+                            </OverlayTrigger>
+                          </span>
+                        </Form.Label>
+                        <FontAwesomeIcon
+                          icon={
+                            formik.values.isUserEditable
+                              ? faToggleOn
+                              : faToggleOff
+                          }
+                          className={
+                            formik.values.isUserEditable
+                              ? 'active-toggle fa-lg'
+                              : 'passive-toggle fa-lg'
+                          }
+                          onClick={() =>
+                            formik.setFieldValue(
+                              'isUserEditable',
+                              !formik.values.isUserEditable
+                            )
+                          }
+                        />
+                      </div>
+                    </Row>
+                    <Row className="p-1 border-bottom ">
+                      <div className="toggle-container d-flex px-4 justify-content-between  ">
+                        <Form.Label>
+                          <SafeFormatMessage id="Is-Required" />{' '}
+                          <span className="fw-normal">
+                            <OverlayTrigger
+                              trigger={['hover', 'focus']}
+                              overlay={
+                                <Tooltip>
+                                  {intl.formatMessage({
+                                    id: 'Value-Presence-Required',
+                                  })}{' '}
+                                </Tooltip>
+                              }
+                            >
+                              <span>
+                                <BsFillQuestionCircleFill
+                                  className={
+                                    direction == 'rtl'
+                                      ? 'ar-questionCircle'
+                                      : ''
+                                  }
+                                />
+                              </span>
+                            </OverlayTrigger>
+                          </span>
+                        </Form.Label>
+                        <FontAwesomeIcon
+                          icon={
+                            formik.values.isRequired ? faToggleOn : faToggleOff
+                          }
+                          className={
+                            formik.values.isRequired
+                              ? 'active-toggle fa-lg'
+                              : 'passive-toggle fa-lg'
+                          }
+                          onClick={() =>
+                            formik.setFieldValue(
+                              'isRequired',
+                              !formik.values.isRequired
+                            )
+                          }
+                        />
+                      </div>
+                    </Row>
+                  </Container>
+                </Col>
+              </Row>
+            </Container>
+          </Card>
+          {/* 2nd Card: Is Published and Is User Editable */}
+          {/* <Card
+            border="light"
+            className="table-wrapper table-responsive shadow-sm bool-card"
+            style={{ marginTop: '15px' }}
+          >
+            <Container>
+              <Row>
+                <Col
+                  md={4}
+                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
+                >
+                  <div className="toggle-container d-flex px-4 justify-content-between">
+                    <Form.Label>
+                      <SafeFormatMessage id="Is-Published" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {intl.formatMessage({
+                                id: 'Tenant-Specification-Display',
+                              })}
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
+                    </Form.Label>
+                    <FontAwesomeIcon
+                      icon={
+                        formik.values.isPublished ? faToggleOn : faToggleOff
+                      }
+                      className={
+                        formik.values.isPublished
+                          ? 'active-toggle fa-lg'
+                          : 'passive-toggle fa-lg'
+                      }
+                      onClick={() =>
+                        formik.setFieldValue(
+                          'isPublished',
+                          !formik.values.isPublished
+                        )
+                      }
+                    />
+                  </div>
+                </Col>
+                <Col
+                  md={4}
+                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
+                >
+                  <div className="toggle-container d-flex px-4 justify-content-between">
+                    <Form.Label>
+                      <SafeFormatMessage id="Is-User-Editable" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {intl.formatMessage({
+                                id: 'User-Editable-Value',
+                              })}
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
+                    </Form.Label>
+                    <FontAwesomeIcon
+                      icon={
+                        formik.values.isUserEditable ? faToggleOn : faToggleOff
+                      }
+                      className={
+                        formik.values.isUserEditable
+                          ? 'active-toggle fa-lg'
+                          : 'passive-toggle fa-lg'
+                      }
+                      onClick={() =>
+                        formik.setFieldValue(
+                          'isUserEditable',
+                          !formik.values.isUserEditable
+                        )
+                      }
+                    />
+                  </div>
+                </Col>
+                <Col
+                  md={4}
+                  className={direction == 'rtl' ? 'borderLeft' : 'borderRight'}
+                >
+                  <div className="toggle-container d-flex px-4 justify-content-between  ">
+                    <Form.Label>
+                      <SafeFormatMessage id="Is-Required" />{' '}
+                      <span className="fw-normal">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {intl.formatMessage({
+                                id: 'Value-Presence-Required',
+                              })}{' '}
+                            </Tooltip>
+                          }
+                        >
+                          <span>
+                            <BsFillQuestionCircleFill
+                              className={
+                                direction == 'rtl' ? 'ar-questionCircle' : ''
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </span>
+                    </Form.Label>
+                    <FontAwesomeIcon
+                      icon={formik.values.isRequired ? faToggleOn : faToggleOff}
+                      className={
+                        formik.values.isRequired
+                          ? 'active-toggle fa-lg'
+                          : 'passive-toggle fa-lg'
+                      }
+                      onClick={() =>
+                        formik.setFieldValue(
+                          'isRequired',
+                          !formik.values.isRequired
+                        )
+                      }
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </Container>
+          </Card> */}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

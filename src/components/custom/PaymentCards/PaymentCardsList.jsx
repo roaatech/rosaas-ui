@@ -12,6 +12,7 @@ import { BsPlusCircleFill } from 'react-icons/bs'
 import CreditCard from '../CreditCard/CreditCard'
 import { setAllpaymentCards } from '../../../store/slices/workSpace'
 import { useDispatch } from 'react-redux'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const PaymentCardsList = () => {
   const { getPaymentCardsList, detachPaymentMethodCard, markCardAsDefault } =
@@ -66,7 +67,7 @@ const PaymentCardsList = () => {
     <Wrapper>
       <UpperContent>
         <h4 className="m-0">
-          <FormattedMessage id="Card-Management" />
+          <SafeFormatMessage id="Card-Management" />
         </h4>
         <DynamicButtons
           buttons={[

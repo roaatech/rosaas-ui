@@ -44,7 +44,9 @@ const ColumnSortHeader = ({
 
   return (
     <Wrapper onClick={toggleSort}>
-      {text} {currentColumn(CurrentSort)}
+      <div className="d-flex flex-row align-items-center ">
+        {text} <span className="mx-2">{currentColumn(CurrentSort)}</span>
+      </div>
     </Wrapper>
   )
 }

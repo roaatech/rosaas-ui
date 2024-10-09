@@ -1,5 +1,6 @@
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Wrapper } from './TrialLabel.styled'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const TrialLabel = ({ days }) => {
   const intl = useIntl()
@@ -10,11 +11,16 @@ const TrialLabel = ({ days }) => {
         <span className="trial-text">
           {days && (
             <>
-              {days} <FormattedMessage id="Days" />
+              {days} {'  '}
+              {days <= 10 ? (
+                <SafeFormatMessage id="Days" />
+              ) : (
+                <SafeFormatMessage id="Days-ar" />
+              )}
               <br />
             </>
           )}
-          <FormattedMessage id="Free-Trial" />
+          <SafeFormatMessage id="Free-Trial" />
         </span>
         <span className="bottom-line"></span>
       </span>

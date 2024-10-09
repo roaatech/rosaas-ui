@@ -25,6 +25,8 @@ import {
   setTenantCreateData,
 } from '../../../../store/slices/tenants.js'
 import { Routes } from '../../../../routes.js'
+import { setPublicCurrenciesList } from '../../../../store/slices/currenciesSlice.js'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const TenantFormOnboarding = ({
   type,
@@ -40,6 +42,7 @@ const TenantFormOnboarding = ({
     getProductPlans,
     getProductPlanPriceList,
     getProductSpecification,
+    getCurrenciesPublishList,
   } = useRequest()
   const [submitLoading, setSubmitLoading] = useState()
   const [priceList, setPriceList] = useState([])
@@ -62,26 +65,44 @@ const TenantFormOnboarding = ({
       })()
     }
   }, [])
+  const publicCurrenciesList = useSelector(
+    (state) => state.currenciesSlice?.publicCurrenciesList
+  )
+  useEffect(() => {
+    const fetchCurrencies = async () => {
+      const response = await getCurrenciesPublishList('/currencies')
+      if (response && response.data) {
+        const currencies = response.data.data
+        dispatch(setPublicCurrenciesList(currencies))
+      }
+    }
+    fetchCurrencies()
+  }, [])
 
   const createValidation = {
     displayName: Yup.string()
-      .required(<FormattedMessage id="Display-Name-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+      .required(<SafeFormatMessage id="Display-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />),
 
     product: Yup.string().required(
-      <FormattedMessage id="Please-select-a-product" />
+      <SafeFormatMessage id="Please-select-a-product" />
     ),
-    plan: Yup.string().required(<FormattedMessage id="Please-select-a-plan" />),
+    plan: Yup.string().required(
+      <SafeFormatMessage id="Please-select-a-plan" />
+    ),
     price: Yup.string().when(['product', 'plan'], {
       is: () =>
         listData[formik.values.product]?.trialPlanId != formik.values.plan,
       then: Yup.string().required(
-        <FormattedMessage id="Please-select-a-price" />
+        <SafeFormatMessage id="Please-select-a-price" />
       ),
     }),
+    currency: Yup.string().required(
+      <SafeFormatMessage id="Currency-is-required" />
+    ),
     price: Yup.string().test(
       'price-validation',
-      <FormattedMessage id="Please-select-a-price" />,
+      <SafeFormatMessage id="Please-select-a-price" />,
       function (value) {
         const product = this.resolve(Yup.ref('product'))
         const plan = this.resolve(Yup.ref('plan'))
@@ -95,17 +116,17 @@ const TenantFormOnboarding = ({
     ),
 
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="Unique-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
   }
   const editValidation = {
     displayName: Yup.string()
-      .required(<FormattedMessage id="Display-Name-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+      .required(<SafeFormatMessage id="Display-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />),
   }
   const validationSchema = Yup.object().shape(
     type === 'create' ? createValidation : editValidation
@@ -122,6 +143,7 @@ const TenantFormOnboarding = ({
     plan: tenantData ? tenantData.plan : '',
     price: tenantData ? tenantData.price : '',
     product: tenantData ? selectedProduct : '',
+    currency: '',
   }
   const [startWithTrial, setStartWithTrial] = useState(false)
 
@@ -172,6 +194,7 @@ const TenantFormOnboarding = ({
                 }),
               },
             ],
+            currencyId: values.currency,
             systemName: values.systemName,
             displayName: values.displayName,
           })
@@ -219,9 +242,10 @@ const TenantFormOnboarding = ({
           dispatch(setStep(2))
 
           navigate(
-            `/checkout/${listData[values.product]?.client.systemName}/${
-              listData[values.product]?.systemName
-            }/plan-price/${
+            `/checkout/${
+              listData[values.product]?.productOwner?.systemName ||
+              listData[values.product]?.client?.systemName
+            }/${listData[values.product]?.systemName}/plan-price/${
               values?.plan &&
               listData[values.product]?.trialPlanId != values?.plan
                 ? listData[values.product]?.plansPrice?.[values.price]
@@ -392,7 +416,7 @@ const TenantFormOnboarding = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Display-Name" />{' '}
+                <SafeFormatMessage id="Display-Name" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <input
@@ -418,7 +442,7 @@ const TenantFormOnboarding = ({
           <div className="mb-3">
             {type === 'create' && (
               <AutoGenerateInput
-                label={<FormattedMessage id="System-Name" />}
+                label={<SafeFormatMessage id="System-Name" />}
                 id="systemName"
                 value={formik.values.displayName}
                 name={formik.values.systemName}
@@ -448,7 +472,7 @@ const TenantFormOnboarding = ({
             <div>
               <Form.Group className="mb-1">
                 <Form.Label>
-                  <FormattedMessage id="Product" />{' '}
+                  <SafeFormatMessage id="Product" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
@@ -460,7 +484,7 @@ const TenantFormOnboarding = ({
                   onBlur={formik.handleBlur}
                 >
                   <option value="">
-                    <FormattedMessage id="Select-Option" />
+                    <SafeFormatMessage id="Select-Option" />
                   </option>
                   {options.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -485,13 +509,12 @@ const TenantFormOnboarding = ({
                 type="checkbox"
                 label={
                   <>
-                    <FormattedMessage id="With" />{' '}
+                    <SafeFormatMessage id="With" />{' '}
                     <span style={{ color: 'var(--second-color)' }}>
                       {listData[formik.values.product]?.trialPeriodInDays}{' '}
-                      <FormattedMessage id="Days" />{' '}
+                      <SafeFormatMessage id="Days" />{' '}
                     </span>
-                    <FormattedMessage id="Free-Trial" />{' '}
-                    <FormattedMessage id="Plan" />
+                    <SafeFormatMessage id="Free-Trial-Plan" />{' '}
                   </>
                 }
                 checked={startWithTrial}
@@ -505,7 +528,7 @@ const TenantFormOnboarding = ({
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Plan" />{' '}
+                  <SafeFormatMessage id="Plan" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
@@ -524,7 +547,7 @@ const TenantFormOnboarding = ({
                   disabled={!formik.values.product}
                 >
                   <option value="">
-                    <FormattedMessage id="Select-Option" />
+                    <SafeFormatMessage id="Select-Option" />
                   </option>
                   {planOptions?.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -543,6 +566,41 @@ const TenantFormOnboarding = ({
               </Form.Group>
             </div>
           )}
+          {type === 'create' && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <SafeFormatMessage id="Currency" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <select
+                  className="form-control"
+                  name="currency"
+                  id="currency"
+                  value={formik.values.currency}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                >
+                  <option value="">
+                    <SafeFormatMessage id="Select-Option" />
+                  </option>
+                  {Object.values(publicCurrenciesList).map((currency) => (
+                    <option key={currency.id} value={currency.id}>
+                      {currency.displayName}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.currency && formik.errors.currency && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.currency}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          )}
           {type === 'create' &&
             (formik.values?.plan
               ? listData[formik.values.product]?.trialPlanId !=
@@ -551,7 +609,7 @@ const TenantFormOnboarding = ({
               <div>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    <FormattedMessage id="Subscription-Options" />{' '}
+                    <SafeFormatMessage id="Subscription-Options" />{' '}
                     <span style={{ color: 'red' }}>*</span>
                   </Form.Label>
                   <select
@@ -569,11 +627,11 @@ const TenantFormOnboarding = ({
                     disabled={!formik.values.plan || !formik.values.product}
                   >
                     <option value="">
-                      <FormattedMessage id="Select-Option" />{' '}
+                      <SafeFormatMessage id="Select-Option" />{' '}
                     </option>
                     {priceList.map((option) => (
                       <option key={option.value} value={option.value}>
-                        <span className="dolar">$</span>
+                        {/* <span className="dolar">$</span> */}
                         <div className="price">{option.price}</div>/
                         <div className="cycle">{option.cycle}</div>
                         {option.label}
@@ -612,14 +670,14 @@ const TenantFormOnboarding = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

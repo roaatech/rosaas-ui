@@ -1,6 +1,9 @@
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
+  .main-container {
+    padding: 4%;
+  }
   .p-steps .p-steps-current.p-steps-item:before {
     border-color: var(--second-color) !important;
   }
@@ -22,5 +25,8 @@ export const Wrapper = styled.div`
   .form-check-input:checked {
     background-color: var(--second-color);
     border-color: var(--second-color);
+  }
+  .hidden {
+    display: none;
   }
 `

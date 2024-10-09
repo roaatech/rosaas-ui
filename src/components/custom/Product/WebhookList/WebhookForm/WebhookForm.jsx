@@ -20,6 +20,7 @@ import {
   setAllWebhookEndpoints,
 } from '../../../../../store/slices/products/productsSlice'
 import DataLabelWhite from '../../../Shared/DateLabelWhite/DateLabelWhite'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const CreateWebhookForm = ({
   visible,
@@ -282,7 +283,7 @@ const CreateWebhookForm = ({
         <Modal.Body>
           <Form.Group className="mb-3" controlId="endpointURL">
             <Form.Label>
-              <FormattedMessage id="Endpoint-URL" />
+              <SafeFormatMessage id="Endpoint-URL" />
               <span className="text-danger">*</span>
             </Form.Label>
             <Form.Control
@@ -302,7 +303,7 @@ const CreateWebhookForm = ({
           <Form.Group className="mb-3" controlId="signingSecret">
             {/* Use AutoGenerateInput for Signing Secret */}
             <AutoGenerateInput
-              label={<FormattedMessage id="Signing-Secret" />}
+              label={<SafeFormatMessage id="Signing-Secret" />}
               id="signingSecret"
               value={formik.values.signingSecret}
               name={formik.values.signingSecret}
@@ -325,7 +326,7 @@ const CreateWebhookForm = ({
 
           <Form.Group controlId="events">
             <Form.Label>
-              <FormattedMessage id="Select-events-to-listen-to" />
+              <SafeFormatMessage id="Select-events-to-listen-to" />
               <span className="text-danger">*</span>
             </Form.Label>
             <TreeSelect
@@ -338,7 +339,7 @@ const CreateWebhookForm = ({
               options={nodes}
               ngModel="selectedNodes2"
               className=" w-full"
-              placeholder={<FormattedMessage id="Select-Items" />}
+              placeholder={<SafeFormatMessage id="Select-Items" />}
               metaKeySelection={false}
               selectionMode="checkbox"
             />
@@ -347,13 +348,13 @@ const CreateWebhookForm = ({
               {formik.errors.events}
             </Form.Control.Feedback>
             {/* <Button onClick={handleSelectAll} className="mt-2">
-              <FormattedMessage id="Select-All" />
+              <SafeFormatMessage id="Select-All" />
             </Button> */}
           </Form.Group>
           <div className="mb-3">{renderEvents(eventsValues)}</div>
           <Form.Group className="mb-3" controlId="description">
             <Form.Label>
-              <FormattedMessage id="Description" />
+              <SafeFormatMessage id="Description" />
             </Form.Label>
             <TextareaAndCounter
               addTextarea={formik.setFieldValue}
@@ -365,7 +366,7 @@ const CreateWebhookForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
         </Modal.Footer>
       </Form>

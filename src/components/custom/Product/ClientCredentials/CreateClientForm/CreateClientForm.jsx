@@ -24,7 +24,7 @@ import {
 import { BsCheckCircleFill } from 'react-icons/bs'
 import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
-import { Product_Client_id } from '../../../../../const/product.js'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
   const { createClient, regenerateClientSecret, updateClient, getClientId } =
     useRequest()
@@ -33,7 +33,9 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
   const productId = routeParams.id
   const allProducts = useSelector((state) => state.products.products)
 
-  const id = allProducts[productId]?.client.id
+  const id =
+    allProducts[productId]?.client?.id ||
+    allProducts[productId]?.productOwner?.id
   const clientItem =
     currentId && allProducts[productId].clientCredentials[currentId]
 
@@ -50,17 +52,17 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
 
   const validationSchema = Yup.object().shape({
     displayName: Yup.string()
-      .required(<FormattedMessage id="Display-Name-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+      .required(<SafeFormatMessage id="Display-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />),
     clientId: Yup.string().when('type', {
       is: 'create',
       then: Yup.string()
-        .required(<FormattedMessage id="Field-is-required" />)
-        .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
+        .required(<SafeFormatMessage id="Field-is-required" />)
+        .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />),
     }),
     description: Yup.string(),
     accessTokenLifetimeInHour: Yup.number().required(
-      <FormattedMessage id="field-is-required" />
+      <SafeFormatMessage id="field-is-required" />
     ),
   })
 
@@ -74,7 +76,7 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
       if (type === 'create') {
         let clientSecret
 
-        clientSecret = await createClient(productId, Product_Client_id, {
+        clientSecret = await createClient(productId, id, {
           clientId: values.clientId,
           displayName: values.displayName,
           description: values.description,
@@ -139,7 +141,7 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
               popupLabel
             ) : (
               <>
-                <FormattedMessage id="Secret-generated-successfully" />{' '}
+                <SafeFormatMessage id="Secret-generated-successfully" />{' '}
                 <BsCheckCircleFill
                   style={{ color: 'green', marginLeft: '5px' }}
                 />
@@ -156,7 +158,7 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
         <Modal.Body>
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Display-Name" />{' '}
+              <SafeFormatMessage id="Display-Name" />{' '}
               <span style={{ color: 'red' }}>*</span>
             </Form.Label>
 
@@ -181,7 +183,7 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
           <div className="mb-3">
             {type === 'create' && (
               <AutoGenerateInput
-                label={<FormattedMessage id="Client-Id" />}
+                label={<SafeFormatMessage id="Client-Id" />}
                 id="clientId"
                 value={formik.values.displayName}
                 name={formik.values.clientId}
@@ -210,7 +212,7 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
 
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Description" />
+              <SafeFormatMessage id="Description" />
             </Form.Label>
 
             <TextareaAndCounter
@@ -231,7 +233,7 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>
-              <FormattedMessage id="Access-Token-Lifetime-In-Hour" />{' '}
+              <SafeFormatMessage id="Access-Token-Lifetime-In-Hour" />{' '}
               <span style={{ color: 'red' }}>*</span>
             </Form.Label>
 
@@ -257,7 +259,7 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
 
           <Button
@@ -265,7 +267,7 @@ const CreateClientForm = ({ type, setVisible, popupLabel, currentId }) => {
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

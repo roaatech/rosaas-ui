@@ -7,10 +7,10 @@ import { useEffect } from 'react'
 import Navbar from '../../../Navbar/Navbar'
 import { useIntl, FormattedMessage } from 'react-intl'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { breadcrumbFun } from '../../../../const/breadcrumb'
-import { Routes } from '../../../../routes'
-
+import { adminPanel, Routes } from '../../../../routes'
+import EnvironmentAlert from '../../../Navbar/EnvironmentAlert/EnvironmentAlert'
 const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
   const routeParams = useParams()
   let direction = useSelector((state) => state.main.direction)
@@ -18,9 +18,10 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
   const intl = useIntl()
   const hasInfo = breadcrumbInfo ? 'yes' : null
   let navigation = '#'
+  const navigate = useNavigate()
   const breadcrumbConst = breadcrumbFun(routeParams, data)
   if (breadcrumbInfo) {
-    if (breadcrumbConst[breadcrumbInfo].navigation) {
+    if (breadcrumbConst?.[breadcrumbInfo]?.navigation) {
       navigation = breadcrumbConst[breadcrumbInfo].navigation
       if (param1) {
         navigation = breadcrumbConst[breadcrumbInfo].navigation.replace(
@@ -32,7 +33,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
   }
   useEffect(() => {
     if (breadcrumbInfo) {
-      if (breadcrumbConst[breadcrumbInfo].name || parent) {
+      if (breadcrumbConst[breadcrumbInfo]?.name || parent) {
         document.title = `RoSaaS - ${intl.formatMessage({
           id: breadcrumbConst[breadcrumbInfo].name,
         })}`
@@ -40,9 +41,12 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
     }
   })
   const pathname = window.location.pathname
+  const location = useLocation()
+  const atAdminPanel = location.pathname.includes(adminPanel)
 
   return (
     <>
+      {atAdminPanel && <EnvironmentAlert atAdminPanel={atAdminPanel} />}
       <Wrapper
         direction={direction}
         className="d-xl-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2"
@@ -55,14 +59,14 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                 className: 'breadcrumb-dark breadcrumb-transparent',
               }}
             >
-              <Breadcrumb.Item href={Routes.mainPage.path}>
+              <Breadcrumb.Item onClick={() => navigate(Routes.mainPage.path)}>
                 <BsFillHouseDoorFill />
               </Breadcrumb.Item>
 
               {pathname != ('/' || Routes.workSpace.path) &&
                 userRole != 'tenantAdmin' && (
                   <>
-                    {breadcrumbConst[breadcrumbInfo].title && (
+                    {breadcrumbConst[breadcrumbInfo]?.title && (
                       <Breadcrumb.Item
                         // href={navigation}
                         active={
@@ -76,7 +80,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                       </Breadcrumb.Item>
                     )}
 
-                    {breadcrumbConst[breadcrumbInfo].parent && (
+                    {breadcrumbConst[breadcrumbInfo]?.parent && (
                       <Breadcrumb.Item
                         href={
                           breadcrumbConst[breadcrumbInfo]?.parentNavigation ||
@@ -95,7 +99,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                       </Breadcrumb.Item>
                     )}
 
-                    {breadcrumbConst[breadcrumbInfo].name && (
+                    {breadcrumbConst[breadcrumbInfo]?.name && (
                       <Breadcrumb.Item
                         href={navigation}
                         active={
@@ -111,7 +115,7 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                       </Breadcrumb.Item>
                     )}
 
-                    {breadcrumbConst[breadcrumbInfo].child && (
+                    {breadcrumbConst[breadcrumbInfo]?.child && (
                       <Breadcrumb.Item
                         href={navigation}
                         active={

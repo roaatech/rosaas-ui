@@ -12,6 +12,28 @@ const setAllProduct = (state, action) => {
   })
   state.products = allProduct
 }
+const setAllProductsLookup = (state, action) => {
+  const allProduct = JSON.parse(
+    JSON.stringify(current(state.lookup.productsLookup))
+  )
+  action?.payload?.forEach((item) => {
+    if (!{ ...current(state.lookup.productsLookup) }[item.id]) {
+      allProduct[item.id] = item
+    }
+  })
+  state.lookup.productsLookup = allProduct
+}
+const updateAllProduct = (state, action) => {
+  const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+  action?.payload?.forEach((item) => {
+    if (!{ ...current(state.products) }[item.id]) {
+      allProduct[item.id] = item
+    } else {
+      allProduct[item.id] = { ...allProduct[item.id], ...item }
+    }
+  })
+  state.products = allProduct
+}
 
 const productInfo = (state, action) => {
   const currentProducts = { ...current(state.products) }
@@ -288,4 +310,6 @@ export {
   clientSecretInfo,
   clientSecretAttr,
   updateClientCredentialAttr,
+  updateAllProduct,
+  setAllProductsLookup,
 }

@@ -22,6 +22,24 @@ const useUserReq = () => {
       data
     )
   }
+  const getAuditsList = async (query) => {
+    return await Request.get(`management/sadmin/v1/Audits${query}`)
+  }
+  const getAditsActionListLookup = async () => {
+    return await Request.get(`management/sadmin/v1/Audits/Actions`)
+  }
+  const getLogsList = async (query) => {
+    return await Request.get(`management/sadmin/v1/Logs${query}`)
+  }
+  const getAuditById = async (id) => {
+    return await Request.get(`management/sadmin/v1/Audits/${id}`)
+  }
+  const getLogById = async (id) => {
+    return await Request.get(`management/sadmin/v1/Logs/${id}`)
+  }
+  const deleteLogBeforeDate = async (data) => {
+    return await Request.delete(`management/sadmin/v1/Logs`, { data })
+  }
   const signUp = async (data) => {
     return await Request.post('identity/tadmin/v1/Auth/Signup', data)
   }
@@ -43,8 +61,12 @@ const useUserReq = () => {
   const userData = async () => {
     return await Request.get('identity/sadmin/v1/Account')
   }
+  const getEnvironment = async () => {
+    return await Request.get('v1/Environment')
+  }
 
   return {
+    getEnvironment,
     SignInAdminAsync,
     SignInProductOwnerAsync,
     SignInTenantAdminAsync,
@@ -55,6 +77,12 @@ const useUserReq = () => {
     confirmEmail,
     requestPasswordReset,
     resetPassword,
+    getAuditsList,
+    getAuditById,
+    getLogsList,
+    getLogById,
+    deleteLogBeforeDate,
+    getAditsActionListLookup,
   }
 }
 

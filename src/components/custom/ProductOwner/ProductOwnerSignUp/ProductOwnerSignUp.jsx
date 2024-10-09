@@ -18,6 +18,7 @@ import Wrapper from './ProductOwnerSignUp.styled'
 import { MdOutlineArrowRight } from 'react-icons/md'
 import { useRef, useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const CreateProductOwner = () => {
   const [recaptchaToken, setRecaptchaToken] = useState(null)
@@ -91,11 +92,11 @@ const CreateProductOwner = () => {
             <div>
               <Card.Header className="mb-3">
                 <Card.Title className="mb-0">
-                  <FormattedMessage id="Admin-Info" />
+                  <SafeFormatMessage id="Admin-Info" />
                 </Card.Title>
               </Card.Header>
               <label htmlFor="fullName" className="pb-2">
-                <FormattedMessage id="Admin-Full-Name" />
+                <SafeFormatMessage id="Admin-Full-Name" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -116,7 +117,7 @@ const CreateProductOwner = () => {
             </div>
             <div>
               <label htmlFor="mobileNumber" className="pb-2">
-                <FormattedMessage id="Admin-Phone" />
+                <SafeFormatMessage id="Admin-Phone" />
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -137,7 +138,7 @@ const CreateProductOwner = () => {
             </div>
             <div>
               <label htmlFor="email" className="pb-2">
-                <FormattedMessage id="Admin-Email" />
+                <SafeFormatMessage id="Admin-Email" />
                 <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
@@ -154,7 +155,7 @@ const CreateProductOwner = () => {
             </div>
             <div>
               <label htmlFor="password" className="pb-2">
-                <FormattedMessage id="Password" />
+                <SafeFormatMessage id="Password" />
                 <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
@@ -176,7 +177,7 @@ const CreateProductOwner = () => {
             </div>
             <div>
               <label htmlFor="confirmPassword" className="pb-2">
-                <FormattedMessage id="Confirm-Password" />
+                <SafeFormatMessage id="Confirm-Password" />
                 <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
@@ -213,7 +214,7 @@ const CreateProductOwner = () => {
                 className="w-100"
                 disabled={isSubmitting || !recaptchaToken}
               >
-                <FormattedMessage id="signUp" />
+                <SafeFormatMessage id="signUp" />
               </Button>
             </div>
           </Form>

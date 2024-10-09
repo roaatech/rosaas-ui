@@ -7,7 +7,9 @@ export const Wrapper = styled.div`
   .product-name {
     color: #ffbc2b;
   }
-
+  .main-container {
+    margin-top: 90px;
+  }
   .product-link:hover {
     background-color: #cccccc49;
   }
@@ -20,11 +22,21 @@ export const Wrapper = styled.div`
     text-overflow: ellipsis;
     max-width: 100%; /* optional, depends on your layout */
   }
-
+  .rosaas-management-area-card .card-body {
+    background-color: #ffdead3b;
+  }
   .product-title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
+  }
+  .row > * {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .row {
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
   .product-sentence {

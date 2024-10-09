@@ -49,6 +49,9 @@ const usePaymentReq = () => {
       data
     )
   }
+  const checkOrderCurrencyChange = async (orderId, data) => {
+    return await Request.put(`public/v1/Orders/${orderId}/Currency`, data)
+  }
 
   return {
     getOrderById,
@@ -65,6 +68,7 @@ const usePaymentReq = () => {
     attachPaymentMethodCard,
     markCardAsDefault,
     getInvoicesList,
+    checkOrderCurrencyChange,
   }
 }
 

@@ -21,6 +21,7 @@ import {
   workspaceUpdateProduct,
 } from '../../../../../store/slices/workSpace.js'
 import { cardInfo } from '../../../../../const/cardPayment.js'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 // Define the component
 const WorkspaceUpDowngradeForm = ({
@@ -40,10 +41,10 @@ const WorkspaceUpDowngradeForm = ({
   // Define validation schema for Formik form
   const validationSchema = Yup.object().shape({
     card: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
+      <SafeFormatMessage id="This-field-is-required" />
     ),
     subscriptionOption: Yup.string().required(
-      <FormattedMessage id="This-field-is-required" />
+      <SafeFormatMessage id="This-field-is-required" />
     ),
   })
   const autoRenewalData = useSelector(
@@ -387,13 +388,13 @@ const WorkspaceUpDowngradeForm = ({
           {/* Subscription cycle radio buttons */}
           <Form.Group className="mb-4">
             <Form.Label>
-              <FormattedMessage id="Subscription Cycle" />
+              <SafeFormatMessage id="Subscription Cycle" />
             </Form.Label>
             <div className="d-flex form-control justify-content-center">
               {/* Monthly cycle radio button */}
               <Form.Check
                 inline
-                label={<FormattedMessage id="Monthly" />}
+                label={<SafeFormatMessage id="Monthly" />}
                 type="radio"
                 id="monthlyCycle"
                 name="cycle"
@@ -405,7 +406,7 @@ const WorkspaceUpDowngradeForm = ({
               {/* Yearly cycle radio button */}
               <Form.Check
                 inline
-                label={<FormattedMessage id="Yearly" />}
+                label={<SafeFormatMessage id="Yearly" />}
                 type="radio"
                 id="yearlyCycle"
                 name="cycle"
@@ -419,7 +420,7 @@ const WorkspaceUpDowngradeForm = ({
           {/* Subscription options dropdown */}
           <Form.Group className="mb-4">
             <Form.Label>
-              <FormattedMessage id="Subscription-Options" />{' '}
+              <SafeFormatMessage id="Subscription-Options" />{' '}
               <span style={{ color: 'red' }}>*</span>
             </Form.Label>
             <ListBox
@@ -445,9 +446,9 @@ const WorkspaceUpDowngradeForm = ({
                       $ /{' '}
                       {priceList.find((price) => price.planId === option.value)
                         ?.label.cycle == 3 ? (
-                        <FormattedMessage id="Month" />
+                        <SafeFormatMessage id="Month" />
                       ) : (
-                        <FormattedMessage id="Year" />
+                        <SafeFormatMessage id="Year" />
                       )}
                     </div>
                   ),
@@ -493,7 +494,7 @@ const WorkspaceUpDowngradeForm = ({
           {/* Payment card dropdown */}
           <Form.Group>
             <Form.Label>
-              <FormattedMessage id="Payment-Card" />{' '}
+              <SafeFormatMessage id="Payment-Card" />{' '}
               <span style={{ color: 'red' }}>*</span>
             </Form.Label>
             <ListBox
@@ -555,7 +556,7 @@ const WorkspaceUpDowngradeForm = ({
         <Modal.Footer>
           {/* Submit button */}
           <Button variant="secondary" type="submit" disabled={submitLoading}>
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           {/* Close button */}
           <Button
@@ -563,7 +564,7 @@ const WorkspaceUpDowngradeForm = ({
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

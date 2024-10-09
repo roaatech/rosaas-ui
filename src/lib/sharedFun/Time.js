@@ -45,7 +45,48 @@ export const DataTransform = (dateTime) => {
   return formattedDateTime
 }
 
+export const UppercaseMonthDateFormat = (
+  dateTime,
+  withTime = false,
+  withSeconds = false,
+  withMilliseconds = false
+) => {
+  if (!dateTime || isNaN(new Date(dateTime).getTime())) {
+    return ''
+  }
+
+  const utcDateTime = dateTime ? new Date(dateTime + 'Z') : ''
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const localDateTime = utcToZonedTime(utcDateTime, timeZone)
+
+  const currentYear = new Date().getFullYear()
+  const dateYear = localDateTime.getFullYear()
+
+  const dateFormat = currentYear === dateYear ? 'MMM dd' : 'MMM dd, yyyy'
+
+  // Add milliseconds to the time format based on the flags
+  let timeFormat = 'hh:mm'
+  if (withSeconds) {
+    timeFormat += ':ss'
+  }
+  if (withMilliseconds) {
+    timeFormat += '.SSS'
+  }
+
+  const formattedDateTime = format(
+    localDateTime,
+    withTime ? `${dateFormat}, ${timeFormat}` : dateFormat,
+    { timeZone }
+  )
+
+  return formattedDateTime.toUpperCase()
+}
+
 export const formatDate = (dateTime) => {
+  if (!dateTime || isNaN(new Date(dateTime).getTime())) {
+    return ''
+  }
+
   const utcDateTime = dateTime ? new Date(dateTime + 'Z') : ''
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = dateTime ? utcToZonedTime(utcDateTime, timeZone) : ''
@@ -58,7 +99,6 @@ export const formatDate = (dateTime) => {
 
   return formattedDate
 }
-
 export const timeDifferenceFromNow = (targetDate) => {
   // Convert the targetDate parameter to a Date object if it is not already
   if (!(targetDate instanceof Date)) {

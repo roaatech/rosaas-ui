@@ -27,6 +27,7 @@ import {
 import FeaturePlanForm from './FeaturePlanForm/FeaturePlanForm'
 import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import { Wrapper } from './ProductFeaturePlan.styled'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export default function ProductFeaturePlan({ children }) {
   const dispatch = useDispatch()
@@ -138,14 +139,14 @@ export default function ProductFeaturePlan({ children }) {
             <Dropdown.Menu>
               <Dropdown.Item onSelect={() => editForm(id)}>
                 <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                <FormattedMessage id="Edit" />
+                <SafeFormatMessage id="Edit" />
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={() => deleteConfirm(id)}
                 className="text-danger"
               >
                 <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                <FormattedMessage id="Delete" />
+                <SafeFormatMessage id="Delete" />
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -166,22 +167,22 @@ export default function ProductFeaturePlan({ children }) {
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="Feature" />
+                    <SafeFormatMessage id="Feature" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Plan" />
+                    <SafeFormatMessage id="Plan" />
                   </th>
                   <th className="border-bottom description">
-                    <FormattedMessage id="Description" />
+                    <SafeFormatMessage id="Description" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Limit" />
+                    <SafeFormatMessage id="Limit" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Date" />
+                    <SafeFormatMessage id="Date" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Actions" />
+                    <SafeFormatMessage id="Actions" />
                   </th>
                 </tr>
               </thead>
@@ -195,7 +196,7 @@ export default function ProductFeaturePlan({ children }) {
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-feature-plan-confirmation-message" />
+                <SafeFormatMessage id="delete-feature-plan-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
@@ -209,7 +210,7 @@ export default function ProductFeaturePlan({ children }) {
 
       <ThemeDialog visible={visible} setVisible={setVisible}>
         <FeaturePlanForm
-          popupLabel={<FormattedMessage id={popUpLable} />}
+          popupLabel={<SafeFormatMessage id={popUpLable} />}
           type={type}
           FeaturePlanData={type == 'edit' ? listData[currentId] : {}}
           setVisible={setVisible}

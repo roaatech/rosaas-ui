@@ -13,6 +13,11 @@ export const productsSlice = createSlice({
   name: 'products',
   initialState: {
     products: {},
+    validationUrl: {
+      path: 'https://example.com/validate',
+      method: 'Post',
+    },
+    lookup: { productsLookup: {}, plansLookup: {} },
   },
 
   reducers: {
@@ -35,12 +40,14 @@ export const productsSlice = createSlice({
 })
 
 export const {
+  updateAllProduct,
   setAllSpecifications,
   specificationInfo,
   specificationChangeAttr,
   deleteSpecification,
   setAllProduct,
   subscribe,
+  sortSubscriptions,
   productInfo,
   removeProductStore,
   setAllFeaturePlan,
@@ -79,5 +86,11 @@ export const {
   WebhookEndpointsChangeAttr,
   deleteWebhookEndpointById,
   deleteAllWebhookEndpoints,
+  deleteAllPlanPriceBySystemName,
+  filterSubscriptions,
+  setSearchTerm,
+  changeSubscriptionAttr,
+  setAllProductsLookup,
+  setAllPlansLookup,
 } = productsSlice.actions
 export default productsSlice.reducer

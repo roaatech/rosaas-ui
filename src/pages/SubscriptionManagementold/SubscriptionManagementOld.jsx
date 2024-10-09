@@ -52,6 +52,7 @@ import {
   SubscriptionPlanChangeStatus,
   SubscriptionResetStatus,
 } from '../../const/subscriptionManagement'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const SubscriptionManagement = (props) => {
   const routeParams = useParams()
@@ -206,7 +207,7 @@ const SubscriptionManagement = (props) => {
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Subscription-Management" />:{' '}
+              <SafeFormatMessage id="Subscription-Management" />:{' '}
               {tenantsData[routeParams.id]?.systemName}
             </h4>
             <DynamicButtons
@@ -285,7 +286,7 @@ const SubscriptionManagement = (props) => {
                               <Card.Body className="py-0 px-0">
                                 <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                                   <div className="mb-0 w-25 fw-bold">
-                                    <FormattedMessage id="Product" />
+                                    <SafeFormatMessage id="Product" />
                                     <span className="fw-normal ml-2">
                                       <OverlayTrigger
                                         trigger={['hover', 'focus']}
@@ -318,11 +319,11 @@ const SubscriptionManagement = (props) => {
                                 </div>
                                 <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                                   <div className="mb-0 w-25 fw-bold">
-                                    <FormattedMessage id="Subscription" />
+                                    <SafeFormatMessage id="Subscription" />
                                   </div>
                                   <div className=" card-stats">
                                     ${subscriptionDatas.planPrice} /{' '}
-                                    <FormattedMessage
+                                    <SafeFormatMessage
                                       id={cycle[subscriptionDatas.planCycle]}
                                     />
                                   </div>
@@ -333,7 +334,7 @@ const SubscriptionManagement = (props) => {
                               <Card.Body className="py-0 px-0 ">
                                 <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                                   <div className="mb-0 w-25 fw-bold">
-                                    <FormattedMessage id="Plan" />
+                                    <SafeFormatMessage id="Plan" />
                                   </div>
                                   <div className=" card-stats">
                                     {subscriptionDatas.planName}
@@ -342,7 +343,7 @@ const SubscriptionManagement = (props) => {
 
                                 <div className="d-flex align-items-center justify-content-between border-bottom  border-light py-2 ">
                                   <div className="mb-0 w-25 fw-bold">
-                                    <FormattedMessage id="Subscription-Status" />
+                                    <SafeFormatMessage id="Subscription-Status" />
                                   </div>
                                   <div className=" card-stats">
                                     {subscriptionDatas.subscriptionStatus
@@ -359,7 +360,7 @@ const SubscriptionManagement = (props) => {
                               <Card.Body className="py-0 px-0">
                                 <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                                   <div className="mb-0 w-25 fw-bold">
-                                    <FormattedMessage id="Auto-Renewal" />{' '}
+                                    <SafeFormatMessage id="Auto-Renewal" />{' '}
                                     <FontAwesomeIcon
                                       icon={
                                         subscriptionDatas.autoRenewal
@@ -388,7 +389,7 @@ const SubscriptionManagement = (props) => {
 
                                 <div className="d-flex align-items-center justify-content-between  py-2  border-bottom  border-light ">
                                   <div className="mb-0 fw-bold">
-                                    <FormattedMessage id="Reset-Subs" />
+                                    <SafeFormatMessage id="Reset-Subs" />
                                     <FontAwesomeIcon
                                       className={`${
                                         ResettableAllowed
@@ -419,7 +420,7 @@ const SubscriptionManagement = (props) => {
                                         {subscriptionDatas.subscriptionReset
                                           .lastResetDate && (
                                           <span>
-                                            <FormattedMessage id="Reseted-At" />
+                                            <SafeFormatMessage id="Reseted-At" />
                                             :{' '}
                                             {subscriptionDatas
                                               ?.subscriptionReset.lastResetDate
@@ -439,7 +440,7 @@ const SubscriptionManagement = (props) => {
                                 </div>
                                 <div className="d-flex align-items-center justify-content-between  py-2 ">
                                   <div className="mb-0 w-25 fw-bold">
-                                    <FormattedMessage id="Start-Date" />
+                                    <SafeFormatMessage id="Start-Date" />
                                   </div>
                                   <div className=" card-stats">
                                     <Label
@@ -459,7 +460,7 @@ const SubscriptionManagement = (props) => {
                               <Card.Body className="py-0 px-0 ">
                                 <div className="d-flex align-items-center justify-content-between border-bottom border-light py-2">
                                   <div className="mb-0 fw-bold">
-                                    <FormattedMessage id="Reset-Limit" />
+                                    <SafeFormatMessage id="Reset-Limit" />
 
                                     <FontAwesomeIcon
                                       className={`${
@@ -474,7 +475,7 @@ const SubscriptionManagement = (props) => {
                                   <div className=" card-stats">
                                     {subscriptionDatas.lastLimitsResetDate ? (
                                       <span>
-                                        {/* <FormattedMessage id="Reseted-At" />:{' '} */}
+                                        {/* <SafeFormatMessage id="Reseted-At" />:{' '} */}
                                         {DataTransform(
                                           subscriptionDatas.lastLimitsResetDate
                                         )}
@@ -489,7 +490,7 @@ const SubscriptionManagement = (props) => {
                                     {subscriptionDatas?.subscriptionPlanChange &&
                                     subscriptionDatas?.subscriptionPlanChange
                                       .type ? (
-                                      <FormattedMessage
+                                      <SafeFormatMessage
                                         id={
                                           PlanChangingType[
                                             subscriptionDatas
@@ -500,7 +501,7 @@ const SubscriptionManagement = (props) => {
                                     ) : (
                                       ''
                                     )}{' '}
-                                    <FormattedMessage id="info" />
+                                    <SafeFormatMessage id="info" />
                                   </div>
                                   <div className=" card-stats">
                                     {subscriptionDatas &&
@@ -523,7 +524,7 @@ const SubscriptionManagement = (props) => {
                                                 'var(--orange-yellow-blend)',
                                               value: (
                                                 <>
-                                                  <FormattedMessage
+                                                  <SafeFormatMessage
                                                     id={
                                                       subscriptionDatas
                                                         .subscriptionPlanChange
@@ -555,7 +556,7 @@ const SubscriptionManagement = (props) => {
                                 </div>
                                 <div className="d-flex align-items-center justify-content-between py-2 ">
                                   <div className="mb-0 w-25 fw-bold">
-                                    <FormattedMessage id="End-Date" />
+                                    <SafeFormatMessage id="End-Date" />
                                   </div>
                                   <div className=" card-stats">
                                     <DateLabel
@@ -585,7 +586,7 @@ const SubscriptionManagement = (props) => {
                             >
                               <TabPanel
                                 header={
-                                  <FormattedMessage id="Subscription-Features" />
+                                  <SafeFormatMessage id="Subscription-Features" />
                                 }
                                 key={'subscriptionFeatures'}
                               >
@@ -595,19 +596,19 @@ const SubscriptionManagement = (props) => {
                                       <thead>
                                         <tr>
                                           <th>
-                                            <FormattedMessage id="Feature" />
+                                            <SafeFormatMessage id="Feature" />
                                           </th>
                                           <th>
-                                            <FormattedMessage id="Reset" />
+                                            <SafeFormatMessage id="Reset" />
                                           </th>
                                           <th>
-                                            <FormattedMessage id="Start-Date" />
+                                            <SafeFormatMessage id="Start-Date" />
                                           </th>
                                           <th>
-                                            <FormattedMessage id="End-Date" />
+                                            <SafeFormatMessage id="End-Date" />
                                           </th>
                                           <th>
-                                            <FormattedMessage id="Remind/Limit" />
+                                            <SafeFormatMessage id="Remind/Limit" />
                                           </th>
                                         </tr>
                                       </thead>
@@ -681,7 +682,7 @@ const SubscriptionManagement = (props) => {
                               <TabPanel
                                 key={'featuresHistory'}
                                 header={
-                                  <FormattedMessage id="Features-History" />
+                                  <SafeFormatMessage id="Features-History" />
                                 }
                               >
                                 {' '}
@@ -743,22 +744,22 @@ const SubscriptionManagement = (props) => {
                                                         <thead>
                                                           <tr>
                                                             <th>
-                                                              <FormattedMessage id="Feature" />
+                                                              <SafeFormatMessage id="Feature" />
                                                             </th>
                                                             <th>
-                                                              <FormattedMessage id="Reset" />
+                                                              <SafeFormatMessage id="Reset" />
                                                             </th>
                                                             <th>
-                                                              <FormattedMessage id="Start-Date" />
+                                                              <SafeFormatMessage id="Start-Date" />
                                                             </th>
                                                             <th>
-                                                              <FormattedMessage id="End-Date" />
+                                                              <SafeFormatMessage id="End-Date" />
                                                             </th>
                                                             <th>
-                                                              <FormattedMessage id="usage" />
+                                                              <SafeFormatMessage id="usage" />
                                                             </th>
                                                             <th>
-                                                              <FormattedMessage id="Remind/Limit" />
+                                                              <SafeFormatMessage id="Remind/Limit" />
                                                             </th>
                                                           </tr>
                                                         </thead>
@@ -783,7 +784,7 @@ const SubscriptionManagement = (props) => {
                                                                     }
                                                                   </td>
                                                                   <td>
-                                                                    <FormattedMessage
+                                                                    <SafeFormatMessage
                                                                       id={
                                                                         featureResetMap[
                                                                           cycle
@@ -878,7 +879,7 @@ const SubscriptionManagement = (props) => {
               {
                 <ThemeDialog visible={visible} setVisible={setVisible}>
                   <RenewForm
-                    popupLabel={<FormattedMessage id="Renew-Subscription" />}
+                    popupLabel={<SafeFormatMessage id="Renew-Subscription" />}
                     type={'edit'}
                     tenantData={subscriptionDatas}
                     visible={visible}

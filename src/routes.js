@@ -5,7 +5,6 @@ import ProductDetails from './pages/ProductDetails/ProductDetails'
 import Redirect from './components/custom/global/Redirect/Redirect'
 import Dashboard from './pages/Welcome/Welcome'
 import Product from './pages/Product/Product'
-import signIn from './pages/signIn/signIn'
 import HealthCheckSettings from './pages/Settings/HealthCheckSettings/HealthCheckSettings'
 import SubscriptionsSettings from './pages/Settings/SubscriptionsSettings/SubscriptionsSettings'
 import SubscriptionManagement from './pages/SubscriptionManagement/SubscriptionManagement'
@@ -30,13 +29,33 @@ import ConfirmAccountPage from './pages/ConfirmAccountPage/ConfirmAccountPage'
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 import ProductManagementSignInPage from './pages/ProductManagementSignInPage/ProductManagementSignInPage'
 import ProductManagementSignUpPage from './pages/ProductManagementSignUpPage/ProductManagementSignUpPage'
-const adminPanel = '/admin-panel'
+import DiscountsPage from './pages/DiscountsPage/DiscountsPage'
+import DiscountDetails from './components/custom/Discounts/DiscountDetails'
+import CurrenciesPage from './pages/CurrenciesPage/CurrenciesPage'
+import SignInPage from './pages/signIn/signIn'
+import ExchangeRateProvidersSettings from './pages/Settings/ExchangeRateProvidersSettings/ExchangeRateProvidersSettings'
+import UpdatedTenantsPage from './pages/UpdatedTenantsPage/UpdatedTenantsPage'
+import EnvironmentInfo from './pages/Settings/EnvironmentInfo/EnvironmentInfo'
+import CanceledTenant from './pages/CanceledTenants/CanceledTenants'
+import Audits from './pages/Audits/Audits'
+import Logs from './pages/Logs/Logs'
+import ProcessFailed from './pages/ProcessFailed/ProcessFailed'
+import CanceledAccount from './pages/CanceledAccount/CanceledAccount'
+
+export const adminPanel = '/admin-panel'
+
 export const Routes = {
   Dashboard: {
     path: `${adminPanel}/dashboard`,
     component: () => <POwnerChecker page={<Dashboard />} />,
 
-    roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+  },
+  Logs: {
+    path: `${adminPanel}/system/logs`,
+    component: () => <POwnerChecker page={<Logs />} />,
+
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
   products: {
     path: `${adminPanel}/products`,
@@ -47,7 +66,12 @@ export const Routes = {
   productsOwners: {
     path: `${adminPanel}/products-owners`,
     component: () => <POwnerChecker page={<ProductsOwners />} />,
-    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+    roles: ['superAdmin'],
+  },
+  audits: {
+    path: `${adminPanel}/system/audits`,
+    component: () => <POwnerChecker page={<Audits />} />,
+    roles: ['superAdmin'],
   },
   EmailConfirmationPage: {
     path: `/email-confirmation`,
@@ -55,6 +79,7 @@ export const Routes = {
     roles: '*',
     type: 'noSidebar',
   },
+
   ResetPasswordConfirmPage: {
     path: `/Reset-Password-confirmation`,
     component: ResetPasswordPage,
@@ -63,13 +88,13 @@ export const Routes = {
   },
   mainPage: {
     path: '/',
-    component: MainPage,
+    component: () => <POwnerChecker page={<MainPage />} />,
     roles: '*',
     type: 'noSidebar',
   },
   marketPlacePage: {
     path: '/marketplace',
-    component: Marketplace,
+    component: () => <POwnerChecker page={<Marketplace />} />,
     roles: '*',
     type: 'noSidebar',
   },
@@ -79,11 +104,23 @@ export const Routes = {
     roles: ['notAuth'],
     type: 'noSidebar',
   },
+  ConfirmAccountByPassword: {
+    path: '/auth/password-setup-complete',
+    component: ConfirmAccountPage,
+    roles: ['notAuth'],
+    type: 'noSidebar',
+  },
 
   Tenant: {
     path: `${adminPanel}/tenants`,
-    component: Tenant,
-    roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
+    component: () => <POwnerChecker page={<UpdatedTenantsPage />} />,
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+  },
+
+  UpdatedTenantsPage: {
+    path: `${adminPanel}/old-tenants`,
+    component: () => <POwnerChecker page={<Tenant />} />,
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
 
   Settings: {
@@ -108,67 +145,99 @@ export const Routes = {
     component: SubscriptionsSettings,
     roles: ['superAdmin'],
   },
+  ExchangeRateProvidersSettings: {
+    path: `${adminPanel}/settings/exchange-rate-providers`,
+    component: ExchangeRateProvidersSettings,
+    roles: ['superAdmin'],
+  },
+  EnvironmentInfo: {
+    path: `${adminPanel}/system/environment-info`,
+    component: EnvironmentInfo,
+    roles: ['superAdmin'],
+  },
 
   ProductWarningsSettings: {
     path: `${adminPanel}/settings/product-warnings`,
     component: ProductWarningsSettings,
     roles: ['superAdmin'],
   },
+  DiscountsPage: {
+    path: `${adminPanel}/settings/discounts`,
+
+    component: () => <POwnerChecker page={<DiscountsPage />} />,
+
+    roles: ['superAdmin', 'clientAdmin'],
+  },
+  CurrenciesPage: {
+    path: `${adminPanel}/settings/currencies`,
+
+    component: () => <POwnerChecker page={<CurrenciesPage />} />,
+
+    roles: ['superAdmin', 'clientAdmin'],
+  },
 
   SignInTenantAdmin: {
     path: '/workspace/sign-in',
-    component: signIn,
+    component: () => <POwnerChecker page={<SignInPage />} />,
+
     roles: ['notAuth'],
     type: 'noSidebar',
   },
   SignInSuperAdmin: {
     path: `${adminPanel}/sign-in`,
-    component: signIn,
+    component: () => <POwnerChecker page={<SignInPage />} />,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
   ProductManagementSignIn: {
     path: '/product-management/sign-in',
-    component: ProductManagementSignInPage,
+    component: () => <POwnerChecker page={<ProductManagementSignInPage />} />,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
 
   CheckOut: {
     path: '/checkout/:productOwnerSystemName/:productSystemName/plan-price/:priceName',
-    component: TwoStepProcessPage,
+    component: () => <POwnerChecker page={<TwoStepProcessPage />} />,
     roles: '*',
     type: 'noSidebar',
   },
 
   CheckOutOrder: {
     path: '/checkout/:productOwnerSystemName/:productSystemName/plan-price/:priceName/order/:orderIDParam',
-    component: TwoStepProcessPage,
+    component: () => <POwnerChecker page={<TwoStepProcessPage />} />,
     roles: '*',
     type: 'noSidebar',
   },
 
   SignUp: {
     path: '/workspace/sign-up',
-    component: SignUpPage,
+    component: () => <POwnerChecker page={<SignUpPage />} />,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
   ResetPasswordRequest: {
     path: '/reset-password-request',
-    component: signIn,
+    component: () => <POwnerChecker page={<SignInPage />} />,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
+
   ResetPasswordConfirm: {
     path: '/auth/reset-password',
-    component: signIn,
+    component: () => <POwnerChecker page={<SignInPage />} />,
+    roles: ['notAuth'],
+    type: 'noSidebar',
+  },
+  setPassword: {
+    path: '/auth/set-password',
+    component: () => <POwnerChecker page={<SignInPage />} />,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
   POwnerSignUp: {
     path: '/product-management/sign-up',
-    component: ProductManagementSignUpPage,
+    component: () => <POwnerChecker page={<ProductManagementSignUpPage />} />,
     roles: ['notAuth'],
     type: 'noSidebar',
   },
@@ -180,23 +249,40 @@ export const Routes = {
   },
 
   PaymentSuccess: {
-    path: '/success',
-    component: PaymentSuccess,
-    roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
+    path: '/payment/success',
+    component: () => <POwnerChecker page={<PaymentSuccess />} />,
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
+    type: 'noSidebar',
+  },
+  successRegistrationPayment: {
+    path: '/payment/product-owner/success',
+    component: () => <POwnerChecker page={<PaymentSuccess />} />,
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
     type: 'noSidebar',
   },
 
   PaymentFailed: {
-    path: '/failed',
-    component: PaymentFailed,
-    roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
+    path: '/payment/failed',
+    component: () => <POwnerChecker page={<PaymentFailed />} />,
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
     type: 'noSidebar',
   },
-
+  ProcessFailed: {
+    path: '/process-failed',
+    component: () => <POwnerChecker page={<ProcessFailed />} />,
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
+    type: 'noSidebar',
+  },
+  CanceledAccount: {
+    path: '/product-owner/canceled-account',
+    component: () => <POwnerChecker page={<CanceledAccount />} />,
+    roles: ['superAdmin', 'clientAdmin'],
+    type: 'noSidebar',
+  },
   CreatedSuccess: {
     path: '/created-successfully',
     component: CreatedSuccess,
-    roles: ['tenantAdmin', 'superAdmin', 'notAuth'],
+    roles: ['tenantAdmin', 'superAdmin', 'notAuth', 'clientAdmin'],
     type: 'noSidebar',
   },
 
@@ -225,22 +311,32 @@ Routes.ProductDetails = {
   component: ProductDetails,
   roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
 }
+Routes.CanceledTenantsPage = {
+  path: `${Routes.Tenant.path}/canceled`,
+  component: () => <POwnerChecker page={<CanceledTenant />} />,
+  roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+}
 
 Routes.Pricing = {
   path: `${Routes.marketPlacePage.path}/:productOwnerSystemName/:productSystemName`,
-  component: PricingPage,
+  component: () => <POwnerChecker page={<PricingPage />} />,
   roles: '*' || ['notAuth'],
   type: 'noSidebar',
 }
 Routes.SubscriptionManagement = {
   path: `${Routes.Tenant.path}/:id/Subscription-Management`,
   component: SubscriptionManagement,
-  roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
+  roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
 }
 Routes.TenantDetails = {
   path: `${Routes.Tenant.path}/:id`,
   component: TenantDetails,
-  roles: ['superAdmin', 'tenantAdmin', 'productAdmin', 'clientAdmin'],
+  roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+}
+Routes.DiscountDetails = {
+  path: `${Routes.DiscountsPage.path}/:id`,
+  component: DiscountDetails,
+  roles: ['superAdmin', 'clientAdmin'],
 }
 Routes.ProductsOwnersDetails = {
   path: `${Routes.productsOwners.path}/:id`,

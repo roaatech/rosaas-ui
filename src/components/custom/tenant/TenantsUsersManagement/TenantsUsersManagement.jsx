@@ -35,6 +35,7 @@ import {
 } from '../../../../store/slices/tenants'
 import { Owner } from '../../../../const'
 import { MdPersonAdd, MdPersonAddDisabled } from 'react-icons/md'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const TenantsUsersManagement = () => {
   const tenantData = useSelector((state) => state.tenants.tenants)
@@ -98,7 +99,7 @@ const TenantsUsersManagement = () => {
           </td>
           <td>
             <span className="fw-normal">
-              {Owner?.[userType] && <FormattedMessage id={Owner[userType]} />}
+              {Owner?.[userType] && <SafeFormatMessage id={Owner[userType]} />}
             </span>
           </td>
 
@@ -130,12 +131,12 @@ const TenantsUsersManagement = () => {
                   {isMajor ? (
                     <span className=" ">
                       <MdPersonAddDisabled className="mx-2" />{' '}
-                      <FormattedMessage id="Deauthorize" />
+                      <SafeFormatMessage id="Deauthorize" />
                     </span>
                   ) : (
                     <span className=" ">
                       <MdPersonAdd className="mx-2" />
-                      <FormattedMessage id="Authorize" />
+                      <SafeFormatMessage id="Authorize" />
                     </span>
                   )}
                 </Dropdown.Item>
@@ -144,7 +145,7 @@ const TenantsUsersManagement = () => {
                   className="text-danger"
                 >
                   <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                  <FormattedMessage id="Delete" />
+                  <SafeFormatMessage id="Delete" />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -159,7 +160,7 @@ const TenantsUsersManagement = () => {
         <DynamicButtons
           buttons={[
             {
-              popupLabel: <FormattedMessage id="Create-New-User" />,
+              popupLabel: <SafeFormatMessage id="Create-New-User" />,
               order: 1,
               type: 'form',
               label: 'New-User',
@@ -171,7 +172,7 @@ const TenantsUsersManagement = () => {
               setUpdate,
             },
             {
-              popupLabel: <FormattedMessage id="Add-New-User" />,
+              popupLabel: <SafeFormatMessage id="Add-New-User" />,
               order: 4,
               type: 'form',
               label: 'Add-User',
@@ -191,21 +192,21 @@ const TenantsUsersManagement = () => {
         <thead>
           <tr>
             <th className="border-bottom">
-              <FormattedMessage id="Email" />
+              <SafeFormatMessage id="Email" />
             </th>
             <th className="border-bottom">
-              <FormattedMessage id="User-Type" />
+              <SafeFormatMessage id="User-Type" />
             </th>
             <th className="border-bottom">
-              <FormattedMessage id="Status" />
-            </th>
-
-            <th className="border-bottom">
-              <FormattedMessage id="Created-Date" />
+              <SafeFormatMessage id="Status" />
             </th>
 
             <th className="border-bottom">
-              <FormattedMessage id="Actions" />
+              <SafeFormatMessage id="Created-Date" />
+            </th>
+
+            <th className="border-bottom">
+              <SafeFormatMessage id="Actions" />
             </th>
           </tr>
         </thead>
@@ -220,7 +221,7 @@ const TenantsUsersManagement = () => {
         </tbody>
       </Table>
       <DeleteConfirmation
-        message={<FormattedMessage id="remove-user-message" />}
+        message={<SafeFormatMessage id="remove-user-message" />}
         icon="pi pi-exclamation-triangle"
         confirm={confirm}
         setConfirm={setConfirm}

@@ -1,12 +1,12 @@
 {
   /* <UpperContent>
         <h4 className="m-0">
-          <FormattedMessage id="Dashboard" />
+          <SafeFormatMessage id="Dashboard" />
         </h4>
       </UpperContent>
       <div className="px-4  align-items-center d-flex flex-wrap flex-md-nowrap align-items-center  mb-5">
         <h6 className="mx-2">
-          <FormattedMessage id="Tenant" />{' '}
+          <SafeFormatMessage id="Tenant" />{' '}
         </h6>
         <select
           className="form-control custom-container  "
@@ -15,7 +15,7 @@
           onChange={handleTenantChange}
         >
           <option value="">
-            <FormattedMessage id="Select-Tenant" />
+            <SafeFormatMessage id="Select-Tenant" />
           </option>
           {Object.entries(tenantsData).map(([key, value]) => (
             <option key={key} value={key}>
@@ -27,7 +27,7 @@
           <>
             {' '}
             <span className="mx-2">
-              <FormattedMessage id="Of" />
+              <SafeFormatMessage id="Of" />
             </span>
             <Label
               {...{

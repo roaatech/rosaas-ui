@@ -41,7 +41,7 @@ const ThemeDialog = ({
           onHide={() => setVisible(false)}
           size={size}
         >
-          {children.length > 1 ? children[0] : children}
+          {children?.length > 1 ? children[0] : children}
         </Modal>
       </React.Fragment>
     </Wrapper>

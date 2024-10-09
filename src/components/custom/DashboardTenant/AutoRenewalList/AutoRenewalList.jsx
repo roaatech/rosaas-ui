@@ -38,6 +38,7 @@ import renderAutoRenewals from './renderAutoRenewals/renderAutoRenewals.jsx'
 import renderUpgradeRenewals from './renderUpgradeRenewals/renderUpgradeRenewals.jsx'
 import renderDowngradeRenewals from './renderDowngradeRenewals/renderDowngradeRenewals.jsx'
 import WorkspaceRenewFormWithCycle from '../SubscriptionsList/WorkspaceRenewFormWithCycle/WorkspaceRenewFormWithCycle.jsx'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export default function RenewalsList() {
   const { getAutoRenewalList } = useRequest()
@@ -147,7 +148,7 @@ export default function RenewalsList() {
       {/* <Card className="m-3 p-3 mt-0"> */}
       <UpperContent>
         <h4 className="m-0">
-          <FormattedMessage id="Auto-Renewal" />{' '}
+          <SafeFormatMessage id="Auto-Renewal" />{' '}
         </h4>
       </UpperContent>
       <div>
@@ -176,7 +177,7 @@ export default function RenewalsList() {
           {/* Dialog for renewing subscription with cycle */}
           <WorkspaceRenewFormWithCycle
             referenceId={referenceId}
-            popupLabel={<FormattedMessage id="Auto-Renewal" />}
+            popupLabel={<SafeFormatMessage id="Auto-Renewal" />}
             setVisible={setVisible}
             visible={visible}
             currentRenewal={currentSubscriptionId}

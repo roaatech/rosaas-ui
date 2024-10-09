@@ -1,16 +1,34 @@
 import React from 'react'
 import { Wrapper } from './DateLabel.styled'
-import { formatDate } from '../../../../lib/sharedFun/Time'
+import {
+  formatDate,
+  UppercaseMonthDateFormat,
+} from '../../../../lib/sharedFun/Time'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 
 function isDateExpired(endDate) {
-  const currentDate = new Date()
-  return endDate !== 'Unlimited' && currentDate > new Date(endDate)
+  const currentDate = new Date().toISOString()
+  return (
+    endDate !== 'Unlimited' &&
+    new Date(currentDate).getTime() > new Date(endDate).getTime()
+  )
 }
 
-const DateLabel = ({ endDate }) => {
+const DateLabel = ({
+  endDate,
+  formatedDate,
+  uppercaseMonthDateFormat,
+  bold,
+  hasTitle,
+  hasBorder,
+}) => {
+  if (!endDate || isNaN(new Date(endDate).getTime())) {
+    return ''
+  }
+
   const DateStatus = {
     true: {
-      background: 'rgba(255, 104, 104, 0.208)',
+      background: 'var(--red2)',
     },
     false: {
       background: 'rgb(239, 249, 246)',
@@ -21,13 +39,29 @@ const DateLabel = ({ endDate }) => {
   return (
     <Wrapper>
       <span
-        className="label"
+        className={!bold ? 'label' : 'label fw-bold'}
         style={{
-          color: expired ? 'rgb(255, 104, 104)' : 'var(--teal-green)',
+          color: expired ? 'var(--red)' : 'var(--teal-green)',
           background: DateStatus[expired].background,
+          borderColor:
+            hasBorder && (expired ? 'var(--red)' : 'var(--teal-green)'),
+          border: hasBorder && '1px solid',
         }}
       >
-        {endDate ? formatDate(endDate) : 'Unlimited'}
+        {hasTitle &&
+          (expired
+            ? SafeFormatMessage({ id: 'Ended-on' })
+            : SafeFormatMessage({ id: 'Ends-on' }))}
+        {'  '}
+        <span className={hasTitle ? 'fw-bold' : ''}>
+          {endDate
+            ? formatedDate
+              ? endDate
+              : uppercaseMonthDateFormat
+              ? UppercaseMonthDateFormat(endDate, true)
+              : formatDate(endDate)
+            : 'Unlimited'}
+        </span>
       </span>
     </Wrapper>
   )

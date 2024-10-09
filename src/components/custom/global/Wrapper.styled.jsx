@@ -29,11 +29,12 @@ const GlobalStyles = createGlobalStyle`
   --hugeFont:35px;
   --errorColor:red;
   --green:#3bc76f;
-  --red:#ff6868;
+  --red:#D32F2F;
   --green2:#eff9f6;
-  --red2:#f5e8e4;
+  --red2:#FFCDD2;
   --primary-color:#414042;
   --passive-color:#ccc;
+  --slate-gray:#6c757d;
   --primary0:#fdfdfd;
   --primary1:#ECECEC;
   --primary2:#DCDCDC;
@@ -45,7 +46,13 @@ const GlobalStyles = createGlobalStyle`
   --second-color:#ffab03;
   --second-color-darker: #cc8802;
   --second-color-1:#ffe8b9;
+  --second-color-2:#ffe8b934;
  --table-hover:#eff0f2;
+ --light-blue: #add8e676; /* Light Blue color */
+ --light-blue-2: #1e8fff15; /* Light Blue color */
+  --blue-2: #1E90FF;     /* Dodger Blue color */
+  --yellow2: #ceaf00;    /* Gold color */
+  --yellow-light: #fff8d1;    /* Gold color */
    --themeBackground:${(props) =>
      props.darkMode ? darkBackground : lightBackground};
   --themeColor:${(props) => (props.darkMode ? lightColor : darkColor)};
@@ -67,6 +74,14 @@ const GlobalStyles = createGlobalStyle`
 --orange-yellow-blend : #FFC966FF;
 --mocha-brown:#5c472e;
 --pale-moonlight-gray: #f8f9faea;
+--dark-blue: #00b1f7;
+--purple-shade: #9623db;
+--green-primary: #1ca57b;
+--orange-warm: #f7a200;
+--red-alert: #db2323;
+--gray-neutral: #c7c5c5;
+--white-pure: #ffffff;
+--alert-background: #ffab03d4;
 }
  
  

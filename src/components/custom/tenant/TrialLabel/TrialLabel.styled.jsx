@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
     display: inline-flex;
     /* align-items: center; */
     justify-content: center;
-    color: red;
+    color: var(--blue-2);
     font-size: 14px;
     font-weight: bold;
     transform: rotate(8deg);
@@ -16,7 +16,7 @@ export const Wrapper = styled.div`
   .bottom-line {
     position: absolute;
     height: 2px;
-    background-color: red;
+    background-color: var(--blue-2);
     width: 60px;
   }
 
@@ -31,5 +31,6 @@ export const Wrapper = styled.div`
   .trial-text {
     z-index: 1;
     display: inline;
+    text-align: center; /* Ensures the text itself is centered */
   }
 `

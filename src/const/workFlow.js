@@ -3,6 +3,7 @@ export const Owner = {
   2: 'Client-Admin',
   3: 'Product-Admin',
   4: 'Tenant-Admin',
+  69: 'Anonymous',
   100: 'Rosas-System',
   101: 'External-System',
   102: 'External-System-Client',

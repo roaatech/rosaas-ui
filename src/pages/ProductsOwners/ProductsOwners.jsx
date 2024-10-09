@@ -42,6 +42,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Routes } from '../../routes.js'
 import ProductOwnerForm from '../../components/custom/ProductOwner/ProductOwnerForm.jsx'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import Label from '../../components/custom/Shared/label/Label.jsx'
+import { ProductOwnerStatus } from '../../const/productOwnerConsts.js'
+import { subscriptionMode, subscriptionStatus } from '../../const/product.js'
+import DataLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLabelWhite.jsx'
+import { UppercaseMonthDateFormat } from '../../lib/sharedFun/Time.js'
+import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel.jsx'
+import { MdEmail } from 'react-icons/md'
+import { FiSettings } from 'react-icons/fi'
 
 export default function ProductsOwners({ children }) {
   const dispatch = useDispatch()
@@ -72,6 +81,7 @@ export default function ProductsOwners({ children }) {
   }
 
   const listData = useSelector((state) => state.productsOwners.productsOwners)
+  let [list, setList] = useState(Object.values(listData))
 
   useEffect(() => {
     let query = `?page=${Math.ceil(
@@ -84,6 +94,7 @@ export default function ProductsOwners({ children }) {
       const productList = await getProductOwnersList(query)
       dispatch(setAllProductOwners(productList.data.data.items))
       setTotalCount(productList.data.data.totalCount)
+      setList(productList.data.data.items)
     })()
   }, [first, rows, searchValue, sortField, sortValue, update])
 
@@ -96,6 +107,7 @@ export default function ProductsOwners({ children }) {
     setCurrentId(id)
     setVisible(true)
   }
+
   return (
     <Wrapper>
       <BreadcrumbComponent
@@ -104,30 +116,22 @@ export default function ProductsOwners({ children }) {
       />
       <div className="main-container">
         <TableHead
-          label={<FormattedMessage id="Add-Product-Owner" />}
+          label={<SafeFormatMessage id="Add-Product-Owner" />}
           icon={'pi-box'}
           setSearchValue={setSearchValue}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
           setFirst={setFirst}
-          title={<FormattedMessage id="Product-Owner-List" />}
-        >
-          <ProductOwnerForm
-            popupLabel={<FormattedMessage id="Create-Product-Owner" />}
-            type={'create'}
-            update={update}
-            setUpdate={setUpdate}
-            visible={visibleHead}
-            setVisible={setVisibleHead}
-          />
-        </TableHead>
+          title={<SafeFormatMessage id="Product-Owner-List" />}
+        />
+
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
         >
           <Card.Body className="pt-0">
             <DataTable
-              value={listData && Object.values(listData)}
+              value={list && Object.values(list)}
               tableStyle={{ minWidth: '50rem' }}
               size={'small'}
             >
@@ -135,7 +139,7 @@ export default function ProductsOwners({ children }) {
                 field="displayName"
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Display-Name" />}
+                    text={<SafeFormatMessage id="Display-Name" />}
                     field="displayName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -151,7 +155,7 @@ export default function ProductsOwners({ children }) {
                 field="systemName"
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="System-Name" />}
+                    text={<SafeFormatMessage id="System-Name" />}
                     field="systemName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -163,19 +167,124 @@ export default function ProductsOwners({ children }) {
                   />
                 }
               ></Column>
+              <Column
+                field="status"
+                header={
+                  <ColumnSortHeader
+                    text={<SafeFormatMessage id="Status" />}
+                    field="status"
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) => (
+                  <Label {...ProductOwnerStatus[rowData?.status]} />
+                )}
+              />
+              <Column
+                field="subscription.subscriptionStatus"
+                header={
+                  <ColumnSortHeader
+                    text={<SafeFormatMessage id="Subscription-Status" />}
+                    field="subscription.subscriptionStatus"
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) =>
+                  rowData?.subscription?.subscriptionStatus ? (
+                    <Label
+                      {...subscriptionStatus[
+                        rowData?.subscription?.subscriptionStatus
+                      ]}
+                    />
+                  ) : (
+                    '__'
+                  )
+                }
+              />
+              <Column
+                header={
+                  <ColumnSortHeader
+                    text={SafeFormatMessage({ id: 'Subscription-Period' })}
+                    field="endDate"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+                body={(rowData) =>
+                  !rowData.subscription?.endDate &&
+                  !rowData.subscription?.startDate ? (
+                    '__'
+                  ) : (
+                    <div className="d-flex  flex-column ">
+                      <span className="mb-1">
+                        {rowData.subscription?.startDate && (
+                          <DataLabelWhite
+                            text={
+                              <>
+                                <span>
+                                  {SafeFormatMessage({ id: 'Started-on' })}
+                                </span>{' '}
+                                <span className="fw-bold">
+                                  {UppercaseMonthDateFormat(
+                                    rowData.subscription?.startDate,
+                                    true
+                                  )}
+                                </span>
+                              </>
+                            }
+                            variant={'gray'}
+                          />
+                        )}
+                      </span>
+                      <DateLabel
+                        endDate={rowData.subscription?.endDate}
+                        uppercaseMonthDateFormat={true}
+                        hasTitle={true}
+                        hasBorder={true}
+                      />
+                    </div>
+                  )
+                }
+              ></Column>
 
               <Column
                 body={(data, options) => (
-                  <TableDate
-                    createdDate={data.createdDate}
-                    editedDate={data.editedDate}
-                  />
+                  <>
+                    {data.administrator?.email ? (
+                      <DataLabelWhite
+                        text={
+                          <>
+                            <MdEmail className="mx-1" />
+                            {data.administrator?.email}
+                          </>
+                        }
+                        variant={'gray'}
+                      />
+                    ) : (
+                      '__'
+                    )}
+                  </>
                 )}
                 style={{ width: '250px', maxidth: '250px' }}
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Date" />}
-                    field="editedDate"
+                    text={<SafeFormatMessage id="Administrator-Email" />}
+                    field="administrator.email"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -186,6 +295,31 @@ export default function ProductsOwners({ children }) {
                   />
                 }
               />
+
+              <Column
+                body={(data, options) => (
+                  <TableDate
+                    createdDate={data.createdDate}
+                    editedDate={data.editedDate}
+                    hasLabel={true}
+                  />
+                )}
+                style={{ width: '250px', maxidth: '250px' }}
+                header={
+                  <ColumnSortHeader
+                    text={<SafeFormatMessage id="Date" />}
+                    field="createdDate"
+                    rebase={rebase}
+                    setRebase={setRebase}
+                    sortField={sortField}
+                    sortValue={sortValue}
+                    setSortField={setSortField}
+                    setSortValue={setSortValue}
+                    setFirst={setFirst}
+                  />
+                }
+              />
+
               <Column
                 body={(data, options) => (
                   <Dropdown as={ButtonGroup}>
@@ -209,24 +343,35 @@ export default function ProductsOwners({ children }) {
                         }
                       >
                         <FontAwesomeIcon icon={faEye} className="mx-2" />
-                        <FormattedMessage id="View-Details" />
+                        <SafeFormatMessage id="View-Details" />
                       </Dropdown.Item>
+                      {data?.subscription?.tenantId && (
+                        <Dropdown.Item
+                          onSelect={() =>
+                            navigate(
+                              `${Routes.Tenant.path}/${data?.subscription?.tenantId}`
+                            )
+                          }
+                        >
+                          <FiSettings className="mx-2" />
+                          <SafeFormatMessage id="Tenant-Management" />
+                        </Dropdown.Item>
+                      )}
                       <Dropdown.Item onSelect={() => editForm(data.id)}>
                         <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                        <FormattedMessage id="Edit" />
+                        <SafeFormatMessage id="Edit" />
                       </Dropdown.Item>
-                      <Dropdown.Item
+                      {/* <Dropdown.Item
                         onClick={() => deleteConfirm(data.id)}
                         className="text-danger"
                       >
                         <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                        <FormattedMessage id="Delete" />
-                      </Dropdown.Item>
+                        <SafeFormatMessage id="Delete" />
+                      </Dropdown.Item> */}
                     </Dropdown.Menu>
                   </Dropdown>
                 )}
-                style={{ width: '60px', textAlign: 'center' }}
-                header={<FormattedMessage id="Actions" />}
+                header={<SafeFormatMessage id="Actions" />}
               />
             </DataTable>
             <CustomPaginator
@@ -238,7 +383,7 @@ export default function ProductsOwners({ children }) {
 
             <ThemeDialog visible={visible} setVisible={setVisible}>
               <ProductOwnerForm
-                popupLabel={<FormattedMessage id="Edit-Product-Owner" />}
+                popupLabel={<SafeFormatMessage id="Edit-Product-Owner" />}
                 type={'edit'}
                 productOwnerData={listData && listData[currentId]}
                 update={update}
@@ -249,7 +394,7 @@ export default function ProductsOwners({ children }) {
 
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-product-owner-confirmation-message" />
+                <SafeFormatMessage id="delete-product-owner-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}

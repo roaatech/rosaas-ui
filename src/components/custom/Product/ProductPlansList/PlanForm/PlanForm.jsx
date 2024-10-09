@@ -1,9 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useRequest from '../../../../../axios/apis/useRequest.js'
-import { Modal, Button } from '@themesberg/react-bootstrap'
-import { Form } from '@themesberg/react-bootstrap'
+import {
+  Modal,
+  Button,
+  Form,
+  OverlayTrigger,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './PlanForm.styled.jsx'
@@ -12,10 +17,12 @@ import {
   PlanInfo,
   setAllPlans,
 } from '../../../../../store/slices/products/productsSlice.js'
-
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
-import { activeTab } from '../../../../../const/product.js'
 import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
+import { activeTab } from '../../../../../const/product.js'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import { BsFillQuestionCircleFill } from 'react-icons/bs'
 
 const PlanForm = ({
   type,
@@ -29,39 +36,91 @@ const PlanForm = ({
   const routeParams = useParams()
   const productId = routeParams.id
   const allProducts = useSelector((state) => state.products.products)
-
   const ProductTrialType = allProducts[productId].trialType
 
+  const extractRedirectionLink = (description) => {
+    const match = description.match(/#redirection-link=([^#]+)#/)
+    return match ? match[1] : ''
+  }
+  const [redirectionLink, setRedirectionLink] = useState(
+    planData?.descriptionLocalizations?.en
+      ? extractRedirectionLink(planData.descriptionLocalizations.en)
+      : '' || planData?.descriptionLocalizations?.ar
+      ? extractRedirectionLink(planData.descriptionLocalizations.ar)
+      : ''
+  )
+
+  // Remove the redirection link from the description
+  const cleanDescription = (description) => {
+    return description.replace(/#redirection-link=([^#]+)#/, '').trim()
+  }
   const initialValues = {
-    displayName: planData ? planData.displayName : '',
+    displayNameEn: planData?.displayNameLocalizations?.en || '',
+    displayNameAr: planData?.displayNameLocalizations?.ar || '',
     systemName: planData ? planData.systemName : '',
-    description: planData ? planData.description : '',
     displayOrder: planData ? planData.displayOrder : '0',
     alternativePlanID: planData ? planData.alternativePlanID : '',
     trialPeriodInDays: planData ? planData.trialPeriodInDays : '0',
+    isAvailableForSelection: planData ? planData.isAvailableForSelection : true,
+    descriptionEn: planData?.descriptionLocalizations?.en
+      ? cleanDescription(planData.descriptionLocalizations.en)
+      : '',
+    descriptionAr: planData?.descriptionLocalizations?.ar
+      ? cleanDescription(planData.descriptionLocalizations.ar)
+      : '',
+
+    redirectionLink: planData?.descriptionLocalizations?.en
+      ? extractRedirectionLink(planData.descriptionLocalizations.en)
+      : '',
   }
 
   const validationSchema = Yup.object().shape({
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="Unique-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="Unique-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
-
-    displayName: Yup.string()
-      .required(<FormattedMessage id="displayName-is-required" />)
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />),
-
+    displayNameEn: Yup.string().test({
+      name: 'displayNameRequired',
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
+      test: (value, context) => {
+        const { parent } = context
+        const displayNameEn = parent.displayNameEn
+        const displayNameAr = parent.displayNameAr
+        return !!displayNameEn || !!displayNameAr
+      },
+    }),
+    displayNameAr: Yup.string().test({
+      name: 'displayNameRequired',
+      message: <SafeFormatMessage id="Display-Name-is-required" />,
+      test: (value, context) => {
+        const { parent } = context
+        const displayNameEn = parent.displayNameEn
+        const displayNameAr = parent.displayNameAr
+        return !!displayNameEn || !!displayNameAr
+      },
+    }),
+    descriptionEn: Yup.string().max(
+      250,
+      <SafeFormatMessage id="Must-be-maximum-250-digits" />
+    ),
+    descriptionAr: Yup.string().max(
+      250,
+      <SafeFormatMessage id="Must-be-maximum-250-digits" />
+    ),
     displayOrder: Yup.number()
-      .typeError(<FormattedMessage id="Display-Order-must-be-a-number" />)
-      .integer(<FormattedMessage id="Display-Order-must-be-an-integer" />)
-      .min(0, <FormattedMessage id="Display-Order-must-be-a-positive-number" />)
+      .typeError(<SafeFormatMessage id="Display-Order-must-be-a-number" />)
+      .integer(<SafeFormatMessage id="Display-Order-must-be-an-integer" />)
+      .min(
+        0,
+        <SafeFormatMessage id="Display-Order-must-be-a-positive-number" />
+      )
       .default(0),
-    alternativePlanID: Yup.string(),
     trialPeriodInDays: Yup.number(),
   })
+
   useEffect(() => {
     const fetchData = async () => {
       if (!allProducts[productId].plan) {
@@ -86,37 +145,52 @@ const PlanForm = ({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
+      const descriptionWithRedirectionEn = values.isAvailableForSelection
+        ? values.descriptionEn
+        : values.descriptionEn
+        ? redirectionLink
+          ? `${values.descriptionEn} #redirection-link=${redirectionLink}#`
+          : values.descriptionEn
+        : ''
+      const descriptionWithRedirectionAr =
+        values.isAvailableForSelection && redirectionLink
+          ? values.descriptionAr
+          : values.descriptionAr
+          ? redirectionLink
+            ? `${values.descriptionAr} #redirection-link=${redirectionLink}#`
+            : values.descriptionAr
+          : ''
+
+      const dataToSubmit = {
+        isLockedBySystem: false,
+        tenancyType: 3,
+        systemName: values.systemName,
+        displayNameLocalizations: {
+          en: values.displayNameEn,
+          ar: values.displayNameAr,
+        },
+        descriptionLocalizations: {
+          en: descriptionWithRedirectionEn,
+          ar: descriptionWithRedirectionAr,
+        },
+        displayOrder: values.displayOrder || 0,
+        alternativePlanID: values.alternativePlanID || null,
+        trialPeriodInDays: values.trialPeriodInDays || 0,
+        isAvailableForSelection: values.isAvailableForSelection,
+      }
+
       if (type === 'create') {
         const createPlan = await createPlanRequest(productId, {
-          systemName: values.systemName,
-          displayName: values.displayName,
+          ...dataToSubmit,
           productId: productId,
-          description: values.description,
-          displayOrder: values.displayOrder || 0,
-          alternativePlanID: values.alternativePlanID || null,
-          trialPeriodInDays: values.trialPeriodInDays || 0,
         })
 
-        if (!allProducts[productId].plan) {
-          const plan = await getProductPlans(productId)
-          dispatch(
-            setAllPlans({
-              productId: productId,
-              data: plan.data.data,
-            })
-          )
-        }
         dispatch(
           PlanInfo({
             planId: createPlan.data.data.id,
             productId: productId,
             data: {
-              systemName: values.systemName,
-              displayName: values.displayName,
-              description: values.description,
-              displayOrder: values.displayOrder || 0,
-              alternativePlanID: values.alternativePlanID,
-              trialPeriodInDays: values.trialPeriodInDays || 0,
+              ...dataToSubmit,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: new Date().toISOString().slice(0, 19),
               id: createPlan.data.data.id,
@@ -128,15 +202,8 @@ const PlanForm = ({
           setActiveIndex(activeTab.plans)
         }
       } else {
-        const editPlan = await editPlanRequest(productId, {
-          data: {
-            systemName: values.systemName,
-            displayName: values.displayName,
-            description: values.description,
-            displayOrder: values.displayOrder || 0,
-            alternativePlanID: values.alternativePlanID || null,
-            trialPeriodInDays: values.trialPeriodInDays || 0,
-          },
+        await editPlanRequest(productId, {
+          data: dataToSubmit,
           id: planData.id,
         })
 
@@ -145,12 +212,8 @@ const PlanForm = ({
             planId: planData.id,
             productId: productId,
             data: {
-              systemName: values.systemName,
-              displayName: values.displayName,
-              description: values.description,
-              displayOrder: values.displayOrder || 0,
-              alternativePlanID: values.alternativePlanID,
-              trialPeriodInDays: values.trialPeriodInDays || 0,
+              ...planData,
+              ...dataToSubmit,
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: planData.createdDate,
               id: planData.id,
@@ -163,18 +226,21 @@ const PlanForm = ({
       setSubmitting(false)
     },
   })
+
   let alternativePlanIDOptions
 
   if (allProducts[productId]?.plans) {
     alternativePlanIDOptions = Object.values(allProducts[productId].plans)
-      .filter((item) => item.isPublished === true && planData?.id != item.id)
-      .map((item, index) => ({
+      .filter((item) => planData?.id != item.id)
+      .map((item) => ({
         value: item.id,
         label: item.displayName,
       }))
   } else {
     alternativePlanIDOptions = []
   }
+  const direction = useSelector((state) => state.main.direction)
+
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
@@ -188,37 +254,45 @@ const PlanForm = ({
         </Modal.Header>
 
         <Modal.Body>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Display-Name" />{' '}
-                <span style={{ color: 'red' }}>*</span>
-              </Form.Label>
-              <input
-                className="form-control"
-                type="text"
-                id="displayName"
-                name="displayName"
-                onChange={formik.handleChange}
-                value={formik.values.displayName}
-              />
+          {/* MultilingualInput for Display Name */}
+          <MultilingualInput
+            inputLabel="Display-Name"
+            languages={[
+              { code: 'en', name: 'English' },
+              { code: 'ar', name: 'Arabic' },
+            ]}
+            inputIds={{
+              en: 'displayNameEn',
+              ar: 'displayNameAr',
+            }}
+            placeholder={{
+              en: 'English-Name',
+              ar: 'Arabic-Name',
+            }}
+            values={{
+              en: formik.values.displayNameEn,
+              ar: formik.values.displayNameAr,
+            }}
+            onChange={formik.handleChange}
+            isRequired={true}
+            inputType="input"
+            errors={{
+              en: formik.errors.displayNameEn,
+              ar: formik.errors.displayNameAr,
+            }}
+            touched={{
+              en: formik.touched.displayNameEn,
+              ar: formik.touched.displayNameAr,
+            }}
+          />
 
-              {formik.touched.displayName && formik.errors.displayName && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.displayName}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
+          {/* System Name Field */}
           <div className="mb-3">
             {type === 'create' && (
               <AutoGenerateInput
-                label={<FormattedMessage id="System-Name" />}
+                label={<SafeFormatMessage id="System-Name" />}
                 id="systemName"
-                value={formik.values.displayName}
+                value={formik.values.displayNameEn}
                 name={formik.values.systemName}
                 onChange={formik.handleChange}
                 onGenerateUniqueName={(generatedUniqueName) => {
@@ -242,33 +316,12 @@ const PlanForm = ({
               </Form.Control.Feedback>
             )}
           </div>
+
+          {/* Display Order Field */}
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Description" />
-              </Form.Label>
-
-              <TextareaAndCounter
-                addTextarea={formik.setFieldValue}
-                maxLength={250}
-                showCharCount
-                inputValue={formik?.values?.description}
-              />
-
-              {formik.touched.description && formik.errors.description && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block' }}
-                >
-                  {formik.errors.description}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </div>
-          <div>
-            <Form.Group className="mb-3">
-              <Form.Label>
-                <FormattedMessage id="Display-Order" />
+                <SafeFormatMessage id="Display-Order" />
               </Form.Label>
               <input
                 type="text"
@@ -278,7 +331,6 @@ const PlanForm = ({
                 onChange={formik.handleChange}
                 value={formik.values.displayOrder}
               />
-
               {formik.touched.displayOrder && formik.errors.displayOrder && (
                 <Form.Control.Feedback
                   type="invalid"
@@ -289,11 +341,13 @@ const PlanForm = ({
               )}
             </Form.Group>
           </div>
+
+          {/* Trial Period Field */}
           {ProductTrialType == 3 && (
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Trial-Period-In-Days" />
+                  <SafeFormatMessage id="Trial-Period-In-Days" />
                 </Form.Label>
                 <input
                   type="text"
@@ -303,7 +357,6 @@ const PlanForm = ({
                   onChange={formik.handleChange}
                   value={formik.values.trialPeriodInDays}
                 />
-
                 {formik.touched.trialPeriodInDays &&
                   formik.errors.trialPeriodInDays && (
                     <Form.Control.Feedback
@@ -316,10 +369,12 @@ const PlanForm = ({
               </Form.Group>
             </div>
           )}
+
+          {/* Alternative Plan Field */}
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Alternative-Plan" />{' '}
+                <SafeFormatMessage id="Alternative-Plan" />{' '}
               </Form.Label>
               <select
                 className="form-control"
@@ -331,7 +386,7 @@ const PlanForm = ({
                 disabled={!productId}
               >
                 <option value="">
-                  <FormattedMessage id="Select-Option" />
+                  <SafeFormatMessage id="Select-Option" />
                 </option>
                 {alternativePlanIDOptions?.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -350,17 +405,102 @@ const PlanForm = ({
                 )}
             </Form.Group>
           </div>
+
+          {/* isAvailableForSelection Checkbox */}
+          <Form.Group className="mb-3">
+            <Form.Check
+              type="checkbox"
+              label={<SafeFormatMessage id="Is-Available-For-Selection" />}
+              id="isAvailableForSelection"
+              name="isAvailableForSelection"
+              checked={formik.values.isAvailableForSelection}
+              onChange={formik.handleChange}
+            />
+          </Form.Group>
+
+          {/* Redirection Link Input if not available for selection */}
+          {!formik.values.isAvailableForSelection && (
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <SafeFormatMessage id="Redirection-Link" />
+              </Form.Label>
+              <OverlayTrigger
+                trigger={['hover', 'focus']}
+                overlay={
+                  <Tooltip>
+                    <SafeFormatMessage id="Provide-a-redirection-link-here.-This-link-will-be-used-in-the-marketplace-for-unselectable-plans-to-redirect-users,-for-example,-to-##Contact-Us##." />
+                  </Tooltip>
+                }
+              >
+                <span>
+                  <BsFillQuestionCircleFill
+                    style={{ color: 'var(--slate-gray)' }}
+                    className={
+                      direction == 'rtl' ? 'ar-questionCircle mr-2' : 'ml-2'
+                    }
+                  />
+                </span>
+              </OverlayTrigger>
+              <input
+                type="text"
+                className="form-control"
+                id="redirectionLink"
+                name="redirectionLink"
+                placeholder="https://example.com/contact-us"
+                value={redirectionLink}
+                onChange={(e) => setRedirectionLink(e.target.value)}
+              />
+            </Form.Group>
+          )}
+          {/* MultilingualInput for Description with Tooltip */}
+
+          <MultilingualInput
+            inputLabel="Description"
+            languages={[
+              { code: 'en', name: 'English' },
+              { code: 'ar', name: 'Arabic' },
+            ]}
+            tooltipMessageId={
+              !formik.values.isAvailableForSelection &&
+              'The-word-enclosed-between-##-will-be-related-to-the-redirection-link.-for-example,-to-##Contact-Us##.'
+            }
+            inputIds={{
+              en: 'descriptionEn',
+              ar: 'descriptionAr',
+            }}
+            placeholder={{
+              en: 'English-Description',
+              ar: 'Arabic-Description',
+            }}
+            values={{
+              en: formik.values.descriptionEn,
+              ar: formik.values.descriptionAr,
+            }}
+            onChange={formik.handleChange}
+            isRequired={false}
+            inputType="TextareaAndCounter"
+            maxLength={250}
+            errors={{
+              en: formik.errors.descriptionEn,
+              ar: formik.errors.descriptionAr,
+            }}
+            touched={{
+              en: formik.touched.descriptionEn,
+              ar: formik.touched.descriptionAr,
+            }}
+          />
         </Modal.Body>
+
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

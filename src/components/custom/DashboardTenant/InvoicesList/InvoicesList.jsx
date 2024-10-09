@@ -8,6 +8,7 @@ import { formatDate } from '../../../../lib/sharedFun/Time.js'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAllInvoices } from '../../../../store/slices/workSpace.js'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 // const styles = StyleSheet.create({
 //   invoiceContainer: {
@@ -170,7 +171,7 @@ export default function InvoicesList() {
     <Wrapper>
       <UpperContent>
         <h4>
-          <FormattedMessage id="Invoices-List" />
+          <SafeFormatMessage id="Invoices-List" />
         </h4>
       </UpperContent>
 
@@ -204,7 +205,7 @@ export default function InvoicesList() {
                   >
                     <div style={{ flex: 1 }}>
                       <Card.Title>
-                        <FormattedMessage id="Invoice" />
+                        <SafeFormatMessage id="Invoice" />
                       </Card.Title>
                     </div>
 
@@ -228,25 +229,25 @@ export default function InvoicesList() {
                     {' '}
                     <Card.Text>
                       <strong>
-                        <FormattedMessage id="Product" />:
+                        <SafeFormatMessage id="Product" />:
                       </strong>{' '}
                       {extractedData.Product}
                     </Card.Text>
                     <Card.Text>
                       <strong>
-                        <FormattedMessage id="Tenant" />:
+                        <SafeFormatMessage id="Tenant" />:
                       </strong>{' '}
                       {extractedData.Tenant}
                     </Card.Text>
                     <Card.Text>
                       <strong>
-                        <FormattedMessage id="Plan" />:
+                        <SafeFormatMessage id="Plan" />:
                       </strong>{' '}
                       {extractedData.Plan}
                     </Card.Text>
                     <Card.Text>
                       <strong>
-                        <FormattedMessage id="Invoice-Date" />:
+                        <SafeFormatMessage id="Invoice-Date" />:
                       </strong>{' '}
                       {formatDate(invoice.paidDate)}
                     </Card.Text>
@@ -255,7 +256,7 @@ export default function InvoicesList() {
                       style={{ backgroundColor: 'var(--primary1)' }}
                     >
                       <strong>
-                        <FormattedMessage id="Total" />
+                        <SafeFormatMessage id="Total" />
                       </strong>{' '}
                       <span style={{ color: 'var(--second-color' }}>
                         <strong> {invoice.orderTotal} $</strong>
