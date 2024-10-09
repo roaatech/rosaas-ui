@@ -25,18 +25,18 @@ export const getLabelDetails = (env) => {
         background: 'var(--orange-warm)',
         value: 'Sandbox',
       }
-      case 'localhost':
-        return {
-          color: 'var(--white-pure)',
-          background: 'var(--red-alert)',
-          value: 'Localhost',
-        }
-        case 'development':
-          return {
-            color: 'var(--white-pure)',
-            background: 'var(--red-alert)',
-            value: 'Development',
-          }
+    case 'localhost':
+      return {
+        color: 'var(--white-pure)',
+        background: 'var(--red-alert)',
+        value: 'Localhost',
+      }
+    case 'development':
+      return {
+        color: 'var(--white-pure)',
+        background: 'var(--red-alert)',
+        value: 'Development',
+      }
     default:
       return {
         color: 'var(--white-pure)',
@@ -57,6 +57,8 @@ export const getEnvironmentNameByFrontendHost = (frontendHost) => {
       return 'sandbox'
     case 'dashboard.rosaas.app':
       return 'production'
+    case 'prod.app.rosas.roaa.tech':
+      return 'production'
     case 'localhost':
       return 'localhost'
     default:
@@ -72,6 +74,8 @@ export const getEnvironmentNameByApiHost = (apiHost) => {
     case 'api-sb.rosaas.app':
       return 'sandbox'
     case 'api.rosaas.app':
+      return 'production'
+    case 'prod.app.rosas.roaa.tech':
       return 'production'
     case 'localhost':
       return 'localhost'

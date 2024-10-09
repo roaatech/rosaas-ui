@@ -7,10 +7,10 @@ import {
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 
 function isDateExpired(endDate) {
-  const currentDate = new Date()
+  const currentDate = new Date().toISOString()
   return (
     endDate !== 'Unlimited' &&
-    currentDate.getTime() > new Date(endDate).getTime()
+    new Date(currentDate).getTime() > new Date(endDate).getTime()
   )
 }
 
