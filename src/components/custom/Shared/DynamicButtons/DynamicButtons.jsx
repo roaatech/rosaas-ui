@@ -391,7 +391,6 @@ const DynamicButtons = ({ buttons }) => {
                 </span>
               )
             } else if (button.type === 'toggle') {
-              console.log(button.group)
               return (
                 <span key={index}>
                   <Button
@@ -401,8 +400,6 @@ const DynamicButtons = ({ buttons }) => {
                         : `${button.variant} transparent`
                     }
                     onClick={() => {
-                      console.log({ index })
-
                       handleToggle(index, button.group)
                     }}
                     className={classNames({

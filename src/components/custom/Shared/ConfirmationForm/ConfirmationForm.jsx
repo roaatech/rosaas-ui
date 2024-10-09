@@ -26,7 +26,6 @@ const ConfirmationForm = ({
   const initialValues = {
     confirmationInput: '',
   }
-  console.log({ tooltipMessage })
   const [value, setValue] = useState(confirmationValue)
   const [confirmLabel, setConfirmLabel] = useState(confirmationInputLabel)
   const [tooltipConfirmMessage, setTooltipConfirmMessage] =

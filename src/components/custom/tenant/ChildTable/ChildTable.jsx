@@ -71,8 +71,6 @@ export default function ChildTable({
   productIndex,
   tenantObject,
 }) {
-  console.log({ productData })
-
   const { getProductSpecification, getProductOwner } = useRequest()
   const dispatch = useDispatch()
   const params = useParams()

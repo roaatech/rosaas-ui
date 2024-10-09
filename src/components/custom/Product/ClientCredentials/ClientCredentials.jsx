@@ -71,7 +71,6 @@ const ClientCredentials = ({ data }) => {
     if (confirmationVisible) {
       return
     }
-    console.log('***********')
 
     !confirmationVisible && setConfirmationValue('')
   }, [confirmationVisible])
@@ -87,8 +86,6 @@ const ClientCredentials = ({ data }) => {
     setConfirmationVisible(true)
   }
   const deactivateConfirm = (id, clientFriendlyId) => {
-    console.log({ clientFriendlyId })
-
     setConfirmationValue(clientFriendlyId)
     setCurrentClientId(id)
     setConfirmationType('deactivate')

@@ -33,7 +33,10 @@ const EnvironmentInfo = () => {
       try {
         const response = await getEnvironment()
         const endpointRequestUrl = response?.config.baseURL
-        const endpointUrlObject = new URL(endpointRequestUrl)
+        const endpointUrlObject = new URL(
+          endpointRequestUrl,
+          window.location.origin
+        )
         const apiHost = endpointUrlObject.hostname
 
         const currentUrl = window.location.href

@@ -35,7 +35,10 @@ const EnvironmentAlert = ({ atAdminPanel }) => {
       try {
         const response = await getEnvironment()
         const endpointRequestUrl = response?.config.baseURL
-        const endpointUrlObject = new URL(endpointRequestUrl)
+        const endpointUrlObject = new URL(
+          endpointRequestUrl,
+          window.location.origin
+        )
 
         const frontendHost = String(urlObject.hostname).toLowerCase()
         const environmentDetails = {

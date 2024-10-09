@@ -117,7 +117,6 @@ export default function Audits() {
     reset,
     !arraysEqual(selectedFilters, selectedData) && selectedData,
   ])
-  console.log(arraysEqual(selectedFilters, selectedData))
 
   const onPageChange = (event) => {
     setFirst(event.first)

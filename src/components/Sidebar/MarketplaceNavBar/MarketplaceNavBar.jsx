@@ -225,13 +225,33 @@ const MarketplaceNavBar = ({ profile }) => {
       setSelectedCurrency(storedCurrency)
     }
   }, [])
+  const [mergedItems, setMergedItems] = useState(leftSideItems)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 960) {
+        // Filter out the "sign out" item from rightSideItems
+        const filteredRightSideItems = rightSideItems.filter(
+          (item) => item.icon !== 'pi pi-fw pi-sign-out'
+        )
+        setMergedItems([...filteredRightSideItems, ...leftSideItems])
+      } else {
+        setMergedItems(leftSideItems)
+      }
+    }
 
+    window.addEventListener('resize', handleResize)
+
+    // Run initially to set the correct state on component mount
+    handleResize()
+
+    return () => window.removeEventListener('resize', handleResize)
+  }, [window.innerWidth])
   return (
     <Wrapper>
       <div className="card">
         {loading && <div className="progress-indicator">Loading...</div>}
         <Menubar
-          model={leftSideItems}
+          model={mergedItems}
           end={
             <ul className="p-menubar-root-list">
               {rightSideItems &&

@@ -53,7 +53,6 @@ export const mainSlice = createSlice({
         action.payload.items.forEach((item) => {
           // Add new item if it doesn't already exist
           if (!allAudits.items[item.id]) {
-            console.log({ item })
             allAudits.items[item.id] = item
           }
         })
