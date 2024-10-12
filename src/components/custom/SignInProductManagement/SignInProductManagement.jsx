@@ -146,7 +146,7 @@ const SignInProductManagement = () => {
               <span>
                 <SafeFormatMessage id="join-as-product-owner" />
               </span>{' '}
-              <Link className="link-underline " to={Routes.POwnerSignUp.path}>
+              <Link className="link-underline " to="https://dashboard.rosaas.app/marketplace/roaa-tech/rosaas">
                 <SafeFormatMessage id="Sign-up-your-product-today!" />
               </Link>
             </div>
