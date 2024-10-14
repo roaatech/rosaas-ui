@@ -40,6 +40,7 @@ import {
   MdHistory,
   MdDataObject,
   MdList,
+  MdOutlineAttachMoney,
 } from 'react-icons/md'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
@@ -61,7 +62,8 @@ import { Menu } from 'primereact/menu'
 import { Button } from 'primereact/button'
 import { HealthStatus, subscriptionMode } from '../../../../const/product'
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions'
-import { FaHeartbeat } from 'react-icons/fa'
+import { FaDollarSign, FaHeartbeat } from 'react-icons/fa'
+import { set } from 'lodash'
 
 export default function ChildTable({
   productData,
@@ -71,7 +73,11 @@ export default function ChildTable({
   productIndex,
   tenantObject,
 }) {
-  const { getProductSpecification, getProductOwner } = useRequest()
+  const {
+    getProductSpecification,
+    getProductOwner,
+    getPaymentStripeDataBySubId,
+  } = useRequest()
   const dispatch = useDispatch()
   const params = useParams()
   const currentTenantId = params.id
@@ -102,6 +108,21 @@ export default function ChildTable({
       }
     })()
   }, [productData.productId])
+
+  const [stripData, setStripData] = useState({})
+  useEffect(() => {
+    if (!productData?.subscriptionId) {
+      return
+    }
+
+    ;(async () => {
+      const paymentStripeData = await getPaymentStripeDataBySubId(
+        productData?.subscriptionId
+      )
+      setStripData(paymentStripeData.data.data)
+    })()
+  }, [productData?.subscriptionId])
+
   const listData = useSelector((state) => state.productsOwners.productsOwners)
 
   useEffect(() => {
@@ -119,7 +140,7 @@ export default function ChildTable({
   }, [productData.productOwnerId])
   const currentPOwnerData = listData[productData.productOwnerId]
   const currentProduct = listProducts[productData.productId]
-  const [maximizedPanel, setMaximizedPanel] = useState('subscription')
+  const [maximizedPanel, setMaximizedPanel] = useState('')
 
   const checkSpecificationsArray =
     (currentProduct?.specifications
@@ -180,7 +201,7 @@ export default function ChildTable({
   ])
   const [colSize, setColSize] = useState(6)
   const subscriptionButtons = []
-
+  const userRole = useSelector((state) => state.auth.userInfo.userType)
   // Conditional button for Cancel Subscription
   if (subscriptionStatusValue !== 3) {
     subscriptionButtons.push({
@@ -912,6 +933,413 @@ export default function ChildTable({
     )
   }
 
+  const paymentstripeJsonHeaderTemplate = (options) => {
+    const className = `${options.className} justify-content-space-between`
+    return !stripData?.subscription ? (
+      <div className="text-center ">
+        <SafeFormatMessage id="There-are-no-invoices-to-view." />
+      </div>
+    ) : (
+      <div className={className}>
+        <div className="flex align-items-center gap-2">
+          <span className="font-bold">
+            <MdDataObject className="mx-2 mb-1" />
+
+            <SafeFormatMessage id="Stripe-json" />
+          </span>
+        </div>
+        <div>
+          <button
+            className="p-panel-header-icon p-link mr-2"
+            onClick={() => {
+              setMaximizedPanel(
+                maximizedPanel === 'stripeJsonHeader'
+                  ? null
+                  : 'stripeJsonHeader'
+              )
+            }}
+          >
+            <span
+              className={
+                maximizedPanel === 'stripeJsonHeader'
+                  ? 'pi pi-window-minimize'
+                  : 'pi pi-window-maximize'
+              }
+            />
+          </button>
+          {(!maximizedPanel || maximizedPanel == 'stripeJsonHeader') &&
+            options.togglerElement}
+        </div>
+      </div>
+    )
+  }
+  const paymentstripeJsonBodyTemplate = () => {
+    return stripData ? (
+      <div className="content-container">
+        <div className="content-details">
+          <Row>
+            <Table
+              responsive
+              className="table-centered table-nowrap rounded mb-0"
+            >
+              <tbody className="p-0">
+                <tr>
+                  <td className="fw-bold">
+                    <SafeFormatMessage id="Subscription-json-data" />
+                  </td>
+                  <td className="">
+                    {stripData?.subscription ? (
+                      <ReactJson
+                        src={stripData?.subscription}
+                        name={false}
+                        collapsed={true}
+                        enableClipboard={false}
+                      />
+                    ) : (
+                      <SafeFormatMessage id="There-are-no-Subscription-json-data-to-view." />
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="fw-bold firstTd">
+                    <SafeFormatMessage id="Invoice-json-data" />
+                  </td>
+                  <td className="line-cell">
+                    {stripData.invoice ? (
+                      <ReactJson
+                        src={stripData?.invoice}
+                        name={false}
+                        collapsed={true}
+                        enableClipboard={false}
+                      />
+                    ) : (
+                      <SafeFormatMessage id="There-are-no-invoice-json-data-to-view." />
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
+          </Row>
+        </div>
+      </div>
+    ) : (
+      <div className="text-center ">
+        <SafeFormatMessage id="There-are-no-subscription-json-data-to-view." />
+      </div>
+    )
+  }
+  const paymentstripeJsonFooterTemplate = (options) => {
+    const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`
+    return (
+      <div className={className}>
+        {!stripData ? (
+          <div className="text-center ">
+            <SafeFormatMessage id="There-are-no-Stripe-json-data-to-view." />
+          </div>
+        ) : (
+          <>
+            <div className="flex align-items-center gap-2">
+              {stripData?.subscription?.status && (
+                <OverlayTrigger
+                  trigger={['hover', 'focus']}
+                  overlay={
+                    <Tooltip>
+                      <SafeFormatMessage id="Stripe-Subscription-Status" />
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <DataLabelWhite
+                      variant={'gray'}
+                      text={stripData?.subscription?.status}
+                    />
+                  </span>
+                </OverlayTrigger>
+              )}
+              {stripData?.invoice?.status && (
+                <div>
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <SafeFormatMessage id="Invoice-Status" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <DataLabelWhite text={stripData?.invoice?.status} />
+                    </span>
+                  </OverlayTrigger>
+                </div>
+              )}
+            </div>
+            <span className="p-text-secondary">
+              {stripData?.stripData?.subscription?.currentPeriodEnd ? (
+                <OverlayTrigger
+                  trigger={['hover', 'focus']}
+                  overlay={
+                    <Tooltip>
+                      <SafeFormatMessage id="current-Period-End" />
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <DateLabel
+                      endDate={stripData?.subscription?.currentPeriodEnd}
+                    />
+                  </span>
+                </OverlayTrigger>
+              ) : null}
+            </span>
+          </>
+        )}
+      </div>
+    )
+  }
+
+  const paymentStripePaymentInfoHeaderTamplate = (options) => {
+    const className = `${options.className} justify-content-space-between`
+    return (
+      <div className={className}>
+        <div className="flex align-items-center gap-2">
+          <span className="font-bold">
+            <FaDollarSign className="mx-2 mb-1" />
+            <SafeFormatMessage id="Stripe-Payment" />
+          </span>
+        </div>
+        <div>
+          <button
+            className="p-panel-header-icon p-link mr-2"
+            onClick={() => {
+              setMaximizedPanel(
+                maximizedPanel === 'paymentInfoHeader'
+                  ? null
+                  : 'paymentInfoHeader'
+              )
+            }}
+          >
+            <span
+              className={
+                maximizedPanel === 'paymentInfoHeader'
+                  ? 'pi pi-window-minimize'
+                  : 'pi pi-window-maximize'
+              }
+            />
+          </button>
+          {(!maximizedPanel || maximizedPanel == 'paymentInfoHeader') &&
+            options.togglerElement}
+        </div>
+      </div>
+    )
+  }
+  const paymentStripePaymentInfoBodyTemplate = () => {
+    return (
+      <div className="content-container">
+        <div className="content-details">
+          <Table
+            responsive
+            className="table-centered table-nowrap rounded mb-0"
+          >
+            <tbody>
+              <tr>
+                <SafeFormatMessage id="Subscription" />
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Id" />
+                </td>
+                <td className="line-cell">{stripData?.subscription?.id}</td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="canceled-at" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.canceledAt}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Current-Period-Start" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.currentPeriodStart}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Current-Period-End" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.currentPeriodEnd}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Customer-Id" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.customerId}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Status" />
+                </td>
+                <td className="line-cell">{stripData?.subscription?.status}</td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Default-Payment-Method-Id" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.defaultPaymentMethodId}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Latest-Invoice-Id" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.latestInvoiceId}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="trialEnd" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.trialEnd}
+                </td>
+              </tr>
+
+              <tr>
+                <h4>
+                  <SafeFormatMessage id="Invoice" />
+                </h4>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Created" />
+                </td>
+                {stripData?.invoice?.created && (
+                  <td className="line-cell">{stripData?.invoice?.created}</td>
+                )}
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Status" />
+                </td>
+                <td className="line-cell">{stripData?.invoice?.status}</td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Currency" />
+                </td>
+                <td>{stripData?.invoice?.currency}</td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Customer-Id" />
+                </td>
+                <td>{stripData?.invoice?.customerId}</td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Customer-Name" />
+                </td>
+                <td>{stripData?.invoice?.customerName}</td>
+              </tr>
+
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Customer-Email" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.invoice?.customerEmail}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Customer-Phone" />
+                </td>
+                <td>{stripData?.invoice?.customerPhone}</td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+      </div>
+    )
+  }
+  const paymentStripePaymentInfoFooterTemplate = (options) => {
+    const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`
+
+    return (
+      <div className={className}>
+        {!stripData ? (
+          <div className="text-center ">
+            <SafeFormatMessage id="There-are-no-Stripe-json-data-to-view." />
+          </div>
+        ) : (
+          <>
+            <div className="flex align-items-center gap-2">
+              {stripData?.subscription?.status && (
+                <OverlayTrigger
+                  trigger={['hover', 'focus']}
+                  overlay={
+                    <Tooltip>
+                      <SafeFormatMessage id="Stripe-Subscription-Status" />
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <DataLabelWhite
+                      variant={'gray'}
+                      text={stripData?.subscription?.status}
+                    />
+                  </span>
+                </OverlayTrigger>
+              )}
+              {stripData?.invoice?.status && (
+                <div>
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <SafeFormatMessage id="Invoice-Status" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <DataLabelWhite text={stripData?.invoice?.status} />
+                    </span>
+                  </OverlayTrigger>
+                </div>
+              )}
+            </div>
+            <span className="p-text-secondary">
+              {stripData?.stripData?.subscription?.currentPeriodEnd ? (
+                <OverlayTrigger
+                  trigger={['hover', 'focus']}
+                  overlay={
+                    <Tooltip>
+                      <SafeFormatMessage id="current-Period-End" />
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <DateLabel
+                      endDate={stripData?.subscription?.currentPeriodEnd}
+                    />
+                  </span>
+                </OverlayTrigger>
+              ) : null}
+            </span>
+          </>
+        )}
+      </div>
+    )
+  }
   return (
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
@@ -1102,6 +1530,35 @@ export default function ChildTable({
               </Col>
             )}
 
+            {/* Stripe json Subscription Panel */}
+            {maximizedPanel == 'stripeJsonHeader' &&
+              userRole == 'superAdmin' && (
+                <Col md={12} className="my-2">
+                  <Panel
+                    headerTemplate={paymentstripeJsonHeaderTemplate}
+                    footerTemplate={paymentstripeJsonFooterTemplate}
+                    // collapsed={true}
+                    toggleable
+                  >
+                    {paymentstripeJsonBodyTemplate()}
+                  </Panel>
+                </Col>
+              )}
+
+            {/*stripe Payment Info Panel */}
+            {maximizedPanel == 'paymentInfoHeader' && (
+              <Col md={12} className="my-2">
+                <Panel
+                  headerTemplate={paymentStripePaymentInfoHeaderTamplate}
+                  footerTemplate={paymentStripePaymentInfoFooterTemplate}
+                  // collapsed={true}
+                  toggleable
+                >
+                  {paymentStripePaymentInfoBodyTemplate()}
+                </Panel>
+              </Col>
+            )}
+
             {/* Minimized Panel */}
             {maximizedPanel !== 'subscription' && (
               <Col md={maximizedPanel ? 3 : 6} className="my-2">
@@ -1236,6 +1693,38 @@ export default function ChildTable({
                       />
                     </div>
                   )}
+                </Panel>
+              </Col>
+            )}
+
+            {/* Stripe json Panel */}
+            {maximizedPanel != 'stripeJsonHeader' && (
+              <Col md={maximizedPanel ? 3 : 6} className="my-2">
+                <Panel
+                  headerTemplate={paymentstripeJsonHeaderTemplate}
+                  footerTemplate={
+                    !maximizedPanel && paymentstripeJsonFooterTemplate
+                  }
+                  collapsed={true}
+                  toggleable
+                >
+                  {paymentstripeJsonBodyTemplate()}
+                </Panel>
+              </Col>
+            )}
+
+            {/* Stripe Payment Info Panel */}
+            {maximizedPanel != 'paymentInfoHeader' && (
+              <Col md={maximizedPanel ? 3 : 6} className="my-2">
+                <Panel
+                  headerTemplate={paymentStripePaymentInfoHeaderTamplate}
+                  footerTemplate={
+                    !maximizedPanel && paymentStripePaymentInfoFooterTemplate
+                  }
+                  collapsed={true}
+                  toggleable
+                >
+                  {paymentStripePaymentInfoBodyTemplate()}
                 </Panel>
               </Col>
             )}

@@ -12,7 +12,7 @@ import useSettingsReq from './Setting/useSettingReq'
 import useSpecificationReq from './Product/specification/useSpecificationReq'
 import useSubManagementReq from './Tenant/useSubManagementReq'
 import useClientCredentialsReq from './Product/ClientCredentials/useClientCredentialsReq'
-import usePaymentReq from './Payment/Payment'
+import usePaymentReq from './Payment/usePaymentReq'
 import useUsersManagementReq from './UsersManagement/useUsersManagementReq'
 import useAdminPrivileges from './UsersManagement/useAdminPrivileges'
 import useAccountReq from './Account/Account'
@@ -221,6 +221,7 @@ const useRequest = () => {
     fetchPaymentIntent,
     getInvoicesList,
     checkOrderCurrencyChange,
+    getPaymentStripeDataBySubId,
   } = usePaymentReq()
   const {
     createPORequest,
@@ -404,6 +405,7 @@ const useRequest = () => {
     clientsLookup,
     getUserById,
     getProductOwnerLookupList,
+    getPaymentStripeDataBySubId,
   }
 }
 export default useRequest

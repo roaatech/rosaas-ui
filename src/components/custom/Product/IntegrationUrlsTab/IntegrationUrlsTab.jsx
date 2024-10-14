@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Card, Table } from '@themesberg/react-bootstrap'
-import UrlItemList from '../UrlItemList/UrlItemList'
+import OldUrlItemList from '../OldUrlItemList/OldUrlItemList'
+import UrlItemList from '../UpdatedUrlItemList/UpdatedUrlItemList'
 
 const IntegrationUrlsTab = ({ data, onSave }) => {
   const [urlData, setUrlData] = useState(data)

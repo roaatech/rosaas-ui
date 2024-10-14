@@ -28,6 +28,10 @@ import { useIntl } from 'react-intl'
 // }
 
 export const DataTransform = (dateTime) => {
+  if (!dateTime || isNaN(new Date(dateTime).getTime())) {
+    return ''
+  }
+
   const utcDateTime = new Date(dateTime + 'Z')
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = utcToZonedTime(utcDateTime, timeZone)

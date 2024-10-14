@@ -8,7 +8,6 @@ import {
   Tooltip,
 } from '@themesberg/react-bootstrap'
 import { Wrapper } from './ProdcutDetailsTab.styled'
-import UrlItemList from '../../../../components/custom/Product/UrlItemList/UrlItemList'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
