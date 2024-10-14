@@ -935,11 +935,7 @@ export default function ChildTable({
 
   const paymentstripeJsonHeaderTemplate = (options) => {
     const className = `${options.className} justify-content-space-between`
-    return !stripData?.subscription ? (
-      <div className="text-center ">
-        <SafeFormatMessage id="There-are-no-invoices-to-view." />
-      </div>
-    ) : (
+    return (
       <div className={className}>
         <div className="flex align-items-center gap-2">
           <span className="font-bold">
@@ -1548,18 +1544,19 @@ export default function ChildTable({
               )}
 
             {/*stripe Payment Info Panel */}
-            {maximizedPanel == 'paymentInfoHeader' && (
-              <Col md={12} className="my-2">
-                <Panel
-                  headerTemplate={paymentStripePaymentInfoHeaderTamplate}
-                  footerTemplate={paymentStripePaymentInfoFooterTemplate}
-                  // collapsed={true}
-                  toggleable
-                >
-                  {paymentStripePaymentInfoBodyTemplate()}
-                </Panel>
-              </Col>
-            )}
+            {maximizedPanel == 'paymentInfoHeader' &&
+              userRole == 'superAdmin' && (
+                <Col md={12} className="my-2">
+                  <Panel
+                    headerTemplate={paymentStripePaymentInfoHeaderTamplate}
+                    footerTemplate={paymentStripePaymentInfoFooterTemplate}
+                    // collapsed={true}
+                    toggleable
+                  >
+                    {paymentStripePaymentInfoBodyTemplate()}
+                  </Panel>
+                </Col>
+              )}
 
             {/* Minimized Panel */}
             {maximizedPanel !== 'subscription' && (
@@ -1700,36 +1697,38 @@ export default function ChildTable({
             )}
 
             {/* Stripe json Panel */}
-            {maximizedPanel != 'stripeJsonHeader' && (
-              <Col md={maximizedPanel ? 3 : 6} className="my-2">
-                <Panel
-                  headerTemplate={paymentstripeJsonHeaderTemplate}
-                  footerTemplate={
-                    !maximizedPanel && paymentstripeJsonFooterTemplate
-                  }
-                  collapsed={true}
-                  toggleable
-                >
-                  {paymentstripeJsonBodyTemplate()}
-                </Panel>
-              </Col>
-            )}
+            {maximizedPanel != 'stripeJsonHeader' &&
+              userRole == 'superAdmin' && (
+                <Col md={maximizedPanel ? 3 : 6} className="my-2">
+                  <Panel
+                    headerTemplate={paymentstripeJsonHeaderTemplate}
+                    footerTemplate={
+                      !maximizedPanel && paymentstripeJsonFooterTemplate
+                    }
+                    collapsed={true}
+                    toggleable
+                  >
+                    {paymentstripeJsonBodyTemplate()}
+                  </Panel>
+                </Col>
+              )}
 
             {/* Stripe Payment Info Panel */}
-            {maximizedPanel != 'paymentInfoHeader' && (
-              <Col md={maximizedPanel ? 3 : 6} className="my-2">
-                <Panel
-                  headerTemplate={paymentStripePaymentInfoHeaderTamplate}
-                  footerTemplate={
-                    !maximizedPanel && paymentStripePaymentInfoFooterTemplate
-                  }
-                  collapsed={true}
-                  toggleable
-                >
-                  {paymentStripePaymentInfoBodyTemplate()}
-                </Panel>
-              </Col>
-            )}
+            {maximizedPanel != 'paymentInfoHeader' &&
+              userRole == 'superAdmin' && (
+                <Col md={maximizedPanel ? 3 : 6} className="my-2">
+                  <Panel
+                    headerTemplate={paymentStripePaymentInfoHeaderTamplate}
+                    footerTemplate={
+                      !maximizedPanel && paymentStripePaymentInfoFooterTemplate
+                    }
+                    collapsed={true}
+                    toggleable
+                  >
+                    {paymentStripePaymentInfoBodyTemplate()}
+                  </Panel>
+                </Col>
+              )}
           </Row>
         </div>
         <div className="content timeLine">
