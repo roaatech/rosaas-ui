@@ -536,7 +536,7 @@ export default function UpdatedTenantsPage({ children }) {
                                 </span>{' '}
                                 <span className="fw-bold">
                                   {UppercaseMonthDateFormat(
-                                    rowData.createdDate,
+                                    rowData.startDate,
                                     true
                                   )}
                                 </span>
