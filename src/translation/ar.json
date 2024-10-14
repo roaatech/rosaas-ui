@@ -887,9 +887,32 @@
 
   "Subscription-Plan": "خطة الاشتراك",
 
-  "No-health-check-status-found": "لا توجد حالة فحص صحي.",
-
+  "No-Specifications-Message": "لا توجد مواصفات لعرضها.",
   "There-are-no-product-Owner-Data-to-view": "لا توجد بيانات مالك المنتج لعرضها.",
 
-  "Metadata-Available": "هذا العنصر يحتوي على بيانات وصفية."
+  "Last-Checked": "آخر فحص",
+  "Dispatch-Url": "رابط الإرسال",
+  "Stripe-json": "بيانات Stripe بتنسيق JSON",
+  "Subscription-json-data": "بيانات الاشتراك بتنسيق JSON",
+  "Invoice-json-data": "بيانات الفاتورة بتنسيق JSON",
+  "There-are-no-invoices-to-view": "لا توجد فواتير لعرضها.",
+  "There-are-no-Subscription-json-data-to-view": "لا توجد بيانات اشتراك بتنسيق JSON لعرضها.",
+  "There-are-no-invoice-json-data-to-view": "لا توجد بيانات فاتورة بتنسيق JSON لعرضها.",
+  "There-are-no-Stripe-json-data-to-view": "لا توجد بيانات Stripe بتنسيق JSON لعرضها.",
+  "Stripe-Payment": "دفع Stripe",
+  "canceled-at": "تم الإلغاء في",
+  "Current-Period-Start": "بداية الفترة الحالية",
+  "Current-Period-End": "نهاية الفترة الحالية",
+  "Customer-Id": "معرف العميل",
+  "Default-Payment-Method-Id": "معرف طريقة الدفع الافتراضية",
+  "Latest-Invoice-Id": "معرف آخر فاتورة",
+  "trialEnd": "نهاية التجربة",
+  "Created": "تاريخ الإنشاء",
+  "Customer-Name": "اسم العميل",
+  "Customer-Email": "البريد الإلكتروني للعميل",
+  "Customer-Phone": "هاتف العميل",
+  "No-health-check-status-found": "لا توجد حالة فحص صحي.",
+  "Metadata-Available": "هذه العناصر تحتوي على بيانات وصفية.",
+  "No-metadata-to-view": "لا توجد بيانات وصفية لعرضها.",
+  "There-are-no-specifications-to-view": "لا توجد مواصفات لعرضها."
 }

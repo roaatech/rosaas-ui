@@ -1142,7 +1142,9 @@ export default function ChildTable({
           >
             <tbody>
               <tr>
-                <SafeFormatMessage id="Subscription" />
+                <h4>
+                  <SafeFormatMessage id="Subscription" />
+                </h4>
               </tr>
               <tr>
                 <td className="fw-bold firstTd line-cell">
