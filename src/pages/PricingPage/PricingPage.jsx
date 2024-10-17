@@ -713,7 +713,7 @@ const PricingPage = () => {
                             </span>{' '}
                             <SafeFormatMessage id="start-your" />{' '}
                             <strong style={{ color: 'var(--second-color)' }}>
-                              <SafeFormatMessage id="trial" />
+                              <SafeFormatMessage id="plan" />
                             </strong>{' '}
                             ,
                             <span>
@@ -807,7 +807,7 @@ const PricingPage = () => {
                         <div>
                           <SafeFormatMessage id="start-your" />{' '}
                           <strong style={{ color: 'var(--second-color)' }}>
-                            <SafeFormatMessage id="trial" />
+                            <SafeFormatMessage id="plan" />
                           </strong>
                           ,
                         </div>
