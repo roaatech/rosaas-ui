@@ -446,10 +446,9 @@ export default function UpdatedTenantsPage({ children }) {
                           <DateLabel
                             endDate={rowData.endDate}
                             uppercaseMonthDateFormat={true}
-                          />
-                          <Label
-                            background="var(--light-blue)"
-                            value={
+                            uppercaseMonthDateFormatType="justDate"
+                            bold={true}
+                            title={
                               <>
                                 <span className="fw-bold ">
                                   <SafeFormatMessage id="Trial" />
@@ -458,17 +457,8 @@ export default function UpdatedTenantsPage({ children }) {
                                   {' '}
                                   <SafeFormatMessage id="Ends" />
                                 </span>
-
-                                <span className="fw-bold ">
-                                  {UppercaseMonthDateFormat(
-                                    rowData.endDate,
-                                    true
-                                  )}
-                                </span>
                               </>
                             }
-                            color="var(--blue-2)"
-                            lighter={true}
                           />
                         </>
                       )
