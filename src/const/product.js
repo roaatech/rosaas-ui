@@ -307,6 +307,11 @@ export const activeTab = activeTabKeys.reduce((acc, key, index) => {
 }, {})
 
 export const urlStyle = {
+  PRICINGURL: {
+    method: 'PRICING URL',
+    darkColor: 'var(--second-color)',
+    lightColor: 'var(--second-color-2)',
+  },
   GET: {
     method: 'GET',
     darkColor: '#61affe',

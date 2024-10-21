@@ -375,25 +375,25 @@ export default function ArchivedTenantsTable({
                   rowData.subscriptionMode != 2 ? (
                     <Label {...subscriptionMode[rowData.subscriptionMode]} />
                   ) : (
-                    <Label
-                      background="var(--light-blue)"
-                      value={
-                        <>
-                          <span className="fw-bold ">
-                            <SafeFormatMessage id="Trial" />
-                          </span>
-                          <span className="mx-1">
-                            {' '}
-                            <SafeFormatMessage id="Ends" />
-                          </span>
-                          <span className="fw-bold ">
-                            {UppercaseMonthDateFormat(rowData.endDate)}
-                          </span>
-                        </>
-                      }
-                      color="var(--blue-2)"
-                      lighter={true}
-                    />
+                    <>
+                      <DateLabel
+                        endDate={rowData.endDate}
+                        uppercaseMonthDateFormat={true}
+                        uppercaseMonthDateFormatType="justDate"
+                        bold={true}
+                        title={
+                          <>
+                            <span className="fw-bold ">
+                              <SafeFormatMessage id="Trial" />
+                            </span>
+                            <span className="mx-1">
+                              {' '}
+                              <SafeFormatMessage id="Ends" />
+                            </span>
+                          </>
+                        }
+                      />
+                    </>
                   )
                 }
               ></Column>
@@ -477,6 +477,7 @@ export default function ArchivedTenantsTable({
                   <DateLabel
                     hasBorder={true}
                     endDate={data.cancellationOrSuspensionDate}
+                    uppercaseMonthDateFormat={true}
                   />
                 )}
                 header={SafeFormatMessage({

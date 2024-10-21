@@ -18,7 +18,7 @@ import {
   ProductTrialType,
   activeStatus,
 } from '../../../../const/product'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import useRequest from '../../../../axios/apis/useRequest'
 import { setAllPlans } from '../../../../store/slices/products/productsSlice'
 import Label from '../../Shared/label/Label'
@@ -27,6 +27,8 @@ import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions'
 import { text } from '@fortawesome/fontawesome-svg-core'
+import NonEditableUrlItem from '../NonEditableUrlItem/NonEditableUrlItem'
+import { Routes } from '../../../../routes'
 
 const ProductDetailsTab = ({ data }) => {
   const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
@@ -46,6 +48,8 @@ const ProductDetailsTab = ({ data }) => {
   const params = useParams()
   const { getProductPlans } = useRequest()
   const productId = params.id
+  const location = new URL(window.location.href)
+  console.log({ location: location.origin })
 
   useEffect(() => {
     ;(async () => {
@@ -66,7 +70,13 @@ const ProductDetailsTab = ({ data }) => {
   return (
     <Wrapper>
       {/* Dynamic Buttons for Language Selection */}
-      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+      <div className="d-flex align-items-center justify-content-between pt-0 mt-0 mb-1 ">
+        <NonEditableUrlItem
+          data={{
+            method: 'PRICINGURL',
+            path: `${location?.origin}${Routes.marketPlacePage.path}/${data.client?.systemName}/${data?.systemName}`,
+          }}
+        />
         <DynamicButtons
           buttons={[
             ...Object.keys({ en: 'English', ar: 'Arabic' }).map((lang) => ({

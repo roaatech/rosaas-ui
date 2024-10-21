@@ -21,7 +21,7 @@ const MarketplaceNavBar = ({ profile }) => {
   const direction = useSelector((state) => state.main.direction)
   const userInfo = useSelector((state) => state.auth.userInfo)
   const { getCurrenciesPublishList, checkOrderCurrencyChange } = useRequest()
-  const { setCurrency, changeDirection } = useGlobal()
+  const { setCurrency, setDefaultCurrency, changeDirection } = useGlobal()
   const isMatch = Boolean(
     matchPath(
       {
@@ -64,8 +64,6 @@ const MarketplaceNavBar = ({ profile }) => {
             if (response.status == 200) {
               setCurrency(currency.currencyCode, currency.id)
               setSelectedCurrency(currency.currencyCode)
-              localStorage.setItem('currencyCode', currency.currencyCode)
-              localStorage.setItem('currencyId', currency.id)
               showToast('Currency changed successfully!', 'success')
             } else {
               showToast('Failed to change currency. Please try again.', 'error')
@@ -79,8 +77,6 @@ const MarketplaceNavBar = ({ profile }) => {
         } else {
           setCurrency(currency.currencyCode, currency.id)
           setSelectedCurrency(currency.currencyCode)
-          localStorage.setItem('currencyCode', currency.currencyCode)
-          localStorage.setItem('currencyId', currency.id)
         }
       },
     }))
@@ -100,7 +96,7 @@ const MarketplaceNavBar = ({ profile }) => {
             primaryCurrency &&
             (!selectedCurrency || selectedCurrency == 'null')
           ) {
-            setCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
+            setDefaultCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
             setSelectedCurrency(primaryCurrency.currencyCode)
           }
         }
@@ -164,11 +160,11 @@ const MarketplaceNavBar = ({ profile }) => {
           icon: 'pi pi-fw pi-money-bill',
           items: currencyItems,
         },
-        {
-          label: <SafeFormatMessage id="Marketplace" />,
-          icon: 'pi pi-fw pi-shopping-cart',
-          command: () => navigate(Routes.marketPlacePage.path),
-        },
+        // {
+        //   label: <SafeFormatMessage id="Marketplace" />,
+        //   icon: 'pi pi-fw pi-shopping-cart',
+        //   command: () => navigate(Routes.marketPlacePage.path),
+        // },
       ]
 
   // Right side menu items

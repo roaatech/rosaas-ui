@@ -229,14 +229,14 @@ export default (props) => {
                         </Dropdown.Item>
                       }
                       <Dropdown.Divider />
-                      <Dropdown.Item
+                      {/* <Dropdown.Item
                         className="fw-bold"
                         onClick={() => {
                           navigate(Routes.marketPlacePage.path)
                         }}
                       >
                         <SafeFormatMessage id="Go-to-Marketplace" />
-                      </Dropdown.Item>
+                      </Dropdown.Item> */}
                       <Dropdown.Divider />
 
                       <Dropdown.Item

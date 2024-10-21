@@ -7,23 +7,27 @@ import {
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 
 function isDateExpired(endDate) {
-  const currentDate = new Date().toISOString()
-  return (
-    endDate !== 'Unlimited' &&
-    new Date(currentDate).getTime() > new Date(endDate).getTime()
-  )
+  if (endDate === 'Unlimited') return false
+  const currentDateUTC = new Date().toISOString()
+  const endDateUTC = new Date(endDate).toISOString()
+
+  return new Date(currentDateUTC).getTime() > new Date(endDateUTC).getTime()
 }
 
 const DateLabel = ({
   endDate,
   formatedDate,
   uppercaseMonthDateFormat,
+  uppercaseMonthDateFormatType,
   bold,
   hasTitle,
+  title,
   hasBorder,
+  validDateColor,
+  validBackgroundColor,
 }) => {
   if (!endDate || isNaN(new Date(endDate).getTime())) {
-    return ''
+    return null // Use null instead of an empty string
   }
 
   const DateStatus = {
@@ -31,34 +35,41 @@ const DateLabel = ({
       background: 'var(--red2)',
     },
     false: {
-      background: 'rgb(239, 249, 246)',
+      background: validBackgroundColor || 'rgb(239, 249, 246)',
     },
   }
-  const expired = !endDate ? false : isDateExpired(endDate)
+  const expired = isDateExpired(endDate)
 
   return (
     <Wrapper>
       <span
-        className={!bold ? 'label' : 'label fw-bold'}
+        className="label"
         style={{
-          color: expired ? 'var(--red)' : 'var(--teal-green)',
+          color: expired ? 'var(--red)' : validDateColor || 'var(--teal-green)',
           background: DateStatus[expired].background,
           borderColor:
             hasBorder && (expired ? 'var(--red)' : 'var(--teal-green)'),
-          border: hasBorder && '1px solid',
+          border: hasBorder ? '1px solid' : undefined,
         }}
       >
-        {hasTitle &&
-          (expired
-            ? SafeFormatMessage({ id: 'Ended-on' })
-            : SafeFormatMessage({ id: 'Ends-on' }))}
-        {'  '}
-        <span className={hasTitle ? 'fw-bold' : ''}>
+        {(hasTitle || title) && (
+          <>
+            {title ||
+              (expired ? (
+                <SafeFormatMessage id="Ended-on" />
+              ) : (
+                <SafeFormatMessage id="Ends-on" />
+              ))}
+          </>
+        )}{' '}
+        <span className={hasTitle || bold ? 'fw-bold' : ''}>
           {endDate
             ? formatedDate
               ? endDate
               : uppercaseMonthDateFormat
-              ? UppercaseMonthDateFormat(endDate, true)
+              ? uppercaseMonthDateFormatType == 'justDate'
+                ? UppercaseMonthDateFormat(endDate)
+                : UppercaseMonthDateFormat(endDate, true)
               : formatDate(endDate)
             : 'Unlimited'}
         </span>

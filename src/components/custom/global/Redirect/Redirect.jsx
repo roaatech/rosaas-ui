@@ -26,7 +26,11 @@ const Redirect = () => {
   // Default redirect if no conditions are met
   return (
     <Navigate
-      to={userRole === 'notAuth' ? Routes.mainPage.path : Routes.NotFound.path}
+      to={
+        userRole === 'notAuth'
+          ? Routes.ProductManagementSignIn.path
+          : Routes.NotFound.path
+      }
       replace
     />
   )

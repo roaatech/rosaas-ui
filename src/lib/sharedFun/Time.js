@@ -59,7 +59,7 @@ export const UppercaseMonthDateFormat = (
     return ''
   }
 
-  const utcDateTime = dateTime ? new Date(dateTime + 'Z') : ''
+  const utcDateTime = new Date(dateTime + 'Z')
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = utcToZonedTime(utcDateTime, timeZone)
 
@@ -69,7 +69,7 @@ export const UppercaseMonthDateFormat = (
   const dateFormat = currentYear === dateYear ? 'MMM dd' : 'MMM dd, yyyy'
 
   // Add milliseconds to the time format based on the flags
-  let timeFormat = 'hh:mm'
+  let timeFormat = 'HH:mm'
   if (withSeconds) {
     timeFormat += ':ss'
   }

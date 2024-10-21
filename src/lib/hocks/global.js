@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux'
 import {
   directionFun,
   setCurrentCurrencyCodeAndId,
+  setDefaultCurrencyCodeAndId,
 } from '../../store/slices/main'
 let x = 0
 const useGlobal = () => {
@@ -16,6 +17,16 @@ const useGlobal = () => {
     localStorage.setItem('currencyId', currencyId)
     dispatch(
       setCurrentCurrencyCodeAndId({
+        id: currencyId,
+        currencyCode: currencyCode,
+      })
+    )
+  }
+  const setDefaultCurrency = (currencyCode, currencyId) => {
+    localStorage.setItem('defaultCurrencyCode', currencyCode)
+    localStorage.setItem('defaultCurrencyId', currencyId)
+    dispatch(
+      setDefaultCurrencyCodeAndId({
         id: currencyId,
         currencyCode: currencyCode,
       })
@@ -38,6 +49,7 @@ const useGlobal = () => {
     changeDirection,
     searchWait,
     setCurrency,
+    setDefaultCurrency,
   }
 }
 

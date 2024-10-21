@@ -87,15 +87,15 @@ export const Routes = {
     type: 'noSidebar',
   },
   mainPage: {
-    path: '/',
+    path: `${adminPanel}/dashboard`,
     component: () => <POwnerChecker page={<MainPage />} />,
-    roles: '*',
+    roles: ['superAdmin', 'productAdmin', 'clientAdmin', 'tenantAdmin'],
     type: 'noSidebar',
   },
   marketPlacePage: {
     path: '/marketplace',
     component: () => <POwnerChecker page={<Marketplace />} />,
-    roles: '*',
+    roles: [],
     type: 'noSidebar',
   },
   ConfirmAccount: {

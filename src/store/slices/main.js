@@ -9,8 +9,16 @@ export const mainSlice = createSlice({
     sidebar: 1,
     history: [],
     currency: {
-      currencyCode: localStorage.getItem('currencyCode'),
-      id: localStorage.getItem('currencyId'),
+      currencyCode:
+        localStorage.getItem('currencyCode') ||
+        localStorage.getItem('defaultCurrencyCode'),
+      id:
+        localStorage.getItem('currencyId') ||
+        localStorage.getItem('defaultCurrencyId'),
+    },
+    defaultCurrency: {
+      currencyCode: localStorage.getItem('defaultCurrencyCode'),
+      id: localStorage.getItem('defaultCurrencyId'),
     },
     pOSystemName: null,
     isLoading: false,
@@ -34,6 +42,10 @@ export const mainSlice = createSlice({
     setCurrentCurrencyCodeAndId: (state, action) => {
       const { id, currencyCode } = action.payload
       state.currency = { id, currencyCode }
+    },
+    setDefaultCurrencyCodeAndId: (state, action) => {
+      const { id, currencyCode } = action.payload
+      state.defaultCurrency = { id, currencyCode }
     },
     setProductOwner: (state, action) => {
       state.pOSystemName = action.payload
@@ -75,6 +87,7 @@ export const {
   setLoading,
   setEnvironmentAlertData,
   setAuditsData,
+  setDefaultCurrencyCodeAndId,
 } = mainSlice.actions
 
 export default mainSlice.reducer
