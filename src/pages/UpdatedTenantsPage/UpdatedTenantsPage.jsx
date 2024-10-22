@@ -447,6 +447,8 @@ export default function UpdatedTenantsPage({ children }) {
                             endDate={rowData.endDate}
                             uppercaseMonthDateFormat={true}
                             uppercaseMonthDateFormatType="justDate"
+                            validBackgroundColor={'var(--light-blue)'}
+                            validDateColor={'var(--blue-2)'}
                             bold={true}
                             title={
                               <>
