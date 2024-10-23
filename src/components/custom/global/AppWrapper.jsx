@@ -31,11 +31,11 @@ const AppWrapper = ({ children, customHistory }) => {
   let darkMode = useSelector((state) => state.main.darkMode)
   let loaded = useSelector((state) => state.main.preloader)
   const [triggerReload, setTriggerReload] = useState(false)
-  // if (process.env.NODE_ENV === 'production') {
-  //   console.log = () => {}
-  //   console.error = () => {}
-  //   console.warn = () => {}
-  // }
+  if (process.env.NODE_ENV === 'production') {
+    console.log = () => {}
+    console.error = () => {}
+    console.warn = () => {}
+  }
   useEffect(() => {
     ;(async () => {
       if (direction === 'rtl') {
