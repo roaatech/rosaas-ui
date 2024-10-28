@@ -244,13 +244,13 @@ export default (props = {}) => {
   const inactiveIsOpen = isSearchPerformed
     ? 'open'
     : sidebarStatus(inactive)
-    ? 'open'
-    : 'close'
+      ? 'open'
+      : 'close'
   const activeIsOpen = isSearchPerformed
     ? 'open'
     : sidebarStatus(active)
-    ? 'open'
-    : 'close'
+      ? 'open'
+      : 'close'
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
   const settingIsOpen = sidebarStatus([{ id: 'setting' }]) ? 'open' : 'close'
   const systemIsOpen = sidebarStatus([{ id: 'system' }]) ? 'open' : 'close'
@@ -394,10 +394,8 @@ export default (props = {}) => {
                     link={`${Routes.productsOwners.path}/info`}
                     icon={<MdInfo />}
                     isActive={
-                      !Routes.products.path &&
-                      location.pathname.includes(
-                        `${Routes.productsOwners.path}/info`
-                      )
+                      location.pathname.includes(Routes.productsOwners.path) &&
+                      location.pathname.includes(`info`)
                     }
                   />
                 )}
@@ -516,7 +514,11 @@ export default (props = {}) => {
                       </span>
                     }
                     style={{}}
-                    isActive={location.pathname.includes(Routes.products.path)}
+                    isActive={
+                      !location.pathname.includes('info')
+                        ? location.pathname.includes(Routes.products.path)
+                        : false
+                    }
                   />
                 )}
 
@@ -691,7 +693,7 @@ export default (props = {}) => {
                     value="Live"
                     color="var(--white-pure)"
                     background="var(--green-primary)"
-                    lighter= {true}
+                    lighter={true}
                     style={{ fontSize: 'var(--normalFont)' }}
                     icon={<MdOutlineVerified />}
                   />
