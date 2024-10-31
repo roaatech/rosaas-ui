@@ -277,7 +277,12 @@ export default (props = {}) => {
       dispatch(setAllProductsLookup(listData.data.data))
       setFilteredProducts(listData.data.data)
     })()
-  }, [searchValue, allProducts])
+  }, [
+    searchValue,
+    allProducts,
+    productsData && Object.keys(productsData).length > 0,
+  ])
+
   useEffect(() => {
     if (userRole != 'superAdmin') {
       return

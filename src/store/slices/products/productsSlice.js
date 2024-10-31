@@ -92,5 +92,7 @@ export const {
   changeSubscriptionAttr,
   setAllProductsLookup,
   setAllPlansLookup,
+  deleteAllProductsLookup,
+  deleteProductLookupById,
 } = productsSlice.actions
 export default productsSlice.reducer

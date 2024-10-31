@@ -915,5 +915,7 @@
   "No-health-check-status-found": "لا توجد حالة فحص صحي.",
   "Metadata-Available": "هذه العناصر تحتوي على بيانات وصفية.",
   "No-metadata-to-view": "لا توجد بيانات وصفية لعرضها.",
-  "There-are-no-specifications-to-view": "لا توجد مواصفات لعرضها."
+  "There-are-no-specifications-to-view": "لا توجد مواصفات لعرضها.",
+  "Archived": "أرشيـف",
+  "Select": "اختر"
 }

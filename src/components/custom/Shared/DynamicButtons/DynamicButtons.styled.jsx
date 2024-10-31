@@ -23,8 +23,14 @@ export const Wrapper = styled.div`
     border-width: 1px 0 1px 1px !important;
   }
   .dynamicAction .last-tog-btn.light-tog-btn {
-    border-radius: 0rem 0.5rem 0.5rem 0rem;
-    border-width: 1px 1px 1px 0px !important;
+    border-radius: ${(props) =>
+      props.direction == 'rtl'
+        ? '0.5rem 0rem 0rem 0.5rem !important'
+        : ' 0 0.5rem  0.5rem 0 !important'};
+    border-width: ${(props) =>
+      props.direction == 'rtl'
+        ? '1px 0 1px 1px !important '
+        : '1px 1px 1px 0px !important'};
   }
 
   .dynamicAction .tog-btn-on:active,
@@ -61,8 +67,14 @@ export const Wrapper = styled.div`
   }
 
   .dynamicAction .first-tog-btn {
-    border-radius: 0.5rem 0rem 0rem 0.5rem;
-    border-width: 1px 0 1px 1px !important;
+    border-radius: ${(props) =>
+      props.direction == 'rtl'
+        ? ' 0 0.5rem  0.5rem 0 '
+        : '0.5rem 0rem 0rem 0.5rem'};
+    border-width: ${(props) =>
+      props.direction == 'rtl'
+        ? ' 1px 1px 1px 0px !important'
+        : '1px 0 1px 1px !important'};
   }
   .dynamicAction .last-tog-btn {
     /* border-radius: 0rem 0.5rem 0.5rem 0rem; */

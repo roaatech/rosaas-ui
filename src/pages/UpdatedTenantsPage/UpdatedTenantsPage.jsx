@@ -57,6 +57,8 @@ import DynamicButtons from '../../components/custom/Shared/DynamicButtons/Dynami
 import { icon } from '@fortawesome/fontawesome-svg-core'
 import { MdHistory } from 'react-icons/md'
 import ArchivedTenantsTable from './ArchivedTenants/ArchivedTenantsTable.jsx'
+import { setLoading } from '../../store/slices/main.js'
+import { arraysEqual } from '../../components/custom/Shared/SharedFunctions/sharedFunctionConsts.jsx'
 export default function UpdatedTenantsPage({ children }) {
   const {
     getTenant,
@@ -94,46 +96,65 @@ export default function UpdatedTenantsPage({ children }) {
     await deleteTenantReq({ id: currentId })
   }
   const tenantsData = useSelector((state) => state.tenants.tenants)
-  const [selectedData, setAllSelectedData] = useState()
+  const [selectedData, setAllSelectedData] = useState([])
+  const [selectedFilters, setSelectedFilters] = useState([])
+  const [isInitialized, setIsInitialized] = useState(false)
 
-  useEffect(() => {
-    let query = `?page=${Math.ceil(
-      (first + 1) / rows
-    )}&pageSize=${rows}&filters[0].Field=SearchTerm`
+  const buildQuery = () => {
+    let query = `?page=${Math.ceil((first + 1) / rows)}&pageSize=${rows}&filters[0].Field=SearchTerm`
+
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     if (sortField) query += `&sort.Field=${sortField}`
     if (sortValue) query += `&sort.Direction=${sortValue}`
+
     if (
       selectedData &&
       (Array.isArray(selectedData)
-        ? selectedData?.length > 0
-        : Object.keys(selectedData)?.length > 0)
+        ? selectedData.length > 0
+        : Object.keys(selectedData).length > 0)
     ) {
-      selectedData &&
-        Object.values(selectedData).forEach((item, index) => {
-          query += `&filters[${index + 1}].Field=${item.field}&filters[${
-            index + 1
-          }].Value=${item.value}`
-        })
+      selectedData.forEach((item, index) => {
+        query += `&filters[${index + 1}].Field=${item.field}&filters[${index + 1}].Value=${item.value}`
+      })
     }
-    if (selectedProduct)
-      query += `&filters[1].Field=selectedProduct&filters[1].Value=${selectedProduct}`
-    ;(async () => {
+
+    if (selectedProduct) {
+      query += `&filters[${selectedData.length + 1}].Field=selectedProduct&filters[${selectedData.length + 1}].Value=${selectedProduct}`
+    }
+
+    return query
+  }
+
+  const fetchSubscriptionList = async (query) => {
+    dispatch(setLoading(true))
+
+    try {
       const listData = await subscriptionFilteredList(query)
       setTotalCount(listData.data.data.totalCount)
       setList(listData.data.data.items)
-    })()
-  }, [
-    first,
-    rows,
-    searchValue,
-    sortField,
-    sortValue,
-    update,
-    selectedProduct,
-    updateDetails,
-    selectedData,
-  ])
+    } catch (error) {
+      console.error('Error fetching subscription list:', error)
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
+  useEffect(() => {
+    if (arraysEqual(selectedFilters, selectedData) && isInitialized) {
+      return
+    }
+    const query = buildQuery()
+    setSelectedFilters(selectedData.length > 0 ? selectedData : [])
+    fetchSubscriptionList(query)
+    setIsInitialized(true)
+  }, [selectedProduct, selectedData])
+
+  useEffect(() => {
+    if (!isInitialized) return
+
+    const query = buildQuery()
+    fetchSubscriptionList(query)
+  }, [first, rows, searchValue, sortField, sortValue, update, updateDetails]) // Assuming `update` and `updateDetails` are relevant dependencies
 
   /******************************* */
   const updateTenant = async () => {

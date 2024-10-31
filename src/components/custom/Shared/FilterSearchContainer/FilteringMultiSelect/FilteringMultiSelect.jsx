@@ -102,7 +102,6 @@ const FilteringMultiSelect = ({
           option?.systemName
         }
         showSelectAll={true}
-        selectAllLabel={<SafeFormatMessage id="SelectAll" />}
         filter={(option) => (option?.label ? true : false)}
         onFilter={handleFilter}
         optionValue="id"
