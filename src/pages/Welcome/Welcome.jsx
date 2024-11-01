@@ -76,6 +76,15 @@ const ProductFilterContainer = ({ setAllSelectedProducts }) => {
     </Card>
   )
 }
+const getRandomColor = () => {
+  const letters = '0123456789ABCDEF'
+  let color = '#'
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)]
+  }
+  return color
+}
+
 const Dashboard = () => {
   const [selectedProducts, setAllSelectedProducts] = useState([])
   const [selectedFilters, setSelectedFilters] = useState([])
@@ -84,17 +93,18 @@ const Dashboard = () => {
   console.log({ chartData })
 
   const [list, setList] = useState([])
+  const dispatch = useDispatch()
+  const { subscriptionFilteredList } = useRequest()
+
   const fetchAndEnhanceData = async () => {
-    console.log('*******')
     if (!list) {
       return
     }
     dispatch(setLoading(true))
     try {
       const subscriptions = list
-      // Enhance and sort the data
       const enhancedData = {}
-      console.log({ enhancedData })
+      const planColors = {} // Store colors for each plan
 
       subscriptions.forEach((subscription) => {
         const productId = subscription.product.id
@@ -109,17 +119,10 @@ const Dashboard = () => {
             subscriptionAverage: {},
             plans: {},
           }
+          planColors[planId] = getRandomColor()
         }
 
         enhancedData[productId].subscriptionsCount += 1
-
-        // Track subscription dates for average calculation
-        const startDate = new Date(subscription.startDate)
-        const monthKey = `${startDate.getFullYear()}-${startDate.getMonth() + 1}`
-        if (!enhancedData[productId].subscriptionAverage[monthKey]) {
-          enhancedData[productId].subscriptionAverage[monthKey] = 0
-        }
-        enhancedData[productId].subscriptionAverage[monthKey] += 1
 
         // Plan details
         if (!enhancedData[productId].plans[planId]) {
@@ -136,23 +139,58 @@ const Dashboard = () => {
         labels: [],
         data: [],
       }
+
       const planChartData = {
         labels: [],
-        data: [],
+        datasets: [],
       }
+
+      // Collect product IDs and names
+      const productIds = Object.keys(enhancedData)
+      const productNames = productIds.map(
+        (productId) => enhancedData[productId].productName
+      )
+      planChartData.labels = productNames
+
+      // Collect plan IDs and names
+      const planIds = new Set()
+      const planNames = {}
 
       for (const productId in enhancedData) {
         chartSubscriptions.labels.push(enhancedData[productId].productName)
         chartSubscriptions.data.push(enhancedData[productId].subscriptionsCount)
 
         for (const planId in enhancedData[productId].plans) {
-          planChartData.labels.push(
-            enhancedData[productId].plans[planId].planName
-          )
-          planChartData.data.push(
-            enhancedData[productId].plans[planId].subscriptionCounts
-          )
+          planIds.add(planId)
+          planNames[planId] = enhancedData[productId].plans[planId].planName
         }
+      }
+
+      // Build datasets for each plan
+      for (const planId of planIds) {
+        const dataset = {
+          label: planNames[planId],
+          data: [],
+          backgroundColor: [],
+          borderColor: [],
+        }
+
+        // Align data with labels
+        for (const productId of productIds) {
+          const product = enhancedData[productId]
+          const plan = product.plans[planId]
+          if (plan) {
+            dataset.data.push(plan.subscriptionCounts)
+          } else {
+            dataset.data.push(0)
+          }
+          // Assign colors
+
+          dataset.backgroundColor.push(planColors[planId])
+          dataset.borderColor.push(planColors[planId])
+        }
+
+        planChartData.datasets.push(dataset)
       }
 
       setChartData({ chartSubscriptions, planChartData, enhancedData })
@@ -166,12 +204,9 @@ const Dashboard = () => {
   useEffect(() => {
     fetchAndEnhanceData()
   }, [list])
-  const { subscriptionFilteredList } = useRequest()
 
-  const dispatch = useDispatch()
   const buildQuery = (page = 1, pageSize = 999) => {
     const queryParts = []
-
     queryParts.push(`page=${page}`)
     queryParts.push(`pageSize=${pageSize}`)
 
@@ -189,9 +224,7 @@ const Dashboard = () => {
       })
     }
 
-    const query = `?${queryParts.join('&')}`
-
-    return query
+    return `?${queryParts.join('&')}`
   }
 
   const fetchSubscriptionList = async (query) => {
@@ -209,6 +242,7 @@ const Dashboard = () => {
       dispatch(setLoading(false))
     }
   }
+
   useEffect(() => {
     if (arraysEqual(selectedFilters, selectedProducts) && !isInitialized) {
       return
@@ -218,6 +252,7 @@ const Dashboard = () => {
     fetchSubscriptionList(newQuery)
     setIsInitialized(true)
   }, [selectedProducts])
+
   return (
     <Wrapper>
       <BreadcrumbComponent breadcrumbInfo={'Dashboard'} />
@@ -232,37 +267,44 @@ const Dashboard = () => {
             setAllSelectedProducts={setAllSelectedProducts}
           />
         </div>
-        <Chart
-          type="bar"
-          data={{
-            labels: chartData.chartSubscriptions?.labels,
-            datasets: [
-              {
-                label: 'Total Subscriptions',
-                data: chartData.chartSubscriptions?.data,
-                backgroundColor: '#42A5F5',
-              },
-            ],
-          }}
-        />
-
-        {/* Chart for Most Subscribed Plans */}
-        <Chart
-          type="bar"
-          data={{
-            labels: chartData.planChartData?.labels,
-            datasets: [
-              {
-                label: 'Most Subscribed Plans',
-                data: chartData.planChartData?.data,
-                backgroundColor: '#66BB6A',
-              },
-            ],
-          }}
-        />
+        <Row className="justify-content-md-center">
+          <Col md={6} className="mb-4 d-none d-sm-block">
+            <Card>
+              <Card.Body>
+                <Chart
+                  type="bar"
+                  data={{
+                    labels: chartData.chartSubscriptions?.labels,
+                    datasets: [
+                      {
+                        label: 'Total Subscriptions',
+                        data: chartData.chartSubscriptions?.data,
+                        backgroundColor: '#42A5F5',
+                      },
+                    ],
+                  }}
+                />
+              </Card.Body>
+            </Card>
+          </Col>
+          {/* Chart for Most Subscribed Plans */}
+          <Col md={6} className="mb-4 d-none d-sm-block">
+            <Card>
+              <Card.Body>
+                {' '}
+                <Chart
+                  type="bar"
+                  data={{
+                    labels: chartData.planChartData?.labels,
+                    datasets: chartData.planChartData?.datasets,
+                  }}
+                />
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
       </div>
     </Wrapper>
   )
 }
-
 export default Dashboard
