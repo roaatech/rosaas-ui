@@ -104,9 +104,50 @@ const Dashboard = () => {
     try {
       const subscriptions = list
       const enhancedData = {}
-      const planColors = {} // Store colors for each plan
+      const planColors = {}
+      const productColors = {}
+
+      let earliestStartDate = null
+      let latestEndDate = null
 
       subscriptions.forEach((subscription) => {
+        const startDate = new Date(subscription.startDate)
+        const endDate = subscription.endDate
+          ? new Date(subscription.endDate)
+          : null
+
+        if (!earliestStartDate || startDate < earliestStartDate) {
+          earliestStartDate = startDate
+        }
+        if (endDate) {
+          if (!latestEndDate || endDate > latestEndDate) {
+            latestEndDate = endDate
+          }
+        } else {
+          latestEndDate = new Date()
+        }
+      })
+
+      const allMonths = []
+      const startMonth = new Date(
+        earliestStartDate.getFullYear(),
+        earliestStartDate.getMonth(),
+        1
+      )
+      const endMonth = new Date(
+        latestEndDate.getFullYear(),
+        latestEndDate.getMonth(),
+        1
+      )
+      let currentMonth = new Date(startMonth)
+
+      while (currentMonth <= endMonth) {
+        const monthKey = `${currentMonth.getFullYear()}-${currentMonth.getMonth() + 1}`
+        allMonths.push(monthKey)
+        currentMonth.setMonth(currentMonth.getMonth() + 1)
+      }
+
+      for (const subscription of subscriptions) {
         const productId = subscription.product.id
         const productName = subscription.product.displayNameLocalizations.en
         const planId = subscription.plan.id
@@ -116,15 +157,21 @@ const Dashboard = () => {
           enhancedData[productId] = {
             productName,
             subscriptionsCount: 0,
-            subscriptionAverage: {},
+            activeSubscriptionsPerMonth: {},
             plans: {},
           }
+        }
+
+        if (!planColors[planId]) {
           planColors[planId] = getRandomColor()
+        }
+
+        if (!productColors[productId]) {
+          productColors[productId] = getRandomColor()
         }
 
         enhancedData[productId].subscriptionsCount += 1
 
-        // Plan details
         if (!enhancedData[productId].plans[planId]) {
           enhancedData[productId].plans[planId] = {
             planName,
@@ -132,9 +179,64 @@ const Dashboard = () => {
           }
         }
         enhancedData[productId].plans[planId].subscriptionCounts += 1
-      })
+      }
 
-      // Prepare chart data
+      for (const productId in enhancedData) {
+        const productData = enhancedData[productId]
+        const activeSubscriptionsPerMonth = {}
+
+        allMonths.forEach((monthKey) => {
+          activeSubscriptionsPerMonth[monthKey] = 0
+        })
+
+        for (const subscription of subscriptions) {
+          if (subscription.product.id !== productId) continue
+
+          const startDate = new Date(subscription.startDate)
+          const endDate = subscription.endDate
+            ? new Date(subscription.endDate)
+            : new Date()
+
+          allMonths.forEach((monthKey) => {
+            const [year, month] = monthKey.split('-').map(Number)
+            const monthStart = new Date(year, month - 1, 1)
+            const monthEnd = new Date(year, month, 0)
+
+            if (
+              startDate <= monthEnd &&
+              (endDate >= monthStart || !subscription.endDate)
+            ) {
+              activeSubscriptionsPerMonth[monthKey] += 1
+            }
+          })
+        }
+
+        productData.activeSubscriptionsPerMonth = activeSubscriptionsPerMonth
+      }
+
+      const lineChartData = {
+        labels: allMonths,
+        datasets: [],
+      }
+
+      for (const productId in enhancedData) {
+        const productName = enhancedData[productId].productName
+        const activeSubscriptionsPerMonth =
+          enhancedData[productId].activeSubscriptionsPerMonth
+
+        const data = allMonths.map((monthKey) => {
+          return activeSubscriptionsPerMonth[monthKey] || 0
+        })
+
+        lineChartData.datasets.push({
+          label: productName,
+          data: data,
+          fill: false,
+          borderColor: productColors[productId],
+          tension: 0.1,
+        })
+      }
+
       const chartSubscriptions = {
         labels: [],
         data: [],
@@ -145,14 +247,12 @@ const Dashboard = () => {
         datasets: [],
       }
 
-      // Collect product IDs and names
       const productIds = Object.keys(enhancedData)
       const productNames = productIds.map(
         (productId) => enhancedData[productId].productName
       )
       planChartData.labels = productNames
 
-      // Collect plan IDs and names
       const planIds = new Set()
       const planNames = {}
 
@@ -166,7 +266,6 @@ const Dashboard = () => {
         }
       }
 
-      // Build datasets for each plan
       for (const planId of planIds) {
         const dataset = {
           label: planNames[planId],
@@ -175,7 +274,6 @@ const Dashboard = () => {
           borderColor: [],
         }
 
-        // Align data with labels
         for (const productId of productIds) {
           const product = enhancedData[productId]
           const plan = product.plans[planId]
@@ -184,7 +282,6 @@ const Dashboard = () => {
           } else {
             dataset.data.push(0)
           }
-          // Assign colors
 
           dataset.backgroundColor.push(planColors[planId])
           dataset.borderColor.push(planColors[planId])
@@ -193,7 +290,12 @@ const Dashboard = () => {
         planChartData.datasets.push(dataset)
       }
 
-      setChartData({ chartSubscriptions, planChartData, enhancedData })
+      setChartData({
+        chartSubscriptions,
+        planChartData,
+        lineChartData,
+        enhancedData,
+      })
     } catch (error) {
       console.error('Error fetching subscription data:', error)
     } finally {
@@ -268,6 +370,7 @@ const Dashboard = () => {
           />
         </div>
         <Row className="justify-content-md-center">
+          {/* Bar Chart for Total Subscriptions per Product */}
           <Col md={6} className="mb-4 d-none d-sm-block">
             <Card>
               <Card.Body>
@@ -283,20 +386,102 @@ const Dashboard = () => {
                       },
                     ],
                   }}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: 'top',
+                      },
+                    },
+                    scales: {
+                      x: {
+                        title: {
+                          display: true,
+                          text: 'Products',
+                        },
+                      },
+                      y: {
+                        title: {
+                          display: true,
+                          text: 'Subscriptions',
+                        },
+                        beginAtZero: true,
+                      },
+                    },
+                  }}
                 />
               </Card.Body>
             </Card>
           </Col>
-          {/* Chart for Most Subscribed Plans */}
+          {/* Bar Chart for Subscriptions per Plan */}
           <Col md={6} className="mb-4 d-none d-sm-block">
             <Card>
               <Card.Body>
-                {' '}
                 <Chart
                   type="bar"
                   data={{
                     labels: chartData.planChartData?.labels,
                     datasets: chartData.planChartData?.datasets,
+                  }}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: 'top',
+                      },
+                    },
+                    scales: {
+                      x: {
+                        title: {
+                          display: true,
+                          text: 'Products',
+                        },
+                      },
+                      y: {
+                        title: {
+                          display: true,
+                          text: 'Subscriptions',
+                        },
+                        beginAtZero: true,
+                      },
+                    },
+                  }}
+                />
+              </Card.Body>
+            </Card>
+          </Col>
+          {/* Line Chart for Subscriptions Over Time */}
+          <Col md={12} className="mb-4 d-none d-sm-block">
+            <Card>
+              <Card.Body>
+                <Chart
+                  type="line"
+                  data={chartData.lineChartData}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: 'top',
+                      },
+                    },
+                    scales: {
+                      x: {
+                        title: {
+                          display: true,
+                          text: 'Month',
+                        },
+                        ticks: {
+                          autoSkip: false,
+                        },
+                      },
+                      y: {
+                        title: {
+                          display: true,
+                          text: 'Number of Subscriptions',
+                        },
+                        beginAtZero: true,
+                      },
+                    },
                   }}
                 />
               </Card.Body>
@@ -307,4 +492,5 @@ const Dashboard = () => {
     </Wrapper>
   )
 }
+
 export default Dashboard
