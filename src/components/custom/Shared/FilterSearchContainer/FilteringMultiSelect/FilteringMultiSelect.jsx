@@ -13,17 +13,19 @@ const FilteringMultiSelect = ({
   optionsArray,
   onSubmit,
   label,
-
+  clearSelection = false,
   hasSelectAll,
 }) => {
   const [selectedValues, setSelectedValues] = useState()
 
   useEffect(() => {
-    if (optionsArray?.length) {
+    if (clearSelection) {
+      setSelectedValues([]) // Clear selection if clearSelection is true
+    } else if (optionsArray?.length) {
       const allIds = optionsArray?.map((option) => option?.id)
-      setSelectedValues(allIds)
+      setSelectedValues(allIds) // Default to all selected
     }
-  }, [optionsArray?.length])
+  }, [optionsArray?.length, clearSelection])
 
   const { getLocalizedString } = useSharedFunctions()
   const intl = useIntl()
