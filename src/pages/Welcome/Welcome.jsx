@@ -13,6 +13,8 @@ import FilteringMultiSelect from '../../components/custom/Shared/FilterSearchCon
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import { setLoading } from '../../store/slices/main'
 import { arraysEqual } from '../../components/custom/Shared/SharedFunctions/sharedFunctionConsts'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCalendar, faUser, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 const ProductFilterContainer = ({ setAllSelectedProducts }) => {
   const [selectedProducts, setSelectedProducts] = useState([])
@@ -90,16 +92,14 @@ const Dashboard = () => {
   const [selectedFilters, setSelectedFilters] = useState([])
   const [isInitialized, setIsInitialized] = useState(false)
   const [chartData, setChartData] = useState({})
-  console.log({ chartData })
-
   const [list, setList] = useState([])
   const dispatch = useDispatch()
   const { subscriptionFilteredList } = useRequest()
 
   const fetchAndEnhanceData = async () => {
-    if (!list) {
-      return
-    }
+    // if (!list) {
+    //   return
+    // }
     dispatch(setLoading(true))
     try {
       const subscriptions = list
@@ -110,6 +110,7 @@ const Dashboard = () => {
       let earliestStartDate = null
       let latestEndDate = null
 
+      // Preprocessing: Find the earliest start date and latest end date
       subscriptions.forEach((subscription) => {
         const startDate = new Date(subscription.startDate)
         const endDate = subscription.endDate
@@ -142,7 +143,9 @@ const Dashboard = () => {
       let currentMonth = new Date(startMonth)
 
       while (currentMonth <= endMonth) {
-        const monthKey = `${currentMonth.getFullYear()}-${currentMonth.getMonth() + 1}`
+        const monthKey = `${currentMonth.getFullYear()}-${
+          currentMonth.getMonth() + 1
+        }`
         allMonths.push(monthKey)
         currentMonth.setMonth(currentMonth.getMonth() + 1)
       }
@@ -290,7 +293,23 @@ const Dashboard = () => {
         planChartData.datasets.push(dataset)
       }
 
+      let totalSubscriptions = 0
+      for (const productId in enhancedData) {
+        totalSubscriptions += enhancedData[productId].subscriptionsCount
+      }
+
+      const formatDate = (date) => {
+        const options = { year: 'numeric', month: 'short' }
+        return date.toLocaleDateString(undefined, options)
+      }
+
+      const dateRange = `${formatDate(earliestStartDate)} - ${formatDate(
+        latestEndDate
+      )}`
+
       setChartData({
+        totalSubscriptions,
+        dateRange,
         chartSubscriptions,
         planChartData,
         lineChartData,
@@ -330,9 +349,9 @@ const Dashboard = () => {
   }
 
   const fetchSubscriptionList = async (query) => {
-    if (!(selectedProducts && Object.values(selectedProducts).length > 0)) {
-      return
-    }
+    // if (!(selectedProducts && Object.values(selectedProducts).length > 0)) {
+    //   return
+    // }
     dispatch(setLoading(true))
 
     try {
@@ -346,7 +365,7 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    if (arraysEqual(selectedFilters, selectedProducts) && !isInitialized) {
+    if (arraysEqual(selectedFilters, selectedProducts) && isInitialized) {
       return
     }
     const newQuery = buildQuery()
@@ -370,9 +389,59 @@ const Dashboard = () => {
           />
         </div>
         <Row className="justify-content-md-center">
+          {/* Total Subscriptions Card */}
+          <Col md={6} className="mb-4 d-none d-sm-block">
+            <Card className="h-100">
+              <Card.Body
+                className="d-flex flex-column justify-content-center"
+                style={{
+                  backgroundColor: 'var(--second-color-2)',
+                }}
+              >
+                <Card.Title className="text-center">
+                  <h1>
+                    <FontAwesomeIcon
+                      icon={faUsers}
+                      style={{
+                        marginRight: '10px',
+                      }}
+                    />
+                    <SafeFormatMessage
+                      id="TotalSubscriptions"
+                      defaultMessage="Total Subscriptions"
+                    />
+                  </h1>
+                </Card.Title>
+                <h1 className="d-flex justify-content-center align-items-center mb-3">
+                  <div
+                    className=""
+                    style={{
+                      backgroundColor: 'var(--second-color)',
+                      color: 'var(--white-pure)',
+                      padding: '10px 20px 10px 20px',
+                      borderRadius: '10%',
+                    }}
+                  >
+                    {chartData.totalSubscriptions}
+                  </div>
+                </h1>
+                <p className="text-center">
+                  <FontAwesomeIcon icon={faCalendar} /> {chartData.dateRange}
+                </p>
+              </Card.Body>
+            </Card>
+          </Col>
           {/* Bar Chart for Total Subscriptions per Product */}
           <Col md={6} className="mb-4 d-none d-sm-block">
-            <Card>
+            <Card className="h-100">
+              <Card.Header>
+                <Card.Title>
+                  <SafeFormatMessage
+                    id="TotalSubscriptionsPerProduct"
+                    defaultMessage="Total Subscriptions per Product"
+                  />
+                </Card.Title>
+              </Card.Header>
               <Card.Body>
                 <Chart
                   type="bar"
@@ -413,9 +482,18 @@ const Dashboard = () => {
               </Card.Body>
             </Card>
           </Col>
+
           {/* Bar Chart for Subscriptions per Plan */}
           <Col md={6} className="mb-4 d-none d-sm-block">
             <Card>
+              <Card.Header>
+                <Card.Title>
+                  <SafeFormatMessage
+                    id="SubscriptionsPerPlan"
+                    defaultMessage="Subscriptions per Plan"
+                  />
+                </Card.Title>
+              </Card.Header>
               <Card.Body>
                 <Chart
                   type="bar"
@@ -450,9 +528,17 @@ const Dashboard = () => {
               </Card.Body>
             </Card>
           </Col>
-          {/* Line Chart for Subscriptions Over Time */}
-          <Col md={12} className="mb-4 d-none d-sm-block">
+          {/* Line Chart for Active Subscriptions Over Time */}
+          <Col md={6} className="mb-4 d-none d-sm-block">
             <Card>
+              <Card.Header>
+                <Card.Title>
+                  <SafeFormatMessage
+                    id="ActiveSubscriptionsOverTime"
+                    defaultMessage="Active Subscriptions Over Time"
+                  />
+                </Card.Title>
+              </Card.Header>
               <Card.Body>
                 <Chart
                   type="line"

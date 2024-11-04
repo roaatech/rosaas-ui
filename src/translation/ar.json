@@ -917,5 +917,10 @@
   "No-metadata-to-view": "لا توجد بيانات وصفية لعرضها.",
   "There-are-no-specifications-to-view": "لا توجد مواصفات لعرضها.",
   "Archived": "أرشيـف",
-  "Select": "اختر"
+  "Select": "اختر",
+  "ActiveSubscriptionsOverTime": "الاشتراكات النشطة على مر الزمن",
+  "SubscriptionsPerPlan": "الاشتراكات لكل خطة",
+  "TotalSubscriptionsPerProduct": "إجمالي الاشتراكات لكل منتج",
+  "TotalSubscriptions": "إجمالي الاشتراكات",
+  "Product-Filter": "فلتر المنتجات"
 }
