@@ -202,13 +202,10 @@ const Dashboard = () => {
 
           allMonths.forEach((monthKey) => {
             const [year, month] = monthKey.split('-').map(Number)
-            const monthStart = new Date(year, month - 1, 1)
             const monthEnd = new Date(year, month, 0)
 
-            if (
-              startDate <= monthEnd &&
-              (endDate >= monthStart || !subscription.endDate)
-            ) {
+            // if (startDate <= monthEnd) {
+            if (startDate <= monthEnd) {
               activeSubscriptionsPerMonth[monthKey] += 1
             }
           })
