@@ -44,7 +44,6 @@ export const Wrapper = styled.div`
 
       padding: 0px 10px;
       text-align: end;
-      min-width: 367px !important;
     }
 
     span.title {

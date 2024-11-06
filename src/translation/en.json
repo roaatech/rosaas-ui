@@ -931,5 +931,8 @@
   "SubscriptionsPerPlan": "Subscriptions Per Plan",
   "TotalSubscriptionsPerProduct": "Total Subscriptions Per Product",
   "TotalSubscriptions": "Total Subscriptions",
-  "Product-Filter": "Product Filter"
+  "Product-Filter": "Product Filter",
+  "usage-example-title": "Usage Example",
+  "usage-example-description": "This example shows how to embed the pricing page within an iframe. Adjust the width and height as needed.",
+  "Copy-Code": "Copy Code"
 }

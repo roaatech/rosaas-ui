@@ -922,5 +922,8 @@
   "SubscriptionsPerPlan": "الاشتراكات لكل خطة",
   "TotalSubscriptionsPerProduct": "إجمالي الاشتراكات لكل منتج",
   "TotalSubscriptions": "إجمالي الاشتراكات",
-  "Product-Filter": "فلتر المنتجات"
+  "Product-Filter": "فلتر المنتجات",
+  "usage-example-title": "مثال للاستخدام",
+  "usage-example-description": "يوضح هذا المثال كيفية تضمين صفحة التسعير داخل إطار. قم بتعديل العرض والارتفاع حسب الحاجة.",
+  "Copy-Code": "نسخ الكود"
 }

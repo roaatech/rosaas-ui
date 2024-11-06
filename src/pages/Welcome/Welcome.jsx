@@ -15,6 +15,7 @@ import { setLoading } from '../../store/slices/main'
 import { arraysEqual } from '../../components/custom/Shared/SharedFunctions/sharedFunctionConsts'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faUser, faUsers } from '@fortawesome/free-solid-svg-icons'
+import ProductForm from '../../components/custom/Product/ProductForm/ProductForm'
 
 const ProductFilterContainer = ({ setAllSelectedProducts }) => {
   const [selectedProducts, setSelectedProducts] = useState([])
@@ -88,6 +89,7 @@ const getRandomColor = () => {
 }
 
 const Dashboard = () => {
+  const [visibleHead, setVisibleHead] = useState(false)
   const [selectedProducts, setAllSelectedProducts] = useState([])
   const [selectedFilters, setSelectedFilters] = useState([])
   const [isInitialized, setIsInitialized] = useState(false)
@@ -445,9 +447,20 @@ const Dashboard = () => {
       <div className="main-container">
         <TableHead
           search={false}
-          button={false}
           title={<SafeFormatMessage id="Dashboard" />}
-        />
+          label={<SafeFormatMessage id="Add-Product" />}
+          visibleHead={visibleHead}
+          setVisibleHead={setVisibleHead}
+          button={true}
+        >
+          <ProductForm
+            popupLabel={<SafeFormatMessage id="Create-Product" />}
+            type={'create'}
+            visible={visibleHead}
+            setVisible={setVisibleHead}
+            sideBar={true}
+          />
+        </TableHead>
         <div className="mb-4">
           <ProductFilterContainer
             setAllSelectedProducts={setAllSelectedProducts}
