@@ -92,43 +92,53 @@ const Dashboard = () => {
   const [selectedFilters, setSelectedFilters] = useState([])
   const [isInitialized, setIsInitialized] = useState(false)
   const [chartData, setChartData] = useState({})
+  console.log({ chartData })
+
   const [list, setList] = useState([])
   const dispatch = useDispatch()
-  const { subscriptionFilteredList } = useRequest()
+  const { subscriptionFilteredList, subscriptionCanceledFilteredList } =
+    useRequest()
 
   const fetchAndEnhanceData = async () => {
-    // if (!list) {
-    //   return
-    // }
+    if (!list) {
+      return
+    }
     dispatch(setLoading(true))
     try {
       const subscriptions = list
       const enhancedData = {}
       const planColors = {}
       const productColors = {}
+      const totalSubscriptionsPerPlan = {}
 
       let earliestStartDate = null
       let latestEndDate = null
 
-      // Preprocessing: Find the earliest start date and latest end date
+      // Find the earliest start date and latest end date among all subscriptions
       subscriptions.forEach((subscription) => {
         const startDate = new Date(subscription.startDate)
-        const endDate = subscription.endDate
-          ? new Date(subscription.endDate)
-          : null
 
+        // Determine the effective end date
+        let endDate = new Date()
+        if (subscription.cancellationOrSuspensionDate) {
+          endDate = new Date(subscription.cancellationOrSuspensionDate)
+        } else if (subscription.endDate) {
+          endDate = new Date(subscription.endDate)
+        }
+
+        // Update earliestStartDate and latestEndDate
         if (!earliestStartDate || startDate < earliestStartDate) {
           earliestStartDate = startDate
         }
-        if (endDate) {
-          if (!latestEndDate || endDate > latestEndDate) {
-            latestEndDate = endDate
-          }
-        } else {
+        if (!latestEndDate || endDate > latestEndDate) {
+          latestEndDate = endDate
+        }
+        if (latestEndDate > new Date()) {
           latestEndDate = new Date()
         }
       })
 
+      // Generate all months between earliestStartDate and latestEndDate
       const allMonths = []
       const startMonth = new Date(
         earliestStartDate.getFullYear(),
@@ -150,6 +160,7 @@ const Dashboard = () => {
         currentMonth.setMonth(currentMonth.getMonth() + 1)
       }
 
+      // Initialize data structures for each product
       for (const subscription of subscriptions) {
         const productId = subscription.product.id
         const productName = subscription.product.displayNameLocalizations.en
@@ -159,7 +170,7 @@ const Dashboard = () => {
         if (!enhancedData[productId]) {
           enhancedData[productId] = {
             productName,
-            subscriptionsCount: 0,
+            subscriptionsCount: 0, // Count of active subscriptions
             activeSubscriptionsPerMonth: {},
             plans: {},
           }
@@ -173,57 +184,72 @@ const Dashboard = () => {
           productColors[productId] = getRandomColor()
         }
 
-        enhancedData[productId].subscriptionsCount += 1
+        // Determine if the subscription is active
+        const isActive = subscription.subscriptionStatus === 1 // Adjust status code as needed
 
-        if (!enhancedData[productId].plans[planId]) {
-          enhancedData[productId].plans[planId] = {
-            planName,
-            subscriptionCounts: 0,
+        // Increment active subscriptions count if active
+        if (isActive) {
+          enhancedData[productId].subscriptionsCount += 1
+
+          if (!enhancedData[productId].plans[planId]) {
+            enhancedData[productId].plans[planId] = {
+              planName,
+              subscriptionCounts: 0,
+            }
           }
+          enhancedData[productId].plans[planId].subscriptionCounts += 1
         }
-        enhancedData[productId].plans[planId].subscriptionCounts += 1
       }
 
+      // Calculate active subscriptions per month per product
       for (const productId in enhancedData) {
         const productData = enhancedData[productId]
         const activeSubscriptionsPerMonth = {}
 
-        allMonths.forEach((monthKey) => {
-          activeSubscriptionsPerMonth[monthKey] = 0
-        })
+        for (let i = 0; i < allMonths.length; i++) {
+          const monthKey = allMonths[i]
+          const [year, month] = monthKey.split('-').map(Number)
+          const monthStart = new Date(year, month - 1, 1)
+          const monthEnd = new Date(year, month, 0)
 
-        for (const subscription of subscriptions) {
-          if (subscription.product.id !== productId) continue
+          let activeCount = 0
 
-          const startDate = new Date(subscription.startDate)
-          const endDate = subscription.endDate
-            ? new Date(subscription.endDate)
-            : new Date()
+          for (const subscription of subscriptions) {
+            if (subscription.product.id !== productId) continue
 
-          allMonths.forEach((monthKey) => {
-            const [year, month] = monthKey.split('-').map(Number)
-            const monthEnd = new Date(year, month, 0)
-
-            // if (startDate <= monthEnd) {
-            if (startDate <= monthEnd) {
-              activeSubscriptionsPerMonth[monthKey] += 1
+            const startDate = new Date(subscription.startDate)
+            let endDate = new Date()
+            if (subscription.cancellationOrSuspensionDate) {
+              endDate = new Date(subscription.cancellationOrSuspensionDate)
+            } else if (subscription.endDate) {
+              endDate = new Date(subscription.endDate)
             }
-          })
+
+            // Check if subscription is active during the month
+            if (startDate <= monthEnd || endDate >= monthStart) {
+              activeCount += 1
+            }
+          }
+
+          activeSubscriptionsPerMonth[monthKey] = activeCount
         }
 
         productData.activeSubscriptionsPerMonth = activeSubscriptionsPerMonth
       }
 
+      // Prepare data for the line chart (active subscriptions over time)
       const lineChartData = {
         labels: allMonths,
         datasets: [],
       }
 
+      // Build datasets for each product
       for (const productId in enhancedData) {
         const productName = enhancedData[productId].productName
         const activeSubscriptionsPerMonth =
           enhancedData[productId].activeSubscriptionsPerMonth
 
+        // Prepare data array aligned with labels
         const data = allMonths.map((monthKey) => {
           return activeSubscriptionsPerMonth[monthKey] || 0
         })
@@ -237,11 +263,14 @@ const Dashboard = () => {
         })
       }
 
+      // Prepare data for the bar charts
+      // Chart for Total Subscriptions per Product
       const chartSubscriptions = {
         labels: [],
         data: [],
       }
 
+      // Chart for Subscriptions per Plan
       const planChartData = {
         labels: [],
         datasets: [],
@@ -290,11 +319,42 @@ const Dashboard = () => {
         planChartData.datasets.push(dataset)
       }
 
+      // Calculate total subscriptions (only active subscriptions)
       let totalSubscriptions = 0
       for (const productId in enhancedData) {
         totalSubscriptions += enhancedData[productId].subscriptionsCount
       }
+      // Calculate total subscriptions per plan across all products
+      for (const productId in enhancedData) {
+        for (const planId in enhancedData[productId].plans) {
+          const planData = enhancedData[productId].plans[planId]
+          if (!totalSubscriptionsPerPlan[planId]) {
+            totalSubscriptionsPerPlan[planId] = 0
+          }
+          totalSubscriptionsPerPlan[planId] += planData.subscriptionCounts
+        }
+      }
 
+      // Prepare data for the pie chart
+      const planPieChartData = {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            backgroundColor: [],
+          },
+        ],
+      }
+
+      // Build the labels and data arrays for the pie chart
+      for (const planId in totalSubscriptionsPerPlan) {
+        planPieChartData.labels.push(planNames[planId])
+        planPieChartData.datasets[0].data.push(
+          totalSubscriptionsPerPlan[planId]
+        )
+        planPieChartData.datasets[0].backgroundColor.push(planColors[planId])
+      }
+      // Format date range
       const formatDate = (date) => {
         const options = { year: 'numeric', month: 'short' }
         return date.toLocaleDateString(undefined, options)
@@ -304,11 +364,13 @@ const Dashboard = () => {
         latestEndDate
       )}`
 
+      // Update the chart data state
       setChartData({
         totalSubscriptions,
         dateRange,
         chartSubscriptions,
         planChartData,
+        planPieChartData,
         lineChartData,
         enhancedData,
       })
@@ -346,14 +408,20 @@ const Dashboard = () => {
   }
 
   const fetchSubscriptionList = async (query) => {
-    // if (!(selectedProducts && Object.values(selectedProducts).length > 0)) {
-    //   return
-    // }
     dispatch(setLoading(true))
 
     try {
-      const listData = await subscriptionFilteredList(query)
-      setList(listData.data.data.items)
+      // Fetch active subscriptions
+      const activeListData = await subscriptionFilteredList(query)
+      const activeItems = activeListData.data.data.items
+      // Fetch canceled subscriptions
+      const canceledListData = await subscriptionCanceledFilteredList(query)
+      const canceledItems = canceledListData.data.data.items
+
+      // Combine both lists
+      const combinedList = [...activeItems, ...canceledItems]
+
+      setList(combinedList)
     } catch (error) {
       console.error('Error fetching subscription list:', error)
     } finally {
@@ -385,15 +453,13 @@ const Dashboard = () => {
             setAllSelectedProducts={setAllSelectedProducts}
           />
         </div>
-        <Row className="justify-content-md-center">
+        <Row className="justify-content-md-center align-items-stretch">
           {/* Total Subscriptions Card */}
           <Col md={6} className="mb-4 d-none d-sm-block">
             <Card className="h-100">
               <Card.Body
                 className="d-flex flex-column justify-content-center"
-                style={{
-                  backgroundColor: 'var(--second-color-2)',
-                }}
+                style={{ backgroundColor: 'var(--second-color-2)' }}
               >
                 <Card.Title className="text-center">
                   <h1>
@@ -401,6 +467,7 @@ const Dashboard = () => {
                       icon={faUsers}
                       style={{
                         marginRight: '10px',
+                        color: 'var(--second-color)',
                       }}
                     />
                     <SafeFormatMessage
@@ -409,18 +476,11 @@ const Dashboard = () => {
                     />
                   </h1>
                 </Card.Title>
-                <h1 className="d-flex justify-content-center align-items-center mb-3">
-                  <div
-                    className=""
-                    style={{
-                      backgroundColor: 'var(--second-color)',
-                      color: 'var(--white-pure)',
-                      padding: '10px 20px 10px 20px',
-                      borderRadius: '10%',
-                    }}
-                  >
-                    {chartData.totalSubscriptions}
-                  </div>
+                <h1
+                  className="display-4 text-center"
+                  style={{ color: 'var(--second-color)' }}
+                >
+                  {chartData.totalSubscriptions}
                 </h1>
                 <p className="text-center">
                   <FontAwesomeIcon icon={faCalendar} /> {chartData.dateRange}
@@ -479,10 +539,9 @@ const Dashboard = () => {
               </Card.Body>
             </Card>
           </Col>
-
           {/* Bar Chart for Subscriptions per Plan */}
           <Col md={6} className="mb-4 d-none d-sm-block">
-            <Card>
+            <Card className="h-100">
               <Card.Header>
                 <Card.Title>
                   <SafeFormatMessage
@@ -491,13 +550,10 @@ const Dashboard = () => {
                   />
                 </Card.Title>
               </Card.Header>
-              <Card.Body>
+              <Card.Body className="d-flex justify-content-center">
                 <Chart
-                  type="bar"
-                  data={{
-                    labels: chartData.planChartData?.labels,
-                    datasets: chartData.planChartData?.datasets,
-                  }}
+                  type="pie"
+                  data={chartData.planPieChartData}
                   options={{
                     responsive: true,
                     plugins: {
@@ -505,29 +561,15 @@ const Dashboard = () => {
                         position: 'top',
                       },
                     },
-                    scales: {
-                      x: {
-                        title: {
-                          display: true,
-                          text: 'Products',
-                        },
-                      },
-                      y: {
-                        title: {
-                          display: true,
-                          text: 'Subscriptions',
-                        },
-                        beginAtZero: true,
-                      },
-                    },
                   }}
+                  className="w-full md:w-auto"
                 />
               </Card.Body>
             </Card>
           </Col>
           {/* Line Chart for Active Subscriptions Over Time */}
           <Col md={6} className="mb-4 d-none d-sm-block">
-            <Card>
+            <Card className="h-100">
               <Card.Header>
                 <Card.Title>
                   <SafeFormatMessage
