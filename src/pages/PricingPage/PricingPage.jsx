@@ -76,6 +76,10 @@ const PricingPage = () => {
       )
     )
   )[0]
+  const storedCurrency = localStorage.getItem('currencyId')
+  const storedDefaultCurrency = localStorage.getItem('defaultCurrencyId')
+
+  console.log({ storedCurrency, storedDefaultCurrency })
 
   const productId = productData?.id
 
@@ -182,6 +186,7 @@ const PricingPage = () => {
     }))
   }
   const currency = useSelector((state) => state.main.currency)
+  const defaultCurrency = useSelector((state) => state.main.defaultCurrency)
 
   useEffect(() => {
     if (listProduct?.[productId]?.trialType != 2) {
@@ -333,6 +338,7 @@ const PricingPage = () => {
   }
 
   const currencyCode = currency.currencyCode
+  const defaultCurrencyCode = defaultCurrency.currencyCode
   const direction = useSelector((state) => state.main.direction)
   const extractRedirectionLinkFromDescription = (description) => {
     const linkMatch = description.match(/#redirection-link=([^#]+)#/)
@@ -643,14 +649,14 @@ const PricingPage = () => {
                   listProduct?.[productId]?.trialType === 2
                     ? '180px'
                     : listProduct?.[productId]?.trialType === 3
-                    ? '137px'
-                    : '',
+                      ? '137px'
+                      : '',
                 backgroundColor: !isAvailableForSelection
                   ? 'rgb(255 201 102 / 8%)'
                   : listProduct?.[productId]?.trialType == 3 &&
-                    planList[planId]?.trialPeriodInDays > 0
-                  ? 'var(--light-blue-2)'
-                  : '',
+                      planList[planId]?.trialPeriodInDays > 0
+                    ? 'var(--light-blue-2)'
+                    : '',
                 display: 'flex',
                 flexDirection: 'column',
                 textAlign: !isAvailableForSelection ? 'center' : '',
@@ -773,7 +779,7 @@ const PricingPage = () => {
                               listProduct?.[productId]?.planSelectionRedirectUrl
                             }?plan-price=${
                               filteredPrices.systemName
-                            }&currency-code=${currencyCode}&trial-enabled=${
+                            }&currency-code=${!currencyCode || currencyCode == 'null' ? defaultCurrencyCode : currencyCode}&trial-enabled=${
                               startWithTrial[planId] ||
                               (listProduct?.[productId]?.trialType === 3 &&
                                 planList[planId]?.trialPeriodInDays > 0)

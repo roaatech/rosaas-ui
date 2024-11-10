@@ -38,6 +38,7 @@ const MarketplaceNavBar = ({ profile }) => {
   const [selectedCurrency, setSelectedCurrency] = useState(() =>
     localStorage.getItem('currencyCode')
   )
+  const storedCurrencyId = localStorage.getItem('currencyId')
 
   const [loading, setLoading] = useState(false)
 
@@ -94,9 +95,13 @@ const MarketplaceNavBar = ({ profile }) => {
           )
           if (
             primaryCurrency &&
-            (!selectedCurrency || selectedCurrency == 'null')
+            (!selectedCurrency ||
+              selectedCurrency == 'null' ||
+              !storedCurrencyId ||
+              storedCurrencyId == 'null')
           ) {
             setDefaultCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
+            setCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
             setSelectedCurrency(primaryCurrency.currencyCode)
           }
         }
@@ -194,25 +199,25 @@ const MarketplaceNavBar = ({ profile }) => {
           },
         ]
       : signInShow
-      ? [
-          {
-            label: <SafeFormatMessage id="Product-Management-Area" />,
-            icon: 'pi pi-fw pi-cog',
-            command: () => navigate(Routes.ProductManagementSignIn.path),
-          },
-          {
-            label: <SafeFormatMessage id="signIn" />,
-            icon: 'pi pi-fw pi-sign-in',
-            command: () => navigate(Routes.SignInTenantAdmin.path),
-          },
-        ]
-      : [
-          {
-            label: <SafeFormatMessage id="Product-Management-Area" />,
-            icon: 'pi pi-fw pi-cog',
-            command: () => navigate(Routes.ProductManagementSignIn.path),
-          },
-        ]),
+        ? [
+            {
+              label: <SafeFormatMessage id="Product-Management-Area" />,
+              icon: 'pi pi-fw pi-cog',
+              command: () => navigate(Routes.ProductManagementSignIn.path),
+            },
+            {
+              label: <SafeFormatMessage id="signIn" />,
+              icon: 'pi pi-fw pi-sign-in',
+              command: () => navigate(Routes.SignInTenantAdmin.path),
+            },
+          ]
+        : [
+            {
+              label: <SafeFormatMessage id="Product-Management-Area" />,
+              icon: 'pi pi-fw pi-cog',
+              command: () => navigate(Routes.ProductManagementSignIn.path),
+            },
+          ]),
   ]
 
   useEffect(() => {
