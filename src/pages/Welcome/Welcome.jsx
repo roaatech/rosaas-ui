@@ -7,7 +7,7 @@ import { useIntl } from 'react-intl'
 import useRequest from '../../axios/apis/useRequest'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAllProductsLookup } from '../../store/slices/products/productReducers'
-import { Button, Card, Col, Row } from '@themesberg/react-bootstrap'
+import { Button, Card, Col, Row, Tab, Tabs } from '@themesberg/react-bootstrap'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 import FilteringMultiSelect from '../../components/custom/Shared/FilterSearchContainer/FilteringMultiSelect/FilteringMultiSelect'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
@@ -94,12 +94,33 @@ const Dashboard = () => {
   const [selectedFilters, setSelectedFilters] = useState([])
   const [isInitialized, setIsInitialized] = useState(false)
   const [chartData, setChartData] = useState({})
-  console.log({ chartData })
-
+  const [timeGranularity, setTimeGranularity] = useState('day') // Default to 'day' as per your request
   const [list, setList] = useState([])
   const dispatch = useDispatch()
   const { subscriptionFilteredList, subscriptionCanceledFilteredList } =
     useRequest()
+
+  const getWeekNumber = (date) => {
+    const d = new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+    )
+    const dayNum = d.getUTCDay() || 7
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum)
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
+    return Math.ceil(((d - yearStart) / 86400000 + 1) / 7)
+  }
+
+  const getDateOfISOWeek = (week, year) => {
+    const simple = new Date(year, 0, 1 + (week - 1) * 7)
+    const dayOfWeek = simple.getDay()
+    let ISOweekStart = simple
+    if (dayOfWeek <= 4) {
+      ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1)
+    } else {
+      ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay())
+    }
+    return ISOweekStart
+  }
 
   const fetchAndEnhanceData = async () => {
     if (!list) {
@@ -140,26 +161,29 @@ const Dashboard = () => {
         }
       })
 
-      // Generate all months between earliestStartDate and latestEndDate
-      const allMonths = []
-      const startMonth = new Date(
-        earliestStartDate.getFullYear(),
-        earliestStartDate.getMonth(),
-        1
-      )
-      const endMonth = new Date(
-        latestEndDate.getFullYear(),
-        latestEndDate.getMonth(),
-        1
-      )
-      let currentMonth = new Date(startMonth)
+      // Generate all time periods based on the selected granularity
+      const allPeriods = []
+      let currentPeriodStart = new Date(earliestStartDate)
+      currentPeriodStart.setHours(0, 0, 0, 0)
 
-      while (currentMonth <= endMonth) {
-        const monthKey = `${currentMonth.getFullYear()}-${
-          currentMonth.getMonth() + 1
-        }`
-        allMonths.push(monthKey)
-        currentMonth.setMonth(currentMonth.getMonth() + 1)
+      while (currentPeriodStart <= latestEndDate) {
+        let periodKey = ''
+        let nextPeriodStart = new Date(currentPeriodStart)
+        if (timeGranularity === 'month') {
+          periodKey = `${currentPeriodStart.getFullYear()}-${
+            currentPeriodStart.getMonth() + 1
+          }`
+          nextPeriodStart.setMonth(currentPeriodStart.getMonth() + 1)
+        } else if (timeGranularity === 'week') {
+          const weekNumber = getWeekNumber(currentPeriodStart)
+          periodKey = `${currentPeriodStart.getFullYear()}-W${weekNumber}`
+          nextPeriodStart.setDate(currentPeriodStart.getDate() + 7)
+        } else if (timeGranularity === 'day') {
+          periodKey = currentPeriodStart.toISOString().split('T')[0]
+          nextPeriodStart.setDate(currentPeriodStart.getDate() + 1)
+        }
+        allPeriods.push(periodKey)
+        currentPeriodStart = nextPeriodStart
       }
 
       // Initialize data structures for each product
@@ -173,7 +197,7 @@ const Dashboard = () => {
           enhancedData[productId] = {
             productName,
             subscriptionsCount: 0, // Count of active subscriptions
-            activeSubscriptionsPerMonth: {},
+            activeSubscriptionsPerPeriod: {},
             plans: {},
           }
         }
@@ -203,16 +227,33 @@ const Dashboard = () => {
         }
       }
 
-      // Calculate active subscriptions per month per product
+      // Calculate active subscriptions per period per product
       for (const productId in enhancedData) {
         const productData = enhancedData[productId]
-        const activeSubscriptionsPerMonth = {}
+        const activeSubscriptionsPerPeriod = {}
 
-        for (let i = 0; i < allMonths.length; i++) {
-          const monthKey = allMonths[i]
-          const [year, month] = monthKey.split('-').map(Number)
-          const monthStart = new Date(year, month - 1, 1)
-          const monthEnd = new Date(year, month, 0)
+        for (let i = 0; i < allPeriods.length; i++) {
+          const periodKey = allPeriods[i]
+          let periodStart = null
+          let periodEnd = null
+
+          if (timeGranularity === 'month') {
+            const [year, month] = periodKey.split('-').map(Number)
+            periodStart = new Date(year, month - 1, 1)
+            periodEnd = new Date(year, month, 0, 23, 59, 59, 999)
+          } else if (timeGranularity === 'week') {
+            const [year, weekStr] = periodKey.split('-W')
+            const week = Number(weekStr)
+            periodStart = getDateOfISOWeek(week, Number(year))
+            periodEnd = new Date(periodStart)
+            periodEnd.setDate(periodEnd.getDate() + 6)
+            periodEnd.setHours(23, 59, 59, 999)
+          } else if (timeGranularity === 'day') {
+            periodStart = new Date(periodKey)
+            periodStart.setHours(0, 0, 0, 0)
+            periodEnd = new Date(periodKey)
+            periodEnd.setHours(23, 59, 59, 999)
+          }
 
           let activeCount = 0
 
@@ -227,33 +268,33 @@ const Dashboard = () => {
               endDate = new Date(subscription.endDate)
             }
 
-            // Check if subscription is active during the month
-            if (startDate <= monthEnd || endDate >= monthStart) {
+            // Check if subscription is active during the period
+            if (startDate <= periodEnd && endDate >= periodStart) {
               activeCount += 1
             }
           }
 
-          activeSubscriptionsPerMonth[monthKey] = activeCount
+          activeSubscriptionsPerPeriod[periodKey] = activeCount
         }
 
-        productData.activeSubscriptionsPerMonth = activeSubscriptionsPerMonth
+        productData.activeSubscriptionsPerPeriod = activeSubscriptionsPerPeriod
       }
 
       // Prepare data for the line chart (active subscriptions over time)
       const lineChartData = {
-        labels: allMonths,
+        labels: allPeriods,
         datasets: [],
       }
 
       // Build datasets for each product
       for (const productId in enhancedData) {
         const productName = enhancedData[productId].productName
-        const activeSubscriptionsPerMonth =
-          enhancedData[productId].activeSubscriptionsPerMonth
+        const activeSubscriptionsPerPeriod =
+          enhancedData[productId].activeSubscriptionsPerPeriod
 
         // Prepare data array aligned with labels
-        const data = allMonths.map((monthKey) => {
-          return activeSubscriptionsPerMonth[monthKey] || 0
+        const data = allPeriods.map((periodKey) => {
+          return activeSubscriptionsPerPeriod[periodKey] || 0
         })
 
         lineChartData.datasets.push({
@@ -385,7 +426,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchAndEnhanceData()
-  }, [list])
+  }, [list, timeGranularity]) // Added timeGranularity as dependency
 
   const buildQuery = (page = 1, pageSize = 999) => {
     const queryParts = []
@@ -552,7 +593,7 @@ const Dashboard = () => {
               </Card.Body>
             </Card>
           </Col>
-          {/* Bar Chart for Subscriptions per Plan */}
+          {/* Pie Chart for Subscriptions per Plan */}
           <Col md={6} className="mb-4 d-none d-sm-block">
             <Card className="h-100">
               <Card.Header>
@@ -592,6 +633,29 @@ const Dashboard = () => {
                 </Card.Title>
               </Card.Header>
               <Card.Body>
+                {/* Tabs for Time Granularity Selection */}
+                <Tabs
+                  activeKey={timeGranularity}
+                  onSelect={(k) => setTimeGranularity(k)}
+                  className="mb-3"
+                >
+                  <Tab
+                    eventKey="month"
+                    title={
+                      <SafeFormatMessage id="Month" defaultMessage="Month" />
+                    }
+                  ></Tab>
+                  <Tab
+                    eventKey="week"
+                    title={
+                      <SafeFormatMessage id="Week" defaultMessage="Week" />
+                    }
+                  ></Tab>
+                  <Tab
+                    eventKey="day"
+                    title={<SafeFormatMessage id="Day" defaultMessage="Day" />}
+                  ></Tab>
+                </Tabs>
                 <Chart
                   type="line"
                   data={chartData.lineChartData}
@@ -606,7 +670,9 @@ const Dashboard = () => {
                       x: {
                         title: {
                           display: true,
-                          text: 'Month',
+                          text:
+                            timeGranularity.charAt(0).toUpperCase() +
+                            timeGranularity.slice(1),
                         },
                         ticks: {
                           autoSkip: false,
