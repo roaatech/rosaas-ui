@@ -934,5 +934,8 @@
   "Product-Filter": "Product Filter",
   "usage-example-title": "Usage Example",
   "usage-example-description": "This example shows how to embed the pricing page within an iframe. Adjust the width and height as needed.",
-  "Copy-Code": "Copy Code"
+  "Copy-Code": "Copy Code",
+  "Day": "Day",
+  "Open-in-new-tab": "Open in new tab",
+  "Preview-Description": "Preview the embedded pricing page in an iframe"
 }

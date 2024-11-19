@@ -14,7 +14,13 @@ import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import { setLoading } from '../../store/slices/main'
 import { arraysEqual } from '../../components/custom/Shared/SharedFunctions/sharedFunctionConsts'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendar, faUser, faUsers } from '@fortawesome/free-solid-svg-icons'
+import {
+  faArrowLeft,
+  faArrowRight,
+  faCalendar,
+  faUser,
+  faUsers,
+} from '@fortawesome/free-solid-svg-icons'
 import ProductForm from '../../components/custom/Product/ProductForm/ProductForm'
 
 const ProductFilterContainer = ({ setAllSelectedProducts }) => {
@@ -93,33 +99,47 @@ const Dashboard = () => {
   const [selectedProducts, setAllSelectedProducts] = useState([])
   const [selectedFilters, setSelectedFilters] = useState([])
   const [isInitialized, setIsInitialized] = useState(false)
-  const [chartData, setChartData] = useState({})
+  const [chartData, setChartData] = useState({
+    totalSubscriptions: 0,
+    dateRange: '',
+    chartSubscriptions: { labels: [], data: [] },
+    planChartData: { labels: [], datasets: [] },
+    planPieChartData: {
+      labels: [],
+      datasets: [{ data: [], backgroundColor: [] }],
+    },
+    lineChartData: { labels: [], datasets: [] },
+    enhancedData: {},
+  })
   const [timeGranularity, setTimeGranularity] = useState('day') // Default to 'day' as per your request
   const [list, setList] = useState([])
   const dispatch = useDispatch()
   const { subscriptionFilteredList, subscriptionCanceledFilteredList } =
     useRequest()
 
-  const getWeekNumber = (date) => {
-    const d = new Date(
-      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-    )
-    const dayNum = d.getUTCDay() || 7
-    d.setUTCDate(d.getUTCDate() + 4 - dayNum)
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
-    return Math.ceil(((d - yearStart) / 86400000 + 1) / 7)
+  const [periodOffset, setPeriodOffset] = useState(0)
+
+  const getMaxPeriods = () => {
+    if (timeGranularity === 'day') return 7
+    if (timeGranularity === 'week') return 7
+    if (timeGranularity === 'month') return 12 // Adjust as needed
+    return 10 // Default value
   }
 
-  const getDateOfISOWeek = (week, year) => {
-    const simple = new Date(year, 0, 1 + (week - 1) * 7)
-    const dayOfWeek = simple.getDay()
-    let ISOweekStart = simple
-    if (dayOfWeek <= 4) {
-      ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1)
-    } else {
-      ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay())
+  const formatPeriodLabel = (periodStart, periodEnd, granularity) => {
+    if (granularity === 'month') {
+      const options = { month: 'short', year: 'numeric' }
+      return periodStart.toLocaleDateString(undefined, options)
+    } else if (granularity === 'week') {
+      const options = { month: 'short', day: 'numeric' }
+      return `${periodStart.toLocaleDateString(
+        undefined,
+        options
+      )} - ${periodEnd.toLocaleDateString(undefined, options)}`
+    } else if (granularity === 'day') {
+      const options = { month: 'short', day: 'numeric' }
+      return periodStart.toLocaleDateString(undefined, options)
     }
-    return ISOweekStart
   }
 
   const fetchAndEnhanceData = async () => {
@@ -139,14 +159,19 @@ const Dashboard = () => {
 
       // Find the earliest start date and latest end date among all subscriptions
       subscriptions.forEach((subscription) => {
-        const startDate = new Date(subscription.startDate)
+        const startDate =
+          new Date(subscription.startDate) || new Date(subscription.createdDate)
 
         // Determine the effective end date
-        let endDate = new Date()
-        if (subscription.cancellationOrSuspensionDate) {
-          endDate = new Date(subscription.cancellationOrSuspensionDate)
-        } else if (subscription.endDate) {
-          endDate = new Date(subscription.endDate)
+        let endDate = subscription.cancellationOrSuspensionDate
+          ? new Date(subscription.cancellationOrSuspensionDate)
+          : subscription.endDate
+            ? new Date(subscription.endDate)
+            : new Date()
+
+        // Cap endDate at current date
+        if (endDate > new Date()) {
+          endDate = new Date()
         }
 
         // Update earliestStartDate and latestEndDate
@@ -156,9 +181,6 @@ const Dashboard = () => {
         if (!latestEndDate || endDate > latestEndDate) {
           latestEndDate = endDate
         }
-        if (latestEndDate > new Date()) {
-          latestEndDate = new Date()
-        }
       })
 
       // Generate all time periods based on the selected granularity
@@ -167,31 +189,56 @@ const Dashboard = () => {
       currentPeriodStart.setHours(0, 0, 0, 0)
 
       while (currentPeriodStart <= latestEndDate) {
-        let periodKey = ''
         let nextPeriodStart = new Date(currentPeriodStart)
+        let periodEnd = null
+
         if (timeGranularity === 'month') {
-          periodKey = `${currentPeriodStart.getFullYear()}-${
-            currentPeriodStart.getMonth() + 1
-          }`
           nextPeriodStart.setMonth(currentPeriodStart.getMonth() + 1)
+          periodEnd = new Date(nextPeriodStart)
+          periodEnd.setDate(periodEnd.getDate() - 1)
+          periodEnd.setHours(23, 59, 59, 999)
         } else if (timeGranularity === 'week') {
-          const weekNumber = getWeekNumber(currentPeriodStart)
-          periodKey = `${currentPeriodStart.getFullYear()}-W${weekNumber}`
+          periodEnd = new Date(currentPeriodStart)
+          periodEnd.setDate(periodEnd.getDate() + 6)
+          periodEnd.setHours(23, 59, 59, 999)
           nextPeriodStart.setDate(currentPeriodStart.getDate() + 7)
         } else if (timeGranularity === 'day') {
-          periodKey = currentPeriodStart.toISOString().split('T')[0]
+          periodEnd = new Date(currentPeriodStart)
+          periodEnd.setHours(23, 59, 59, 999)
           nextPeriodStart.setDate(currentPeriodStart.getDate() + 1)
         }
-        allPeriods.push(periodKey)
+
+        const periodLabel = formatPeriodLabel(
+          currentPeriodStart,
+          periodEnd,
+          timeGranularity
+        )
+
+        allPeriods.push({
+          key: currentPeriodStart.toISOString(),
+          label: periodLabel,
+          start: new Date(currentPeriodStart),
+          end: periodEnd,
+        })
+
         currentPeriodStart = nextPeriodStart
       }
 
-      // Initialize data structures for each product
+      // Calculate active subscriptions per period per product
+      const subscriptionsByProduct = {}
       for (const subscription of subscriptions) {
         const productId = subscription.product.id
-        const productName = subscription.product.displayNameLocalizations.en
-        const planId = subscription.plan.id
-        const planName = subscription.plan.displayNameLocalizations.en
+        if (!subscriptionsByProduct[productId]) {
+          subscriptionsByProduct[productId] = []
+        }
+        subscriptionsByProduct[productId].push(subscription)
+      }
+
+      // Initialize data structures for each product
+      for (const productId in subscriptionsByProduct) {
+        const productSubscriptions = subscriptionsByProduct[productId]
+        const productName =
+          productSubscriptions[0].product.displayNameLocalizations.en
 
         if (!enhancedData[productId]) {
           enhancedData[productId] = {
@@ -202,28 +249,33 @@ const Dashboard = () => {
           }
         }
 
-        if (!planColors[planId]) {
-          planColors[planId] = getRandomColor()
-        }
+        for (const subscription of productSubscriptions) {
+          const planId = subscription.plan.id
+          const planName = subscription.plan.displayNameLocalizations.en
 
-        if (!productColors[productId]) {
-          productColors[productId] = getRandomColor()
-        }
-
-        // Determine if the subscription is active
-        const isActive = subscription.subscriptionStatus === 1 // Adjust status code as needed
-
-        // Increment active subscriptions count if active
-        if (isActive) {
-          enhancedData[productId].subscriptionsCount += 1
-
-          if (!enhancedData[productId].plans[planId]) {
-            enhancedData[productId].plans[planId] = {
-              planName,
-              subscriptionCounts: 0,
-            }
+          if (!planColors[planId]) {
+            planColors[planId] = getRandomColor()
           }
-          enhancedData[productId].plans[planId].subscriptionCounts += 1
+
+          if (!productColors[productId]) {
+            productColors[productId] = getRandomColor()
+          }
+
+          // Determine if the subscription is active
+          const isActive = subscription.subscriptionStatus === 1 // Adjust status code as needed
+
+          // Increment active subscriptions count if active
+          if (isActive) {
+            enhancedData[productId].subscriptionsCount += 1
+
+            if (!enhancedData[productId].plans[planId]) {
+              enhancedData[productId].plans[planId] = {
+                planName,
+                subscriptionCounts: 0,
+              }
+            }
+            enhancedData[productId].plans[planId].subscriptionCounts += 1
+          }
         }
       }
 
@@ -232,45 +284,33 @@ const Dashboard = () => {
         const productData = enhancedData[productId]
         const activeSubscriptionsPerPeriod = {}
 
-        for (let i = 0; i < allPeriods.length; i++) {
-          const periodKey = allPeriods[i]
-          let periodStart = null
-          let periodEnd = null
-
-          if (timeGranularity === 'month') {
-            const [year, month] = periodKey.split('-').map(Number)
-            periodStart = new Date(year, month - 1, 1)
-            periodEnd = new Date(year, month, 0, 23, 59, 59, 999)
-          } else if (timeGranularity === 'week') {
-            const [year, weekStr] = periodKey.split('-W')
-            const week = Number(weekStr)
-            periodStart = getDateOfISOWeek(week, Number(year))
-            periodEnd = new Date(periodStart)
-            periodEnd.setDate(periodEnd.getDate() + 6)
-            periodEnd.setHours(23, 59, 59, 999)
-          } else if (timeGranularity === 'day') {
-            periodStart = new Date(periodKey)
-            periodStart.setHours(0, 0, 0, 0)
-            periodEnd = new Date(periodKey)
-            periodEnd.setHours(23, 59, 59, 999)
-          }
+        for (const period of allPeriods) {
+          const periodKey = period.key
+          const periodStart = period.start
+          const periodEnd = period.end
 
           let activeCount = 0
 
           for (const subscription of subscriptions) {
             if (subscription.product.id !== productId) continue
 
-            const startDate = new Date(subscription.startDate)
-            let endDate = new Date()
-            if (subscription.cancellationOrSuspensionDate) {
-              endDate = new Date(subscription.cancellationOrSuspensionDate)
-            } else if (subscription.endDate) {
-              endDate = new Date(subscription.endDate)
+            const startDate =
+              new Date(subscription.startDate) ||
+              new Date(subscription.createdDate)
+            let endDate = subscription.cancellationOrSuspensionDate
+              ? new Date(subscription.cancellationOrSuspensionDate)
+              : subscription.endDate
+                ? new Date(subscription.endDate)
+                : new Date()
+
+            // Cap endDate at current date
+            if (endDate > new Date()) {
+              endDate = new Date()
             }
 
-            // Check if subscription is active during the period
+            // Determine if the subscription was active during the period
             if (startDate <= periodEnd && endDate >= periodStart) {
-              activeCount += 1
+              activeCount += 1 // Count the subscription as active during this period
             }
           }
 
@@ -281,8 +321,15 @@ const Dashboard = () => {
       }
 
       // Prepare data for the line chart (active subscriptions over time)
+      const maxPeriods = getMaxPeriods()
+      const totalPeriods = allPeriods.length
+      const start = Math.max(0, totalPeriods - periodOffset - maxPeriods)
+      const end = totalPeriods - periodOffset
+
+      const periodsToDisplay = allPeriods.slice(start, end)
+
       const lineChartData = {
-        labels: allPeriods,
+        labels: periodsToDisplay.map((p) => p.label),
         datasets: [],
       }
 
@@ -293,7 +340,8 @@ const Dashboard = () => {
           enhancedData[productId].activeSubscriptionsPerPeriod
 
         // Prepare data array aligned with labels
-        const data = allPeriods.map((periodKey) => {
+        const data = periodsToDisplay.map((period) => {
+          const periodKey = period.key
           return activeSubscriptionsPerPeriod[periodKey] || 0
         })
 
@@ -416,6 +464,7 @@ const Dashboard = () => {
         planPieChartData,
         lineChartData,
         enhancedData,
+        totalPeriods,
       })
     } catch (error) {
       console.error('Error fetching subscription data:', error)
@@ -426,7 +475,28 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchAndEnhanceData()
-  }, [list, timeGranularity]) // Added timeGranularity as dependency
+  }, [list, timeGranularity, periodOffset]) // Added periodOffset as dependency
+
+  const handlePreviousPeriods = () => {
+    if (!chartData.lineChartData || !chartData.lineChartData.labels) return
+
+    const totalPeriods = chartData.totalPeriods // Use the total number of periods
+    const maxPeriods = getMaxPeriods()
+    if (periodOffset + maxPeriods < totalPeriods) {
+      setPeriodOffset(periodOffset + maxPeriods)
+    }
+  }
+
+  const handleNextPeriods = () => {
+    if (!chartData.lineChartData || !chartData.lineChartData.labels) return
+
+    const maxPeriods = getMaxPeriods()
+    if (periodOffset - maxPeriods >= 0) {
+      setPeriodOffset(periodOffset - maxPeriods)
+    } else {
+      setPeriodOffset(0)
+    }
+  }
 
   const buildQuery = (page = 1, pageSize = 999) => {
     const queryParts = []
@@ -473,7 +543,7 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    if (arraysEqual(selectedFilters, selectedProducts) && isInitialized) {
+    if (selectedFilters === selectedProducts && isInitialized) {
       return
     }
     const newQuery = buildQuery()
@@ -557,11 +627,11 @@ const Dashboard = () => {
                 <Chart
                   type="bar"
                   data={{
-                    labels: chartData.chartSubscriptions?.labels,
+                    labels: chartData.chartSubscriptions.labels,
                     datasets: [
                       {
                         label: 'Total Subscriptions',
-                        data: chartData.chartSubscriptions?.data,
+                        data: chartData.chartSubscriptions.data,
                         backgroundColor: '#42A5F5',
                       },
                     ],
@@ -632,12 +702,15 @@ const Dashboard = () => {
                   />
                 </Card.Title>
               </Card.Header>
-              <Card.Body>
+              <Card.Body className="px-3 py-3">
                 {/* Tabs for Time Granularity Selection */}
                 <Tabs
                   activeKey={timeGranularity}
-                  onSelect={(k) => setTimeGranularity(k)}
-                  className="mb-3"
+                  onSelect={(k) => {
+                    setTimeGranularity(k)
+                    setPeriodOffset(0) // Reset period offset when granularity changes
+                  }}
+                  className="mb-0 px-4"
                 >
                   <Tab
                     eventKey="month"
@@ -656,38 +729,75 @@ const Dashboard = () => {
                     title={<SafeFormatMessage id="Day" defaultMessage="Day" />}
                   ></Tab>
                 </Tabs>
-                <Chart
-                  type="line"
-                  data={chartData.lineChartData}
-                  options={{
-                    responsive: true,
-                    plugins: {
-                      legend: {
-                        position: 'top',
-                      },
-                    },
-                    scales: {
-                      x: {
-                        title: {
-                          display: true,
-                          text:
-                            timeGranularity.charAt(0).toUpperCase() +
-                            timeGranularity.slice(1),
+                {/* Navigation Arrows */}
+                <div className="m-0 card p-3">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <Button
+                      variant="primary"
+                      onClick={handlePreviousPeriods}
+                      disabled={
+                        periodOffset + getMaxPeriods() >= chartData.totalPeriods
+                      }
+                    >
+                      <FontAwesomeIcon icon={faArrowLeft} />
+                    </Button>
+                    <span>
+                      {chartData.lineChartData &&
+                      chartData.lineChartData.labels &&
+                      chartData.lineChartData.labels.length > 0
+                        ? chartData.lineChartData.labels[0]
+                        : 'N/A'}{' '}
+                      -{' '}
+                      {chartData.lineChartData &&
+                      chartData.lineChartData.labels &&
+                      chartData.lineChartData.labels.length > 0
+                        ? chartData.lineChartData.labels[
+                            chartData.lineChartData.labels.length - 1
+                          ]
+                        : 'N/A'}
+                    </span>
+                    <Button
+                      variant="primary"
+                      onClick={handleNextPeriods}
+                      disabled={periodOffset <= 0}
+                    >
+                      {' '}
+                      <FontAwesomeIcon icon={faArrowRight} />
+                    </Button>
+                  </div>
+                  <Chart
+                    type="line"
+                    data={chartData.lineChartData}
+                    options={{
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          position: 'top',
                         },
-                        ticks: {
-                          autoSkip: false,
+                      },
+                      scales: {
+                        x: {
+                          title: {
+                            display: true,
+                            text:
+                              timeGranularity.charAt(0).toUpperCase() +
+                              timeGranularity.slice(1),
+                          },
+                          ticks: {
+                            autoSkip: false,
+                          },
+                        },
+                        y: {
+                          title: {
+                            display: true,
+                            text: 'Number of Subscriptions',
+                          },
+                          beginAtZero: true,
                         },
                       },
-                      y: {
-                        title: {
-                          display: true,
-                          text: 'Number of Subscriptions',
-                        },
-                        beginAtZero: true,
-                      },
-                    },
-                  }}
-                />
+                    }}
+                  />
+                </div>
               </Card.Body>
             </Card>
           </Col>

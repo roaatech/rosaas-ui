@@ -49,7 +49,6 @@ const ProductDetailsTab = ({ data }) => {
   const { getProductPlans } = useRequest()
   const productId = params.id
   const location = new URL(window.location.href)
-  console.log({ location: location.origin })
 
   useEffect(() => {
     ;(async () => {
@@ -72,6 +71,7 @@ const ProductDetailsTab = ({ data }) => {
       {/* Dynamic Buttons for Language Selection */}
       <div className="d-flex align-items-center justify-content-between pt-0 mt-0 mb-1 ">
         <NonEditableUrlItem
+          showNavigationIcon={true}
           data={{
             method: 'PRICINGURL',
             path: `${location?.origin}${Routes.marketPlacePage.path}/${data.client?.systemName}/${data?.systemName}`,

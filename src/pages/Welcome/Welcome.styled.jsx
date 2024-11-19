@@ -5,4 +5,7 @@ export const Wrapper = styled.div`
     /* margin-right: auto;
     margin-left: auto; */
   }
+  .nav-tabs .nav-link.active {
+    background-color: var(--primary-color);
+  }
 `

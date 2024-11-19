@@ -44,7 +44,7 @@ const CodeBox = ({ codeString, language }) => {
           {toolTipText}
         </div>
       </div>
-      <div style={{ padding: '10px' }}>
+      <div dir="ltr" style={{ padding: '10px' }}>
         <SyntaxHighlighter language={language}>{codeString}</SyntaxHighlighter>
       </div>
     </CodeBoxWrapper>

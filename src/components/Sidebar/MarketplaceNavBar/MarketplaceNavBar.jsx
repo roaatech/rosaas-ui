@@ -101,7 +101,7 @@ const MarketplaceNavBar = ({ profile }) => {
               storedCurrencyId == 'null')
           ) {
             setDefaultCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
-            setCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
+            // setCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
             setSelectedCurrency(primaryCurrency.currencyCode)
           }
         }

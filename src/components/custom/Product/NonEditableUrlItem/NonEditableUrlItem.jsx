@@ -7,8 +7,9 @@ import { AiFillCopy } from 'react-icons/ai'
 import { FormattedMessage } from 'react-intl'
 import { useSelector } from 'react-redux'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
+import { FiExternalLink } from 'react-icons/fi'
 
-const NonEditableUrlItem = ({ data }) => {
+const NonEditableUrlItem = ({ data, showNavigationIcon = false }) => {
   const url = data
   const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
   let direction = useSelector((state) => state.main.direction)
@@ -18,6 +19,10 @@ const NonEditableUrlItem = ({ data }) => {
     setTimeout(() => {
       setToolTipText('Copy-to-clipboard')
     }, 2000)
+  }
+
+  const handleNavigate = () => {
+    window.open(url.path, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -62,6 +67,32 @@ const NonEditableUrlItem = ({ data }) => {
               </CopyToClipboard>
             </span>
           </OverlayTrigger>
+          {showNavigationIcon && (
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              placement="top"
+              overlay={
+                <Tooltip>
+                  <div style={{ minWidth: '100px' }}>
+                    {
+                      <SafeFormatMessage
+                        id="Open-in-new-tab"
+                        defaultMessage={'Open in new tab'}
+                      />
+                    }
+                  </div>
+                </Tooltip>
+              }
+            >
+              <span
+                className="navigateItem ml-2"
+                onClick={handleNavigate}
+                style={{ cursor: 'pointer', marginLeft: '10px' }}
+              >
+                <FiExternalLink />
+              </span>
+            </OverlayTrigger>
+          )}
         </span>
       </div>
     </Wrapper>

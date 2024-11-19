@@ -45,7 +45,7 @@ const PricingPage = () => {
   const isRunningInIframe = window.self !== window.top
 
   useEffect(() => {
-    if (paramLanguage === 'ar' || isRunningInIframe) {
+    if (paramLanguage === 'ar' || (!paramLanguage && isRunningInIframe)) {
       changeDirection('rtl')
     } else {
       changeDirection('ltr')
@@ -76,10 +76,6 @@ const PricingPage = () => {
       )
     )
   )[0]
-  const storedCurrency = localStorage.getItem('currencyId')
-  const storedDefaultCurrency = localStorage.getItem('defaultCurrencyId')
-
-  console.log({ storedCurrency, storedDefaultCurrency })
 
   const productId = productData?.id
 
