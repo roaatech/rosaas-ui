@@ -6,38 +6,24 @@ import {
   Col,
   OverlayTrigger,
   Row,
-  Table,
   Tooltip,
 } from '@themesberg/react-bootstrap'
 
 import { Wrapper } from './ProductTrialPeriod.styled'
-import { FormattedMessage } from 'react-intl'
-import { DataTransform } from '../../../../lib/sharedFun/Time'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { AiFillCopy } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
-import { ProductTrialType } from '../../../../const/product'
+import { activeStatus, ProductTrialType } from '../../../../const/product'
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import useRequest from '../../../../axios/apis/useRequest'
 import { setAllPlans } from '../../../../store/slices/products/productsSlice'
 import Label from '../../Shared/label/Label'
-import DescriptionCell from '../../Shared/DescriptionCell/DescriptionCell'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStopwatch } from '@fortawesome/free-solid-svg-icons'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
+import { BsFillQuestionCircleFill } from 'react-icons/bs'
 
 const ProductTrialPeriod = ({ data, setActiveIndex }) => {
-  const [code, setCode] = useState(data.apiKey)
-  const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
-
-  const handleCopy = () => {
-    setToolTipText('Copied')
-    setTimeout(() => {
-      setToolTipText('Copy-to-clipboard')
-    }, 2000)
-  }
   let direction = useSelector((state) => state.main.direction)
   const listData = useSelector((state) => state.products.products)
   const dispatch = useDispatch()
@@ -60,6 +46,48 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
       }
     })()
   }, [productId])
+
+  const TrialPaymentDetailsRequired = () => {
+    return (
+      <Col md={6}>
+        <Card.Body className="py-0 px-3 ">
+          <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
+            <td className="mb-0 w-50 fw-bold">
+              <SafeFormatMessage
+                defaultMessage={'Payment Details Collection During Trial'}
+                id={'Payment-Details-Collection-During-Trial'}
+              />
+              <OverlayTrigger
+                trigger={['hover', 'focus']}
+                placement="top"
+                overlay={
+                  <Tooltip>
+                    <div style={{ minWidth: '100px' }}>
+                      <SafeFormatMessage
+                        defaultMessage={
+                          "Collecting the customer's payment details during the trial period subscription."
+                        }
+                        id={'Payment-Details-Collection-During-Trial-desc'}
+                      />
+                    </div>
+                  </Tooltip>
+                }
+              >
+                <span>
+                  <BsFillQuestionCircleFill />
+                </span>
+              </OverlayTrigger>
+            </td>
+            <td className=" card-stats">
+              {ProductTrialType[data?.trialType] && (
+                <Label {...activeStatus[data?.isTrialPaymentDetailsRequired]} />
+              )}
+            </td>
+          </tr>
+        </Card.Body>
+      </Col>
+    )
+  }
 
   return (
     <Wrapper>
@@ -85,7 +113,7 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
               <Row>
                 {data?.trialType != 2 ? (
                   <Card.Body className="py-0 px-3">
-                    <Col md={12}>
+                    <Col md={6}>
                       <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                         <td className="mb-0 w-50 fw-bold">
                           <SafeFormatMessage id="Trial-Type" />
@@ -112,6 +140,10 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
                             )}
                           </td>
                         </tr>
+                      </Card.Body>
+                    </Col>
+                    <Col md={6}>
+                      <Card.Body className="py-0 px-3 ">
                         {data?.trialType == 2 && (
                           <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                             <td className="mb-0 w-50 fw-bold">
@@ -146,6 +178,11 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
                       </Card.Body>
                     </Col>
                   </>
+                )}
+                {data?.trialType && data?.trialType != 1 ? (
+                  TrialPaymentDetailsRequired()
+                ) : (
+                  <></>
                 )}
               </Row>
             </Card>

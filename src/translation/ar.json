@@ -929,5 +929,8 @@
   "Day": "يوم",
   "Open-in-new-tab": "فتح في علامة تبويب جديدة",
   "Preview-Description": "معاينة صفحة التسعير المضمّنة في إطار iframe",
-  "Auto-Provisioning": "التوفير التلقائي"
+  "Auto-Provisioning": "التوفير التلقائي",
+  "Payment-Details-Collection-During-Trial-desc": "جمع معلومات الدفع الخاصة بالعميل أثناء الاشتراك في الفترة التجريبية.",
+  "Payment-Details-Collection-During-Trial": "جمع معلومات الدفع أثناء الفترة التجريبية",
+  "Preview": "معاينة"
 }

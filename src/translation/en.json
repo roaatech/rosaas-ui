@@ -937,5 +937,8 @@
   "Copy-Code": "Copy Code",
   "Day": "Day",
   "Open-in-new-tab": "Open in new tab",
-  "Preview-Description": "Preview the embedded pricing page in an iframe"
+  "Preview-Description": "Preview the embedded pricing page in an iframe",
+  "Payment-Details-Collection-During-Trial-desc": "Collecting the customer's payment details during the trial period subscription.",
+  "Payment-Details-Collection-During-Trial": "Payment Details Collection During Trial",
+  "Preview": "Preview"
 }

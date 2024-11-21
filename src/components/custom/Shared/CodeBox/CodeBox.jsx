@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { FaCopy } from 'react-icons/fa'
+import { FaCopy, FaEye } from 'react-icons/fa'
 import SyntaxHighlighter from 'react-syntax-highlighter'
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs'
-import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import styled from 'styled-components'
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
+import { AiFillCopy } from 'react-icons/ai'
+import { CodeBoxButtonWrapper } from './CodeBox.styled'
 
 const CodeBoxWrapper = styled.div`
   border: 1px solid #ddd;
@@ -14,7 +14,7 @@ const CodeBoxWrapper = styled.div`
   background-color: var(--primary0);
 `
 
-const CodeBox = ({ codeString, language }) => {
+const CodeBox = ({ codeString, language, previewOnClick }) => {
   const [toolTipText, setToolTipText] = useState('Copy code')
 
   const handleCopy = () => {
@@ -35,13 +35,28 @@ const CodeBox = ({ codeString, language }) => {
         }}
       >
         <h6 style={{ margin: 0 }}>{language}</h6>
-        <div
-          onClick={handleCopy}
-          variant="outline-primary"
-          style={{ cursor: 'pointer' }}
-        >
-          <FaCopy className="mx-2" />
-          {toolTipText}
+        <div className="d-flex align-items-center">
+          <div
+            onClick={handleCopy}
+            variant="outline-primary"
+            className=" px-2  border-left-2 border-light"
+          >
+            <CodeBoxButtonWrapper>
+              <AiFillCopy /> {toolTipText}
+            </CodeBoxButtonWrapper>
+          </div>
+          {previewOnClick && (
+            <div
+              onClick={previewOnClick}
+              variant="outline-primary"
+              style={{ cursor: 'pointer' }}
+              className="px-2 border-left-2 border-light"
+            >
+              <CodeBoxButtonWrapper>
+                <FaEye /> <SafeFormatMessage id="Preview" />
+              </CodeBoxButtonWrapper>
+            </div>
+          )}
         </div>
       </div>
       <div dir="ltr" style={{ padding: '10px' }}>

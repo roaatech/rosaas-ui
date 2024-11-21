@@ -49,14 +49,14 @@ const SubscriptionsSettings = () => {
 
   const initialValues = {}
   const validationSchema = Yup.object().shape({
-    subscriptionWorkerTimePeriod: Yup.number()
+    subscriptionWorkerIntervalInHours: Yup.number()
       .required('The feild is required!')
       .test(
         'Is positive?',
         'Add a valid number',
         (value) => value > 0 && value % 1 == 0
       ),
-    allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment: Yup.number()
+    paymentGracePeriodInHours: Yup.number()
       .required('The feild is required!')
       .test(
         'Is positive?',
@@ -156,19 +156,19 @@ const SubscriptionsSettings = () => {
                       className="form-control"
                       required
                       type="number"
-                      id="subscriptionWorkerTimePeriod"
-                      name="subscriptionWorkerTimePeriod"
+                      id="subscriptionWorkerIntervalInHours"
+                      name="subscriptionWorkerIntervalInHours"
                       onChange={formik.handleChange}
-                      value={formik.values.subscriptionWorkerTimePeriod}
+                      value={formik.values.subscriptionWorkerIntervalInHours}
                       disabled={!edit}
                     />
-                    {formik.touched.subscriptionWorkerTimePeriod &&
-                      formik.errors.subscriptionWorkerTimePeriod && (
+                    {formik.touched.subscriptionWorkerIntervalInHours &&
+                      formik.errors.subscriptionWorkerIntervalInHours && (
                         <Form.Control.Feedback
                           type="invalid"
                           style={{ display: 'block' }}
                         >
-                          {formik.errors.subscriptionWorkerTimePeriod}
+                          {formik.errors.subscriptionWorkerIntervalInHours}
                         </Form.Control.Feedback>
                       )}
                   </Form.Group>
@@ -197,27 +197,19 @@ const SubscriptionsSettings = () => {
                       className="form-control"
                       required
                       type="number"
-                      id="allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment"
-                      name="allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment"
+                      id="paymentGracePeriodInHours"
+                      name="paymentGracePeriodInHours"
                       onChange={formik.handleChange}
-                      value={
-                        formik.values
-                          .allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment
-                      }
+                      value={formik.values.paymentGracePeriodInHours}
                       disabled={!edit}
                     />
-                    {formik.touched
-                      .allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment &&
-                      formik.errors
-                        .allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment && (
+                    {formik.touched.paymentGracePeriodInHours &&
+                      formik.errors.paymentGracePeriodInHours && (
                         <Form.Control.Feedback
                           type="invalid"
                           style={{ display: 'block' }}
                         >
-                          {
-                            formik.errors
-                              .allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment
-                          }
+                          {formik.errors.paymentGracePeriodInHours}
                         </Form.Control.Feedback>
                       )}
                   </Form.Group>

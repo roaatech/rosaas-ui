@@ -1,15 +1,9 @@
 import React, { useState } from 'react'
-import {
-  Card,
-  Modal,
-  OverlayTrigger,
-  Tooltip,
-} from '@themesberg/react-bootstrap'
+import { Card, Modal } from '@themesberg/react-bootstrap'
 import NonEditableUrlItem from '../NonEditableUrlItem/NonEditableUrlItem'
 import { Routes } from '../../../../routes'
 import CodeBox from '../../Shared/CodeBox/CodeBox'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage' // Adjust import as needed
-import { AiOutlineEye } from 'react-icons/ai'
 import { useIntl } from 'react-intl'
 
 const FrontendIntegrationUrlsTab = ({ data }) => {
@@ -60,32 +54,17 @@ const FrontendIntegrationUrlsTab = ({ data }) => {
             }}
             showNavigationIcon={true}
           />
-          <h5 className="mt-3">
+          <h5 className="mt-3 flex justify-content-between align-items-center">
             <SafeFormatMessage id="usage-example-title" />
-            <OverlayTrigger
-              trigger={['hover', 'focus']}
-              placement="top"
-              overlay={
-                <Tooltip>
-                  <div style={{ minWidth: '100px' }}>
-                    <SafeFormatMessage id="Preview-Description" />
-                  </div>
-                </Tooltip>
-              }
-            >
-              <span
-                className="preview-icon ml-3"
-                style={{ cursor: 'pointer' }}
-                onClick={handlePreview}
-              >
-                <AiOutlineEye size={20} />
-              </span>
-            </OverlayTrigger>
           </h5>
           <p>
             <SafeFormatMessage id="usage-example-description" />
           </p>
-          <CodeBox codeString={iframeExample.trim()} language="html" />
+          <CodeBox
+            codeString={iframeExample.trim()}
+            language="html"
+            previewOnClick={handlePreview}
+          />
         </Card.Body>
       </Card>
 
