@@ -932,5 +932,7 @@
   "Auto-Provisioning": "التوفير التلقائي",
   "Payment-Details-Collection-During-Trial-desc": "جمع معلومات الدفع الخاصة بالعميل أثناء الاشتراك في الفترة التجريبية.",
   "Payment-Details-Collection-During-Trial": "جمع معلومات الدفع أثناء الفترة التجريبية",
-  "Preview": "معاينة"
+  "Preview": "معاينة",
+  "Grace-period-ends-on": "ينتهي الاشتراك فور انتهاء فترة السماحية بتاريخ",
+  "Copied!": "تم النسخ!"
 }

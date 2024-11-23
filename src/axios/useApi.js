@@ -6,7 +6,6 @@ import { changePreloader } from '../store/slices/main'
 import { Client_id } from '../const'
 import { useNavigate } from 'react-router-dom'
 import { Routes } from '../routes'
-import { useEffect } from 'react'
 
 const useApi = () => {
   let axiosObject = {

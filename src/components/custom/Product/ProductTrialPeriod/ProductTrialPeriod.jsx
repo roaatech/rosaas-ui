@@ -52,7 +52,7 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
       <Col md={6}>
         <Card.Body className="py-0 px-3 ">
           <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
-            <td className="mb-0 w-50 fw-bold">
+            <td className="mb-0 w-60 fw-bold">
               <SafeFormatMessage
                 defaultMessage={'Payment Details Collection During Trial'}
                 id={'Payment-Details-Collection-During-Trial'}
@@ -73,7 +73,7 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
                   </Tooltip>
                 }
               >
-                <span>
+                <span className="mx-1">
                   <BsFillQuestionCircleFill />
                 </span>
               </OverlayTrigger>
@@ -112,8 +112,8 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
             <Card border="light" className="shadow-sm mb-3 px-2">
               <Row>
                 {data?.trialType != 2 ? (
-                  <Card.Body className="py-0 px-3">
-                    <Col md={6}>
+                  <Col md={6}>
+                    <Card.Body className="py-0 px-3">
                       <tr className="d-flex align-items-center justify-content-between border-bottom border-light py-2 ">
                         <td className="mb-0 w-50 fw-bold">
                           <SafeFormatMessage id="Trial-Type" />
@@ -124,8 +124,8 @@ const ProductTrialPeriod = ({ data, setActiveIndex }) => {
                           )}
                         </td>
                       </tr>
-                    </Col>
-                  </Card.Body>
+                    </Card.Body>
+                  </Col>
                 ) : (
                   <>
                     <Col md={6}>

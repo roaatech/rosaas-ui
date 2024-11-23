@@ -77,6 +77,7 @@ export default function ChildTable({
     getProductSpecification,
     getProductOwner,
     getPaymentStripeDataBySubId,
+    getSubscriptionsSettings,
   } = useRequest()
   const dispatch = useDispatch()
   const params = useParams()
@@ -89,7 +90,15 @@ export default function ChildTable({
 
   const listProducts = useSelector((state) => state.products.products)
   const { getLocalizedString } = useSharedFunctions()
-
+  const [paymentGracePeriodInHours, setPaymentGracePeriodInHours] = useState(0)
+  useEffect(() => {
+    ;(async () => {
+      const subscriptions = await getSubscriptionsSettings()
+      setPaymentGracePeriodInHours(
+        subscriptions.data.data.paymentGracePeriodInHours
+      )
+    })()
+  }, [])
   useEffect(() => {
     ;(async () => {
       if (listProducts[productData.productId]) {
@@ -373,6 +382,23 @@ export default function ChildTable({
                 <DataLabelWhite text={formatDate(productData.startDate)} />{' '}
                 <SafeFormatMessage id="to" />{' '}
                 <DateLabel endDate={productData.endDate} />
+              </td>
+            </tr>
+          )}
+          {productData.endDate && (
+            <tr>
+              <td className="firstTd fw-bold">
+                <SafeFormatMessage id="Grace-Period-ends-on" />
+              </td>
+              <td>
+                <DateLabel
+                  endDate={
+                    new Date(
+                      new Date(productData.endDate).getTime() +
+                        paymentGracePeriodInHours * 3600 * 1000
+                    )
+                  }
+                />
               </td>
             </tr>
           )}

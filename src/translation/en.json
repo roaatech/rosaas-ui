@@ -940,5 +940,7 @@
   "Preview-Description": "Preview the embedded pricing page in an iframe",
   "Payment-Details-Collection-During-Trial-desc": "Collecting the customer's payment details during the trial period subscription.",
   "Payment-Details-Collection-During-Trial": "Payment Details Collection During Trial",
-  "Preview": "Preview"
+  "Preview": "Preview",
+  "Grace-period-ends-on": "The subscription will be terminated after the grace period ends on",
+  "Copied!": "Copied!"
 }

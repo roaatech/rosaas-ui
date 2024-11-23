@@ -72,8 +72,11 @@ const FrontendIntegrationUrlsTab = ({ data }) => {
       <Modal show={showPreview} onHide={handleClosePreview} centered size="lg">
         <Modal.Header closeButton>
           <Modal.Title>
-            <SafeFormatMessage id="preview-title" defaultMessage="Preview" />
+            <SafeFormatMessage id="Preview" defaultMessage="Preview" />
           </Modal.Title>
+          <div className="mx-2">
+            <SafeFormatMessage id="Preview-Description" />
+          </div>
         </Modal.Header>
         <Modal.Body>
           <iframe

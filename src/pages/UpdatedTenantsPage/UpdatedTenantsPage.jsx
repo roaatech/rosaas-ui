@@ -27,6 +27,8 @@ import {
   Button,
   ButtonGroup,
   Dropdown,
+  OverlayTrigger,
+  Tooltip,
 } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog.jsx'
@@ -62,10 +64,9 @@ import { arraysEqual } from '../../components/custom/Shared/SharedFunctions/shar
 export default function UpdatedTenantsPage({ children }) {
   const {
     getTenant,
-    getTenantList,
     deleteTenantReq,
-    getProductsLookup,
     subscriptionFilteredList,
+    getSubscriptionsSettings,
   } = useRequest()
   const [visible, setVisible] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
@@ -84,6 +85,7 @@ export default function UpdatedTenantsPage({ children }) {
   const [update, setUpdate] = useState(1)
   const [selectedProduct, setSelectedProduct] = useState()
   const [updateDetails, setUpdateDetails] = useState(0)
+  const [paymentGracePeriodInHours, setPaymentGracePeriodInHours] = useState(0)
   const routeParams = useParams()
   const dispatch = useDispatch()
 
@@ -138,7 +140,14 @@ export default function UpdatedTenantsPage({ children }) {
       dispatch(setLoading(false))
     }
   }
-
+  useEffect(() => {
+    ;(async () => {
+      const subscriptions = await getSubscriptionsSettings()
+      setPaymentGracePeriodInHours(
+        subscriptions.data.data.paymentGracePeriodInHours
+      )
+    })()
+  }, [])
   useEffect(() => {
     if (arraysEqual(selectedFilters, selectedData) && isInitialized) {
       return
@@ -565,12 +574,38 @@ export default function UpdatedTenantsPage({ children }) {
                             variant={'gray'}
                           />
                         </span>
+
                         <DateLabel
                           endDate={rowData.endDate}
                           uppercaseMonthDateFormat={true}
                           hasTitle={true}
                           hasBorder={true}
+                          tooltip={
+                            <div>
+                              <SafeFormatMessage
+                                id={'Grace-period-ends-on'}
+                                defaultMessage={
+                                  'The subscription will be terminated after the grace period ends on'
+                                }
+                              />{' '}
+                              <span className="fw-bold">
+                                {UppercaseMonthDateFormat(
+                                  new Date(
+                                    new Date(rowData.endDate).getTime() +
+                                      paymentGracePeriodInHours * 3600 * 1000
+                                  )
+                                )}
+                              </span>
+                            </div>
+                          }
                         />
+
+                        {/* <DateLabel
+                          endDate={rowData.endDate}
+                          uppercaseMonthDateFormat={true}
+                          hasTitle={true}
+                          hasBorder={true}
+                        /> */}
                       </div>
                     )}
                   ></Column>

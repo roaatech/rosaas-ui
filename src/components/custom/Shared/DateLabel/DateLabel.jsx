@@ -5,6 +5,7 @@ import {
   UppercaseMonthDateFormat,
 } from '../../../../lib/sharedFun/Time'
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
+import { OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
 
 function isDateExpired(endDate) {
   if (endDate === 'Unlimited') return false
@@ -25,6 +26,7 @@ const DateLabel = ({
   hasBorder,
   validDateColor,
   validBackgroundColor,
+  tooltip,
 }) => {
   if (!endDate || isNaN(new Date(endDate).getTime())) {
     return null // Use null instead of an empty string
@@ -40,8 +42,8 @@ const DateLabel = ({
   }
   const expired = isDateExpired(endDate)
 
-  return (
-    <Wrapper>
+  const dateLabel = () => {
+    return (
       <span
         className="label"
         style={{
@@ -67,13 +69,28 @@ const DateLabel = ({
             ? formatedDate
               ? endDate
               : uppercaseMonthDateFormat
-              ? uppercaseMonthDateFormatType == 'justDate'
-                ? UppercaseMonthDateFormat(endDate)
-                : UppercaseMonthDateFormat(endDate, true)
-              : formatDate(endDate)
+                ? uppercaseMonthDateFormatType == 'justDate'
+                  ? UppercaseMonthDateFormat(endDate)
+                  : UppercaseMonthDateFormat(endDate, true)
+                : formatDate(endDate)
             : 'Unlimited'}
         </span>
       </span>
+    )
+  }
+
+  return (
+    <Wrapper>
+      {tooltip ? (
+        <OverlayTrigger
+          trigger={['hover', 'focus']}
+          overlay={<Tooltip>{tooltip}</Tooltip>}
+        >
+          {dateLabel()}
+        </OverlayTrigger>
+      ) : (
+        dateLabel()
+      )}
     </Wrapper>
   )
 }

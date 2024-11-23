@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Modal,
   Button,
@@ -20,7 +20,29 @@ const ShowDetails = ({
   style = {},
   titleStyle = {},
   className = {},
+  func,
 }) => {
+  const [currentData, setCurrentData] = useState(data)
+  console.log({ currentData })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (func && !data) {
+        try {
+          const funcResult = await func() // Await the result
+          console.log({ funcResult })
+
+          setCurrentData(funcResult?.data?.data || null) // Handle null/undefined safely
+        } catch (error) {
+          console.error('Error fetching data:', error)
+          setCurrentData(null) // Optionally handle errors gracefully
+        }
+      }
+    }
+
+    fetchData()
+  }, [func, data])
+
   const RowExpansionTemplate = ({ data }) => {
     let parsedData
     try {
@@ -67,25 +89,26 @@ const ShowDetails = ({
               style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}
             >
               <tbody>
-                {Object.keys(data).map((key, index) => (
-                  <tr key={index}>
-                    <td style={titleStyle[key] || {}}>
-                      <SafeFormatMessage id={key} />
-                    </td>
-                    <td
-                      className={`fw-bold ${className[key] || ''} ${
-                        key === 'Description' || key === 'Action-Details'
-                          ? 'description'
-                          : ''
-                      }`}
-                      style={style[key] || {}}
-                    >
-                      <EmptyFallbackRendering data={data[key]}>
-                        {renderField(key, data[key])}
-                      </EmptyFallbackRendering>
-                    </td>
-                  </tr>
-                ))}
+                {currentData &&
+                  Object.keys(currentData).map((key, index) => (
+                    <tr key={index}>
+                      <td style={titleStyle[key] || {}}>
+                        <SafeFormatMessage id={key} />
+                      </td>
+                      <td
+                        className={`fw-bold ${className[key] || ''} ${
+                          key === 'Description' || key === 'Action-Details'
+                            ? 'description'
+                            : ''
+                        }`}
+                        style={style[key] || {}}
+                      >
+                        <EmptyFallbackRendering data={currentData[key]}>
+                          {renderField(key, currentData[key])}
+                        </EmptyFallbackRendering>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </Table>
           </Card.Body>

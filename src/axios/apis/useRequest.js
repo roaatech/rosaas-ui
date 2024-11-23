@@ -20,6 +20,7 @@ import useWebhookEndpointReq from './Product/webhookEndpoint/useWebhookEndpointR
 import usePOReq from './ProductOwner/usePOReq'
 import useDiscountReq from './Setting/discount/useDiscountReq'
 import useCurrencyReq from './Setting/currency/useCurrencyReq'
+import useContactReq from './Contact/useContactReq'
 
 const useRequest = () => {
   const {
@@ -234,6 +235,12 @@ const useRequest = () => {
     ProductOwnerLimits,
     getProductOwnerLookupList,
   } = usePOReq()
+  const {
+    getPaginationContactMessagesList,
+    getContactMessageById,
+    deleteContactMessageById,
+    replayContactMessageById,
+  } = useContactReq()
   return {
     SignInTenantAdminAsync,
     SignInProductOwnerAsync,
@@ -406,6 +413,10 @@ const useRequest = () => {
     getUserById,
     getProductOwnerLookupList,
     getPaymentStripeDataBySubId,
+    getPaginationContactMessagesList,
+    getContactMessageById,
+    deleteContactMessageById,
+    replayContactMessageById,
   }
 }
 export default useRequest
