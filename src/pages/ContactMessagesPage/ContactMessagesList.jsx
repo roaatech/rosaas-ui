@@ -34,6 +34,12 @@ import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/
 import ShowDetails from '../../components/custom/Shared/ShowDetails/ShowDetails.jsx'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog.jsx'
 import ReplayForm from './ReplayForm/ReplayForm.jsx'
+import TableHead from '../../components/custom/Shared/TableHead/TableHead.jsx'
+import { UppercaseMonthDateFormat } from '../../lib/sharedFun/Time.js'
+import Label from '../../components/custom/Shared/label/Label.jsx'
+import { ContactFormStatus } from '../../const/const.js'
+import DataLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLabelWhite.jsx'
+import { MdEmail } from 'react-icons/md'
 
 export default function ContactMessagesList() {
   const dispatch = useDispatch()
@@ -82,8 +88,7 @@ export default function ContactMessagesList() {
   }
   const handleDetails = async (id) => {
     try {
-      setCurrentId(id)
-      setVisibleDetails(true)
+      navigate(`./${id}`)
     } catch (error) {
       console.error('Failed to fetch message details:', error)
     }
@@ -96,8 +101,18 @@ export default function ContactMessagesList() {
 
   return (
     <Wrapper>
-      <BreadcrumbComponent breadcrumbInfo={'ContactMessagesList'} />
-
+      <BreadcrumbComponent breadcrumbInfo={'ContactMessages'} />
+      <TableHead
+        setFirst={setFirst}
+        search={false}
+        button={false}
+        title={
+          <SafeFormatMessage
+            id="Contact-Messages-List"
+            defaultMessage={'Contact Messages List'}
+          />
+        }
+      />
       <div className="main-container">
         <Card
           border="light"
@@ -112,37 +127,49 @@ export default function ContactMessagesList() {
               <Column
                 field="status"
                 header={<SafeFormatMessage id="Status" />}
+                body={(data) => <Label {...ContactFormStatus[data.status]} />}
               />
               <Column
                 field="fullName"
                 header={<SafeFormatMessage id="Full-Name" />}
               />
-              <Column field="email" header={<SafeFormatMessage id="Email" />} />
               <Column
-                field="mobileNumber"
-                header={<SafeFormatMessage id="Mobile-Number" />}
+                field="email"
+                header={<SafeFormatMessage id="Email" />}
+                body={(data) => (
+                  <DataLabelWhite
+                    variant={'gray'}
+                    text={
+                      <>
+                        <MdEmail className="mr-2" />
+                        {data.email}
+                      </>
+                    }
+                  />
+                )}
               />
+
               <Column
                 field="subject"
                 header={<SafeFormatMessage id="Subject" />}
               />
               <Column
                 field="createdDate"
-                header={
-                  <ColumnSortHeader
-                    text={<SafeFormatMessage id="Created-Date" />}
-                    field="createdDate"
-                    sortField={sortField}
-                    sortValue={sortValue}
-                    setSortField={setSortField}
-                    setSortValue={setSortValue}
-                    setFirst={setFirst}
-                  />
-                }
+                header={<SafeFormatMessage id="Created-Date" />}
+                body={(data) => (
+                  <span>
+                    {UppercaseMonthDateFormat(data.createdDate, true, true)}
+                  </span>
+                )}
               />
               <Column
                 field="replyDate"
                 header={<SafeFormatMessage id="Reply-Date" />}
+                body={(data) => (
+                  <span>
+                    {UppercaseMonthDateFormat(data.replyDate, true, true)}
+                  </span>
+                )}
               />
 
               <Column
@@ -164,12 +191,9 @@ export default function ContactMessagesList() {
                     <Dropdown.Menu>
                       <Dropdown.Item onSelect={() => handleDetails(data.id)}>
                         <FontAwesomeIcon icon={faEye} className="mx-2" />
-                        <SafeFormatMessage id="Show-Details" />
+                        <SafeFormatMessage id="View-Details" />
                       </Dropdown.Item>
-                      <Dropdown.Item onSelect={() => handleReplay(data.id)}>
-                        <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                        <SafeFormatMessage id="Replay" />
-                      </Dropdown.Item>
+
                       <Dropdown.Item
                         onClick={() => {
                           setCurrentId(data.id)
@@ -208,13 +232,25 @@ export default function ContactMessagesList() {
         />
       </ThemeDialog>
 
-      <ThemeDialog visible={visibleDetails} setVisible={setVisibleDetails}>
+      <ThemeDialog
+        visible={visibleDetails}
+        setVisible={setVisibleDetails}
+        size={'xl'}
+      >
         <ShowDetails
           popupLabel={<SafeFormatMessage id="Contact-Message-Details" />}
           data={currentData}
           setVisible={setVisibleDetails}
           func={() => getContactMessageById(currentId)}
         />
+        {/* <ReplayForm
+          contactMessageId={currentId}
+          data={currentData}
+          setVisible={setVisibleReplay}
+          type="readOnly"
+          popupLabel={<FormattedMessage id="Reply-to-Message" />}
+          func={() => getContactMessageById(currentId)}
+        /> */}
       </ThemeDialog>
 
       <DeleteConfirmation

@@ -942,5 +942,8 @@
   "Payment-Details-Collection-During-Trial": "Payment Details Collection During Trial",
   "Preview": "Preview",
   "Grace-period-ends-on": "The subscription will be terminated after the grace period ends on",
-  "Copied!": "Copied!"
+  "Copied!": "Copied!",
+  "Replay-Message": "Replay Message",
+  "me:": "me:",
+  "Reply-Date": "Reply Date"
 }

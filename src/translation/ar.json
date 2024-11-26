@@ -934,5 +934,8 @@
   "Payment-Details-Collection-During-Trial": "جمع معلومات الدفع أثناء الفترة التجريبية",
   "Preview": "معاينة",
   "Grace-period-ends-on": "ينتهي الاشتراك فور انتهاء فترة السماحية بتاريخ",
-  "Copied!": "تم النسخ!"
+  "Copied!": "تم النسخ!",
+  "Replay-Message": "رسالة الرد",
+  "me:": "أنا:",
+  "Reply-Date": "تاريخ الرد"
 }

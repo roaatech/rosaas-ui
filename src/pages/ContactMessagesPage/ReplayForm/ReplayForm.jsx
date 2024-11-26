@@ -6,10 +6,12 @@ import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './ReplayForm.styled'
 import { Button, Form, Modal } from '@themesberg/react-bootstrap'
 import { Editor } from 'primereact/editor'
+import { useEffect } from 'react'
 
-const ReplayForm = ({ contactMessageId, setVisible, popupLabel }) => {
+const ReplayForm = ({ contactMessageId, setVisible, setUpdate, update }) => {
   const { replayContactMessageById } = useRequest()
   const [editorContent, setEditorContent] = useState('')
+
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const validationSchema = Yup.object().shape()
@@ -25,6 +27,7 @@ const ReplayForm = ({ contactMessageId, setVisible, popupLabel }) => {
         await replayContactMessageById(contactMessageId, {
           replay: editorContent?.htmlValue,
         })
+        setUpdate(update + 1)
         setVisible(false)
       } catch (error) {
         console.error('Error sending replay:', error)
@@ -38,21 +41,8 @@ const ReplayForm = ({ contactMessageId, setVisible, popupLabel }) => {
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
-        <Modal.Header>
-          <Modal.Title className="h6">{popupLabel}</Modal.Title>
-          <Button
-            variant="close"
-            aria-label="Close"
-            onClick={() => setVisible(false)}
-          />
-        </Modal.Header>
-
         <Modal.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <FormattedMessage id="Replay-Message" />
-            </Form.Label>
-
+          <Form.Group className=" mb-2">
             <Editor
               value={editorContent}
               onTextChange={(content) => {
@@ -74,7 +64,12 @@ const ReplayForm = ({ contactMessageId, setVisible, popupLabel }) => {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" type="submit" disabled={isSubmitting}>
+          <Button
+            className=""
+            variant="secondary"
+            type="submit"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? (
               <FormattedMessage id="Submitting..." />
             ) : (

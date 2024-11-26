@@ -78,6 +78,7 @@ import {
   MdSettingsSuggest,
   MdOutlineVerifiedUser,
   MdOutlineVerified,
+  MdOutlineMessage,
 } from 'react-icons/md'
 import SafeFormatMessage from '../custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import { AiOutlineAudit } from 'react-icons/ai'
@@ -610,39 +611,46 @@ export default (props = {}) => {
                         />
                       </>
                     )}
-                    {userRole == 'superAdmin' && (
-                      <NavItem
-                        title={<SafeFormatMessage id="Discounts" />}
-                        link={Routes.DiscountsPage.path}
-                        icon={<MdDiscount />}
-                        isActive={location.pathname.includes(
-                          Routes.DiscountsPage.path
-                        )}
-                      />
-                    )}
-                    <NavItem
-                      title={<SafeFormatMessage id="Currencies" />}
-                      link={Routes.CurrenciesPage.path}
-                      icon={<MdCurrencyExchange />}
-                      isActive={location.pathname.includes(
-                        Routes.CurrenciesPage.path
+                    {Routes &&
+                      Routes.DiscountsPage.roles.includes(userRole) && (
+                        <NavItem
+                          title={<SafeFormatMessage id="Discounts" />}
+                          link={Routes.DiscountsPage.path}
+                          icon={<MdDiscount />}
+                          isActive={location.pathname.includes(
+                            Routes.DiscountsPage.path
+                          )}
+                        />
                       )}
-                    />
+                    {Routes &&
+                      Routes.CurrenciesPage.roles.includes(userRole) && (
+                        <NavItem
+                          title={<SafeFormatMessage id="Currencies" />}
+                          link={Routes.CurrenciesPage.path}
+                          icon={<MdCurrencyExchange />}
+                          isActive={location.pathname.includes(
+                            Routes.CurrenciesPage.path
+                          )}
+                        />
+                      )}
 
-                    {userRole == 'superAdmin' && (
-                      <NavItem
-                        title={
-                          <SafeFormatMessage id="Exchange-Rate-Providers" />
-                        }
-                        link={Routes.ExchangeRateProvidersSettings.path}
-                        icon={<BsPercent />}
-                        isActive={location.pathname.includes(
-                          Routes.ExchangeRateProvidersSettings.path
-                        )}
-                      />
-                    )}
+                    {Routes &&
+                      Routes.ExchangeRateProvidersSettings.roles.includes(
+                        userRole
+                      ) && (
+                        <NavItem
+                          title={
+                            <SafeFormatMessage id="Exchange-Rate-Providers" />
+                          }
+                          link={Routes.ExchangeRateProvidersSettings.path}
+                          icon={<BsPercent />}
+                          isActive={location.pathname.includes(
+                            Routes.ExchangeRateProvidersSettings.path
+                          )}
+                        />
+                      )}
 
-                    {userRole == 'superAdmin' && (
+                    {Routes && Routes.Profile.roles.includes(userRole) && (
                       <NavItem
                         title={<SafeFormatMessage id="Profile" />}
                         link={Routes.Profile.path}
@@ -687,6 +695,22 @@ export default (props = {}) => {
                     </CollapsableNavItem>
                   </>
                 )}
+                {Routes &&
+                  Routes.ContactMessagesPage.roles.includes(userRole) && (
+                    <NavItem
+                      title={
+                        <SafeFormatMessage
+                          id="Contact-Messages"
+                          defaultMessage={'Contact Messages'}
+                        />
+                      }
+                      link={Routes.ContactMessagesPage.path}
+                      icon={<MdOutlineMessage />}
+                      isActive={location.pathname.includes(
+                        Routes.ContactMessagesPage.path
+                      )}
+                    />
+                  )}
               </Nav>
             </div>
             {/* Sidebar Footer */}

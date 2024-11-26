@@ -1,6 +1,12 @@
 import { MdAttachMoney, MdMoneyOff, MdStar, MdStarBorder } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
 import SafeFormatMessage from '../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faEnvelope,
+  faEnvelopeOpen,
+  faReply,
+} from '@fortawesome/free-solid-svg-icons'
 
 export const labelYesNoStyle = {
   true: {
@@ -72,4 +78,25 @@ export const roundingTypeOptions = {
 }
 export const LimitType = {
   10: <SafeFormatMessage id="Max-Products-Limit" />,
+}
+
+export const ContactFormStatus = {
+  1: {
+    background: 'var(--light-blue)',
+    value: <SafeFormatMessage id="New" />,
+    color: 'var(--blue-2)',
+    icon: <FontAwesomeIcon icon={faEnvelope} />,
+  },
+  2: {
+    background: 'var(--yellow-light)',
+    value: <SafeFormatMessage id="Read" />,
+    color: 'var( --yellow2)',
+    icon: <FontAwesomeIcon icon={faEnvelopeOpen} />,
+  },
+  3: {
+    background: 'var(--second-color-2)',
+    value: <SafeFormatMessage id="Replied" />,
+    color: 'var(--second-color)',
+    icon: <FontAwesomeIcon icon={faReply} />,
+  },
 }

@@ -23,7 +23,6 @@ const ShowDetails = ({
   func,
 }) => {
   const [currentData, setCurrentData] = useState(data)
-  console.log({ currentData })
 
   useEffect(() => {
     const fetchData = async () => {

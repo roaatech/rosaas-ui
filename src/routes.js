@@ -42,6 +42,7 @@ import Logs from './pages/Logs/Logs'
 import ProcessFailed from './pages/ProcessFailed/ProcessFailed'
 import CanceledAccount from './pages/CanceledAccount/CanceledAccount'
 import ContactMessagesList from './pages/ContactMessagesPage/ContactMessagesList'
+import ContactMessagesDetailsPage from './pages/ContactMessagesPage/ContactMessagesDetailsPage/ContactMessagesDetailsPage'
 
 export const adminPanel = '/admin-panel'
 
@@ -70,9 +71,14 @@ export const Routes = {
     roles: ['superAdmin'],
   },
   ContactMessagesPage: {
-    path: `${adminPanel}/system/contact-messages`,
+    path: `${adminPanel}/contact-messages`,
     component: () => <POwnerChecker page={<ContactMessagesList />} />,
-    roles: ['superAdmin', 'clientAdmin', 'productAdmin'],
+    roles: ['superAdmin'],
+  },
+  ContactMessagesdetailsPage: {
+    path: `${adminPanel}/contact-messages/:id`,
+    component: () => <POwnerChecker page={<ContactMessagesDetailsPage />} />,
+    roles: ['superAdmin'],
   },
   audits: {
     path: `${adminPanel}/system/audits`,
