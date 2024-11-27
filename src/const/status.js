@@ -64,20 +64,20 @@ export const statusConst = {
   11: {
     string: 'Delete-request-is-sent',
     opacity: '10',
-    color: '#FF6868',
+    color: 'var(--red)',
     icon: 'pi-trash',
     message: 'Delete-Tenant-Confirmation',
   },
   12: {
     string: 'Deleting',
     opacity: '15',
-    color: '#FF6868',
+    color: 'var(--red)',
     icon: 'pi-trash',
   },
   13: {
     string: 'Deleted',
     opacity: '35',
-    color: '#FF6868',
+    color: 'var(--red)',
     icon: 'pi-trash',
   },
   14: {

@@ -1,34 +1,96 @@
 import React from 'react'
 import { Wrapper } from './DateLabel.styled'
-import { formatDate } from '../../../../lib/sharedFun/Time'
+import {
+  formatDate,
+  UppercaseMonthDateFormat,
+} from '../../../../lib/sharedFun/Time'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
+import { OverlayTrigger, Tooltip } from '@themesberg/react-bootstrap'
 
 function isDateExpired(endDate) {
-  const currentDate = new Date()
-  return endDate !== 'Unlimited' && currentDate > new Date(endDate)
+  if (endDate === 'Unlimited') return false
+  const currentDateUTC = new Date().toISOString()
+  const endDateUTC = new Date(endDate).toISOString()
+
+  return new Date(currentDateUTC).getTime() > new Date(endDateUTC).getTime()
 }
 
-const DateLabel = ({ endDate }) => {
+const DateLabel = ({
+  endDate,
+  formatedDate,
+  uppercaseMonthDateFormat,
+  uppercaseMonthDateFormatType,
+  bold,
+  hasTitle,
+  title,
+  hasBorder,
+  validDateColor,
+  validBackgroundColor,
+  tooltip,
+}) => {
+  if (!endDate || isNaN(new Date(endDate).getTime())) {
+    return null // Use null instead of an empty string
+  }
+
   const DateStatus = {
     true: {
-      background: 'rgba(255, 104, 104, 0.208)',
+      background: 'var(--red2)',
     },
     false: {
-      background: 'rgb(239, 249, 246)',
+      background: validBackgroundColor || 'rgb(239, 249, 246)',
     },
   }
-  const expired = !endDate ? false : isDateExpired(endDate)
+  const expired = isDateExpired(endDate)
 
-  return (
-    <Wrapper>
+  const dateLabel = () => {
+    return (
       <span
         className="label"
         style={{
-          color: expired ? 'rgb(255, 104, 104)' : 'var(--teal-green)',
+          color: expired ? 'var(--red)' : validDateColor || 'var(--teal-green)',
           background: DateStatus[expired].background,
+          borderColor:
+            hasBorder && (expired ? 'var(--red)' : 'var(--teal-green)'),
+          border: hasBorder ? '1px solid' : undefined,
         }}
       >
-        {endDate ? formatDate(endDate) : 'Unlimited'}
+        {(hasTitle || title) && (
+          <>
+            {title ||
+              (expired ? (
+                <SafeFormatMessage id="Ended-on" />
+              ) : (
+                <SafeFormatMessage id="Ends-on" />
+              ))}
+          </>
+        )}{' '}
+        <span className={hasTitle || bold ? 'fw-bold' : ''}>
+          {endDate
+            ? formatedDate
+              ? endDate
+              : uppercaseMonthDateFormat
+                ? uppercaseMonthDateFormatType == 'justDate'
+                  ? UppercaseMonthDateFormat(endDate)
+                  : UppercaseMonthDateFormat(endDate, true)
+                : formatDate(endDate)
+            : 'Unlimited'}
+        </span>
       </span>
+    )
+  }
+
+  return (
+    <Wrapper>
+      {tooltip ? (
+        <OverlayTrigger
+          trigger={['hover', 'focus']}
+          overlay={<Tooltip>{tooltip}</Tooltip>}
+        >
+          {dateLabel()}
+        </OverlayTrigger>
+      ) : (
+        dateLabel()
+      )}
     </Wrapper>
   )
 }

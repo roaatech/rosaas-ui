@@ -12,6 +12,38 @@ const setAllProduct = (state, action) => {
   })
   state.products = allProduct
 }
+const setAllProductsLookup = (state, action) => {
+  const allProduct = JSON.parse(
+    JSON.stringify(current(state.lookup.productsLookup))
+  )
+  action?.payload?.forEach((item) => {
+    if (!{ ...current(state.lookup.productsLookup) }[item.id]) {
+      allProduct[item.id] = item
+    }
+  })
+  state.lookup.productsLookup = allProduct
+}
+const deleteAllProductsLookup = (state) => {
+  state.lookup.productsLookup = {}
+}
+const deleteProductLookupById = (state, action) => {
+  const productId = action?.payload?.id
+
+  if (productId && state.lookup.productsLookup[productId]) {
+    delete state.lookup.productsLookup[productId] // Delete the product by id
+  }
+}
+const updateAllProduct = (state, action) => {
+  const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+  action?.payload?.forEach((item) => {
+    if (!{ ...current(state.products) }[item.id]) {
+      allProduct[item.id] = item
+    } else {
+      allProduct[item.id] = { ...allProduct[item.id], ...item }
+    }
+  })
+  state.products = allProduct
+}
 
 const productInfo = (state, action) => {
   const currentProducts = { ...current(state.products) }
@@ -288,4 +320,8 @@ export {
   clientSecretInfo,
   clientSecretAttr,
   updateClientCredentialAttr,
+  updateAllProduct,
+  setAllProductsLookup,
+  deleteAllProductsLookup,
+  deleteProductLookupById,
 }

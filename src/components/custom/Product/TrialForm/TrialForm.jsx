@@ -4,7 +4,12 @@ import * as Yup from 'yup'
 import useRequest from '../../../../axios/apis/useRequest.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { Form } from '@themesberg/react-bootstrap'
+import {
+  Card,
+  Form,
+  OverlayTrigger,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
 import { Modal, Button } from '@themesberg/react-bootstrap'
 import {
   productsChangeAttr,
@@ -14,6 +19,8 @@ import {
 import { Wrapper } from './TrialForm.styled.jsx'
 import { FormattedMessage } from 'react-intl'
 import { ProductTrialType } from '../../../../const/product.js'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import { BsFillQuestionCircleFill } from 'react-icons/bs'
 
 const TrialForm = ({ setVisible, popupLabel }) => {
   const { changeProductTrialType, getProductList, getProductPlans } =
@@ -40,11 +47,11 @@ const TrialForm = ({ setVisible, popupLabel }) => {
 
   const createValidation = {
     trialType: Yup.number().required(
-      <FormattedMessage id="This-field-is-required" />
+      <SafeFormatMessage id="This-field-is-required" />
     ),
     trialPlanId: Yup.string().test(
       'unit-validation',
-      <FormattedMessage id="This-field-is-required" />,
+      <SafeFormatMessage id="This-field-is-required" />,
       function (value) {
         const trialType = this.resolve(Yup.ref('trialType'))
         if (trialType == '2') {
@@ -55,7 +62,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
     ),
     trialPeriodInDays: Yup.number().test(
       'unit-validation',
-      <FormattedMessage id="Trial-Period-In-Days-Required-Number" />,
+      <SafeFormatMessage id="Trial-Period-In-Days-Required-Number" />,
       function (value) {
         const trialType = this.resolve(Yup.ref('trialType'))
         if (trialType == '2') {
@@ -72,6 +79,9 @@ const TrialForm = ({ setVisible, popupLabel }) => {
     trialType: trialData ? trialData.trialType : '',
     plan: trialData ? trialData.plan : '',
     trialPeriodInDays: trialData ? trialData.trialPeriodInDays : '',
+    isTrialPaymentDetailsRequired: trialData
+      ? trialData.isTrialPaymentDetailsRequired
+      : true,
   }
 
   const formik = useFormik({
@@ -83,6 +93,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
         const productTrialType = await changeProductTrialType(productId, {
           trialType: parseInt(values.trialType),
           trialPlanId: formik.values.trialType == 2 ? values.trialPlanId : null,
+          isTrialPaymentDetailsRequired: values.isTrialPaymentDetailsRequired,
           trialPeriodInDays:
             formik.values.trialType == 2
               ? parseInt(values.trialPeriodInDays)
@@ -95,10 +106,12 @@ const TrialForm = ({ setVisible, popupLabel }) => {
               trialType: parseInt(values.trialType),
               trialPlanId: values.trialPlanId,
               trialPeriodInDays: parseInt(values.trialPeriodInDays),
+              isTrialPaymentDetailsRequired:
+                values.isTrialPaymentDetailsRequired,
             },
           })
         )
-      } else {
+      } else if (formik.values.trialType == 1) {
         const productTrialType = await changeProductTrialType(productId, {
           trialType: parseInt(values.trialType),
         })
@@ -109,6 +122,23 @@ const TrialForm = ({ setVisible, popupLabel }) => {
               trialType: parseInt(values.trialType),
               trialPlanId: '',
               trialPeriodInDays: 0,
+            },
+          })
+        )
+      } else if (formik.values.trialType == 3) {
+        const productTrialType = await changeProductTrialType(productId, {
+          trialType: parseInt(values.trialType),
+          isTrialPaymentDetailsRequired: values.isTrialPaymentDetailsRequired,
+        })
+        dispatch(
+          productsChangeAttr({
+            productId,
+            attributes: {
+              trialType: parseInt(values.trialType),
+              trialPlanId: '',
+              trialPeriodInDays: 0,
+              isTrialPaymentDetailsRequired:
+                values.isTrialPaymentDetailsRequired,
             },
           })
         )
@@ -162,7 +192,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Trial-Type" />{' '}
+                <SafeFormatMessage id="Trial-Type" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
@@ -174,7 +204,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
                 onBlur={formik.handleBlur}
               >
                 <option value="">
-                  <FormattedMessage id="Select-Option" />{' '}
+                  <SafeFormatMessage id="Select-Option" />{' '}
                 </option>
                 {Object.entries(ProductTrialType).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -197,7 +227,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Trial-Plan" />{' '}
+                  <SafeFormatMessage id="Trial-Plan" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <select
@@ -214,7 +244,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
                   disabled={!productId}
                 >
                   <option value="">
-                    <FormattedMessage id="Select-Option" />
+                    <SafeFormatMessage id="Select-Option" />
                   </option>
                   {planOptions?.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -237,7 +267,7 @@ const TrialForm = ({ setVisible, popupLabel }) => {
             <div>
               <Form.Group className="mb-3">
                 <Form.Label>
-                  <FormattedMessage id="Trial-Period-In-Days" />{' '}
+                  <SafeFormatMessage id="Trial-Period-In-Days" />{' '}
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
                 <input
@@ -265,17 +295,62 @@ const TrialForm = ({ setVisible, popupLabel }) => {
               </Form.Group>
             </div>
           )}
+          {formik.values.trialType != 1 && (
+            <div>
+              <Form.Group className="mb-3">
+                <Card>
+                  <Card.Body className="py-2 px-3 d-flex justify-content-between">
+                    <Form.Label>
+                      <SafeFormatMessage
+                        id={'Payment-Details-Collection-During-Trial'}
+                      />{' '}
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        placement="top"
+                        overlay={
+                          <Tooltip>
+                            <SafeFormatMessage id="Payment-Details-Collection-During-Trial-desc" />
+                          </Tooltip>
+                        }
+                      >
+                        <span>
+                          <BsFillQuestionCircleFill />
+                        </span>
+                      </OverlayTrigger>
+                    </Form.Label>
+                    <Form.Check
+                      type="checkbox"
+                      id="isTrialPaymentDetailsRequired"
+                      name="isTrialPaymentDetailsRequired"
+                      checked={formik.values.isTrialPaymentDetailsRequired}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.isTrialPaymentDetailsRequired &&
+                      formik.errors.isTrialPaymentDetailsRequired && (
+                        <Form.Control.Feedback
+                          type="invalid"
+                          style={{ display: 'block' }}
+                        >
+                          {formik.errors.isTrialPaymentDetailsRequired}
+                        </Form.Control.Feedback>
+                      )}
+                  </Card.Body>
+                </Card>
+              </Form.Group>
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

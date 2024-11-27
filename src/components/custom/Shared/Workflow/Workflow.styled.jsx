@@ -93,7 +93,7 @@ export const Wrapper = styled.div`
   .p-paginator .p-paginator-last {
     background-color: transparent;
     border: 0 none;
-    color: #6c757d;
+    color: var(--slate-gray);
     min-width: 1.5rem;
     height: 1.5rem;
     margin: 0.143rem;
@@ -148,11 +148,11 @@ export const Wrapper = styled.div`
     text-decoration: underline;
   }
 
-  .notes-container .note-label { 
+  .notes-container .note-label {
     font-size: var(--smallFont);
     font-weight: bold;
   }
-  .notes-container .note-text { 
+  .notes-container .note-text {
     font-size: var(--smallFont);
   }
 `

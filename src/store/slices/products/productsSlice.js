@@ -6,12 +6,18 @@ import * as featureReducers from './featureReducers'
 import * as specificationReducers from './specificationReducers'
 import * as planPriceReducers from './planPriceReducers'
 import * as featurePlanReducers from './featurePlanReducers'
+import * as WebhookEndpointsReducers from './WebhookEndpointsReducers'
 const _ = require('lodash')
 
 export const productsSlice = createSlice({
   name: 'products',
   initialState: {
     products: {},
+    validationUrl: {
+      path: 'https://example.com/validate',
+      method: 'Post',
+    },
+    lookup: { productsLookup: {}, plansLookup: {} },
   },
 
   reducers: {
@@ -28,16 +34,20 @@ export const productsSlice = createSlice({
     ...planPriceReducers,
 
     ...featurePlanReducers,
+
+    ...WebhookEndpointsReducers,
   },
 })
 
 export const {
+  updateAllProduct,
   setAllSpecifications,
   specificationInfo,
   specificationChangeAttr,
   deleteSpecification,
   setAllProduct,
   subscribe,
+  sortSubscriptions,
   productInfo,
   removeProductStore,
   setAllFeaturePlan,
@@ -71,5 +81,18 @@ export const {
   clientSecretInfo,
   clientSecretAttr,
   updateClientCredentialAttr,
+  setAllWebhookEndpoints,
+  WebhookEndpointInfo,
+  WebhookEndpointsChangeAttr,
+  deleteWebhookEndpointById,
+  deleteAllWebhookEndpoints,
+  deleteAllPlanPriceBySystemName,
+  filterSubscriptions,
+  setSearchTerm,
+  changeSubscriptionAttr,
+  setAllProductsLookup,
+  setAllPlansLookup,
+  deleteAllProductsLookup,
+  deleteProductLookupById,
 } = productsSlice.actions
 export default productsSlice.reducer

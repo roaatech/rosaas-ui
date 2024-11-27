@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import TenantStatus from '../../tenant/TenantStatus/TenantStatus'
 import useRequest from '../../../../axios/apis/useRequest'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisH, faGear } from '@fortawesome/free-solid-svg-icons'
+import { faEllipsisH, faGear, faSort } from '@fortawesome/free-solid-svg-icons'
 import {
   Card,
   Table,
@@ -11,49 +11,42 @@ import {
   Dropdown,
 } from '@themesberg/react-bootstrap'
 import TableDate from '../../Shared/TableDate/TableDate'
-import { Link, Navigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  productInfo,
   subscribe,
+  sortSubscriptions,
+  filterSubscriptions,
+  setSearchTerm,
 } from '../../../../store/slices/products/productsSlice.js'
 import { setAllTenant } from '../../../../store/slices/tenants'
-import { FormattedMessage } from 'react-intl'
-import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
+import { FormattedMessage, useIntl } from 'react-intl'
+import { formatDate } from '../../../../lib/sharedFun/Time'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import Label from '../../Shared/label/Label'
-import { activeStatus } from '../../../../const/product'
+import { activeStatus, subscriptionStatus } from '../../../../const/product'
 import { Wrapper } from './ProductTenantsList.styled'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import { Routes } from '../../../../routes.js'
+import { BsSearch } from 'react-icons/bs'
+import { InputText } from 'primereact/inputtext'
+import CancelSubscriptionForm from '../../tenant/CancelSubscriptionForm/CancelSubscriptionForm.jsx'
+import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog.jsx'
+import { MdOutlineCancel } from 'react-icons/md'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 export const ProductTenantsList = ({ productId, productName }) => {
   const { getProductTenants } = useRequest()
-  const [searchValue] = useState('')
-  const [sortField] = useState('')
-  const [sortValue] = useState('')
-  const [first] = useState(0)
-  const [rows] = useState(10)
-  const [update] = useState(1)
-  const [selectedProduct] = useState()
+  const [sortField, setSortField] = useState('')
+  const [sortOrder, setSortOrder] = useState('asc')
+  const [inputValue, setInputValue] = useState('')
 
   const dispatch = useDispatch()
-
   const list = useSelector((state) => state.products.products[productId])
-
-  function isDateTimeInFuture(dateTimeString) {
-    // Parse the given date string into a Date object
-    const [datePart, timePart] = dateTimeString.split(' ')
-    const [day, month, year] = datePart.split('/').map(Number)
-    const [hours, minutes, seconds] = timePart.split(':').map(Number)
-    const inputDate = new Date(year, month - 1, day, hours, minutes, seconds)
-
-    // Get the current date and time
-    const currentDate = new Date()
-
-    // Compare the two dates
-    return inputDate > currentDate
-  }
+  const searchTerm = useSelector(
+    (state) => state.products.products[productId]?.searchTerm
+  )
 
   useEffect(() => {
     let params = `${productId}/subscriptions`
@@ -65,8 +58,52 @@ export const ProductTenantsList = ({ productId, productName }) => {
         dispatch(subscribe({ id: productId, data: listData.data.data }))
       }
     })()
-  }, [first, rows, searchValue, sortField, sortValue, update, selectedProduct])
+  }, [productId, Object.keys(list).length > 0])
 
+  useEffect(() => {
+    dispatch(filterSubscriptions({ productId }))
+  }, [searchTerm && Object.values(searchTerm).length, productId])
+
+  const handleSort = (field) => {
+    const order = sortField === field && sortOrder === 'asc' ? 'desc' : 'asc'
+    setSortField(field)
+    setSortOrder(order)
+    dispatch(sortSubscriptions({ productId, sortBy: field, order }))
+  }
+
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setInputValue(value)
+    dispatch(setSearchTerm({ productId, searchTerm: value }))
+  }
+  const [visible, setVisible] = useState(false)
+  const [currentSubscriptionId, setCurrentSubscriptionId] = useState()
+  const [currentSystemName, setCurrentSystemName] = useState()
+  const [popupLabel, setPopupLabel] = useState()
+  const [type, setType] = useState()
+  const suspendSubscription = async (subscriptionId, systemName) => {
+    setCurrentSubscriptionId(subscriptionId)
+    setCurrentSystemName(systemName)
+    setVisible(true)
+    setType('suspend')
+    setPopupLabel(<SafeFormatMessage id="Suspend-Subscription" />)
+  }
+  const cancelSubscription = async (subscriptionId, systemName) => {
+    setCurrentSubscriptionId(subscriptionId)
+    setCurrentSystemName(systemName)
+    setVisible(true)
+    setType('cancel')
+    setPopupLabel(<SafeFormatMessage id="Cancel-Subscription" />)
+  }
+  const activateSubscription = async (subscriptionId, systemName) => {
+    setCurrentSubscriptionId(subscriptionId)
+    setCurrentSystemName(systemName)
+    setVisible(true)
+    setType('activate')
+    setPopupLabel(<SafeFormatMessage id="Activate-Subscription" />)
+  }
+
+  const intl = useIntl()
   const TableRow = (props) => {
     const {
       displayName,
@@ -75,12 +112,12 @@ export const ProductTenantsList = ({ productId, productName }) => {
       createdDate,
       editedDate,
       tenantId,
-      plan,
+      plan: { systemName: planSystemName } = {},
       startDate,
       endDate,
-      isActive,
+      subscriptionStatus: subscriptionStatusValue,
+      subscriptionId,
     } = props
-    const subscribtionStatus = isActive ? true : false
 
     return (
       <tr>
@@ -90,44 +127,18 @@ export const ProductTenantsList = ({ productId, productName }) => {
         <td>
           <span className="fw-normal">{systemName}</span>
         </td>
-
-        {/* <td>
-          <span className="fw-normal">
-            <OverlayTrigger
-              trigger={["hover", "focus"]}
-              overlay={<Tooltip>{list?.defaultHealthCheckUrl}</Tooltip>}>
-              <span
-                style={{
-                  background:
-                    urlIsOverridden[healthCheckUrlIsOverridden.toString()]
-                      .background,
-                }}
-                size="sm"
-                className="p-1 border-round border-1 border-400 mx-2">
-                {urlIsOverridden[healthCheckUrlIsOverridden.toString()].value}
-              </span>
-            </OverlayTrigger>
-          </span>
-        </td> */}
-
         <td>
           <span className={`fw-normal`}>
-            <DataLabelWhite text={plan.systemName} />
+            <DataLabelWhite text={planSystemName} />
           </span>
         </td>
         <td>
           <span>
-            <Label {...activeStatus[subscribtionStatus]} />
+            <Label {...subscriptionStatus[subscriptionStatusValue]} />
           </span>
         </td>
-        <td>
-          {' '}
-          <DataLabelWhite text={formatDate(startDate)} />
-        </td>
-        <td>
-          <DateLabel endDate={endDate} />
-        </td>
-
+        <td>{startDate && <DataLabelWhite text={formatDate(startDate)} />}</td>
+        <td>{endDate && <DateLabel endDate={endDate} />}</td>
         <td>
           <span className="fw-normal">
             {status && <TenantStatus statusValue={status} />}
@@ -135,10 +146,11 @@ export const ProductTenantsList = ({ productId, productName }) => {
         </td>
         <td>
           <span className={`fw-normal`}>
-            <TableDate createdDate={createdDate} editedDate={editedDate} />
+            {createdDate && editedDate && (
+              <TableDate createdDate={createdDate} editedDate={editedDate} />
+            )}
           </span>
         </td>
-
         <td>
           <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle
@@ -154,13 +166,49 @@ export const ProductTenantsList = ({ productId, productName }) => {
             <Dropdown.Menu>
               <Dropdown.Item>
                 <Link
-                  to={`/tenants/${tenantId}#${productName}`}
+                  to={`${Routes.Tenant.path}/${tenantId}#${productName}`}
                   className="w-100 d-block"
                 >
                   <FontAwesomeIcon icon={faGear} className="mx-2" />{' '}
-                  <FormattedMessage id="Manage" />
+                  <SafeFormatMessage id="Manage" />
                 </Link>
               </Dropdown.Item>
+              {subscriptionStatusValue === 2 && (
+                <Dropdown.Item
+                  onSelect={() => {
+                    activateSubscription(subscriptionId, systemName)
+                  }}
+                >
+                  <span className="text-success">
+                    <MdOutlineCancel className="mx-2" />
+                    <SafeFormatMessage id="Activate-Subscription" />
+                  </span>
+                </Dropdown.Item>
+              )}
+              {subscriptionStatusValue != 3 && (
+                <Dropdown.Item
+                  onSelect={() => {
+                    cancelSubscription(subscriptionId, systemName)
+                  }}
+                >
+                  <span className="text-danger">
+                    <MdOutlineCancel className="mx-2" />
+                    <SafeFormatMessage id="Cancel-Subscription" />
+                  </span>
+                </Dropdown.Item>
+              )}
+              {subscriptionStatusValue != 2 && subscriptionStatusValue != 3 && (
+                <Dropdown.Item
+                  onSelect={() => {
+                    suspendSubscription(subscriptionId, systemName)
+                  }}
+                >
+                  <span className="text-warning">
+                    <MdOutlineCancel className="mx-2" />
+                    <SafeFormatMessage id="Suspend-Subscription" />
+                  </span>
+                </Dropdown.Item>
+              )}
             </Dropdown.Menu>
           </Dropdown>
         </td>
@@ -172,50 +220,109 @@ export const ProductTenantsList = ({ productId, productName }) => {
     <Wrapper>
       <Card border="light" className="table-wrapper table-responsive shadow-sm">
         <Card.Body className="pt-0">
+          <div className="d-flex justify-content-end mb-3">
+            <div className="p-input-icon-left mx-3">
+              <BsSearch />
+              <InputText
+                className="form-control"
+                placeholder={intl.formatMessage({ id: 'Search' })}
+                value={inputValue}
+                onChange={handleSearch}
+              />
+            </div>
+          </div>
+
           <Table hover className="user-table align-items-center">
             <thead>
               <tr>
-                <th className="border-bottom">
-                  <FormattedMessage id="Title" />
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('displayName')}
+                >
+                  <SafeFormatMessage id="Title" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
+                </th>
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('systemName')}
+                >
+                  <SafeFormatMessage id="Unique-Name" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
+                </th>
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('plan.systemName')}
+                >
+                  <SafeFormatMessage id="Plan" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
+                </th>
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('isActive')}
+                >
+                  <SafeFormatMessage id="Subscription-Status" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
+                </th>
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('startDate')}
+                >
+                  <SafeFormatMessage id="Start-Date" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
+                </th>
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('endDate')}
+                >
+                  <SafeFormatMessage id="End-Date" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
+                </th>
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('status')}
+                >
+                  <SafeFormatMessage id="Tenant-Status" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
+                </th>
+                <th
+                  className="border-bottom"
+                  onClick={() => handleSort('createdDate')}
+                >
+                  <SafeFormatMessage id="Created-Date" />{' '}
+                  <FontAwesomeIcon className="small sort-icon" icon={faSort} />
                 </th>
                 <th className="border-bottom">
-                  <FormattedMessage id="Unique-Name" />
-                </th>
-
-                <th className="border-bottom">
-                  <FormattedMessage id="Plan" />
-                </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Subscription-Status" />
-                </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Start-Date" />
-                </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="End-Date" />
-                </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Tenant-Status" />
-                </th>
-                <th className="border-bottom">
-                  <FormattedMessage id="Created-Date" />
-                </th>
-
-                <th className="border-bottom">
-                  <FormattedMessage id="Actions" />
+                  <SafeFormatMessage id="Actions" />
                 </th>
               </tr>
             </thead>
             <tbody>
-              {list?.subscribe?.length
-                ? list?.subscribe?.map((t, index) => (
+              {list?.filtered?.length && searchTerm
+                ? list.filtered &&
+                  list.filtered.map((t, index) => (
                     <TableRow key={index} {...t} />
                   ))
-                : null}
+                : !searchTerm &&
+                  list?.subscribe &&
+                  Object.values(list?.subscribe).map((t, index) => (
+                    <TableRow key={index} {...t} />
+                  ))}
             </tbody>
           </Table>
         </Card.Body>
       </Card>
+      <ThemeDialog visible={visible} setVisible={setVisible}>
+        <>
+          <CancelSubscriptionForm
+            popupLabel={popupLabel}
+            setVisible={setVisible}
+            systemName={currentSystemName}
+            subscriptionId={currentSubscriptionId}
+            type={type}
+            productId={productId}
+          />
+        </>
+      </ThemeDialog>
     </Wrapper>
   )
 }

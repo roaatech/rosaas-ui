@@ -137,7 +137,7 @@
 //       <BreadcrumbComponent breadcrumbInfo={'PlanList'} icon={BsBoxSeam} />
 //       <div className="main-container">
 //         <TableHead
-//           label={<FormattedMessage id="Add-Plan" />}
+//           label={<SafeFormatMessage id="Add-Plan" />}
 //           icon={'pi-box'}
 //           setSearchValue={setSearchValue}
 //           visibleHead={visibleHead}
@@ -145,7 +145,7 @@
 //           setFirst={setFirst}
 //         >
 //           <PlanForm
-//             popupLabel={<FormattedMessage id="Create-Plan" />}
+//             popupLabel={<SafeFormatMessage id="Create-Plan" />}
 //             type={'create'}
 //             update={update}
 //             setUpdate={setUpdate}
@@ -168,7 +168,7 @@
 //                 style={{ width: '140px', maxidth: '140px' }}
 //                 header={
 //                   <ColumnSortHeader
-//                     text={<FormattedMessage id="Name" />}
+//                     text={<SafeFormatMessage id="Name" />}
 //                     field="name"
 //                     rebase={rebase}
 //                     setRebase={setRebase}
@@ -185,7 +185,7 @@
 //                 field={'description'}
 //                 header={
 //                   <ColumnSortHeader
-//                     text={<FormattedMessage id="Description" />}
+//                     text={<SafeFormatMessage id="Description" />}
 //                     field="description"
 //                     rebase={rebase}
 //                     setRebase={setRebase}
@@ -203,7 +203,7 @@
 //                 style={{ width: '520px', maxidth: '520px' }}
 //                 header={
 //                   <ColumnSortHeader
-//                     text={<FormattedMessage id="Description" />}
+//                     text={<SafeFormatMessage id="Description" />}
 //                     field="description"
 //                     rebase={rebase}
 //                     setRebase={setRebase}
@@ -229,7 +229,7 @@
 //                 style={{ width: '170px', maxidth: '170px' }}
 //                 header={
 //                   <ColumnSortHeader
-//                     text={<FormattedMessage id="Display-Order" />}
+//                     text={<SafeFormatMessage id="Display-Order" />}
 //                     field="displayOrder"
 //                     rebase={rebase}
 //                     setRebase={setRebase}
@@ -253,7 +253,7 @@
 //                 style={{ width: '250px', maxidth: '250px' }}
 //                 header={
 //                   <ColumnSortHeader
-//                     text={<FormattedMessage id="Date" />}
+//                     text={<SafeFormatMessage id="Date" />}
 //                     field="editedDate"
 //                     rebase={rebase}
 //                     setRebase={setRebase}
@@ -286,24 +286,24 @@
 //                         onSelect={() => navigate(`/plans/${data.id}`)}
 //                       >
 //                         <FontAwesomeIcon icon={faEye} className="mx-2" />
-//                         <FormattedMessage id="View-Details" />
+//                         <SafeFormatMessage id="View-Details" />
 //                       </Dropdown.Item>
 //                       <Dropdown.Item onSelect={() => editForm(data.id)}>
 //                         <FontAwesomeIcon icon={faEdit} className="mx-2" />
-//                         <FormattedMessage id="Edit" />
+//                         <SafeFormatMessage id="Edit" />
 //                       </Dropdown.Item>
 //                       <Dropdown.Item
 //                         onClick={() => deleteConfirm(data.id)}
 //                         className="text-danger"
 //                       >
 //                         <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-//                         <FormattedMessage id="Delete" />
+//                         <SafeFormatMessage id="Delete" />
 //                       </Dropdown.Item>
 //                     </Dropdown.Menu>
 //                   </Dropdown>
 //                 )}
 //                 style={{ width: '60px', textAlign: 'center' }}
-//                 header={<FormattedMessage id="Actions" />}
+//                 header={<SafeFormatMessage id="Actions" />}
 //               />
 //             </DataTable>
 //             <CustomPaginator
@@ -315,7 +315,7 @@
 
 //             <ThemeDialog visible={visible} setVisible={setVisible}>
 //               <PlanForm
-//                 popupLabel={<FormattedMessage id="Edit-Plan" />}
+//                 popupLabel={<SafeFormatMessage id="Edit-Plan" />}
 //                 type={'edit'}
 //                 planData={listData[currentId]}
 //                 update={update}
@@ -326,7 +326,7 @@
 
 //             <DeleteConfirmation
 //               message={
-//                 <FormattedMessage id="delete-plan-confirmation-message" />
+//                 <SafeFormatMessage id="delete-plan-confirmation-message" />
 //               }
 //               icon="pi pi-exclamation-triangle"
 //               confirm={confirm}

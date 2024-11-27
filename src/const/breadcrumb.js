@@ -1,3 +1,5 @@
+import { Routes } from '../routes'
+
 export const breadcrumbFun = (routeParams, data) => {
   const { id } = routeParams
   return {
@@ -6,6 +8,65 @@ export const breadcrumbFun = (routeParams, data) => {
       name: 'Health-Check-Settings',
       navigation: '/settings/health-check',
       active: 'Settings',
+      icon: {},
+    },
+    AuditsList: {
+      title: 'System',
+      name: 'Audits-List',
+      navigation: Routes && Routes?.audits?.path,
+      active: 'System',
+      icon: {},
+    },
+    LogsList: {
+      title: 'System',
+      name: 'Logs-List',
+      navigation: Routes && Routes?.Logs?.path,
+      active: 'System',
+      icon: {},
+    },
+
+    EnvironmentInfo: {
+      title: 'Settings',
+      name: 'Environment Info',
+      navigation: '/settings/environment-info',
+      active: 'Settings',
+      icon: {},
+    },
+    DiscountsList: {
+      title: 'Settings',
+      name: 'Discounts-List',
+      navigation: '/settings/DiscountsList',
+      active: 'Settings',
+      icon: {},
+    },
+    CurrenciesList: {
+      title: 'Settings',
+      name: 'Currencies-List',
+      navigation: Routes && Routes?.CurrenciesPage?.path,
+      active: 'Settings',
+      icon: {},
+    },
+    DiscountDetails: {
+      title: 'Discounts',
+      name: 'Discounts-Management',
+      active: 'Discounts Management',
+      parentNavigation: Routes && Routes?.DiscountsPage?.path,
+      parent: data?.name,
+      changableParent: true,
+      icon: {},
+    },
+    Profile: {
+      title: 'Settings',
+      name: 'Profile',
+      navigation: Routes && Routes?.Profile?.path,
+      active: 'Settings',
+      icon: {},
+    },
+    CardManagement: {
+      title: 'Settings',
+      name: 'Card-Management',
+      navigation: Routes && Routes?.CardSettings?.path,
+      active: 'Card-Management',
       icon: {},
     },
     Home: {
@@ -17,31 +78,46 @@ export const breadcrumbFun = (routeParams, data) => {
     SubscriptionSettings: {
       title: 'Settings',
       name: 'Subscriptions',
-      navigation: '/settings/Subscriptions',
+      navigation: Routes && Routes?.SubscriptionsSettings?.path,
       active: 'Settings',
       icon: {},
     },
     ProductWarningsSettings: {
       title: 'Settings',
       name: 'Product-Warnings',
-      navigation: '/settings/Product-Warnings',
+      navigation: Routes && Routes?.ProductWarningsSettings?.path,
       active: 'Settings',
       icon: {},
     },
     Dashboard: {
       title: 'Dashboard',
-      navigation: '/',
+      navigation: Routes && Routes?.Dashboard?.path,
     },
     ProductList: {
       title: 'Products',
       name: 'Product-Management',
-      navigation: '/products',
+      navigation: Routes && Routes?.products?.path,
       active: 'Products',
       icon: {},
     },
+    ProductsOwnersList: {
+      title: 'Products-Owners',
+      name: 'Products-Owners-Management',
+      navigation: Routes && Routes?.productsOwners?.path,
+      active: 'Products',
+      icon: {},
+    },
+    ProductsOwnersDetails: {
+      title: 'Product-Owner-Details',
+      name: 'Products-Owners-Management',
+      navigation: Routes && Routes?.productsOwners?.path,
+      active: 'Products',
+      icon: {},
+    },
+
     ProductListPublic: {
       name: 'Products-List',
-      navigation: '/products',
+      navigation: Routes && Routes?.products?.path,
       active: 'Products-List',
       icon: {},
     },
@@ -56,7 +132,8 @@ export const breadcrumbFun = (routeParams, data) => {
       title: 'Tenants',
       name: 'Subscription-Management',
       active: 'Subscription-Management',
-      navigation: `/tenants/${id}/Subscription-Management`,
+      navigation:
+        Routes && `${Routes?.Tenant?.path}/${id}/Subscription-Management`,
       parent: data?.name,
       changableParent: true,
       parentNavigation: `/tenants/${id}`,
@@ -74,21 +151,12 @@ export const breadcrumbFun = (routeParams, data) => {
       title: 'Products',
       name: 'Product-Management',
       active: 'Product-Management',
-      navigation: `/products/${id}`,
+      navigation: `${Routes?.products?.path}/${id}`,
       parent: data?.name,
       changableParent: true,
-      // parentNavigation: '/products',
       icon: {},
     },
-    // FeatureDetails: {
-    //   title: 'Product-Management',
-    //   name: 'Feature-Details',
-    //   active: 'Product Details',
-    //   navigation: '/products',
-    //   parent: 'Products',
-    //   parentNavigation: '/products',
-    //   icon: {},
-    // },
+
     PlanDetails: {
       title: 'Plan-Management',
       name: 'Plan-Details',
@@ -101,19 +169,38 @@ export const breadcrumbFun = (routeParams, data) => {
     TenantList: {
       title: 'Tenant-Management',
       name: 'Tenants',
-      navigation: '/tenants',
+      navigation: Routes && Routes?.Tenant?.path,
       active: 'Tenants',
+      icon: {},
+    },
+    CanceledTenantList: {
+      title: 'Tenant-Management',
+      name: 'Canceled-Tenants',
+      navigation: Routes && Routes?.CanceledTenantsPage?.path,
+      active: 'Canceled-Tenants',
       icon: {},
     },
     TenantDetails: {
       title: 'Tenants',
       name: 'Tenant-Management',
       active: 'Tenant Management',
-      navigation: `/tenants/${id}`,
+      titleNavigation: Routes && `${Routes?.Tenant?.path}`,
       parent: data?.name,
+      parentNavigation: Routes && `${Routes?.Tenant?.path}/${id}`,
       changableParent: true,
-      // parentNavigation: '/tenant',
       icon: {},
+    },
+    ContactMessages: {
+      title: 'Contact Messages',
+      active: 'Contact Messages',
+      titleNavigation: Routes && `${Routes?.ContactMessages?.path}`,
+      icon: {},
+    },
+    ContactMessagesDetails: {
+      title: 'Contact Messages',
+      name: 'Contact-Messages-Details',
+      navigation: Routes && `${Routes?.ContactMessagesPage?.path}/${id}`,
+      titleNavigation: Routes && `${Routes?.ContactMessagesPage?.path}`,
     },
   }
 }

@@ -27,6 +27,8 @@ import useRequest from '../../../axios/apis/useRequest'
 import UpperContent from '../../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../../components/custom/Shared/DynamicButtons/DynamicButtons'
+import PaymentCardsList from '../../../components/custom/PaymentCards/PaymentCardsList'
+import SafeFormatMessage from '../../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const HealthCheckSettings = () => {
   const [edit, setEdit] = useState(false)
@@ -98,33 +100,8 @@ const HealthCheckSettings = () => {
         <Form onSubmit={formik.handleSubmit}>
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Settings" />
+              <SafeFormatMessage id="Settings" />
             </h4>
-            {/* <div>
-              <Button
-                className={edit ? 'd-none' : ''}
-                variant="primary"
-                type="button"
-                onClick={() => {
-                  setEdit(true)
-                }}
-              >
-                <AiFillEdit /> <FormattedMessage id="Edit" />
-              </Button>
-
-              <span className={!edit ? 'd-none' : ''}>
-                <Button
-                  variant="primary"
-                  type="button"
-                  onClick={formik.handleSubmit}
-                >
-                  <AiFillSave /> <FormattedMessage id="Save-All" />
-                </Button>
-                <Button type="button" className="ml-2 cancel" onClick={cancel}>
-                  <BsFillBackspaceFill /> <FormattedMessage id="Cancel" />
-                </Button>
-              </span>
-            </div> */}
 
             <DynamicButtons
               buttons={
@@ -168,20 +145,20 @@ const HealthCheckSettings = () => {
           <Card className="m-3 mt-0">
             <Card.Body>
               <h5 className="mb-4">
-                <FormattedMessage id="Health-Check-Settings" />
+                <SafeFormatMessage id="Health-Check-Settings" />
               </h5>
               <Row>
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="Available-Check-Period-minutes" />
+                      <SafeFormatMessage id="Available-Check-Period-minutes" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id="Available-Check-Period-description" />
+                              <SafeFormatMessage id="Available-Check-Period-description" />
                             </Tooltip>
                           }
                         >
@@ -215,14 +192,14 @@ const HealthCheckSettings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="Unavailable-Check-Period-minutes" />
+                      <SafeFormatMessage id="Unavailable-Check-Period-minutes" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id="Unavailable-Check-Period-description" />
+                              <SafeFormatMessage id="Unavailable-Check-Period-description" />
                             </Tooltip>
                           }
                         >
@@ -256,14 +233,14 @@ const HealthCheckSettings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="Inaccessible-Check-Period-minutes" />
+                      <SafeFormatMessage id="Inaccessible-Check-Period-minutes" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id="Inaccessible-Check-Period-description" />
+                              <SafeFormatMessage id="Inaccessible-Check-Period-description" />
                             </Tooltip>
                           }
                         >
@@ -297,14 +274,14 @@ const HealthCheckSettings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="Notification-Threshold-times" />
+                      <SafeFormatMessage id="Notification-Threshold-times" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id="Notification-Threshold-description" />
+                              <SafeFormatMessage id="Notification-Threshold-description" />
                             </Tooltip>
                           }
                         >

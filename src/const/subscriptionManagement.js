@@ -7,6 +7,7 @@ import {
 } from 'react-icons/ai'
 import { MdHourglassEmpty, MdPayment, MdUndo } from 'react-icons/md'
 import { FormattedMessage } from 'react-intl'
+import SafeFormatMessage from '../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 export const PlanChangingType = {
   1: 'Upgrade',
@@ -15,89 +16,95 @@ export const PlanChangingType = {
 export const SubscriptionPlanChangeStatus = {
   1: {
     background: 'var(--misty-blue)',
-    value: <FormattedMessage id="Pending" />,
+    value: <SafeFormatMessage id="Pending" />,
     color: 'var(--midnight-blue)',
   },
   2: {
-    background: 'rgba(255, 201, 102, 0.4)',
-    value: <FormattedMessage id="In-Progress" />,
-    color: '#5c472e',
+    background: 'var(--orange-yellow-blend)',
+    value: <SafeFormatMessage id="In-Progress" />,
+    color: 'var(--mocha-brown)',
   },
   3: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Done" />,
+    value: <SafeFormatMessage id="Done" />,
     color: 'var(--teal-green)',
   },
   4: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Failure" />,
-    color: 'var(--orange-brown)',
+    value: <SafeFormatMessage id="Failure" />,
+    color: 'var(--red)',
   },
 }
 
 export const SubscriptionResetStatus = {
   1: {
     background: 'var(--misty-blue)',
-    value: <FormattedMessage id="Pending" />,
+    value: <SafeFormatMessage id="Pending" />,
     color: 'var(--midnight-blue)',
   },
   2: {
-    background: 'rgba(255, 201, 102, 0.4)',
-    value: <FormattedMessage id="In-Progress" />,
-    color: '#5c472e',
+    background: 'var(--orange-yellow-blend)',
+    value: <SafeFormatMessage id="In-Progress" />,
+    color: 'var(--mocha-brown)',
   },
   3: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Done" />,
+    value: <SafeFormatMessage id="Done" />,
     color: 'var(--teal-green)',
   },
   4: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Failure" />,
-    color: 'var(--orange-brown)',
+    value: <SafeFormatMessage id="Failure" />,
+    color: 'var(--red)',
   },
 }
 
 export const paymentStatus = {
   100: {
     background: 'var(--primary-color)',
-    value: <FormattedMessage id="Initial" />,
+    value: <SafeFormatMessage id="Initial" />,
     icon: <MdHourglassEmpty />,
     color: '#fff',
   },
   150: {
     background: 'var(--primary-color)',
-    value: <FormattedMessage id="Pending-To-Pay" />,
+    value: <SafeFormatMessage id="Pending-To-Pay" />,
     icon: <MdHourglassEmpty />,
     color: '#fff',
   },
   200: {
-    background: 'var(--orange-brown)',
-    value: <FormattedMessage id="Authorized" />,
-    icon: <MdPayment />,
-    color: 'var(--orange-brown)',
+    background: 'var(--green2)',
+    value: <SafeFormatMessage id="Paid" />,
+    icon: <AiFillDollarCircle />,
+    color: 'var(--teal-green)',
   },
   300: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Paid" />,
-    icon: <AiFillDollarCircle />,
+    value: <SafeFormatMessage id="Authorized" />,
+    icon: <MdPayment />,
     color: 'var(--teal-green)',
   },
   400: {
     background: 'var(--red2)',
-    value: <FormattedMessage id="Refunded" />,
+    value: <SafeFormatMessage id="Refunded" />,
     icon: <MdUndo />,
-    color: '#5c472e',
+    color: 'var(--mocha-brown)',
   },
   500: {
     background: 'var(--primary-color)',
-    value: <FormattedMessage id="Voided" />,
+    value: <SafeFormatMessage id="Failed" />,
     icon: <AiOutlineIssuesClose />,
-    color: '#fff',
+    color: 'var(--red)',
   },
   600: {
     background: 'var(--primary-color)',
-    value: <FormattedMessage id="Partially-Refunded" />,
+    value: <SafeFormatMessage id="Voided" />,
+    icon: <AiOutlineIssuesClose />,
+    color: '#fff',
+  },
+  700: {
+    background: 'var(--primary-color)',
+    value: <SafeFormatMessage id="Partially-Refunded" />,
     icon: <AiOutlineCheckCircle />,
     color: '#fff',
   },
@@ -109,7 +116,7 @@ export const orderStatus = {
   },
   2: {
     value: 'Pending-To-Pay',
-    color: 'var(--orange-brown)',
+    color: 'var(--red)',
   },
   3: {
     value: 'Complete',
@@ -117,21 +124,21 @@ export const orderStatus = {
   },
   4: {
     value: 'Cancelled',
-    color: '#5c472e',
+    color: 'var(--mocha-brown)',
   },
 }
 
 export const subscriptionStatus = {
   true: {
     background: 'var(--green2)',
-    value: <FormattedMessage id="Active" />,
+    value: <SafeFormatMessage id="Active" />,
     color: 'var(--teal-green)',
     // icon: <MdPayments />,
   },
   false: {
     background: 'var(--red2)',
-    value: <FormattedMessage id="Inactive" />,
-    color: 'var(--orange-brown)',
+    value: <SafeFormatMessage id="Inactive" />,
+    color: 'var(--red)',
     // icon: <MdOutlinePayments />,
   },
 }

@@ -8,39 +8,69 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import {
   BsFillEnvelopeOpenFill,
-  BsFillPersonFill,
+  BsPerson,
+  BsPhoneFill,
   BsUnlockFill,
 } from 'react-icons/bs'
 import { Routes } from '../../../routes'
 import { useSelector } from 'react-redux'
+import ReCAPTCHA from 'react-google-recaptcha'
+import { useRef, useState } from 'react'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 
 const SignUp = () => {
-  let redirectPath = useSelector(
-    (state) => state.auth.redirectPath.redirectPath
+  const [recaptchaToken, setRecaptchaToken] = useState(null)
+  const recaptchaRef = useRef(null)
+  const redirectPath = useSelector(
+    (state) => state.auth.redirectPath?.redirectPath
   )
+
   const { signUp } = useRequest()
   const navigate = useNavigate()
 
   const initialValues = {
     fullName: '',
+    mobileNumber: '',
     email: '',
     password: '',
     confirmPassword: '',
   }
 
   const validationSchema = Yup.object().shape({
+    fullName: Yup.string(),
     email: Yup.string().email('Invalid email').required('Email is required'),
     password: Yup.string().required('Password is required'),
+    mobileNumber: Yup.string(),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Confirm Password is required'),
   })
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    const signUpSuccess = await signUp(values)
-    if (signUpSuccess) {
-      redirectPath ? navigate(redirectPath) : navigate(Routes.productsList.path)
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+    if (!recaptchaToken) {
+      setErrors({ recaptcha: 'Please complete the reCAPTCHA' })
+      setSubmitting(false)
+      return
     }
+
+    const signUpSuccess = await signUp({
+      ...values,
+      recaptchaToken,
+    })
+
+    if (signUpSuccess) {
+      !signUpSuccess.data.data.userAccount.emailConfirmed
+        ? navigate(Routes.EmailConfirmationPage.path)
+        : redirectPath
+        ? navigate(redirectPath)
+        : signUpSuccess.data.data.userAccount.userType == 4
+        ? navigate(Routes.workSpace.path)
+        : navigate(Routes.Dashboard.path)
+    }
+  }
+
+  const onRecaptchaChange = (token) => {
+    setRecaptchaToken(token)
   }
 
   return (
@@ -50,11 +80,54 @@ const SignUp = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, errors }) => (
           <Form className="mt-4">
             <div>
+              <label htmlFor="fullName" className="pb-2">
+                <SafeFormatMessage id="Your-Full-Name" />
+              </label>
+              <div className="inputContainer">
+                <div className="inputContainerWithIcon">
+                  <BsPerson />
+                  <Field
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    as={InputText}
+                  />
+                </div>
+                <ErrorMessage
+                  name="fullName"
+                  component="div"
+                  className="error-message"
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="mobileNumber" className="pb-2">
+                <SafeFormatMessage id="Your-Phone" />
+              </label>
+              <div className="inputContainer">
+                <div className="inputContainerWithIcon">
+                  <BsPhoneFill />
+                  <Field
+                    type="tel"
+                    id="mobileNumber"
+                    name="mobileNumber"
+                    as={InputText}
+                  />{' '}
+                </div>
+                <ErrorMessage
+                  name="mobileNumber"
+                  component="div"
+                  className="error-message"
+                />
+              </div>
+            </div>
+            <div>
               <label htmlFor="email" className="pb-2">
-                <FormattedMessage id="yourEmail" />
+                <SafeFormatMessage id="yourEmail" />
+                <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -68,9 +141,11 @@ const SignUp = () => {
                 />
               </div>
             </div>
+
             <div>
               <label htmlFor="password" className="pb-2">
-                <FormattedMessage id="yourPassword" />
+                <SafeFormatMessage id="yourPassword" />
+                <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -92,7 +167,8 @@ const SignUp = () => {
 
             <div>
               <label htmlFor="confirmPassword" className="pb-2">
-                <FormattedMessage id="confirmPassword" />
+                <SafeFormatMessage id="confirmPassword" />
+                <span className="text-danger px-1">*</span>
               </label>
               <div className="inputContainer">
                 <div className="inputContainerWithIcon">
@@ -111,7 +187,20 @@ const SignUp = () => {
                 />
               </div>
             </div>
-            {/* (Existing code) */}
+
+            <div className="recaptcha-container mt-2 mb-4">
+              <div>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
+                  onChange={onRecaptchaChange}
+                />
+                <div className="error-message">
+                  {errors.recaptcha && <div>{errors.recaptcha}</div>}
+                </div>
+              </div>
+            </div>
+
             <div className="pt-1">
               <Button
                 variant="primary"
@@ -119,7 +208,7 @@ const SignUp = () => {
                 className="w-100"
                 disabled={isSubmitting}
               >
-                <FormattedMessage id="signUp" />
+                <SafeFormatMessage id="signUp" />
               </Button>
             </div>
           </Form>

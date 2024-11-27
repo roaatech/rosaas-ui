@@ -28,27 +28,81 @@ import { useIntl } from 'react-intl'
 // }
 
 export const DataTransform = (dateTime) => {
+  if (!dateTime || isNaN(new Date(dateTime).getTime())) {
+    return ''
+  }
+
   const utcDateTime = new Date(dateTime + 'Z')
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = utcToZonedTime(utcDateTime, timeZone)
-  const formattedDateTime = format(localDateTime, 'MM/dd/yyyy HH:mm:ss', {
-    timeZone,
-  })
+
+  const hasTime = localDateTime.toISOString().split('T')[1] !== '00:00:00.000Z'
+
+  const formattedDateTime = hasTime
+    ? format(localDateTime, 'MM/dd/yyyy HH:mm:ss', {
+        timeZone,
+      })
+    : format(localDateTime, 'MM/dd/yyyy', {
+        timeZone,
+      })
 
   return formattedDateTime
 }
-export const formatDate = (dateTime) => {
+
+export const UppercaseMonthDateFormat = (
+  dateTime,
+  withTime = false,
+  withSeconds = false,
+  withMilliseconds = false
+) => {
+  if (!dateTime || isNaN(new Date(dateTime).getTime())) {
+    return ''
+  }
+
   const utcDateTime = new Date(dateTime + 'Z')
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const localDateTime = utcToZonedTime(utcDateTime, timeZone)
 
-  const formattedDate = format(localDateTime, 'MM/dd/yyyy', {
-    timeZone,
-  })
+  const currentYear = new Date().getFullYear()
+  const dateYear = localDateTime.getFullYear()
+
+  const dateFormat = currentYear === dateYear ? 'MMM dd' : 'MMM dd, yyyy'
+
+  // Add milliseconds to the time format based on the flags
+  let timeFormat = 'HH:mm'
+  if (withSeconds) {
+    timeFormat += ':ss'
+  }
+  if (withMilliseconds) {
+    timeFormat += '.SSS'
+  }
+
+  const formattedDateTime = format(
+    localDateTime,
+    withTime ? `${dateFormat}, ${timeFormat}` : dateFormat,
+    { timeZone }
+  )
+
+  return formattedDateTime.toUpperCase()
+}
+
+export const formatDate = (dateTime) => {
+  if (!dateTime || isNaN(new Date(dateTime).getTime())) {
+    return ''
+  }
+
+  const utcDateTime = dateTime ? new Date(dateTime + 'Z') : ''
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const localDateTime = dateTime ? utcToZonedTime(utcDateTime, timeZone) : ''
+
+  const formattedDate = dateTime
+    ? format(localDateTime, 'MM/dd/yyyy', {
+        timeZone,
+      })
+    : ''
 
   return formattedDate
 }
-
 export const timeDifferenceFromNow = (targetDate) => {
   // Convert the targetDate parameter to a Date object if it is not already
   if (!(targetDate instanceof Date)) {

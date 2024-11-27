@@ -9,6 +9,9 @@ const Label = ({
   lighter,
   small,
   className,
+  hasBorder,
+  style,
+  sameWidth,
 }) => {
   return (
     <Wrapper>
@@ -17,8 +20,14 @@ const Label = ({
           small ? 'small' : ''
         } ${className} `}
         style={{
+          display: sameWidth && 'inline-block',
           color,
           background,
+          borderColor: hasBorder && color,
+          border: hasBorder && '1px solid',
+          width: sameWidth && `${sameWidth}px`,
+          textAlign: sameWidth && 'center',
+          ...style,
         }}
       >
         {icon ? icon : null} {value}

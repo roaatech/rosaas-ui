@@ -1,0 +1,191 @@
+import React from 'react'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { Modal, Button, Form } from '@themesberg/react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
+import { Wrapper } from './ProductOwnerForm.styled.jsx'
+import useRequest from '../../../axios/apis/useRequest.js'
+import TextareaAndCounter from '../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
+import AutoGenerateInput from '../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import { Routes } from '../../../routes.js'
+import { useNavigate } from 'react-router-dom'
+import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+
+const ProductOwnerForm = ({
+  type,
+  setVisible,
+  popupLabel,
+  update,
+  setUpdate,
+  productOwnerData,
+}) => {
+  const { createPORequest, editPORequest } = useRequest()
+  const navigate = useNavigate()
+  let userInfo = useSelector((state) => state.auth.userInfo)
+  const initialValues = {
+    systemName: productOwnerData ? productOwnerData.systemName : '',
+    displayName: productOwnerData ? productOwnerData.displayName : '',
+    description: productOwnerData ? productOwnerData.description : '',
+  }
+
+  const validationSchema = Yup.object().shape({
+    systemName: Yup.string()
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="System-Name-is-required" />)
+      .matches(
+        /^[a-zA-Z0-9_-]+$/,
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+      ),
+    displayName: Yup.string()
+      .required(<SafeFormatMessage id="This-field-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />),
+    description: Yup.string().max(250),
+  })
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      if (type === 'create') {
+        if (userInfo?.userType == 'clientAdmin') {
+          const createPO = await createPORequest({
+            systemName: values.systemName,
+            displayName: values.displayName,
+            description: values.description,
+            CreatedByUserId: userInfo?.id,
+          })
+          setUpdate && setUpdate(update + 1)
+        } else {
+          const createPO = await createPORequest({
+            systemName: values.systemName,
+            displayName: values.displayName,
+            description: values.description,
+          })
+          setUpdate && setUpdate(update + 1)
+          setVisible && setVisible(false)
+          navigate(`${Routes.productsOwners.path}/${createPO.data.data.id}`)
+        }
+      } else {
+        const editPO = await editPORequest(productOwnerData.id, {
+          id: productOwnerData.id,
+          systemName: values.systemName,
+          displayName: values.displayName,
+          description: values.description,
+        })
+        setUpdate && setUpdate(update + 1)
+        setVisible && setVisible(false)
+
+        // Dispatch any necessary actions after editing
+      }
+      setSubmitting(false)
+    },
+  })
+
+  return (
+    <Wrapper>
+      <Form onSubmit={formik.handleSubmit}>
+        <Modal.Header>
+          <Modal.Title className="h6">{popupLabel}</Modal.Title>
+          <Button
+            variant="close"
+            aria-label="Close"
+            onClick={() => setVisible(false)}
+          />
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <SafeFormatMessage id="Display-Name" />{' '}
+                <span style={{ color: 'red' }}>*</span>
+              </Form.Label>
+              <input
+                className="form-control"
+                type="text"
+                id="displayName"
+                name="displayName"
+                onChange={formik.handleChange}
+                value={formik.values.displayName}
+              />
+
+              {formik.touched.displayName && formik.errors.displayName && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.displayName}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+          <div className="mb-3">
+            {type === 'create' && (
+              <AutoGenerateInput
+                label={<SafeFormatMessage id="System-Name" />}
+                id="systemName"
+                value={formik.values.displayName}
+                name={formik.values.systemName}
+                onChange={formik.handleChange}
+                onGenerateUniqueName={(generatedUniqueName) => {
+                  formik.setFieldValue('systemName', generatedUniqueName)
+                }}
+                onAutoGenerateClick={() => {
+                  formik.setFieldValue(
+                    'isAutoGenerated',
+                    !formik.values.isAutoGenerated
+                  )
+                }}
+                isAutoGenerated={formik.values.isAutoGenerated}
+              />
+            )}
+            {formik.touched.systemName && formik.errors.systemName && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.systemName}
+              </Form.Control.Feedback>
+            )}
+          </div>
+
+          <div>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <SafeFormatMessage id="Description" />
+              </Form.Label>
+              <TextareaAndCounter
+                addTextarea={formik.setFieldValue}
+                maxLength={250}
+                showCharCount
+                inputValue={formik.values.description}
+              />
+              {formik.touched.description && formik.errors.description && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.description}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" type="submit">
+            <SafeFormatMessage id="Submit" />
+          </Button>
+          <Button
+            variant="link"
+            className="text-gray"
+            onClick={() => setVisible(false)}
+          >
+            <SafeFormatMessage id="Close" />
+          </Button>
+        </Modal.Footer>
+      </Form>
+    </Wrapper>
+  )
+}
+
+export default ProductOwnerForm

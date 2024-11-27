@@ -1,10 +1,74 @@
-import React from 'react'
-import { Modal, Button, Card, Table } from '@themesberg/react-bootstrap'
+import React, { useEffect, useState } from 'react'
+import {
+  Modal,
+  Button,
+  Card,
+  Table,
+  Container,
+  Row,
+  Col,
+} from '@themesberg/react-bootstrap'
 import { Wrapper } from './ShowDetails.styled.jsx'
-import { FormattedMessage } from 'react-intl'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage.jsx'
+import ReactJson from 'react-json-view'
+import EmptyFallbackRendering from '../EmptyFallbackRendering/EmptyFallbackRendering.jsx'
 
-const ShowDetails = ({ data, setVisible, popupLabel }) => {
-  // console.log({ data })
+const ShowDetails = ({
+  data,
+  setVisible,
+  popupLabel,
+  style = {},
+  titleStyle = {},
+  className = {},
+  func,
+}) => {
+  const [currentData, setCurrentData] = useState(data)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (func && !data) {
+        try {
+          const funcResult = await func() // Await the result
+          console.log({ funcResult })
+
+          setCurrentData(funcResult?.data?.data || null) // Handle null/undefined safely
+        } catch (error) {
+          console.error('Error fetching data:', error)
+          setCurrentData(null) // Optionally handle errors gracefully
+        }
+      }
+    }
+
+    fetchData()
+  }, [func, data])
+
+  const RowExpansionTemplate = ({ data }) => {
+    let parsedData
+    try {
+      parsedData = JSON.parse(data)
+    } catch (error) {
+      console.error('Error parsing JSON:', error)
+      parsedData = { ERROR: 'Invalid JSON data' }
+    }
+
+    return (
+      <div>
+        <Card border="light" className="border-0">
+          <Card.Body className="p-0 description">
+            <ReactJson src={parsedData} name={false} />
+          </Card.Body>
+        </Card>
+      </div>
+    )
+  }
+
+  const renderField = (key, value) => {
+    if (key === 'Action-Details') {
+      return <RowExpansionTemplate data={value} />
+    }
+    return value
+  }
+
   return (
     <Wrapper>
       <div>
@@ -24,20 +88,26 @@ const ShowDetails = ({ data, setVisible, popupLabel }) => {
               style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}
             >
               <tbody>
-                {Object.keys(data).map((item, index) => (
-                  <tr key={index}>
-                    <td>
-                      <FormattedMessage id={item} />
-                    </td>
-                    <td
-                      className={`fw-bold ${
-                        item === 'Description' ? 'description' : ''
-                      }`}
-                    >
-                      {data[item]}
-                    </td>
-                  </tr>
-                ))}
+                {currentData &&
+                  Object.keys(currentData).map((key, index) => (
+                    <tr key={index}>
+                      <td style={titleStyle[key] || {}}>
+                        <SafeFormatMessage id={key} />
+                      </td>
+                      <td
+                        className={`fw-bold ${className[key] || ''} ${
+                          key === 'Description' || key === 'Action-Details'
+                            ? 'description'
+                            : ''
+                        }`}
+                        style={style[key] || {}}
+                      >
+                        <EmptyFallbackRendering data={currentData[key]}>
+                          {renderField(key, currentData[key])}
+                        </EmptyFallbackRendering>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </Table>
           </Card.Body>

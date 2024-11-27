@@ -20,7 +20,9 @@ export const Wrapper = styled.div`
     ~ .custom-control-label::before {
     border-color: var(--second-color) !important;
   }
-
+  .bool-card .table-wrapper.table-responsive {
+    padding: 0.75rem 0rem 0.75rem 0rem !important;
+  }
   .p-tabview .p-tabview-nav .p-tabview-ink-bar {
     background-color: var(--second-color);
   }

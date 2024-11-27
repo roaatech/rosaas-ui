@@ -20,6 +20,7 @@ import { useParams } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
+import DataLabelPrice from '../../Shared/DataLabelPrice/DataLabelPrice'
 
 import {
   PlansChangeAttr,
@@ -43,6 +44,8 @@ import { DataTransform } from '../../../../lib/sharedFun/Time'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import {
   BsCurrencyDollar,
+  BsEye,
+  BsEyeSlash,
   BsFillLockFill,
   BsFillUnlockFill,
   BsToggleOff,
@@ -50,6 +53,9 @@ import {
 } from 'react-icons/bs'
 import { setActiveIndex } from '../../../../store/slices/tenants'
 import { GiShadowFollower } from 'react-icons/gi'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
+import { textLocale } from '../../../../const/product.js'
 export default function ProductPlansPriceList({ children }) {
   const intl = useIntl()
   const dispatch = useDispatch()
@@ -59,6 +65,7 @@ export default function ProductPlansPriceList({ children }) {
     deletePlanPriceReq,
     PlansPricePublishedReq,
     publishPlan,
+    visiblePlan,
   } = useRequest()
   const [visible, setVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
@@ -69,6 +76,7 @@ export default function ProductPlansPriceList({ children }) {
   const [type, setType] = useState('')
   const [show, setShow] = useState(false)
   const [popUpLable, setPopUpLable] = useState('')
+  const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
 
   const productId = routeParams.id
   const listProductDataStore = useSelector(
@@ -76,10 +84,7 @@ export default function ProductPlansPriceList({ children }) {
   )
 
   const plansData = { ...listProductDataStore?.plans }
-  // delete default key from list
   const listData = { ...listProductDataStore?.plansPrice }
-  // listData['00000000-0000-0000-0000-000000000000'] &&
-  //   delete listData['00000000-0000-0000-0000-000000000000']
   let list = listData && Object.values(listData)
 
   const handleDeletePlanPrice = async () => {
@@ -119,11 +124,13 @@ export default function ProductPlansPriceList({ children }) {
       setConfirm(true)
     }
   }
+
   const toastError = (message) => {
     return toast.error(intl.formatMessage({ id: message }), {
       position: toast.POSITION.TOP_CENTER,
     })
   }
+
   const editForm = async (id) => {
     if (listData[id].isSubscribed == true) {
       toast.error(
@@ -211,11 +218,16 @@ export default function ProductPlansPriceList({ children }) {
       'System-Name': data.systemName,
       'System-Lock-Status': data.isLockedBySystem ? 'Yes' : 'No',
       Plan: data.plan.displayName,
-      cycle: cycle[data.cycle],
+      Price: data.price,
+      oldPrice: data.oldPrice,
+      Cycle: cycle[data.cycle],
       Published: data.isPublished ? 'Yes' : 'No',
       Subscribed: data.isSubscribed ? 'Yes' : 'No',
-      Description: data.description,
-
+      Description: textLocale(
+        data.descriptionLocalizations,
+        selectedLanguage,
+        intl
+      ),
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
     }
@@ -235,6 +247,21 @@ export default function ProductPlansPriceList({ children }) {
       })
     )
   }
+  const toggleVisiblePlan = async (id, isVisible) => {
+    await visiblePlan(productId, {
+      id,
+      isVisible: !isVisible,
+    })
+
+    dispatch(
+      PlansChangeAttr({
+        productId,
+        planId: id,
+        attr: 'isVisible',
+        value: !isVisible,
+      })
+    )
+  }
 
   const TableRow = () => {
     return (
@@ -243,7 +270,7 @@ export default function ProductPlansPriceList({ children }) {
           <tr key={cycleIndex}>
             <td>
               <span className="fw-bolder">
-                <FormattedMessage id={cycle[item]} />
+                <SafeFormatMessage id={cycle[item]} />
               </span>
             </td>
             {Object.keys(plansData).map((planItem, planIndex) => (
@@ -257,16 +284,48 @@ export default function ProductPlansPriceList({ children }) {
                         variant="link"
                         className="text-dark m-0 p-0 planFeatureButton"
                       >
-                        {listData[tableData[planItem + ',' + item]]?.price} ${' '}
+                        <span>
+                          <DataLabelPrice
+                            price={
+                              listData[tableData[planItem + ',' + item]]?.price
+                            }
+                            oldPrice={
+                              listData[tableData[planItem + ',' + item]]
+                                ?.oldPrice
+                            }
+                          />
+                        </span>
                         {listData[tableData[planItem + ',' + item]]
                           ?.isPublished ? (
-                          <span className="label green">
-                            <MdOutlinePublishedWithChanges />
-                          </span>
+                          <OverlayTrigger
+                            trigger={['hover', 'focus']}
+                            overlay={
+                              <Tooltip>
+                                {intl.formatMessage({
+                                  id: 'Active',
+                                })}
+                              </Tooltip>
+                            }
+                          >
+                            <span className="label green">
+                              <MdOutlinePublishedWithChanges />
+                            </span>
+                          </OverlayTrigger>
                         ) : (
-                          <span className="label red">
-                            <MdOutlineUnpublished />
-                          </span>
+                          <OverlayTrigger
+                            trigger={['hover', 'focus']}
+                            overlay={
+                              <Tooltip>
+                                {intl.formatMessage({
+                                  id: 'Inactive',
+                                })}
+                              </Tooltip>
+                            }
+                          >
+                            <span className="label red">
+                              <MdOutlineUnpublished />
+                            </span>
+                          </OverlayTrigger>
                         )}
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
@@ -280,7 +339,7 @@ export default function ProductPlansPriceList({ children }) {
                             className="mx-2"
                           />
 
-                          <FormattedMessage id="View-Details" />
+                          <SafeFormatMessage id="View-Details" />
                         </Dropdown.Item>
 
                         <Dropdown.Item
@@ -289,7 +348,7 @@ export default function ProductPlansPriceList({ children }) {
                           }
                         >
                           <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                          <FormattedMessage id="Edit" />
+                          <SafeFormatMessage id="Edit" />
                         </Dropdown.Item>
                         <Dropdown.Item
                           onSelect={() =>
@@ -303,13 +362,13 @@ export default function ProductPlansPriceList({ children }) {
                           {listData[tableData[planItem + ',' + item]]
                             ?.isPublished ? (
                             <span className="label">
-                              <MdOutlineUnpublished />{' '}
-                              <FormattedMessage id="Unpublished" />
+                              <MdOutlineUnpublished className="mx-2" />{' '}
+                              <SafeFormatMessage id="Deactivate" />
                             </span>
                           ) : (
                             <span className="label">
-                              <MdOutlinePublishedWithChanges />{' '}
-                              <FormattedMessage id="Published" />
+                              <MdOutlinePublishedWithChanges className="mx-2" />{' '}
+                              <SafeFormatMessage id="Activate" />
                             </span>
                           )}
                         </Dropdown.Item>
@@ -320,7 +379,7 @@ export default function ProductPlansPriceList({ children }) {
                           className="text-danger"
                         >
                           <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                          <FormattedMessage id="Delete" />
+                          <SafeFormatMessage id="Delete" />
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
@@ -346,6 +405,17 @@ export default function ProductPlansPriceList({ children }) {
       <div className="dynamicButtons pt-0 mt-0 mb-1 ">
         <DynamicButtons
           buttons={[
+            ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+              (lang, index) => ({
+                order: 1,
+                type: 'toggle',
+                label: lang,
+                group: 'language',
+                toggleValue: selectedLanguage === lang,
+                toggleFunc: () => setSelectedLanguage(lang),
+                variant: 'primary',
+              })
+            ),
             {
               order: 1,
               type: 'form',
@@ -369,61 +439,110 @@ export default function ProductPlansPriceList({ children }) {
                 <tr>
                   <th className="border-bottom"></th>
                   {Object.keys(plansData).map((item, index) => (
-                    <>
-                      <th
-                        className="clickable-icon"
-                        key={index}
-                        onClick={() =>
-                          togglePublishPlan(item, plansData[item].isPublished)
+                    <th className="clickable-icon" key={index}>
+                      <span className=" ">
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {plansData[item].isLockedBySystem
+                                ? intl.formatMessage({
+                                    id: 'Locked-by-system',
+                                  })
+                                : intl.formatMessage({
+                                    id: 'Not-locked-by-system',
+                                  })}
+                            </Tooltip>
+                          }
+                        >
+                          <span
+                            className={`${
+                              plansData[item].isLockedBySystem
+                                ? 'lock-active'
+                                : 'lock-passive'
+                            }`}
+                          >
+                            {plansData[item].isLockedBySystem ? (
+                              <BsFillLockFill />
+                            ) : (
+                              <BsFillUnlockFill />
+                            )}
+                            <span className="ml-1">
+                              {plansData[item].isLockedBySystem}
+                            </span>
+                          </span>
+                        </OverlayTrigger>
+                      </span>
+                      <span className="mx-2">
+                        {textLocale(
+                          plansData[item].displayNameLocalizations,
+                          selectedLanguage,
+                          intl
+                        )}
+                      </span>
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            {plansData[item].isPublished
+                              ? intl.formatMessage({
+                                  id: 'Active',
+                                })
+                              : intl.formatMessage({
+                                  id: 'Inactive',
+                                })}
+                          </Tooltip>
                         }
                       >
-                        <span className="mr-2">
+                        <span
+                          onClick={() =>
+                            togglePublishPlan(item, plansData[item].isPublished)
+                          }
+                          className="mr-2"
+                        >
                           {plansData[item].isPublished ? (
                             <span className="label green">
-                              <BsToggleOn />
+                              <MdOutlinePublishedWithChanges />
                             </span>
                           ) : (
-                            <span className="label grey">
-                              <BsToggleOff />
+                            <span className="label red ">
+                              <MdOutlineUnpublished />
                             </span>
                           )}
                         </span>
-                        {plansData[item].displayName}
-                        <span className="ml-2 ">
-                          <OverlayTrigger
-                            trigger={['hover', 'focus']}
-                            overlay={
-                              <Tooltip>
-                                {plansData[item].isLockedBySystem
-                                  ? intl.formatMessage({
-                                      id: 'Locked-by-system',
-                                    })
-                                  : intl.formatMessage({
-                                      id: 'Not-locked-by-system',
-                                    })}
-                              </Tooltip>
-                            }
-                          >
-                            <span
-                              className={`${
-                                plansData[item].isLockedBySystem
-                                  ? 'lock-active'
-                                  : 'lock-passive'
-                              }`}
-                            >
-                              {plansData[item].isLockedBySystem ? (
-                                <BsFillLockFill />
-                              ) : (
-                                <BsFillUnlockFill />
-                              )}
-                              <span className="ml-1">
-                                {plansData[item].isLockedBySystem}
-                              </span>
+                      </OverlayTrigger>
+                      <OverlayTrigger
+                        trigger={['hover', 'focus']}
+                        overlay={
+                          <Tooltip>
+                            {plansData[item].isVisible
+                              ? intl.formatMessage({
+                                  id: 'Visible',
+                                })
+                              : intl.formatMessage({
+                                  id: 'Invisible',
+                                })}
+                          </Tooltip>
+                        }
+                      >
+                        <span
+                          onClick={() =>
+                            toggleVisiblePlan(item, plansData[item].isVisible)
+                          }
+                          className="mr-2"
+                        >
+                          {plansData[item].isVisible ? (
+                            <span className="label green">
+                              <BsEye />
                             </span>
-                          </OverlayTrigger>
+                          ) : (
+                            <span className="label red">
+                              <BsEyeSlash />
+                            </span>
+                          )}
                         </span>
-                      </th>
-                    </>
+                      </OverlayTrigger>
+                    </th>
                   ))}
                 </tr>
               </thead>
@@ -433,7 +552,7 @@ export default function ProductPlansPriceList({ children }) {
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-plan-price-confirmation-message" />
+                <SafeFormatMessage id="delete-plan-price-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
@@ -448,15 +567,15 @@ export default function ProductPlansPriceList({ children }) {
       <ThemeDialog visible={visible} setVisible={setVisible}>
         {show ? (
           <ShowDetails
-            popupLabel={<FormattedMessage id={popUpLable} />}
+            popupLabel={<SafeFormatMessage id={popUpLable} />}
             data={handleData(listData[currentId])}
             setVisible={setVisible}
           />
         ) : (
           <PlanPriceForm
-            popupLabel={<FormattedMessage id={popUpLable} />}
+            popupLabel={<SafeFormatMessage id={popUpLable} />}
             type={type}
-            planPriceData={type == 'edit' ? listData[currentId] : {}}
+            planPriceData={type === 'edit' ? listData[currentId] : {}}
             setVisible={setVisible}
             plan={currentPlanId}
             cycleValue={currentCycle}

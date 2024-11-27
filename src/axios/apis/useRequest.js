@@ -12,12 +12,46 @@ import useSettingsReq from './Setting/useSettingReq'
 import useSpecificationReq from './Product/specification/useSpecificationReq'
 import useSubManagementReq from './Tenant/useSubManagementReq'
 import useClientCredentialsReq from './Product/ClientCredentials/useClientCredentialsReq'
-import usePaymentReq from './Payment/Payment'
+import usePaymentReq from './Payment/usePaymentReq'
 import useUsersManagementReq from './UsersManagement/useUsersManagementReq'
 import useAdminPrivileges from './UsersManagement/useAdminPrivileges'
+import useAccountReq from './Account/Account'
+import useWebhookEndpointReq from './Product/webhookEndpoint/useWebhookEndpointReq'
+import usePOReq from './ProductOwner/usePOReq'
+import useDiscountReq from './Setting/discount/useDiscountReq'
+import useCurrencyReq from './Setting/currency/useCurrencyReq'
+import useContactReq from './Contact/useContactReq'
 
 const useRequest = () => {
-  const { signIn, userData, logOut, signUp } = useUserReq()
+  const {
+    SignInTenantAdminAsync,
+    SignInProductOwnerAsync,
+    userData,
+    logOut,
+    getAuditsList,
+    getAditsActionListLookup,
+    getLogsList,
+    getLogById,
+    deleteLogBeforeDate,
+    getAuditById,
+    signUp,
+    signUpPOwner,
+    SignInAdminAsync,
+    confirmEmail,
+    requestPasswordReset,
+    resetPassword,
+    getEnvironment,
+  } = useUserReq()
+  const {
+    getDiscounts,
+    createDiscount,
+    activeDiscount,
+    editDiscountRequest,
+    deleteDiscount,
+    getDiscountById,
+    deleteDiscountUsageHistoriesById,
+    getDiscountUsageHistoriesByDiscountId,
+  } = useDiscountReq()
   const {
     createTenantRequest,
     editTenantRequest,
@@ -28,7 +62,31 @@ const useRequest = () => {
     getProductTenants,
     editTenantStatus,
     getTimeLine,
+    createTenantRequestPublic,
   } = useTenantReq()
+  const { updateProfile, getCurrentProfile, changePassword } = useAccountReq()
+  const {
+    getCurrencies,
+    getCurrenciesPublishList,
+    createCurrency,
+    editCurrency,
+    deleteCurrency,
+    getCurrencyById,
+    publishCurrency,
+    markAsPrimaryCurrency,
+    markAsPrimaryExchangeRateCurrency,
+    markAsPrimaryCurrencyForProductOwner,
+    markAsPrimaryExchangeRateCurrencyForProductOwner,
+    getCurrenciesProductOwnerList,
+  } = useCurrencyReq()
+  const {
+    getWebhookEndpointsList,
+    getWebhookEndpointbyId,
+    createWebhookEndpoint,
+    activateWebhookEndpoint,
+    editWebhookEndpoint,
+    deleteWebhookEndpoint,
+  } = useWebhookEndpointReq()
   const {
     subscriptionDetails,
     subscriptionDetailsRenew,
@@ -40,12 +98,21 @@ const useRequest = () => {
     downgradeSubscription,
     subscriptionFeturesList,
     subscriptionCycleById,
+    getSubscriptionsList,
+    getAutoRenewalList,
+    cancelSubscriptionRequest,
+    suspendSubscriptionRequest,
+    activateSubscriptionRequest,
+    subscriptionFilteredList,
+    subscriptionCanceledFilteredList,
   } = useSubManagementReq()
 
   const {
     createTenantAdmin,
     createProductAdmin,
     createClientAdmin,
+    clientsLookup,
+    getUserById,
     validateEmail,
   } = useUsersManagementReq()
   const {
@@ -65,6 +132,9 @@ const useRequest = () => {
     getProductListPublic,
     changeProductTrialType,
     publishProduct,
+    visibleProduct,
+    getProductsLookup,
+    updateCompositeTemplateRequest,
   } = useProductReq()
 
   const {
@@ -88,6 +158,8 @@ const useRequest = () => {
     editPlanRequest,
     deletePlanReq,
     getProductPlansPublic,
+    visiblePlan,
+    getPlanFilteredList,
   } = usePlanReq()
   const {
     getProductSpecification,
@@ -95,6 +167,7 @@ const useRequest = () => {
     publishSpecification,
     editSpecificationRequest,
     deleteSpecificationReq,
+    publicSpecificationByProductName,
   } = useSpecificationReq()
   const {
     getProductFeatures,
@@ -110,6 +183,8 @@ const useRequest = () => {
     deletePlanPriceReq,
     PlansPricePublishedReq,
     getProductPlanPriceListPublic,
+    getProductPlanPricePublic,
+    getProductPlanPricePublicbyId,
   } = usePlanPriceReq()
 
   const {
@@ -119,6 +194,7 @@ const useRequest = () => {
     editFeaturePlanRequest,
     getFeaturePlan,
     deleteFeaturePlanReq,
+    getFeaturePlanPublic,
   } = usePlanFeatureReq()
 
   const {
@@ -137,10 +213,37 @@ const useRequest = () => {
     paymentSuccess,
     paymentFailed,
     changeOrderPlan,
+    getOrderByIdPublic,
+    getPaymentCardsList,
+    detachPaymentMethodCard,
+    attachPaymentMethodCard,
+    markCardAsDefault,
+    getConfig,
+    fetchPaymentIntent,
+    getInvoicesList,
+    checkOrderCurrencyChange,
+    getPaymentStripeDataBySubId,
   } = usePaymentReq()
-
+  const {
+    createPORequest,
+    editPORequest,
+    getProductOwnersList,
+    getProductOwner,
+    deleteProductOwnerReq,
+    isProductOwnerRegistered,
+    GetCurrentProductOwnerByUserId,
+    ProductOwnerLimits,
+    getProductOwnerLookupList,
+  } = usePOReq()
+  const {
+    getPaginationContactMessagesList,
+    getContactMessageById,
+    deleteContactMessageById,
+    replayContactMessageById,
+  } = useContactReq()
   return {
-    signIn,
+    SignInTenantAdminAsync,
+    SignInProductOwnerAsync,
     signUp,
     userData,
     logOut,
@@ -231,6 +334,89 @@ const useRequest = () => {
     deleteClient,
     activateClient,
     changeOrderPlan,
+    publicSpecificationByProductName,
+    getProductPlanPricePublic,
+    getProductPlanPricePublicbyId,
+    createTenantRequestPublic,
+    getFeaturePlanPublic,
+    getOrderByIdPublic,
+    getPaymentCardsList,
+    detachPaymentMethodCard,
+    attachPaymentMethodCard,
+    markCardAsDefault,
+    getConfig,
+    fetchPaymentIntent,
+    updateProfile,
+    getCurrentProfile,
+    changePassword,
+    getSubscriptionsList,
+    getInvoicesList,
+    getAutoRenewalList,
+    getWebhookEndpointsList,
+    getWebhookEndpointbyId,
+    createWebhookEndpoint,
+    activateWebhookEndpoint,
+    editWebhookEndpoint,
+    deleteWebhookEndpoint,
+    createPORequest,
+    editPORequest,
+    getProductOwnersList,
+    getProductOwner,
+    deleteProductOwnerReq,
+    signUpPOwner,
+    isProductOwnerRegistered,
+    GetCurrentProductOwnerByUserId,
+    SignInAdminAsync,
+    confirmEmail,
+    requestPasswordReset,
+    resetPassword,
+    getDiscounts,
+    createDiscount,
+    activeDiscount,
+    editDiscountRequest,
+    deleteDiscount,
+    getDiscountById,
+    deleteDiscountUsageHistoriesById,
+    getDiscountUsageHistoriesByDiscountId,
+    getCurrencies,
+    createCurrency,
+    editCurrency,
+    deleteCurrency,
+    getCurrencyById,
+    publishCurrency,
+    markAsPrimaryCurrency,
+    markAsPrimaryExchangeRateCurrency,
+    markAsPrimaryCurrencyForProductOwner,
+    markAsPrimaryExchangeRateCurrencyForProductOwner,
+    getCurrenciesPublishList,
+    checkOrderCurrencyChange,
+    ProductOwnerLimits,
+    getCurrenciesProductOwnerList,
+    cancelSubscriptionRequest,
+    suspendSubscriptionRequest,
+    visiblePlan,
+    visibleProduct,
+    activateSubscriptionRequest,
+    subscriptionFilteredList,
+    getProductsLookup,
+    getPlanFilteredList,
+    getEnvironment,
+    updateCompositeTemplateRequest,
+    subscriptionCanceledFilteredList,
+    getAuditsList,
+    getAuditById,
+    getLogsList,
+    getLogById,
+    deleteLogBeforeDate,
+    getAditsActionListLookup,
+    clientsLookup,
+    getUserById,
+    getProductOwnerLookupList,
+    getPaymentStripeDataBySubId,
+    getPaginationContactMessagesList,
+    getContactMessageById,
+    deleteContactMessageById,
+    replayContactMessageById,
   }
 }
 export default useRequest

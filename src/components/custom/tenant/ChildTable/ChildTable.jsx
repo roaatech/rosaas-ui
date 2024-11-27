@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import { Card, Table } from '@themesberg/react-bootstrap'
+import {
+  Card,
+  Col,
+  OverlayTrigger,
+  Row,
+  Table,
+  Tooltip,
+} from '@themesberg/react-bootstrap'
 import { Wrapper } from './ChildTable.style'
 import TenantStatus from '../TenantStatus/TenantStatus'
 import MetaDataAccordion from '../MetaDataAccordion/MetaDataAccordion'
 
 import Workflow from '../../Shared/Workflow/Workflow'
-import { Button } from 'primereact/button'
 import { FiRefreshCw } from 'react-icons/fi'
 import useRequest from '../../../../axios/apis/useRequest'
 import ReactJson from 'react-json-view'
 
 import Label from '../../Shared/label/Label'
 import HealthCheckAccordion from '../HealthCheckAccordion/HealthCheckAccordion'
-import { DataTransform, formatDate } from '../../../../lib/sharedFun/Time'
+import { DataTransform, formatDate, Time } from '../../../../lib/sharedFun/Time'
 import { FormattedMessage, useIntl } from 'react-intl'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
@@ -23,9 +29,42 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setAllSpecifications } from '../../../../store/slices/products/productsSlice'
 import NoteInputConfirmation from '../../Shared/NoteInputConfirmation/NoteInputConfirmation'
 import { statusConst } from '../../../../const'
-import { MdFactCheck } from 'react-icons/md'
+import {
+  MdDone,
+  MdFactCheck,
+  MdOutlineCancel,
+  MdGppBad,
+  MdGppGood,
+  MdGppMaybe,
+  MdEmail,
+  MdHistory,
+  MdDataObject,
+  MdList,
+  MdOutlineAttachMoney,
+} from 'react-icons/md'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import DateLabel from '../../Shared/DateLabel/DateLabel'
+import { Routes } from '../../../../routes'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
+import { productOwnerInfo } from '../../../../store/slices/productsOwners'
+import {
+  BsFillCheckCircleFill,
+  BsFillExclamationCircleFill,
+  BsInfo,
+  BsInfoCircle,
+  BsInfoCircleFill,
+} from 'react-icons/bs'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBuildingUser } from '@fortawesome/free-solid-svg-icons'
+import { Panel } from 'primereact/panel'
+import { Avatar } from 'primereact/avatar'
+import { Menu } from 'primereact/menu'
+import { Button } from 'primereact/button'
+import { HealthStatus, subscriptionMode } from '../../../../const/product'
+import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions'
+import { FaDollarSign, FaHeartbeat } from 'react-icons/fa'
+import { set } from 'lodash'
+
 export default function ChildTable({
   productData,
   tenantId,
@@ -34,10 +73,32 @@ export default function ChildTable({
   productIndex,
   tenantObject,
 }) {
-  const { getProductSpecification } = useRequest()
+  const {
+    getProductSpecification,
+    getProductOwner,
+    getPaymentStripeDataBySubId,
+    getSubscriptionsSettings,
+  } = useRequest()
   const dispatch = useDispatch()
+  const params = useParams()
+  const currentTenantId = params.id
+  const currentTenantsData = useSelector(
+    (state) => state.tenants.tenants?.[currentTenantId]
+  )
+  const subscriptionStatusValue =
+    currentTenantsData.subscriptions?.[0].subscriptionStatus
 
   const listProducts = useSelector((state) => state.products.products)
+  const { getLocalizedString } = useSharedFunctions()
+  const [paymentGracePeriodInHours, setPaymentGracePeriodInHours] = useState(0)
+  useEffect(() => {
+    ;(async () => {
+      const subscriptions = await getSubscriptionsSettings()
+      setPaymentGracePeriodInHours(
+        subscriptions.data.data.paymentGracePeriodInHours
+      )
+    })()
+  }, [])
   useEffect(() => {
     ;(async () => {
       if (listProducts[productData.productId]) {
@@ -56,7 +117,39 @@ export default function ChildTable({
       }
     })()
   }, [productData.productId])
+
+  const [stripData, setStripData] = useState({})
+  useEffect(() => {
+    if (!productData?.subscriptionId) {
+      return
+    }
+
+    ;(async () => {
+      const paymentStripeData = await getPaymentStripeDataBySubId(
+        productData?.subscriptionId
+      )
+      setStripData(paymentStripeData.data.data)
+    })()
+  }, [productData?.subscriptionId])
+
+  const listData = useSelector((state) => state.productsOwners.productsOwners)
+
+  useEffect(() => {
+    ;(async () => {
+      if (productData.productOwnerId) {
+        const owner = await getProductOwner(productData.productOwnerId)
+        dispatch(
+          productOwnerInfo({
+            id: productData.productOwnerId,
+            data: owner.data.data,
+          })
+        )
+      }
+    })()
+  }, [productData.productOwnerId])
+  const currentPOwnerData = listData[productData.productOwnerId]
   const currentProduct = listProducts[productData.productId]
+  const [maximizedPanel, setMaximizedPanel] = useState('')
 
   const checkSpecificationsArray =
     (currentProduct?.specifications
@@ -73,18 +166,19 @@ export default function ChildTable({
 
   let direction = useSelector((state) => state.main.direction)
 
-  const chagneStatus = async (actionStatus, notes) => {
+  const chagneStatus = async (data, notes) => {
     await editTenantStatus({
       TenantId: tenantId,
-      status: actionStatus,
+      status: data?.status,
+      actionType: data?.actionType,
       comment: notes,
       productId: productData.id,
     })
     updateTenant()
   }
-  const statusConfirm = (data) => {
+  const statusConfirm = (status, actionType) => {
     setConfirm(true)
-    setStatus(data)
+    setStatus({ status, actionType })
   }
 
   const intl = useIntl()
@@ -101,16 +195,1175 @@ export default function ChildTable({
   }
 
   const navigate = useNavigate()
+  const handleProductClick = (productId) => {
+    navigate(`${Routes.products.path}/${productId}`)
+  }
+
   const routeParams = useParams()
   const metadata = productData?.metadata ? productData.metadata : null
   const [products, setProducts] = useState([
     {
       eventKey: 'metadata',
-      title: <FormattedMessage id="Meta-Data" />,
+      title: <SafeFormatMessage id="Meta-Data" />,
       description: metadata ? rowExpansionTemplate(JSON.parse(metadata)) : null,
     },
   ])
+  const [colSize, setColSize] = useState(6)
+  const subscriptionButtons = []
+  const userRole = useSelector((state) => state.auth.userInfo.userType)
+  // Conditional button for Cancel Subscription
+  if (subscriptionStatusValue !== 3) {
+    subscriptionButtons.push({
+      order: 4,
+      type: 'form',
+      label: 'Cancel-Subscription',
+      component: 'subscriptionActionsForm',
+      popupLabel: <SafeFormatMessage id="Cancel-Subscription" />,
+      updateTenant: updateTenant,
+      icon: <MdGppBad />,
+      variant: 'text-danger',
+      formType: 'cancel',
+      separator: true,
+    })
+  }
 
+  // Conditional button for Suspend Subscription
+  if (subscriptionStatusValue !== 2 && subscriptionStatusValue !== 3) {
+    subscriptionButtons.push({
+      order: 4,
+      type: 'form',
+      label: 'Suspend-Subscription',
+      component: 'subscriptionActionsForm',
+      popupLabel: <SafeFormatMessage id="Suspend-Subscription" />,
+      updateTenant: updateTenant,
+      icon: <MdGppMaybe />,
+      variant: 'text-warning',
+      formType: 'suspend',
+    })
+  }
+
+  // Conditional button for Activate Subscription
+  if (subscriptionStatusValue === 2) {
+    subscriptionButtons.push({
+      order: 4,
+      type: 'form',
+      label: 'Activate-Subscription',
+      component: 'subscriptionActionsForm',
+      popupLabel: <SafeFormatMessage id="Activate-Subscription" />,
+      updateTenant: updateTenant,
+      icon: <MdGppGood />,
+      variant: 'text-success',
+      formType: 'activate',
+    })
+  }
+
+  const subscripitonHeaderTemplate = (options) => {
+    const className = `${options.className} justify-content-space-between`
+
+    return (
+      <div className={className}>
+        <div className="flex align-items-center gap-2">
+          <span className="font-bold">
+            {' '}
+            <BsInfoCircleFill className="mx-2" />
+            <SafeFormatMessage id="Subscription" />
+          </span>
+        </div>
+        <div>
+          <button
+            className="p-panel-header-icon p-link mr-2"
+            onClick={() => {
+              setMaximizedPanel(
+                maximizedPanel === 'subscription' ? null : 'subscription'
+              )
+            }}
+          >
+            <span
+              className={
+                maximizedPanel === 'subscription'
+                  ? 'pi pi-window-minimize'
+                  : 'pi pi-window-maximize'
+              }
+            />
+          </button>
+
+          {(!maximizedPanel || maximizedPanel == 'subscription') &&
+            options.togglerElement}
+        </div>
+      </div>
+    )
+  }
+  const renderSubscriptionBody = () => {
+    return (
+      <Table
+        responsive
+        className="table-centered table-nowrap rounded mb-0 accordions p-0"
+      >
+        <tbody
+          className="p-0"
+          style={{ backgroundColor: 'var(--secondary-color) !important' }}
+        >
+          {productData.subscriptionMode === 2 && (
+            <tr>
+              <td className="fw-bold firstTd ">
+                <SafeFormatMessage id="Subscription-Mode" />
+              </td>
+              <td className=" ">
+                <Label
+                  className="mr-2 fs-7"
+                  {...{
+                    background: 'var(--light-blue)',
+                    value: intl.formatMessage({ id: 'Trial' }),
+                    color: 'var(--blue-2)',
+                  }}
+                />
+              </td>
+            </tr>
+          )}
+          <tr>
+            <td className="fw-bold firstTd line-cell">
+              <SafeFormatMessage id="Status" />
+            </td>
+            <td className=" line-cell">
+              <TenantStatus statusValue={productData.status} />
+            </td>
+          </tr>
+
+          <tr>
+            <td className="fw-bold firstTd">
+              <SafeFormatMessage id="Health-Check-Url" />
+            </td>
+            <td className=" card p-2 m-2 ">
+              <span className="mr-2 mb-1">
+                <Label
+                  value={
+                    productData.healthCheckUrlIsOverridden ? (
+                      <SafeFormatMessage id="Overridden" />
+                    ) : (
+                      <SafeFormatMessage id="Default" />
+                    )
+                  }
+                />
+              </span>
+              <span className="mr-2 checkurl  ">
+                {productData.healthCheckUrl}
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td className="fw-bold firstTd">
+              <SafeFormatMessage id="Last-Updated-Date" />
+            </td>
+            <td className="line-cell">
+              {DataTransform(productData.editedDate)}
+            </td>
+          </tr>
+          {productData.specifications.map((spec) => (
+            <tr key={spec.id}>
+              <td className="fw-bold firstTd">
+                {spec.displayName[intl.locale] ||
+                  (intl.locale === 'ar' && spec.displayName['en']) ||
+                  (intl.locale === 'en' && spec.displayName['ar'])}
+              </td>
+              <td>{spec.value}</td>
+            </tr>
+          ))}
+          {productData?.startDate && (
+            <tr>
+              <td className="firstTd fw-bold">
+                <SafeFormatMessage id="Subscription-Info" />
+              </td>
+              <td>
+                <span>
+                  <DataLabelWhite text={productData.plan.systemName} />
+                </span>
+                {'   '}
+                <SafeFormatMessage id="From" />{' '}
+                <DataLabelWhite text={formatDate(productData.startDate)} />{' '}
+                <SafeFormatMessage id="to" />{' '}
+                <DateLabel endDate={productData.endDate} />
+              </td>
+            </tr>
+          )}
+          {productData.endDate && (
+            <tr>
+              <td className="firstTd fw-bold">
+                <SafeFormatMessage id="Grace-Period-ends-on" />
+              </td>
+              <td>
+                <DateLabel
+                  endDate={
+                    new Date(
+                      new Date(productData.endDate).getTime() +
+                        paymentGracePeriodInHours * 3600 * 1000
+                    )
+                  }
+                />
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
+    )
+  }
+
+  const subscriptionFooterTemplate = (options) => {
+    const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`
+
+    return (
+      <div className={className}>
+        <div className="flex align-items-center gap-2">
+          {productData.subscriptionMode && (
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              overlay={
+                <Tooltip>
+                  <SafeFormatMessage id="Subscription-Mode" />
+                </Tooltip>
+              }
+            >
+              <span>
+                <Label {...subscriptionMode[productData.subscriptionMode]} />
+              </span>
+            </OverlayTrigger>
+          )}
+          {productData.status && (
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              overlay={
+                <Tooltip>
+                  <SafeFormatMessage id="Status" />
+                </Tooltip>
+              }
+            >
+              <span>
+                <TenantStatus statusValue={productData.status} />{' '}
+              </span>
+            </OverlayTrigger>
+          )}
+        </div>
+        <span className="p-text-secondary">
+          {productData?.plan?.systemName && (
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              overlay={
+                <Tooltip>
+                  {colSize == 6 ? (
+                    <SafeFormatMessage id="Subscription-Plan" />
+                  ) : (
+                    <SafeFormatMessage id="Subscription-Info" />
+                  )}
+                </Tooltip>
+              }
+            >
+              <span>
+                <span>
+                  <DataLabelWhite text={productData.plan.systemName} />
+                </span>
+                {'   '}
+                {maximizedPanel == 'subscription' && (
+                  <>
+                    {' '}
+                    <SafeFormatMessage id="From" />{' '}
+                    <DataLabelWhite text={formatDate(productData.startDate)} />{' '}
+                    <SafeFormatMessage id="to" />{' '}
+                    <DateLabel endDate={productData.endDate} />
+                  </>
+                )}
+              </span>
+            </OverlayTrigger>
+          )}
+        </span>
+      </div>
+    )
+  }
+
+  /*Specification Panel */
+  const specificationsHeaderTemplate = (options) => {
+    const className = `${options.className} justify-content-space-between`
+
+    return (
+      <div className={className}>
+        <div className="flex align-items-center gap-2">
+          <span className="font-bold">
+            <MdList className="mx-2 mb-1" />
+            <SafeFormatMessage id="Specifications" />
+          </span>
+        </div>
+        <div>
+          <button
+            className="p-panel-header-icon p-link mr-2"
+            onClick={() => {
+              setMaximizedPanel(
+                maximizedPanel === 'specifications' ? null : 'specifications'
+              )
+            }}
+          >
+            <span
+              className={
+                maximizedPanel === 'specifications'
+                  ? 'pi pi-window-minimize'
+                  : 'pi pi-window-maximize'
+              }
+            />
+          </button>
+          {(!maximizedPanel || maximizedPanel == 'specifications') &&
+            options.togglerElement}
+        </div>
+      </div>
+    )
+  }
+
+  const specificationsFooterTemplate = (options) => {
+    const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`
+
+    return (
+      <div className={className}>
+        <div>
+          {!productData.specifications ||
+          productData.specifications.length === 0 ? (
+            <div className="text-center ">
+              <SafeFormatMessage
+                id="No-Specifications-Message"
+                defaultMessage="There are no specifications to view."
+              />
+            </div>
+          ) : (
+            productData.specifications.map((spec) => {
+              return (
+                spec.value && (
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <span>{getLocalizedString(spec.displayName)}</span>
+                      </Tooltip>
+                    }
+                  >
+                    <span style={{ marginRight: '8px' }}>
+                      <DataLabelWhite text={spec.value} />{' '}
+                    </span>
+                  </OverlayTrigger>
+                )
+              )
+            })
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  const specificationsBodyTemplate = () => {
+    if (
+      !productData.specifications ||
+      productData.specifications.length === 0
+    ) {
+      return (
+        <div className="text-center py-2">
+          <SafeFormatMessage
+            id="No-Specifications-Message"
+            defaultMessage="There are no specifications to view."
+          />
+        </div>
+      )
+    }
+
+    return (
+      <Table responsive className="table-centered table-nowrap rounded mb-0">
+        <tbody>
+          {productData.specifications.map((spec) => (
+            <tr key={spec.id}>
+              <td className="fw-bold">
+                {getLocalizedString(spec.displayName)}
+              </td>
+              <td>{spec.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    )
+  }
+
+  /* product owner Panel */
+  const pOwnerHeaderTemplate = (options) => {
+    const className = `${options.className} justify-content-space-between`
+
+    return (
+      <div className={className}>
+        <div className="flex align-items-center gap-2">
+          <span className="font-bold">
+            {' '}
+            <FontAwesomeIcon icon={faBuildingUser} className="mx-2" />
+            <SafeFormatMessage id="Product-Owner" />
+          </span>
+        </div>
+        <div>
+          {/* {currentPOwnerData && ( */}
+          <button
+            className="p-panel-header-icon p-link mr-2"
+            onClick={() => {
+              setMaximizedPanel(
+                maximizedPanel === 'productOwner' ? null : 'productOwner'
+              )
+            }}
+          >
+            <span
+              className={
+                maximizedPanel == 'productOwner'
+                  ? 'pi pi-window-minimize'
+                  : 'pi pi-window-maximize'
+              }
+            />
+          </button>
+          {/* )} */}
+          {!maximizedPanel && options.togglerElement}
+        </div>
+      </div>
+    )
+  }
+
+  const pOwnerFooterTemplate = (options) => {
+    const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`
+
+    return (
+      <div className={className}>
+        {!currentPOwnerData ? (
+          <div className="text-center ">
+            <SafeFormatMessage
+              id="There-are-no-product-Owner-Data-to-view."
+              defaultMessage={'There are no product Owner Data to view.'}
+            />
+          </div>
+        ) : (
+          <>
+            <div className="flex align-items-center gap-2">
+              <OverlayTrigger
+                trigger={['hover', 'focus']}
+                overlay={
+                  <Tooltip>
+                    <SafeFormatMessage id="System-Name" />
+                  </Tooltip>
+                }
+              >
+                <span>
+                  <DataLabelWhite
+                    variant={'gray'}
+                    text={currentPOwnerData?.systemName}
+                    style={{ fontWeight: 'bold' }}
+                  />
+                </span>
+              </OverlayTrigger>
+              <OverlayTrigger
+                trigger={['hover', 'focus']}
+                overlay={
+                  <Tooltip>
+                    <SafeFormatMessage id="Display-Name" />
+                  </Tooltip>
+                }
+              >
+                <span>
+                  <Label
+                    value={currentPOwnerData?.displayName}
+                    color={'var(--second-color)'}
+                    background={'var(--second-color-2)'}
+                    hasBorder={true}
+                  />{' '}
+                </span>
+              </OverlayTrigger>
+
+              {/* <DataLabelWhite text={currentPOwnerData?.displayName} /> */}
+            </div>
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              overlay={
+                <Tooltip>
+                  <SafeFormatMessage id="Administrator-Email" />
+                </Tooltip>
+              }
+            >
+              <span>
+                {currentPOwnerData?.administrator?.email ||
+                'bilal.hkmsh@gmail.com' ? (
+                  <DataLabelWhite
+                    text={
+                      <>
+                        <MdEmail className="mx-1" />
+                        {currentPOwnerData?.administrator?.email ||
+                          'bilal.hkmsh@gmail.com'}
+                      </>
+                    }
+                    variant={'gray'}
+                  />
+                ) : (
+                  '__'
+                )}
+              </span>
+            </OverlayTrigger>
+          </>
+        )}
+      </div>
+    )
+  }
+
+  const metaDataHeaderTemplate = (options) => {
+    const className = `${options.className} justify-content-space-between`
+
+    return (
+      <div className={className}>
+        <div className="flex align-items-center gap-2">
+          <span className="font-bold">
+            <MdDataObject className="mx-2 mb-1" />
+            <SafeFormatMessage id="Meta-Data" />
+          </span>
+        </div>
+        <div>
+          <button
+            className="p-panel-header-icon p-link mr-2"
+            onClick={() => {
+              setMaximizedPanel(
+                maximizedPanel === 'metaData' ? null : 'metaData'
+              )
+            }}
+          >
+            <span
+              className={
+                maximizedPanel === 'metaData'
+                  ? 'pi pi-window-minimize'
+                  : 'pi pi-window-maximize'
+              }
+            />
+          </button>
+          {(!maximizedPanel || maximizedPanel == 'metaData') &&
+            options.togglerElement}
+        </div>
+      </div>
+    )
+  }
+  const metaDataBodyTemplate = () => {
+    return metadata ? (
+      rowExpansionTemplate(JSON.parse(metadata))
+    ) : (
+      <div className="text-center py-2">
+        <SafeFormatMessage id="There-are-no-metadata-to-view." />
+      </div>
+    )
+  }
+  const metaDataFooterTemplate = (options) => {
+    const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`
+
+    return (
+      <div className={className}>
+        {metadata ? (
+          <div className="flex align-items-center gap-2">
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              overlay={
+                <Tooltip>
+                  <SafeFormatMessage
+                    id="Metadata-Available"
+                    defaultMessage="This item has metadata."
+                  />
+                </Tooltip>
+              }
+            >
+              <span>
+                <DataLabelWhite text="Metadata" variant={'gray'} />
+              </span>
+            </OverlayTrigger>
+          </div>
+        ) : (
+          <div className="text-center ">
+            <SafeFormatMessage
+              id="No-Specifications-Message"
+              defaultMessage="There are no specifications to view."
+            />
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  const healthCheckHeaderTemplate = (options) => {
+    const className = `${options.className} justify-content-space-between`
+
+    return (
+      <div className={className}>
+        <div className="flex align-items-center gap-2">
+          <span className="font-bold">
+            <FaHeartbeat className="mx-2 mb-1" />
+            <SafeFormatMessage id="Health-Check" />
+          </span>
+        </div>
+        <div>
+          <button
+            className="p-panel-header-icon p-link mr-2"
+            onClick={() => {
+              setMaximizedPanel(
+                maximizedPanel === 'healthCheck' ? null : 'healthCheck'
+              )
+            }}
+          >
+            <span
+              className={
+                maximizedPanel === 'healthCheck'
+                  ? 'pi pi-window-minimize'
+                  : 'pi pi-window-maximize'
+              }
+            />
+          </button>
+          {(!maximizedPanel || maximizedPanel == 'healthCheck') &&
+            options.togglerElement}
+        </div>
+      </div>
+    )
+  }
+
+  const healthCheckBodyTemplate = () => {
+    if (!productData?.healthCheckStatus?.showHealthStatus) {
+      return (
+        <div className="text-center py-2">
+          <SafeFormatMessage
+            id="No-health-check-status-found"
+            defaultMessage="There is no health check status found."
+          />
+        </div>
+      )
+    }
+
+    return (
+      <Table responsive className="table-centered table-nowrap rounded mb-0">
+        <tbody>
+          <tr>
+            <td className="fw-bold">
+              <SafeFormatMessage id="Health-Check-Status" />
+            </td>
+            <td>
+              <Label
+                {...HealthStatus[productData?.healthCheckStatus?.isHealthy]}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className="fw-bold">
+              <SafeFormatMessage id="Checks-Count" />
+            </td>
+            <td>
+              <Label
+                background="var(--green2)"
+                value={productData?.healthCheckStatus?.healthyCount}
+                color="var(--teal-green)"
+                icon={<BsFillCheckCircleFill />}
+              />
+              {productData?.healthCheckStatus?.unhealthyCount > 0 && (
+                <>
+                  <Label
+                    background="var(--red2)"
+                    value={productData?.healthCheckStatus?.unhealthyCount}
+                    color="var(--red)"
+                    icon={<BsFillExclamationCircleFill />}
+                  />
+                </>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td className="fw-bold">
+              <SafeFormatMessage id="Url" />
+            </td>
+            <td>{productData?.healthCheckStatus?.healthCheckUrl}</td>
+          </tr>
+          <tr>
+            <td className="fw-bold">
+              <SafeFormatMessage id="Last-Checked" />
+            </td>
+            <td>
+              {Time(
+                productData?.healthCheckStatus?.lastCheckDate,
+                intl.formatMessage({ id: 'Last-checked' })
+              )}
+            </td>
+          </tr>
+          {productData?.healthCheckStatus?.isHealthy === false &&
+            productData?.healthCheckStatus?.externalSystemDispatch && (
+              <>
+                <tr>
+                  <td className="fw-bold">
+                    <SafeFormatMessage id="External-System-Dispatch" />
+                  </td>
+                  <td>
+                    <SafeFormatMessage id="Is-Successful" />:{' '}
+                    {productData?.healthCheckStatus?.externalSystemDispatch?.isSuccessful.toString()}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="fw-bold">
+                    <SafeFormatMessage id="Dispatch-Url" />
+                  </td>
+                  <td>
+                    {
+                      productData?.healthCheckStatus?.externalSystemDispatch
+                        ?.url
+                    }
+                  </td>
+                </tr>
+                <tr>
+                  <td className="fw-bold">
+                    <SafeFormatMessage id="Dispatch-Date" />
+                  </td>
+                  <td>
+                    {Time(
+                      productData?.healthCheckStatus?.externalSystemDispatch
+                        ?.dispatchDate,
+                      intl.formatMessage({ id: 'Last-checked' })
+                    )}
+                  </td>
+                </tr>
+              </>
+            )}
+        </tbody>
+      </Table>
+    )
+  }
+
+  const healthCheckFooterTamplate = (options) => {
+    const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`
+
+    return (
+      <div className={className}>
+        {productData?.healthCheckStatus?.showHealthStatus != true ? (
+          <div className="text-center ">
+            <SafeFormatMessage
+              id="No-health-check-status-found"
+              defaultMessage="There is no health check status found."
+            />
+          </div>
+        ) : (
+          productData && (
+            <OverlayTrigger
+              trigger={['hover', 'focus']}
+              overlay={
+                <Tooltip>
+                  <SafeFormatMessage id="Health-Check-Status" />{' '}
+                </Tooltip>
+              }
+            >
+              <span>
+                <Label
+                  {...HealthStatus[productData?.healthCheckStatus?.isHealthy]}
+                />
+              </span>
+            </OverlayTrigger>
+          )
+        )}
+      </div>
+    )
+  }
+
+  const paymentstripeJsonHeaderTemplate = (options) => {
+    const className = `${options.className} justify-content-space-between`
+    return (
+      <div className={className}>
+        <div className="flex align-items-center gap-2">
+          <span className="font-bold">
+            <MdDataObject className="mx-2 mb-1" />
+
+            <SafeFormatMessage id="Stripe-json" />
+          </span>
+        </div>
+        <div>
+          <button
+            className="p-panel-header-icon p-link mr-2"
+            onClick={() => {
+              setMaximizedPanel(
+                maximizedPanel === 'stripeJsonHeader'
+                  ? null
+                  : 'stripeJsonHeader'
+              )
+            }}
+          >
+            <span
+              className={
+                maximizedPanel === 'stripeJsonHeader'
+                  ? 'pi pi-window-minimize'
+                  : 'pi pi-window-maximize'
+              }
+            />
+          </button>
+          {(!maximizedPanel || maximizedPanel == 'stripeJsonHeader') &&
+            options.togglerElement}
+        </div>
+      </div>
+    )
+  }
+  const paymentstripeJsonBodyTemplate = () => {
+    return stripData ? (
+      <div className="content-container">
+        <div className="content-details">
+          <Row>
+            <Table
+              responsive
+              className="table-centered table-nowrap rounded mb-0"
+            >
+              <tbody className="p-0">
+                <tr>
+                  <td className="fw-bold">
+                    <SafeFormatMessage id="Subscription-json-data" />
+                  </td>
+                  <td className="">
+                    {stripData?.subscription ? (
+                      <ReactJson
+                        src={stripData?.subscription}
+                        name={false}
+                        collapsed={true}
+                        enableClipboard={false}
+                      />
+                    ) : (
+                      <SafeFormatMessage id="There-are-no-Subscription-json-data-to-view." />
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="fw-bold firstTd">
+                    <SafeFormatMessage id="Invoice-json-data" />
+                  </td>
+                  <td className="line-cell">
+                    {stripData.invoice ? (
+                      <ReactJson
+                        src={stripData?.invoice}
+                        name={false}
+                        collapsed={true}
+                        enableClipboard={false}
+                      />
+                    ) : (
+                      <SafeFormatMessage id="There-are-no-invoice-json-data-to-view." />
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
+          </Row>
+        </div>
+      </div>
+    ) : (
+      <div className="text-center ">
+        <SafeFormatMessage id="There-are-no-subscription-json-data-to-view." />
+      </div>
+    )
+  }
+  const paymentstripeJsonFooterTemplate = (options) => {
+    const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`
+    return (
+      <div className={className}>
+        {!stripData ? (
+          <div className="text-center ">
+            <SafeFormatMessage id="There-are-no-Stripe-json-data-to-view." />
+          </div>
+        ) : (
+          <>
+            <div className="flex align-items-center gap-2">
+              {stripData?.subscription?.status && (
+                <OverlayTrigger
+                  trigger={['hover', 'focus']}
+                  overlay={
+                    <Tooltip>
+                      <SafeFormatMessage id="Stripe-Subscription-Status" />
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <DataLabelWhite
+                      variant={'gray'}
+                      text={stripData?.subscription?.status}
+                    />
+                  </span>
+                </OverlayTrigger>
+              )}
+              {stripData?.invoice?.status && (
+                <div>
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <SafeFormatMessage id="Invoice-Status" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <DataLabelWhite text={stripData?.invoice?.status} />
+                    </span>
+                  </OverlayTrigger>
+                </div>
+              )}
+            </div>
+            <span className="p-text-secondary">
+              {stripData?.stripData?.subscription?.currentPeriodEnd ? (
+                <OverlayTrigger
+                  trigger={['hover', 'focus']}
+                  overlay={
+                    <Tooltip>
+                      <SafeFormatMessage id="current-Period-End" />
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <DateLabel
+                      endDate={stripData?.subscription?.currentPeriodEnd}
+                    />
+                  </span>
+                </OverlayTrigger>
+              ) : null}
+            </span>
+          </>
+        )}
+      </div>
+    )
+  }
+
+  const paymentStripePaymentInfoHeaderTamplate = (options) => {
+    const className = `${options.className} justify-content-space-between`
+    return (
+      <div className={className}>
+        <div className="flex align-items-center gap-2">
+          <span className="font-bold">
+            <FaDollarSign className="mx-2 mb-1" />
+            <SafeFormatMessage id="Stripe-Payment" />
+          </span>
+        </div>
+        <div>
+          <button
+            className="p-panel-header-icon p-link mr-2"
+            onClick={() => {
+              setMaximizedPanel(
+                maximizedPanel === 'paymentInfoHeader'
+                  ? null
+                  : 'paymentInfoHeader'
+              )
+            }}
+          >
+            <span
+              className={
+                maximizedPanel === 'paymentInfoHeader'
+                  ? 'pi pi-window-minimize'
+                  : 'pi pi-window-maximize'
+              }
+            />
+          </button>
+          {(!maximizedPanel || maximizedPanel == 'paymentInfoHeader') &&
+            options.togglerElement}
+        </div>
+      </div>
+    )
+  }
+  const paymentStripePaymentInfoBodyTemplate = () => {
+    return (
+      <div className="content-container">
+        <div className="content-details">
+          <Table
+            responsive
+            className="table-centered table-nowrap rounded mb-0"
+          >
+            <tbody>
+              <tr>
+                <h4>
+                  <SafeFormatMessage id="Subscription" />
+                </h4>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Id" />
+                </td>
+                <td className="line-cell">{stripData?.subscription?.id}</td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="canceled-at" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.canceledAt}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Current-Period-Start" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.currentPeriodStart}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Current-Period-End" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.currentPeriodEnd}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Customer-Id" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.customerId}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Status" />
+                </td>
+                <td className="line-cell">{stripData?.subscription?.status}</td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Default-Payment-Method-Id" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.defaultPaymentMethodId}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Latest-Invoice-Id" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.latestInvoiceId}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="trialEnd" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.subscription?.trialEnd}
+                </td>
+              </tr>
+
+              <tr>
+                <h4>
+                  <SafeFormatMessage id="Invoice" />
+                </h4>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Created" />
+                </td>
+                {stripData?.invoice?.created && (
+                  <td className="line-cell">{stripData?.invoice?.created}</td>
+                )}
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Status" />
+                </td>
+                <td className="line-cell">{stripData?.invoice?.status}</td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Currency" />
+                </td>
+                <td>{stripData?.invoice?.currency}</td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Customer-Id" />
+                </td>
+                <td>{stripData?.invoice?.customerId}</td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Customer-Name" />
+                </td>
+                <td>{stripData?.invoice?.customerName}</td>
+              </tr>
+
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Customer-Email" />
+                </td>
+                <td className="line-cell">
+                  {stripData?.invoice?.customerEmail}
+                </td>
+              </tr>
+              <tr>
+                <td className="fw-bold firstTd line-cell">
+                  <SafeFormatMessage id="Customer-Phone" />
+                </td>
+                <td>{stripData?.invoice?.customerPhone}</td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+      </div>
+    )
+  }
+  const paymentStripePaymentInfoFooterTemplate = (options) => {
+    const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`
+
+    return (
+      <div className={className}>
+        {!stripData ? (
+          <div className="text-center ">
+            <SafeFormatMessage id="There-are-no-Stripe-json-data-to-view." />
+          </div>
+        ) : (
+          <>
+            <div className="flex align-items-center gap-2">
+              {stripData?.subscription?.status && (
+                <OverlayTrigger
+                  trigger={['hover', 'focus']}
+                  overlay={
+                    <Tooltip>
+                      <SafeFormatMessage id="Stripe-Subscription-Status" />
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <DataLabelWhite
+                      variant={'gray'}
+                      text={stripData?.subscription?.status}
+                    />
+                  </span>
+                </OverlayTrigger>
+              )}
+              {stripData?.invoice?.status && (
+                <div>
+                  <OverlayTrigger
+                    trigger={['hover', 'focus']}
+                    overlay={
+                      <Tooltip>
+                        <SafeFormatMessage id="Invoice-Status" />
+                      </Tooltip>
+                    }
+                  >
+                    <span>
+                      <DataLabelWhite text={stripData?.invoice?.status} />
+                    </span>
+                  </OverlayTrigger>
+                </div>
+              )}
+            </div>
+            <span className="p-text-secondary">
+              {stripData?.stripData?.subscription?.currentPeriodEnd ? (
+                <OverlayTrigger
+                  trigger={['hover', 'focus']}
+                  overlay={
+                    <Tooltip>
+                      <SafeFormatMessage id="current-Period-End" />
+                    </Tooltip>
+                  }
+                >
+                  <span>
+                    <DateLabel
+                      endDate={stripData?.subscription?.currentPeriodEnd}
+                    />
+                  </span>
+                </OverlayTrigger>
+              ) : null}
+            </span>
+          </>
+        )}
+      </div>
+    )
+  }
   return (
     <Wrapper direction={direction}>
       <div className="dynamicButtons">
@@ -118,16 +1371,6 @@ export default function ChildTable({
           buttons={
             productData.actions && productData.actions[0]?.status != 13
               ? [
-                  //  {
-                  //       order: 1,
-                  //       type: 'form',
-                  //       id: routeParams.id,
-                  //       label: 'Edit',
-                  //       component: 'editTenant',
-                  //       updateTenant: updateTenant,
-                  //       icon: <AiFillEdit />,
-                  //     }
-                  //   :
                   {
                     order: 1,
                     type: 'form',
@@ -139,21 +1382,30 @@ export default function ChildTable({
                     disable: !checkSpecificationsArray,
                     icon: <AiFillEdit />,
                   },
-                  {
-                    order: 4,
-                    type: 'action',
-                    label: 'Subscription-Management',
-                    func: () => {
-                      navigate('./Subscription-Management')
-                    },
-                    icon: <MdFactCheck />,
-                  },
                   ...renderActions(
                     tenantObject,
                     productData.actions,
                     chagneStatus,
                     statusConfirm
                   ),
+                  // Ensure the condition returns an object or nothing
+                  ...(currentTenantsData.subscriptions?.[0].status != 11 &&
+                  currentTenantsData.subscriptions?.[0].status != 12 &&
+                  currentTenantsData.subscriptions?.[0].status != 13
+                    ? [...subscriptionButtons]
+                    : []),
+                  {
+                    order: 5, // Adjusted order to avoid duplication
+                    type: 'action',
+                    label: 'Subscription-Management',
+                    func: () => {
+                      navigate(
+                        `${Routes.Tenant.path}/${routeParams?.id}/Subscription-Management`
+                      )
+                    },
+                    icon: <MdFactCheck />,
+                    separator: true,
+                  },
                 ]
               : renderActions(
                   tenantObject,
@@ -166,115 +1418,355 @@ export default function ChildTable({
       </div>
       <div className="content-container">
         <div className="content-details">
-          <Table
-            responsive
-            className="table-centered table-nowrap rounded mb-0 accordions "
-          >
-            <tbody>
-              {productData.subscriptionMode == 2 && (
-                <tr>
-                  <td className="fw-bold firstTd line-cell">
-                    <FormattedMessage id="Subscription-Mode" />
-                  </td>
-                  <td className=" line-cell">
-                    <Label
-                      className="mr-2 fs-7"
-                      {...{
-                        background: 'var(--red2)',
-                        value: intl.formatMessage({ id: 'Trial' }),
+          <Row>
+            {/* maximized Panel */}
+            {maximizedPanel === 'subscription' && (
+              <Col md={12} className="my-2">
+                <Panel
+                  headerTemplate={subscripitonHeaderTemplate}
+                  footerTemplate={subscriptionFooterTemplate}
+                  // collapsed={true}
+                  toggleable
+                >
+                  {renderSubscriptionBody()}
+                </Panel>
+              </Col>
+            )}
+            {maximizedPanel === 'specifications' && (
+              <Col md={12} className="my-2">
+                <Panel
+                  headerTemplate={specificationsHeaderTemplate}
+                  footerTemplate={specificationsFooterTemplate}
+                  // collapsed={true}
+                  toggleable
+                >
+                  {specificationsBodyTemplate()}
+                </Panel>
+              </Col>
+            )}
+            {maximizedPanel === 'metaData' && (
+              <Col md={12} className="my-2">
+                <Panel
+                  headerTemplate={metaDataHeaderTemplate}
+                  footerTemplate={metaDataFooterTemplate}
+                  // collapsed={true}
+                  toggleable
+                >
+                  {metaDataBodyTemplate()}
+                </Panel>
+              </Col>
+            )}
+            {maximizedPanel === 'healthCheck' && (
+              <Col md={12} className="my-2">
+                <Panel
+                  headerTemplate={healthCheckHeaderTemplate}
+                  footerTemplate={healthCheckFooterTamplate}
+                  // collapsed={true}
+                  toggleable
+                >
+                  {healthCheckBodyTemplate()}
+                </Panel>
+              </Col>
+            )}
+            {maximizedPanel === 'productOwner' && (
+              <Col md={12} className="my-2">
+                <Panel
+                  headerTemplate={pOwnerHeaderTemplate}
+                  footerTemplate={pOwnerFooterTemplate}
+                  // collapsed={true}
+                  toggleable
+                >
+                  {currentPOwnerData ? (
+                    <Table
+                      responsive
+                      className="table-centered table-nowrap rounded mb-0 accordions "
+                    >
+                      <tbody>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="System-Name" />
+                          </td>
+                          <td>{currentPOwnerData?.systemName}</td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Display-Name" />
+                          </td>
+                          <td>{currentPOwnerData?.displayName}</td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Products" />
+                          </td>
+                          <td>
+                            {currentPOwnerData.products &&
+                              Object.values(currentPOwnerData.products).length >
+                                0 && (
+                                <div className="d-flex flex-wrap">
+                                  {' '}
+                                  {Object.values(
+                                    currentPOwnerData.products
+                                  ).map((product) => (
+                                    <span
+                                      className="mx-1 my-1"
+                                      key={product.id} // Use a unique id from the product
+                                      onClick={() =>
+                                        handleProductClick(product.id)
+                                      }
+                                      style={{ cursor: 'pointer' }}
+                                    >
+                                      <DataLabelWhite
+                                        text={product.systemName}
+                                      />
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Created-Date" />
+                          </td>
+                          <td>
+                            {DataTransform(currentPOwnerData.createdDate)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Last-Updated-Date" />
+                          </td>
+                          <td>{DataTransform(currentPOwnerData.editedDate)}</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  ) : (
+                    <div className="text-center ">
+                      <SafeFormatMessage
+                        id="There-are-no-product-Owner-Data-to-view."
+                        defaultMessage={
+                          'There are no product Owner Data to view.'
+                        }
+                      />
+                    </div>
+                  )}
+                </Panel>
+              </Col>
+            )}
 
-                        color: 'red',
-                      }}
-                    />
-                  </td>
-                </tr>
+            {/* Stripe json Subscription Panel */}
+            {maximizedPanel == 'stripeJsonHeader' &&
+              userRole == 'superAdmin' && (
+                <Col md={12} className="my-2">
+                  <Panel
+                    headerTemplate={paymentstripeJsonHeaderTemplate}
+                    footerTemplate={paymentstripeJsonFooterTemplate}
+                    // collapsed={true}
+                    toggleable
+                  >
+                    {paymentstripeJsonBodyTemplate()}
+                  </Panel>
+                </Col>
               )}
-              <tr>
-                <td className="fw-bold firstTd line-cell">
-                  <FormattedMessage id="Status" />
-                </td>
-                <td className=" line-cell">
-                  <TenantStatus statusValue={productData.status} />
-                </td>
-              </tr>
 
-              <tr>
-                <td className="fw-bold firstTd">
-                  <FormattedMessage id="Health-Check-Url" />
-                </td>
-                <td className="d-flex align-items-center">
-                  <span className="mr-2">
-                    <Label
-                      value={
-                        productData.healthCheckUrlIsOverridden ? (
-                          <FormattedMessage id="Overridden" />
-                        ) : (
-                          <FormattedMessage id="Default" />
-                        )
-                      }
-                    />
-                  </span>
-                  <span className="mr-2 checkurl">
-                    {productData.healthCheckUrl}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td className="fw-bold firstTd">
-                  <FormattedMessage id="Last-Updated-Date" />
-                </td>
-                <td>{DataTransform(productData.editedDate)}</td>
-              </tr>
-              {productData.specifications.map((spec, index) => (
-                <tr key={spec.id}>
-                  <td className="fw-bold firstTd">
-                    {spec.displayName[intl.locale] ||
-                      (intl.locale === 'ar' && spec.displayName['en']) ||
-                      (intl.locale === 'en' && spec.displayName['ar'])}
-                  </td>
-                  <td>{spec.value}</td>
-                </tr>
-              ))}
-              {productData?.startDate && (
-                <tr>
-                  <td className="firstTd fw-bold">
-                    <FormattedMessage id="Subscription-Info" />
-                  </td>
-                  <td>
-                    <span>
-                      <DataLabelWhite text={productData.plan.systemName} />
-                    </span>
-                    {'   '}
-                    <FormattedMessage id="From" />{' '}
-                    <DataLabelWhite text={formatDate(productData.startDate)} />{' '}
-                    <FormattedMessage id="to" />{' '}
-                    <DateLabel endDate={productData.endDate} />
-                  </td>
-                </tr>
+            {/*stripe Payment Info Panel */}
+            {maximizedPanel == 'paymentInfoHeader' &&
+              userRole == 'superAdmin' && (
+                <Col md={12} className="my-2">
+                  <Panel
+                    headerTemplate={paymentStripePaymentInfoHeaderTamplate}
+                    footerTemplate={paymentStripePaymentInfoFooterTemplate}
+                    // collapsed={true}
+                    toggleable
+                  >
+                    {paymentStripePaymentInfoBodyTemplate()}
+                  </Panel>
+                </Col>
               )}
-              <tr>
-                <td className="accordions" colSpan={2}>
-                  <MetaDataAccordion defaultKey="metaData" data={products} />
-                </td>
-              </tr>
 
-              {productData?.healthCheckStatus.showHealthStatus == true && (
-                <tr>
-                  <td className="accordions" colSpan={2}>
-                    <HealthCheckAccordion
-                      defaultKey="HealthCheckStatus"
-                      data={[productData]}
-                    />
-                  </td>
-                </tr>
+            {/* Minimized Panel */}
+            {maximizedPanel !== 'subscription' && (
+              <Col md={maximizedPanel ? 3 : 6} className="my-2">
+                <Panel
+                  headerTemplate={subscripitonHeaderTemplate}
+                  footerTemplate={!maximizedPanel && subscriptionFooterTemplate}
+                  collapsed={true}
+                  toggleable
+                >
+                  {renderSubscriptionBody()}
+                </Panel>
+              </Col>
+            )}
+            {maximizedPanel !== 'healthCheck' && (
+              <Col md={maximizedPanel ? 3 : 6} className="my-2  ">
+                <Panel
+                  headerTemplate={healthCheckHeaderTemplate}
+                  footerTemplate={!maximizedPanel && healthCheckFooterTamplate}
+                  collapsed={true}
+                  toggleable
+                >
+                  {healthCheckBodyTemplate()}
+                </Panel>
+              </Col>
+            )}
+            {maximizedPanel !== 'specifications' && (
+              <Col md={maximizedPanel ? 3 : 6} className="my-2">
+                <Panel
+                  headerTemplate={specificationsHeaderTemplate}
+                  footerTemplate={
+                    !maximizedPanel && specificationsFooterTemplate
+                  }
+                  collapsed={true}
+                  toggleable
+                >
+                  {specificationsBodyTemplate()}
+                </Panel>
+              </Col>
+            )}
+            {maximizedPanel !== 'metaData' && (
+              <Col md={maximizedPanel ? 3 : 6} className="my-2">
+                <Panel
+                  headerTemplate={metaDataHeaderTemplate}
+                  footerTemplate={!maximizedPanel && metaDataFooterTemplate}
+                  collapsed={true}
+                  toggleable
+                >
+                  {metaDataBodyTemplate()}
+                </Panel>
+              </Col>
+            )}
+
+            {maximizedPanel != 'productOwner' && (
+              <Col md={maximizedPanel ? 3 : 6} className="my-2">
+                <Panel
+                  headerTemplate={pOwnerHeaderTemplate}
+                  footerTemplate={!maximizedPanel && pOwnerFooterTemplate}
+                  collapsed={true}
+                  toggleable
+                >
+                  {currentPOwnerData ? (
+                    <Table
+                      responsive
+                      className="table-centered table-nowrap rounded mb-0 accordions "
+                    >
+                      <tbody>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="System-Name" />
+                          </td>
+                          <td>{currentPOwnerData?.systemName}</td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Display-Name" />
+                          </td>
+                          <td>{currentPOwnerData?.displayName}</td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Products" />
+                          </td>
+                          <td>
+                            {currentPOwnerData.products &&
+                              Object.values(currentPOwnerData.products).length >
+                                0 && (
+                                <div className="d-flex flex-wrap">
+                                  {' '}
+                                  {Object.values(
+                                    currentPOwnerData.products
+                                  ).map((product) => (
+                                    <span
+                                      className="mx-1 my-1"
+                                      key={product.id} // Use a unique id from the product
+                                      onClick={() =>
+                                        handleProductClick(product.id)
+                                      }
+                                      style={{ cursor: 'pointer' }}
+                                    >
+                                      <DataLabelWhite
+                                        text={product.systemName}
+                                      />
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Created-Date" />
+                          </td>
+                          <td>
+                            {DataTransform(currentPOwnerData.createdDate)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="firstTd fw-bold">
+                            <SafeFormatMessage id="Last-Updated-Date" />
+                          </td>
+                          <td>{DataTransform(currentPOwnerData.editedDate)}</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  ) : (
+                    <div className="text-center ">
+                      <SafeFormatMessage
+                        id="There-are-no-product-Owner-Data-to-view."
+                        defaultMessage={
+                          'There are no product Owner Data to view.'
+                        }
+                      />
+                    </div>
+                  )}
+                </Panel>
+              </Col>
+            )}
+
+            {/* Stripe json Panel */}
+            {maximizedPanel != 'stripeJsonHeader' &&
+              userRole == 'superAdmin' && (
+                <Col md={maximizedPanel ? 3 : 6} className="my-2">
+                  <Panel
+                    headerTemplate={paymentstripeJsonHeaderTemplate}
+                    footerTemplate={
+                      !maximizedPanel && paymentstripeJsonFooterTemplate
+                    }
+                    collapsed={true}
+                    toggleable
+                  >
+                    {paymentstripeJsonBodyTemplate()}
+                  </Panel>
+                </Col>
               )}
-            </tbody>
-          </Table>
+
+            {/* Stripe Payment Info Panel */}
+            {maximizedPanel != 'paymentInfoHeader' &&
+              userRole == 'superAdmin' && (
+                <Col md={maximizedPanel ? 3 : 6} className="my-2">
+                  <Panel
+                    headerTemplate={paymentStripePaymentInfoHeaderTamplate}
+                    footerTemplate={
+                      !maximizedPanel && paymentStripePaymentInfoFooterTemplate
+                    }
+                    collapsed={true}
+                    toggleable
+                  >
+                    {paymentStripePaymentInfoBodyTemplate()}
+                  </Panel>
+                </Col>
+              )}
+          </Row>
         </div>
         <div className="content timeLine">
-          <Card border="light" className="shadow-sm">
-            <Card.Header className="fs-6">
-              <FormattedMessage id="History" />
+          <Card className="shadow-sm mt-2 ml-2">
+            <Card.Header
+              style={{ padding: '0.75rem 1.25rem' }}
+              className="fs-6"
+            >
+              <span>
+                <MdHistory className="mx-2" />
+                <SafeFormatMessage id="History" />
+              </span>
               {productData?.status != 13 ? (
                 <div className="refresh">
                   <Button
@@ -306,7 +1798,9 @@ export default function ChildTable({
             setConfirm={setConfirm}
             confirmFunction={chagneStatus}
             message={intl.formatMessage({
-              id: statusConst[status].message || 'default-status-message',
+              id:
+                statusConst[status]?.status?.message ||
+                'default-status-message',
             })}
             data={status}
             placeholder={intl.formatMessage({ id: 'Comment' })}

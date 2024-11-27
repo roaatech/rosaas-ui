@@ -1,14 +1,26 @@
-import { useIntl } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { Wrapper } from './TrialLabel.styled'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
-const TrialLabel = () => {
+const TrialLabel = ({ days }) => {
   const intl = useIntl()
   return (
     <Wrapper>
       <span className="trial-label">
         <span className="top-line"></span>
         <span className="trial-text">
-          {intl.formatMessage({ id: 'Trial' })}
+          {days && (
+            <>
+              {days} {'  '}
+              {days <= 10 ? (
+                <SafeFormatMessage id="Days" />
+              ) : (
+                <SafeFormatMessage id="Days-ar" />
+              )}
+              <br />
+            </>
+          )}
+          <SafeFormatMessage id="Free-Trial" />
         </span>
         <span className="bottom-line"></span>
       </span>

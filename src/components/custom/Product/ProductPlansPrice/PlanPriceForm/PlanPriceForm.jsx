@@ -17,6 +17,8 @@ import {
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import { activeIndex, cycle } from '../../../../../const/index.js'
 import AutoGenerateInput from '../../../Shared/AutoGenerateInput/AutoGenerateInput.jsx'
+import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInput.jsx'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const PlanPriceForm = ({
   type,
@@ -141,7 +143,9 @@ const PlanPriceForm = ({
     systemName: planPriceData ? planPriceData.systemName : '',
     cycle: cycleValue || (planPriceData ? planPriceData.cycle : ''),
     price: planPriceData ? planPriceData.price : '',
-    description: planPriceData ? planPriceData.description : '',
+    oldPrice: planPriceData ? planPriceData.oldPrice : null,
+    descriptionEn: planPriceData?.descriptionLocalizations?.en || '',
+    descriptionAr: planPriceData?.descriptionLocalizations?.ar || '',
     cyclesYouDontHave: cyclesYouDontHave,
   }
 
@@ -149,22 +153,36 @@ const PlanPriceForm = ({
 
   const validationSchema = Yup.object().shape({
     plan: Yup.string().required(
-      <FormattedMessage id="Please-Select-a-Option" />
+      <SafeFormatMessage id="Please-Select-a-Option" />
     ),
     cycle: Yup.number().required(
-      <FormattedMessage id="Please-Select-a-Option" />
+      <SafeFormatMessage id="Please-Select-a-Option" />
     ),
     systemName: Yup.string()
-      .max(100, <FormattedMessage id="Must-be-maximum-100-digits" />)
-      .required(<FormattedMessage id="System-Name-is-required" />)
+      .max(100, <SafeFormatMessage id="Must-be-maximum-100-digits" />)
+      .required(<SafeFormatMessage id="System-Name-is-required" />)
       .matches(
         /^[a-zA-Z0-9_-]+$/,
-        <FormattedMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
+        <SafeFormatMessage id="English-Characters,-Numbers,-and-Underscores-are-only-accepted." />
       ),
     price: Yup.number()
-      .required(<FormattedMessage id="This-field-is-required" />)
-      .min(0, <FormattedMessage id="The-price-must-be-0-or-more" />)
-      .max(999999, <FormattedMessage id="The-value-must-not-exceed-999,999" />),
+      .required(<SafeFormatMessage id="This-field-is-required" />)
+      .min(0, <SafeFormatMessage id="The-price-must-be-0-or-more" />)
+      .max(999999, <SafeFormatMessage id="The-value-must-not-exceed-999,999" />)
+      .test(
+        'is-decimal',
+        <SafeFormatMessage id="The-price-must-have-up-to-two-decimal-places" />,
+        (value) => (value + '').match(/^\d+(\.\d{1,2})?$/)
+      ),
+    oldPrice: Yup.number()
+      .nullable() // This makes the field optional
+      .min(0, <SafeFormatMessage id="The-price-must-be-0-or-more" />)
+      .max(999999, <SafeFormatMessage id="The-value-must-not-exceed-999,999" />)
+      .test(
+        'is-decimal',
+        <SafeFormatMessage id="The-price-must-have-up-to-two-decimal-places" />,
+        (value) => !value || (value + '').match(/^\d+(\.\d{1,2})?$/) // Validation only applies if a value exists
+      ),
   })
 
   const formik = useFormik({
@@ -176,8 +194,12 @@ const PlanPriceForm = ({
           systemName: values.systemName,
           planId: values.plan,
           cycle: parseInt(values.cycle),
-          price: parseInt(values.price),
-          description: values.description,
+          price: parseFloat(values.price),
+          descriptionLocalizations: {
+            en: values.descriptionEn,
+            ar: values.descriptionAr,
+          },
+          oldPrice: parseFloat(values.oldPrice) || null,
         })
 
         if (!allProducts[productId].plansPrice) {
@@ -202,8 +224,11 @@ const PlanPriceForm = ({
               cycle: values.cycle,
               price: values.price,
               systemName: values.systemName,
-
-              description: values.description,
+              oldPrice: parseFloat(values.oldPrice) || null,
+              descriptionLocalizations: {
+                en: values.descriptionEn,
+                ar: values.descriptionAr,
+              },
               id: createPlanPrice.data.data.id,
               isPublished: false,
               isSubscribed: false,
@@ -219,8 +244,12 @@ const PlanPriceForm = ({
       } else {
         const editPlan = await editPlanPriceRequest(productId, {
           data: {
-            price: parseInt(values.price),
-            description: values.description,
+            price: parseFloat(values.price),
+            oldPrice: parseFloat(values.oldPrice) || null,
+            descriptionLocalizations: {
+              en: values.descriptionEn,
+              ar: values.descriptionAr,
+            },
             cycle: parseInt(values.cycle),
           },
           id: planPriceData.id,
@@ -238,7 +267,11 @@ const PlanPriceForm = ({
               systemName: values.systemName,
               cycle: values.cycle,
               price: values.price,
-              description: values.description,
+              oldPrice: parseFloat(values.oldPrice) || null,
+              descriptionLocalizations: {
+                en: values.descriptionEn,
+                ar: values.descriptionAr,
+              },
               id: planPriceData.id,
               isPublished: planPriceData.isPublished,
               isSubscribed: planPriceData.isSubscribed,
@@ -302,7 +335,7 @@ const PlanPriceForm = ({
           {type !== 'edit' && (
             <div className="mb-3">
               <AutoGenerateInput
-                label={<FormattedMessage id="System-Name" />}
+                label={<SafeFormatMessage id="System-Name" />}
                 id="systemName"
                 value={`${
                   formik.values.plan
@@ -351,7 +384,7 @@ const PlanPriceForm = ({
               <div>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    <FormattedMessage id="Plan" />{' '}
+                    <SafeFormatMessage id="Plan" />{' '}
                     <span style={{ color: 'red' }}>*</span>
                   </Form.Label>
                   <select
@@ -372,7 +405,7 @@ const PlanPriceForm = ({
                     onBlur={formik.handleBlur}
                   >
                     <option value="">
-                      <FormattedMessage id="Select-Option" />
+                      <SafeFormatMessage id="Select-Option" />
                     </option>
                     {filteredPlanOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -395,7 +428,7 @@ const PlanPriceForm = ({
               <div>
                 <Form.Group className="mb-3">
                   <Form.Label>
-                    <FormattedMessage id="cycle" />
+                    <SafeFormatMessage id="cycle" />
                     <span style={{ color: 'red' }}> *</span>
                   </Form.Label>
                   <select
@@ -407,11 +440,11 @@ const PlanPriceForm = ({
                     disabled={cyclesYouDontHave.length === 0}
                   >
                     <option value="">
-                      <FormattedMessage id="Select-Option" />
+                      <SafeFormatMessage id="Select-Option" />
                     </option>
                     {cyclesYouDontHave.map((cycleValue) => (
                       <option key={cycleValue} value={cycleValue}>
-                        <FormattedMessage id={cycle[cycleValue]} />
+                        <SafeFormatMessage id={cycle[cycleValue]} />
                       </option>
                     ))}
                   </select>
@@ -425,7 +458,7 @@ const PlanPriceForm = ({
                   )}
                   {formik.values.plan && cyclesYouDontHave.length === 0 ? (
                     <div className="assigned-value">
-                      <FormattedMessage id="All-values-are-assigned." />
+                      <SafeFormatMessage id="All-values-are-assigned." />
                     </div>
                   ) : null}
                 </Form.Group>
@@ -436,7 +469,7 @@ const PlanPriceForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Price" />{' '}
+                <SafeFormatMessage id="Price" />{' '}
                 <span style={{ color: 'red' }}> *</span>
               </Form.Label>
               <input
@@ -465,34 +498,69 @@ const PlanPriceForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Description" />
+                <SafeFormatMessage id="OldPrice" />{' '}
               </Form.Label>
-
-              <TextareaAndCounter
-                addTextarea={formik.setFieldValue}
-                maxLength={250}
-                showCharCount
-                inputValue={formik?.values?.description}
+              <input
+                type="text"
+                className="form-control"
+                id="oldPrice"
+                name="oldPrice"
+                onChange={formik.handleChange}
+                value={formik.values.oldPrice}
+                disabled={[1, 2].includes(tenancyType)}
               />
-
-              {formik.touched.description && formik.errors.description && (
-                <div className="invalid-feedback">
-                  {formik.errors.description}
-                </div>
+              {formik.touched.oldPrice && formik.errors.oldPrice && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.oldPrice}
+                </Form.Control.Feedback>
               )}
             </Form.Group>
           </div>
+          <MultilingualInput
+            inputLabel="Description"
+            languages={[
+              { code: 'en', name: 'English' },
+              { code: 'ar', name: 'Arabic' },
+            ]}
+            inputIds={{
+              en: 'descriptionEn',
+              ar: 'descriptionAr',
+            }}
+            placeholder={{
+              en: 'English-Description',
+              ar: 'Arabic-Description',
+            }}
+            values={{
+              en: formik.values.descriptionEn,
+              ar: formik.values.descriptionAr,
+            }}
+            onChange={formik.handleChange}
+            isRequired={false}
+            inputType="TextareaAndCounter"
+            maxLength={250}
+            errors={{
+              en: formik.errors.descriptionEn,
+              ar: formik.errors.descriptionAr,
+            }}
+            touched={{
+              en: formik.touched.descriptionEn,
+              ar: formik.touched.descriptionAr,
+            }}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit">
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

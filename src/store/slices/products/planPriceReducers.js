@@ -45,10 +45,29 @@ const deletePlanPrice = (state, action) => {
 }
 const deleteAllPlanPrice = (state, action) => {
   const allProduct = JSON.parse(JSON.stringify(current(state.products)))
-  delete allProduct[action.payload.productId].plansPrice
+  delete allProduct[action.payload.productId]?.plansPrice
   state.products = allProduct
 }
+const deleteAllPlanPriceBySystemName = (state, action) => {
+  // Deep clone the current state products
+  const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+
+  // Find the product by systemName
+  const product = Object.values(allProduct).find(
+    (product) => product.systemName === action.payload.systemName
+  )
+
+  // If the product is found, delete its plansPrice
+  if (product) {
+    delete product.plansPrice
+  }
+
+  // Update the state with the modified products
+  state.products = allProduct
+}
+
 export {
+  deleteAllPlanPriceBySystemName,
   setAllPlansPrice,
   PlansPriceInfo,
   PlansPriceChangeAttr,

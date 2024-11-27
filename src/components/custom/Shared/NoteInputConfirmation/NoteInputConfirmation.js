@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import { GiTriangleTarget } from 'react-icons/gi'
 import { BsExclamationTriangle } from 'react-icons/bs'
 import TextareaAndCounter from '../TextareaAndCounter/TextareaAndCounter'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 
 export default function NoteInputConfirmation({
   confirm,
@@ -52,9 +53,9 @@ export default function NoteInputConfirmation({
           </>
         }
         icon={icon}
-        header={<FormattedMessage id="Confirmation" />}
-        rejectLabel={<FormattedMessage id="No" />}
-        acceptLabel={<FormattedMessage id="Yes" />}
+        header={<SafeFormatMessage id="Confirmation" />}
+        rejectLabel={<SafeFormatMessage id="No" />}
+        acceptLabel={<SafeFormatMessage id="Yes" />}
         accept={accept}
         reject={reject}
         visible={confirm}

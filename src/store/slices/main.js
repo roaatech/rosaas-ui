@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, current } from '@reduxjs/toolkit'
 
 export const mainSlice = createSlice({
   name: 'main',
@@ -8,6 +8,22 @@ export const mainSlice = createSlice({
     preloader: true,
     sidebar: 1,
     history: [],
+    currency: {
+      currencyCode:
+        localStorage.getItem('currencyCode') ||
+        localStorage.getItem('defaultCurrencyCode'),
+      id:
+        localStorage.getItem('currencyId') ||
+        localStorage.getItem('defaultCurrencyId'),
+    },
+    defaultCurrency: {
+      currencyCode: localStorage.getItem('defaultCurrencyCode'),
+      id: localStorage.getItem('defaultCurrencyId'),
+    },
+    pOSystemName: null,
+    isLoading: false,
+    environmentAlertData: [],
+    audits: { items: [], totalCount: 0 },
   },
   reducers: {
     directionFun: (state, action) => {
@@ -23,10 +39,55 @@ export const mainSlice = createSlice({
     addToHistory: (state, action) => {
       state.history = [...state.history, action.payload]
     },
+    setCurrentCurrencyCodeAndId: (state, action) => {
+      const { id, currencyCode } = action.payload
+      state.currency = { id, currencyCode }
+    },
+    setDefaultCurrencyCodeAndId: (state, action) => {
+      const { id, currencyCode } = action.payload
+      state.defaultCurrency = { id, currencyCode }
+    },
+    setProductOwner: (state, action) => {
+      state.pOSystemName = action.payload
+    },
+    deleteProductOwner: (state) => {
+      state.pOSystemName = null
+    },
+    setLoading: (state, action) => {
+      state.isLoading = action.payload
+    },
+    setEnvironmentAlertData: (state, action) => {
+      state.environmentAlertData = action.payload
+    },
+    setAuditsData: (state, action) => {
+      const allAudits = JSON.parse(JSON.stringify(current(state.audits)))
+      if (action?.payload?.items) {
+        action.payload.items.forEach((item) => {
+          // Add new item if it doesn't already exist
+          if (!allAudits.items[item.id]) {
+            allAudits.items[item.id] = item
+          }
+        })
+      }
+
+      state.audits.items = allAudits.items
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { directionFun, changePreloader, changeMode, addToHistory } =
-  mainSlice.actions
+export const {
+  directionFun,
+  changePreloader,
+  deleteProductOwner,
+  changeMode,
+  addToHistory,
+  setCurrentCurrencyCodeAndId,
+  setProductOwner,
+  setLoading,
+  setEnvironmentAlertData,
+  setAuditsData,
+  setDefaultCurrencyCodeAndId,
+} = mainSlice.actions
+
 export default mainSlice.reducer

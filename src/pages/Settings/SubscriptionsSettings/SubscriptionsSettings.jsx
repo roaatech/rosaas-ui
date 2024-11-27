@@ -27,6 +27,7 @@ import useRequest from '../../../axios/apis/useRequest'
 import UpperContent from '../../../components/custom/Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../../../components/custom/Shared/DynamicButtons/DynamicButtons'
+import SafeFormatMessage from '../../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 
 const SubscriptionsSettings = () => {
   const [edit, setEdit] = useState(false)
@@ -48,14 +49,14 @@ const SubscriptionsSettings = () => {
 
   const initialValues = {}
   const validationSchema = Yup.object().shape({
-    subscriptionWorkerTimePeriod: Yup.number()
+    subscriptionWorkerIntervalInHours: Yup.number()
       .required('The feild is required!')
       .test(
         'Is positive?',
         'Add a valid number',
         (value) => value > 0 && value % 1 == 0
       ),
-    allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment: Yup.number()
+    paymentGracePeriodInHours: Yup.number()
       .required('The feild is required!')
       .test(
         'Is positive?',
@@ -83,7 +84,7 @@ const SubscriptionsSettings = () => {
         <Form onSubmit={formik.handleSubmit}>
           <UpperContent>
             <h4 className="m-0">
-              <FormattedMessage id="Settings" />
+              <SafeFormatMessage id="Settings" />
             </h4>
 
             <DynamicButtons
@@ -128,20 +129,20 @@ const SubscriptionsSettings = () => {
           <Card className="m-3 mt-0">
             <Card.Body>
               <h5 className="mb-4">
-                <FormattedMessage id="Subscriptions-Settings" />
+                <SafeFormatMessage id="Subscriptions-Settings" />
               </h5>
               <Row>
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="subscription-Worker-Time-Period" />
+                      <SafeFormatMessage id="subscription-Worker-Time-Period" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id="subscription-Worker-Time-Period-desc" />
+                              <SafeFormatMessage id="subscription-Worker-Time-Period-desc" />
                             </Tooltip>
                           }
                         >
@@ -155,19 +156,19 @@ const SubscriptionsSettings = () => {
                       className="form-control"
                       required
                       type="number"
-                      id="subscriptionWorkerTimePeriod"
-                      name="subscriptionWorkerTimePeriod"
+                      id="subscriptionWorkerIntervalInHours"
+                      name="subscriptionWorkerIntervalInHours"
                       onChange={formik.handleChange}
-                      value={formik.values.subscriptionWorkerTimePeriod}
+                      value={formik.values.subscriptionWorkerIntervalInHours}
                       disabled={!edit}
                     />
-                    {formik.touched.subscriptionWorkerTimePeriod &&
-                      formik.errors.subscriptionWorkerTimePeriod && (
+                    {formik.touched.subscriptionWorkerIntervalInHours &&
+                      formik.errors.subscriptionWorkerIntervalInHours && (
                         <Form.Control.Feedback
                           type="invalid"
                           style={{ display: 'block' }}
                         >
-                          {formik.errors.subscriptionWorkerTimePeriod}
+                          {formik.errors.subscriptionWorkerIntervalInHours}
                         </Form.Control.Feedback>
                       )}
                   </Form.Group>
@@ -175,14 +176,14 @@ const SubscriptionsSettings = () => {
                 <Col sm={6} className="mb-3">
                   <Form.Group id="addressNumber">
                     <Form.Label>
-                      <FormattedMessage id="Grace-Period" />
+                      <SafeFormatMessage id="Grace-Period" />
                       <span style={{ color: 'red' }}>* </span>
                       <span className="fw-normal">
                         <OverlayTrigger
                           trigger={['hover', 'focus']}
                           overlay={
                             <Tooltip>
-                              <FormattedMessage id="Grace-Period-desc" />
+                              <SafeFormatMessage id="Grace-Period-desc" />
                             </Tooltip>
                           }
                         >
@@ -196,27 +197,19 @@ const SubscriptionsSettings = () => {
                       className="form-control"
                       required
                       type="number"
-                      id="allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment"
-                      name="allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment"
+                      id="paymentGracePeriodInHours"
+                      name="paymentGracePeriodInHours"
                       onChange={formik.handleChange}
-                      value={
-                        formik.values
-                          .allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment
-                      }
+                      value={formik.values.paymentGracePeriodInHours}
                       disabled={!edit}
                     />
-                    {formik.touched
-                      .allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment &&
-                      formik.errors
-                        .allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment && (
+                    {formik.touched.paymentGracePeriodInHours &&
+                      formik.errors.paymentGracePeriodInHours && (
                         <Form.Control.Feedback
                           type="invalid"
                           style={{ display: 'block' }}
                         >
-                          {
-                            formik.errors
-                              .allowedPeriodTimeBeforeDeactivatingSubscriptionforNonPayment
-                          }
+                          {formik.errors.paymentGracePeriodInHours}
                         </Form.Control.Feedback>
                       )}
                   </Form.Group>

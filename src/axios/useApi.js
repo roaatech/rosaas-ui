@@ -1,42 +1,64 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
-import { logOut } from '../store/slices/auth'
+import { useDispatch, useSelector } from 'react-redux'
+import { logOut, addUserInfo } from '../store/slices/auth'
 import { changePreloader } from '../store/slices/main'
-import { addUserInfo } from '../store/slices/auth'
 import { Client_id } from '../const'
+import { useNavigate } from 'react-router-dom'
+import { Routes } from '../routes'
 
 const useApi = () => {
   let axiosObject = {
-    // baseURL: process.env.REACT_APP_API_URL,
-    baseURL: window.localStorage.getItem('url'),
+    baseURL: process.env.REACT_APP_API_URL,
+    // baseURL: window.localStorage.getItem('url'),
   }
 
-  const mainInstance = axios.create(axiosObject)
-
+  const pOSystemName = useSelector((state) => state.main.pOSystemName)
+  const direction = useSelector((state) => state.main.direction)
+  const currency = useSelector((state) => state.main.currency)
+  const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const mainInstance = axios.create(axiosObject)
 
   mainInstance.interceptors.request.use(
     function (config) {
       dispatch(changePreloader(true))
+
       const noAuthRoutes = [
-        'identity/sadmin/v1/Auth/Signin',
         'identity/tadmin/v1/Auth/Signup',
+        'identity/product-owner-admin/v1/Auth/Signup',
+        'identity/product-owner-admin/v1/Auth/Signin',
+        'identity/tadmin/v1/Auth/Signin',
+        'identity/sadmin/v1/Auth/Signin',
+        'identity/v1/Account/ConfirmEmail',
+        'identity/v1/Account/ForgotPassword',
+        'identity/v1/Account/ResetPassword',
+        'public/v1',
       ]
-      //* add auth
+
+      config.headers['Accept-Language'] = direction === 'rtl' ? 'ar' : 'en'
+      config.headers['Currency-Code'] = currency.currencyCode
+      config.headers['Currency-Id'] = currency.id
+      config.headers['PO-System-Name'] = pOSystemName
+
+      //* Add auth
       if (!noAuthRoutes.includes(config.url)) {
         const localStorageToken = localStorage.getItem('token')
-        config.headers.Authorization = localStorageToken
-          ? `Bearer ${localStorageToken}`
-          : ''
+        if (localStorageToken) {
+          config.headers.Authorization = `Bearer ${localStorageToken}`
+        } else {
+          dispatch(logOut())
+        }
       } else {
         config.headers['Client-Id'] = Client_id
       }
-      //* end auth
+      //* End auth
+
       return config
     },
     (error) => {
-      //if err don't do any thing and i will handel it in my global handel error
+      // Handle error
       return Promise.reject(error)
     }
   )
@@ -44,8 +66,11 @@ const useApi = () => {
   mainInstance.interceptors.response.use(
     async (res) => {
       dispatch(changePreloader(false))
-      res.data?.data?.token?.accessToken &&
-        localStorage.setItem('token', res.data?.data?.token?.accessToken)
+
+      if (res.data?.data?.token?.accessToken) {
+        localStorage.setItem('token', res.data.data.token.accessToken)
+      }
+
       const roles = [
         '',
         'superAdmin',
@@ -53,23 +78,42 @@ const useApi = () => {
         'ProductAdmin',
         'tenantAdmin',
       ]
+
+      if (
+        res.data?.data?.token === null &&
+        res.data?.data?.isUserMustConfirmEmail
+      ) {
+        return navigate(Routes.EmailConfirmationPage.path)
+      }
+
       if (res.data?.data?.userAccount?.email) {
         dispatch(
           addUserInfo({
-            email: res.data?.data?.userAccount?.email,
-            role: roles[res.data?.data?.userAccount?.userType],
+            ...res.data?.data?.userAccount,
+            userType: roles[res.data?.data?.userAccount?.userType],
           })
         )
       }
+
       return res
     },
     async (err) => {
       dispatch(changePreloader(false))
+
+      const isSysCode2005 = err.response?.data.metadata?.errors.some(
+        (element) => {
+          return element.sysCode == 2005 ? true : false
+        }
+      )
+
+      if (isSysCode2005) {
+        return navigate(Routes.EmailConfirmationPage.path)
+      }
+
       if (err?.response?.status == 401) {
         dispatch(logOut())
         return Promise.reject(err)
       }
-
       if (err?.response?.data?.metadata) {
         //when the Access Token is expired
         err.response.data.metadata.errors.map((element) => {
@@ -78,9 +122,11 @@ const useApi = () => {
           })
         })
       }
+
       return Promise.reject(err)
     }
   )
+
   return mainInstance
 }
 

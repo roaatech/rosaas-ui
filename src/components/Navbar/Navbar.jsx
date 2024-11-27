@@ -23,8 +23,12 @@ import { changeMode, directionFun } from '../../store/slices/main'
 import { useDarkreader } from 'react-darkreader'
 import { FormattedMessage } from 'react-intl'
 import { Wrapper } from './Navbar.styled'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Routes } from '../../routes'
+import { MdOutlineArrowDownward } from 'react-icons/md'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
+import SafeFormatMessage from '../custom/Shared/SafeFormatMessage/SafeFormatMessage'
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (props) => {
   const dispatch = useDispatch()
@@ -45,7 +49,8 @@ export default (props) => {
       setNotifications(notifications.map((n) => ({ ...n, read: true })))
     }, 300)
   }
-
+  let userRole = useSelector((state) => state.auth.userInfo.userType)
+  const navigate = useNavigate()
   const Notification = (props) => {
     const { link, sender, image, time, message, read = false } = props
     const readClassName = read ? '' : 'text-danger'
@@ -91,7 +96,7 @@ export default (props) => {
 
                 // </div>
                 <>
-                  <Dropdown as={Nav.Item} onToggle={markNotificationsAsRead}>
+                  {/* <Dropdown as={Nav.Item} onToggle={markNotificationsAsRead}>
                     <Dropdown.Toggle
                       as={Nav.Link}
                       className="text-dark icon-notifications me-lg-3"
@@ -114,15 +119,16 @@ export default (props) => {
                         </Dropdown.Item>
                       </ListGroup>
                     </Dropdown.Menu>
-                  </Dropdown>
+                  </Dropdown> */}
 
                   <Dropdown as={Nav.Item}>
                     <Dropdown.Toggle as={Nav.Link} className="pt-1 px-0 p-info">
                       <div className="media d-flex align-items-center">
-                        <Image
+                        {/* <Image
                           src={darkMode ? Profile1 : Profile3}
                           className="user-avatar md-avatar rounded-circle"
-                        />
+                        /> */}{' '}
+                        <FontAwesomeIcon icon={faAngleDown} />
                       </div>
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
@@ -134,9 +140,9 @@ export default (props) => {
                         }}
                       >
                         {darkMode == false ? (
-                          <FormattedMessage id="Dark-Mode" />
+                          <SafeFormatMessage id="Dark-Mode" />
                         ) : (
-                          <FormattedMessage id="Light-Mode" />
+                          <SafeFormatMessage id="Light-Mode" />
                         )}
                       </Dropdown.Item>
 
@@ -149,17 +155,20 @@ export default (props) => {
                         }}
                       >
                         {direction === 'rtl' ? (
-                          <FormattedMessage id="English" />
+                          <SafeFormatMessage id="English" />
                         ) : (
-                          <FormattedMessage id="Arabic" />
+                          <SafeFormatMessage id="Arabic" />
                         )}
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                   <div className="media-body ms-2 mr-2 text-dark align-items-center d-none d-lg-block">
                     <span className="mb-0 font-small fw-bold email">
-                      <Link className="fw-bold" to={Routes.Signin.path}>
-                        <FormattedMessage id="Signin" />
+                      <Link
+                        className="fw-bold"
+                        to={Routes.SignInTenantAdmin.path}
+                      >
+                        <SafeFormatMessage id="Signin" />
                       </Link>
                     </span>
                   </div>
@@ -207,6 +216,29 @@ export default (props) => {
                       </div>
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
+                      {
+                        <Dropdown.Item
+                          className="fw-bold"
+                          onClick={() => {
+                            userRole == 'tenantAdmin'
+                              ? navigate(`${Routes.workSpace.path}#profile`)
+                              : navigate(Routes.Profile.path)
+                          }}
+                        >
+                          <SafeFormatMessage id="Update-Profile" />
+                        </Dropdown.Item>
+                      }
+                      <Dropdown.Divider />
+                      {/* <Dropdown.Item
+                        className="fw-bold"
+                        onClick={() => {
+                          navigate(Routes.marketPlacePage.path)
+                        }}
+                      >
+                        <SafeFormatMessage id="Go-to-Marketplace" />
+                      </Dropdown.Item> */}
+                      <Dropdown.Divider />
+
                       <Dropdown.Item
                         className="fw-bold"
                         onClick={() => {
@@ -215,13 +247,13 @@ export default (props) => {
                         }}
                       >
                         {darkMode == false ? (
-                          <FormattedMessage id="Dark-Mode" />
+                          <SafeFormatMessage id="Dark-Mode" />
                         ) : (
-                          <FormattedMessage id="Light-Mode" />
+                          <SafeFormatMessage id="Light-Mode" />
                         )}
                       </Dropdown.Item>
 
-                      <Dropdown.Divider />
+                      {/* <Dropdown.Divider /> */}
 
                       <Dropdown.Item
                         className="fw-bold"
@@ -230,22 +262,30 @@ export default (props) => {
                         }}
                       >
                         {direction === 'rtl' ? (
-                          <FormattedMessage id="English" />
+                          <SafeFormatMessage id="English" />
                         ) : (
-                          <FormattedMessage id="Arabic" />
+                          <SafeFormatMessage id="Arabic" />
                         )}
                       </Dropdown.Item>
 
-                      <Dropdown.Item
-                        className="fw-bold"
-                        onClick={() => dispatch(logOut())}
-                      >
-                        {/* <FontAwesomeIcon
+                      {userRole && (
+                        <>
+                          <Dropdown.Divider />
+                          <Dropdown.Item
+                            className="fw-bold"
+                            onClick={() => {
+                              dispatch(logOut())
+                              navigate(Routes.mainPage.path)
+                            }}
+                          >
+                            {/* <FontAwesomeIcon
                     icon={faSignOutAlt}
                     className="text-danger mx-2"
                   /> */}
-                        <FormattedMessage id="Logout" />
-                      </Dropdown.Item>
+                            <SafeFormatMessage id="Logout" />
+                          </Dropdown.Item>
+                        </>
+                      )}
                     </Dropdown.Menu>
                   </Dropdown>
                 </>

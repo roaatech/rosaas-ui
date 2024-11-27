@@ -29,11 +29,12 @@ const GlobalStyles = createGlobalStyle`
   --hugeFont:35px;
   --errorColor:red;
   --green:#3bc76f;
-  --red:#ff6868;
+  --red:#D32F2F;
   --green2:#eff9f6;
-  --red2:#f5e8e4;
+  --red2:#FFCDD2;
   --primary-color:#414042;
   --passive-color:#ccc;
+  --slate-gray:#6c757d;
   --primary0:#fdfdfd;
   --primary1:#ECECEC;
   --primary2:#DCDCDC;
@@ -43,8 +44,15 @@ const GlobalStyles = createGlobalStyle`
   --primary6:#3B3A3C;
   --primary7:#2E2D2F;
   --second-color:#ffab03;
+  --second-color-darker: #cc8802;
   --second-color-1:#ffe8b9;
+  --second-color-2:#ffe8b934;
  --table-hover:#eff0f2;
+ --light-blue: #add8e676; /* Light Blue color */
+ --light-blue-2: #1e8fff15; /* Light Blue color */
+  --blue-2: #1E90FF;     /* Dodger Blue color */
+  --yellow2: #ceaf00;    /* Gold color */
+  --yellow-light: #fff8d1;    /* Gold color */
    --themeBackground:${(props) =>
      props.darkMode ? darkBackground : lightBackground};
   --themeColor:${(props) => (props.darkMode ? lightColor : darkColor)};
@@ -57,16 +65,23 @@ const GlobalStyles = createGlobalStyle`
 /// theme override
 --bs-btn-border-color:#ffab03;
 --bs-btn-bg:#ffab03;
-
 --misty-gray:#cccccc40;
 --orange-brown:#d26b4e;
 --teal-green:#00a675;
 --misty-blue:#f0f8ff;
 --midnight-blue:#336699;
 --silver-gray:#a3a3a3;
-
-
-
+--orange-yellow-blend : #FFC966FF;
+--mocha-brown:#5c472e;
+--pale-moonlight-gray: #f8f9faea;
+--dark-blue: #00b1f7;
+--purple-shade: #9623db;
+--green-primary: #1ca57b;
+--orange-warm: #f7a200;
+--red-alert: #db2323;
+--gray-neutral: #c7c5c5;
+--white-pure: #ffffff;
+--alert-background: #ffab03d4;
 }
  
  
@@ -124,7 +139,30 @@ const GlobalStyles = createGlobalStyle`
 .sidebar-inner .addNew {
   width: 100%;
 }
+.p-treeselect-panel.p-component.p-ripple-disabled.p-connected-overlay-enter-done {
+    z-index: 2000 !important; 
+  
+  }
+  .p-tree-selectable{
+    max-height:180px;
 
+  }
+  .p-treeselect-panel .p-treeselect-header{
+    max-height:45px;
+
+  }
+  .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight{
+  background-color: var(--second-color-1)!important;
+  
+}
+  .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-tree-toggler, .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight .p-treenode-icon{
+ color: var(--second-color)!important;
+  }
+  .p-checkbox .p-checkbox-box.p-highlight{
+    background: var(--second-color)!important;
+    border-color: var(--second-color-1)!important;
+
+  }
 .navbar-theme-primary:not(.headroom){
   background-color: var(--primary5);
 

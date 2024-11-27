@@ -12,8 +12,17 @@ const useTenantReq = () => {
       data.data
     )
   }
+  const updateCompositeTemplateRequest = async (data) => {
+    return await Request.put(
+      `management/sadmin/v1/Products/${data.id}/CompositeTemplates`,
+      data
+    )
+  }
   const getProduct = async (id) => {
     return await Request.get(`management/sadmin/v1/Products/${id}`)
+  }
+  const getProductsLookup = async () => {
+    return await Request.get(`management/sadmin/v1/Products/Lookup`)
   }
   const getProductWarnings = async (id) => {
     return await Request.get(`management/sadmin/v1/Products/${id}/Warnings`)
@@ -39,6 +48,12 @@ const useTenantReq = () => {
       data
     )
   }
+  const visibleProduct = async (productId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/Products/${productId}/Visibility`,
+      data
+    )
+  }
 
   return {
     createProductRequest,
@@ -50,6 +65,9 @@ const useTenantReq = () => {
     getProductWarnings,
     changeProductTrialType,
     publishProduct,
+    visibleProduct,
+    getProductsLookup,
+    updateCompositeTemplateRequest,
   }
 }
 

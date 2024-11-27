@@ -18,6 +18,21 @@ export const Wrapper = styled.div`
     }
   }
 
+  .p-tabview .p-tabview-nav-btn.p-link:hover {
+    color: var(--second-color);
+    opacity: 1;
+  }
+  .p-tabview .p-tabview-nav-btn.p-link {
+    opacity: 0.6;
+    color: var(--primary-color);
+    left: ${(props) => (props.direction == 'rtl' ? '0 !important' : '')};
+    right: ${(props) => (props.direction == 'rtl' ? 'auto !important' : '')};
+    rotate: ${(props) => (props.direction == 'rtl' ? '180deg' : '')};
+  }
+  .dynamicButtons {
+    margin-bottom: 20px !important;
+  }
+
   .card-body {
     padding: 0px;
     background: unset;

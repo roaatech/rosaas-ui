@@ -10,6 +10,7 @@ import { cycle } from '../../../../../const/product.js'
 import TextareaAndCounter from '../../../Shared/TextareaAndCounter/TextareaAndCounter.jsx'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAllPlansPrice } from '../../../../../store/slices/products/productsSlice'
+import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 
 const RenewForm = ({
   tenantData,
@@ -28,7 +29,7 @@ const RenewForm = ({
   const dispatch = useDispatch()
   const validationSchema = Yup.object().shape({
     price: Yup.string().required(
-      <FormattedMessage id="Please-select-a-price" />
+      <SafeFormatMessage id="Please-select-a-price" />
     ),
   })
 
@@ -106,7 +107,7 @@ const RenewForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Subscription-Options" />{' '}
+                <SafeFormatMessage id="Subscription-Options" />{' '}
                 <span style={{ color: 'red' }}>*</span>
               </Form.Label>
               <select
@@ -119,7 +120,7 @@ const RenewForm = ({
                 disabled={!selectedPlan || !selectedProduct}
               >
                 <option value="">
-                  <FormattedMessage id="Select-Option" />{' '}
+                  <SafeFormatMessage id="Select-Option" />{' '}
                 </option>
                 {priceList.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -140,7 +141,7 @@ const RenewForm = ({
           <div>
             <Form.Group className="mb-3">
               <Form.Label>
-                <FormattedMessage id="Comment" />
+                <SafeFormatMessage id="Comment" />
               </Form.Label>
               <TextareaAndCounter
                 maxLength="250"
@@ -156,14 +157,14 @@ const RenewForm = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" type="submit" disabled={submitLoading}>
-            <FormattedMessage id="Submit" />
+            <SafeFormatMessage id="Submit" />
           </Button>
           <Button
             variant="link"
             className="text-gray "
             onClick={() => setVisible(false)}
           >
-            <FormattedMessage id="Close" />
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

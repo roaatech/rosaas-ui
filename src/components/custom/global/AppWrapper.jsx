@@ -13,9 +13,15 @@ import {
   addToHistory,
   changeMode,
   changePreloader,
+  deleteProductOwner,
+  setProductOwner,
 } from '../../../store/slices/main'
 import useRequest from '../../../axios/apis/useRequest'
 import { useState } from 'react'
+import { useLocation, useParams } from 'react-router-dom'
+import Loader from '../../../components/custom/global/Loader'
+import EnvironmentAlert from '../../Navbar/EnvironmentAlert/EnvironmentAlert.jsx'
+import { adminPanel } from '../../../routes.js'
 
 const AppWrapper = ({ children, customHistory }) => {
   const { userData } = useRequest()
@@ -25,6 +31,11 @@ const AppWrapper = ({ children, customHistory }) => {
   let darkMode = useSelector((state) => state.main.darkMode)
   let loaded = useSelector((state) => state.main.preloader)
   const [triggerReload, setTriggerReload] = useState(false)
+  if (process.env.NODE_ENV === 'production') {
+    console.log = () => {}
+    console.error = () => {}
+    console.warn = () => {}
+  }
   useEffect(() => {
     ;(async () => {
       if (direction === 'rtl') {
@@ -48,7 +59,8 @@ const AppWrapper = ({ children, customHistory }) => {
       dispatch(changePreloader(false))
     })()
   }, [])
-
+  const location = useLocation()
+  const atAdminPanel = location.pathname.includes(adminPanel)
   useEffect(() => {
     dispatch(addToHistory(window.location.pathname))
   }, [window.location.pathname])
@@ -56,6 +68,7 @@ const AppWrapper = ({ children, customHistory }) => {
   const messages = direction === 'rtl' ? arFile : enFile
   return (
     <>
+      {!atAdminPanel && <EnvironmentAlert atAdminPanel={!atAdminPanel} />}
       <Preloader show={loaded} />
       <ToastContainer />
       <GlobalStyles direction={direction} key={direction} darkMode={false} />

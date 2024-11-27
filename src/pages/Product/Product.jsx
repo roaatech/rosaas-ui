@@ -36,12 +36,24 @@ import { Wrapper } from './Product.styled'
 import CustomPaginator from '../../components/custom/Shared/CustomPaginator/CustomPaginator'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import {
+  deleteAllProductsLookup,
+  deleteProductLookupById,
   productInfo,
   removeProductStore,
   setAllProduct,
 } from '../../store/slices/products/productsSlice.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
+import { Routes } from '../../routes.js'
+import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import DataLabelWhite from '../../components/custom/Shared/DateLabelWhite/DateLabelWhite.jsx'
+import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions.jsx'
+import {
+  ProductTrialType,
+  PublishStatus,
+  visibilityStatus,
+} from '../../const/product.js'
+import Label from '../../components/custom/Shared/label/Label.jsx'
 
 export default function Product({ children }) {
   const dispatch = useDispatch()
@@ -65,6 +77,7 @@ export default function Product({ children }) {
   }
   const deleteProduct = async () => {
     await deleteProductReq({ id: currentId })
+    dispatch(deleteProductLookupById({ id: currentId }))
     dispatch(removeProductStore(currentId))
   }
 
@@ -98,7 +111,7 @@ export default function Product({ children }) {
     setFirst(event.first)
     setRows(event.rows)
   }
-
+  const { getLocalizedString } = useSharedFunctions()
   /****************************** */
   const editForm = async (id) => {
     if (!listData[id].creationEndpoint) {
@@ -114,16 +127,16 @@ export default function Product({ children }) {
       <BreadcrumbComponent breadcrumbInfo={'ProductList'} icon={BsBoxSeam} />
       <div className="main-container">
         <TableHead
-          label={<FormattedMessage id="Add-Product" />}
-          icon={'pi-box'}
+          label={<SafeFormatMessage id="Add-Product" />}
           setSearchValue={setSearchValue}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
           setFirst={setFirst}
-          title={<FormattedMessage id="Product-List" />}
+          title={<SafeFormatMessage id="Product-List" />}
+          button={true}
         >
           <ProductForm
-            popupLabel={<FormattedMessage id="Create-Product" />}
+            popupLabel={<SafeFormatMessage id="Create-Product" />}
             type={'create'}
             update={update}
             setUpdate={setUpdate}
@@ -145,7 +158,7 @@ export default function Product({ children }) {
                 field="displayName"
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Display-Name" />}
+                    text={<SafeFormatMessage id="Display-Name" />}
                     field="displayName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -156,12 +169,17 @@ export default function Product({ children }) {
                     setFirst={setFirst}
                   />
                 }
+                body={(rowData) => (
+                  <div>
+                    {getLocalizedString(rowData.displayNameLocalizations)}
+                  </div>
+                )}
               ></Column>
               <Column
                 field="systemName"
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="System-Name" />}
+                    text={<SafeFormatMessage id="System-Name" />}
                     field="systemName"
                     rebase={rebase}
                     setRebase={setRebase}
@@ -172,14 +190,30 @@ export default function Product({ children }) {
                     setFirst={setFirst}
                   />
                 }
+                body={(rowData) => (
+                  <div>
+                    <small style={{ color: 'gray' }}>
+                      {
+                        <DataLabelWhite
+                          variant={'gray'}
+                          text={
+                            <span className="fw-bold">
+                              {rowData.systemName}
+                            </span>
+                          }
+                        />
+                      }
+                    </small>{' '}
+                  </div>
+                )}
               ></Column>
 
               <Column
-                field={'client.systemName'}
+                field={'productOwner.systemName'}
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Client" />}
-                    field="client"
+                    text={<SafeFormatMessage id="Product-Owner" />}
+                    field="productOwner"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -193,17 +227,58 @@ export default function Product({ children }) {
               />
 
               <Column
+                field={'trialType'}
+                header={<SafeFormatMessage id="Trial-Type" />}
+                // <ColumnSortHeader
+                //   text={<SafeFormatMessage id="Trial-Type" />}
+                //   field="trialType"
+                //   rebase={rebase}
+                //   setRebase={setRebase}
+                //   sortField={sortField}
+                //   sortValue={sortValue}
+                //   setSortField={setSortField}
+                //   setSortValue={setSortValue}
+                //   setFirst={setFirst}
+                // />
+                body={(rowData) =>
+                  ProductTrialType?.[rowData?.trialType] ? (
+                    <Label {...ProductTrialType[rowData?.trialType]} />
+                  ) : (
+                    '__'
+                  )
+                }
+                showFilterMenu={false}
+              />
+              <Column
+                field={'isPublished'}
+                header={<SafeFormatMessage id="Status" />}
+                body={(rowData) => (
+                  <Label {...PublishStatus[rowData?.isPublished]} />
+                )}
+                showFilterMenu={false}
+              />
+              <Column
+                field={'isVisible'}
+                header={<SafeFormatMessage id="Visibility-Status" />}
+                body={(rowData) => (
+                  <Label {...visibilityStatus[rowData?.isVisible]} />
+                )}
+                showFilterMenu={false}
+              />
+
+              <Column
                 body={(data, options) => (
                   <TableDate
                     createdDate={data.createdDate}
                     editedDate={data.editedDate}
+                    hasLabel={true}
                   />
                 )}
                 style={{ width: '250px', maxidth: '250px' }}
                 header={
                   <ColumnSortHeader
-                    text={<FormattedMessage id="Date" />}
-                    field="editedDate"
+                    text={<SafeFormatMessage id="Date" />}
+                    field="createdDate"
                     rebase={rebase}
                     setRebase={setRebase}
                     sortField={sortField}
@@ -232,27 +307,29 @@ export default function Product({ children }) {
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                       <Dropdown.Item
-                        onSelect={() => navigate(`/products/${data.id}`)}
+                        onSelect={() =>
+                          navigate(`${Routes.products.path}/${data.id}`)
+                        }
                       >
                         <FontAwesomeIcon icon={faEye} className="mx-2" />
-                        <FormattedMessage id="View-Details" />
+                        <SafeFormatMessage id="View-Details" />
                       </Dropdown.Item>
                       <Dropdown.Item onSelect={() => editForm(data.id)}>
                         <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                        <FormattedMessage id="Edit" />
+                        <SafeFormatMessage id="Edit" />
                       </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() => deleteConfirm(data.id)}
                         className="text-danger"
                       >
                         <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                        <FormattedMessage id="Delete" />
+                        <SafeFormatMessage id="Delete" />
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 )}
                 style={{ width: '60px', textAlign: 'center' }}
-                header={<FormattedMessage id="Actions" />}
+                header={<SafeFormatMessage id="Actions" />}
               />
             </DataTable>
             <CustomPaginator
@@ -264,7 +341,7 @@ export default function Product({ children }) {
 
             <ThemeDialog visible={visible} setVisible={setVisible}>
               <ProductForm
-                popupLabel={<FormattedMessage id="Edit-Product" />}
+                popupLabel={<SafeFormatMessage id="Edit-Product" />}
                 type={'edit'}
                 productData={listData[currentId]}
                 update={update}
@@ -275,7 +352,7 @@ export default function Product({ children }) {
 
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-product-confirmation-message" />
+                <SafeFormatMessage id="delete-product-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}

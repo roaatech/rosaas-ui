@@ -35,10 +35,16 @@ import {
   MdOutlineUnpublished,
   MdOutlinePublishedWithChanges,
   MdEditNote,
+  MdAdd,
+  MdSort,
 } from 'react-icons/md'
 
 import { PublishStatus } from '../../../../const'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import { size } from 'lodash'
+import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
+import { textLocale } from '../../../../const/product.js'
 
 export const ProductCustomSpecificationList = (
   { productId },
@@ -59,6 +65,7 @@ export const ProductCustomSpecificationList = (
   const [popUpLable, setPopUpLable] = useState('')
   const intl = useIntl()
   const direction = useSelector((state) => state.main.direction)
+  const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
 
   const handleDeleteSpecification = async () => {
     if (list?.specifications[currentId]?.isSubscribed) {
@@ -134,6 +141,7 @@ export const ProductCustomSpecificationList = (
       isUserEditable,
       regularExpression,
       validationFailureDescription,
+      displayOrder,
     } = props
     const publishStatus = isPublished ? true : false
 
@@ -145,13 +153,7 @@ export const ProductCustomSpecificationList = (
           </td>
           <td>
             <span className="fw-normal">
-              {direction === 'rtl'
-                ? displayName.ar
-                  ? displayName.ar
-                  : displayName.en
-                : displayName.en
-                ? displayName.en
-                : displayName.ar}
+              {textLocale(displayName, selectedLanguage, intl)}
             </span>
           </td>
           <td>
@@ -161,13 +163,7 @@ export const ProductCustomSpecificationList = (
           </td>
 
           <td className="description">
-            {direction === 'rtl'
-              ? description.ar
-                ? description.ar
-                : description.en
-              : description.en
-              ? description.en
-              : description.ar}
+            {textLocale(description, selectedLanguage, intl)}
           </td>
 
           <td>
@@ -185,13 +181,21 @@ export const ProductCustomSpecificationList = (
           </td>
           <td>
             <span className="fw-normal">
-              {direction === 'rtl'
-                ? validationFailureDescription.ar
-                  ? validationFailureDescription.ar
-                  : validationFailureDescription.en
-                : validationFailureDescription.en
-                ? validationFailureDescription.en
-                : validationFailureDescription.ar}
+              {textLocale(validationFailureDescription, selectedLanguage, intl)}
+            </span>
+          </td>
+          <td>
+            <span className="fw-normal">
+              <DataLabelWhite
+                variant={'gray'}
+                text={
+                  <>
+                    <MdSort />
+                    {'  '}
+                    {displayOrder}
+                  </>
+                }
+              />
             </span>
           </td>
           <td>
@@ -199,6 +203,7 @@ export const ProductCustomSpecificationList = (
               <TableDate createdDate={createdDate} editedDate={editedDate} />
             </span>
           </td>
+
           <td>
             <Dropdown as={ButtonGroup}>
               <Dropdown.Toggle
@@ -218,7 +223,7 @@ export const ProductCustomSpecificationList = (
                   }}
                 >
                   <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                  <FormattedMessage id="Edit" />
+                  <SafeFormatMessage id="Edit" />
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => togglePublishSpecifications(id, isPublished)}
@@ -226,12 +231,12 @@ export const ProductCustomSpecificationList = (
                   {isPublished ? (
                     <span className=" ">
                       <MdOutlineUnpublished className="mx-2" />
-                      <FormattedMessage id="Unpublished" />
+                      <SafeFormatMessage id="Deactivate" />
                     </span>
                   ) : (
                     <span className=" ">
                       <MdOutlinePublishedWithChanges className="mx-2" />
-                      <FormattedMessage id="Published" />
+                      <SafeFormatMessage id="Activate" />
                     </span>
                   )}
                 </Dropdown.Item>
@@ -240,7 +245,7 @@ export const ProductCustomSpecificationList = (
                   className="text-danger"
                 >
                   <FontAwesomeIcon icon={faTrashAlt} className="mx-2" />
-                  <FormattedMessage id="Delete" />
+                  <SafeFormatMessage id="Delete" />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -255,6 +260,17 @@ export const ProductCustomSpecificationList = (
       <div className="dynamicButtons pt-0 mt-0 mb-1 ">
         <DynamicButtons
           buttons={[
+            ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+              (lang, index) => ({
+                order: 1,
+                type: 'toggle',
+                label: lang,
+                group: 'language',
+                toggleValue: selectedLanguage === lang,
+                toggleFunc: () => setSelectedLanguage(lang),
+                variant: 'primary',
+              })
+            ),
             {
               order: 1,
               type: 'form',
@@ -262,6 +278,16 @@ export const ProductCustomSpecificationList = (
               label: 'Add-Specification',
               component: 'addSpecification',
               icon: <MdEditNote />,
+              setActiveIndex: setActiveIndex,
+              size: 'lg',
+            },
+            {
+              order: 4,
+              type: 'form',
+              id: productId,
+              label: 'Add-Validation-Url',
+              component: 'AddValidationUrl',
+              icon: <MdAdd />,
               setActiveIndex: setActiveIndex,
             },
           ]}
@@ -278,35 +304,38 @@ export const ProductCustomSpecificationList = (
               <thead>
                 <tr>
                   <th className="border-bottom">
-                    <FormattedMessage id="System-Name" />
+                    <SafeFormatMessage id="System-Name" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Display-Name" />
+                    <SafeFormatMessage id="Display-Name" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Status" />
+                    <SafeFormatMessage id="Status" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Description" />
+                    <SafeFormatMessage id="Description" />
                   </th>
 
                   <th className="border-bottom">
-                    <FormattedMessage id="Is-Required" />
+                    <SafeFormatMessage id="Is-Required" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Is-User-Editable" />
+                    <SafeFormatMessage id="Is-User-Editable" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Regular-Expression" />
+                    <SafeFormatMessage id="Regular-Expression" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Validation-Failure-Description" />
+                    <SafeFormatMessage id="Validation-Failure-Description" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Date" />
+                    <SafeFormatMessage id="Display-Order" />
                   </th>
                   <th className="border-bottom">
-                    <FormattedMessage id="Actions" />
+                    <SafeFormatMessage id="Date" />
+                  </th>
+                  <th className="border-bottom">
+                    <SafeFormatMessage id="Actions" />
                   </th>
                 </tr>
               </thead>
@@ -321,7 +350,7 @@ export const ProductCustomSpecificationList = (
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-specification-confirmation-message" />
+                <SafeFormatMessage id="delete-specification-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
@@ -335,7 +364,7 @@ export const ProductCustomSpecificationList = (
         <ThemeDialog visible={visible} setVisible={setVisible} size="lg">
           <>
             <CustomSpecificationForm
-              popupLabel={<FormattedMessage id={popUpLable} />}
+              popupLabel={<SafeFormatMessage id={popUpLable} />}
               type={type}
               setVisible={setVisible}
               sideBar={false}

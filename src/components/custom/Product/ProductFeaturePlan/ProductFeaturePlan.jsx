@@ -21,7 +21,13 @@ import { useParams } from 'react-router-dom'
 import { FormattedMessage, useIntl } from 'react-intl'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
-import { BsToggleOff, BsToggleOn, BsUiChecks } from 'react-icons/bs'
+import {
+  BsEye,
+  BsEyeSlash,
+  BsToggleOff,
+  BsToggleOn,
+  BsUiChecks,
+} from 'react-icons/bs'
 
 import {
   PlansChangeAttr,
@@ -38,18 +44,27 @@ import { toast } from 'react-toastify'
 import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 import Label from '../../Shared/label/Label'
 import { GiShadowFollower } from 'react-icons/gi'
+import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
+import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
+import { textLocale } from '../../../../const/product.js'
+import {
+  MdOutlinePublishedWithChanges,
+  MdOutlineUnpublished,
+} from 'react-icons/md'
 
 export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [currentPlanId, setCurrentPlanId] = useState('')
   const [currentFeatureId, setCurrentFeatureId] = useState('')
   let direction = useSelector((state) => state.main.direction)
 
+  const intl = useIntl()
   const dispatch = useDispatch()
   const {
     getFeaturePlanList,
     deleteFeaturePlanReq,
     publishPlan,
     getProductPlans,
+    visiblePlan,
   } = useRequest()
   const [visible, setVisible] = useState(false)
   const [confirm, setConfirm] = useState(false)
@@ -58,6 +73,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [type, setType] = useState('')
   const [show, setShow] = useState(false)
   const [popUpLable, setPopUpLable] = useState('')
+  const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
 
   const productId = routeParams.id
   const listDataStore = useSelector(
@@ -66,10 +82,9 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const planList = useSelector(
     (state) => state.products.products[productId]?.plans
   )
-  // delete default key from list
   const listData = { ...listDataStore }
-  const intl = useIntl()
-  // const defaultData = {}
+
+  // Remove default key from list
   listData['00000000-0000-0000-0000-000000000000'] &&
     delete listData['00000000-0000-0000-0000-000000000000']
   let list = listData && Object.values(listData)
@@ -128,14 +143,26 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
 
   const handleData = (data) => {
     return {
-      Feature: data.feature.displayName,
-      Plan: data.plan.displayName,
+      Feature: textLocale(
+        data.feature.displayNameLocalizations,
+        selectedLanguage,
+        intl
+      ),
+      Plan: textLocale(
+        data.plan.displayNameLocalizations,
+        selectedLanguage,
+        intl
+      ),
       Limit: data.limit,
       Unit: featureUnitMap[data.unit],
-      'Unit-Display-Name-En': data.unitDisplayName?.en,
-      'Unit-Display-Name-Ar': data.unitDisplayName?.ar,
+      'Unit-Display-Name':
+        data.unitDisplayName?.[selectedLanguage] || data.unitDisplayName?.en,
       Reset: featureResetMap[data.reset],
-      Description: data.description,
+      Description: textLocale(
+        data.descriptionLocalizations,
+        selectedLanguage,
+        intl
+      ),
       'Created-Date': DataTransform(data.createdDate),
       'Edited-Date': DataTransform(data.editedDate),
     }
@@ -167,11 +194,15 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const featuresObj = {}
   const tableData = {}
 
-  const generateTableData = list?.map((item) => {
+  list?.forEach((item) => {
     if (!featuresObj[item.feature.id]) {
       featuresObj[item.feature.id] = {
         featureId: item.feature.id,
-        displayName: item.feature.displayName,
+        displayName: textLocale(
+          item.feature?.displayNameLocalizations,
+          selectedLanguage,
+          intl
+        ),
         systemName: item.feature.systemName,
         type: item.feature.type,
         index: Object.keys(featuresObj).length,
@@ -223,7 +254,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                                       tableData[planId + ',' + item.featureId]
                                     ].unit
                                   ]
-                                : direction == 'rtl'
+                                : selectedLanguage != 'en'
                                 ? listData[
                                     tableData[planId + ',' + item.featureId]
                                   ].unitDisplayName?.ar || 'unit'
@@ -239,7 +270,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                                 ],
                               })
                             ) : (
-                              <FormattedMessage id="Yes" />
+                              <SafeFormatMessage id="Yes" />
                             )}
                           </Dropdown.Toggle>
                           <Dropdown.Menu>
@@ -255,7 +286,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                                 className="mx-2"
                               />
 
-                              <FormattedMessage id="View-Details" />
+                              <SafeFormatMessage id="View-Details" />
                             </Dropdown.Item>
 
                             <Dropdown.Item
@@ -266,7 +297,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                               }
                             >
                               <FontAwesomeIcon icon={faEdit} className="mx-2" />
-                              <FormattedMessage id="Edit" />
+                              <SafeFormatMessage id="Edit" />
                             </Dropdown.Item>
                             <Dropdown.Item
                               onClick={() =>
@@ -280,7 +311,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                                 icon={faTrashAlt}
                                 className="mx-2"
                               />
-                              <FormattedMessage id="Delete" />
+                              <SafeFormatMessage id="Delete" />
                             </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
@@ -291,7 +322,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                             handleCreateFeaturePlan(item.featureId, planId)
                           }
                         >
-                          <FormattedMessage id="No" />
+                          <SafeFormatMessage id="No" />
                         </span>
                       ) : (
                         <span
@@ -327,7 +358,21 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
       })
     )
   }
+  const toggleVisiblePlan = async (id, isVisible) => {
+    await visiblePlan(productId, {
+      id,
+      isVisible: !isVisible,
+    })
 
+    dispatch(
+      PlansChangeAttr({
+        productId,
+        planId: id,
+        attr: 'isVisible',
+        value: !isVisible,
+      })
+    )
+  }
   const handleCreateFeaturePlan = (featureId, planId) => {
     const matchingPlan = Object.values(listData).find(
       (item) => item.plan.id === planId
@@ -357,11 +402,23 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
       <div className="dynamicButtons pt-0 mt-0 mb-1 ">
         <DynamicButtons
           buttons={[
+            ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+              (lang, index) => ({
+                order: 1,
+                type: 'toggle',
+                label: lang,
+                group: 'language',
+                toggleValue: selectedLanguage === lang,
+                toggleFunc: () => setSelectedLanguage(lang),
+                variant: 'primary',
+              })
+            ),
             {
-              order: 1,
+              order: 2,
               type: 'form',
               id: routeParams.id,
               label: 'Add-Plan-Feature',
+              selectedLanguage: selectedLanguage,
               component: 'addFeaturePlan',
               icon: <BsUiChecks />,
             },
@@ -377,30 +434,85 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
             <Table hover className="user-table align-items-center">
               <thead>
                 <tr>
-                  <th className="border-bottom  table-title-cell">
-                    {' '}
-                    Features / Plans
+                  <th className="border-bottom table-title-cell">
+                    <SafeFormatMessage id="Features" /> /{' '}
+                    <SafeFormatMessage id="Plans" />
                   </th>
                   {planList &&
                     Object.keys(planList)?.map((item, index) => (
-                      <th
-                        className="border-bottom clickable-icon"
-                        key={index}
-                        onClick={() =>
-                          togglePublishPlan(item, planList[item].isPublished)
-                        }
-                      >
-                        {planList[item].isPublished ? (
-                          <span className="label green">
-                            <BsToggleOn />
+                      <th className="border-bottom clickable-icon" key={index}>
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {planList[item].isPublished
+                                ? intl.formatMessage({
+                                    id: 'Active',
+                                  })
+                                : intl.formatMessage({
+                                    id: 'Inactive',
+                                  })}
+                            </Tooltip>
+                          }
+                        >
+                          <span
+                            onClick={() =>
+                              togglePublishPlan(
+                                item,
+                                planList[item].isPublished
+                              )
+                            }
+                            className="mr-2"
+                          >
+                            {planList[item].isPublished ? (
+                              <span className="label green">
+                                <MdOutlinePublishedWithChanges />
+                              </span>
+                            ) : (
+                              <span className="label red ">
+                                <MdOutlineUnpublished />
+                              </span>
+                            )}
                           </span>
-                        ) : (
-                          <span className="label grey">
-                            <BsToggleOff />
+                        </OverlayTrigger>
+                        <OverlayTrigger
+                          trigger={['hover', 'focus']}
+                          overlay={
+                            <Tooltip>
+                              {planList[item].isVisible
+                                ? intl.formatMessage({
+                                    id: 'Visible',
+                                  })
+                                : intl.formatMessage({
+                                    id: 'Invisible',
+                                  })}
+                            </Tooltip>
+                          }
+                        >
+                          <span
+                            onClick={() =>
+                              toggleVisiblePlan(item, planList[item].isVisible)
+                            }
+                            className="mr-2"
+                          >
+                            {planList[item].isVisible ? (
+                              <span className="label green">
+                                <BsEye />
+                              </span>
+                            ) : (
+                              <span className="label red">
+                                <BsEyeSlash />
+                              </span>
+                            )}
                           </span>
-                        )}
+                        </OverlayTrigger>
+
                         <span className="mr-1">
-                          {planList[item].displayName}
+                          {textLocale(
+                            planList[item].displayNameLocalizations,
+                            selectedLanguage,
+                            intl
+                          )}
                         </span>
 
                         {planList[item].subscribers && (
@@ -441,7 +553,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
             </Table>
             <DeleteConfirmation
               message={
-                <FormattedMessage id="delete-feature-plan-confirmation-message" />
+                <SafeFormatMessage id="delete-feature-plan-confirmation-message" />
               }
               icon="pi pi-exclamation-triangle"
               confirm={confirm}
@@ -456,13 +568,14 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
       <ThemeDialog visible={visible} setVisible={setVisible}>
         {show ? (
           <ShowDetails
-            popupLabel={<FormattedMessage id={popUpLable} />}
+            popupLabel={<SafeFormatMessage id={popUpLable} />}
             data={handleData(listData[currentId])}
             setVisible={setVisible}
           />
         ) : (
           <FeaturePlanForm
-            popupLabel={<FormattedMessage id={popUpLable} />}
+            popupLabel={<SafeFormatMessage id={popUpLable} />}
+            selectedLanguage={selectedLanguage || 'en'}
             type={type}
             FeaturePlanData={type == 'edit' ? listData[currentId] : {}}
             setVisible={setVisible}
