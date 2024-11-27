@@ -23,6 +23,16 @@ const setAllProductsLookup = (state, action) => {
   })
   state.lookup.productsLookup = allProduct
 }
+const deleteAllProductsLookup = (state) => {
+  state.lookup.productsLookup = {}
+}
+const deleteProductLookupById = (state, action) => {
+  const productId = action?.payload?.id
+
+  if (productId && state.lookup.productsLookup[productId]) {
+    delete state.lookup.productsLookup[productId] // Delete the product by id
+  }
+}
 const updateAllProduct = (state, action) => {
   const allProduct = JSON.parse(JSON.stringify(current(state.products)))
   action?.payload?.forEach((item) => {
@@ -312,4 +322,6 @@ export {
   updateClientCredentialAttr,
   updateAllProduct,
   setAllProductsLookup,
+  deleteAllProductsLookup,
+  deleteProductLookupById,
 }

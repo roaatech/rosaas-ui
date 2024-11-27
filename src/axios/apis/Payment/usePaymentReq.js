@@ -18,6 +18,9 @@ const usePaymentReq = () => {
   const getPaymentCardsList = async (tenantId) => {
     return await Request.get(`payment/v1/Cards`)
   }
+  const getPaymentStripeDataBySubId = async (subscriptionId) => {
+    return await Request.get(`payment/v1/Stripe/Subscription/${subscriptionId}`)
+  }
   const attachPaymentMethodCard = async (id) => {
     return await Request.post(`payment/v1/Cards/${id}`)
   }
@@ -69,6 +72,7 @@ const usePaymentReq = () => {
     markCardAsDefault,
     getInvoicesList,
     checkOrderCurrencyChange,
+    getPaymentStripeDataBySubId,
   }
 }
 

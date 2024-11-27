@@ -43,7 +43,6 @@ const AuditsFilterSearchContainer = ({
     }
     ;(async () => {
       const listData = await getProductsLookup()
-      console.log({ listData })
 
       dispatch(setAllProductsLookup(listData.data.data))
     })()

@@ -49,54 +49,64 @@ export default function Logs() {
   const [popUpLabel, setPopUpLabel] = useState('')
   // const listData = useSelector((state) => state.main.logs?.items)
   const [list, setList] = useState([])
-  const [selectedData, setAllSelectedData] = useState()
+  const [selectedData, setAllSelectedData] = useState([])
   const [selectedFilters, setSelectedFilters] = useState([])
   const [isInitialized, setIsInitialized] = useState(false)
   const [reset, setReset] = useState(false)
+
+  const buildQuery = () => {
+    let query = `?page=${Math.ceil((first + 1) / rows)}&pageSize=${rows}&filters[0].Field=level&filters[0].Operator=contains`
+
+    if (searchValue) query += `&filters[0].Value=${searchValue}`
+    if (sortField) query += `&sort.Field=${sortField}`
+    if (sortValue) query += `&sort.Direction=${sortValue}`
+
+    if (
+      selectedData &&
+      (Array.isArray(selectedData)
+        ? selectedData.length > 0
+        : Object.keys(selectedData).length > 0)
+    ) {
+      selectedData.forEach((item, index) => {
+        query += `&filters[${index + 1}].Field=${item.field}&filters[${index + 1}].Value=${item.value}`
+      })
+    }
+
+    return query
+  }
+
+  const fetchLogs = async (query) => {
+    dispatch(setLoading(true))
+
+    try {
+      const logsList = await getLogsList(query)
+      setList(logsList.data.data.items)
+      setTotalCount(logsList.data.data.totalCount)
+    } catch (error) {
+      console.error('Error fetching logs:', error)
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
 
   useEffect(() => {
     if (arraysEqual(selectedFilters, selectedData) && isInitialized) {
       return
     }
-    let query = `?page=${Math.ceil(
-      (first + 1) / rows
-    )}&pageSize=${rows}&filters[0].Field=level&filters[0].Operator=contains`
-    if (searchValue) query += `&filters[0].Value=${searchValue}`
-    if (sortField) query += `&sort.Field=${sortField}`
-    if (sortValue) query += `&sort.Direction=${sortValue}`
-    if (
-      selectedData &&
-      (Array.isArray(selectedData)
-        ? selectedData?.length > 0
-        : Object.keys(selectedData)?.length > 0)
-    ) {
-      selectedData &&
-        Object.values(selectedData).forEach((item, index) => {
-          query += `&filters[${index + 1}].Field=${item.field}&filters[${
-            index + 1
-          }].Value=${item.value}`
-        })
-    }
-    setSelectedFilters(
-      selectedData && Object.values(selectedData).length > 0 ? selectedData : []
-    )
-    const fetchLogs = async () => {
-      dispatch(setLoading(true))
-      try {
-        const logsList = await getLogsList(query)
-        setList(logsList.data.data.items)
-        // dispatch(setLogsData(logsList.data.data))
-        setTotalCount(logsList.data.data.totalCount)
-      } catch (error) {
-        console.error('Error fetching logs:', error)
-      } finally {
-        dispatch(setLoading(false))
-      }
-    }
 
-    fetchLogs()
+    const query = buildQuery()
+    setSelectedFilters(selectedData.length > 0 ? selectedData : [])
+    fetchLogs(query)
     setIsInitialized(true)
-  }, [first, rows, searchValue, sortField, sortValue, selectedData, reset])
+  }, [reset, !arraysEqual(selectedFilters, selectedData) && selectedData])
+
+  useEffect(() => {
+    if (!isInitialized) return
+
+    const query = buildQuery()
+    setSelectedFilters(selectedData.length > 0 ? selectedData : [])
+    fetchLogs(query)
+  }, [first, rows, searchValue, sortField, sortValue])
 
   const onPageChange = (event) => {
     setFirst(event.first)
@@ -181,6 +191,7 @@ export default function Logs() {
               value={list}
               tableStyle={{ minWidth: '50rem' }}
               size={'small'}
+              lazy
             >
               {/* Level Column */}
               <Column

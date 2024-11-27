@@ -21,7 +21,7 @@ const MarketplaceNavBar = ({ profile }) => {
   const direction = useSelector((state) => state.main.direction)
   const userInfo = useSelector((state) => state.auth.userInfo)
   const { getCurrenciesPublishList, checkOrderCurrencyChange } = useRequest()
-  const { setCurrency, changeDirection } = useGlobal()
+  const { setCurrency, setDefaultCurrency, changeDirection } = useGlobal()
   const isMatch = Boolean(
     matchPath(
       {
@@ -38,6 +38,7 @@ const MarketplaceNavBar = ({ profile }) => {
   const [selectedCurrency, setSelectedCurrency] = useState(() =>
     localStorage.getItem('currencyCode')
   )
+  const storedCurrencyId = localStorage.getItem('currencyId')
 
   const [loading, setLoading] = useState(false)
 
@@ -64,8 +65,6 @@ const MarketplaceNavBar = ({ profile }) => {
             if (response.status == 200) {
               setCurrency(currency.currencyCode, currency.id)
               setSelectedCurrency(currency.currencyCode)
-              localStorage.setItem('currencyCode', currency.currencyCode)
-              localStorage.setItem('currencyId', currency.id)
               showToast('Currency changed successfully!', 'success')
             } else {
               showToast('Failed to change currency. Please try again.', 'error')
@@ -79,8 +78,6 @@ const MarketplaceNavBar = ({ profile }) => {
         } else {
           setCurrency(currency.currencyCode, currency.id)
           setSelectedCurrency(currency.currencyCode)
-          localStorage.setItem('currencyCode', currency.currencyCode)
-          localStorage.setItem('currencyId', currency.id)
         }
       },
     }))
@@ -98,9 +95,13 @@ const MarketplaceNavBar = ({ profile }) => {
           )
           if (
             primaryCurrency &&
-            (!selectedCurrency || selectedCurrency == 'null')
+            (!selectedCurrency ||
+              selectedCurrency == 'null' ||
+              !storedCurrencyId ||
+              storedCurrencyId == 'null')
           ) {
-            setCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
+            setDefaultCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
+            // setCurrency(primaryCurrency.currencyCode, primaryCurrency.id)
             setSelectedCurrency(primaryCurrency.currencyCode)
           }
         }
@@ -164,11 +165,11 @@ const MarketplaceNavBar = ({ profile }) => {
           icon: 'pi pi-fw pi-money-bill',
           items: currencyItems,
         },
-        {
-          label: <SafeFormatMessage id="Marketplace" />,
-          icon: 'pi pi-fw pi-shopping-cart',
-          command: () => navigate(Routes.marketPlacePage.path),
-        },
+        // {
+        //   label: <SafeFormatMessage id="Marketplace" />,
+        //   icon: 'pi pi-fw pi-shopping-cart',
+        //   command: () => navigate(Routes.marketPlacePage.path),
+        // },
       ]
 
   // Right side menu items
@@ -198,25 +199,25 @@ const MarketplaceNavBar = ({ profile }) => {
           },
         ]
       : signInShow
-      ? [
-          {
-            label: <SafeFormatMessage id="Product-Management-Area" />,
-            icon: 'pi pi-fw pi-cog',
-            command: () => navigate(Routes.ProductManagementSignIn.path),
-          },
-          {
-            label: <SafeFormatMessage id="signIn" />,
-            icon: 'pi pi-fw pi-sign-in',
-            command: () => navigate(Routes.SignInTenantAdmin.path),
-          },
-        ]
-      : [
-          {
-            label: <SafeFormatMessage id="Product-Management-Area" />,
-            icon: 'pi pi-fw pi-cog',
-            command: () => navigate(Routes.ProductManagementSignIn.path),
-          },
-        ]),
+        ? [
+            {
+              label: <SafeFormatMessage id="Product-Management-Area" />,
+              icon: 'pi pi-fw pi-cog',
+              command: () => navigate(Routes.ProductManagementSignIn.path),
+            },
+            {
+              label: <SafeFormatMessage id="signIn" />,
+              icon: 'pi pi-fw pi-sign-in',
+              command: () => navigate(Routes.SignInTenantAdmin.path),
+            },
+          ]
+        : [
+            {
+              label: <SafeFormatMessage id="Product-Management-Area" />,
+              icon: 'pi pi-fw pi-cog',
+              command: () => navigate(Routes.ProductManagementSignIn.path),
+            },
+          ]),
   ]
 
   useEffect(() => {

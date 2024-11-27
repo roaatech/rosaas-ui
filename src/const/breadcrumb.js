@@ -184,10 +184,23 @@ export const breadcrumbFun = (routeParams, data) => {
       title: 'Tenants',
       name: 'Tenant-Management',
       active: 'Tenant Management',
-      navigation: Routes && `${Routes?.Tenant?.path}/${id}`,
+      titleNavigation: Routes && `${Routes?.Tenant?.path}`,
       parent: data?.name,
+      parentNavigation: Routes && `${Routes?.Tenant?.path}/${id}`,
       changableParent: true,
       icon: {},
+    },
+    ContactMessages: {
+      title: 'Contact Messages',
+      active: 'Contact Messages',
+      titleNavigation: Routes && `${Routes?.ContactMessages?.path}`,
+      icon: {},
+    },
+    ContactMessagesDetails: {
+      title: 'Contact Messages',
+      name: 'Contact-Messages-Details',
+      navigation: Routes && `${Routes?.ContactMessagesPage?.path}/${id}`,
+      titleNavigation: Routes && `${Routes?.ContactMessagesPage?.path}`,
     },
   }
 }

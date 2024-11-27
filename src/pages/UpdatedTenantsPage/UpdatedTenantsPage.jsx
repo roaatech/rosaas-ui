@@ -27,6 +27,8 @@ import {
   Button,
   ButtonGroup,
   Dropdown,
+  OverlayTrigger,
+  Tooltip,
 } from '@themesberg/react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog.jsx'
@@ -57,13 +59,14 @@ import DynamicButtons from '../../components/custom/Shared/DynamicButtons/Dynami
 import { icon } from '@fortawesome/fontawesome-svg-core'
 import { MdHistory } from 'react-icons/md'
 import ArchivedTenantsTable from './ArchivedTenants/ArchivedTenantsTable.jsx'
+import { setLoading } from '../../store/slices/main.js'
+import { arraysEqual } from '../../components/custom/Shared/SharedFunctions/sharedFunctionConsts.jsx'
 export default function UpdatedTenantsPage({ children }) {
   const {
     getTenant,
-    getTenantList,
     deleteTenantReq,
-    getProductsLookup,
     subscriptionFilteredList,
+    getSubscriptionsSettings,
   } = useRequest()
   const [visible, setVisible] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
@@ -82,6 +85,7 @@ export default function UpdatedTenantsPage({ children }) {
   const [update, setUpdate] = useState(1)
   const [selectedProduct, setSelectedProduct] = useState()
   const [updateDetails, setUpdateDetails] = useState(0)
+  const [paymentGracePeriodInHours, setPaymentGracePeriodInHours] = useState(0)
   const routeParams = useParams()
   const dispatch = useDispatch()
 
@@ -94,46 +98,72 @@ export default function UpdatedTenantsPage({ children }) {
     await deleteTenantReq({ id: currentId })
   }
   const tenantsData = useSelector((state) => state.tenants.tenants)
-  const [selectedData, setAllSelectedData] = useState()
+  const [selectedData, setAllSelectedData] = useState([])
+  const [selectedFilters, setSelectedFilters] = useState([])
+  const [isInitialized, setIsInitialized] = useState(false)
 
-  useEffect(() => {
-    let query = `?page=${Math.ceil(
-      (first + 1) / rows
-    )}&pageSize=${rows}&filters[0].Field=SearchTerm`
+  const buildQuery = () => {
+    let query = `?page=${Math.ceil((first + 1) / rows)}&pageSize=${rows}&filters[0].Field=SearchTerm`
+
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     if (sortField) query += `&sort.Field=${sortField}`
     if (sortValue) query += `&sort.Direction=${sortValue}`
+
     if (
       selectedData &&
       (Array.isArray(selectedData)
-        ? selectedData?.length > 0
-        : Object.keys(selectedData)?.length > 0)
+        ? selectedData.length > 0
+        : Object.keys(selectedData).length > 0)
     ) {
-      selectedData &&
-        Object.values(selectedData).forEach((item, index) => {
-          query += `&filters[${index + 1}].Field=${item.field}&filters[${
-            index + 1
-          }].Value=${item.value}`
-        })
+      selectedData.forEach((item, index) => {
+        query += `&filters[${index + 1}].Field=${item.field}&filters[${index + 1}].Value=${item.value}`
+      })
     }
-    if (selectedProduct)
-      query += `&filters[1].Field=selectedProduct&filters[1].Value=${selectedProduct}`
-    ;(async () => {
+
+    if (selectedProduct) {
+      query += `&filters[${selectedData.length + 1}].Field=selectedProduct&filters[${selectedData.length + 1}].Value=${selectedProduct}`
+    }
+
+    return query
+  }
+
+  const fetchSubscriptionList = async (query) => {
+    dispatch(setLoading(true))
+
+    try {
       const listData = await subscriptionFilteredList(query)
       setTotalCount(listData.data.data.totalCount)
       setList(listData.data.data.items)
+    } catch (error) {
+      console.error('Error fetching subscription list:', error)
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+  useEffect(() => {
+    ;(async () => {
+      const subscriptions = await getSubscriptionsSettings()
+      setPaymentGracePeriodInHours(
+        subscriptions.data.data.paymentGracePeriodInHours
+      )
     })()
-  }, [
-    first,
-    rows,
-    searchValue,
-    sortField,
-    sortValue,
-    update,
-    selectedProduct,
-    updateDetails,
-    selectedData,
-  ])
+  }, [])
+  useEffect(() => {
+    if (arraysEqual(selectedFilters, selectedData) && isInitialized) {
+      return
+    }
+    const query = buildQuery()
+    setSelectedFilters(selectedData.length > 0 ? selectedData : [])
+    fetchSubscriptionList(query)
+    setIsInitialized(true)
+  }, [selectedProduct, selectedData])
+
+  useEffect(() => {
+    if (!isInitialized) return
+
+    const query = buildQuery()
+    fetchSubscriptionList(query)
+  }, [first, rows, searchValue, sortField, sortValue, update, updateDetails]) // Assuming `update` and `updateDetails` are relevant dependencies
 
   /******************************* */
   const updateTenant = async () => {
@@ -442,28 +472,27 @@ export default function UpdatedTenantsPage({ children }) {
                           {...subscriptionMode[rowData.subscriptionMode]}
                         />
                       ) : (
-                        <Label
-                          background="var(--light-blue)"
-                          value={
-                            <>
-                              <span className="fw-bold ">
-                                <SafeFormatMessage id="Trial" />
-                              </span>
-                              <span className="mx-1">
-                                {' '}
-                                <SafeFormatMessage id="Ends" />
-                              </span>
-                              <span className="fw-bold ">
-                                {UppercaseMonthDateFormat(
-                                  rowData.endDate,
-                                  true
-                                )}
-                              </span>
-                            </>
-                          }
-                          color="var(--blue-2)"
-                          lighter={true}
-                        />
+                        <>
+                          <DateLabel
+                            endDate={rowData.endDate}
+                            uppercaseMonthDateFormat={true}
+                            uppercaseMonthDateFormatType="justDate"
+                            validBackgroundColor={'var(--light-blue)'}
+                            validDateColor={'var(--blue-2)'}
+                            bold={true}
+                            title={
+                              <>
+                                <span className="fw-bold ">
+                                  <SafeFormatMessage id="Trial" />
+                                </span>
+                                <span className="mx-1">
+                                  {' '}
+                                  <SafeFormatMessage id="Ends" />
+                                </span>
+                              </>
+                            }
+                          />
+                        </>
                       )
                     }
                   ></Column>
@@ -536,7 +565,7 @@ export default function UpdatedTenantsPage({ children }) {
                                 </span>{' '}
                                 <span className="fw-bold">
                                   {UppercaseMonthDateFormat(
-                                    rowData.createdDate,
+                                    rowData.startDate,
                                     true
                                   )}
                                 </span>
@@ -545,12 +574,38 @@ export default function UpdatedTenantsPage({ children }) {
                             variant={'gray'}
                           />
                         </span>
+
                         <DateLabel
                           endDate={rowData.endDate}
                           uppercaseMonthDateFormat={true}
                           hasTitle={true}
                           hasBorder={true}
+                          tooltip={
+                            <div>
+                              <SafeFormatMessage
+                                id={'Grace-period-ends-on'}
+                                defaultMessage={
+                                  'The subscription will be terminated after the grace period ends on'
+                                }
+                              />{' '}
+                              <span className="fw-bold">
+                                {UppercaseMonthDateFormat(
+                                  new Date(
+                                    new Date(rowData.endDate).getTime() +
+                                      paymentGracePeriodInHours * 3600 * 1000
+                                  )
+                                )}
+                              </span>
+                            </div>
+                          }
                         />
+
+                        {/* <DateLabel
+                          endDate={rowData.endDate}
+                          uppercaseMonthDateFormat={true}
+                          hasTitle={true}
+                          hasBorder={true}
+                        /> */}
                       </div>
                     )}
                   ></Column>

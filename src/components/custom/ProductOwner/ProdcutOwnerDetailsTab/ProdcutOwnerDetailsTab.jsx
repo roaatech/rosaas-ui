@@ -11,7 +11,6 @@ import {
 } from '@themesberg/react-bootstrap'
 
 import { Wrapper } from './ProdcutOwnerDetailsTab.styled'
-import UrlItemList from '../../Product/UrlItemList/UrlItemList'
 import { FormattedMessage } from 'react-intl'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 import { CopyToClipboard } from 'react-copy-to-clipboard'

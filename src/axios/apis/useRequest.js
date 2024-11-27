@@ -12,7 +12,7 @@ import useSettingsReq from './Setting/useSettingReq'
 import useSpecificationReq from './Product/specification/useSpecificationReq'
 import useSubManagementReq from './Tenant/useSubManagementReq'
 import useClientCredentialsReq from './Product/ClientCredentials/useClientCredentialsReq'
-import usePaymentReq from './Payment/Payment'
+import usePaymentReq from './Payment/usePaymentReq'
 import useUsersManagementReq from './UsersManagement/useUsersManagementReq'
 import useAdminPrivileges from './UsersManagement/useAdminPrivileges'
 import useAccountReq from './Account/Account'
@@ -20,6 +20,7 @@ import useWebhookEndpointReq from './Product/webhookEndpoint/useWebhookEndpointR
 import usePOReq from './ProductOwner/usePOReq'
 import useDiscountReq from './Setting/discount/useDiscountReq'
 import useCurrencyReq from './Setting/currency/useCurrencyReq'
+import useContactReq from './Contact/useContactReq'
 
 const useRequest = () => {
   const {
@@ -221,6 +222,7 @@ const useRequest = () => {
     fetchPaymentIntent,
     getInvoicesList,
     checkOrderCurrencyChange,
+    getPaymentStripeDataBySubId,
   } = usePaymentReq()
   const {
     createPORequest,
@@ -233,6 +235,12 @@ const useRequest = () => {
     ProductOwnerLimits,
     getProductOwnerLookupList,
   } = usePOReq()
+  const {
+    getPaginationContactMessagesList,
+    getContactMessageById,
+    deleteContactMessageById,
+    replayContactMessageById,
+  } = useContactReq()
   return {
     SignInTenantAdminAsync,
     SignInProductOwnerAsync,
@@ -404,6 +412,11 @@ const useRequest = () => {
     clientsLookup,
     getUserById,
     getProductOwnerLookupList,
+    getPaymentStripeDataBySubId,
+    getPaginationContactMessagesList,
+    getContactMessageById,
+    deleteContactMessageById,
+    replayContactMessageById,
   }
 }
 export default useRequest

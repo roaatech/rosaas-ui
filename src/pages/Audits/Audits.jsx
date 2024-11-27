@@ -65,59 +65,55 @@ export default function Audits() {
   const listData = useSelector((state) => state.productsOwners.lookup)
 
   const [list, setList] = useState([])
-  useEffect(() => {
-    if (arraysEqual(selectedFilters, selectedData) && isInitialized) {
-      return
-    }
-    let query = `?page=${Math.ceil(
-      (first + 1) / rows
-    )}&pageSize=${rows}&filters[0].Field=actionType&filters[0].Operator=contains`
+  const buildQuery = () => {
+    let query = `?page=${Math.ceil((first + 1) / rows)}&pageSize=${rows}&filters[0].Field=actionType&filters[0].Operator=contains`
+
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     if (sortField) query += `&sort.Field=${sortField}`
     if (sortValue) query += `&sort.Direction=${sortValue}`
+
     if (
       selectedData &&
       (Array.isArray(selectedData)
-        ? selectedData?.length > 0
-        : Object.keys(selectedData)?.length > 0)
+        ? selectedData.length > 0
+        : Object.keys(selectedData).length > 0)
     ) {
-      selectedData &&
-        Object.values(selectedData).forEach((item, index) => {
-          query += `&filters[${index + 1}].Field=${item.field}&filters[${
-            index + 1
-          }].Value=${item.value}`
-        })
-    }
-    setSelectedFilters(
-      selectedData && Object.values(selectedData).length > 0 ? selectedData : []
-    )
-    const fetchAuditsList = async () => {
-      dispatch(setLoading(true))
-
-      try {
-        const auditsList = await getAuditsList(query)
-        setList(auditsList.data.data.items)
-        // dispatch(setAuditsData(auditsList.data.data))
-        setTotalCount(auditsList.data.data.totalCount)
-      } catch (error) {
-        console.error('Error fetching audits:', error)
-      } finally {
-        dispatch(setLoading(false))
-      }
+      selectedData.forEach((item, index) => {
+        query += `&filters[${index + 1}].Field=${item.field}&filters[${index + 1}].Value=${item.value}`
+      })
     }
 
-    fetchAuditsList()
+    return query
+  }
+
+  const fetchAuditsList = async (query) => {
+    dispatch(setLoading(true))
+
+    try {
+      const auditsList = await getAuditsList(query)
+      setList(auditsList.data.data.items)
+      setTotalCount(auditsList.data.data.totalCount)
+    } catch (error) {
+      console.error('Error fetching audits:', error)
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+
+  useEffect(() => {
+    if (!isInitialized) return
+
+    const query = buildQuery()
+    setSelectedFilters(selectedData.length > 0 ? selectedData : [])
+    fetchAuditsList(query)
+  }, [reset, !arraysEqual(selectedFilters, selectedData) && selectedData])
+
+  useEffect(() => {
+    const query = buildQuery()
+    setSelectedFilters(selectedData.length > 0 ? selectedData : [])
+    fetchAuditsList(query)
     setIsInitialized(true)
-  }, [
-    first,
-    rows,
-    searchValue,
-    sortField,
-    sortValue,
-    reset,
-    !arraysEqual(selectedFilters, selectedData) && selectedData,
-  ])
-  console.log(arraysEqual(selectedFilters, selectedData))
+  }, [first, rows, searchValue, sortField, sortValue])
 
   const onPageChange = (event) => {
     setFirst(event.first)

@@ -54,6 +54,7 @@ import WebhookList from '../../components/custom/Product/WebhookList/WebhookList
 import IntegrationUrlsTab from '../../components/custom/Product/IntegrationUrlsTab/IntegrationUrlsTab.jsx'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import { size } from 'lodash'
+import FrontendIntegrationUrlsTab from '../../components/custom/Product/FrontendIntegrationUrlsTab/FrontendIntegrationUrlsTab.jsx'
 
 const ProductDetails = () => {
   const routeParams = useParams()
@@ -263,11 +264,30 @@ const ProductDetails = () => {
               </TabPanel>
             )}
             {productData && (
-              <TabPanel header={<SafeFormatMessage id="Integration-Urls" />}>
+              <TabPanel
+                header={
+                  <SafeFormatMessage
+                    id="Api-Integration-Urls"
+                    defaultMessage={'API Integration URLs'}
+                  />
+                }
+              >
                 <IntegrationUrlsTab
                   data={productData}
                   setActiveIndex={setActiveIndex}
                 />
+              </TabPanel>
+            )}
+            {productData && (
+              <TabPanel
+                header={
+                  <SafeFormatMessage
+                    id="Frontend-Integration-URLs"
+                    defaultMessage={'Frontend Integration'}
+                  />
+                }
+              >
+                <FrontendIntegrationUrlsTab data={productData} />
               </TabPanel>
             )}
             <TabPanel header={<SafeFormatMessage id="Trial-Period" />}>

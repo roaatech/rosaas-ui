@@ -11,7 +11,10 @@ import {
   Card,
 } from '@themesberg/react-bootstrap'
 import { Form } from '@themesberg/react-bootstrap'
-import { productInfo } from '../../../../store/slices/products/productsSlice.js'
+import {
+  deleteAllProductsLookup,
+  productInfo,
+} from '../../../../store/slices/products/productsSlice.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi'
@@ -69,8 +72,8 @@ const ProductForm = ({
       productData && userInfo.userType != 'clientAdmin'
         ? productData?.client?.id
         : userInfo.userType == 'clientAdmin'
-        ? userInfo.ProductOwnerInfo?.id
-        : '',
+          ? userInfo.ProductOwnerInfo?.id
+          : '',
     isTenantAutoProvisioning: productData
       ? productData?.isTenantAutoProvisioning
       : true,
@@ -162,8 +165,8 @@ const ProductForm = ({
           userInfo.userType == 'clientAdmin'
             ? userInfo.ProductOwnerInfo?.id
             : values.clientId
-            ? values.clientId
-            : Product_Client_id,
+              ? values.clientId
+              : Product_Client_id,
         isTenantAutoProvisioning: values.isTenantAutoProvisioning,
       }
 
@@ -172,6 +175,7 @@ const ProductForm = ({
         if (sideBar) {
           navigate(`${Routes.products.path}/${createProduct.data.data.id}`)
         }
+        dispatch(deleteAllProductsLookup())
         setUpdate && setUpdate(update + 1)
         setVisible && setVisible(false)
       } else {

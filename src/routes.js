@@ -41,6 +41,8 @@ import Audits from './pages/Audits/Audits'
 import Logs from './pages/Logs/Logs'
 import ProcessFailed from './pages/ProcessFailed/ProcessFailed'
 import CanceledAccount from './pages/CanceledAccount/CanceledAccount'
+import ContactMessagesList from './pages/ContactMessagesPage/ContactMessagesList'
+import ContactMessagesDetailsPage from './pages/ContactMessagesPage/ContactMessagesDetailsPage/ContactMessagesDetailsPage'
 
 export const adminPanel = '/admin-panel'
 
@@ -68,6 +70,16 @@ export const Routes = {
     component: () => <POwnerChecker page={<ProductsOwners />} />,
     roles: ['superAdmin'],
   },
+  ContactMessagesPage: {
+    path: `${adminPanel}/contact-messages`,
+    component: () => <POwnerChecker page={<ContactMessagesList />} />,
+    roles: ['superAdmin'],
+  },
+  ContactMessagesdetailsPage: {
+    path: `${adminPanel}/contact-messages/:id`,
+    component: () => <POwnerChecker page={<ContactMessagesDetailsPage />} />,
+    roles: ['superAdmin'],
+  },
   audits: {
     path: `${adminPanel}/system/audits`,
     component: () => <POwnerChecker page={<Audits />} />,
@@ -87,15 +99,15 @@ export const Routes = {
     type: 'noSidebar',
   },
   mainPage: {
-    path: '/',
+    path: `/`,
     component: () => <POwnerChecker page={<MainPage />} />,
-    roles: '*',
+    roles: [],
     type: 'noSidebar',
   },
   marketPlacePage: {
     path: '/marketplace',
     component: () => <POwnerChecker page={<Marketplace />} />,
-    roles: '*',
+    roles: [],
     type: 'noSidebar',
   },
   ConfirmAccount: {

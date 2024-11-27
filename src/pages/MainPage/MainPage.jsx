@@ -117,7 +117,7 @@ const MainPage = () => {
 
           {userRole && (
             <div className="redirect-icons">
-              <Card
+              {/* <Card
                 onClick={() => navigate(Routes.marketPlacePage.path)}
                 className="redirect-card"
               >
@@ -131,7 +131,7 @@ const MainPage = () => {
                     </span>
                   </Row>
                 </Card.Body>
-              </Card>
+              </Card> */}
               <Card
                 onClick={() =>
                   userRole

@@ -42,7 +42,6 @@ export default function CanceledTenant() {
   const { subscriptionCanceledFilteredList } = useRequest()
   const [totalCount, setTotalCount] = useState(0)
   const [list, setList] = useState([])
-  console.log({ list })
 
   const [first, setFirst] = useState(0)
   const [rows, setRows] = useState(10)

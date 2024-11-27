@@ -36,6 +36,8 @@ import { Wrapper } from './Product.styled'
 import CustomPaginator from '../../components/custom/Shared/CustomPaginator/CustomPaginator'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import {
+  deleteAllProductsLookup,
+  deleteProductLookupById,
   productInfo,
   removeProductStore,
   setAllProduct,
@@ -75,6 +77,7 @@ export default function Product({ children }) {
   }
   const deleteProduct = async () => {
     await deleteProductReq({ id: currentId })
+    dispatch(deleteProductLookupById({ id: currentId }))
     dispatch(removeProductStore(currentId))
   }
 

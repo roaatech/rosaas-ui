@@ -78,6 +78,7 @@ import {
   MdSettingsSuggest,
   MdOutlineVerifiedUser,
   MdOutlineVerified,
+  MdOutlineMessage,
 } from 'react-icons/md'
 import SafeFormatMessage from '../custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import { AiOutlineAudit } from 'react-icons/ai'
@@ -244,13 +245,13 @@ export default (props = {}) => {
   const inactiveIsOpen = isSearchPerformed
     ? 'open'
     : sidebarStatus(inactive)
-    ? 'open'
-    : 'close'
+      ? 'open'
+      : 'close'
   const activeIsOpen = isSearchPerformed
     ? 'open'
     : sidebarStatus(active)
-    ? 'open'
-    : 'close'
+      ? 'open'
+      : 'close'
   const archivedIsOpen = sidebarStatus(archived) ? 'open' : 'close'
   const settingIsOpen = sidebarStatus([{ id: 'setting' }]) ? 'open' : 'close'
   const systemIsOpen = sidebarStatus([{ id: 'system' }]) ? 'open' : 'close'
@@ -277,7 +278,12 @@ export default (props = {}) => {
       dispatch(setAllProductsLookup(listData.data.data))
       setFilteredProducts(listData.data.data)
     })()
-  }, [searchValue, allProducts])
+  }, [
+    searchValue,
+    allProducts,
+    productsData && Object.keys(productsData).length > 0,
+  ])
+
   useEffect(() => {
     if (userRole != 'superAdmin') {
       return
@@ -394,10 +400,8 @@ export default (props = {}) => {
                     link={`${Routes.productsOwners.path}/info`}
                     icon={<MdInfo />}
                     isActive={
-                      !Routes.products.path &&
-                      location.pathname.includes(
-                        `${Routes.productsOwners.path}/info`
-                      )
+                      location.pathname.includes(Routes.productsOwners.path) &&
+                      location.pathname.includes(`info`)
                     }
                   />
                 )}
@@ -516,7 +520,11 @@ export default (props = {}) => {
                       </span>
                     }
                     style={{}}
-                    isActive={location.pathname.includes(Routes.products.path)}
+                    isActive={
+                      !location.pathname.includes('info')
+                        ? location.pathname.includes(Routes.products.path)
+                        : false
+                    }
                   />
                 )}
 
@@ -603,39 +611,46 @@ export default (props = {}) => {
                         />
                       </>
                     )}
-                    {userRole == 'superAdmin' && (
-                      <NavItem
-                        title={<SafeFormatMessage id="Discounts" />}
-                        link={Routes.DiscountsPage.path}
-                        icon={<MdDiscount />}
-                        isActive={location.pathname.includes(
-                          Routes.DiscountsPage.path
-                        )}
-                      />
-                    )}
-                    <NavItem
-                      title={<SafeFormatMessage id="Currencies" />}
-                      link={Routes.CurrenciesPage.path}
-                      icon={<MdCurrencyExchange />}
-                      isActive={location.pathname.includes(
-                        Routes.CurrenciesPage.path
+                    {Routes &&
+                      Routes.DiscountsPage.roles.includes(userRole) && (
+                        <NavItem
+                          title={<SafeFormatMessage id="Discounts" />}
+                          link={Routes.DiscountsPage.path}
+                          icon={<MdDiscount />}
+                          isActive={location.pathname.includes(
+                            Routes.DiscountsPage.path
+                          )}
+                        />
                       )}
-                    />
+                    {Routes &&
+                      Routes.CurrenciesPage.roles.includes(userRole) && (
+                        <NavItem
+                          title={<SafeFormatMessage id="Currencies" />}
+                          link={Routes.CurrenciesPage.path}
+                          icon={<MdCurrencyExchange />}
+                          isActive={location.pathname.includes(
+                            Routes.CurrenciesPage.path
+                          )}
+                        />
+                      )}
 
-                    {userRole == 'superAdmin' && (
-                      <NavItem
-                        title={
-                          <SafeFormatMessage id="Exchange-Rate-Providers" />
-                        }
-                        link={Routes.ExchangeRateProvidersSettings.path}
-                        icon={<BsPercent />}
-                        isActive={location.pathname.includes(
-                          Routes.ExchangeRateProvidersSettings.path
-                        )}
-                      />
-                    )}
+                    {Routes &&
+                      Routes.ExchangeRateProvidersSettings.roles.includes(
+                        userRole
+                      ) && (
+                        <NavItem
+                          title={
+                            <SafeFormatMessage id="Exchange-Rate-Providers" />
+                          }
+                          link={Routes.ExchangeRateProvidersSettings.path}
+                          icon={<BsPercent />}
+                          isActive={location.pathname.includes(
+                            Routes.ExchangeRateProvidersSettings.path
+                          )}
+                        />
+                      )}
 
-                    {userRole == 'superAdmin' && (
+                    {Routes && Routes.Profile.roles.includes(userRole) && (
                       <NavItem
                         title={<SafeFormatMessage id="Profile" />}
                         link={Routes.Profile.path}
@@ -680,6 +695,22 @@ export default (props = {}) => {
                     </CollapsableNavItem>
                   </>
                 )}
+                {Routes &&
+                  Routes.ContactMessagesPage.roles.includes(userRole) && (
+                    <NavItem
+                      title={
+                        <SafeFormatMessage
+                          id="Contact-Messages"
+                          defaultMessage={'Contact Messages'}
+                        />
+                      }
+                      link={Routes.ContactMessagesPage.path}
+                      icon={<MdOutlineMessage />}
+                      isActive={location.pathname.includes(
+                        Routes.ContactMessagesPage.path
+                      )}
+                    />
+                  )}
               </Nav>
             </div>
             {/* Sidebar Footer */}
@@ -691,7 +722,7 @@ export default (props = {}) => {
                     value="Live"
                     color="var(--white-pure)"
                     background="var(--green-primary)"
-                    lighter= {true}
+                    lighter={true}
                     style={{ fontSize: 'var(--normalFont)' }}
                     icon={<MdOutlineVerified />}
                   />

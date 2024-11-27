@@ -68,7 +68,11 @@ const BreadcrumbComponent = ({ breadcrumbInfo, param1, parent, data }) => {
                   <>
                     {breadcrumbConst[breadcrumbInfo]?.title && (
                       <Breadcrumb.Item
-                        // href={navigation}
+                        href={
+                          breadcrumbConst[breadcrumbInfo]?.titleNavigation
+                            ? breadcrumbConst[breadcrumbInfo]?.titleNavigation
+                            : navigation
+                        }
                         active={
                           breadcrumbConst[breadcrumbInfo].active ==
                           breadcrumbConst[breadcrumbInfo].title
