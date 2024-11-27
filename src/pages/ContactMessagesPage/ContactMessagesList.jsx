@@ -60,15 +60,11 @@ export default function ContactMessagesList() {
   const [currentId, setCurrentId] = useState('')
   const [currentData, setCurrentData] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
-  //   const contactMessagesList = useSelector(
-  //     (state) => state.contactMessages.contactMessages
-  //   )
 
   useEffect(() => {
     const fetchContactMessages = async () => {
       const query = `?page=${Math.ceil((first + 1) / rows)}&pageSize=${rows}`
       const result = await getPaginationContactMessagesList(query)
-      //   dispatch(setContactMessagesList(result.data.items))
       setList(result.data.data.items)
       setTotalCount(result.data.data.totalCount)
     }
@@ -83,7 +79,6 @@ export default function ContactMessagesList() {
 
   const handleDelete = async () => {
     await deleteContactMessageById(currentId)
-    // dispatch(removeContactMessageById(currentId))
     setConfirmDelete(false)
   }
   const handleDetails = async (id) => {
