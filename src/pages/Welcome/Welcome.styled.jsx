@@ -8,4 +8,11 @@ export const Wrapper = styled.div`
   .nav-tabs .nav-link.active {
     background-color: var(--primary-color);
   }
+  .link-unit {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .link-unit:hover {
+    color: var(--primary4);
+  }
 `

@@ -17,11 +17,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faArrowLeft,
   faArrowRight,
+  faBoxes,
   faCalendar,
   faUser,
   faUsers,
 } from '@fortawesome/free-solid-svg-icons'
 import ProductForm from '../../components/custom/Product/ProductForm/ProductForm'
+import { FaBox, FaBoxes } from 'react-icons/fa'
+import {
+  BsBoxes,
+  BsBuildings,
+  BsCheckCircleFill,
+  BsClockFill,
+  BsPencilSquare,
+  BsXCircleFill,
+} from 'react-icons/bs'
+import { Routes } from '../../routes'
+import { MdOutlinePayments, MdPayments } from 'react-icons/md'
 
 const ProductFilterContainer = ({ setAllSelectedProducts }) => {
   const [selectedProducts, setSelectedProducts] = useState([])
@@ -29,8 +41,9 @@ const ProductFilterContainer = ({ setAllSelectedProducts }) => {
   const intl = useIntl()
   const { getProductsLookup } = useRequest()
   const dispatch = useDispatch()
-  const LookupData = useSelector((state) => state.products?.lookup)
-  const productsLookup = LookupData?.productsLookup
+  const productsLookupData = useSelector((state) => state.products?.lookup)
+
+  const productsLookup = productsLookupData?.productsLookup
 
   useEffect(() => {
     if (productsLookup && Object.keys(productsLookup).length > 0) {
@@ -110,6 +123,9 @@ const Dashboard = () => {
     },
     lineChartData: { labels: [], datasets: [] },
     enhancedData: {},
+    canceledCount: 0,
+    activeCount: 0,
+    suspendedCount: 0,
   })
   const [timeGranularity, setTimeGranularity] = useState('day') // Default to 'day' as per your request
   const [list, setList] = useState([])
@@ -118,13 +134,17 @@ const Dashboard = () => {
     useRequest()
 
   const [periodOffset, setPeriodOffset] = useState(0)
-
+  const LookupData = useSelector((state) => state.products?.lookup)
+  const productsLookup = LookupData?.productsLookup
   const getMaxPeriods = () => {
     if (timeGranularity === 'day') return 7
     if (timeGranularity === 'week') return 7
     if (timeGranularity === 'month') return 12 // Adjust as needed
     return 10 // Default value
   }
+  const productOwnersLookup = useSelector(
+    (state) => state.productsOwners.lookup
+  )
 
   const formatPeriodLabel = (periodStart, periodEnd, granularity) => {
     if (granularity === 'month') {
@@ -156,7 +176,24 @@ const Dashboard = () => {
 
       let earliestStartDate = null
       let latestEndDate = null
+      let activeCount = 0
+      let suspendedCount = 0
+      let canceledCount = 0
 
+      for (const subscription of subscriptions) {
+        const status = subscription.subscriptionStatus
+
+        if (status === 1) {
+          // Active
+          activeCount += 1
+        } else if (status === 2) {
+          // Suspended
+          suspendedCount += 1
+        } else if (status === 3) {
+          // Canceled
+          canceledCount += 1
+        }
+      }
       // Find the earliest start date and latest end date among all subscriptions
       subscriptions.forEach((subscription) => {
         const startDate =
@@ -262,7 +299,7 @@ const Dashboard = () => {
           }
 
           // Determine if the subscription is active
-          const isActive = subscription.subscriptionStatus === 1 // Adjust status code as needed
+          const isActive = subscription.subscriptionStatus === 1
 
           // Increment active subscriptions count if active
           if (isActive) {
@@ -465,6 +502,9 @@ const Dashboard = () => {
         lineChartData,
         enhancedData,
         totalPeriods,
+        activeCount,
+        suspendedCount,
+        canceledCount,
       })
     } catch (error) {
       console.error('Error fetching subscription data:', error)
@@ -551,6 +591,7 @@ const Dashboard = () => {
     fetchSubscriptionList(newQuery)
     setIsInitialized(true)
   }, [selectedProducts])
+  const navigate = useNavigate()
 
   return (
     <Wrapper>
@@ -573,20 +614,65 @@ const Dashboard = () => {
           />
         </TableHead>
         <div className="mb-4">
-          <ProductFilterContainer
-            setAllSelectedProducts={setAllSelectedProducts}
-          />
+          <Card>
+            <Card.Body>
+              <Row>
+                <GenerateCard
+                  count={
+                    productOwnersLookup
+                      ? Object.keys(productOwnersLookup).length
+                      : 0
+                  }
+                  variant={'var(--second-color-2)'}
+                  icon={<BsBuildings />}
+                  md={4}
+                  title={'Total-Products-Owners'}
+                  unit={'Products-Owners'}
+                />
+                <GenerateCard
+                  count={
+                    productsLookup ? Object.keys(productsLookup).length : 0
+                  }
+                  icon={<BsBoxes />}
+                  md={4}
+                  title={'Total-Products'}
+                  unit={'Products'}
+                />
+                <GenerateCard
+                  count={'USD'}
+                  icon={<BsBoxes />}
+                  variant={'var(--second-color-2)'}
+                  md={4}
+                  title={'Default-Currency'}
+                  unit={
+                    <span
+                      style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                      className="link-unit"
+                      onClick={() => navigate(Routes.CurrenciesPage.path)}
+                    >
+                      <SafeFormatMessage id="Change-Currency" />
+                    </span>
+                  }
+                />
+              </Row>
+            </Card.Body>
+          </Card>
         </div>
         <Row className="justify-content-md-center align-items-stretch">
           {/* Total Subscriptions Card */}
-          <Col md={6} className="mb-4 d-none d-sm-block">
+          <Col md={12}>
+            <ProductFilterContainer
+              setAllSelectedProducts={setAllSelectedProducts}
+            />
+          </Col>
+          <Col md={3} className="my-2">
             <Card className="h-100">
               <Card.Body
                 className="d-flex flex-column justify-content-center"
                 style={{ backgroundColor: 'var(--second-color-2)' }}
               >
                 <Card.Title className="text-center">
-                  <h1>
+                  <h3>
                     <FontAwesomeIcon
                       icon={faUsers}
                       style={{
@@ -598,7 +684,7 @@ const Dashboard = () => {
                       id="TotalSubscriptions"
                       defaultMessage="Total Subscriptions"
                     />
-                  </h1>
+                  </h3>
                 </Card.Title>
                 <h1
                   className="display-4 text-center"
@@ -612,8 +698,31 @@ const Dashboard = () => {
               </Card.Body>
             </Card>
           </Col>
+          <GenerateCard
+            title="Active-Subscriptions"
+            count={chartData.activeCount}
+            icon={<BsCheckCircleFill />}
+            color="var(--green2)"
+            unit={'Subscriptions'}
+          />
+          <GenerateCard
+            title="Suspended-Subscriptions"
+            count={chartData.suspendedCount}
+            icon={<BsClockFill />}
+            color="var(--red2)"
+            variant="var(--second-color-2)"
+            unit={'Subscriptions'}
+          />
+          <GenerateCard
+            title="Canceled-Subscriptions"
+            count={chartData.canceledCount}
+            icon={<BsXCircleFill />}
+            color="var(--red2)"
+            style={{ color: 'var(--second-color)' }}
+            unit={'Subscriptions'}
+          />
           {/* Bar Chart for Total Subscriptions per Product */}
-          <Col md={6} className="mb-4 d-none d-sm-block">
+          <Col md={6} className="mb-4 ">
             <Card className="h-100">
               <Card.Header>
                 <Card.Title>
@@ -664,7 +773,7 @@ const Dashboard = () => {
             </Card>
           </Col>
           {/* Pie Chart for Subscriptions per Plan */}
-          <Col md={6} className="mb-4 d-none d-sm-block">
+          <Col md={6} className="mb-4 ">
             <Card className="h-100">
               <Card.Header>
                 <Card.Title>
@@ -692,7 +801,7 @@ const Dashboard = () => {
             </Card>
           </Col>
           {/* Line Chart for Active Subscriptions Over Time */}
-          <Col md={6} className="mb-4 d-none d-sm-block">
+          <Col md={6} className="mb-4 ">
             <Card className="h-100">
               <Card.Header>
                 <Card.Title>
@@ -807,4 +916,45 @@ const Dashboard = () => {
   )
 }
 
+const GenerateCard = ({ title, icon, md, count, unit, variant }) => {
+  return (
+    <Col md={md}>
+      <Card className="h-100 ">
+        <Card.Body
+          className="d-flex flex-column justify-content-center"
+          style={{ backgroundColor: variant }}
+        >
+          <Card.Title className="text-center">
+            <h3>
+              <span
+                style={{
+                  marginRight: '10px',
+                  color: 'var(--second-color)',
+                }}
+              >
+                {icon}
+              </span>
+
+              <SafeFormatMessage id={title} defaultMessage={title} />
+            </h3>
+          </Card.Title>
+          <div>
+            <h1
+              className="display-4 text-center"
+              style={{ color: 'var(--second-color)' }}
+            >
+              {count}
+            </h1>
+            <p
+              className="text-center fw-bold"
+              style={{ color: 'var(--primary3)' }}
+            >
+              {unit}
+            </p>
+          </div>
+        </Card.Body>
+      </Card>
+    </Col>
+  )
+}
 export default Dashboard

@@ -41,16 +41,28 @@ const SignInProductManagement = () => {
       return
     }
 
-    const loginPass = await SignInProductOwnerAsync({
-      ...values,
-      recaptchaToken,
-    })
-    if (loginPass) {
-      redirectPath
-        ? navigate(redirectPath)
-        : loginPass.data.data.userAccount.userType == 4
-        ? navigate(Routes.workSpace.path)
-        : navigate(Routes.Dashboard.path)
+    try {
+      const loginPass = await SignInProductOwnerAsync({
+        ...values,
+        recaptchaToken,
+      })
+
+      if (loginPass) {
+        redirectPath
+          ? navigate(redirectPath)
+          : loginPass.data.data.userAccount.userType == 4
+            ? navigate(Routes.workSpace.path)
+            : navigate(Routes.Dashboard.path)
+      }
+    } catch (error) {
+      // Handle login error here
+      console.error(error)
+    } finally {
+      // Reset reCAPTCHA regardless of success or failure
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset()
+      }
+      setSubmitting(false)
     }
   }
 
@@ -146,7 +158,10 @@ const SignInProductManagement = () => {
               <span>
                 <SafeFormatMessage id="join-as-product-owner" />
               </span>{' '}
-              <Link className="link-underline " to="https://dashboard.rosaas.app/marketplace/roaa-tech/rosaas">
+              <Link
+                className="link-underline "
+                to="https://dashboard.rosaas.app/marketplace/roaa-tech/rosaas"
+              >
                 <SafeFormatMessage id="Sign-up-your-product-today!" />
               </Link>
             </div>
