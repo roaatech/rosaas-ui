@@ -41,16 +41,28 @@ const SignInSuperAdmin = () => {
       return
     }
 
-    const loginPass = await SignInAdminAsync({
-      ...values,
-      recaptchaToken,
-    })
-    if (loginPass) {
-      redirectPath
-        ? navigate(redirectPath)
-        : loginPass.data.data.userAccount.userType === 4
-        ? navigate(Routes.workSpace.path)
-        : navigate(Routes.Dashboard.path)
+    try {
+      const loginPass = await SignInAdminAsync({
+        ...values,
+        recaptchaToken,
+      })
+
+      if (loginPass) {
+        redirectPath
+          ? navigate(redirectPath)
+          : loginPass.data.data.userAccount.userType === 4
+            ? navigate(Routes.workSpace.path)
+            : navigate(Routes.Dashboard.path)
+      }
+    } catch (error) {
+      // Handle login error here
+      console.error(error)
+    } finally {
+      // Reset reCAPTCHA regardless of success or failure
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset()
+      }
+      setSubmitting(false)
     }
   }
 
