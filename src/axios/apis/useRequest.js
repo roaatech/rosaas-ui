@@ -21,6 +21,7 @@ import usePOReq from './ProductOwner/usePOReq'
 import useDiscountReq from './Setting/discount/useDiscountReq'
 import useCurrencyReq from './Setting/currency/useCurrencyReq'
 import useContactReq from './Contact/useContactReq'
+import useStatisticsReq from './Statistics/useStatisticsReq'
 
 const useRequest = () => {
   const {
@@ -106,6 +107,13 @@ const useRequest = () => {
     subscriptionFilteredList,
     subscriptionCanceledFilteredList,
   } = useSubManagementReq()
+
+  const {
+    getStatisticsDetailsList,
+    getStatisticsDetailsListByProductId,
+    getStatisticsCountsList,
+    getStatisticsCountsListByProductId,
+  } = useStatisticsReq()
 
   const {
     createTenantAdmin,
@@ -417,6 +425,10 @@ const useRequest = () => {
     getContactMessageById,
     deleteContactMessageById,
     replayContactMessageById,
+    getStatisticsDetailsList,
+    getStatisticsDetailsListByProductId,
+    getStatisticsCountsList,
+    getStatisticsCountsListByProductId,
   }
 }
 export default useRequest

@@ -79,6 +79,7 @@ import {
   MdOutlineVerifiedUser,
   MdOutlineVerified,
   MdOutlineMessage,
+  MdDashboard,
 } from 'react-icons/md'
 import SafeFormatMessage from '../custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import { AiOutlineAudit } from 'react-icons/ai'
@@ -457,7 +458,17 @@ export default (props = {}) => {
                     ) : null}
                   </>
                 )}
-
+                <NavItem
+                  key={'Dashboard'}
+                  link={`${Routes.Dashboard.path}`}
+                  isActive={
+                    location.pathname.includes(Routes.Dashboard.path)
+                      ? true
+                      : false
+                  }
+                  title={<SafeFormatMessage id="Dashboard" />}
+                  icon={<MdDashboard />}
+                />
                 <NavItem
                   key={'Tenants'}
                   link={`${Routes.Tenant.path}`}

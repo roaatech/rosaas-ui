@@ -43,13 +43,14 @@ import ProcessFailed from './pages/ProcessFailed/ProcessFailed'
 import CanceledAccount from './pages/CanceledAccount/CanceledAccount'
 import ContactMessagesList from './pages/ContactMessagesPage/ContactMessagesList'
 import ContactMessagesDetailsPage from './pages/ContactMessagesPage/ContactMessagesDetailsPage/ContactMessagesDetailsPage'
+import UpdatedDashboard from './pages/Welcome/UpdatedWelcome'
 
 export const adminPanel = '/admin-panel'
 
 export const Routes = {
   Dashboard: {
     path: `${adminPanel}/dashboard`,
-    component: () => <POwnerChecker page={<Dashboard />} />,
+    component: () => <POwnerChecker page={<UpdatedDashboard />} />,
 
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
   },
