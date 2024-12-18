@@ -3,9 +3,9 @@ import useApi from '../../useApi'
 const useStatisticsReq = () => {
   const Request = useApi()
 
-  const getStatisticsDetailsList = async () => {
+  const getStatisticsDetailsList = async (queryParams) => {
     return await Request.get(
-      `management/sadmin/v1/Statistics/Details/Subscriptions`
+      `management/sadmin/v1/Statistics/Details/Subscriptions${queryParams}`
     )
   }
   const getStatisticsDetailsListByProductId = async (productId) => {
@@ -13,9 +13,9 @@ const useStatisticsReq = () => {
       `management/sadmin/v1/Statistics/Details/Subscriptions/${productId}`
     )
   }
-  const getStatisticsCountsList = async () => {
+  const getStatisticsCountsList = async (queryParams) => {
     return await Request.get(
-      `management/sadmin/v1/Statistics/Counts/Subscriptions`
+      `management/sadmin/v1/Statistics/Counts/Subscriptions${queryParams}`
     )
   }
   const getStatisticsCountsListByProductId = async (productId) => {

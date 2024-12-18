@@ -40,6 +40,7 @@ import { MdOutlinePayment, MdOutlinePayments, MdPayments } from 'react-icons/md'
 import FilteringDropdown from '../../components/custom/Shared/FilterSearchContainer/FilteringDropdown/FilteringDropdown'
 import { setAllPlansLookup } from '../../store/slices/products/productsSlice'
 import { el } from 'date-fns/locale'
+import FilterSearchContainer from '../../components/custom/Shared/FilterSearchContainer/FilterSearchContainer'
 
 const ProductFilterContainer = ({ setAllSelectedProducts }) => {
   const [selectedProducts, setSelectedProducts] = useState([])
@@ -117,7 +118,7 @@ const getRandomColor = () => {
 
 const UpdatedDashboard = () => {
   const [visibleHead, setVisibleHead] = useState(false)
-  const [selectedProducts, setAllSelectedProducts] = useState([])
+  const [allSelectedData, setAllSelectedData] = useState([])
 
   const [selectedFilters, setSelectedFilters] = useState([])
   const [isInitialized, setIsInitialized] = useState(false)
@@ -136,6 +137,8 @@ const UpdatedDashboard = () => {
     activeCount: 0,
     suspendedCount: 0,
   })
+  console.log({ chartData })
+
   const [countsData, setCountsData] = useState({
     totalSubscriptions: 0,
     canceledCount: 0,
@@ -162,6 +165,8 @@ const UpdatedDashboard = () => {
   const [StatisticsCountsList, setStatisticsCountsList] = useState([])
   const [timelineData, setTimelineData] = useState([])
   const [StatisticsDetailsList, setStatisticsDetailsList] = useState([])
+  const [periodOffset, setPeriodOffset] = useState(0)
+
   const dispatch = useDispatch()
   const {
     getStatisticsDetailsList,
@@ -171,33 +176,103 @@ const UpdatedDashboard = () => {
     getPlanFilteredList,
   } = useRequest()
 
-  const [periodOffset, setPeriodOffset] = useState(0)
   const LookupData = useSelector((state) => state.products?.lookup)
   const productsLookup = LookupData?.productsLookup
+  const productOwnersLookup = useSelector(
+    (state) => state.productsOwners.lookup
+  )
+
   const getMaxPeriods = () => {
     if (timeGranularity === 'day') return 7
     if (timeGranularity === 'week') return 7
     if (timeGranularity === 'month') return 12 // Adjust as needed
     return 10 // Default value
   }
-  const productOwnersLookup = useSelector(
-    (state) => state.productsOwners.lookup
-  )
 
-  const formatPeriodLabel = (periodStart, periodEnd, granularity) => {
-    if (granularity === 'month') {
-      const options = { month: 'short', year: 'numeric' }
-      return periodStart.toLocaleDateString(undefined, options)
-    } else if (granularity === 'week') {
-      const options = { month: 'short', day: 'numeric' }
-      return `${periodStart.toLocaleDateString(
-        undefined,
-        options
-      )} - ${periodEnd.toLocaleDateString(undefined, options)}`
-    } else if (granularity === 'day') {
-      const options = { month: 'short', day: 'numeric' }
-      return periodStart.toLocaleDateString(undefined, options)
+  // Utility function to parse date
+  const parseDate = (dateStr) => new Date(dateStr)
+
+  // Calculate the earliest start date and current moment
+  const earliestStartDate = StatisticsDetailsList.reduce((earliest, item) => {
+    const start = parseDate(item.startDate)
+    return start < earliest ? start : earliest
+  }, new Date())
+
+  const currentMoment = new Date()
+
+  // Generate labels and active subscriptions
+  const generateChartData = () => {
+    const labels = []
+    const datasets = {}
+    const productIds = [
+      ...new Set(StatisticsDetailsList.map((item) => item.productId)),
+    ]
+
+    console.log({ StatisticsDetailsList })
+    console.log({ productIds })
+
+    productIds.forEach((productId) => {
+      datasets[productId] = []
+    })
+
+    let currentPeriodStart = new Date(earliestStartDate)
+    const maxPeriods = getMaxPeriods()
+    let periodCount = 0
+
+    while (currentPeriodStart <= currentMoment && periodCount < maxPeriods) {
+      let nextPeriodStart = new Date(currentPeriodStart)
+      let periodEnd = new Date(currentPeriodStart)
+
+      if (timeGranularity === 'month') {
+        nextPeriodStart.setMonth(currentPeriodStart.getMonth() + 1)
+        periodEnd = new Date(nextPeriodStart)
+        periodEnd.setDate(periodEnd.getDate() - 1)
+        periodEnd.setHours(23, 59, 59, 999)
+      } else if (timeGranularity === 'week') {
+        periodEnd.setDate(currentPeriodStart.getDate() + 6)
+        periodEnd.setHours(23, 59, 59, 999)
+        nextPeriodStart.setDate(currentPeriodStart.getDate() + 7)
+      } else if (timeGranularity === 'day') {
+        periodEnd.setHours(23, 59, 59, 999)
+        nextPeriodStart.setDate(currentPeriodStart.getDate() + 1)
+      }
+
+      labels.push(
+        `${currentPeriodStart.toISOString().split('T')[0]} - ${
+          periodEnd.toISOString().split('T')[0]
+        }`
+      )
+
+      productIds.forEach((productId) => {
+        const activeSubscriptions = StatisticsDetailsList.filter((item) => {
+          const start = parseDate(item.startDate)
+          const end =
+            item.cancellationOrSuspensionDate ||
+            parseDate(item.endDate || currentMoment)
+          return (
+            item.productId === productId &&
+            start <= periodEnd &&
+            end >= currentPeriodStart
+          )
+        }).length
+
+        datasets[productId].push(activeSubscriptions)
+      })
+
+      currentPeriodStart = new Date(nextPeriodStart)
+      periodCount += 1 // Increment the period counter
     }
+
+    setChartData({
+      labels,
+      datasets: Object.entries(datasets).map(([productId, data]) => ({
+        label: `Product ${productId}`,
+        data,
+        fill: false,
+        borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+        tension: 0.1,
+      })),
+    })
   }
 
   const fetchSubscriptionsCounts = async () => {
@@ -357,26 +432,15 @@ const UpdatedDashboard = () => {
     fetchSubscriptionsCounts()
     fetchPlanPieChartData()
   }, [StatisticsCountsList, timeGranularity, periodOffset])
-
+  useEffect(() => {
+    generateChartData()
+  }, [timeGranularity])
   const handlePreviousPeriods = () => {
-    if (!chartData.lineChartData || !chartData.lineChartData.labels) return
-
-    const totalPeriods = chartData.totalPeriods // Use the total number of periods
-    const maxPeriods = getMaxPeriods()
-    if (periodOffset + maxPeriods < totalPeriods) {
-      setPeriodOffset(periodOffset + maxPeriods)
-    }
+    setPeriodOffset(periodOffset + 1)
   }
 
   const handleNextPeriods = () => {
-    if (!chartData.lineChartData || !chartData.lineChartData.labels) return
-
-    const maxPeriods = getMaxPeriods()
-    if (periodOffset - maxPeriods >= 0) {
-      setPeriodOffset(periodOffset - maxPeriods)
-    } else {
-      setPeriodOffset(0)
-    }
+    setPeriodOffset(periodOffset - 1)
   }
 
   const buildQuery = (page = 1, pageSize = 999) => {
@@ -385,12 +449,12 @@ const UpdatedDashboard = () => {
     queryParts.push(`pageSize=${pageSize}`)
 
     if (
-      selectedProducts &&
-      (Array.isArray(selectedProducts)
-        ? selectedProducts.length > 0
-        : Object.keys(selectedProducts).length > 0)
+      allSelectedData &&
+      (Array.isArray(allSelectedData)
+        ? allSelectedData.length > 0
+        : Object.keys(allSelectedData).length > 0)
     ) {
-      selectedProducts.forEach((item, index) => {
+      allSelectedData.forEach((item, index) => {
         queryParts.push(`filters[${index}].Field=${item.field}`)
         if (item.value) {
           queryParts.push(`filters[${index}].Value=${item.value}`)
@@ -401,33 +465,33 @@ const UpdatedDashboard = () => {
     return `?${queryParts.join('&')}`
   }
 
-  const fetchSubscriptionList = async () => {
+  const fetchSubscriptionList = async (queryParams) => {
     dispatch(setLoading(true))
 
     try {
       // Fetch active subscriptions
-      if (selectedProducts && Object.keys(selectedProducts).length > 0) {
-        const productId = selectedProducts?.[0].value
-        const StatisticsCounts =
-          await getStatisticsCountsListByProductId(productId)
-        StatisticsCounts &&
-          StatisticsCounts?.data?.data &&
-          setStatisticsCountsList(StatisticsCounts.data.data)
-        const StatisticsDetails =
-          await getStatisticsDetailsListByProductId(productId)
-        StatisticsDetails &&
-          StatisticsDetails?.data?.data &&
-          setStatisticsDetailsList(StatisticsDetails.data.data)
-      } else {
-        const StatisticsCounts = await getStatisticsCountsList()
-        StatisticsCounts &&
-          StatisticsCounts?.data?.data &&
-          setStatisticsCountsList(StatisticsCounts.data.data)
-        const StatisticsDetails = await getStatisticsDetailsList()
-        StatisticsDetails &&
-          StatisticsDetails?.data?.data &&
-          setStatisticsDetailsList(StatisticsDetails.data.data)
-      }
+      // if (allSelectedData && Object.keys(allSelectedData).length > 0) {
+      //   const productId = allSelectedData?.[0].value
+      //   const StatisticsCounts =
+      //     await getStatisticsCountsListByProductId(productId)
+      //   StatisticsCounts &&
+      //     StatisticsCounts?.data?.data &&
+      //     setStatisticsCountsList(StatisticsCounts.data.data)
+      //   const StatisticsDetails =
+      //     await getStatisticsDetailsListByProductId(productId)
+      //   StatisticsDetails &&
+      //     StatisticsDetails?.data?.data &&
+      //     setStatisticsDetailsList(StatisticsDetails.data.data)
+      // } else {
+      const StatisticsCounts = await getStatisticsCountsList(queryParams)
+      StatisticsCounts &&
+        StatisticsCounts?.data?.data &&
+        setStatisticsCountsList(StatisticsCounts.data.data)
+      const StatisticsDetails = await getStatisticsDetailsList(queryParams)
+      StatisticsDetails &&
+        StatisticsDetails?.data?.data &&
+        setStatisticsDetailsList(StatisticsDetails.data.data)
+      // }
     } catch (error) {
       console.error('Error fetching subscription list:', error)
     } finally {
@@ -456,15 +520,19 @@ const UpdatedDashboard = () => {
   }
 
   useEffect(() => {
-    if (selectedFilters === selectedProducts && isInitialized) {
+    if (selectedFilters === allSelectedData && isInitialized) {
+      console.log('*******')
+
       return
     }
+    console.log('done')
+
     const newQuery = buildQuery()
-    setSelectedFilters(selectedProducts.length > 0 ? selectedProducts : [])
+    setSelectedFilters(allSelectedData.length > 0 ? allSelectedData : [])
     fetchSubscriptionList(newQuery)
     getActiveSubscriptionsTimelineData(StatisticsDetailsList)
     setIsInitialized(true)
-  }, [selectedProducts])
+  }, [allSelectedData])
   const navigate = useNavigate()
 
   return (
@@ -502,9 +570,7 @@ const UpdatedDashboard = () => {
           {/* Total Subscriptions Card */}
           <Row>
             <Col md={12}>
-              <ProductFilterContainer
-                setAllSelectedProducts={setAllSelectedProducts}
-              />
+              <FilterSearchContainer setAllSelectedData={setAllSelectedData} />
             </Col>
           </Row>
           <Row className="mt-3">
@@ -772,112 +838,69 @@ const UpdatedDashboard = () => {
             <Col md={6} className="mb-4 ">
               <Card className="h-100">
                 <Card.Header>
-                  <Card.Title>
-                    <SafeFormatMessage
-                      id="ActiveSubscriptionsOverTime"
-                      defaultMessage="Active Subscriptions Over Time"
-                    />
-                  </Card.Title>
+                  <Card.Title>Active Subscriptions Over Time</Card.Title>
                 </Card.Header>
-                <Card.Body className="px-3 py-3">
-                  {/* Tabs for Time Granularity Selection */}
+                <Card.Body>
                   <Tabs
                     activeKey={timeGranularity}
                     onSelect={(k) => {
                       setTimeGranularity(k)
-                      setPeriodOffset(0) // Reset period offset when granularity changes
+                      setPeriodOffset(0)
                     }}
-                    className="mb-0 px-4"
                   >
-                    <Tab
-                      eventKey="month"
-                      title={
-                        <SafeFormatMessage id="Month" defaultMessage="Month" />
-                      }
-                    ></Tab>
-                    <Tab
-                      eventKey="week"
-                      title={
-                        <SafeFormatMessage id="Week" defaultMessage="Week" />
-                      }
-                    ></Tab>
-                    <Tab
-                      eventKey="day"
-                      title={
-                        <SafeFormatMessage id="Day" defaultMessage="Day" />
-                      }
-                    ></Tab>
+                    <Tab eventKey="month" title="Month"></Tab>
+                    <Tab eventKey="week" title="Week"></Tab>
+                    <Tab eventKey="day" title="Day"></Tab>
                   </Tabs>
-                  {/* Navigation Arrows */}
-                  <div className="m-0 card p-3">
-                    <div className="d-flex justify-content-between align-items-center mb-3">
-                      <Button
-                        variant="primary"
-                        onClick={handlePreviousPeriods}
-                        disabled={
-                          periodOffset + getMaxPeriods() >=
-                          chartData.totalPeriods
-                        }
-                      >
-                        <FontAwesomeIcon icon={faArrowLeft} />
-                      </Button>
-                      <span>
-                        {chartData.lineChartData &&
-                        chartData.lineChartData.labels &&
-                        chartData.lineChartData.labels.length > 0
-                          ? chartData.lineChartData.labels[0]
-                          : 'N/A'}{' '}
-                        -{' '}
-                        {chartData.lineChartData &&
-                        chartData.lineChartData.labels &&
-                        chartData.lineChartData.labels.length > 0
-                          ? chartData.lineChartData.labels[
-                              chartData.lineChartData.labels.length - 1
-                            ]
-                          : 'N/A'}
-                      </span>
-                      <Button
-                        variant="primary"
-                        onClick={handleNextPeriods}
-                        disabled={periodOffset <= 0}
-                      >
-                        {' '}
-                        <FontAwesomeIcon icon={faArrowRight} />
-                      </Button>
-                    </div>
-                    <Chart
-                      type="line"
-                      data={chartData.lineChartData}
-                      options={{
-                        responsive: true,
-                        plugins: {
-                          legend: {
-                            position: 'top',
-                          },
-                        },
-                        scales: {
-                          x: {
-                            title: {
-                              display: true,
-                              text:
-                                timeGranularity.charAt(0).toUpperCase() +
-                                timeGranularity.slice(1),
-                            },
-                            ticks: {
-                              autoSkip: false,
-                            },
-                          },
-                          y: {
-                            title: {
-                              display: true,
-                              text: 'Number of Subscriptions',
-                            },
-                            beginAtZero: true,
-                          },
-                        },
-                      }}
-                    />
+                  <div className="d-flex justify-content-between align-items-center mt-3">
+                    <Button
+                      variant="primary"
+                      onClick={handlePreviousPeriods}
+                      disabled={periodOffset + 1 >= chartData.labels?.length}
+                    >
+                      <FontAwesomeIcon icon={faArrowLeft} />
+                    </Button>
+                    <span>
+                      {chartData.labels?.[0] || 'N/A'} -{' '}
+                      {chartData.labels?.[chartData.labels.length - 1] || 'N/A'}
+                    </span>
+                    <Button
+                      variant="primary"
+                      onClick={handleNextPeriods}
+                      disabled={periodOffset <= 0}
+                    >
+                      <FontAwesomeIcon icon={faArrowRight} />
+                    </Button>
                   </div>
+                  <Chart
+                    type="line"
+                    data={chartData}
+                    options={{
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          position: 'top',
+                        },
+                      },
+                      scales: {
+                        x: {
+                          title: {
+                            display: true,
+                            text:
+                              timeGranularity.charAt(0).toUpperCase() +
+                              timeGranularity.slice(1),
+                          },
+                        },
+                        y: {
+                          title: {
+                            display: true,
+                            text: 'Number of Subscriptions',
+                          },
+                          beginAtZero: true,
+                        },
+                      },
+                    }}
+                  />
                 </Card.Body>
               </Card>
             </Col>
