@@ -11,7 +11,10 @@ import { Button, Card, Col, Row, Tab, Tabs } from '@themesberg/react-bootstrap'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 import FilteringMultiSelect from '../../components/custom/Shared/FilterSearchContainer/FilteringMultiSelect/FilteringMultiSelect'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
-import { setLoading } from '../../store/slices/main'
+import {
+  setDefaultCurrencyCodeAndId,
+  setLoading,
+} from '../../store/slices/main'
 import { arraysEqual } from '../../components/custom/Shared/SharedFunctions/sharedFunctionConsts'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -41,6 +44,7 @@ import FilteringDropdown from '../../components/custom/Shared/FilterSearchContai
 import { setAllPlansLookup } from '../../store/slices/products/productsSlice'
 import { el } from 'date-fns/locale'
 import FilterSearchContainer from '../../components/custom/Shared/FilterSearchContainer/FilterSearchContainer'
+import GenerateCard from './GenerateCard'
 
 const ProductFilterContainer = ({ setAllSelectedProducts }) => {
   const [selectedProducts, setSelectedProducts] = useState([])
@@ -137,7 +141,6 @@ const UpdatedDashboard = () => {
     activeCount: 0,
     suspendedCount: 0,
   })
-  console.log({ chartData })
 
   const [countsData, setCountsData] = useState({
     totalSubscriptions: 0,
@@ -159,20 +162,20 @@ const UpdatedDashboard = () => {
       datasets: [{ data: [], backgroundColor: [] }],
     },
   })
-  console.log({ countsData })
 
   const [timeGranularity, setTimeGranularity] = useState('day') // Default to 'day' as per your request
   const [StatisticsCountsList, setStatisticsCountsList] = useState([])
   const [timelineData, setTimelineData] = useState([])
   const [StatisticsDetailsList, setStatisticsDetailsList] = useState([])
   const [periodOffset, setPeriodOffset] = useState(0)
-
+  const [currencies, setCurrencies] = useState([])
   const dispatch = useDispatch()
   const {
     getStatisticsDetailsList,
     getStatisticsCountsListByProductId,
     getStatisticsCountsList,
     getStatisticsDetailsListByProductId,
+    getCurrenciesPublishList,
     getPlanFilteredList,
   } = useRequest()
 
@@ -181,7 +184,28 @@ const UpdatedDashboard = () => {
   const productOwnersLookup = useSelector(
     (state) => state.productsOwners.lookup
   )
+  const defaultCurrency = useSelector((state) => state.main.defaultCurrency)
 
+  useEffect(() => {
+    const fetchCurrencies = async () => {
+      try {
+        const currencies = await getCurrenciesPublishList()
+        const currenciesData = currencies?.data?.data
+        const primaryCurrency =
+          currenciesData && currenciesData.find((c) => c.isPrimaryCurrency)
+        dispatch(
+          setDefaultCurrencyCodeAndId({
+            id: primaryCurrency?.id,
+            currencyCode: primaryCurrency?.currencyCode,
+          })
+        )
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchCurrencies()
+  }, [])
   const getMaxPeriods = () => {
     if (timeGranularity === 'day') return 7
     if (timeGranularity === 'week') return 7
@@ -200,28 +224,41 @@ const UpdatedDashboard = () => {
 
   const currentMoment = new Date()
 
+  const formatPeriodLabel = (periodStart, periodEnd, granularity) => {
+    if (granularity === 'month') {
+      const options = { month: 'short', year: 'numeric' }
+      return periodStart.toLocaleDateString(undefined, options)
+    } else if (granularity === 'week') {
+      const options = { month: 'short', day: 'numeric' }
+      return `${periodStart.toLocaleDateString(
+        undefined,
+        options
+      )} - ${periodEnd.toLocaleDateString(undefined, options)}`
+    } else if (granularity === 'day') {
+      const options = { month: 'short', day: 'numeric' }
+      return periodStart.toLocaleDateString(undefined, options)
+    }
+  }
   // Generate labels and active subscriptions
   const generateChartData = () => {
-    const labels = []
+    // Initialize datasets for each product
     const datasets = {}
     const productIds = [
       ...new Set(StatisticsDetailsList.map((item) => item.productId)),
     ]
 
-    console.log({ StatisticsDetailsList })
-    console.log({ productIds })
-
     productIds.forEach((productId) => {
       datasets[productId] = []
     })
 
+    // Generate all periods
+    const allPeriods = []
     let currentPeriodStart = new Date(earliestStartDate)
-    const maxPeriods = getMaxPeriods()
-    let periodCount = 0
+    currentPeriodStart.setHours(0, 0, 0, 0)
 
-    while (currentPeriodStart <= currentMoment && periodCount < maxPeriods) {
+    while (currentPeriodStart <= currentMoment) {
       let nextPeriodStart = new Date(currentPeriodStart)
-      let periodEnd = new Date(currentPeriodStart)
+      let periodEnd = null
 
       if (timeGranularity === 'month') {
         nextPeriodStart.setMonth(currentPeriodStart.getMonth() + 1)
@@ -229,52 +266,119 @@ const UpdatedDashboard = () => {
         periodEnd.setDate(periodEnd.getDate() - 1)
         periodEnd.setHours(23, 59, 59, 999)
       } else if (timeGranularity === 'week') {
-        periodEnd.setDate(currentPeriodStart.getDate() + 6)
+        periodEnd = new Date(currentPeriodStart)
+        periodEnd.setDate(periodEnd.getDate() + 6)
         periodEnd.setHours(23, 59, 59, 999)
         nextPeriodStart.setDate(currentPeriodStart.getDate() + 7)
       } else if (timeGranularity === 'day') {
+        periodEnd = new Date(currentPeriodStart)
         periodEnd.setHours(23, 59, 59, 999)
         nextPeriodStart.setDate(currentPeriodStart.getDate() + 1)
       }
 
-      labels.push(
-        `${currentPeriodStart.toISOString().split('T')[0]} - ${
-          periodEnd.toISOString().split('T')[0]
-        }`
-      )
-
-      productIds.forEach((productId) => {
-        const activeSubscriptions = StatisticsDetailsList.filter((item) => {
-          const start = parseDate(item.startDate)
-          const end =
-            item.cancellationOrSuspensionDate ||
-            parseDate(item.endDate || currentMoment)
-          return (
-            item.productId === productId &&
-            start <= periodEnd &&
-            end >= currentPeriodStart
-          )
-        }).length
-
-        datasets[productId].push(activeSubscriptions)
+      const periodKey = currentPeriodStart.toISOString()
+      allPeriods.push({
+        key: periodKey,
+        label: formatPeriodLabel(
+          currentPeriodStart,
+          periodEnd,
+          timeGranularity
+        ),
+        start: new Date(currentPeriodStart),
+        end: periodEnd,
       })
 
-      currentPeriodStart = new Date(nextPeriodStart)
-      periodCount += 1 // Increment the period counter
+      currentPeriodStart = nextPeriodStart
     }
 
+    // Calculate active subscriptions for each product and period
+    allPeriods.forEach(({ key, start, end }) => {
+      productIds.forEach((productId) => {
+        let activeCount = 0
+
+        StatisticsDetailsList.forEach((subscription) => {
+          if (subscription.productId !== productId) return
+
+          const startDate = new Date(
+            subscription.startDate || subscription.createdDate
+          )
+          let endDate = subscription.cancellationOrSuspensionDate
+            ? new Date(subscription.cancellationOrSuspensionDate)
+            : subscription.endDate
+              ? new Date(subscription.endDate)
+              : new Date()
+
+          // Cap endDate at current date
+          if (endDate > currentMoment) {
+            endDate = currentMoment
+          }
+
+          // Check if the subscription was active during the period
+          if (startDate <= end && endDate >= start) {
+            activeCount += 1 // Count as active during this period
+          }
+        })
+
+        // Add the active count to the dataset
+        datasets[productId].push(activeCount)
+      })
+    })
+
+    // Build chart data
     setChartData({
-      labels,
-      datasets: Object.entries(datasets).map(([productId, data]) => ({
-        label: `Product ${productId}`,
-        data,
-        fill: false,
-        borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-        tension: 0.1,
-      })),
+      labels: allPeriods.map((period) => period.label),
+      lineChartData: {
+        labels: allPeriods.map((period) => period.label),
+        datasets: Object.entries(datasets).map(([productId, data]) => ({
+          label: `${productsLookup[productId]?.systemName || 'Unknown'}`,
+          data,
+          fill: false,
+          borderColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+          tension: 0.1,
+        })),
+      },
+      totalPeriods: allPeriods.length,
     })
   }
+  const [chartSubscriptions, setChartSubscriptions] = useState({
+    labels: [],
+    data: [],
+  })
 
+  const fetchSubscriptionsPerProductChartData = () => {
+    const chartSubscriptions = {
+      labels: [],
+      data: [],
+    }
+
+    const productCounts = StatisticsCountsList?.products
+
+    // Check if productCounts is iterable (an array)
+    if (Array.isArray(productCounts)) {
+      for (const product of productCounts) {
+        const productId = product.key
+
+        chartSubscriptions.labels.push(
+          productsLookup[productId]?.systemName || 'Unknown'
+        )
+        chartSubscriptions.data.push(product.count || 0)
+      }
+    } else {
+      console.error(
+        'productCounts is not iterable or not an array:',
+        productCounts
+      )
+    }
+
+    setChartSubscriptions(chartSubscriptions)
+  }
+
+  useEffect(() => {
+    if (!StatisticsCountsList) {
+      return
+    }
+    fetchSubscriptionsPerProductChartData()
+  }, [StatisticsCountsList])
   const fetchSubscriptionsCounts = async () => {
     if (!StatisticsCountsList) {
       return
@@ -301,10 +405,8 @@ const UpdatedDashboard = () => {
         Deletion: 4,
       }
       const plans = subscriptionsCounts.plans
-      console.log({ plans })
 
       for (const plan of plans) {
-        console.log({ plan })
         const planId = plan.key
         if (!totalSubscriptionsPerPlan[planId]) {
           totalSubscriptionsPerPlan[planId] = 0
@@ -331,7 +433,6 @@ const UpdatedDashboard = () => {
         } else if (subscriptionMode.key === 2) {
           inTrial += subscriptionMode.count
         } else if (subscriptionMode.key === 3) {
-          console.log(subscriptionMode.count)
           inPayment += subscriptionMode.count
         }
         totalSubscriptions += subscriptionMode.count
@@ -386,7 +487,7 @@ const UpdatedDashboard = () => {
       setAllPlansLookup(planList.data.data && Object.values(planList.data.data))
     )
     const subscriptionsCounts = StatisticsCountsList
-    const plans = subscriptionsCounts.plans
+    const plans = subscriptionsCounts?.plans
     let totalSubscriptionsPerPlan = {}
 
     const planPieChartData = {
@@ -409,7 +510,7 @@ const UpdatedDashboard = () => {
         totalSubscriptionsPerPlan[planId] = 0
       }
       totalSubscriptionsPerPlan[planId] += plan.count
-      planNames[planId] = currentPlan.systemName
+      planNames[planId] = currentPlan?.systemName
     }
     for (const plan of plans) {
       const planId = plan.key
@@ -434,7 +535,7 @@ const UpdatedDashboard = () => {
   }, [StatisticsCountsList, timeGranularity, periodOffset])
   useEffect(() => {
     generateChartData()
-  }, [timeGranularity])
+  }, [timeGranularity, Object.keys(StatisticsDetailsList).length])
   const handlePreviousPeriods = () => {
     setPeriodOffset(periodOffset + 1)
   }
@@ -521,11 +622,8 @@ const UpdatedDashboard = () => {
 
   useEffect(() => {
     if (selectedFilters === allSelectedData && isInitialized) {
-      console.log('*******')
-
       return
     }
-    console.log('done')
 
     const newQuery = buildQuery()
     setSelectedFilters(allSelectedData.length > 0 ? allSelectedData : [])
@@ -568,7 +666,7 @@ const UpdatedDashboard = () => {
         <div className="mb-4"></div>
         <Row className="justify-content-md-center align-items-stretch">
           {/* Total Subscriptions Card */}
-          <Row>
+          <Row className="my-4">
             <Col md={12}>
               <FilterSearchContainer setAllSelectedData={setAllSelectedData} />
             </Col>
@@ -583,22 +681,22 @@ const UpdatedDashboard = () => {
               variant={'var(--second-color-2)'}
               icon={<BsBuildings />}
               md={4}
-              title={'Total Products Owners'}
-              unit={'Products-Owners'}
+              title={<SafeFormatMessage id="Total-Products-Owners" />}
+              unit={<SafeFormatMessage id="Products-Owners" />}
             />
             <GenerateCard
               count={productsLookup ? Object.keys(productsLookup).length : 0}
               icon={<BsBoxes />}
               md={4}
-              title={'Total Products'}
-              unit={'Products'}
+              title={<SafeFormatMessage id="Total-Products" />}
+              unit={<SafeFormatMessage id="Products" />}
             />
             <GenerateCard
-              count={'USD'}
+              count={defaultCurrency?.currencyCode}
               icon={<BsBoxes />}
               variant={'var(--second-color-2)'}
               md={4}
-              title={'Default Currency'}
+              title={SafeFormatMessage({ id: 'default-currency' })}
               unit={
                 <span
                   style={{ cursor: 'pointer', textDecoration: 'underline' }}
@@ -613,7 +711,8 @@ const UpdatedDashboard = () => {
               }
             />
           </Row>
-          <Row>
+
+          <Row className="my-4">
             <h4 className="mt-3 " style={{ color: 'var(--primary4)' }}>
               <SafeFormatMessage
                 id="Subscription-Status"
@@ -627,11 +726,12 @@ const UpdatedDashboard = () => {
                   style={{ backgroundColor: 'var(--second-color-2)' }}
                 >
                   <Card.Title className="text-center">
-                    <h3>
+                    <h5>
                       <FontAwesomeIcon
                         icon={faUsers}
                         style={{
                           marginRight: '10px',
+                          marginLeft: '10px',
                           color: 'var(--second-color)',
                         }}
                       />
@@ -639,7 +739,7 @@ const UpdatedDashboard = () => {
                         id="TotalSubscriptions"
                         defaultMessage="Total Subscriptions"
                       />
-                    </h3>
+                    </h5>
                   </Card.Title>
                   <h1
                     className="display-4 text-center"
@@ -660,30 +760,54 @@ const UpdatedDashboard = () => {
               </Card>
             </Col>
             <GenerateCard
-              title="Active Subscriptions"
+              title={SafeFormatMessage({
+                id: 'active-subscriptions',
+                defaultMessage: 'Active Subscriptions',
+              })}
               count={countsData.activeCount}
               icon={<BsCheckCircleFill />}
               color="var(--green2)"
-              unit={'Subscriptions'}
+              unit={
+                <SafeFormatMessage
+                  id="Subscriptions"
+                  defaultMessage="Subscriptions"
+                />
+              }
             />
             <GenerateCard
-              title="Suspended Subscriptions"
+              title={SafeFormatMessage({
+                id: 'suspended-subscriptions',
+                defaultMessage: 'Suspended Subscriptions',
+              })}
               count={countsData.suspendedCount}
               icon={<BsClockFill />}
               color="var(--red2)"
               variant="var(--second-color-2)"
-              unit={'Subscriptions'}
+              unit={
+                <SafeFormatMessage
+                  id="Subscriptions"
+                  defaultMessage="Subscriptions"
+                />
+              }
             />
             <GenerateCard
-              title="Canceled Subscriptions"
+              title={SafeFormatMessage({
+                id: 'canceled-subscriptions',
+                defaultMessage: 'Canceled Subscriptions',
+              })}
               count={countsData.canceledCount}
               icon={<BsXCircleFill />}
               color="var(--red2)"
               style={{ color: 'var(--second-color)' }}
-              unit={'Subscriptions'}
+              unit={
+                <SafeFormatMessage
+                  id="Subscriptions"
+                  defaultMessage="Subscriptions"
+                />
+              }
             />
           </Row>
-          <Row>
+          <Row className="my-4">
             <h4 className="mt-3" style={{ color: 'var(--primary4)' }}>
               <SafeFormatMessage
                 id="Subscription-Mode"
@@ -691,30 +815,54 @@ const UpdatedDashboard = () => {
               />
             </h4>
             <GenerateCard
-              title="Recurring Subscription"
+              title={SafeFormatMessage({
+                id: 'recurring-subscription',
+                defaultMessage: 'Recurring Subscription',
+              })}
               count={countsData.inSubscription}
               icon={<BsCheckCircleFill />}
               color="var(--green2)"
-              unit={'Subscriptions'}
+              unit={
+                <SafeFormatMessage
+                  id="Subscriptions"
+                  defaultMessage="Subscriptions"
+                />
+              }
             />
             <GenerateCard
-              title="Trial Subscription"
+              title={SafeFormatMessage({
+                id: 'trial-subscription',
+                defaultMessage: 'Trial Subscription',
+              })}
               count={countsData.inTrial}
               icon={<BsClockFill />}
               color="var(--red2)"
               variant="var(--second-color-2)"
-              unit={'Subscriptions'}
+              unit={
+                <SafeFormatMessage
+                  id="Subscriptions"
+                  defaultMessage="Subscriptions"
+                />
+              }
             />
             <GenerateCard
-              title="One Time Subscription"
+              title={SafeFormatMessage({
+                id: 'one-time-subscription',
+                defaultMessage: 'One Time Subscription',
+              })}
               count={countsData.inPayment}
               icon={<MdOutlinePayment />}
               color="var(--red2)"
               style={{ color: 'var(--second-color)' }}
-              unit={'Subscriptions'}
+              unit={
+                <SafeFormatMessage
+                  id="Subscriptions"
+                  defaultMessage="Subscriptions"
+                />
+              }
             />
           </Row>
-          <Row>
+          <Row className="my-4">
             <h4 className="mt-3" style={{ color: 'var(--primary4)' }}>
               <SafeFormatMessage
                 id="Tenant-Steps"
@@ -722,88 +870,58 @@ const UpdatedDashboard = () => {
               />
             </h4>
             <GenerateCard
-              title="Creation"
+              title={SafeFormatMessage({ id: 'creation' })}
               count={countsData.creation}
               icon={<BsPlusCircleFill />}
               color="var(--green2)"
               variant="var(--second-color-2)"
-              unit={'Tenant Steps'}
+              unit={
+                <SafeFormatMessage
+                  id="Tenant-Steps"
+                  defaultMessage={'Tenant Steps'}
+                />
+              }
             />
             <GenerateCard
-              title="Activation"
+              title={SafeFormatMessage({ id: 'activation' })}
               count={countsData.activation}
               icon={<BsCheckCircleFill />}
               color="var(--green2)"
-              unit={'Tenant Steps'}
+              unit={
+                <SafeFormatMessage
+                  id="Tenant-Steps"
+                  defaultMessage={'Tenant Steps'}
+                />
+              }
             />
             <GenerateCard
-              title="Deactivation"
+              title={SafeFormatMessage({ id: 'deactivation' })}
               count={countsData.deactivation}
               icon={<BsFillXCircleFill />}
               variant="var(--second-color-2)"
-              unit={'Tenant Steps'}
+              unit={
+                <SafeFormatMessage
+                  id="Tenant-Steps"
+                  defaultMessage={'Tenant Steps'}
+                />
+              }
             />
             <GenerateCard
-              title="Deletion"
+              title={SafeFormatMessage({ id: 'deletion' })}
               count={countsData.deletion}
               icon={<BsTrash />}
               color="var(--green2)"
-              unit={'Tenant Steps'}
+              unit={
+                <SafeFormatMessage
+                  id="Tenant-Steps"
+                  defaultMessage={'Tenant Steps'}
+                />
+              }
             />
           </Row>
-          {/* Bar Chart for Total Subscriptions per Product */}
-          {/* <Col md={6} className="mb-4 ">
-            <Card className="h-100">
-              <Card.Header>
-                <Card.Title>
-                  <SafeFormatMessage
-                    id="TotalSubscriptionsPerProduct"
-                    defaultMessage="Total Subscriptions per Product"
-                  />
-                </Card.Title>
-              </Card.Header>
-              <Card.Body>
-                <Chart
-                  type="bar"
-                  data={{
-                    labels: chartData.chartSubscriptions?.labels,
-                    datasets: [
-                      {
-                        label: 'Total Subscriptions',
-                        data: chartData.chartSubscriptions?.data,
-                        backgroundColor: '#42A5F5',
-                      },
-                    ],
-                  }}
-                  options={{
-                    responsive: true,
-                    plugins: {
-                      legend: {
-                        position: 'top',
-                      },
-                    },
-                    scales: {
-                      x: {
-                        title: {
-                          display: true,
-                          text: 'Products',
-                        },
-                      },
-                      y: {
-                        title: {
-                          display: true,
-                          text: 'Subscriptions',
-                        },
-                        beginAtZero: true,
-                      },
-                    },
-                  }}
-                />
-              </Card.Body>
-            </Card>
-          </Col> */}
+
           {/* Pie Chart for Subscriptions per Plan */}
-          <Row>
+          <Row className="my-4">
             <h4 className="mt-3" style={{ color: 'var(--primary4)' }}>
               <SafeFormatMessage id="Charts" />
             </h4>
@@ -817,7 +935,7 @@ const UpdatedDashboard = () => {
                     />
                   </Card.Title>
                 </Card.Header>
-                <Card.Body className=" md:w-35rem lg:w-40rem sm:w-auto">
+                <Card.Body>
                   <Chart
                     type="pie"
                     data={planChartData?.planPieChartData}
@@ -829,16 +947,70 @@ const UpdatedDashboard = () => {
                         },
                       },
                     }}
-                    className="w-full md:w-auto"
+                    height="99%"
+                    className=" d-flex justify-content-center"
+                  />
+                </Card.Body>
+              </Card>
+            </Col>
+            {/* Bar Chart for Total Subscriptions per Product */}
+            <Col md={6} className="mb-4 ">
+              <Card className="h-100">
+                <Card.Header>
+                  <Card.Title>
+                    <SafeFormatMessage
+                      id="TotalSubscriptionsPerProduct"
+                      defaultMessage="Total Subscriptions per Product"
+                    />
+                  </Card.Title>
+                </Card.Header>
+                <Card.Body>
+                  <Chart
+                    type="bar"
+                    data={{
+                      labels: ' ',
+                      datasets: chartSubscriptions?.labels.map(
+                        (product, index) => ({
+                          label: product,
+                          data: [chartSubscriptions?.data[index]],
+                          backgroundColor: getRandomColor(),
+                        })
+                      ),
+                    }}
+                    options={{
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          position: 'top',
+                        },
+                      },
+                      scales: {
+                        x: {
+                          title: {
+                            display: true,
+                            text: 'Total Subscriptions',
+                          },
+                        },
+                        y: {
+                          title: {
+                            display: true,
+                            text: 'Products',
+                          },
+                          beginAtZero: true,
+                        },
+                      },
+                    }}
                   />
                 </Card.Body>
               </Card>
             </Col>
             {/* Line Chart for Active Subscriptions Over Time */}
-            <Col md={6} className="mb-4 ">
+            <Col md={12} className="mb-4 ">
               <Card className="h-100">
                 <Card.Header>
-                  <Card.Title>Active Subscriptions Over Time</Card.Title>
+                  <Card.Title>
+                    <SafeFormatMessage id="Active-Subscriptions-Over-Time" />
+                  </Card.Title>
                 </Card.Header>
                 <Card.Body>
                   <Tabs
@@ -848,21 +1020,34 @@ const UpdatedDashboard = () => {
                       setPeriodOffset(0)
                     }}
                   >
-                    <Tab eventKey="month" title="Month"></Tab>
-                    <Tab eventKey="week" title="Week"></Tab>
-                    <Tab eventKey="day" title="Day"></Tab>
+                    <Tab
+                      eventKey="month"
+                      title={SafeFormatMessage({ id: 'Month' })}
+                    ></Tab>
+                    <Tab
+                      eventKey="week"
+                      title={SafeFormatMessage({ id: 'Week' })}
+                    ></Tab>
+                    <Tab
+                      eventKey="day"
+                      title={SafeFormatMessage({ id: 'Day' })}
+                    ></Tab>
                   </Tabs>
-                  <div className="d-flex justify-content-between align-items-center mt-3">
+                  <div className="d-flex justify-content-between align-items-center mt-4">
                     <Button
                       variant="primary"
                       onClick={handlePreviousPeriods}
-                      disabled={periodOffset + 1 >= chartData.labels?.length}
+                      disabled={
+                        periodOffset + getMaxPeriods() >= chartData.totalPeriods
+                      }
                     >
                       <FontAwesomeIcon icon={faArrowLeft} />
                     </Button>
                     <span>
-                      {chartData.labels?.[0] || 'N/A'} -{' '}
-                      {chartData.labels?.[chartData.labels.length - 1] || 'N/A'}
+                      {chartData.lineChartData?.labels?.[0] || 'N/A'} -{' '}
+                      {chartData.lineChartData?.labels?.[
+                        chartData.lineChartData.labels.length - 1
+                      ] || 'N/A'}
                     </span>
                     <Button
                       variant="primary"
@@ -874,7 +1059,7 @@ const UpdatedDashboard = () => {
                   </div>
                   <Chart
                     type="line"
-                    data={chartData}
+                    data={chartData.lineChartData}
                     options={{
                       responsive: true,
                       plugins: {
@@ -911,45 +1096,4 @@ const UpdatedDashboard = () => {
   )
 }
 
-const GenerateCard = ({ title, icon, md, count, unit, variant }) => {
-  return (
-    <Col md={md}>
-      <Card className="h-100 ">
-        <Card.Body
-          className="d-flex flex-column justify-content-center"
-          style={{ backgroundColor: variant }}
-        >
-          <Card.Title className="text-center">
-            <h3>
-              <span
-                style={{
-                  marginRight: '10px',
-                  color: 'var(--second-color)',
-                }}
-              >
-                {icon}
-              </span>
-
-              <SafeFormatMessage id={title} defaultMessage={title} />
-            </h3>
-          </Card.Title>
-          <div>
-            <h1
-              className="display-4 text-center"
-              style={{ color: 'var(--second-color)' }}
-            >
-              {count}
-            </h1>
-            <p
-              className="text-center fw-bold"
-              style={{ color: 'var(--primary3)' }}
-            >
-              {unit}
-            </p>
-          </div>
-        </Card.Body>
-      </Card>
-    </Col>
-  )
-}
 export default UpdatedDashboard

@@ -163,9 +163,6 @@ const Dashboard = () => {
   }
 
   const fetchAndEnhanceData = async () => {
-    if (!list) {
-      return
-    }
     dispatch(setLoading(true))
     try {
       const subscriptions = list
@@ -514,9 +511,11 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
+    if (list && Object.keys(list).length === 0) {
+      return
+    }
     fetchAndEnhanceData()
-  }, [list, timeGranularity, periodOffset]) // Added periodOffset as dependency
-
+  }, [list, timeGranularity, periodOffset, Object.keys(list).length])
   const handlePreviousPeriods = () => {
     if (!chartData.lineChartData || !chartData.lineChartData.labels) return
 

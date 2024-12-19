@@ -112,6 +112,16 @@ const FilteringMultiSelect = ({
         itemCheckboxIcon={MdSelectAll}
         panelHeaderTemplate={hasSelectAll && panelHeaderTemplate}
         maxSelectedLabels={0}
+        selectedItemTemplate={(items) => {
+          const count = selectedValues?.length
+          return count === 0 ? (
+            SafeFormatMessage({ id: 'No-items-selected' })
+          ) : (
+            <span>
+              {count} <SafeFormatMessage id={'items-selected'} />
+            </span>
+          )
+        }}
       />
     </div>
   )

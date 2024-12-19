@@ -144,27 +144,27 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const handleData = (data) => {
     return {
       Feature: textLocale(
-        data.feature.displayNameLocalizations,
+        data?.feature.displayNameLocalizations,
         selectedLanguage,
         intl
       ),
       Plan: textLocale(
-        data.plan.displayNameLocalizations,
+        data?.plan.displayNameLocalizations,
         selectedLanguage,
         intl
       ),
-      Limit: data.limit,
-      Unit: featureUnitMap[data.unit],
+      Limit: data?.limit,
+      Unit: featureUnitMap[data?.unit],
       'Unit-Display-Name':
-        data.unitDisplayName?.[selectedLanguage] || data.unitDisplayName?.en,
-      Reset: featureResetMap[data.reset],
+        data?.unitDisplayName?.[selectedLanguage] || data?.unitDisplayName?.en,
+      Reset: featureResetMap[data?.reset],
       Description: textLocale(
-        data.descriptionLocalizations,
+        data?.descriptionLocalizations,
         selectedLanguage,
         intl
       ),
-      'Created-Date': DataTransform(data.createdDate),
-      'Edited-Date': DataTransform(data.editedDate),
+      'Created-Date': DataTransform(data?.createdDate),
+      'Edited-Date': DataTransform(data?.editedDate),
     }
   }
 
@@ -175,7 +175,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
         dispatch(
           setAllFeaturePlan({
             productId: productId,
-            data: FeaturePlanData.data.data,
+            data: FeaturePlanData?.data.data,
           })
         )
       }
@@ -237,40 +237,76 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
                           >
                             {listData[tableData[planId + ',' + item.featureId]]
                               .limit || item.type == 1 ? (
-                              (listData[
-                                tableData[planId + ',' + item.featureId]
-                              ].limit ||
-                                intl.formatMessage({
-                                  id: 'Unlimited',
-                                })) +
-                              ' ' +
-                              (featureUnitMap[
-                                listData[
+                              <>
+                                {(listData[
                                   tableData[planId + ',' + item.featureId]
-                                ].unit
-                              ] != 'unit'
-                                ? featureUnitMap[
+                                ].limit ||
+                                  intl.formatMessage({
+                                    id: 'Unlimited',
+                                  })) +
+                                  ' ' +
+                                  (featureUnitMap[
                                     listData[
                                       tableData[planId + ',' + item.featureId]
                                     ].unit
-                                  ]
-                                : selectedLanguage != 'en'
-                                ? listData[
+                                  ] != 'unit'
+                                    ? featureUnitMap[
+                                        listData[
+                                          tableData[
+                                            planId + ',' + item.featureId
+                                          ]
+                                        ].unit
+                                      ]
+                                    : selectedLanguage != 'en'
+                                      ? listData[
+                                          tableData[
+                                            planId + ',' + item.featureId
+                                          ]
+                                        ].unitDisplayName?.ar || 'unit'
+                                      : listData[
+                                          tableData[
+                                            planId + ',' + item.featureId
+                                          ]
+                                        ].unitDisplayName?.en || 'unit') +
+                                  ' / ' +
+                                  intl.formatMessage({
+                                    id: featureResetMap[
+                                      listData[
+                                        tableData[planId + ',' + item.featureId]
+                                      ].reset
+                                    ],
+                                  })}
+                                <div style={{ color: 'var(--primary3)' }}>
+                                  {listData[
                                     tableData[planId + ',' + item.featureId]
-                                  ].unitDisplayName?.ar || 'unit'
-                                : listData[
-                                    tableData[planId + ',' + item.featureId]
-                                  ].unitDisplayName?.en || 'unit') +
-                              ' / ' +
-                              intl.formatMessage({
-                                id: featureResetMap[
-                                  listData[
-                                    tableData[planId + ',' + item.featureId]
-                                  ].reset
-                                ],
-                              })
+                                  ].descriptionLocalizations ? (
+                                    textLocale(
+                                      listData[
+                                        tableData[planId + ',' + item.featureId]
+                                      ].descriptionLocalizations,
+                                      selectedLanguage,
+                                      intl
+                                    )
+                                  ) : (
+                                    <SafeFormatMessage id="Display-Details-NotSet" />
+                                  )}
+                                </div>
+                              </>
                             ) : (
-                              <SafeFormatMessage id="Yes" />
+                              <>
+                                <SafeFormatMessage id="Yes" />
+                                <div style={{ color: 'var(--primary3)' }}>
+                                  {listData[
+                                    tableData[planId + ',' + item.featureId]
+                                  ].description ? (
+                                    listData[
+                                      tableData[planId + ',' + item.featureId]
+                                    ].description
+                                  ) : (
+                                    <SafeFormatMessage id="Display-Details-NotSet" />
+                                  )}
+                                </div>
+                              </>
                             )}
                           </Dropdown.Toggle>
                           <Dropdown.Menu>

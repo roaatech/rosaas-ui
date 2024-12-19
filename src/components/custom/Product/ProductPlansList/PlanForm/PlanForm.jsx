@@ -46,8 +46,8 @@ const PlanForm = ({
     planData?.descriptionLocalizations?.en
       ? extractRedirectionLink(planData.descriptionLocalizations.en)
       : '' || planData?.descriptionLocalizations?.ar
-      ? extractRedirectionLink(planData.descriptionLocalizations.ar)
-      : ''
+        ? extractRedirectionLink(planData.descriptionLocalizations.ar)
+        : ''
   )
 
   // Remove the redirection link from the description
@@ -148,18 +148,18 @@ const PlanForm = ({
       const descriptionWithRedirectionEn = values.isAvailableForSelection
         ? values.descriptionEn
         : values.descriptionEn
-        ? redirectionLink
-          ? `${values.descriptionEn} #redirection-link=${redirectionLink}#`
-          : values.descriptionEn
-        : ''
+          ? redirectionLink
+            ? `${values.descriptionEn} #redirection-link=${redirectionLink}#`
+            : values.descriptionEn
+          : ''
       const descriptionWithRedirectionAr =
         values.isAvailableForSelection && redirectionLink
           ? values.descriptionAr
           : values.descriptionAr
-          ? redirectionLink
-            ? `${values.descriptionAr} #redirection-link=${redirectionLink}#`
-            : values.descriptionAr
-          : ''
+            ? redirectionLink
+              ? `${values.descriptionAr} #redirection-link=${redirectionLink}#`
+              : values.descriptionAr
+            : ''
 
       const dataToSubmit = {
         isLockedBySystem: false,
@@ -194,6 +194,7 @@ const PlanForm = ({
               editedDate: new Date().toISOString().slice(0, 19),
               createdDate: new Date().toISOString().slice(0, 19),
               id: createPlan.data.data.id,
+              isVisible: false,
             },
           })
         )
