@@ -1,19 +1,29 @@
 import { current } from '@reduxjs/toolkit'
 const setAllPlans = (state, action) => {
-  const allProduct = JSON.parse(JSON.stringify(current(state.products)))
+  const allProduct = { ...current(state.products) } // Ensure it's a shallow copy
   const allPlans = {}
 
   const sortedData = action.payload.data.sort(
     (a, b) => a.displayOrder - b.displayOrder
   )
 
-  sortedData.map((item) => {
+  sortedData.forEach((item) => {
     allPlans[item.id] = item
   })
 
-  allProduct[action.payload.productId].plans = allPlans
+  if (!allProduct[action.payload.productId]) {
+    console.error(`Product with ID ${action.payload.productId} not found.`)
+    return state
+  }
+
+  allProduct[action.payload.productId] = {
+    ...allProduct[action.payload.productId],
+    plans: allPlans,
+  }
+
   state.products = allProduct
 }
+
 const setAllPlansLookup = (state, action) => {
   const allPlans = {}
 

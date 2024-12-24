@@ -41,7 +41,13 @@ import { textLocale } from '../../../../const/product.js'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
 import { MdSort } from 'react-icons/md'
 
-export const ProductFeaturesList = ({ productId }) => {
+export const ProductFeaturesList = ({
+  productId,
+  quickSetup,
+  setSelectedItemId,
+  setVisibleQuickSetup,
+  setFormType,
+}) => {
   const { getProductFeatures, deleteFeatureReq } = useRequest()
   const [update, setUpdate] = useState(1)
   const dispatch = useDispatch()
@@ -72,6 +78,12 @@ export const ProductFeaturesList = ({ productId }) => {
   }
 
   const editForm = async (id) => {
+    if (quickSetup) {
+      setSelectedItemId(id)
+      setFormType('edit')
+      setVisibleQuickSetup(true)
+      return
+    }
     if (list?.features[id]?.isSubscribed) {
       toast.error('Cannot edit a subscribed feature.', {
         position: toast.POSITION.TOP_CENTER,
@@ -137,25 +149,29 @@ export const ProductFeaturesList = ({ productId }) => {
         <td>
           <span className={`fw-normal`}>{mappedType}</span>
         </td>
-        <td>
-          <span className="fw-normal">
-            <DataLabelWhite
-              variant={'gray'}
-              text={
-                <>
-                  <MdSort />
-                  {'  '}
-                  {displayOrder}
-                </>
-              }
-            />
-          </span>
-        </td>
-        <td>
-          <span className="fw-normal">
-            <TableDate createdDate={createdDate} editedDate={editedDate} />
-          </span>
-        </td>
+        {!quickSetup && (
+          <td>
+            <span className="fw-normal">
+              <DataLabelWhite
+                variant={'gray'}
+                text={
+                  <>
+                    <MdSort />
+                    {'  '}
+                    {displayOrder}
+                  </>
+                }
+              />
+            </span>
+          </td>
+        )}
+        {!quickSetup && (
+          <td>
+            <span className="fw-normal">
+              <TableDate createdDate={createdDate} editedDate={editedDate} />
+            </span>
+          </td>
+        )}
         <td>
           <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle
@@ -186,38 +202,41 @@ export const ProductFeaturesList = ({ productId }) => {
       </tr>
     )
   }
-
+  const backgroundColor = quickSetup ? 'var(--themeBackground) !important' : ''
   return (
     <Wrapper>
-      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
-        <DynamicButtons
-          buttons={[
-            ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
-              (lang, index) => ({
-                order: 1,
-                type: 'toggle',
-                label: lang,
-                group: 'language',
-                toggleValue: selectedLanguage === lang,
-                toggleFunc: () => setSelectedLanguage(lang),
-                variant: 'primary',
-              })
-            ),
-            {
-              order: 2,
-              type: 'form',
-              id: productId,
-              label: 'Add-Feature',
-              component: 'addFeature',
-              icon: <BsStars />,
-            },
-          ]}
-        />
-      </div>
-      <div className="border-top-1 border-light">
+      {!quickSetup && (
+        <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+          <DynamicButtons
+            buttons={[
+              ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+                (lang, index) => ({
+                  order: 1,
+                  type: 'toggle',
+                  label: lang,
+                  group: 'language',
+                  toggleValue: selectedLanguage === lang,
+                  toggleFunc: () => setSelectedLanguage(lang),
+                  variant: 'primary',
+                })
+              ),
+              {
+                order: 2,
+                type: 'form',
+                id: productId,
+                label: 'Add-Feature',
+                component: 'addFeature',
+                icon: <BsStars />,
+              },
+            ]}
+          />
+        </div>
+      )}
+      <div className={!quickSetup && 'border-top-1 border-light'}>
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
+          style={{ backgroundColor: backgroundColor }}
         >
           <Card.Body className="pt-0">
             <Table hover className="user-table align-items-center">
@@ -235,12 +254,16 @@ export const ProductFeaturesList = ({ productId }) => {
                   <th className="border-bottom">
                     <SafeFormatMessage id="Type" />
                   </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Display-Order" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Date" />
-                  </th>
+                  {!quickSetup && (
+                    <th className="border-bottom">
+                      <SafeFormatMessage id="Display-Order" />
+                    </th>
+                  )}
+                  {!quickSetup && (
+                    <th className="border-bottom">
+                      <SafeFormatMessage id="Date" />
+                    </th>
+                  )}
                   <th className="border-bottom">
                     <SafeFormatMessage id="Actions" />
                   </th>

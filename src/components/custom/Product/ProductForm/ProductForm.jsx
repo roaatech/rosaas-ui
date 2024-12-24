@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useFormik } from 'formik'
 import { InputText } from 'primereact/inputtext'
 import * as Yup from 'yup'
@@ -40,10 +40,16 @@ const ProductForm = ({
   update,
   setUpdate,
   sideBar,
+  onSubmit,
+  quickSetup,
+  triggerSubmit,
+  step,
+  handleStepChange,
 }) => {
   const { createProductRequest, editProductRequest } = useRequest()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const formRef = useRef()
   const listData = useSelector((state) => state.productsOwners.lookup)
   let userInfo = useSelector((state) => state.auth.userInfo)
 
@@ -175,6 +181,9 @@ const ProductForm = ({
         if (sideBar) {
           navigate(`${Routes.products.path}/${createProduct.data.data.id}`)
         }
+        if (quickSetup) {
+          handleStepChange(step + 1, 'next', createProduct.data.data.id)
+        }
         dispatch(deleteAllProductsLookup())
         setUpdate && setUpdate(update + 1)
         setVisible && setVisible(false)
@@ -201,19 +210,66 @@ const ProductForm = ({
   const RandomApiKey = () => {
     formik.setFieldValue('apiKey', generateApiKey())
   }
-
+  React.useEffect(() => {
+    if (quickSetup && triggerSubmit) {
+      console.log('triggering submit')
+      triggerSubmit(() => {
+        formRef.current?.dispatchEvent(
+          new Event('submit', { cancelable: true, bubbles: true })
+        )
+      })
+    }
+  }, [quickSetup, triggerSubmit])
   return (
     <Wrapper>
-      <Form onSubmit={formik.handleSubmit}>
-        <Modal.Header>
-          <Modal.Title className="h6">{popupLabel}</Modal.Title>
-          <Button
-            variant="close"
-            aria-label="Close"
-            onClick={() => setVisible(false)}
-          />
-        </Modal.Header>
+      <Form ref={formRef} onSubmit={formik.handleSubmit}>
+        {!quickSetup && (
+          <Modal.Header>
+            <Modal.Title className="h6">{popupLabel}</Modal.Title>
+            <Button
+              variant="close"
+              aria-label="Close"
+              onClick={() => setVisible(false)}
+            />
+          </Modal.Header>
+        )}
         <Modal.Body>
+          {userInfo.userType == 'superAdmin' && type === 'create' && (
+            <div>
+              <Form.Group className="mb-3">
+                <Form.Label>
+                  <SafeFormatMessage id="Product-Owner" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </Form.Label>
+                <select
+                  className="form-control"
+                  name="clientId"
+                  id="clientId"
+                  value={formik.values.clientId}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                >
+                  <option value="">
+                    <SafeFormatMessage id="Select-Option" />
+                  </option>
+                  {listData &&
+                    Object.values(listData).map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.displayName}
+                      </option>
+                    ))}
+                </select>
+                {formik.touched.clientId && formik.errors.clientId && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.clientId}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </div>
+          )}
           {/* MultilingualInput for Display Name */}
           <MultilingualInput
             inputLabel="Display-Name"
@@ -274,43 +330,6 @@ const ProductForm = ({
                   {formik.errors.systemName}
                 </Form.Control.Feedback>
               )}
-            </div>
-          )}
-
-          {userInfo.userType == 'superAdmin' && type === 'create' && (
-            <div>
-              <Form.Group className="mb-3">
-                <Form.Label>
-                  <SafeFormatMessage id="ProductOwner" />{' '}
-                  <span style={{ color: 'red' }}>*</span>
-                </Form.Label>
-                <select
-                  className="form-control"
-                  name="clientId"
-                  id="clientId"
-                  value={formik.values.clientId}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                >
-                  <option value="">
-                    <SafeFormatMessage id="Select-Option" />
-                  </option>
-                  {listData &&
-                    Object.values(listData).map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.displayName}
-                      </option>
-                    ))}
-                </select>
-                {formik.touched.clientId && formik.errors.clientId && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.clientId}
-                  </Form.Control.Feedback>
-                )}
-              </Form.Group>
             </div>
           )}
 
@@ -444,18 +463,20 @@ const ProductForm = ({
             </Card>
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" type="submit">
-            <SafeFormatMessage id="Submit" />
-          </Button>
-          <Button
-            variant="link"
-            className="text-gray "
-            onClick={() => setVisible(false)}
-          >
-            <SafeFormatMessage id="Close" />
-          </Button>
-        </Modal.Footer>
+        {!quickSetup && (
+          <Modal.Footer>
+            <Button variant="secondary" type="submit">
+              <SafeFormatMessage id="Submit" />
+            </Button>
+            <Button
+              variant="link"
+              className="text-gray "
+              onClick={() => setVisible(false)}
+            >
+              <SafeFormatMessage id="Close" />
+            </Button>
+          </Modal.Footer>
+        )}
       </Form>
     </Wrapper>
   )

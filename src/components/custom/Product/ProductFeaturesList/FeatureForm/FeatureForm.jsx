@@ -28,12 +28,13 @@ const FeatureForm = ({
   setVisible,
   popupLabel,
   setActiveIndex,
+  quickSetup,
 }) => {
   const { createFeatureRequest, editFeatureRequest, getProductFeatures } =
     useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
-  const productId = routeParams.id
+  const productId = routeParams.id || routeParams.productId
   const allProducts = useSelector((state) => state.products.products)
 
   const initialValues = {
@@ -169,14 +170,16 @@ const FeatureForm = ({
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
-        <Modal.Header>
-          <Modal.Title className="h6">{popupLabel}</Modal.Title>
-          <Button
-            variant="close"
-            aria-label="Close"
-            onClick={() => setVisible(false)}
-          />
-        </Modal.Header>
+        {!quickSetup && (
+          <Modal.Header>
+            <Modal.Title className="h6">{popupLabel}</Modal.Title>
+            <Button
+              variant="close"
+              aria-label="Close"
+              onClick={() => setVisible(false)}
+            />
+          </Modal.Header>
+        )}
 
         <Modal.Body>
           {/* MultilingualInput for Display Name */}

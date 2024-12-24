@@ -8,6 +8,7 @@ export const mainSlice = createSlice({
     preloader: true,
     sidebar: 1,
     history: [],
+    quickSetupStep: 1,
     currency: {
       currencyCode:
         localStorage.getItem('currencyCode') ||
@@ -59,6 +60,9 @@ export const mainSlice = createSlice({
     setEnvironmentAlertData: (state, action) => {
       state.environmentAlertData = action.payload
     },
+    setQuickSetupStep: (state, action) => {
+      state.quickSetupStep = action.payload
+    },
     setAuditsData: (state, action) => {
       const allAudits = JSON.parse(JSON.stringify(current(state.audits)))
       if (action?.payload?.items) {
@@ -88,6 +92,7 @@ export const {
   setEnvironmentAlertData,
   setAuditsData,
   setDefaultCurrencyCodeAndId,
+  setQuickSetupStep,
 } = mainSlice.actions
 
 export default mainSlice.reducer

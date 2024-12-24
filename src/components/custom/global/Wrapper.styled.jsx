@@ -46,7 +46,7 @@ const GlobalStyles = createGlobalStyle`
   --second-color:#ffab03;
   --second-color-darker: #cc8802;
   --second-color-1:#ffe8b9;
-  --second-color-2:#ffe8b934;
+  --second-color-2:#fffaf0;
  --table-hover:#eff0f2;
  --light-blue: #add8e676; /* Light Blue color */
  --light-blue-2: #1e8fff15; /* Light Blue color */

@@ -23,6 +23,7 @@ import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInp
 import { activeTab } from '../../../../../const/product.js'
 import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
+import QuickSetup from '../../../../../pages/QuickSetup/QuickSetup.jsx'
 
 const PlanForm = ({
   type,
@@ -30,13 +31,14 @@ const PlanForm = ({
   setVisible,
   popupLabel,
   setActiveIndex,
+  quickSetup,
 }) => {
   const { createPlanRequest, editPlanRequest, getProductPlans } = useRequest()
   const dispatch = useDispatch()
   const routeParams = useParams()
-  const productId = routeParams.id
+  const productId = routeParams.id || routeParams.productId
   const allProducts = useSelector((state) => state.products.products)
-  const ProductTrialType = allProducts[productId].trialType
+  const ProductTrialType = allProducts[productId]?.trialType
 
   const extractRedirectionLink = (description) => {
     const match = description.match(/#redirection-link=([^#]+)#/)
@@ -245,15 +247,16 @@ const PlanForm = ({
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
-        <Modal.Header>
-          <Modal.Title className="h6">{popupLabel}</Modal.Title>
-          <Button
-            variant="close"
-            aria-label="Close"
-            onClick={() => setVisible(false)}
-          />
-        </Modal.Header>
-
+        {!quickSetup && (
+          <Modal.Header>
+            <Modal.Title className="h6">{popupLabel}</Modal.Title>
+            <Button
+              variant="close"
+              aria-label="Close"
+              onClick={() => setVisible(false)}
+            />
+          </Modal.Header>
+        )}
         <Modal.Body>
           {/* MultilingualInput for Display Name */}
           <MultilingualInput
@@ -491,7 +494,6 @@ const PlanForm = ({
             }}
           />
         </Modal.Body>
-
         <Modal.Footer>
           <Button variant="secondary" type="submit">
             <SafeFormatMessage id="Submit" />

@@ -67,7 +67,13 @@ import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
 
-export const ProductPlansList = ({ productId }) => {
+export const ProductPlansList = ({
+  productId,
+  quickSetup,
+  setSelectedItemId,
+  setVisibleQuickSetup,
+  setFormType,
+}) => {
   const { getProductPlans, deletePlanReq, publishPlan, visiblePlan } =
     useRequest()
   const [update, setUpdate] = useState(1)
@@ -79,7 +85,7 @@ export const ProductPlansList = ({ productId }) => {
   const [type, setType] = useState('')
   const [popUpLable, setPopUpLable] = useState('')
   const intl = useIntl()
-  const ProductTrialType = list.trialType
+  const ProductTrialType = list?.trialType
   const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
 
   const handleDeletePlan = async () => {
@@ -108,6 +114,12 @@ export const ProductPlansList = ({ productId }) => {
   }
 
   const editForm = async (id) => {
+    if (quickSetup) {
+      setSelectedItemId(id)
+      setVisibleQuickSetup(true)
+      setFormType('edit')
+      return
+    }
     if (list?.plans[id]?.isSubscribed) {
       toast.error(
         intl.formatMessage({ id: 'Cannot-edit-a-subscribed-plan.' }),
@@ -130,13 +142,13 @@ export const ProductPlansList = ({ productId }) => {
   }
 
   useEffect(() => {
+    if (!productId) return
+    console.log(productId)
     ;(async () => {
-      if (!list?.plans) {
-        const listData = await getProductPlans(productId)
-        dispatch(setAllPlans({ productId, data: listData.data.data }))
-      }
+      const listData = await getProductPlans(productId)
+      dispatch(setAllPlans({ productId, data: listData.data.data }))
     })()
-  }, [])
+  }, [productId])
   const toggleVisiblePlan = async (id, isVisible) => {
     await visiblePlan(productId, {
       id,
@@ -212,33 +224,41 @@ export const ProductPlansList = ({ productId }) => {
             <Label {...PublishStatus[publishStatus]} />
           </span>
         </td>
-        <td>
-          <span>
-            <Label {...SelectabilityStatus[isAvailableForSelection]} />
-          </span>
-        </td>
+        {!quickSetup && (
+          <td>
+            <span>
+              <Label {...SelectabilityStatus[isAvailableForSelection]} />
+            </span>
+          </td>
+        )}
         <td>
           <span>
             <Label {...visibilityStatus[isVisible]} />
           </span>
         </td>
-        <td>
-          <span>{<SafeFormatMessage id={tenancyTypeEnum[tenancyType]} />}</span>
-        </td>
-        <td>
-          <span
-            className={`${
-              subscriptionsCount > 0
-                ? 'subscribers-active'
-                : 'subscribers-passive'
-            }`}
-          >
-            <GiShadowFollower />
-            <span className="ml-1">
-              {subscriptionsCount ? subscriptionsCount : 0}
+        {!quickSetup && (
+          <td>
+            <span>
+              {<SafeFormatMessage id={tenancyTypeEnum[tenancyType]} />}
             </span>
-          </span>
-        </td>
+          </td>
+        )}
+        {!quickSetup && (
+          <td>
+            <span
+              className={`${
+                subscriptionsCount > 0
+                  ? 'subscribers-active'
+                  : 'subscribers-passive'
+              }`}
+            >
+              <GiShadowFollower />
+              <span className="ml-1">
+                {subscriptionsCount ? subscriptionsCount : 0}
+              </span>
+            </span>
+          </td>
+        )}
         {/*<td className="description">
           <DescriptionCell
             data={{
@@ -247,38 +267,46 @@ export const ProductPlansList = ({ productId }) => {
             }}
           />
         </td>*/}
-        <td>
-          <span className={`fw-normal`}>
-            <DataLabelWhite
-              variant={'gray'}
-              text={
-                <>
-                  <MdSort />
-                  {'  '}
-                  {displayOrder}
-                </>
-              }
-            />
-          </span>
-        </td>
-        <td>
-          <span>{list.plans?.[alternativePlanID]?.displayName}</span>
-        </td>
+        {!quickSetup && (
+          <td>
+            <span className={`fw-normal`}>
+              <DataLabelWhite
+                variant={'gray'}
+                text={
+                  <>
+                    <MdSort />
+                    {'  '}
+                    {displayOrder}
+                  </>
+                }
+              />
+            </span>
+          </td>
+        )}
+        {!quickSetup && (
+          <td>
+            <span>{list.plans?.[alternativePlanID]?.displayName}</span>
+          </td>
+        )}
         {ProductTrialType == 3 && (
           <td>
             <span>{trialPeriodInDays}</span>
           </td>
         )}
-        <td>
-          <span>
-            <Label {...systemLockStatus[isLockedBySystem]} />
-          </span>
-        </td>
-        <td>
-          <span className="fw-normal">
-            <TableDate createdDate={createdDate} editedDate={editedDate} />
-          </span>
-        </td>
+        {!quickSetup && (
+          <td>
+            <span>
+              <Label {...systemLockStatus[isLockedBySystem]} />
+            </span>
+          </td>
+        )}
+        {!quickSetup && (
+          <td>
+            <span className="fw-normal">
+              <TableDate createdDate={createdDate} editedDate={editedDate} />
+            </span>
+          </td>
+        )}
         <td>
           <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle
@@ -335,112 +363,143 @@ export const ProductPlansList = ({ productId }) => {
       </tr>
     )
   }
+  const TableRows = () => {
+    return (
+      <Table hover className="user-table align-items-center">
+        <thead>
+          <tr>
+            <th className="border-bottom">
+              <SafeFormatMessage id="Display-Name" />
+            </th>
+            <th className="border-bottom">
+              <SafeFormatMessage id="System-Name" />
+            </th>
+            <th className="border-bottom">
+              <SafeFormatMessage id="Status" />
+            </th>
+            {!quickSetup && (
+              <th className="border-bottom">
+                <SafeFormatMessage id="Selection-Availability" />
+              </th>
+            )}
+            <th className="border-bottom">
+              <SafeFormatMessage id="Visibility-Status" />
+            </th>
+            {!quickSetup && (
+              <th className="border-bottom">
+                <SafeFormatMessage id="Tenancy-Type" />
+              </th>
+            )}
+            {!quickSetup && (
+              <th className="border-bottom">
+                <SafeFormatMessage id="Subscribers" />
+              </th>
+            )}
+            {/*<th className="border-bottom">
+            <SafeFormatMessage id="Description" />
+          </th>*/}
+            {!quickSetup && (
+              <th className="border-bottom">
+                <SafeFormatMessage id="Display-Order" />
+              </th>
+            )}
+            {!quickSetup && (
+              <th className="border-bottom">
+                <SafeFormatMessage id="Alternative-Plan" />
+              </th>
+            )}
+            {ProductTrialType == 3 && (
+              <th className="border-bottom">
+                <SafeFormatMessage id="Trial-Period-In-Days" />
+              </th>
+            )}
+            {!quickSetup && (
+              <th className="border-bottom">
+                <SafeFormatMessage id="System-Lock-Status" />
+              </th>
+            )}
+            {!quickSetup && (
+              <th className="border-bottom">
+                <SafeFormatMessage id="Date" />
+              </th>
+            )}
+            <th className="border-bottom">
+              <SafeFormatMessage id="Actions" />
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {list?.plans && Object.values(list?.plans).length
+            ? Object.values(list?.plans).map((t, index) => {
+                return <TableRow key={index} {...t} />
+              })
+            : null}
+        </tbody>
+      </Table>
+    )
+  }
 
   return (
     <Wrapper>
-      <div className="dynamicButtons pt-0 mt-0 mb-1 d-flex justify-content-end">
-        <span className="mx-2">
-          <DynamicButtons
-            buttons={[
-              ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
-                (lang, index) => ({
+      {!quickSetup && (
+        <div className="dynamicButtons pt-0 mt-0 mb-1 d-flex justify-content-end">
+          <span className="mx-2">
+            <DynamicButtons
+              buttons={[
+                ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+                  (lang, index) => ({
+                    order: 1,
+                    type: 'toggle',
+                    label: lang,
+                    group: 'language',
+                    toggleValue: selectedLanguage === lang,
+                    toggleFunc: () => setSelectedLanguage(lang),
+                    variant: 'primary',
+                  })
+                ),
+                {
                   order: 1,
-                  type: 'toggle',
-                  label: lang,
-                  group: 'language',
-                  toggleValue: selectedLanguage === lang,
-                  toggleFunc: () => setSelectedLanguage(lang),
-                  variant: 'primary',
-                })
-              ),
-              {
-                order: 1,
-                type: 'form',
-                id: productId,
-                label: 'Add-Plan',
-                component: 'addPlan',
-                icon: <BsPencilSquare />,
-                setActiveIndex: setActiveIndex,
-              },
-            ]}
-          />
-        </span>
-      </div>
-      <div className="border-top-1 border-light">
-        <Card
-          border="light"
-          className="table-wrapper table-responsive shadow-sm"
-        >
-          <Card.Body className="pt-0">
-            <Table hover className="user-table align-items-center">
-              <thead>
-                <tr>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Display-Name" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="System-Name" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Status" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Selection-Availability" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Visibility-Status" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Tenancy-Type" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Subscribers" />
-                  </th>
-                  {/*<th className="border-bottom">
-                    <SafeFormatMessage id="Description" />
-                  </th>*/}
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Display-Order" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Alternative-Plan" />
-                  </th>
-                  {ProductTrialType == 3 && (
-                    <th className="border-bottom">
-                      <SafeFormatMessage id="Trial-Period-In-Days" />
-                    </th>
-                  )}
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="System-Lock-Status" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Date" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Actions" />
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {list?.plans && Object.values(list?.plans).length
-                  ? Object.values(list?.plans).map((t, index) => {
-                      return <TableRow key={index} {...t} />
-                    })
-                  : null}
-              </tbody>
-            </Table>
-            <DeleteConfirmation
-              message={
-                <SafeFormatMessage id="delete-plan-confirmation-message" />
-              }
-              icon="pi pi-exclamation-triangle"
-              confirm={confirm}
-              setConfirm={setConfirm}
-              confirmFunction={handleDeletePlan}
-              sideBar={false}
+                  type: 'form',
+                  id: productId,
+                  label: 'Add-Plan',
+                  component: 'addPlan',
+                  icon: <BsPencilSquare />,
+                  setActiveIndex: setActiveIndex,
+                },
+              ]}
             />
-          </Card.Body>
-        </Card>
+          </span>
+        </div>
+      )}
+      <div className={!quickSetup ? 'border-top-1 border-light' : 'mt-3'}>
+        {quickSetup ? (
+          <Card
+            border="light"
+            className="table-wrapper table-responsive shadow-sm"
+            style={{ backgroundColor: 'var(--themeBackground)' }}
+          >
+            <Card.Body className="pt-0">
+              <TableRows />
+            </Card.Body>
+          </Card>
+        ) : (
+          <Card
+            border="light"
+            className="table-wrapper table-responsive shadow-sm"
+          >
+            <Card.Body className="pt-0">
+              <TableRows />
+            </Card.Body>
+          </Card>
+        )}
+        <DeleteConfirmation
+          message={<SafeFormatMessage id="delete-plan-confirmation-message" />}
+          icon="pi pi-exclamation-triangle"
+          confirm={confirm}
+          setConfirm={setConfirm}
+          confirmFunction={handleDeletePlan}
+          sideBar={false}
+        />
 
         <ThemeDialog visible={visible} setVisible={setVisible}>
           <>

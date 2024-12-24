@@ -52,7 +52,12 @@ import {
   MdOutlineUnpublished,
 } from 'react-icons/md'
 
-export default function ProductFeaturePlan({ children }, setActiveIndex) {
+export default function ProductFeaturePlan({
+  quickSetup,
+  setSelectedItemId,
+  setFormType,
+  setVisibleQuickSetup,
+}) {
   const [currentPlanId, setCurrentPlanId] = useState('')
   const [currentFeatureId, setCurrentFeatureId] = useState('')
   let direction = useSelector((state) => state.main.direction)
@@ -75,7 +80,7 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   const [popUpLable, setPopUpLable] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
 
-  const productId = routeParams.id
+  const productId = routeParams.id || routeParams.productId
   const listDataStore = useSelector(
     (state) => state.products.products[productId]?.featurePlan
   )
@@ -116,6 +121,12 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
   }
 
   const editForm = async (id) => {
+    if (quickSetup) {
+      setSelectedItemId(id)
+      setFormType('edit')
+      setVisibleQuickSetup(true)
+      return
+    }
     if (listData[id]?.plan?.isSubscribed) {
       toast.error(
         intl.formatMessage({ id: 'Cannot-edit-a-subscribed-feature-plan.' }),
@@ -432,45 +443,52 @@ export default function ProductFeaturePlan({ children }, setActiveIndex) {
     setType('create')
     setShow(false)
   }
+  const backgroundColor = quickSetup ? 'var(--themeBackground) !important' : ''
 
   return (
     <Wrapper direction={direction}>
-      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
-        <DynamicButtons
-          buttons={[
-            ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
-              (lang, index) => ({
-                order: 1,
-                type: 'toggle',
-                label: lang,
-                group: 'language',
-                toggleValue: selectedLanguage === lang,
-                toggleFunc: () => setSelectedLanguage(lang),
-                variant: 'primary',
-              })
-            ),
-            {
-              order: 2,
-              type: 'form',
-              id: routeParams.id,
-              label: 'Add-Plan-Feature',
-              selectedLanguage: selectedLanguage,
-              component: 'addFeaturePlan',
-              icon: <BsUiChecks />,
-            },
-          ]}
-        />
-      </div>
-      <div className="border-top-1 border-light">
+      {!quickSetup && (
+        <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+          <DynamicButtons
+            buttons={[
+              ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+                (lang, index) => ({
+                  order: 1,
+                  type: 'toggle',
+                  label: lang,
+                  group: 'language',
+                  toggleValue: selectedLanguage === lang,
+                  toggleFunc: () => setSelectedLanguage(lang),
+                  variant: 'primary',
+                })
+              ),
+              {
+                order: 2,
+                type: 'form',
+                id: routeParams.id,
+                label: 'Add-Plan-Feature',
+                selectedLanguage: selectedLanguage,
+                component: 'addFeaturePlan',
+                icon: <BsUiChecks />,
+              },
+            ]}
+          />
+        </div>
+      )}
+      <div className={quickSetup ? '' : 'border-top-1 border-light'}>
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
+          style={{ backgroundColor: backgroundColor }}
         >
           <Card.Body className="pt-0">
             <Table hover className="user-table align-items-center">
               <thead>
                 <tr>
-                  <th className="border-bottom table-title-cell">
+                  <th
+                    className="border-bottom table-title-cell"
+                    style={{ color: 'var(--primary4)' }}
+                  >
                     <SafeFormatMessage id="Features" /> /{' '}
                     <SafeFormatMessage id="Plans" />
                   </th>

@@ -46,9 +46,10 @@ const FeaturePlanForm = ({
   plan,
   feature,
   selectedLanguage,
+  quickSetup,
 }) => {
   const routeParams = useParams()
-  const productId = routeParams.id
+  const productId = routeParams.id || routeParams.productId
   const intl = useIntl()
   const {
     getProductFeatures,
@@ -329,14 +330,16 @@ const FeaturePlanForm = ({
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
-        <Modal.Header>
-          <Modal.Title className="h6">{popupLabel}</Modal.Title>
-          <Button
-            variant="close"
-            aria-label="Close"
-            onClick={() => setVisible(false)}
-          />
-        </Modal.Header>
+        {!quickSetup && (
+          <Modal.Header>
+            <Modal.Title className="h6">{popupLabel}</Modal.Title>
+            <Button
+              variant="close"
+              aria-label="Close"
+              onClick={() => setVisible(false)}
+            />
+          </Modal.Header>
+        )}
         <Modal.Body>
           <div style={{ display: type == 'edit' ? 'none' : 'block' }}>
             <Form.Group className="mb-3">
@@ -429,8 +432,8 @@ const FeaturePlanForm = ({
                   unlimited
                     ? ''
                     : isFeatureBoolean(formik.values.feature)
-                    ? ''
-                    : formik.values.limit
+                      ? ''
+                      : formik.values.limit
                 }
                 disabled={isFeatureBoolean(formik.values.feature) || unlimited}
               />

@@ -666,7 +666,7 @@ const UpdatedDashboard = () => {
         <div className="mb-4"></div>
         <Row className="justify-content-md-center align-items-stretch">
           {/* Total Subscriptions Card */}
-          <Row className="my-4">
+          <Row className="mt-3">
             <Col md={12}>
               <FilterSearchContainer setAllSelectedData={setAllSelectedData} />
             </Col>
@@ -712,7 +712,7 @@ const UpdatedDashboard = () => {
             />
           </Row>
 
-          <Row className="my-4">
+          <Row className="mt-3">
             <h4 className="mt-3 " style={{ color: 'var(--primary4)' }}>
               <SafeFormatMessage
                 id="Subscription-Status"
@@ -807,7 +807,7 @@ const UpdatedDashboard = () => {
               }
             />
           </Row>
-          <Row className="my-4">
+          <Row className="mt-3">
             <h4 className="mt-3" style={{ color: 'var(--primary4)' }}>
               <SafeFormatMessage
                 id="Subscription-Mode"
@@ -862,7 +862,7 @@ const UpdatedDashboard = () => {
               }
             />
           </Row>
-          <Row className="my-4">
+          <Row className="mt-3">
             <h4 className="mt-3" style={{ color: 'var(--primary4)' }}>
               <SafeFormatMessage
                 id="Tenant-Steps"
@@ -921,7 +921,7 @@ const UpdatedDashboard = () => {
           </Row>
 
           {/* Pie Chart for Subscriptions per Plan */}
-          <Row className="my-4">
+          <Row className="mt-3">
             <h4 className="mt-3" style={{ color: 'var(--primary4)' }}>
               <SafeFormatMessage id="Charts" />
             </h4>
