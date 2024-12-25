@@ -11,7 +11,7 @@ import { Wrapper } from './ProdcutDetailsTab.styled'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { DataTransform } from '../../../../lib/sharedFun/Time'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { AiFillCopy } from 'react-icons/ai'
+import { AiFillCopy, AiFillEdit } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   textLocale,
@@ -88,6 +88,14 @@ const ProductDetailsTab = ({ data }) => {
               toggleFunc: () => setSelectedLanguage(lang),
               variant: 'primary',
             })),
+            {
+              order: 2,
+              type: 'form',
+              id: params.id,
+              label: 'Edit',
+              component: 'editProduct',
+              icon: <AiFillEdit />,
+            },
           ]}
         />
       </div>

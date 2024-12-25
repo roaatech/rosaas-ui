@@ -36,6 +36,7 @@ const CustomSpecificationForm = ({
   setVisible,
   popupLabel,
   setActiveIndex,
+  quickSetup,
 }) => {
   const {
     createSpecificationRequest,
@@ -46,7 +47,7 @@ const CustomSpecificationForm = ({
   const routeParams = useParams()
   const intl = useIntl()
 
-  const productId = routeParams.id
+  const productId = routeParams.id || routeParams.productId
   const initialValues = {
     systemName: specificationData ? specificationData.systemName : '',
     descriptionEn: specificationData?.description?.en || '',
@@ -256,15 +257,16 @@ const CustomSpecificationForm = ({
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
-        <Modal.Header>
-          <Modal.Title className="h6">{popupLabel}</Modal.Title>
-          <Button
-            variant="close"
-            aria-label="Close"
-            onClick={() => setVisible(false)}
-          />
-        </Modal.Header>
-
+        {!quickSetup && (
+          <Modal.Header>
+            <Modal.Title className="h6">{popupLabel}</Modal.Title>
+            <Button
+              variant="close"
+              aria-label="Close"
+              onClick={() => setVisible(false)}
+            />
+          </Modal.Header>
+        )}
         <Modal.Body>
           {/* 1st Card: System Name and Display Name */}
           <Card
@@ -1074,7 +1076,7 @@ const CustomSpecificationForm = ({
             </Container>
           </Card> */}
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="mt-2">
           <Button variant="secondary" type="submit">
             <SafeFormatMessage id="Submit" />
           </Button>

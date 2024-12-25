@@ -61,6 +61,8 @@ import {
   faBuildingUser,
   faTools,
   faCogs,
+  faMagic,
+  faMagicWandSparkles,
 } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
 import QuickActions from './QuickActions/QuickActions'
@@ -390,10 +392,21 @@ export default (props = {}) => {
 
               <Nav className="flex-column pt-3 pt-md-0">
                 <img src={selectedLogo} alt="logo" className="my-3 logo" />
-
+                <Button
+                  onClick={() => navigate(Routes.QuickProductWizard.path)}
+                  variant="secondary"
+                  className="py-2 mt-3 mb-5 "
+                >
+                  <FontAwesomeIcon
+                    icon={faMagicWandSparkles}
+                    className="mr-2"
+                  />
+                  <SafeFormatMessage id="ProWizard" />
+                </Button>
                 {showComponent && (
                   <QuickActions setSearchValue={setSearchValues} />
                 )}
+
                 {userRole == 'clientAdmin' && (
                   <NavItem
                     key={'details'}

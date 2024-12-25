@@ -21,7 +21,8 @@ import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 const UrlItemList = () => {
   const dispatch = useDispatch()
   const { editProductRequest } = useRequest()
-  const productId = useParams().id
+  const params = useParams()
+  const productId = params.id || params.productId
   const listData = useSelector((state) => state.products.products)
   const productData = listData?.[productId]
 
@@ -438,8 +439,8 @@ const UrlGroup = ({
                 item.isToggleable && !isGroupEnabled
                   ? false
                   : item.isToggleable
-                  ? item.isEnabled
-                  : isGroupEnabled
+                    ? item.isEnabled
+                    : isGroupEnabled
 
               const method = isItemEnabled ? item.method : 'DISABLED'
 

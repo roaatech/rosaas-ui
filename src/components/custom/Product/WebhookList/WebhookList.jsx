@@ -44,7 +44,7 @@ import { FormattedMessage } from 'react-intl'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 
-export const WebhookList = ({}) => {
+export const WebhookList = ({ quickSetup }) => {
   const {
     getWebhookEndpointsList,
     activateWebhookEndpoint,
@@ -56,15 +56,16 @@ export const WebhookList = ({}) => {
   const [popUpLable, setPopUpLable] = useState('')
   const dispatch = useDispatch()
   const params = useParams()
+  const productId = params.id || params.productId
   const products = useSelector((state) => state?.products?.products)
-  const webhooks = products?.[params.id]?.webhookEndpoints
+  const webhooks = products?.[productId]?.webhookEndpoints
   useEffect(() => {
     ;(async () => {
       if (!webhooks) {
-        const WebhookEndpointsList = await getWebhookEndpointsList(params.id)
+        const WebhookEndpointsList = await getWebhookEndpointsList(productId)
         dispatch(
           setAllWebhookEndpoints({
-            productId: params.id,
+            productId: productId,
             data: WebhookEndpointsList.data.data,
           })
         )
@@ -73,10 +74,10 @@ export const WebhookList = ({}) => {
   }, [])
 
   const handleDeleteWebhook = async () => {
-    await deleteWebhookEndpoint(params.id, currentId)
+    await deleteWebhookEndpoint(productId, currentId)
     dispatch(
       deleteWebhookEndpointById({
-        productId: params.id,
+        productId: productId,
         webhookEndpointId: currentId,
       })
     )
@@ -130,13 +131,13 @@ export const WebhookList = ({}) => {
       : ''
   }
   const toggleActivateWebhooksEndpoint = async (id, isActive) => {
-    await activateWebhookEndpoint(params.id, id, {
+    await activateWebhookEndpoint(productId, id, {
       isActive: !isActive,
     })
 
     dispatch(
       WebhookEndpointsChangeAttr({
-        productId: params.id,
+        productId: productId,
         endpointId: id,
         attr: 'isActive',
         value: !isActive,
@@ -155,21 +156,23 @@ export const WebhookList = ({}) => {
   return (
     <Wrapper>
       <div className="dynamicButtons pt-0 mt-0 mb-1 ">
-        <DynamicButtons
-          buttons={[
-            {
-              order: 1,
-              type: 'form',
-              label: 'Add-Endpoint',
-              component: 'addEndpoint',
-              icon: <MdWeb />,
-              formType: 'create',
-              size: 'lg',
-            },
-          ]}
-        />
+        {!quickSetup && (
+          <DynamicButtons
+            buttons={[
+              {
+                order: 1,
+                type: 'form',
+                label: 'Add-Endpoint',
+                component: 'addEndpoint',
+                icon: <MdWeb />,
+                formType: 'create',
+                size: 'lg',
+              },
+            ]}
+          />
+        )}
       </div>
-      <div className="border-top-1 border-light">
+      <div className={quickSetup ? '' : 'border-top-1 border-light'}>
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"

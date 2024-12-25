@@ -206,6 +206,7 @@ const ProductForm = ({
       }
     },
   })
+  console.log({ ssss: formik.values.isTenantAutoProvisioning, productData })
 
   const RandomApiKey = () => {
     formik.setFieldValue('apiKey', generateApiKey())
@@ -438,7 +439,7 @@ const ProductForm = ({
                     id="isTenantAutoProvisioning"
                     name="isTenantAutoProvisioning"
                     onChange={formik.handleChange}
-                    value={formik.values.isTenantAutoProvisioning}
+                    checked={formik.values.isTenantAutoProvisioning}
                   />
                   {/* <input
                   type="checkbox"

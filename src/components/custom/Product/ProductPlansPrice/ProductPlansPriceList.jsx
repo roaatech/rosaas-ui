@@ -56,7 +56,12 @@ import { GiShadowFollower } from 'react-icons/gi'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import useSharedFunctions from '../../Shared/SharedFunctions/SharedFunctions.jsx'
 import { textLocale } from '../../../../const/product.js'
-export default function ProductPlansPriceList({ children }) {
+export default function ProductPlansPriceList({
+  quickSetup,
+  setSelectedItemId,
+  setVisibleQuickSetup,
+  setFormType,
+}) {
   const intl = useIntl()
   const dispatch = useDispatch()
   const {
@@ -78,7 +83,7 @@ export default function ProductPlansPriceList({ children }) {
   const [popUpLable, setPopUpLable] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState(intl.locale)
 
-  const productId = routeParams.id
+  const productId = routeParams.id || routeParams.productId
   const listProductDataStore = useSelector(
     (state) => state.products.products[productId]
   )
@@ -132,6 +137,12 @@ export default function ProductPlansPriceList({ children }) {
   }
 
   const editForm = async (id) => {
+    if (quickSetup) {
+      setSelectedItemId(id)
+      setVisibleQuickSetup(true)
+      setFormType('edit')
+      return
+    }
     if (listData[id].isSubscribed == true) {
       toast.error(
         intl.formatMessage({ id: 'subscribed-plan-price-cannot-be-modified' }),
@@ -399,39 +410,42 @@ export default function ProductPlansPriceList({ children }) {
       </>
     )
   }
-
+  const backgroundColor = quickSetup ? 'var(--themeBackground) !important' : ''
   return (
     <Wrapper>
-      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
-        <DynamicButtons
-          buttons={[
-            ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
-              (lang, index) => ({
+      {!quickSetup && (
+        <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+          <DynamicButtons
+            buttons={[
+              ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+                (lang, index) => ({
+                  order: 1,
+                  type: 'toggle',
+                  label: lang,
+                  group: 'language',
+                  toggleValue: selectedLanguage === lang,
+                  toggleFunc: () => setSelectedLanguage(lang),
+                  variant: 'primary',
+                })
+              ),
+              {
                 order: 1,
-                type: 'toggle',
-                label: lang,
-                group: 'language',
-                toggleValue: selectedLanguage === lang,
-                toggleFunc: () => setSelectedLanguage(lang),
-                variant: 'primary',
-              })
-            ),
-            {
-              order: 1,
-              type: 'form',
-              id: productId,
-              label: 'Add-Plan-Price',
-              component: 'addPlanPrice',
-              icon: <BsCurrencyDollar />,
-              setActiveIndex: setActiveIndex,
-            },
-          ]}
-        />
-      </div>
-      <div className="border-top-1 border-light">
+                type: 'form',
+                id: productId,
+                label: 'Add-Plan-Price',
+                component: 'addPlanPrice',
+                icon: <BsCurrencyDollar />,
+                setActiveIndex: setActiveIndex,
+              },
+            ]}
+          />
+        </div>
+      )}
+      <div className={quickSetup ? '' : 'border-top-1 border-light'}>
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
+          style={{ backgroundColor: backgroundColor }}
         >
           <Card.Body className="pt-0">
             <Table hover className="user-table align-items-center">

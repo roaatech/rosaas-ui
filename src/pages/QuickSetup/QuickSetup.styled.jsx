@@ -40,7 +40,17 @@ export const QuickSetupWrapper = styled.div`
   .ebWoEC .p-tabview .p-tabview-nav li .p-tabview-nav-link:first-child {
     background-color: var(--themeBackground) !important;
   }
-  .p-menuitem-link {
+
+  .table-responsive,
+  .card {
+    background-color: var(--themeBackground) !important;
+  }
+  .p-tabview-panels {
+    background-color: var(--themeBackground) !important;
+  }
+  .p-menuitem-link,
+  .p-tabview-nav-link,
+  .p-tabview-panels {
     background: unset !important;
   }
   .table-responsive,

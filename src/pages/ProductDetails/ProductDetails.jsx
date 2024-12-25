@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import useRequest from '../../axios/apis/useRequest'
 import { Wrapper } from './ProductDetails.styled'
@@ -47,7 +47,10 @@ import ProductWarnings from '../../components/custom/Product/ProductWarnings/Pro
 import ClientCredentials from '../../components/custom/Product/ClientCredentials/ClientCredentials'
 import Label from '../../components/custom/Shared/label/Label.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStopwatch } from '@fortawesome/free-solid-svg-icons'
+import {
+  faMagicWandSparkles,
+  faStopwatch,
+} from '@fortawesome/free-solid-svg-icons'
 import ProductTrialPeriod from '../../components/custom/Product/ProductTrialPeriod/ProductTrialPeriod.jsx'
 import ProductsUsersManagement from '../../components/custom/Product/ProductsUsersManagement/ProductsUsersManagement.jsx'
 import WebhookList from '../../components/custom/Product/WebhookList/WebhookList.jsx'
@@ -55,10 +58,11 @@ import IntegrationUrlsTab from '../../components/custom/Product/IntegrationUrlsT
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import { size } from 'lodash'
 import FrontendIntegrationUrlsTab from '../../components/custom/Product/FrontendIntegrationUrlsTab/FrontendIntegrationUrlsTab.jsx'
+import { Routes } from '../../routes.js'
 
 const ProductDetails = () => {
   const routeParams = useParams()
-
+  const navigate = useNavigate()
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
   const [activeIndex, setActiveIndex] = useState(0)
@@ -137,6 +141,30 @@ const ProductDetails = () => {
             </h4>
             <DynamicButtons
               buttons={[
+                {
+                  order: 2,
+                  type: 'action',
+                  id: routeParams.id,
+                  label: 'ProWizard',
+                  func: () =>
+                    navigate(
+                      `${Routes.QuickProductWizard.path}/${routeParams.id}`
+                    ),
+                  icon: (
+                    <FontAwesomeIcon
+                      icon={faMagicWandSparkles}
+                      className="mr-2"
+                    />
+                  ),
+                },
+                {
+                  order: 4,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Edit',
+                  component: 'editProduct',
+                  icon: <AiFillEdit />,
+                },
                 {
                   order: 4,
                   type: 'action',
@@ -220,14 +248,7 @@ const ProductDetails = () => {
                   icon: <BsCurrencyDollar />,
                   setActiveIndex: setActiveIndex,
                 },
-                {
-                  order: 2,
-                  type: 'form',
-                  id: routeParams.id,
-                  label: 'Edit',
-                  component: 'editProduct',
-                  icon: <AiFillEdit />,
-                },
+
                 {
                   order: 4,
                   type: 'form',

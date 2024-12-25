@@ -29,6 +29,7 @@ const CreateWebhookForm = ({
   webhookId,
   type,
   currentWebhookData,
+  quickSetup,
 }) => {
   const initialValues = {
     endpointURL: currentWebhookData ? currentWebhookData.url : '',
@@ -277,9 +278,11 @@ const CreateWebhookForm = ({
   return (
     <Wrapper>
       <Form onSubmit={formik.handleSubmit}>
-        <Modal.Header closeButton>
-          <Modal.Title className="h6">{popUpLable}</Modal.Title>
-        </Modal.Header>
+        {!quickSetup && (
+          <Modal.Header closeButton>
+            <Modal.Title className="h6">{popUpLable}</Modal.Title>
+          </Modal.Header>
+        )}
         <Modal.Body>
           <Form.Group className="mb-3" controlId="endpointURL">
             <Form.Label>

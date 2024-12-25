@@ -47,7 +47,13 @@ import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite.jsx'
 import { textLocale } from '../../../../const/product.js'
 
 export const ProductCustomSpecificationList = (
-  { productId },
+  {
+    productId,
+    quickSetup,
+    setSelectedItemId,
+    setVisibleQuickSetup,
+    setFormType,
+  },
   setActiveIndex
 ) => {
   const {
@@ -87,6 +93,12 @@ export const ProductCustomSpecificationList = (
   }
 
   const editForm = async (id) => {
+    if (quickSetup) {
+      setSelectedItemId(id)
+      setVisibleQuickSetup(true)
+      setFormType('edit')
+      return
+    }
     if (list?.specifications[id]?.isSubscribed) {
       toast.error(
         intl.formatMessage({ id: 'Cannot-edit-a-subscribed-specification.' }),
@@ -162,10 +174,11 @@ export const ProductCustomSpecificationList = (
             </span>
           </td>
 
-          <td className="description">
-            {textLocale(description, selectedLanguage, intl)}
-          </td>
-
+          {!quickSetup && (
+            <td className="description">
+              {textLocale(description, selectedLanguage, intl)}
+            </td>
+          )}
           <td>
             <span className="fw-normal">{isRequired ? 'True' : 'False'}</span>
           </td>
@@ -179,30 +192,40 @@ export const ProductCustomSpecificationList = (
               {regularExpression ? regularExpression : '-'}
             </span>
           </td>
-          <td>
-            <span className="fw-normal">
-              {textLocale(validationFailureDescription, selectedLanguage, intl)}
-            </span>
-          </td>
-          <td>
-            <span className="fw-normal">
-              <DataLabelWhite
-                variant={'gray'}
-                text={
-                  <>
-                    <MdSort />
-                    {'  '}
-                    {displayOrder}
-                  </>
-                }
-              />
-            </span>
-          </td>
-          <td>
-            <span className="fw-normal">
-              <TableDate createdDate={createdDate} editedDate={editedDate} />
-            </span>
-          </td>
+          {!quickSetup && (
+            <td>
+              <span className="fw-normal">
+                {textLocale(
+                  validationFailureDescription,
+                  selectedLanguage,
+                  intl
+                )}
+              </span>
+            </td>
+          )}
+          {!quickSetup && (
+            <td>
+              <span className="fw-normal">
+                <DataLabelWhite
+                  variant={'gray'}
+                  text={
+                    <>
+                      <MdSort />
+                      {'  '}
+                      {displayOrder}
+                    </>
+                  }
+                />
+              </span>
+            </td>
+          )}
+          {!quickSetup && (
+            <td>
+              <span className="fw-normal">
+                <TableDate createdDate={createdDate} editedDate={editedDate} />
+              </span>
+            </td>
+          )}
 
           <td>
             <Dropdown as={ButtonGroup}>
@@ -254,50 +277,54 @@ export const ProductCustomSpecificationList = (
       </>
     )
   }
+  const backgroundColor = quickSetup ? 'var(--themeBackground) !important' : ''
 
   return (
     <Wrapper>
-      <div className="dynamicButtons pt-0 mt-0 mb-1 ">
-        <DynamicButtons
-          buttons={[
-            ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
-              (lang, index) => ({
+      {!quickSetup && (
+        <div className="dynamicButtons pt-0 mt-0 mb-1 ">
+          <DynamicButtons
+            buttons={[
+              ...Object.keys({ en: 'English', ar: 'Arabic' }).map(
+                (lang, index) => ({
+                  order: 1,
+                  type: 'toggle',
+                  label: lang,
+                  group: 'language',
+                  toggleValue: selectedLanguage === lang,
+                  toggleFunc: () => setSelectedLanguage(lang),
+                  variant: 'primary',
+                })
+              ),
+              {
                 order: 1,
-                type: 'toggle',
-                label: lang,
-                group: 'language',
-                toggleValue: selectedLanguage === lang,
-                toggleFunc: () => setSelectedLanguage(lang),
-                variant: 'primary',
-              })
-            ),
-            {
-              order: 1,
-              type: 'form',
-              id: productId,
-              label: 'Add-Specification',
-              component: 'addSpecification',
-              icon: <MdEditNote />,
-              setActiveIndex: setActiveIndex,
-              size: 'lg',
-            },
-            {
-              order: 4,
-              type: 'form',
-              id: productId,
-              label: 'Add-Validation-Url',
-              component: 'AddValidationUrl',
-              icon: <MdAdd />,
-              setActiveIndex: setActiveIndex,
-            },
-          ]}
-        />
-      </div>
+                type: 'form',
+                id: productId,
+                label: 'Add-Specification',
+                component: 'addSpecification',
+                icon: <MdEditNote />,
+                setActiveIndex: setActiveIndex,
+                size: 'lg',
+              },
+              {
+                order: 4,
+                type: 'form',
+                id: productId,
+                label: 'Add-Validation-Url',
+                component: 'AddValidationUrl',
+                icon: <MdAdd />,
+                setActiveIndex: setActiveIndex,
+              },
+            ]}
+          />
+        </div>
+      )}
 
-      <div className="border-top-1 border-light">
+      <div className={quickSetup ? '' : 'border-top-1 border-light'}>
         <Card
           border="light"
           className="table-wrapper table-responsive shadow-sm"
+          style={{ backgroundColor: backgroundColor }}
         >
           <Card.Body className="pt-0">
             <Table hover className="user-table align-items-center">
@@ -312,9 +339,11 @@ export const ProductCustomSpecificationList = (
                   <th className="border-bottom">
                     <SafeFormatMessage id="Status" />
                   </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Description" />
-                  </th>
+                  {!quickSetup && (
+                    <th className="border-bottom">
+                      <SafeFormatMessage id="Description" />
+                    </th>
+                  )}
 
                   <th className="border-bottom">
                     <SafeFormatMessage id="Is-Required" />
@@ -325,15 +354,21 @@ export const ProductCustomSpecificationList = (
                   <th className="border-bottom">
                     <SafeFormatMessage id="Regular-Expression" />
                   </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Validation-Failure-Description" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Display-Order" />
-                  </th>
-                  <th className="border-bottom">
-                    <SafeFormatMessage id="Date" />
-                  </th>
+                  {!quickSetup && (
+                    <th className="border-bottom">
+                      <SafeFormatMessage id="Validation-Failure-Description" />
+                    </th>
+                  )}
+                  {!quickSetup && (
+                    <th className="border-bottom">
+                      <SafeFormatMessage id="Display-Order" />
+                    </th>
+                  )}
+                  {!quickSetup && (
+                    <th className="border-bottom">
+                      <SafeFormatMessage id="Date" />
+                    </th>
+                  )}
                   <th className="border-bottom">
                     <SafeFormatMessage id="Actions" />
                   </th>
