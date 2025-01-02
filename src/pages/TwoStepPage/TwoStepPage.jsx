@@ -85,61 +85,55 @@ const TwoStepProcessPage = () => {
     <Wrapper>
       <MarketplaceNavBar />
 
-      <div className="main-container">
+      <div className="main-container ">
+        <Steps
+          model={[
+            {
+              label: (
+                <>
+                  <FontAwesomeIcon icon={faInfoCircle} />{' '}
+                  <SafeFormatMessage id="Subscribtion-Info" />
+                </>
+              ),
+            },
+            {
+              label: (
+                <>
+                  <FontAwesomeIcon icon={faMoneyCheckDollar} />{' '}
+                  <SafeFormatMessage id="Check-Out" />
+                </>
+              ),
+            },
+          ]}
+          activeIndex={step - 1}
+          readOnly={step != 1 ? false : true}
+        />
         {/* {userRole != 'notAuth' && (
           <BreadcrumbComponent breadcrumbInfo={'ProductList'} />
         )}{' '} */}
         <Row>
-          <Card>
-            <Card.Body>
-              <div className="text-center">
-                <Steps
-                  model={[
-                    {
-                      label: (
-                        <>
-                          <FontAwesomeIcon icon={faInfoCircle} />{' '}
-                          <SafeFormatMessage id="Subscribtion-Info" />
-                        </>
-                      ),
-                    },
-                    {
-                      label: (
-                        <>
-                          <FontAwesomeIcon icon={faMoneyCheckDollar} />{' '}
-                          <SafeFormatMessage id="Check-Out" />
-                        </>
-                      ),
-                    },
-                  ]}
-                  activeIndex={step - 1}
-                  readOnly={step != 1 ? false : true}
-                />{' '}
-              </div>
-              {step === 1 && (
-                <CheckoutTenantReg
-                  type="create"
-                  popupLabel={<SafeFormatMessage id="Enter-Your-Info" />}
-                  setCurrentTenant={setCurrentTenant}
-                  setHasToPay={setHasToPay}
-                  setDisplayName={setTenantDisplayName}
-                  priceData={priceData}
-                  setPriceData={setPriceData}
-                />
-              )}
-              {step === 2 && (
-                <CheckoutPage
-                  currentTenant={currentTenant}
-                  hasToPay={hasToPay}
-                  setHasToPay={setHasToPay}
-                  tenantDisplayName={tenantDisplayName}
-                  priceData={priceData}
-                  setPriceData={setPriceData}
-                  trialPlanId={trialPlanId}
-                />
-              )}{' '}
-            </Card.Body>
-          </Card>
+          {step === 1 && (
+            <CheckoutTenantReg
+              type="create"
+              popupLabel={<SafeFormatMessage id="Enter-Your-Info" />}
+              setCurrentTenant={setCurrentTenant}
+              setHasToPay={setHasToPay}
+              setDisplayName={setTenantDisplayName}
+              priceData={priceData}
+              setPriceData={setPriceData}
+            />
+          )}
+          {step === 2 && (
+            <CheckoutPage
+              currentTenant={currentTenant}
+              hasToPay={hasToPay}
+              setHasToPay={setHasToPay}
+              tenantDisplayName={tenantDisplayName}
+              priceData={priceData}
+              setPriceData={setPriceData}
+              trialPlanId={trialPlanId}
+            />
+          )}{' '}
         </Row>
       </div>
     </Wrapper>

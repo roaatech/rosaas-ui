@@ -21,7 +21,9 @@ import { Wrapper } from './PricingPage.styled'
 import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
-import useSharedFunctions from '../../components/custom/Shared/SharedFunctions/SharedFunctions'
+import useSharedFunctions, {
+  getUserLocation,
+} from '../../components/custom/Shared/SharedFunctions/SharedFunctions'
 import {
   deleteAllPlanPriceBySystemNamePublic,
   setAllFeaturePlanPublic,
@@ -31,7 +33,13 @@ import {
 } from '../../store/slices/publicProductsSlice'
 import useGlobal from '../../lib/hocks/global'
 
-const PricingPage = () => {
+const PricingPage = ({
+  ProductOwnerSystemName,
+  ProductSystemName,
+  reviewAndLaunch,
+}) => {
+  console.log({ ProductOwnerSystemName, ProductSystemName, reviewAndLaunch })
+
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const routeParams = useParams()
@@ -56,8 +64,9 @@ const PricingPage = () => {
     }
   }, [paramLanguage, paramCurrencyCode])
 
-  const productSystemName = routeParams.productSystemName
-  const productOwnerSystemName = routeParams.productOwnerSystemName || ''
+  const productSystemName = routeParams.productSystemName || ProductSystemName
+  const productOwnerSystemName =
+    routeParams.productOwnerSystemName || ProductOwnerSystemName
   // const pOSystemName = useSelector((state) => state.main.pOSystemName)
 
   // useEffect(() => {
@@ -149,7 +158,23 @@ const PricingPage = () => {
   useEffect(() => {
     dispatch(setStep(1))
   }, [])
+  const [location, setLocation] = useState(null)
+  const [error, setError] = useState(null)
+  console.log({ location, error })
 
+  const handleGetLocation = async () => {
+    try {
+      const userLocation = await getUserLocation()
+      setLocation(userLocation)
+      setError(null) // Clear any previous errors
+    } catch (err) {
+      setError(err)
+      setLocation(null) // Clear previous location
+    }
+  }
+  useEffect(() => {
+    handleGetLocation()
+  }, [])
   if (userRole == undefined) userRole = 'notAuth'
 
   const listData = productData?.featurePlan
@@ -836,14 +861,26 @@ const PricingPage = () => {
 
   /* ResponsivePlans*/
   const getColumnsPerRow = () => {
-    if (window.innerWidth >= 1506) {
-      return 4
-    } else if (window.innerWidth >= 1149) {
-      return 3
-    } else if (window.innerWidth >= 794) {
-      return 2
+    if (reviewAndLaunch) {
+      if (window.innerWidth >= 1506) {
+        return 3
+      } else if (window.innerWidth >= 1149) {
+        return 2
+      } else if (window.innerWidth >= 794) {
+        return 1
+      } else {
+        return 1
+      }
     } else {
-      return 1
+      if (window.innerWidth >= 1506) {
+        return 4
+      } else if (window.innerWidth >= 1149) {
+        return 3
+      } else if (window.innerWidth >= 794) {
+        return 2
+      } else {
+        return 1
+      }
     }
   }
 
@@ -896,69 +933,82 @@ const PricingPage = () => {
       </Row>
     )
   }
-
+  const PricingCards = () => {
+    return (
+      <>
+        <div className="text-center">{renderCycleRadioButtons()}</div>
+        <Row className="justify-content-center">
+          {groupedByCycle && groupedByCycle[selectedCycle] && (
+            <ResponsivePlans
+              groupedByCycle={groupedByCycle}
+              selectedCycle={selectedCycle}
+            />
+          )}
+        </Row>
+      </>
+    )
+  }
   return (
-    <Wrapper direction={localeDirection}>
-      <MarketplaceNavBar profile={userRole != 'notAuth'} />
-      {/* {userRole != 'notAuth' && (
+    <>
+      {!reviewAndLaunch ? (
+        <Wrapper direction={localeDirection}>
+          <MarketplaceNavBar profile={userRole != 'notAuth'} />
+          <section style={{ minHeight: '100vh' }}>
+            <div className="main-container">
+              <section className="  mx-4 ">
+                <div className="pt-8 text-center fw-bold  ">
+                  {' '}
+                  <h4>
+                    {' '}
+                    <FontAwesomeIcon
+                      icon={faBox}
+                      className={`product-icon ${convertMargin(
+                        'ml'
+                      )}-2 ${convertMargin('mr')}-2`}
+                    />
+                    {getLocalizedString(
+                      listProduct?.[productId]?.displayNameLocalizations
+                    )?.toUpperCase()}
+                    {getLocalizedString(
+                      listProduct?.[productId]?.descriptionLocalizations
+                    ) && (
+                      <div
+                        style={{
+                          fontSize: 'var(--largeFont)',
+                          maxWidth: '900px',
+                          margin: '0 auto',
+                          textAlign: 'center',
+                          padding: '0 1rem',
+                        }}
+                        className="text-center pb-3 mt-2"
+                      >
+                        {getLocalizedString(
+                          listProduct?.[productId]?.descriptionLocalizations
+                        )}
+                      </div>
+                    )}
+                  </h4>
+                </div>
+              </section>
+
+              <Card>
+                <Card.Body>
+                  {/* {userRole != 'notAuth' && (
         <BreadcrumbComponent
           breadcrumbInfo={'ProductPricing'}
           icon={BsBoxSeam}
         />
       )} */}
-      <section style={{ minHeight: '100vh' }}>
-        <div className="main-container">
-          <section className="  mx-4 ">
-            <div className="pt-8 text-center fw-bold  ">
-              {' '}
-              <h4>
-                {' '}
-                <FontAwesomeIcon
-                  icon={faBox}
-                  className={`product-icon ${convertMargin(
-                    'ml'
-                  )}-2 ${convertMargin('mr')}-2`}
-                />
-                {getLocalizedString(
-                  listProduct?.[productId]?.displayNameLocalizations
-                )?.toUpperCase()}
-                {getLocalizedString(
-                  listProduct?.[productId]?.descriptionLocalizations
-                ) && (
-                  <div
-                    style={{
-                      fontSize: 'var(--largeFont)',
-                      maxWidth: '900px',
-                      margin: '0 auto',
-                      textAlign: 'center',
-                      padding: '0 1rem',
-                    }}
-                    className="text-center pb-3 mt-2"
-                  >
-                    {getLocalizedString(
-                      listProduct?.[productId]?.descriptionLocalizations
-                    )}
-                  </div>
-                )}
-              </h4>
+                  <PricingCards />
+                </Card.Body>
+              </Card>
             </div>
           </section>
-          <Card>
-            <Card.Body>
-              <div className="text-center">{renderCycleRadioButtons()}</div>
-              <Row className="justify-content-center">
-                {groupedByCycle && groupedByCycle[selectedCycle] && (
-                  <ResponsivePlans
-                    groupedByCycle={groupedByCycle}
-                    selectedCycle={selectedCycle}
-                  />
-                )}
-              </Row>
-            </Card.Body>
-          </Card>
-        </div>
-      </section>
-    </Wrapper>
+        </Wrapper>
+      ) : (
+        <PricingCards />
+      )}
+    </>
   )
 }
 

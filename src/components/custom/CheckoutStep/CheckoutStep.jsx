@@ -103,7 +103,6 @@ const CheckoutPage = (data) => {
 
   const [currentFeaturePlan, setCurrentFeaturePlan] = useState()
 
-  const [trialFeaturePlan, setTrialFeaturePlan] = useState()
   const intl = useIntl()
 
   useEffect(() => {
@@ -111,29 +110,15 @@ const CheckoutPage = (data) => {
       return
     }
 
-    if (trialPlanId && productSystemName) {
-      ;(async () => {
-        const featurePlanTrial = await getFeaturePlanListPublic(
-          productOwnerSystemName,
-          productSystemName
-        )
-        setTrialFeaturePlan(
-          featurePlanTrial.data.data.filter(
-            (item) => item.plan.id === trialPlanId
-          )
-        )
-      })()
-    } else {
-      ;(async () => {
-        const featurePlan = await getFeaturePlanPublic(
-          productOwnerSystemName,
-          productSystemName,
-          priceData?.plan.systemName
-        )
-        setCurrentFeaturePlan(featurePlan.data.data)
-      })()
-    }
-  }, [priceData, productSystemName, trialPlanId])
+    ;(async () => {
+      const featurePlan = await getFeaturePlanPublic(
+        productOwnerSystemName,
+        productSystemName,
+        priceData?.plan.systemName
+      )
+      setCurrentFeaturePlan(featurePlan.data.data)
+    })()
+  }, [priceData, productSystemName])
 
   useEffect(() => {
     if (!orderData) {
@@ -228,14 +213,11 @@ const CheckoutPage = (data) => {
 
   const direction = useSelector((state) => state.main.direction)
   const renderFeaturePlans = () => {
-    const featurePlans = currentFeaturePlan
-      ? currentFeaturePlan.sort((a, b) => {
-          return a.feature.id.localeCompare(b.feature.id)
-        })
-      : trialFeaturePlan &&
-        trialFeaturePlan.sort((a, b) => {
-          return a.feature.id.localeCompare(b.feature.id)
-        })
+    const featurePlans =
+      currentFeaturePlan &&
+      currentFeaturePlan.sort((a, b) => {
+        return a.feature.id.localeCompare(b.feature.id)
+      })
 
     return (
       <>
@@ -244,34 +226,38 @@ const CheckoutPage = (data) => {
           <span className="fw-bold">
             {getLocalizedString(
               priceData?.plan.displayNameLocalizations
-            )?.toUpperCase() ||
-              getLocalizedString(
-                priceData?.product?.displayNameLocalizations
-              )?.toUpperCase()}
+            )?.toUpperCase() || priceData?.plan.displayName?.toUpperCase()}
           </span>{' '}
           <SafeFormatMessage id={'of-Product'} />{' '}
           <span className="fw-bold">
             {getLocalizedString(
-              listProduct?.[productId]?.displayNameLocalizations
-            )?.toUpperCase()}
+              priceData?.product?.displayNameLocalizations
+            )?.toUpperCase() || priceData?.product?.displayName?.toUpperCase()}
           </span>
         </Card.Header>
         <Card.Body className="border-bottom ">
-          {featurePlans?.map((featurePlan) => {
-            return (
-              <div key={featurePlan.id}>
-                <p>
-                  <BsCheck2Circle style={{ color: 'var(--second-color)' }} />{' '}
-                  {getLocalizedString(
-                    featurePlan.feature.descriptionLocalizations
-                  ) ||
-                    getLocalizedString(
-                      featurePlan.feature.displayNameLocalizations
-                    )}
-                </p>
-              </div>
-            )
-          })}
+          <Row>
+            {featurePlans?.map((featurePlan) => {
+              return (
+                <Col md={12}>
+                  <div key={featurePlan.id}>
+                    <p className="font-small">
+                      <BsCheck2Circle
+                        className="mx-2"
+                        style={{ color: 'var(--second-color)' }}
+                      />{' '}
+                      {getLocalizedString(
+                        featurePlan.descriptionLocalizations
+                      ) ||
+                        getLocalizedString(
+                          featurePlan.feature.displayNameLocalizations
+                        )}
+                    </p>
+                  </div>
+                </Col>
+              )
+            })}
+          </Row>
         </Card.Body>
       </>
     )
@@ -299,179 +285,140 @@ const CheckoutPage = (data) => {
   return (
     <Wrapper>
       <div className="main-container">
-        <div className="">
+        <div>
           {!processFailed ? (
-            <Container className="card">
-              <Row>
-                <Col lg={7} md={12}>
-                  {renderFeaturePlans()}
-
-                  <Card.Header className="fw-bold">
-                    <SafeFormatMessage id="Your-Subscribe-Information" />
-                  </Card.Header>
+            <Container className="d-flex justify-content-center">
+              <Col md={10}>
+                <Card style={{ backgroundColor: 'var(--themeBackground)' }}>
                   <Card.Body>
-                    {/* tenant Display name */}
+                    <Row>
+                      <Col lg={5} md={12}>
+                        <Card.Header className="fw-bold">
+                          <SafeFormatMessage id="Your-Subscribe-Information" />
+                        </Card.Header>
+                        <Card.Body>
+                          <Row className="font-small">
+                            {/* product */}
 
-                    <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-2 ">
-                      <div className=" w-50 fw-bold">
-                        <SafeFormatMessage id="Display-Name" />
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              <SafeFormatMessage id="generated-automatically-by-system" />
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              style={{ color: 'var(--slate-gray)' }}
-                              className={
-                                direction == 'rtl'
-                                  ? 'ar-questionCircle mr-2'
-                                  : 'ml-2'
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
-                      <div className=" card-stats">{tenantDisplayName}</div>
-                    </div>
+                            <div className="  d-flex align-items-center justify-content-between border-bottom border-light p-3 ">
+                              <div className=" w-50 fw-bold">
+                                <SafeFormatMessage id="Product" />
+                                <OverlayTrigger
+                                  trigger={['hover', 'focus']}
+                                  overlay={
+                                    <Tooltip>
+                                      <SafeFormatMessage id="Subscription-Managenent-Product" />
+                                    </Tooltip>
+                                  }
+                                >
+                                  <span>
+                                    <BsFillQuestionCircleFill
+                                      style={{ color: 'var(--slate-gray)' }}
+                                      className={
+                                        direction == 'rtl'
+                                          ? 'ar-questionCircle mr-2'
+                                          : 'ml-2'
+                                      }
+                                    />
+                                  </span>
+                                </OverlayTrigger>
+                              </div>
+                              <div
+                                className=" card-stats w-50 align-text-center"
+                                // style={{ textAlign: 'center' }}
+                              >
+                                {priceData?.product?.displayNameLocalizations
+                                  ? getLocalizedString(
+                                      priceData?.product
+                                        ?.displayNameLocalizations
+                                    )
+                                  : priceData?.product?.displayName}
+                              </div>
+                            </div>
 
-                    {/* Tenant System Name */}
+                            {/* plan */}
 
-                    {/* <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
-                    <div className=" w-50 fw-bold">
-                      <SafeFormatMessage id="System-Name" />
-                      <OverlayTrigger
-                        trigger={['hover', 'focus']}
-                        overlay={
-                          <Tooltip>
-                            <SafeFormatMessage id="generated-automatically-by-system" />
-                          </Tooltip>
+                            <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                              <div className=" w-50 fw-bold">
+                                <SafeFormatMessage id="Plan" />
+                                <OverlayTrigger
+                                  trigger={['hover', 'focus']}
+                                  overlay={
+                                    <Tooltip>
+                                      <SafeFormatMessage id="Subscription-Managenent-Plan" />
+                                    </Tooltip>
+                                  }
+                                >
+                                  <span>
+                                    <BsFillQuestionCircleFill
+                                      style={{ color: 'var(--slate-gray)' }}
+                                      className={
+                                        direction == 'rtl'
+                                          ? 'ar-questionCircle mr-2'
+                                          : 'ml-2'
+                                      }
+                                    />
+                                  </span>
+                                </OverlayTrigger>
+                              </div>
+                              <div className=" card-stats w-50 align-text-center">
+                                {priceData?.plan?.displayNameLocalizations
+                                  ? getLocalizedString(
+                                      priceData?.plan?.displayNameLocalizations
+                                    )
+                                  : priceData?.plan?.displayName}
+                              </div>
+                            </div>
+
+                            {/* subsc */}
+
+                            <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                              <div className=" w-50 fw-bold">
+                                <SafeFormatMessage id="Subscription" />
+                                <OverlayTrigger
+                                  trigger={['hover', 'focus']}
+                                  overlay={
+                                    <Tooltip>
+                                      <SafeFormatMessage id="Subscription-Managenent-Subscription" />
+                                    </Tooltip>
+                                  }
+                                >
+                                  <span>
+                                    <BsFillQuestionCircleFill
+                                      style={{ color: 'var(--slate-gray)' }}
+                                      className={
+                                        direction == 'rtl'
+                                          ? 'ar-questionCircle mr-2'
+                                          : 'ml-2'
+                                      }
+                                    />
+                                  </span>
+                                </OverlayTrigger>
+                              </div>
+                              <div className=" card-stats w-50 align-text-center">
+                                {priceData?.priceDetails?.formattedPrice} /{' '}
+                                {cycle[priceData?.cycle] && (
+                                  <SafeFormatMessage
+                                    id={cycle[priceData?.cycle]}
+                                  />
+                                )}{' '}
+                              </div>
+                            </div>
+                          </Row>
+                        </Card.Body>
+                        {renderFeaturePlans()}
+                      </Col>
+                      <Col
+                        lg={7}
+                        md={12}
+                        className={
+                          direction == 'rtl'
+                            ? 'border-right-1 border-light  '
+                            : 'border-left-1 border-light  '
                         }
                       >
-                        <span>
-                          <BsFillQuestionCircleFill
-                            style={{ color: 'var(--slate-gray)' }}
-                            className={
-                              direction == 'rtl'
-                                ? 'ar-questionCircle mr-2'
-                                : 'ml-2'
-                            }
-                          />
-                        </span>
-                      </OverlayTrigger>
-                    </div>
-                    <div className=" card-stats">{systemName}</div>
-                  </div> */}
-
-                    {/* product */}
-                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
-                      <div className=" w-50 fw-bold">
-                        <SafeFormatMessage id="Product" />
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              <SafeFormatMessage id="Subscription-Managenent-Product" />
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              style={{ color: 'var(--slate-gray)' }}
-                              className={
-                                direction == 'rtl'
-                                  ? 'ar-questionCircle mr-2'
-                                  : 'ml-2'
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
-                      <div className=" card-stats">
-                        {getLocalizedString(
-                          priceData?.product?.displayNameLocalizations
-                        )}
-                      </div>
-                    </div>
-
-                    {/* plan */}
-                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
-                      <div className=" w-50 fw-bold">
-                        <SafeFormatMessage id="Plan" />
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              <SafeFormatMessage id="Subscription-Managenent-Plan" />
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              style={{ color: 'var(--slate-gray)' }}
-                              className={
-                                direction == 'rtl'
-                                  ? 'ar-questionCircle mr-2'
-                                  : 'ml-2'
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
-                      <div className=" card-stats">
-                        {getLocalizedString(
-                          priceData?.plan?.displayNameLocalizations
-                        )}
-                      </div>
-                    </div>
-
-                    {/* subsc */}
-                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
-                      <div className=" w-50 fw-bold">
-                        <SafeFormatMessage id="Subscription" />
-                        <OverlayTrigger
-                          trigger={['hover', 'focus']}
-                          overlay={
-                            <Tooltip>
-                              <SafeFormatMessage id="Subscription-Managenent-Subscription" />
-                            </Tooltip>
-                          }
-                        >
-                          <span>
-                            <BsFillQuestionCircleFill
-                              style={{ color: 'var(--slate-gray)' }}
-                              className={
-                                direction == 'rtl'
-                                  ? 'ar-questionCircle mr-2'
-                                  : 'ml-2'
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
-                      <div className=" card-stats">
-                        {priceData?.priceDetails?.formattedPrice} /{' '}
-                        {cycle[priceData?.cycle] && (
-                          <SafeFormatMessage id={cycle[priceData?.cycle]} />
-                        )}{' '}
-                      </div>
-                    </div>
-                  </Card.Body>
-                </Col>
-                <Col
-                  lg={5}
-                  md={12}
-                  className={
-                    direction == 'rtl'
-                      ? 'border-right-1 border-light  '
-                      : 'border-left-1 border-light  '
-                  }
-                >
-                  <div>
-                    {/* {hasToPay && (
+                        <div>
+                          {/* {hasToPay && (
                     <Form>
                       <Form.Group className="mb-3">
                         <Card.Header className="mb-3 fw-bold">
@@ -495,199 +442,206 @@ const CheckoutPage = (data) => {
                       </Form.Group>
                     </Form>
                   )} */}
-                    {/* Labels and prices table */}
-                    <Card.Body>
-                      {
-                        <table className="table no-border p-0">
-                          <tbody className="p-0">
-                            <tr>
-                              <td className="fw-bold">
-                                <SafeFormatMessage id="Order-Subtotal-Exclude-Tax" />
-                              </td>
-                              <td className="display-cell">
-                                {
-                                  orderData?.orderSubtotalExclTaxDetails
-                                    .formattedPrice
-                                }
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="fw-bold">
-                                <SafeFormatMessage id="Order-Subtotal-Include-Tax" />
-                              </td>
-                              <td className="display-cell">
-                                {
-                                  orderData?.orderSubtotalInclTaxDetails
-                                    .formattedPrice
-                                }
-                              </td>
-                            </tr>
-                            {isDiscountApplied && (
-                              <tr>
-                                <td className="fw-bold text-danger">
-                                  <SafeFormatMessage id="Discount-Amount" />
-                                </td>
-                                <td className="text-danger display-cell">
-                                  - {discountAmount}{' '}
-                                  {` (${orderData?.userCurrencyCode})`}
-                                </td>
-                              </tr>
-                            )}
-                            {orderData?.orderItems[0]?.trialPeriodInDays ? (
-                              <>
-                                <tr>
-                                  <td className="fw-bold">
-                                    <SafeFormatMessage id="Due-Now" />
-                                  </td>
-                                  <td className="trial display-cell">
-                                    0.00 {` (${orderData?.userCurrencyCode}) `}/{' '}
-                                    {
-                                      orderData?.orderItems[0]
-                                        ?.trialPeriodInDays
-                                    }{' '}
-                                    <SafeFormatMessage id="Days" />
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td className="fw-bold ">
-                                    <SafeFormatMessage id="After-Trial" />
-                                    <div className="normal-text font-small fw-bold">
-                                      <SafeFormatMessage id="Ends-On" /> (
-                                      {trialEndDate})
-                                    </div>
-                                  </td>
-                                  <td className="total fw-bold display-cell ">
-                                    <div>
+                          {/* Labels and prices table */}
+                          <Card.Body>
+                            {
+                              <table className="table no-border p-0">
+                                <tbody className="p-0">
+                                  <tr>
+                                    <td className="fw-bold">
+                                      <SafeFormatMessage id="Order-Subtotal-Exclude-Tax" />
+                                    </td>
+                                    <td className="display-cell">
                                       {
-                                        orderData?.orderTotalDetails
+                                        orderData?.orderSubtotalExclTaxDetails
                                           .formattedPrice
                                       }
-                                    </div>
-                                  </td>
-                                </tr>
-                              </>
-                            ) : (
-                              <tr className="">
-                                <td className="fw-bold ">
-                                  <SafeFormatMessage id="Total" />
-                                </td>
-                                <td className="total fw-bold display-cell ">
-                                  {' '}
-                                  {orderData?.orderTotalDetails.formattedPrice}
-                                </td>
-                              </tr>
-                            )}
-                            {isDiscountApplied && (
-                              <tr>
-                                <td className="fw-bold py-2 px-8 total">
-                                  <SafeFormatMessage id="Total-Payable" />
-                                </td>
-                                <td className="fw-bold py-2 px-8 total">
-                                  ${orderData?.orderTotal - discountAmount}
-                                </td>
-                              </tr>
-                            )}
-                          </tbody>
-                        </table>
-                      }
-                      {
-                        <Form>
-                          <div className=" mr-3">
-                            <Form.Group className="mb-3 merged-form-group">
-                              {discountCodeStatus && (
-                                <>
-                                  <Form.Control
-                                    type="text"
-                                    placeholder={intl.formatMessage({
-                                      id: 'Enter-Discount-Code',
-                                    })}
-                                    value={discountCode}
-                                    onChange={(e) =>
-                                      setDiscountCode(e.target.value)
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td className="fw-bold">
+                                      <SafeFormatMessage id="Order-Subtotal-Include-Tax" />
+                                    </td>
+                                    <td className="display-cell">
+                                      {
+                                        orderData?.orderSubtotalInclTaxDetails
+                                          .formattedPrice
+                                      }
+                                    </td>
+                                  </tr>
+                                  {isDiscountApplied && (
+                                    <tr>
+                                      <td className="fw-bold text-danger">
+                                        <SafeFormatMessage id="Discount-Amount" />
+                                      </td>
+                                      <td className="text-danger display-cell">
+                                        - {discountAmount}{' '}
+                                        {` (${orderData?.userCurrencyCode})`}
+                                      </td>
+                                    </tr>
+                                  )}
+                                  {orderData?.orderItems[0]
+                                    ?.trialPeriodInDays ? (
+                                    <>
+                                      <tr>
+                                        <td className="fw-bold">
+                                          <SafeFormatMessage id="Due-Now" />
+                                        </td>
+                                        <td className="trial display-cell">
+                                          0.00{' '}
+                                          {` (${orderData?.userCurrencyCode}) `}
+                                          /{' '}
+                                          {
+                                            orderData?.orderItems[0]
+                                              ?.trialPeriodInDays
+                                          }{' '}
+                                          <SafeFormatMessage id="Days" />
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td className="fw-bold ">
+                                          <SafeFormatMessage id="After-Trial" />
+                                          <div className="normal-text font-small fw-bold">
+                                            <SafeFormatMessage id="Ends-On" /> (
+                                            {trialEndDate})
+                                          </div>
+                                        </td>
+                                        <td className="total fw-bold display-cell ">
+                                          <div>
+                                            {
+                                              orderData?.orderTotalDetails
+                                                .formattedPrice
+                                            }
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    </>
+                                  ) : (
+                                    <tr className="">
+                                      <td className="fw-bold ">
+                                        <SafeFormatMessage id="Total" />
+                                      </td>
+                                      <td className="total fw-bold display-cell ">
+                                        {' '}
+                                        {
+                                          orderData?.orderTotalDetails
+                                            .formattedPrice
+                                        }
+                                      </td>
+                                    </tr>
+                                  )}
+                                  {isDiscountApplied && (
+                                    <tr>
+                                      <td className="fw-bold py-2 px-8 total">
+                                        <SafeFormatMessage id="Total-Payable" />
+                                      </td>
+                                      <td className="fw-bold py-2 px-8 total">
+                                        $
+                                        {orderData?.orderTotal - discountAmount}
+                                      </td>
+                                    </tr>
+                                  )}
+                                </tbody>
+                              </table>
+                            }
+                            {
+                              <Form>
+                                <div className=" mr-3">
+                                  <Form.Group className="mb-3 merged-form-group">
+                                    {discountCodeStatus && (
+                                      <>
+                                        <Form.Control
+                                          type="text"
+                                          placeholder={intl.formatMessage({
+                                            id: 'Enter-Discount-Code',
+                                          })}
+                                          value={discountCode}
+                                          onChange={(e) =>
+                                            setDiscountCode(e.target.value)
+                                          }
+                                          className="form-control"
+                                        />
+                                        <Button
+                                          variant="secondary"
+                                          type="button"
+                                          onClick={handleApplyDiscount}
+                                          className="btn"
+                                        >
+                                          <SafeFormatMessage id="Apply" />
+                                        </Button>
+                                      </>
+                                    )}
+                                  </Form.Group>
+                                </div>
+
+                                {hasToPay && (
+                                  <Form.Group className="mb-3">
+                                    <Form.Check
+                                      type="checkbox"
+                                      label={
+                                        <SafeFormatMessage id="Remember-Card-Information" />
+                                      }
+                                      checked={rememberCardInfo}
+                                      onChange={handleRememberCardInfoChange}
+                                      value={rememberCardInfo}
+                                      disabled={autoRenewal}
+                                      className="font-small"
+                                    />
+                                  </Form.Group>
+                                )}
+
+                                <Form.Group className="mb-3">
+                                  <Form.Check
+                                    type="checkbox"
+                                    label={
+                                      <SafeFormatMessage id="Allow-Auto-Renewal" />
                                     }
-                                    className="form-control"
+                                    checked={autoRenewal}
+                                    onChange={handleAutoRenewalChange}
+                                    value={autoRenewal}
+                                    className="font-small"
                                   />
+                                </Form.Group>
+                              </Form>
+                            }
+                            <div
+                              className={
+                                hasToPay
+                                  ? 'button-container-center'
+                                  : 'button-container'
+                              }
+                            >
+                              <Button
+                                variant="secondary"
+                                type="button"
+                                onClick={handlePayment}
+                                className={hasToPay ? 'px-6' : 'px-6'}
+                              >
+                                {hasToPay ? (
+                                  <SafeFormatMessage id={`Checkout`} />
+                                ) : (
+                                  <SafeFormatMessage id="Complete" />
+                                )}
+                              </Button>
+                              {hasToPay && (
+                                <>
+                                  <span className="underline m-2">
+                                    <SafeFormatMessage id="or" />
+                                  </span>
                                   <Button
-                                    variant="secondary"
+                                    variant="primary"
                                     type="button"
-                                    onClick={handleApplyDiscount}
-                                    className="btn"
+                                    onClick={() => setVisible(true)}
+                                    className="mx-2 "
                                   >
-                                    <SafeFormatMessage id="Apply" />
+                                    <SafeFormatMessage id="Create-Payment-Link" />
                                   </Button>
                                 </>
                               )}
-                            </Form.Group>
-                          </div>
+                            </div>
+                          </Card.Body>
 
-                          {hasToPay && (
-                            <Form.Group className="mb-3">
-                              <Form.Check
-                                type="checkbox"
-                                label={
-                                  <SafeFormatMessage id="Remember-Card-Information" />
-                                }
-                                checked={rememberCardInfo}
-                                onChange={handleRememberCardInfoChange}
-                                value={rememberCardInfo}
-                                disabled={autoRenewal}
-                                className="font-small"
-                              />
-                            </Form.Group>
-                          )}
-
-                          <Form.Group className="mb-3">
-                            <Form.Check
-                              type="checkbox"
-                              label={
-                                <SafeFormatMessage id="Allow-Auto-Renewal" />
-                              }
-                              checked={autoRenewal}
-                              onChange={handleAutoRenewalChange}
-                              value={autoRenewal}
-                              className="font-small"
-                            />
-                          </Form.Group>
-                        </Form>
-                      }
-                      <div
-                        className={
-                          hasToPay
-                            ? 'button-container-center'
-                            : 'button-container'
-                        }
-                      >
-                        <Button
-                          variant="secondary"
-                          type="button"
-                          onClick={handlePayment}
-                          className={hasToPay ? 'px-6' : 'px-6'}
-                        >
-                          {hasToPay ? (
-                            <SafeFormatMessage id={`Checkout`} />
-                          ) : (
-                            <SafeFormatMessage id="Complete" />
-                          )}
-                        </Button>
-                        {hasToPay && (
-                          <>
-                            <span className="underline m-2">
-                              <SafeFormatMessage id="or" />
-                            </span>
-                            <Button
-                              variant="primary"
-                              type="button"
-                              onClick={() => setVisible(true)}
-                              className="mx-2 "
-                            >
-                              <SafeFormatMessage id="Create-Payment-Link" />
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    </Card.Body>
-
-                    {/* <Card.Body>
+                          {/* <Card.Body>
                     {paymentMethod && hasToPay && (
                       <div className="d-flex align-items-start justify-content-between py-3">
                         <div className="">
@@ -773,36 +727,39 @@ const CheckoutPage = (data) => {
                     )}
                     
                   </Card.Body> */}
-                    <Card.Footer>
-                      {orderData?.orderItems[0]?.trialPeriodInDays ? (
-                        <div className="free-trial-terms">
-                          <p className="fw-bold">
-                            <SafeFormatMessage id="Free-Trial-Terms" />
-                          </p>
+                          <Card.Footer>
+                            {orderData?.orderItems[0]?.trialPeriodInDays ? (
+                              <div className="free-trial-terms">
+                                <p className="fw-bold">
+                                  <SafeFormatMessage id="Free-Trial-Terms" />
+                                </p>
 
-                          <p className="font-small">
-                            <BsCheckCircleFill className="check-circle" />{' '}
-                            <SafeFormatMessage id="Auto-Start-Billing-After-Trial" />
-                            <br />
-                            <BsCheckCircleFill className="check-circle" />{' '}
-                            <SafeFormatMessage
-                              id="Cancel-Before"
-                              values={{ trialEndDate }}
-                            />{' '}
-                            {trialEndDate}{' '}
-                            <SafeFormatMessage
-                              id="Billing-Starts"
-                              values={{ trialEndDate }}
-                            />
-                          </p>
+                                <p className="font-small">
+                                  <BsCheckCircleFill className="check-circle" />{' '}
+                                  <SafeFormatMessage id="Auto-Start-Billing-After-Trial" />
+                                  <br />
+                                  <BsCheckCircleFill className="check-circle" />{' '}
+                                  <SafeFormatMessage
+                                    id="Cancel-Before"
+                                    values={{ trialEndDate }}
+                                  />{' '}
+                                  {trialEndDate}{' '}
+                                  <SafeFormatMessage
+                                    id="Billing-Starts"
+                                    values={{ trialEndDate }}
+                                  />
+                                </p>
+                              </div>
+                            ) : (
+                              ''
+                            )}
+                          </Card.Footer>
                         </div>
-                      ) : (
-                        ''
-                      )}
-                    </Card.Footer>
-                  </div>
-                </Col>
-              </Row>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </Col>
             </Container>
           ) : (
             <Row className="p-2">

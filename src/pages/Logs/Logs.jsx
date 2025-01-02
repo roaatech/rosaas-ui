@@ -288,17 +288,19 @@ export default function Logs() {
           </Card.Body>
         </Card>
         <ThemeDialog visible={visible} setVisible={setVisible} size={'xl'}>
-          <ShowDetails
-            popupLabel={popUpLabel}
-            data={handleData(logDetails)}
-            setVisible={setVisible}
-            className={{
-              Message: 'description',
-              Template: 'description',
-              Exception: 'description',
-              Properties: 'description',
-            }}
-          />
+          {logDetails.id == currentId && (
+            <ShowDetails
+              popupLabel={popUpLabel}
+              data={handleData(logDetails)}
+              setVisible={setVisible}
+              className={{
+                Message: 'description',
+                Template: 'description',
+                Exception: 'description',
+                Properties: 'description',
+              }}
+            />
+          )}
         </ThemeDialog>
       </div>
     </Wrapper>

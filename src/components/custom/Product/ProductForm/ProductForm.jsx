@@ -52,6 +52,7 @@ const ProductForm = ({
   const formRef = useRef()
   const listData = useSelector((state) => state.productsOwners.lookup)
   let userInfo = useSelector((state) => state.auth.userInfo)
+  console.log({ productData })
 
   const initialValues = {
     displayNameEn: productData?.displayNameLocalizations?.en || '',
@@ -203,10 +204,12 @@ const ProductForm = ({
           })
         )
         setVisible && setVisible(false)
+        if (quickSetup) {
+          handleStepChange(step + 1, 'next', productData.id)
+        }
       }
     },
   })
-  console.log({ ssss: formik.values.isTenantAutoProvisioning, productData })
 
   const RandomApiKey = () => {
     formik.setFieldValue('apiKey', generateApiKey())

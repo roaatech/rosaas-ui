@@ -166,6 +166,12 @@ const UrlItemList = () => {
   // Define groups
   const groups = [
     {
+      name: 'Lifecycle',
+      displayNameId: 'Lifecycle-Group',
+      flag: 'isMainOperationEnabled',
+      isToggleable: true,
+    },
+    {
       name: 'Health',
       displayNameId: 'Health-Group',
       flag: 'isHealthCheckEnabled',
@@ -174,15 +180,10 @@ const UrlItemList = () => {
     {
       name: 'Subscription',
       displayNameId: 'Subscription-Group',
-      flag: null, // Individual items are toggleable
+      flag: null,
       isToggleable: false,
     },
-    {
-      name: 'Lifecycle',
-      displayNameId: 'Lifecycle-Group',
-      flag: 'isMainOperationEnabled',
-      isToggleable: true,
-    },
+
     {
       name: 'SpecificationValidator',
       displayNameId: 'Specification-Validator-Group',
@@ -243,19 +244,20 @@ const UrlItemList = () => {
   const handleUrlChange = async (itemId, newPath) => {
     const updatedProductData = { ...productData }
     const item = urlItemsData.find((item) => item.id === itemId)
+    const isEnabled = productData?.[item.flag]
 
     updatedProductData[item.pathKey] = newPath
 
-    if (item.isToggleable && newPath.trim() === '') {
+    if (isEnabled && newPath.trim() === '') {
       updatedProductData[item.flag] = false
-      setGroupStates((prev) => ({
-        ...prev,
-        [item.flag]: false,
-      }))
-      setValidationMessages((prev) => ({
-        ...prev,
-        [item.flag]: 'The-URL-cannot-be-empty-while-the-group-is-enabled.',
-      }))
+      // setGroupStates((prev) => ({
+      //   ...prev,
+      //   [item.flag]: false,
+      // }))
+      // setValidationMessages((prev) => ({
+      //   ...prev,
+      //   [item.flag]: 'The-URL-cannot-be-empty-while-the-group-is-enabled.',
+      // }))
     } else {
       setValidationMessages((prev) => ({
         ...prev,
@@ -275,6 +277,7 @@ const UrlItemList = () => {
     const updatedProductData = { ...productData }
     const item = urlItemsData.find((item) => item.id === itemId)
     const isEnabled = !productData?.[item.flag]
+    console.log({ item })
 
     if (
       isEnabled &&

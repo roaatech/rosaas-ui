@@ -12,13 +12,15 @@ const Label = ({
   hasBorder,
   style,
   sameWidth,
+  isClickable,
+  onClick,
 }) => {
   return (
     <Wrapper>
       <span
         className={`${lighter ? 'lighter label' : 'normal label'} ${
           small ? 'small' : ''
-        } ${className} `}
+        } ${className} ${isClickable ? 'clickable' : ''}`}
         style={{
           display: sameWidth && 'inline-block',
           color,
@@ -27,8 +29,10 @@ const Label = ({
           border: hasBorder && '1px solid',
           width: sameWidth && `${sameWidth}px`,
           textAlign: sameWidth && 'center',
+          cursor: isClickable ? 'pointer' : 'default',
           ...style,
         }}
+        onClick={isClickable ? onClick : undefined}
       >
         {icon ? icon : null} {value}
       </span>

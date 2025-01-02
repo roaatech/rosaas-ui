@@ -21,6 +21,7 @@ const TableHead = ({
   button = true,
   icon,
   variant,
+  onClick,
 }) => {
   const { searchWait } = useGlobal()
   const [inputValue, setInputValue] = useState('')
@@ -55,7 +56,7 @@ const TableHead = ({
               <Button
                 variant={variant ? variant : 'secondary'}
                 className="addButton"
-                onClick={() => setVisibleHead(true)}
+                onClick={() => (onClick ? onClick() : setVisibleHead(true))}
               >
                 <FontAwesomeIcon icon={icon ? icon : faPlus} className="mx-2" />
                 {label}

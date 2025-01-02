@@ -1,6 +1,10 @@
 import styled from 'styled-components'
+import bg from '../../assets/img/pages/login/bg.svg'
 
 export const Wrapper = styled.div`
+  background-image: url(${bg});
+  background-size: cover;
+  min-height: 100vh;
   .main-container {
     padding: 4%;
   }

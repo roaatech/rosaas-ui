@@ -487,16 +487,16 @@ const ClientCredentials = ({ data }) => {
                           />
 
                           {/* SecretMangements component */}
-                          <tr className="SecretMangements">
-                            {SecretManagementVisible[t.id] && (
-                              <td colSpan="9">
-                                <SecretMangements
-                                  data={data}
-                                  currentClientId={currentClientIdManagement}
-                                />
-                              </td>
-                            )}
-                          </tr>
+                          {/* <tr className="SecretMangements"> */}
+                          {SecretManagementVisible[t.id] && (
+                            <td colSpan="9">
+                              <SecretMangements
+                                data={data}
+                                currentClientId={currentClientIdManagement}
+                              />
+                            </td>
+                          )}
+                          {/* </tr> */}
                         </React.Fragment>
                       )
                     }

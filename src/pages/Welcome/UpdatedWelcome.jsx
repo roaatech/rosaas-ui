@@ -22,6 +22,7 @@ import {
   faArrowRight,
   faBoxes,
   faCalendar,
+  faMagicWandSparkles,
   faUser,
   faUsers,
 } from '@fortawesome/free-solid-svg-icons'
@@ -45,6 +46,7 @@ import { setAllPlansLookup } from '../../store/slices/products/productsSlice'
 import { el } from 'date-fns/locale'
 import FilterSearchContainer from '../../components/custom/Shared/FilterSearchContainer/FilterSearchContainer'
 import GenerateCard from './GenerateCard'
+import ProWizard from '../ProWizard/ProWizard'
 
 const ProductFilterContainer = ({ setAllSelectedProducts }) => {
   const [selectedProducts, setSelectedProducts] = useState([])
@@ -123,6 +125,7 @@ const getRandomColor = () => {
 const UpdatedDashboard = () => {
   const [visibleHead, setVisibleHead] = useState(false)
   const [allSelectedData, setAllSelectedData] = useState([])
+  console.log({ allSelectedData: allSelectedData?.length })
 
   const [selectedFilters, setSelectedFilters] = useState([])
   const [isInitialized, setIsInitialized] = useState(false)
@@ -346,6 +349,13 @@ const UpdatedDashboard = () => {
   })
 
   const fetchSubscriptionsPerProductChartData = () => {
+    if (
+      (StatisticsCountsList &&
+        Object.keys(StatisticsCountsList).length === 0) ||
+      !StatisticsCountsList
+    ) {
+      return
+    }
     const chartSubscriptions = {
       labels: [],
       data: [],
@@ -372,15 +382,18 @@ const UpdatedDashboard = () => {
 
     setChartSubscriptions(chartSubscriptions)
   }
-
+  let userRole = useSelector((state) => state.auth?.userInfo?.userType)
   useEffect(() => {
-    if (!StatisticsCountsList) {
+    if (!StatisticsCountsList || StatisticsCountsList?.length === 0) {
       return
     }
     fetchSubscriptionsPerProductChartData()
-  }, [StatisticsCountsList])
+  }, [StatisticsCountsList, allSelectedData, StatisticsCountsList?.length])
   const fetchSubscriptionsCounts = async () => {
-    if (!StatisticsCountsList) {
+    if (
+      !StatisticsCountsList ||
+      Object.keys(StatisticsCountsList).length === 0
+    ) {
       return
     }
     dispatch(setLoading(true))
@@ -477,7 +490,10 @@ const UpdatedDashboard = () => {
     }
   }
   const fetchPlanPieChartData = async () => {
-    if (!StatisticsCountsList) {
+    if (
+      !StatisticsCountsList ||
+      Object.keys(StatisticsCountsList).length === 0
+    ) {
       return
     }
     const planList = await getPlanFilteredList()
@@ -530,12 +546,24 @@ const UpdatedDashboard = () => {
   }
 
   useEffect(() => {
-    fetchSubscriptionsCounts()
-    fetchPlanPieChartData()
-  }, [StatisticsCountsList, timeGranularity, periodOffset])
+    ;(async () => {
+      await fetchSubscriptionsCounts()
+      await fetchPlanPieChartData()
+    })()
+  }, [
+    StatisticsCountsList,
+    StatisticsCountsList && Object.keys(StatisticsCountsList).length > 0,
+    timeGranularity,
+    periodOffset,
+    // allSelectedData,
+  ])
   useEffect(() => {
     generateChartData()
-  }, [timeGranularity, Object.keys(StatisticsDetailsList).length])
+  }, [
+    timeGranularity,
+    StatisticsCountsList && Object.keys(StatisticsDetailsList).length,
+    allSelectedData,
+  ])
   const handlePreviousPeriods = () => {
     setPeriodOffset(periodOffset + 1)
   }
@@ -641,27 +669,15 @@ const UpdatedDashboard = () => {
           search={false}
           title={<SafeFormatMessage id="Dashboard" />}
           label={
-            <SafeFormatMessage
-              id="Add-Product"
-              defaultMessage={'Add Product'}
-            />
+            <SafeFormatMessage id="ProWizard" defaultMessage={'ProWizard'} />
           }
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
           button={true}
+          onClick={() => navigate(Routes.QuickProductWizard.path)}
+          icon={faMagicWandSparkles}
         >
-          <ProductForm
-            popupLabel={
-              <SafeFormatMessage
-                id="Create-Product"
-                defaultMessage={'Create Product'}
-              />
-            }
-            type={'create'}
-            visible={visibleHead}
-            setVisible={setVisibleHead}
-            sideBar={true}
-          />
+          <ProWizard />
         </TableHead>
         <div className="mb-4"></div>
         <Row className="justify-content-md-center align-items-stretch">
@@ -672,18 +688,20 @@ const UpdatedDashboard = () => {
             </Col>
           </Row>
           <Row className="mt-3">
-            <GenerateCard
-              count={
-                productOwnersLookup
-                  ? Object.keys(productOwnersLookup).length
-                  : 0
-              }
-              variant={'var(--second-color-2)'}
-              icon={<BsBuildings />}
-              md={4}
-              title={<SafeFormatMessage id="Total-Products-Owners" />}
-              unit={<SafeFormatMessage id="Products-Owners" />}
-            />
+            {userRole == 'superAdmin' && (
+              <GenerateCard
+                count={
+                  productOwnersLookup
+                    ? Object.keys(productOwnersLookup).length
+                    : 0
+                }
+                variant={'var(--second-color-2)'}
+                icon={<BsBuildings />}
+                md={4}
+                title={<SafeFormatMessage id="Total-Products-Owners" />}
+                unit={<SafeFormatMessage id="Products-Owners" />}
+              />
+            )}
             <GenerateCard
               count={productsLookup ? Object.keys(productsLookup).length : 0}
               icon={<BsBoxes />}
@@ -1033,7 +1051,7 @@ const UpdatedDashboard = () => {
                       title={SafeFormatMessage({ id: 'Day' })}
                     ></Tab>
                   </Tabs>
-                  <div className="d-flex justify-content-between align-items-center mt-4">
+                  {/* <div className="d-flex justify-content-between align-items-center mt-4">
                     <Button
                       variant="primary"
                       onClick={handlePreviousPeriods}
@@ -1056,8 +1074,9 @@ const UpdatedDashboard = () => {
                     >
                       <FontAwesomeIcon icon={faArrowRight} />
                     </Button>
-                  </div>
+                  </div> */}
                   <Chart
+                    className="mt-6"
                     type="line"
                     data={chartData.lineChartData}
                     options={{

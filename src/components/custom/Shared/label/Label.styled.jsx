@@ -19,4 +19,17 @@ export const Wrapper = styled.span`
     border-radius: 5px;
     font-size: var(--smallFont);
   }
+  .clickable {
+    text-decoration: underline;
+    transition:
+      background-color 0.3s ease,
+      transform 0.2s ease;
+    &:hover {
+      filter: brightness(0.9);
+      transform: scale(1.05);
+    }
+    &:active {
+      transform: scale(0.95);
+    }
+  }
 `

@@ -281,6 +281,11 @@ const CreateWebhookForm = ({
         {!quickSetup && (
           <Modal.Header closeButton>
             <Modal.Title className="h6">{popUpLable}</Modal.Title>
+            <Button
+              variant="close"
+              aria-label="Close"
+              onClick={() => setVisible(false)}
+            />
           </Modal.Header>
         )}
         <Modal.Body>
@@ -370,6 +375,13 @@ const CreateWebhookForm = ({
         <Modal.Footer>
           <Button variant="secondary" type="submit">
             <SafeFormatMessage id="Submit" />
+          </Button>
+          <Button
+            variant="link"
+            className="text-gray "
+            onClick={() => setVisible(false)}
+          >
+            <SafeFormatMessage id="Close" />
           </Button>
         </Modal.Footer>
       </Form>

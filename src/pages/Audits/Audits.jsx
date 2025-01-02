@@ -392,11 +392,13 @@ export default function Audits() {
           </Card.Body>
         </Card>
         <ThemeDialog visible={visible} setVisible={setVisible} size={'xl'}>
-          <ShowDetails
-            popupLabel={popUpLable}
-            data={auditDetails && handleData(auditDetails)}
-            setVisible={setVisible}
-          />
+          {auditDetails?.id == currentId && (
+            <ShowDetails
+              popupLabel={popUpLable}
+              data={handleData(auditDetails)}
+              setVisible={setVisible}
+            />
+          )}
         </ThemeDialog>
       </div>
     </Wrapper>

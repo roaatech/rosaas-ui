@@ -1,19 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { QuickSetupWrapper } from './QuickSetup.styled'
+import { QuickSetupWrapper, TableWrapper } from './ProWizard.styled'
 import BreadcrumbComponent from '../../components/custom/Shared/Breadcrumb/Breadcrumb'
 import { Steps } from 'primereact/steps'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBox,
+  faCode,
+  faCogs,
+  faEye,
   faInfoCircle,
   faMoneyCheckDollar,
+  faNetworkWired,
   faPencilSquare,
+  faPlug,
+  faStar,
+  faToggleOn,
 } from '@fortawesome/free-solid-svg-icons'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
 import { Button, Card, Col, Container } from '@themesberg/react-bootstrap'
 import ProductForm from '../../components/custom/Product/ProductForm/ProductForm'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Form, useNavigate, useParams } from 'react-router-dom'
 import { Routes } from '../../routes'
 import { use } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -35,8 +42,9 @@ import IntegrationUrlsTab from '../../components/custom/Product/IntegrationUrlsT
 import WebhookList from '../../components/custom/Product/WebhookList/WebhookList'
 import CreateWebhookForm from '../../components/custom/Product/WebhookList/WebhookForm/WebhookForm'
 import FrontendIntegrationUrlsTab from '../../components/custom/Product/FrontendIntegrationUrlsTab/FrontendIntegrationUrlsTab'
+import ReviewAndLaunch from '../../components/custom/ReviewAndLaunch/ReviewAndLaunch'
 
-const QuickSetup = () => {
+const ProWizard = () => {
   const step = useSelector((state) => state.main.quickSetupStep)
   const handleSubmit = useRef()
   const navigate = useNavigate()
@@ -65,25 +73,68 @@ const QuickSetup = () => {
   }, [productId])
 
   const ProWizardSteps = [
-    { label: 'product-info', icon: <FontAwesomeIcon icon={faBox} /> }, // Step 1
-    { label: 'plan-info', icon: <FontAwesomeIcon icon={faPencilSquare} /> }, // Step 2
-    { label: 'feature-info', icon: <FontAwesomeIcon icon={faInfoCircle} /> }, // Step 3
-    { label: 'plan-feature', icon: <FontAwesomeIcon icon={faPencilSquare} /> }, // Step 4
+    { label: 'product-info', icon: <FontAwesomeIcon icon={faBox} /> }, // Step 1: Product Info
+    { label: 'plan-info', icon: <FontAwesomeIcon icon={faPencilSquare} /> }, // Step 2: Plan Info
+    { label: 'feature-info', icon: <FontAwesomeIcon icon={faStar} /> }, // Step 3: Feature Info
+    { label: 'plan-feature', icon: <FontAwesomeIcon icon={faCogs} /> }, // Step 4: Plan Feature
     {
       label: 'plan-price',
       icon: <FontAwesomeIcon icon={faMoneyCheckDollar} />,
-    }, // Step 5
-    { label: 'specifications', icon: <FontAwesomeIcon icon={faInfoCircle} /> }, // Step 6
-    {
-      label: 'integration-url',
-      icon: <FontAwesomeIcon icon={faPencilSquare} />,
-    }, // Step 7
-    { label: 'webhooks', icon: <FontAwesomeIcon icon={faInfoCircle} /> }, // Step 8
-    {
-      label: 'frontend-integration',
-      icon: <FontAwesomeIcon icon={faPencilSquare} />,
-    }, // Step 9
+    }, // Step 5: Plan Price
+    { label: 'specifications', icon: <FontAwesomeIcon icon={faInfoCircle} /> }, // Step 6: Specifications
+    { label: 'integration-url', icon: <FontAwesomeIcon icon={faPlug} /> }, // Step 8: Integration URL
+    { label: 'webhooks', icon: <FontAwesomeIcon icon={faNetworkWired} /> }, // Step 9: Webhooks
+    { label: 'Launch-&-Preview', icon: <FontAwesomeIcon icon={faEye} /> }, // Step 7: Activate Product
+    { label: 'frontend-integration', icon: <FontAwesomeIcon icon={faCode} /> }, // Step 10: Frontend Integration
   ]
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth)
+  const getVisibleSteps = (steps, activeIndex) => {
+    return steps.map((step, index) => {
+      if (screenWidth <= 748) {
+        // For widths 748px or less: Current, one before, and one after
+        return {
+          ...step,
+          className:
+            index === activeIndex ||
+            index === activeIndex - 1 ||
+            index === activeIndex + 1
+              ? 'wizard-step narrow-visible'
+              : 'wizard-step',
+        }
+      } else if (screenWidth <= 1299) {
+        // For widths 1299px or less: Current, two before, and one after
+
+        return {
+          ...step,
+          className:
+            index === activeIndex ||
+            index === activeIndex - 1 ||
+            index === activeIndex - 2 ||
+            index === activeIndex + 1
+              ? 'wizard-step visible'
+              : 'wizard-step',
+        }
+      }
+      // Default (show all for larger screens)
+      return {
+        ...step,
+        className: 'wizard-step visible',
+      }
+    })
+  }
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth)
+    }
+
+    // Listen for window resize
+    window.addEventListener('resize', handleResize)
+
+    // Clean up the event listener
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
   const hash = window.location.hash.substring(1)
   useEffect(() => {
     if (!productId) {
@@ -112,12 +163,20 @@ const QuickSetup = () => {
       dispatch(setQuickSetupStep(1))
     }
   }, [productId, hash])
-
+  const formRef = useRef(null)
   useEffect(() => {
-    if (productId && step === 1) {
-      navigate(Routes.NotFound.path)
+    if (visible && formRef.current) {
+      formRef.current.scrollIntoView({
+        behavior: 'smooth', // Smooth scrolling
+        block: 'center', // Align to the center of the viewport
+      })
     }
-  }, [step, productId])
+  }, [visible])
+  // useEffect(() => {
+  //   if (productId && step === 1) {
+  //     navigate(Routes.NotFound.path)
+  //   }
+  // }, [step, productId])
 
   /**
    * Handles step navigation.
@@ -154,6 +213,8 @@ const QuickSetup = () => {
     }
   }
   console.log(currentProductData?.featurePlan?.[selectedItemId])
+  const [activeIndex, setActiveIndex] = useState(0)
+  console.log({ activeIndex })
 
   return (
     <QuickSetupWrapper>
@@ -161,32 +222,51 @@ const QuickSetup = () => {
       <div className="main-container">
         <TableHead
           search={false}
-          title={<SafeFormatMessage id="ProWizard" />}
+          title={
+            <>
+              <SafeFormatMessage id="Pro-Product-Wizard" />
+              {currentProductData?.systemName ? (
+                <span>: {currentProductData?.systemName}</span>
+              ) : null}
+            </>
+          }
         />
+
         <Steps
-          model={ProWizardSteps.map((step) => ({
+          model={getVisibleSteps(ProWizardSteps, step - 1).map((step) => ({
             label: (
               <>
-                {step.icon}{' '}
-                <SafeFormatMessage id={step.label.replace('-', '_')} />
+                {step.icon} <SafeFormatMessage id={step.label} />
               </>
             ),
+            className: step.className,
           }))}
           activeIndex={step - 1}
-          readOnly
+          readOnly={productId ? false : true}
+          onSelect={(e) => handleStepChange(e.index + 1, 'next', productId)}
+          disabled={step == 1}
         />
+
         <Container>
-          {step == 1 &&
-            (productId ? (
-              navigate(Routes.NotFound.path)
-            ) : (
-              <>
-                <div className="my-7 ">
-                  <div className=" d-flex justify-content-between align-items-center my-4">
-                    <h4 className="" style={{ color: 'var(--primary4)' }}>
+          {step == 1 && (
+            //   productId ? (
+            //   navigate(Routes.NotFound.path)
+            // ) : (
+            <>
+              <div className="my-7 ">
+                <div className=" d-flex justify-content-between align-items-center my-4">
+                  <h4
+                    ref={formRef}
+                    className=""
+                    style={{ color: 'var(--primary4)' }}
+                  >
+                    {!currentProductData?.id ? (
                       <SafeFormatMessage id="Create-Product" />
-                    </h4>
-                    {/* <Button
+                    ) : (
+                      <SafeFormatMessage id="Edit-Product" />
+                    )}
+                  </h4>
+                  {/* <Button
                       onClick={() => {
                         if (handleSubmit.current) {
                           handleSubmit.current()
@@ -199,29 +279,32 @@ const QuickSetup = () => {
                     >
                       <SafeFormatMessage id="Next" />
                     </Button> */}
-                  </div>
-                  <div className="d-flex justify-content-center">
-                    <Col md={6} className="h-100">
-                      <Card
-                        style={{ backgroundColor: ' var(--themeBackground)' }}
-                      >
-                        <Card.Body>
-                          <ProductForm
-                            quickSetup={true}
-                            type={'create'}
-                            triggerSubmit={(submitFunction) =>
-                              (handleSubmit.current = submitFunction)
-                            }
-                            step={step}
-                            handleStepChange={handleStepChange}
-                          />
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  </div>{' '}
                 </div>
+                <div className="d-flex justify-content-center">
+                  <Col md={6} className="h-100">
+                    <Card
+                      style={{ backgroundColor: ' var(--themeBackground)' }}
+                    >
+                      <Card.Body ref={formRef}>
+                        <ProductForm
+                          quickSetup={true}
+                          type={currentProductData?.id ? 'edit' : 'create'}
+                          triggerSubmit={(submitFunction) =>
+                            (handleSubmit.current = submitFunction)
+                          }
+                          step={step}
+                          handleStepChange={handleStepChange}
+                          productData={
+                            currentProductData?.id ? currentProductData : null
+                          }
+                        />
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </div>{' '}
+              </div>
 
-                {/* <ProductForm
+              {/* <ProductForm
                   quickSetup={true}
                   type={'create'}
                   triggerSubmit={(submitFunction) =>
@@ -230,8 +313,9 @@ const QuickSetup = () => {
                   step={step}
                   setStep={() => dispatch(setQuickSetupStep(step + 1))}
                 /> */}
-              </>
-            ))}
+            </>
+            // )
+          )}
           {step == 2 && currentProductData && (
             <>
               <div className="my-7 ">
@@ -255,18 +339,24 @@ const QuickSetup = () => {
                   </Button>
                   {/* )} */}
                 </div>
-                <ProductPlansList
-                  productId={productId}
-                  quickSetup={true}
-                  setSelectedItemId={setSelectedItemId}
-                  setVisibleQuickSetup={setVisible}
-                  setFormType={setFormType}
-                />
+                <TableWrapper>
+                  <ProductPlansList
+                    productId={productId}
+                    quickSetup={true}
+                    setSelectedItemId={setSelectedItemId}
+                    setVisibleQuickSetup={setVisible}
+                    setFormType={setFormType}
+                  />
+                </TableWrapper>
               </div>
               {visible && (
                 <>
                   <h4 className="" style={{ color: 'var(--primary4)' }}>
-                    <SafeFormatMessage id="Create-Plan" />
+                    {formType == 'create' ? (
+                      <SafeFormatMessage id="Create-Plan" />
+                    ) : (
+                      <SafeFormatMessage id="Edit-Plan" />
+                    )}
                   </h4>
                   <div className="d-flex justify-content-center">
                     <Col md={6}>
@@ -274,7 +364,7 @@ const QuickSetup = () => {
                         className="mt-3"
                         style={{ backgroundColor: ' var(--themeBackground)' }}
                       >
-                        <Card.Body>
+                        <Card.Body ref={formRef}>
                           <PlanForm
                             quickSetup={true}
                             type={formType}
@@ -321,18 +411,24 @@ const QuickSetup = () => {
                     <SafeFormatMessage id="Add-Feature" />
                   </Button>
                 </div>
-                <ProductFeaturesList
-                  productId={productId}
-                  quickSetup={true}
-                  setSelectedItemId={setSelectedItemId}
-                  setVisibleQuickSetup={setVisible}
-                  setFormType={setFormType}
-                />
+                <TableWrapper>
+                  <ProductFeaturesList
+                    productId={productId}
+                    quickSetup={true}
+                    setSelectedItemId={setSelectedItemId}
+                    setVisibleQuickSetup={setVisible}
+                    setFormType={setFormType}
+                  />
+                </TableWrapper>
               </div>
               {visible && (
                 <>
                   <h4 className="" style={{ color: 'var(--primary4)' }}>
-                    <SafeFormatMessage id="Create-Feature" />
+                    {formType == 'create' ? (
+                      <SafeFormatMessage id="Create-Feature" />
+                    ) : (
+                      <SafeFormatMessage id="Edit-Feature" />
+                    )}
                   </h4>
                   <div className="d-flex justify-content-center">
                     <Col md={6}>
@@ -340,7 +436,7 @@ const QuickSetup = () => {
                         className="mt-3"
                         style={{ backgroundColor: ' var(--themeBackground)' }}
                       >
-                        <Card.Body>
+                        <Card.Body ref={formRef}>
                           <FeatureForm
                             quickSetup={true}
                             type={formType}
@@ -386,17 +482,23 @@ const QuickSetup = () => {
                     <SafeFormatMessage id="Add-Plan-Feature" />
                   </Button>
                 </div>
-                <ProductFeaturePlan
-                  quickSetup={true}
-                  setSelectedItemId={setSelectedItemId}
-                  setVisibleQuickSetup={setVisible}
-                  setFormType={setFormType}
-                />
+                <TableWrapper>
+                  <ProductFeaturePlan
+                    quickSetup={true}
+                    setSelectedItemId={setSelectedItemId}
+                    setVisibleQuickSetup={setVisible}
+                    setFormType={setFormType}
+                  />
+                </TableWrapper>
               </div>
               {visible && (
                 <>
                   <h4 className="" style={{ color: 'var(--primary4)' }}>
-                    <SafeFormatMessage id="Create-Plan-Feature" />
+                    {formType == 'create' ? (
+                      <SafeFormatMessage id="Create-Plan-Feature" />
+                    ) : (
+                      <SafeFormatMessage id="Edit-Plan-Feature" />
+                    )}
                   </h4>
                   <div className="d-flex justify-content-center">
                     <Col md={6}>
@@ -404,7 +506,7 @@ const QuickSetup = () => {
                         className="mt-3"
                         style={{ backgroundColor: ' var(--themeBackground)' }}
                       >
-                        <Card.Body>
+                        <Card.Body ref={formRef}>
                           <FeaturePlanForm
                             quickSetup={true}
                             type={formType}
@@ -454,17 +556,23 @@ const QuickSetup = () => {
                     <SafeFormatMessage id="Add-Plan-Price" />
                   </Button>
                 </div>
-                <ProductPlansPriceList
-                  quickSetup={true}
-                  setSelectedItemId={setSelectedItemId}
-                  setVisibleQuickSetup={setVisible}
-                  setFormType={setFormType}
-                />
+                <TableWrapper>
+                  <ProductPlansPriceList
+                    quickSetup={true}
+                    setSelectedItemId={setSelectedItemId}
+                    setVisibleQuickSetup={setVisible}
+                    setFormType={setFormType}
+                  />
+                </TableWrapper>
               </div>
               {visible && (
                 <>
                   <h4 className="" style={{ color: 'var(--primary4)' }}>
-                    <SafeFormatMessage id="Create-plan-price" />
+                    {formType == 'create' ? (
+                      <SafeFormatMessage id="Create-plan-price" />
+                    ) : (
+                      <SafeFormatMessage id="Edit-plan-price" />
+                    )}
                   </h4>
                   <div className="d-flex justify-content-center">
                     <Col md={6}>
@@ -472,7 +580,7 @@ const QuickSetup = () => {
                         className="mt-3"
                         style={{ backgroundColor: ' var(--themeBackground)' }}
                       >
-                        <Card.Body>
+                        <Card.Body ref={formRef}>
                           <PlanPriceForm
                             quickSetup={true}
                             type={formType}
@@ -518,18 +626,24 @@ const QuickSetup = () => {
                     <SafeFormatMessage id="Add-Specification" />
                   </Button>
                 </div>
-                <ProductCustomSpecificationList
-                  productId={productId}
-                  quickSetup={true}
-                  setSelectedItemId={setSelectedItemId}
-                  setVisibleQuickSetup={setVisible}
-                  setFormType={setFormType}
-                />
+                <TableWrapper>
+                  <ProductCustomSpecificationList
+                    productId={productId}
+                    quickSetup={true}
+                    setSelectedItemId={setSelectedItemId}
+                    setVisibleQuickSetup={setVisible}
+                    setFormType={setFormType}
+                  />
+                </TableWrapper>
               </div>
               {visible && (
                 <>
                   <h4 className="" style={{ color: 'var(--primary4)' }}>
-                    <SafeFormatMessage id="Create-Specification" />
+                    {formType == 'create' ? (
+                      <SafeFormatMessage id="Create-Specification" />
+                    ) : (
+                      <SafeFormatMessage id="Edit-Specification" />
+                    )}
                   </h4>
                   <div className="d-flex justify-content-center">
                     <Col md={12}>
@@ -537,7 +651,7 @@ const QuickSetup = () => {
                         className="mt-3"
                         style={{ backgroundColor: ' var(--themeBackground)' }}
                       >
-                        <Card.Body>
+                        <Card.Body ref={formRef}>
                           <CustomSpecificationForm
                             quickSetup={true}
                             type={formType}
@@ -565,7 +679,9 @@ const QuickSetup = () => {
                     <SafeFormatMessage id="API-INTEGRATION-URLs" />
                   </h4>
                 </div>
-                <IntegrationUrlsTab data={currentProductData} />
+                <TableWrapper>
+                  <IntegrationUrlsTab data={currentProductData} />
+                </TableWrapper>
               </div>
             </>
           )}
@@ -591,12 +707,18 @@ const QuickSetup = () => {
                     <SafeFormatMessage id="Add-Webhook" />
                   </Button>
                 </div>
-                <WebhookList quickSetup={true} />
+                <TableWrapper>
+                  <WebhookList quickSetup={true} />
+                </TableWrapper>
               </div>
               {visible && (
                 <>
                   <h4 className="" style={{ color: 'var(--primary4)' }}>
-                    <SafeFormatMessage id="Create-Webhook" />
+                    {formType == 'create' ? (
+                      <SafeFormatMessage id="Create-Webhook" />
+                    ) : (
+                      <SafeFormatMessage id="Edit-Webhook" />
+                    )}
                   </h4>
                   <div className="d-flex justify-content-center">
                     <Col md={6}>
@@ -604,7 +726,7 @@ const QuickSetup = () => {
                         className="mt-3"
                         style={{ backgroundColor: ' var(--themeBackground)' }}
                       >
-                        <Card.Body>
+                        <Card.Body ref={formRef}>
                           <CreateWebhookForm
                             quickSetup={true}
                             type={formType}
@@ -624,7 +746,14 @@ const QuickSetup = () => {
               )}
             </>
           )}
-          {step == 9 && currentProductData && (
+          {step == 9 && (
+            <>
+              <div className="my-7 ">
+                <ReviewAndLaunch visible={visible} setVisible={setVisible} />
+              </div>
+            </>
+          )}
+          {step == 10 && currentProductData && (
             <>
               <div className="my-7 ">
                 <div className=" d-flex justify-content-between align-items-center my-4">
@@ -632,19 +761,25 @@ const QuickSetup = () => {
                     <SafeFormatMessage id="FRONTEND-INTEGRATION" />
                   </h4>
                 </div>
-                <FrontendIntegrationUrlsTab data={currentProductData} />
+                <TableWrapper>
+                  {' '}
+                  <TableWrapper>
+                    {' '}
+                    <FrontendIntegrationUrlsTab data={currentProductData} />
+                  </TableWrapper>
+                </TableWrapper>
               </div>
             </>
           )}
           {/* <Card.Footer></Card.Footer> */}
           <div
             className={
-              step <= 2
+              step <= 1
                 ? 'd-flex justify-content-end border-top-1 border-light my-6 py-2'
                 : 'd-flex justify-content-between border-top-1 border-light my-6 py-2'
             }
           >
-            {step > 2 && (
+            {step > 1 && (
               <Button
                 onClick={() => {
                   handleStepChange(step - 1, 'previous')
@@ -655,21 +790,34 @@ const QuickSetup = () => {
                 <SafeFormatMessage id="Previous" />
               </Button>
             )}
-            <Button
-              onClick={() => {
-                if (handleSubmit.current && step === 1) {
-                  handleSubmit.current()
-                } else if (step > 1) {
-                  handleStepChange(step + 1, 'next')
-                } else {
-                  console.error('handleSubmit is not set')
-                }
-              }}
-              variant="primary"
-              className="px-4"
-            >
-              <SafeFormatMessage id="Next" />
-            </Button>
+            {step != 10 ? (
+              <Button
+                onClick={() => {
+                  if (handleSubmit.current && step === 1) {
+                    handleSubmit.current()
+                  } else if (step > 1) {
+                    handleStepChange(step + 1, 'next')
+                  } else {
+                    console.error('handleSubmit is not set')
+                  }
+                }}
+                variant="primary"
+                className="px-4"
+              >
+                <SafeFormatMessage id="Next" />
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  navigate(`${Routes.products.path}/${productId}`)
+                }}
+                variant="primary"
+                className="px-4"
+              >
+                {' '}
+                <SafeFormatMessage id="Exit" />
+              </Button>
+            )}
           </div>
         </Container>
       </div>
@@ -677,4 +825,4 @@ const QuickSetup = () => {
   )
 }
 
-export default QuickSetup
+export default ProWizard

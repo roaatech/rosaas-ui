@@ -44,7 +44,7 @@ import CanceledAccount from './pages/CanceledAccount/CanceledAccount'
 import ContactMessagesList from './pages/ContactMessagesPage/ContactMessagesList'
 import ContactMessagesDetailsPage from './pages/ContactMessagesPage/ContactMessagesDetailsPage/ContactMessagesDetailsPage'
 import UpdatedDashboard from './pages/Welcome/UpdatedWelcome'
-import QuickSetup from './pages/QuickSetup/QuickSetup'
+import ProWizard from './pages/ProWizard/ProWizard'
 
 export const adminPanel = '/admin-panel'
 
@@ -57,8 +57,9 @@ export const Routes = {
   },
   QuickProductWizard: {
     path: `${adminPanel}/pro-wizard`,
-    component: () => <POwnerChecker page={<QuickSetup />} />,
+    component: () => <POwnerChecker page={<ProWizard />} />,
     roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+    type: 'noSidebar',
   },
 
   Logs: {
@@ -365,6 +366,7 @@ Routes.ProductsOwnersDetails = {
 }
 Routes.QuickSetupSteps = {
   path: `${Routes.QuickProductWizard.path}/:productId`,
-  component: () => <POwnerChecker page={<QuickSetup />} />,
+  component: () => <POwnerChecker page={<ProWizard />} />,
   roles: ['superAdmin', 'productAdmin', 'clientAdmin'],
+  type: 'noSidebar',
 }

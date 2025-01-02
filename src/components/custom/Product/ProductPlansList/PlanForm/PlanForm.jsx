@@ -23,7 +23,7 @@ import MultilingualInput from '../../../Shared/MultilingualInput/MultilingualInp
 import { activeTab } from '../../../../../const/product.js'
 import SafeFormatMessage from '../../../Shared/SafeFormatMessage/SafeFormatMessage.jsx'
 import { BsFillQuestionCircleFill } from 'react-icons/bs'
-import QuickSetup from '../../../../../pages/QuickSetup/QuickSetup.jsx'
+import ProWizard from '../../../../../pages/ProWizard/ProWizard.jsx'
 
 const PlanForm = ({
   type,

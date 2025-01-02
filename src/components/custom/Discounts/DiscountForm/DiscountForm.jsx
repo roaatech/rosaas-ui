@@ -12,6 +12,8 @@ import {
 } from '../../../../store/slices/discountsSlice'
 import { Client_id } from '../../../../const'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
+import { MultiSelect } from 'primereact/multiselect'
+import { setAllPlansLookup } from '../../../../store/slices/products/productsSlice'
 
 const DiscountForm = ({
   type, // 'create' or 'edit'
@@ -21,10 +23,41 @@ const DiscountForm = ({
   currentId,
 }) => {
   const dispatch = useDispatch()
-  const { createDiscount, editDiscountRequest, getDiscountById } = useRequest()
+  const {
+    createDiscount,
+    editDiscountRequest,
+    getDiscountById,
+    getPlanFilteredList,
+  } = useRequest()
   const discountsData = useSelector((state) => state?.discountsSlice?.discounts)
   const [discountData, setDiscountData] = useState()
+  const productsLookup = useSelector(
+    (state) => state.products?.lookup?.productsLookup
+  )
+  const productOwnersLookup = useSelector(
+    (state) => state.productsOwners.lookup
+  )
+  const plansLookup = useSelector(
+    (state) => state?.products.lookup?.plansLookup
+  )
+  useEffect(() => {
+    if (plansLookup && Object.keys(plansLookup).length > 0) {
+      return
+    }
 
+    const sendRequest = () => {
+      ;(async () => {
+        const listData = await getPlanFilteredList()
+
+        dispatch(
+          setAllPlansLookup(
+            listData.data.data && Object.values(listData.data.data)
+          )
+        )
+      })()
+    }
+    sendRequest()
+  }, [Object.keys(plansLookup).length > 0])
   useEffect(() => {
     const fetchDiscountDetails = async () => {
       if (!currentId || type !== 'edit') {
@@ -63,7 +96,7 @@ const DiscountForm = ({
         adminComment: discountData.adminComment || '',
         discountPercentage: discountData.discountPercentage || 0,
         discountAmount: discountData.discountAmount || 0,
-        maximumDiscountAmount: discountData.maximumDiscountAmount || 0,
+        maximumDiscountAmount: discountData.maximumDiscountAmount || null,
         startDate: discountData.startDate || null,
         endDate: discountData.endDate || null,
         couponCode: discountData.couponCode || '',
@@ -209,15 +242,6 @@ const DiscountForm = ({
     },
   })
 
-  // Options for DiscountType enum
-  const discountTypeOptions = [
-    { value: 1, label: 'assigned-to-plans' },
-    { value: 2, label: 'assigned-to-products' },
-    { value: 3, label: 'assigned-to-products-owners' },
-    { value: 4, label: 'assigned-to-order-total' },
-    { value: 5, label: 'assigned-to-order-subtotal' },
-  ]
-
   // Options for DiscountLimitationType enum
   const discountLimitationOptions = [
     { value: 1, label: 'unlimited' },
@@ -265,142 +289,114 @@ const DiscountForm = ({
             </Col>
 
             <Col md={12}>
-              <div className="mb-3">
-                <label htmlFor="discountType">
-                  <SafeFormatMessage id="discount-type" />{' '}
-                  <span style={{ color: 'red' }}>*</span>
-                </label>
-                <select
-                  name="discountType"
-                  id="discountType"
-                  value={formik.values.discountType}
-                  onChange={formik.handleChange}
-                  className={`form-control ${
-                    formik.touched.discountType && formik.errors.discountType
-                      ? 'is-invalid'
-                      : ''
-                  }`}
-                >
-                  <option value="">
-                    <SafeFormatMessage id="select-type" />
-                  </option>
-                  {discountTypeOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      <SafeFormatMessage id={option.label} />
-                    </option>
-                  ))}
-                </select>
-
-                {formik.touched.discountType && formik.errors.discountType && (
-                  <div className="invalid-feedback">
-                    {formik.errors.discountType}
-                  </div>
-                )}
-              </div>
-            </Col>
-            <div className="px-2 mb-3">
-              <Container className="card pt-2">
-                <Row>
-                  <Col md={12} className="d-flex align-items-center mb-3">
-                    <input
-                      type="checkbox"
-                      name="usePercentage"
-                      id="usePercentage"
-                      checked={usePercentage}
-                      onChange={(e) => setUsePercentage(e.target.checked)}
-                    />
-                    <label htmlFor="usePercentage" className="ml-2">
-                      <SafeFormatMessage id="use-percentage" />
-                    </label>
-                  </Col>
-                  {usePercentage ? (
-                    <>
-                      <Col md={6}>
+              <div className=" mb-3">
+                <Container className="card pt-2">
+                  <Row>
+                    <Col md={12} className="d-flex align-items-center mb-3">
+                      <input
+                        type="checkbox"
+                        name="usePercentage"
+                        id="usePercentage"
+                        checked={usePercentage}
+                        onChange={(e) => setUsePercentage(e.target.checked)}
+                      />
+                      <label htmlFor="usePercentage" className="ml-2">
+                        <SafeFormatMessage id="use-percentage" />
+                      </label>
+                    </Col>
+                    {usePercentage ? (
+                      <>
+                        <Col md={6}>
+                          <div className="mb-3">
+                            <label htmlFor="discountPercentage">
+                              <SafeFormatMessage id="discount-percentage" />{' '}
+                              <span style={{ color: 'red' }}>*</span>
+                            </label>
+                            <input
+                              type="number"
+                              name="discountPercentage"
+                              id="discountPercentage"
+                              value={formik.values.discountPercentage}
+                              onChange={formik.handleChange}
+                              className={`form-control ${
+                                formik.touched.discountPercentage &&
+                                formik.errors.discountPercentage
+                                  ? 'is-invalid'
+                                  : ''
+                              }`}
+                            />
+                            {formik.touched.discountPercentage &&
+                              formik.errors.discountPercentage && (
+                                <div className="invalid-feedback">
+                                  {formik.errors.discountPercentage}
+                                </div>
+                              )}
+                          </div>
+                        </Col>
+                        <Col md={6}>
+                          <div className="mb-3">
+                            <label htmlFor="maximumDiscountAmount">
+                              <SafeFormatMessage id="maximum-discount-amount" />
+                            </label>
+                            <input
+                              type="number"
+                              name="maximumDiscountAmount"
+                              id="maximumDiscountAmount"
+                              value={
+                                formik.values.maximumDiscountAmount > 0
+                                  ? formik.values.maximumDiscountAmount
+                                  : null
+                              }
+                              onChange={formik.handleChange}
+                              className={`form-control ${
+                                formik.touched.maximumDiscountAmount &&
+                                formik.errors.maximumDiscountAmount
+                                  ? 'is-invalid'
+                                  : ''
+                              }`}
+                            />
+                            {formik.touched.maximumDiscountAmount &&
+                              formik.errors.maximumDiscountAmount && (
+                                <div className="invalid-feedback">
+                                  {formik.errors.maximumDiscountAmount}
+                                </div>
+                              )}
+                          </div>
+                        </Col>
+                      </>
+                    ) : (
+                      <Col md={12}>
                         <div className="mb-3">
-                          <label htmlFor="discountPercentage">
-                            <SafeFormatMessage id="discount-percentage" />{' '}
+                          <label htmlFor="discountAmount">
+                            <SafeFormatMessage id="discount-amount" />{' '}
                             <span style={{ color: 'red' }}>*</span>
                           </label>
                           <input
                             type="number"
-                            name="discountPercentage"
-                            id="discountPercentage"
-                            value={formik.values.discountPercentage}
+                            name="discountAmount"
+                            id="discountAmount"
+                            value={formik.values.discountAmount}
                             onChange={formik.handleChange}
                             className={`form-control ${
-                              formik.touched.discountPercentage &&
-                              formik.errors.discountPercentage
+                              formik.touched.discountAmount &&
+                              formik.errors.discountAmount
                                 ? 'is-invalid'
                                 : ''
                             }`}
                           />
-                          {formik.touched.discountPercentage &&
-                            formik.errors.discountPercentage && (
+                          {formik.touched.discountAmount &&
+                            formik.errors.discountAmount && (
                               <div className="invalid-feedback">
-                                {formik.errors.discountPercentage}
+                                {formik.errors.discountAmount}
                               </div>
                             )}
                         </div>
                       </Col>
-                      <Col md={6}>
-                        <div className="mb-3">
-                          <label htmlFor="maximumDiscountAmount">
-                            <SafeFormatMessage id="maximum-discount-amount" />
-                          </label>
-                          <input
-                            type="number"
-                            name="maximumDiscountAmount"
-                            id="maximumDiscountAmount"
-                            value={formik.values.maximumDiscountAmount}
-                            onChange={formik.handleChange}
-                            className={`form-control ${
-                              formik.touched.maximumDiscountAmount &&
-                              formik.errors.maximumDiscountAmount
-                                ? 'is-invalid'
-                                : ''
-                            }`}
-                          />
-                          {formik.touched.maximumDiscountAmount &&
-                            formik.errors.maximumDiscountAmount && (
-                              <div className="invalid-feedback">
-                                {formik.errors.maximumDiscountAmount}
-                              </div>
-                            )}
-                        </div>
-                      </Col>
-                    </>
-                  ) : (
-                    <Col md={12}>
-                      <div className="mb-3">
-                        <label htmlFor="discountAmount">
-                          <SafeFormatMessage id="discount-amount" />{' '}
-                          <span style={{ color: 'red' }}>*</span>
-                        </label>
-                        <input
-                          type="number"
-                          name="discountAmount"
-                          id="discountAmount"
-                          value={formik.values.discountAmount}
-                          onChange={formik.handleChange}
-                          className={`form-control ${
-                            formik.touched.discountAmount &&
-                            formik.errors.discountAmount
-                              ? 'is-invalid'
-                              : ''
-                          }`}
-                        />
-                        {formik.touched.discountAmount &&
-                          formik.errors.discountAmount && (
-                            <div className="invalid-feedback">
-                              {formik.errors.discountAmount}
-                            </div>
-                          )}
-                      </div>
-                    </Col>
-                  )}{' '}
-                </Row>
-              </Container>
-            </div>
+                    )}{' '}
+                  </Row>
+                </Container>
+              </div>
+            </Col>
 
             <Col md={6}>
               <div className="mb-3">
@@ -418,7 +414,9 @@ const DiscountForm = ({
                       ? 'is-invalid'
                       : ''
                   }`}
-                  min={new Date().toISOString().slice(0, 16)}
+                  min={
+                    type == 'create' && new Date().toISOString().slice(0, 16)
+                  }
                 />
                 {formik.touched.startDate && formik.errors.startDate && (
                   <div className="invalid-feedback">
