@@ -994,5 +994,7 @@
   "Launch-Product": "إطلاق المنتج",
   "Preview-Pricing": "معاينة التسعير",
   "Product-Visibility": "رؤية المنتج",
-  "Product-Status": "حالة المنتج"
+  "Product-Status": "حالة المنتج",
+  "Product-Not-Published": "يجب أن يكون المنتج نشطًا ومرئيًا لمعاينة التسعير",
+  "Plan-Or-Price-Not-Published": "للمعاينة في صفحة التسعير، تأكد من تفعيل الخطة أو السعر وجعلها مرئية بالنقر على الأيقونات."
 }

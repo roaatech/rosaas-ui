@@ -15,10 +15,17 @@ import {
   faPlug,
   faStar,
   faToggleOn,
+  faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
 import TableHead from '../../components/custom/Shared/TableHead/TableHead'
-import { Button, Card, Col, Container } from '@themesberg/react-bootstrap'
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Container,
+} from '@themesberg/react-bootstrap'
 import ProductForm from '../../components/custom/Product/ProductForm/ProductForm'
 import { Form, useNavigate, useParams } from 'react-router-dom'
 import { Routes } from '../../routes'
@@ -563,6 +570,24 @@ const ProWizard = () => {
                     setVisibleQuickSetup={setVisible}
                     setFormType={setFormType}
                   />
+                  <Alert variant="warning" className="mt-3">
+                    <div className="d-flex justify-content-center align-items-center">
+                      <FontAwesomeIcon
+                        icon={faTriangleExclamation}
+                        className="mr-2"
+                      />
+                      <strong>
+                        <SafeFormatMessage id={'Warning'} /> -
+                      </strong>
+                      {'  '}
+                      <span className="mx-2">
+                        <SafeFormatMessage
+                          id="Plan-Or-Price-Not-Published"
+                          defaultMessage="To preview on the pricing page, ensure the plan or price is active and visible by clicking the icon buttons."
+                        />
+                      </span>
+                    </div>
+                  </Alert>
                 </TableWrapper>
               </div>
               {visible && (

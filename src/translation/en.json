@@ -1003,5 +1003,7 @@
   "Launch-Product": "Launch Product",
   "Preview-Pricing": "Preview Pricing",
   "Product-Visibility": "Product Visibility",
-  "Product-Status": "Product Status"
+  "Product-Status": "Product Status",
+  "Product-Not-Published": "product should be active and visible to preview pricing",
+  "Plan-Or-Price-Not-Published": "To preview on the pricing page, ensure the plan or price is active and visible by clicking the icon buttons."
 }
