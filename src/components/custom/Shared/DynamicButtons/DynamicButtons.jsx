@@ -42,6 +42,7 @@ import AddValidationUrlForm from '../../Product/CustomSpecification/AddValidatio
 import CancelSubscriptionForm from '../../tenant/CancelSubscriptionForm/CancelSubscriptionForm'
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 import TemplateForm from '../../Product/TemplateForm/TemplateForm'
+import DiscountAllocationForm from '../../Discounts/DiscountAllocationForm/DiscountAllocationForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -325,6 +326,16 @@ const DynamicButtons = ({ buttons }) => {
         visible={visible}
         setVisible={setVisible}
         discountData={buttons[currentButtonIndex].discountData}
+      />
+    ),
+    allocateDiscount: () => (
+      <DiscountAllocationForm
+        popupLabel={<SafeFormatMessage id="Allocate-Discount" />}
+        type={'edit'}
+        visible={visible}
+        setVisible={setVisible}
+        discountData={buttons[currentButtonIndex].discountData}
+        currentId={buttons[currentButtonIndex].id}
       />
     ),
     AddValidationUrl: () => (

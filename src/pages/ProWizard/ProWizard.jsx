@@ -836,11 +836,11 @@ const ProWizard = () => {
                 onClick={() => {
                   navigate(`${Routes.products.path}/${productId}`)
                 }}
-                variant="primary"
+                variant="secondary"
                 className="px-4"
               >
                 {' '}
-                <SafeFormatMessage id="Exit" />
+                <SafeFormatMessage id="End" />
               </Button>
             )}
           </div>

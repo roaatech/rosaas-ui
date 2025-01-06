@@ -3,8 +3,8 @@ import useApi from '../../../useApi'
 const useDiscountReq = () => {
   const Request = useApi()
 
-  const getDiscounts = async () => {
-    return await Request.get(`management/sadmin/v1/Discounts`)
+  const getDiscounts = async (query) => {
+    return await Request.get(`management/sadmin/v1/Discounts${query}`)
   }
 
   const createDiscount = async (data) => {
@@ -31,9 +31,27 @@ const useDiscountReq = () => {
   const getDiscountById = async (id) => {
     return await Request.get(`management/sadmin/v1/Discounts/${id}`)
   }
-  const getDiscountUsageHistoriesByDiscountId = async (discountId) => {
+  const getDiscountUsageHistoriesByDiscountId = async (discountId, query) => {
     return await Request.get(
-      `management/sadmin/v1/Discounts/${discountId}/UsageHistories`
+      `management/sadmin/v1/Discounts/${discountId}/UsageHistories${query}`
+    )
+  }
+  const linkEntitiesbyDiscountId = async (discountId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/Discounts/${discountId}/EntityLinks`,
+      data
+    )
+  }
+  const discountEntityLinks = async (discountId, entityType) => {
+    return await Request.get(
+      `management/sadmin/v1/Discounts/${discountId}/EntityLinks/${entityType}`
+    )
+  }
+  const deleteDiscountLinkedEntityId = async (discountId, entityId) => {
+    console.log({ discountId, entityId })
+
+    return await Request.delete(
+      `management/sadmin/v1/Discounts/${discountId}/EntityLinks/${entityId}`
     )
   }
   return {
@@ -45,6 +63,9 @@ const useDiscountReq = () => {
     getDiscountById,
     deleteDiscountUsageHistoriesById,
     getDiscountUsageHistoriesByDiscountId,
+    linkEntitiesbyDiscountId,
+    discountEntityLinks,
+    deleteDiscountLinkedEntityId,
   }
 }
 

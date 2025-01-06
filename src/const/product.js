@@ -63,6 +63,7 @@ export const PublishStatus = {
     icon: <MdOutlineUnpublished />,
   },
 }
+
 export const SelectabilityStatus = {
   true: {
     background: 'var(--green2)',

@@ -14,6 +14,9 @@ import { Client_id } from '../../../../const'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 import { MultiSelect } from 'primereact/multiselect'
 import { setAllPlansLookup } from '../../../../store/slices/products/productsSlice'
+import { useNavigate } from 'react-router-dom'
+import { convertObjectToOptionsArray } from '../../Shared/SharedFunctions/SharedFunctions'
+import { discountTypes } from '../../../../const/const'
 
 const DiscountForm = ({
   type, // 'create' or 'edit'
@@ -34,6 +37,7 @@ const DiscountForm = ({
   const productsLookup = useSelector(
     (state) => state.products?.lookup?.productsLookup
   )
+  const navigate = useNavigate()
   const productOwnersLookup = useSelector(
     (state) => state.productsOwners.lookup
   )
@@ -222,6 +226,7 @@ const DiscountForm = ({
             })
           )
           setSubmitting(false)
+          navigate(`./${response.data.data.id}`)
           setVisible(false)
           onUpdate && onUpdate()
         } else {
@@ -248,6 +253,8 @@ const DiscountForm = ({
     { value: 2, label: 'n-times-only' },
     { value: 3, label: 'n-times-per-customer' },
   ]
+
+  const discountTypeOptions = convertObjectToOptionsArray(discountTypes)
 
   return (
     <Wrapper>
@@ -287,7 +294,40 @@ const DiscountForm = ({
                 )}
               </div>
             </Col>
+            <Col md={12}>
+              <div className="mb-3">
+                <label htmlFor="discountType">
+                  <SafeFormatMessage id="discount-type" />{' '}
+                  <span style={{ color: 'red' }}>*</span>
+                </label>
+                <select
+                  name="discountType"
+                  id="discountType"
+                  value={formik.values.discountType}
+                  onChange={formik.handleChange}
+                  className={`form-control ${
+                    formik.touched.discountType && formik.errors.discountType
+                      ? 'is-invalid'
+                      : ''
+                  }`}
+                >
+                  <option value="">
+                    <SafeFormatMessage id="select-type" />
+                  </option>
+                  {discountTypeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
 
+                {formik.touched.discountType && formik.errors.discountType && (
+                  <div className="invalid-feedback">
+                    {formik.errors.discountType}
+                  </div>
+                )}
+              </div>
+            </Col>
             <Col md={12}>
               <div className=" mb-3">
                 <Container className="card pt-2">

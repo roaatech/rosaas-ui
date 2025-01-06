@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import useRequest from '../../../axios/apis/useRequest'
-import { removeDiscount } from '../../../store/slices/discountsSlice'
+import {
+  discountInfo,
+  removeDiscount,
+} from '../../../store/slices/discountsSlice'
 import { Wrapper } from './DiscountDetails.styled'
 import UpperContent from '../Shared/UpperContent/UpperContent'
 import { FormattedMessage } from 'react-intl'
@@ -22,25 +25,34 @@ import DeleteConfirmation from '../global/DeleteConfirmation/DeleteConfirmation'
 import BreadcrumbComponent from '../Shared/Breadcrumb/Breadcrumb'
 import Label from '../Shared/label/Label'
 import DateLabel from '../Shared/DateLabel/DateLabel'
-import { labelYesNoStyle } from '../../../const/const'
+import {
+  discountLimitations,
+  discountTypes,
+  entityTypes,
+  labelYesNoStyle,
+} from '../../../const/const'
 import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
+import DiscountUsageHistory from './DiscountUsageHistory/DiscountUsageHistory'
+import { use } from 'react'
+import {
+  convertObjectToOptionsArray,
+  getKeyByValueWithFormattedMessage,
+} from '../Shared/SharedFunctions/SharedFunctions'
+import DiscountLinkedEntities from './DiscountLinkedEntities/DiscountLinkedEntities'
 
 const DiscountDetails = () => {
   const routeParams = useParams()
   const [activeIndex, setActiveIndex] = useState(0)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const {
-    getDiscountById,
-    deleteDiscount,
-    getDiscountUsageHistoriesByDiscountId,
-    deleteDiscountUsageHistoriesById,
-  } = useRequest()
+  const { getDiscountById, deleteDiscount, deleteDiscountUsageHistoriesById } =
+    useRequest()
 
-  const [discount, setDiscount] = useState(null)
+  const currentDiscount = useSelector(
+    (state) => state.discountsSlice?.discounts?.[routeParams.id]
+  )
   const [usageHistories, setUsageHistories] = useState([])
   const [confirm, setConfirm] = useState(false)
-  const [currentHistoryId, setCurrentHistoryId] = useState(null)
 
   useEffect(() => {
     fetchDiscountDetails()
@@ -49,14 +61,9 @@ const DiscountDetails = () => {
   const fetchDiscountDetails = async () => {
     const discountResponse = await getDiscountById(routeParams.id)
     if (discountResponse?.data) {
-      setDiscount(discountResponse.data.data)
-    }
-
-    const usageHistoriesResponse = await getDiscountUsageHistoriesByDiscountId(
-      routeParams.id
-    )
-    if (usageHistoriesResponse?.data) {
-      setUsageHistories(usageHistoriesResponse.data.data)
+      dispatch(
+        discountInfo({ id: routeParams.id, data: discountResponse.data.data })
+      )
     }
   }
 
@@ -65,39 +72,44 @@ const DiscountDetails = () => {
     dispatch(removeDiscount(routeParams.id))
     navigate('/discounts') // Adjust the path as needed
   }
-
-  const handleDeleteHistory = async () => {
-    await deleteDiscountUsageHistoriesById(currentHistoryId)
-    setUsageHistories(usageHistories.filter((h) => h.id !== currentHistoryId))
-    setConfirm(false)
-  }
-  const discountTypeOptions = [
-    { value: 1, label: 'Assigned to Plans' },
-    { value: 2, label: 'Assigned to Products' },
-    { value: 3, label: 'Assigned to Products Owners' },
-    { value: 4, label: 'Assigned to Order Total' },
-    { value: 5, label: 'Assigned to Order SubTotal' },
-  ]
-  const discountLimitationOptions = [
-    { value: 1, label: 'Unlimited' },
-    { value: 2, label: 'N Times Only' },
-    { value: 3, label: 'N Times Per Customer' },
-  ]
+  const [entityType, setEntityType] = useState(null)
+  useEffect(() => {
+    if (
+      !currentDiscount ||
+      (currentDiscount && Object.keys(currentDiscount).length === 0)
+    ) {
+      return
+    }
+    if (currentDiscount?.discountType == discountTypes.assignedToPlans) {
+      setEntityType(entityTypes.Plan)
+    } else if (
+      currentDiscount?.discountType == discountTypes.assignedToProducts
+    ) {
+      setEntityType(entityTypes.Product)
+    } else if (
+      currentDiscount?.discountType == discountTypes.assignedToProductOwners
+    ) {
+      setEntityType(entityTypes.ProductOwner)
+    }
+  }, [currentDiscount, currentDiscount && Object.keys(currentDiscount).length])
+  const discountTypeOptions = convertObjectToOptionsArray(discountTypes)
+  const discountLimitationOptions =
+    convertObjectToOptionsArray(discountLimitations)
   return (
     <Wrapper>
-      {discount && (
+      {currentDiscount && (
         <BreadcrumbComponent
           breadcrumbInfo={'DiscountDetails'}
-          data={{ name: discount.displayName }}
+          data={{ name: currentDiscount.displayName }}
         />
       )}
 
-      {discount && (
+      {currentDiscount && (
         <div className="main-container">
           <UpperContent>
             <h4 className="m-0">
               <SafeFormatMessage id="Discount-Details" /> :{' '}
-              {discount.displayName}
+              {currentDiscount.displayName}
             </h4>
             <DynamicButtons
               buttons={[
@@ -109,7 +121,17 @@ const DiscountDetails = () => {
                   component: 'editDiscount',
                   icon: <AiFillEdit />,
                   setActiveIndex: () => setActiveIndex(0),
-                  discountData: discount,
+                  discountData: currentDiscount,
+                },
+                {
+                  order: 5,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Allocate-Discount',
+                  component: 'allocateDiscount',
+                  icon: <AiFillEdit />,
+                  setActiveIndex: () => setActiveIndex(0),
+                  discountData: currentDiscount,
                 },
                 {
                   order: 5,
@@ -143,27 +165,25 @@ const DiscountDetails = () => {
                         <td className="fw-bold">
                           <SafeFormatMessage id="Display-Name" />
                         </td>
-                        <td>{discount.displayName}</td>
+                        <td>{currentDiscount.displayName}</td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
                           <SafeFormatMessage id="Admin-Comment" />
                         </td>
-                        <td>{discount.adminComment}</td>
+                        <td>{currentDiscount.adminComment}</td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
                           <SafeFormatMessage id="Discount-Type" />
                         </td>
                         <td>
-                          <SafeFormatMessage
-                            id={
-                              discountTypeOptions.find(
-                                (option) =>
-                                  option.value === discount.discountType
-                              )?.label
-                            }
-                          />
+                          {
+                            discountTypeOptions.find(
+                              (option) =>
+                                option.value === currentDiscount.discountType
+                            )?.label
+                          }
                         </td>
                       </tr>
                       <tr>
@@ -172,32 +192,32 @@ const DiscountDetails = () => {
                         </td>
                         <td>
                           <Label
-                            {...labelYesNoStyle[discount?.usePercentage]}
+                            {...labelYesNoStyle[currentDiscount?.usePercentage]}
                           />
                         </td>
                       </tr>
-                      {discount.usePercentage && (
+                      {currentDiscount.usePercentage && (
                         <tr>
                           <td className="fw-bold">
                             <SafeFormatMessage id="Discount-Percentage" />
                           </td>
-                          <td>{discount.discountPercentage}%</td>
+                          <td>{currentDiscount.discountPercentage}%</td>
                         </tr>
                       )}
-                      {!discount.usePercentage && (
+                      {!currentDiscount.usePercentage && (
                         <tr>
                           <td className="fw-bold">
                             <SafeFormatMessage id="Discount-Amount" />
                           </td>
-                          <td>{discount.discountAmount}$</td>
+                          <td>{currentDiscount.discountAmount}$</td>
                         </tr>
                       )}
-                      {discount.usePercentage && (
+                      {currentDiscount.usePercentage && (
                         <tr>
                           <td className="fw-bold">
                             <SafeFormatMessage id="Maximum-Discount-Amount" />
                           </td>
-                          <td>{discount.maximumDiscountAmount}$</td>
+                          <td>{currentDiscount.maximumDiscountAmount}$</td>
                         </tr>
                       )}
                       <tr>
@@ -205,10 +225,10 @@ const DiscountDetails = () => {
                           <SafeFormatMessage id="Start-Date" />
                         </td>
                         <td>
-                          {discount.startDate && (
+                          {currentDiscount.startDate && (
                             <Label
                               {...{
-                                value: DataTransform(discount.startDate),
+                                value: DataTransform(currentDiscount.startDate),
                                 lighter: true,
                               }}
                             />
@@ -220,9 +240,9 @@ const DiscountDetails = () => {
                           <SafeFormatMessage id="End-Date" />
                         </td>
                         <td>
-                          {discount.endDate && (
+                          {currentDiscount.endDate && (
                             <DateLabel
-                              endDate={DataTransform(discount.endDate)}
+                              endDate={DataTransform(currentDiscount.endDate)}
                               formatedDate={true}
                             />
                           )}
@@ -235,7 +255,9 @@ const DiscountDetails = () => {
                         <td>
                           {' '}
                           <Label
-                            {...labelYesNoStyle[discount?.requiresCouponCode]}
+                            {...labelYesNoStyle[
+                              currentDiscount?.requiresCouponCode
+                            ]}
                           />
                         </td>
                       </tr>
@@ -243,7 +265,7 @@ const DiscountDetails = () => {
                         <td className="fw-bold">
                           <SafeFormatMessage id="Coupon-Code" />
                         </td>
-                        <td>{discount.couponCode}</td>
+                        <td>{currentDiscount.couponCode}</td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
@@ -251,7 +273,9 @@ const DiscountDetails = () => {
                         </td>
                         <td>
                           {' '}
-                          <Label {...labelYesNoStyle[discount?.isCumulative]} />
+                          <Label
+                            {...labelYesNoStyle[currentDiscount?.isCumulative]}
+                          />
                         </td>
                       </tr>
                       <tr>
@@ -259,28 +283,29 @@ const DiscountDetails = () => {
                           <SafeFormatMessage id="Discount-Limitation" />
                         </td>
                         <td>
-                          <SafeFormatMessage
-                            id={
-                              discountLimitationOptions.find(
-                                (option) =>
-                                  option.value === discount.discountLimitation
-                              )?.label
-                            }
-                          />
+                          {
+                            discountLimitationOptions.find(
+                              (option) =>
+                                option.value ===
+                                currentDiscount.discountLimitation
+                            )?.label
+                          }
                         </td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
                           <SafeFormatMessage id="Limitation-Times" />
                         </td>
-                        <td>{discount.limitationTimes}</td>
+                        <td>{currentDiscount.limitationTimes}</td>
                       </tr>
                       <tr>
                         <td className="fw-bold">
                           <SafeFormatMessage id="Is-Active" />
                         </td>
                         <td>
-                          <Label {...labelYesNoStyle[discount?.isActive]} />
+                          <Label
+                            {...labelYesNoStyle[currentDiscount?.isActive]}
+                          />
                         </td>
                       </tr>
                       <tr>
@@ -288,7 +313,7 @@ const DiscountDetails = () => {
                           <SafeFormatMessage id="Created-Date" />
                         </td>
                         <td>
-                          {DataTransform(discount.createdDate).replace(
+                          {DataTransform(currentDiscount.createdDate).replace(
                             'T',
                             ' '
                           )}
@@ -299,7 +324,10 @@ const DiscountDetails = () => {
                           <SafeFormatMessage id="Last-Updated-Date" />
                         </td>
                         <td>
-                          {DataTransform(discount.editedDate).replace('T', ' ')}
+                          {DataTransform(currentDiscount.editedDate).replace(
+                            'T',
+                            ' '
+                          )}
                         </td>
                       </tr>
                     </tbody>
@@ -309,78 +337,19 @@ const DiscountDetails = () => {
             </TabPanel>
 
             <TabPanel header={<SafeFormatMessage id="Usage-Histories" />}>
-              <Card border="light" className="shadow-sm border-0">
-                <Card.Body className="p-0">
-                  <Table
-                    responsive
-                    className="table-centered table-nowrap rounded mb-0"
-                  >
-                    <thead className="thead-light">
-                      <tr>
-                        <th>
-                          <SafeFormatMessage id="Used" />
-                        </th>
-                        <th>
-                          <SafeFormatMessage id="Order-Number" />
-                        </th>
-                        <th>
-                          <SafeFormatMessage id="Order-Total" />
-                        </th>
-                        <th>
-                          <SafeFormatMessage id="Actions" />
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.values(usageHistories).map((history, index) => (
-                        <tr key={index}>
-                          <td>
-                            {history.usedDate &&
-                              DataTransform(history.usedDate).replace('T', ' ')}
-                          </td>
-                          <td>{history.orderNumber}</td>
-                          <td>{history.orderTotal}</td>
-                          <td>
-                            <Dropdown as={ButtonGroup}>
-                              <Dropdown.Toggle
-                                as={Button}
-                                split
-                                variant="link"
-                                className="text-dark m-0"
-                              >
-                                <span className="icon icon-sm">
-                                  {/* <MdOutlineEllipsisH className="icon-dark" /> */}
-                                </span>
-                              </Dropdown.Toggle>
-                              <Dropdown.Menu>
-                                <Dropdown.Item
-                                  onClick={() => {
-                                    setCurrentHistoryId(history.id)
-                                    setConfirm(true)
-                                  }}
-                                >
-                                  <BsFillTrash3Fill className="mx-2 text-danger" />
-                                  <SafeFormatMessage id="Delete" />
-                                </Dropdown.Item>
-                              </Dropdown.Menu>
-                            </Dropdown>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                </Card.Body>
-              </Card>
+              <DiscountUsageHistory />
             </TabPanel>
+            {entityType && (
+              <TabPanel
+                header={getKeyByValueWithFormattedMessage(
+                  entityTypes,
+                  entityType
+                )}
+              >
+                <DiscountLinkedEntities />
+              </TabPanel>
+            )}
           </TabView>
-          <DeleteConfirmation
-            message={<SafeFormatMessage id="delete-confirmation-message" />}
-            icon="pi pi-exclamation-triangle"
-            confirm={confirm}
-            setConfirm={setConfirm}
-            confirmFunction={handleDeleteHistory}
-            sideBar={false}
-          />
         </div>
       )}
     </Wrapper>

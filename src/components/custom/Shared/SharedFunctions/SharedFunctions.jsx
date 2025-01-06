@@ -1,4 +1,5 @@
 import { useIntl } from 'react-intl'
+import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 const useSharedFunctions = () => {
   const locale = useIntl().locale
   const getLocalizedString = (localizations) => {
@@ -14,6 +15,16 @@ const useSharedFunctions = () => {
   return {
     getLocalizedString,
   }
+}
+export const getKeyByValueWithFormattedMessage = (obj, value) => {
+  const entry = Object.entries(obj).find(([key, val]) => val === value)
+  return entry ? SafeFormatMessage({ id: entry?.[0] }) : null
+}
+export const convertObjectToOptionsArray = (obj) => {
+  return Object.entries(obj).map(([key, value]) => ({
+    label: key && SafeFormatMessage({ id: key }),
+    value: value,
+  }))
 }
 export const getUserLocation = () => {
   return new Promise((resolve, reject) => {

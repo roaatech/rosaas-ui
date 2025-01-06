@@ -8,6 +8,34 @@ import {
   faReply,
 } from '@fortawesome/free-solid-svg-icons'
 
+export const entityTypes = {
+  User: 1,
+  ProductOwner: 2,
+  Product: 3,
+  Tenant: 4,
+  Feature: 5,
+  Subscription: 7,
+  SubscriptionAutoRenewal: 8,
+  SubscriptionPlanChanging: 9,
+  SubscriptionRenewal: 10,
+  Membership: 11,
+  Order: 12,
+  Plan: 13,
+  PlanPrice: 14,
+}
+export const discountLimitations = {
+  unlimited: 1,
+  nTimesOnly: 2,
+  nTimesPerCustomer: 3,
+}
+export const discountTypes = {
+  assignedToPlans: 1,
+  assignedToProducts: 2,
+  assignedToProductOwners: 3,
+  assignedToOrderTotal: 4,
+  assignedToOrderSubTotal: 5,
+}
+
 export const labelYesNoStyle = {
   true: {
     background: 'var(--green2)',

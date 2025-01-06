@@ -996,5 +996,13 @@
   "Product-Visibility": "رؤية المنتج",
   "Product-Status": "حالة المنتج",
   "Product-Not-Published": "يجب أن يكون المنتج نشطًا ومرئيًا لمعاينة التسعير",
-  "Plan-Or-Price-Not-Published": "للمعاينة في صفحة التسعير، تأكد من تفعيل الخطة أو السعر وجعلها مرئية بالنقر على الأيقونات."
+  "Plan-Or-Price-Not-Published": "للمعاينة في صفحة التسعير، تأكد من تفعيل الخطة أو السعر وجعلها مرئية بالنقر على الأيقونات.",
+  "Creation-Date": "تاريخ الإنشاء",
+  "assignedToPlans": "مخصص للخطط",
+  "assignedToProducts": "مخصص للمنتجات",
+  "assignedToProductOwners": "مخصص لمالكي المنتجات",
+  "assignedToOrderTotal": "مخصص لإجمالي الطلب",
+  "assignedToOrderSubTotal": "مخصص للإجمالي الفرعي للطلب",
+  "nTimesOnly": "عدد مرات فقط",
+  "nTimesPerCustomer": "عدد مرات لكل عميل"
 }

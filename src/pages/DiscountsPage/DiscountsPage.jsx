@@ -13,9 +13,11 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  faClipboardList,
   faEdit,
   faEllipsisH,
   faEye,
+  faLineChart,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage } from 'react-intl'
@@ -42,10 +44,12 @@ import { DataTransform, formatDate } from '../../lib/sharedFun/Time'
 import DateLabel from '../../components/custom/Shared/DateLabel/DateLabel'
 import ThemeDialog from '../../components/custom/Shared/ThemeDialog/ThemeDialog'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
+import DiscountAllocationForm from '../../components/custom/Discounts/DiscountAllocationForm/DiscountAllocationForm'
 
 export default function DiscountsPage() {
   const dispatch = useDispatch()
   const [visible, setVisible] = useState(false)
+  const [type, setType] = useState('')
   const [totalCount, setTotalCount] = useState(0)
   const [visibleHead, setVisibleHead] = useState(false)
   const [first, setFirst] = useState(0) // For pagination
@@ -60,7 +64,7 @@ export default function DiscountsPage() {
   useEffect(() => {
     const fetchDiscounts = async () => {
       const response = await getDiscounts(
-        `?page=${first / rows + 1}&pageSize=${rows}`
+        `?page=${Math.ceil((first + 1) / rows)}&pageSize=${rows}`
       )
       if (response?.data) {
         dispatch(setAllDiscounts(response.data.data))
@@ -107,6 +111,19 @@ export default function DiscountsPage() {
       ...discount,
     }))
   }, [listData])
+  console.log({
+    processedData: processedData,
+    processedDataId: processedData?.find((item) => item.id === currentId),
+    currentId,
+  })
+  const [currentProcessedData, setCurrentProcessedData] = useState()
+  useEffect(() => {
+    if (currentId) {
+      setCurrentProcessedData(
+        processedData?.find((item) => item.id === currentId)
+      )
+    }
+  }, [currentId, processedData])
 
   return (
     <Wrapper>
@@ -114,7 +131,6 @@ export default function DiscountsPage() {
       <div className="main-container">
         <TableHead
           label={<SafeFormatMessage id="Add-Discount" />}
-          icon={'pi-box'}
           search={false}
           visibleHead={visibleHead}
           setVisibleHead={setVisibleHead}
@@ -182,7 +198,6 @@ export default function DiscountsPage() {
                 body={(data) => (data.timesUsed ? data.timesUsed : 0)}
                 header="Times used"
               />
-
               <Column
                 field="isActive"
                 header="Is active"
@@ -205,6 +220,10 @@ export default function DiscountsPage() {
                       </span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
+                      <Dropdown.Item onSelect={() => navigate(`./${data.id}`)}>
+                        <FontAwesomeIcon icon={faEye} className="mx-2" />
+                        <SafeFormatMessage id="View-Details" />
+                      </Dropdown.Item>
                       <Dropdown.Item
                         onClick={() =>
                           activateDiscount(data.id, !data.isActive)
@@ -222,14 +241,28 @@ export default function DiscountsPage() {
                           </span>
                         )}
                       </Dropdown.Item>
-                      <Dropdown.Item onSelect={() => navigate(`./${data.id}`)}>
-                        <FontAwesomeIcon icon={faEye} className="mx-2" />
-                        <SafeFormatMessage id="View-Details" />
+
+                      <Dropdown.Item
+                        onSelect={() => {
+                          setCurrentId(data.id)
+                          setVisible(true)
+                          setType('allocate')
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faClipboardList}
+                          className="mx-2"
+                        />
+                        <SafeFormatMessage
+                          id="Allocate-Discount"
+                          defaultMessage={'Allocate Discount'}
+                        />
                       </Dropdown.Item>
                       <Dropdown.Item
                         onSelect={() => {
                           setCurrentId(data.id)
                           setVisible(true)
+                          setType('edit')
                         }}
                       >
                         <FontAwesomeIcon icon={faEdit} className="mx-2" />
@@ -267,14 +300,28 @@ export default function DiscountsPage() {
               sideBar={false}
             />
             <ThemeDialog visible={visible} setVisible={setVisible}>
-              <DiscountForm
-                popupLabel={<SafeFormatMessage id="Edit-Discount" />}
-                type={'edit'}
-                visible={visible}
-                setVisible={setVisible}
-                discountData={listData[currentId]}
-                currentId={currentId}
-              />
+              <>
+                {type === 'edit' && (
+                  <DiscountForm
+                    popupLabel={<SafeFormatMessage id="Edit-Discount" />}
+                    type={type}
+                    visible={visible}
+                    setVisible={setVisible}
+                    discountData={listData[currentId]}
+                    currentId={currentId}
+                  />
+                )}
+                {type === 'allocate' && (
+                  <DiscountAllocationForm
+                    popupLabel={<SafeFormatMessage id="Allocate-Discount" />}
+                    type={type}
+                    visible={visible}
+                    setVisible={setVisible}
+                    discountData={listData[currentId]}
+                    currentId={currentId}
+                  />
+                )}
+              </>
             </ThemeDialog>
           </Card.Body>
         </Card>
