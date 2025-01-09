@@ -35,6 +35,41 @@ export const discountTypes = {
   assignedToOrderTotal: 4,
   assignedToOrderSubTotal: 5,
 }
+export const discountStatus = {
+  unlimited: 1,
+  nTimesOnly: 2,
+  nTimesPerCustomer: 3,
+}
+
+export const DiscountRequirementRuleType = {
+  DefaultDiscountRequirementRule: 1,
+  GeoLocationDiscountRequirementRule: 2,
+}
+export const countryIsoCodes = {
+  Algeria: 'DZ',
+  Bahrain: 'BH',
+  Comoros: 'KM',
+  Djibouti: 'DJ',
+  Egypt: 'EG',
+  Iraq: 'IQ',
+  Jordan: 'JO',
+  Kuwait: 'KW',
+  Lebanon: 'LB',
+  Libya: 'LY',
+  Mauritania: 'MR',
+  Morocco: 'MA',
+  Oman: 'OM',
+  Palestine: 'PS',
+  Qatar: 'QA',
+  SaudiArabia: 'SA',
+  Somalia: 'SO',
+  Sudan: 'SD',
+  Syria: 'SY',
+  Tunisia: 'TN',
+  UnitedArabEmirates: 'AE',
+  Yemen: 'YE',
+  Turkey: 'TR',
+}
 
 export const labelYesNoStyle = {
   true: {

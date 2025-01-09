@@ -157,13 +157,26 @@ export default function DiscountsPage() {
               first={first}
               onPage={onPageChange}
             >
-              <Column field="displayName" header="Name" />
               <Column
-                body={(data) => discountTypeOptions[data.discountType - 1]}
-                header="Discount type"
+                field="displayName"
+                header={<SafeFormatMessage id="Name" defaultMessage={'Name'} />}
               />
               <Column
-                header="Discount"
+                body={(data) => discountTypeOptions[data.discountType - 1]}
+                header={
+                  <SafeFormatMessage
+                    id="Discount-Type"
+                    defaultMessage={'Discount Type'}
+                  />
+                }
+              />
+              <Column
+                header={
+                  <SafeFormatMessage
+                    id="Discount"
+                    defaultMessage={'Discount'}
+                  />
+                }
                 body={(rowData) =>
                   rowData.discountAmount > 0
                     ? `${rowData.discountAmount}$`
@@ -181,7 +194,12 @@ export default function DiscountsPage() {
                     />
                   )
                 }
-                header="Start Date"
+                header={
+                  <SafeFormatMessage
+                    id="Start-Date"
+                    defaultMessage={'Start Date'}
+                  />
+                }
               />
               <Column
                 body={(data) =>
@@ -192,15 +210,30 @@ export default function DiscountsPage() {
                     />
                   )
                 }
-                header="End date"
+                header={
+                  <SafeFormatMessage
+                    id="End-Date"
+                    defaultMessage={'End Date'}
+                  />
+                }
               />
               <Column
                 body={(data) => (data.timesUsed ? data.timesUsed : 0)}
-                header="Times used"
+                header={
+                  <SafeFormatMessage
+                    id="Times-Used"
+                    defaultMessage={'Times Used'}
+                  />
+                }
               />
               <Column
                 field="isActive"
-                header="Is active"
+                header={
+                  <SafeFormatMessage
+                    id="Is-Active"
+                    defaultMessage={'Is Active'}
+                  />
+                }
                 body={(data) => <Label {...activeStatus[data.isActive]} />}
               />
               <Column

@@ -43,6 +43,7 @@ import CancelSubscriptionForm from '../../tenant/CancelSubscriptionForm/CancelSu
 import SafeFormatMessage from '../SafeFormatMessage/SafeFormatMessage'
 import TemplateForm from '../../Product/TemplateForm/TemplateForm'
 import DiscountAllocationForm from '../../Discounts/DiscountAllocationForm/DiscountAllocationForm'
+import DiscountRequirementsForm from '../../Discounts/DiscountRequirementsForm/DiscountRequirementsForm'
 
 const DynamicButtons = ({ buttons }) => {
   const { getTenant } = useRequest()
@@ -326,12 +327,23 @@ const DynamicButtons = ({ buttons }) => {
         visible={visible}
         setVisible={setVisible}
         discountData={buttons[currentButtonIndex].discountData}
+        currentId={buttons[currentButtonIndex].id}
       />
     ),
     allocateDiscount: () => (
       <DiscountAllocationForm
         popupLabel={<SafeFormatMessage id="Allocate-Discount" />}
         type={'edit'}
+        visible={visible}
+        setVisible={setVisible}
+        discountData={buttons[currentButtonIndex].discountData}
+        currentId={buttons[currentButtonIndex].id}
+      />
+    ),
+    DiscountRequirements: () => (
+      <DiscountRequirementsForm
+        popupLabel={<SafeFormatMessage id="Discount-Requirements" />}
+        type={buttons[currentButtonIndex].formType}
         visible={visible}
         setVisible={setVisible}
         discountData={buttons[currentButtonIndex].discountData}

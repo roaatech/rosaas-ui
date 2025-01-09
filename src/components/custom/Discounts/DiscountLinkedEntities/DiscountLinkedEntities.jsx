@@ -36,7 +36,6 @@ const DiscountLinkedEntities = () => {
   const discountsData = useSelector((state) => state?.discountsSlice?.discounts)
   const [entityType, setEntityType] = useState(null)
   const [currentAllocationId, setCurrentAllocationId] = useState(null)
-  console.log({ currentAllocationId })
 
   const [confirm, setConfirm] = useState(false)
 
@@ -53,7 +52,6 @@ const DiscountLinkedEntities = () => {
   const DiscountAllocation = useSelector(
     (state) => state.discountsSlice.discounts[currentId]?.allocations
   )
-  console.log({ DiscountAllocation })
 
   useEffect(() => {
     if (
@@ -122,7 +120,6 @@ const DiscountLinkedEntities = () => {
     const sendRequest = () => {
       ;(async () => {
         const listData = await discountEntityLinks(currentId, entityType)
-        console.log({ listData })
 
         dispatch(
           setDiscountAllocation({
@@ -140,8 +137,6 @@ const DiscountLinkedEntities = () => {
   ])
 
   const deleteDiscountLinkedEntityFun = async () => {
-    console.log({ currentAllocationId, currentId, sss: 'sss' })
-
     const deleteDiscount = await deleteDiscountLinkedEntityId(
       currentId,
       currentAllocationId

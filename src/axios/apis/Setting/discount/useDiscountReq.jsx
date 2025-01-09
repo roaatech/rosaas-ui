@@ -48,10 +48,40 @@ const useDiscountReq = () => {
     )
   }
   const deleteDiscountLinkedEntityId = async (discountId, entityId) => {
-    console.log({ discountId, entityId })
-
     return await Request.delete(
       `management/sadmin/v1/Discounts/${discountId}/EntityLinks/${entityId}`
+    )
+  }
+  const getDiscountsRequirementsOptions = async () => {
+    return await Request.get(`management/sadmin/v1/Discounts/RequirementRules`)
+  }
+  const createDiscountRequirementGeoLocation = async (discountId, data) => {
+    return await Request.post(
+      `management/sadmin/v1/Discounts/${discountId}/RequirementRules/GeoLocation`,
+      data
+    )
+  }
+  const editDiscountRequirementGeoLocation = async (
+    discountId,
+    data,
+    requirementId
+  ) => {
+    return await Request.put(
+      `management/sadmin/v1/Discounts/${discountId}/RequirementRules/${requirementId}/GeoLocation`,
+      data
+    )
+  }
+  const deleteDiscountRequirementGeoLocation = async (
+    discountId,
+    requirementId
+  ) => {
+    return await Request.delete(
+      `management/sadmin/v1/Discounts/${discountId}/RequirementRules/${requirementId}/GeoLocation`
+    )
+  }
+  const getDiscountRequirementByDiscountId = async (discountId) => {
+    return await Request.get(
+      `management/sadmin/v1/Discounts/${discountId}/RequirementRules/GeoLocation`
     )
   }
   return {
@@ -66,6 +96,11 @@ const useDiscountReq = () => {
     linkEntitiesbyDiscountId,
     discountEntityLinks,
     deleteDiscountLinkedEntityId,
+    getDiscountsRequirementsOptions,
+    createDiscountRequirementGeoLocation,
+    getDiscountRequirementByDiscountId,
+    editDiscountRequirementGeoLocation,
+    deleteDiscountRequirementGeoLocation,
   }
 }
 

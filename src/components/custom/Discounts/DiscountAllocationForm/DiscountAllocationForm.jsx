@@ -30,7 +30,6 @@ const DiscountAllocationForm = ({
     (state) => state.products?.lookup?.productsLookup
   )
   const currentDiscount = discountsData[currentId]
-  console.log({ currentDiscountxxxxx: currentDiscount?.allocations })
 
   const productOwnersLookup = useSelector(
     (state) => state.productsOwners.lookup
@@ -99,7 +98,6 @@ const DiscountAllocationForm = ({
       }
     },
   })
-  console.log({ values: formik.values })
 
   const entityIdsOptions = [
     { id: 1, array: Object.values(plansLookup) },

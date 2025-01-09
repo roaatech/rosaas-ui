@@ -29,7 +29,6 @@ const ShowDetails = ({
       if (func && !data) {
         try {
           const funcResult = await func() // Await the result
-          console.log({ funcResult })
 
           setCurrentData(funcResult?.data?.data || null) // Handle null/undefined safely
         } catch (error) {

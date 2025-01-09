@@ -15,8 +15,8 @@ import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 import { MultiSelect } from 'primereact/multiselect'
 import { setAllPlansLookup } from '../../../../store/slices/products/productsSlice'
 import { useNavigate } from 'react-router-dom'
-import { convertObjectToOptionsArray } from '../../Shared/SharedFunctions/SharedFunctions'
-import { discountTypes } from '../../../../const/const'
+import { convertEnumToOptionsArray } from '../../Shared/SharedFunctions/SharedFunctions'
+import { discountStatus, discountTypes } from '../../../../const/const'
 
 const DiscountForm = ({
   type, // 'create' or 'edit'
@@ -33,7 +33,8 @@ const DiscountForm = ({
     getPlanFilteredList,
   } = useRequest()
   const discountsData = useSelector((state) => state?.discountsSlice?.discounts)
-  const [discountData, setDiscountData] = useState()
+  const discountData = discountsData?.[currentId]
+
   const productsLookup = useSelector(
     (state) => state.products?.lookup?.productsLookup
   )
@@ -64,16 +65,13 @@ const DiscountForm = ({
   }, [Object.keys(plansLookup).length > 0])
   useEffect(() => {
     const fetchDiscountDetails = async () => {
-      if (!currentId || type !== 'edit') {
+      if (!currentId || type !== 'edit' || discountsData?.[currentId]) {
         return
       }
 
       try {
         const discountResponse = await getDiscountById(currentId)
         const discountDetails = discountResponse.data.data
-
-        // Set the discount data directly from the response
-        setDiscountData(discountDetails)
 
         // Dispatch the data to the Redux store
         dispatch(
@@ -173,6 +171,9 @@ const DiscountForm = ({
           .required(<SafeFormatMessage id="coupon-code-is-required" />)
           .max(50, <SafeFormatMessage id="maximum-50-characters-allowed" />)
       : Yup.string().notRequired(),
+    discountLimitation: Yup.number().required(
+      <SafeFormatMessage id="discount-limitation-is-required" />
+    ),
     limitationTimes:
       initialValues.discountLimitation === '2' ||
       initialValues.discountLimitation === '3'
@@ -248,13 +249,17 @@ const DiscountForm = ({
   })
 
   // Options for DiscountLimitationType enum
-  const discountLimitationOptions = [
-    { value: 1, label: 'unlimited' },
-    { value: 2, label: 'n-times-only' },
-    { value: 3, label: 'n-times-per-customer' },
-  ]
+  const discountLimitationOptions =
+    discountStatus &&
+    convertEnumToOptionsArray(
+      Object.fromEntries(Object.entries(discountStatus).slice(0, 2))
+    )
 
-  const discountTypeOptions = convertObjectToOptionsArray(discountTypes)
+  const discountTypeOptions =
+    discountTypes &&
+    convertEnumToOptionsArray(
+      Object.fromEntries(Object.entries(discountTypes).slice(0, 3))
+    )
 
   return (
     <Wrapper>
@@ -565,7 +570,7 @@ const DiscountForm = ({
                         </option>
                         {discountLimitationOptions.map((option) => (
                           <option key={option.value} value={option.value}>
-                            <SafeFormatMessage id={option.label} />
+                            {option.label}
                           </option>
                         ))}
                       </select>

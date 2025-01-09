@@ -1,9 +1,10 @@
 import { createSlice, current } from '@reduxjs/toolkit'
-import { set } from 'lodash'
+import { forEach, set } from 'lodash'
 
 export const discountsSlice = createSlice({
   name: 'discounts',
   initialState: {
+    requirementsOptions: {},
     discounts: {},
   },
   reducers: {
@@ -22,6 +23,27 @@ export const discountsSlice = createSlice({
       }
 
       state.discounts = allDiscounts
+    },
+    setAllRequirementsOptions: (state, action) => {
+      const allRequirementsOptions = JSON.parse(
+        JSON.stringify(current(state.requirementsOptions))
+      )
+
+      const requirementsOptionsArray = action.payload
+      if (Array.isArray(requirementsOptionsArray)) {
+        requirementsOptionsArray.forEach((item) => {
+          if (!current(state.requirementsOptions)[item.systemName]) {
+            allRequirementsOptions[item.systemName] = item
+          }
+        })
+      } else {
+        console.error(
+          'Payload items are not an array:',
+          requirementsOptionsArray
+        )
+      }
+
+      state.requirementsOptions = allRequirementsOptions
     },
     setDiscountHistory: (state, action) => {
       const { id, data } = action.payload
@@ -66,6 +88,84 @@ export const discountsSlice = createSlice({
       // Update allocations with the provided data
       state.discounts[id].allocations = [...data]
     },
+    setDiscountRequirement: (state, action) => {
+      const { id, data } = action.payload
+
+      if (!id) {
+        console.error('Missing "id" in payload:', action.payload)
+        return
+      }
+
+      if (!state.discounts[id]) {
+        state.discounts[id] = {}
+      }
+
+      if (!state.discounts[id].requirement) {
+        state.discounts[id].requirement = {}
+      }
+      if (Array.isArray(data)) {
+        forEach(data, (item) => {
+          if (!state.discounts[id].requirement[item.id]) {
+            state.discounts[id].requirement[item.id] = item
+          }
+        })
+      }
+    },
+    setDiscountRequirementInfo: (state, action) => {
+      const { discountId, id, data } = action.payload
+
+      if (!id || !discountId) {
+        console.error(
+          'Missing "id" or "discountId" in payload:',
+          action.payload
+        )
+        return
+      }
+
+      if (!state.discounts?.[discountId]) {
+        state.discounts[discountId] = {}
+      }
+
+      if (!state.discounts?.[discountId]?.requirement) {
+        state.discounts[discountId].requirement = {}
+      }
+
+      // Update or add the data
+      state.discounts[discountId].requirement[id] = {
+        ...state.discounts[discountId].requirement[id],
+        ...data,
+      }
+    },
+    deleteDiscountRequirementInfo: (state, action) => {
+      const { discountId, id } = action.payload
+
+      if (!id || !discountId) {
+        console.error(
+          'Missing "id" or "discountId" in payload:',
+          action.payload
+        )
+        return
+      }
+
+      if (!state.discounts?.[discountId]?.requirement?.[id]) {
+        console.warn(
+          `No requirement found for discountId: ${discountId}, id: ${id}`
+        )
+        return
+      }
+
+      // Delete the requirement by id
+      delete state.discounts[discountId].requirement[id]
+
+      // Optionally clean up empty objects
+      if (Object.keys(state.discounts[discountId].requirement).length === 0) {
+        delete state.discounts[discountId].requirement
+      }
+      if (Object.keys(state.discounts[discountId]).length === 0) {
+        delete state.discounts[discountId]
+      }
+    },
+
     deleteDiscountLinkedByEntityId: (state, action) => {
       const { id, data: currentAllocationId } = action.payload
 
@@ -143,6 +243,10 @@ export const {
   deleteDiscountHistory,
   setDiscountAllocation,
   deleteDiscountLinkedByEntityId,
+  setAllRequirementsOptions,
+  setDiscountRequirement,
+  setDiscountRequirementInfo,
+  deleteDiscountRequirementInfo,
 } = discountsSlice.actions
 
 export default discountsSlice.reducer

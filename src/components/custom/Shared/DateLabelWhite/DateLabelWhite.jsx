@@ -15,6 +15,7 @@ const DataLabelWhite = ({
   variant,
   maxCharSize,
   showCopyButton,
+  className = '',
 }) => {
   const [toolTipText, setToolTipText] = useState('Copy-to-clipboard')
   const handleCopy = () => {
@@ -54,7 +55,11 @@ const DataLabelWhite = ({
             onMouseLeave={() => {
               setShow(false)
             }}
-            className={variant === 'gray' ? 'label-gray' : 'label-white'}
+            className={
+              variant === 'gray'
+                ? `label-gray ${className}`
+                : ` label-white  ${className}`
+            }
             style={style}
           >
             {maxCharSize && text.length > maxCharSize
@@ -64,7 +69,11 @@ const DataLabelWhite = ({
         </OverlayTrigger>
       ) : (
         <span
-          className={variant === 'gray' ? 'label-gray' : 'label-white'}
+          className={
+            variant === 'gray'
+              ? `label-gray ${className}`
+              : ` label-white  ${className}`
+          }
           style={style}
         >
           {text}

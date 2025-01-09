@@ -399,7 +399,10 @@ export default (props = {}) => {
                 >
                   <FontAwesomeIcon
                     icon={faMagicWandSparkles}
-                    className="mr-2"
+                    className={direction === 'rtl' ? 'ml-2' : 'mr-2'}
+                    style={
+                      direction === 'rtl' ? { transform: 'scaleX(-1)' } : {}
+                    }
                   />
                   <SafeFormatMessage id="ProWizard" />
                 </Button>

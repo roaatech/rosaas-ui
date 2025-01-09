@@ -52,7 +52,6 @@ const ProductForm = ({
   const formRef = useRef()
   const listData = useSelector((state) => state.productsOwners.lookup)
   let userInfo = useSelector((state) => state.auth.userInfo)
-  console.log({ productData })
 
   const initialValues = {
     displayNameEn: productData?.displayNameLocalizations?.en || '',
@@ -216,7 +215,6 @@ const ProductForm = ({
   }
   React.useEffect(() => {
     if (quickSetup && triggerSubmit) {
-      console.log('triggering submit')
       triggerSubmit(() => {
         formRef.current?.dispatchEvent(
           new Event('submit', { cancelable: true, bubbles: true })

@@ -20,10 +20,16 @@ export const getKeyByValueWithFormattedMessage = (obj, value) => {
   const entry = Object.entries(obj).find(([key, val]) => val === value)
   return entry ? SafeFormatMessage({ id: entry?.[0] }) : null
 }
-export const convertObjectToOptionsArray = (obj) => {
+export const convertEnumToOptionsArray = (obj) => {
   return Object.entries(obj).map(([key, value]) => ({
     label: key && SafeFormatMessage({ id: key }),
     value: value,
+  }))
+}
+export const convertObjectToCustomOptionsArray = (obj, label, value) => {
+  return Object.entries(obj).map(([key, objValue]) => ({
+    label: objValue[label],
+    value: objValue[value],
   }))
 }
 export const getUserLocation = () => {

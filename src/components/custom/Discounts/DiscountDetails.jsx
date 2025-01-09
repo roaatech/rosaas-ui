@@ -35,10 +35,13 @@ import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 import DiscountUsageHistory from './DiscountUsageHistory/DiscountUsageHistory'
 import { use } from 'react'
 import {
-  convertObjectToOptionsArray,
+  convertEnumToOptionsArray,
   getKeyByValueWithFormattedMessage,
 } from '../Shared/SharedFunctions/SharedFunctions'
 import DiscountLinkedEntities from './DiscountLinkedEntities/DiscountLinkedEntities'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faClipboardList, faLink } from '@fortawesome/free-solid-svg-icons'
+import DiscountRequirements from './DiscountRequirements/DiscountRequirements'
 
 const DiscountDetails = () => {
   const routeParams = useParams()
@@ -92,9 +95,9 @@ const DiscountDetails = () => {
       setEntityType(entityTypes.ProductOwner)
     }
   }, [currentDiscount, currentDiscount && Object.keys(currentDiscount).length])
-  const discountTypeOptions = convertObjectToOptionsArray(discountTypes)
+  const discountTypeOptions = convertEnumToOptionsArray(discountTypes)
   const discountLimitationOptions =
-    convertObjectToOptionsArray(discountLimitations)
+    convertEnumToOptionsArray(discountLimitations)
   return (
     <Wrapper>
       {currentDiscount && (
@@ -129,9 +132,21 @@ const DiscountDetails = () => {
                   id: routeParams.id,
                   label: 'Allocate-Discount',
                   component: 'allocateDiscount',
-                  icon: <AiFillEdit />,
+                  icon: (
+                    <FontAwesomeIcon icon={faClipboardList} className="mx-2" />
+                  ),
                   setActiveIndex: () => setActiveIndex(0),
                   discountData: currentDiscount,
+                },
+                {
+                  order: 5,
+                  type: 'form',
+                  id: routeParams.id,
+                  label: 'Requirements',
+                  component: 'DiscountRequirements',
+                  icon: <FontAwesomeIcon icon={faLink} className="mx-2" />,
+                  discountData: currentDiscount,
+                  formType: 'create',
                 },
                 {
                   order: 5,
@@ -349,6 +364,9 @@ const DiscountDetails = () => {
                 <DiscountLinkedEntities />
               </TabPanel>
             )}
+            <TabPanel header={<SafeFormatMessage id="Requirements" />}>
+              <DiscountRequirements />
+            </TabPanel>
           </TabView>
         </div>
       )}

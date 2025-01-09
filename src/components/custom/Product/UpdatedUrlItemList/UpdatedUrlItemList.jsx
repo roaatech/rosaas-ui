@@ -277,7 +277,6 @@ const UrlItemList = () => {
     const updatedProductData = { ...productData }
     const item = urlItemsData.find((item) => item.id === itemId)
     const isEnabled = !productData?.[item.flag]
-    console.log({ item })
 
     if (
       isEnabled &&
