@@ -206,6 +206,12 @@ const DiscountForm = ({
         usePercentage,
         requiresCouponCode,
         discountLimitation: parseInt(values.discountLimitation),
+        discountPercentage: usePercentage ? values.discountPercentage : null,
+        maximumDiscountAmount:
+          values.maximumDiscountAmount > 0
+            ? values.maximumDiscountAmount
+            : null,
+        // discountAmount: usePercentage ? null : values.discountAmount,
       }
 
       try {

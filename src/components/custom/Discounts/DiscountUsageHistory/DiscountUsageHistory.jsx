@@ -26,6 +26,9 @@ import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
 import CustomPaginator from '../../Shared/CustomPaginator/CustomPaginator'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons'
+import { orderStatus } from '../../../../const/subscriptionManagement'
+import Label from '../../Shared/label/Label'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
 const DiscountUsageHistory = () => {
   const dispatch = useDispatch()
@@ -85,8 +88,15 @@ const DiscountUsageHistory = () => {
                 <th>
                   <SafeFormatMessage id="Order-Number" />
                 </th>
+
                 <th>
-                  <SafeFormatMessage id="Creation-Date" />
+                  <SafeFormatMessage id="Order-Total" />
+                </th>
+                <th>
+                  <SafeFormatMessage id="Created-Date" />
+                </th>
+                <th>
+                  <SafeFormatMessage id="Actions" />
                 </th>
               </tr>
             </thead>
@@ -94,12 +104,13 @@ const DiscountUsageHistory = () => {
               {usageHistories &&
                 Object.values(usageHistories).map((history, index) => (
                   <tr key={index}>
-                    <td>{history.orderId}</td>
+                    <td>{history.order?.orderNumber}</td>
+                    <td>{history.order?.orderTotal}</td>
                     <td>
                       {history.creationDate && (
                         <DataLabelWhite
                           text={UppercaseMonthDateFormat(
-                            history.creationDate,
+                            history.createdDate,
                             true
                           )}
                         />

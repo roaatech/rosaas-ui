@@ -20,6 +20,7 @@ import {
   faEdit,
   faEllipsisH,
   faEye,
+  faLink,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons'
 import DataLabelWhite from '../../Shared/DateLabelWhite/DateLabelWhite'
@@ -29,6 +30,7 @@ import { Wrapper } from './DiscountRequirements.styled'
 import DiscountRequirementsForm from '../DiscountRequirementsForm/DiscountRequirementsForm'
 import ThemeDialog from '../../Shared/ThemeDialog/ThemeDialog'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
 const DiscountRequirements = () => {
   const dispatch = useDispatch()
@@ -101,6 +103,24 @@ const DiscountRequirements = () => {
   return (
     <Wrapper>
       <Card border="light" className="shadow-sm border-0">
+        <div className="dynamicButtons pt-0 mt-0 mb-1 d-flex justify-content-end border-bottom pb-3">
+          <span className="mx-2">
+            <DynamicButtons
+              buttons={[
+                {
+                  order: 1,
+                  type: 'form',
+                  id: currentDiscountId,
+                  label: 'Add-Discount-requirement',
+                  component: 'DiscountRequirements',
+                  icon: <FontAwesomeIcon icon={faLink} className="mx-2" />,
+                  discountData: currentDiscountsRequirements,
+                  formType: 'create',
+                },
+              ]}
+            />
+          </span>
+        </div>
         <Card.Body className="p-0">
           <Table hover className="user-table align-items-center">
             <thead>
@@ -153,10 +173,10 @@ const DiscountRequirements = () => {
                             </span>
                           </Dropdown.Toggle>
                           <Dropdown.Menu>
-                            <Dropdown.Item>
+                            {/* <Dropdown.Item>
                               <FontAwesomeIcon icon={faEye} className="mx-2" />
                               <SafeFormatMessage id="View-Details" />
-                            </Dropdown.Item>
+                            </Dropdown.Item> */}
                             <Dropdown.Item
                               onClick={() => deleteConfirm(requirement?.id)}
                               className="text-danger"

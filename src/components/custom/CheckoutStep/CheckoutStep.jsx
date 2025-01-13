@@ -35,10 +35,18 @@ import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 import useSharedFunctions from '../Shared/SharedFunctions/SharedFunctions'
 import { setLoading } from '../../../store/slices/main'
 import ProcessFailed from '../../../pages/ProcessFailed/ProcessFailed'
+import { set } from 'lodash'
 
 const CheckoutPage = (data) => {
   const { hasToPay, setHasToPay, tenantDisplayName, priceData } = data
   const [orderData, setOrderData] = useState()
+  const [appliedDiscountsIds, setAppliedDiscountsIds] = useState([])
+  const [discountsList, setDiscountsList] = useState([])
+  const [discountsAmountsList, setDiscountsAmountsList] = useState([])
+  console.log({ discountsAmounsList: discountsAmountsList })
+
+  console.log({ discountsList })
+
   const [trialPlanId, setTrialPlanId] = useState()
 
   useEffect(() => {
@@ -62,6 +70,11 @@ const CheckoutPage = (data) => {
   const [paymentMethod, setPaymentMethod] = useState(2)
   const [rememberCardInfo, setRememberCardInfo] = useState(false)
   const [autoRenewal, setAutoRenewal] = useState(false)
+  const [discountCode, setDiscountCode] = useState('')
+  const [discountAmount, setDiscountAmount] = useState(0)
+  const [isDiscountApplied, setIsDiscountApplied] = useState(false)
+  const [discountCodeStatus, setDiscountCodeStatus] = useState(false)
+  const [showDiscountAmount, setShowDiscountAmount] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -70,7 +83,8 @@ const CheckoutPage = (data) => {
     getFeaturePlanPublic,
     getOrderByIdPublic,
     getFeaturePlanListPublic,
-    applyDiscountCode,
+    validateDiscountCoupon,
+    getDiscountsLookupByListIdsArray,
   } = useRequest()
 
   const listProduct = useSelector((state) => state.publicProducts.products)
@@ -87,19 +101,35 @@ const CheckoutPage = (data) => {
   const [processFailed, setProcessFailed] = useState(false)
 
   useEffect(() => {
-    if (!orderID) {
+    if ((!orderID || orderData) && !isDiscountApplied) {
       return
     }
 
     ;(async () => {
       const order = await getOrderByIdPublic(orderID)
       setOrderData(order.data.data)
+      setAppliedDiscountsIds(
+        order.data.data?.orderTotalDetails?.appliedDiscountsIds
+      )
+      setDiscountsAmountsList(order.data.data?.orderDiscounts)
 
       if (order.data && order.data.data === null) {
         setProcessFailed(true)
       }
     })()
-  }, [orderID, currency])
+
+    setIsDiscountApplied(false)
+  }, [orderID, currency, isDiscountApplied])
+  useEffect(() => {
+    if (appliedDiscountsIds.length === 0) {
+      return
+    }
+    ;(async () => {
+      const discountsList =
+        await getDiscountsLookupByListIdsArray(appliedDiscountsIds)
+      setDiscountsList(discountsList.data.data)
+    })()
+  }, [orderData])
 
   const [currentFeaturePlan, setCurrentFeaturePlan] = useState()
 
@@ -146,7 +176,6 @@ const CheckoutPage = (data) => {
     }
   }
 
-  const [discountCodeStatus, setDiscountCodeStatus] = useState(false)
   const handleDiscountCodeStatus = () => {
     setDiscountCodeStatus(!discountCodeStatus)
   }
@@ -262,25 +291,36 @@ const CheckoutPage = (data) => {
       </>
     )
   }
-  const [discountCode, setDiscountCode] = useState('')
-  const [discountAmount, setDiscountAmount] = useState(0)
-  const [isDiscountApplied, setIsDiscountApplied] = useState(false)
-
   // Function to handle discount code application
   const handleApplyDiscount = async () => {
     try {
-      // const response = await applyDiscountCode(discountCode) // Replace with your actual discount code API
-      // const { discount } = response.data // Adjust based on your API response
-      setDiscountAmount(20)
-      toast.success('Discount Applied successfully', {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 4000,
-      })
-      setIsDiscountApplied(true)
+      const response = await validateDiscountCoupon(orderID, {
+        couponsCodes: [discountCode],
+      }) // Replace with your actual discount code API
+      const success = response.data?.metadata?.success // Adjust based on your API response
+
+      if (success) {
+        setIsDiscountApplied(true)
+        setShowDiscountAmount(true)
+        toast.success('Discount Applied successfully', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 4000,
+        })
+      } else {
+        toast.error('Discount not applied', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 4000,
+        })
+      }
     } catch (error) {
       console.error('Error applying discount code:', error)
       // Handle errors (e.g., show error message)
     }
+  }
+  const [isAccordionOpen, setAccordionOpen] = useState(false)
+
+  const toggleAccordion = () => {
+    setAccordionOpen(!isAccordionOpen)
   }
   return (
     <Wrapper>
@@ -469,16 +509,53 @@ const CheckoutPage = (data) => {
                                       }
                                     </td>
                                   </tr>
-                                  {isDiscountApplied && (
-                                    <tr>
-                                      <td className="fw-bold text-danger">
-                                        <SafeFormatMessage id="Discount-Amount" />
-                                      </td>
-                                      <td className="text-danger display-cell">
-                                        - {discountAmount}{' '}
-                                        {` (${orderData?.userCurrencyCode})`}
-                                      </td>
-                                    </tr>
+                                  {(showDiscountAmount ||
+                                    appliedDiscountsIds?.length > 0) && (
+                                    <>
+                                      <tr>
+                                        <td className="fw-bold text-danger">
+                                          <SafeFormatMessage id="Discount-Amount" />
+                                        </td>
+                                        <td className="fw-bold   display-cell">
+                                          <span className="text-danger">
+                                            -{' '}
+                                            {
+                                              orderData?.orderTotalDetails
+                                                ?.discountAmount
+                                            }{' '}
+                                            {` (${orderData?.userCurrencyCode})`}
+                                          </span>
+                                          <span
+                                            onClick={toggleAccordion}
+                                            style={{ cursor: 'pointer' }}
+                                            className="mx-2"
+                                          >
+                                            {isAccordionOpen ? '▼' : '►'}{' '}
+                                            {/* Arrow toggles direction */}
+                                          </span>{' '}
+                                        </td>
+                                      </tr>
+                                      {isAccordionOpen &&
+                                        discountsList.map((discount, index) => (
+                                          <tr key={index}>
+                                            <td className="fw-bold text-danger display-cell">
+                                              {discount.displayName}
+                                            </td>
+                                            <td className="fw-bold text-danger">
+                                              -{' '}
+                                              {discountsAmountsList &&
+                                                Object.values(
+                                                  discountsAmountsList
+                                                ).find(
+                                                  (item) =>
+                                                    item.discountId ===
+                                                    discount.id
+                                                )?.discountAmount}
+                                              {` (${orderData?.userCurrencyCode})`}
+                                            </td>
+                                          </tr>
+                                        ))}
+                                    </>
                                   )}
                                   {orderData?.orderItems[0]
                                     ?.trialPeriodInDays ? (
@@ -530,50 +607,11 @@ const CheckoutPage = (data) => {
                                       </td>
                                     </tr>
                                   )}
-                                  {isDiscountApplied && (
-                                    <tr>
-                                      <td className="fw-bold py-2 px-8 total">
-                                        <SafeFormatMessage id="Total-Payable" />
-                                      </td>
-                                      <td className="fw-bold py-2 px-8 total">
-                                        $
-                                        {orderData?.orderTotal - discountAmount}
-                                      </td>
-                                    </tr>
-                                  )}
                                 </tbody>
                               </table>
                             }
                             {
-                              <Form>
-                                <div className=" mr-3">
-                                  <Form.Group className="mb-3 merged-form-group">
-                                    {discountCodeStatus && (
-                                      <>
-                                        <Form.Control
-                                          type="text"
-                                          placeholder={intl.formatMessage({
-                                            id: 'Enter-Discount-Code',
-                                          })}
-                                          value={discountCode}
-                                          onChange={(e) =>
-                                            setDiscountCode(e.target.value)
-                                          }
-                                          className="form-control"
-                                        />
-                                        <Button
-                                          variant="secondary"
-                                          type="button"
-                                          onClick={handleApplyDiscount}
-                                          className="btn"
-                                        >
-                                          <SafeFormatMessage id="Apply" />
-                                        </Button>
-                                      </>
-                                    )}
-                                  </Form.Group>
-                                </div>
-
+                              <Form className=" mt-3">
                                 {hasToPay && (
                                   <Form.Group className="mb-3">
                                     <Form.Check
@@ -602,6 +640,46 @@ const CheckoutPage = (data) => {
                                     className="font-small"
                                   />
                                 </Form.Group>
+                                <Form.Group className="">
+                                  <Form.Check
+                                    type="checkbox"
+                                    label={
+                                      <SafeFormatMessage id="Add-Coupon-Code" />
+                                    }
+                                    checked={discountCodeStatus}
+                                    onChange={handleDiscountCodeStatus}
+                                    value={discountCodeStatus}
+                                    className="font-small"
+                                  />
+                                </Form.Group>
+
+                                <div className=" mr-3">
+                                  <Form.Group className="mb-3 merged-form-group">
+                                    {discountCodeStatus && (
+                                      <>
+                                        <Form.Control
+                                          type="text"
+                                          placeholder={intl.formatMessage({
+                                            id: 'Enter-Coupon-Code',
+                                          })}
+                                          value={discountCode}
+                                          onChange={(e) =>
+                                            setDiscountCode(e.target.value)
+                                          }
+                                          className="form-control"
+                                        />
+                                        <Button
+                                          variant="secondary"
+                                          type="button"
+                                          onClick={handleApplyDiscount}
+                                          className="btn"
+                                        >
+                                          <SafeFormatMessage id="Apply" />
+                                        </Button>
+                                      </>
+                                    )}
+                                  </Form.Group>
+                                </div>
                               </Form>
                             }
                             <div

@@ -113,18 +113,22 @@ export const orderStatus = {
   1: {
     value: 'Initial',
     color: 'var(--second-color)',
+    background: 'var(--second-color-1)',
   },
   2: {
     value: 'Pending-To-Pay',
     color: 'var(--red)',
+    background: 'var(--red-2)',
   },
   3: {
     value: 'Complete',
     color: 'var(--teal-green)',
+    background: 'var(--green2)',
   },
   4: {
     value: 'Cancelled',
     color: 'var(--mocha-brown)',
+    background: 'var(--orange-yellow-blend)',
   },
 }
 

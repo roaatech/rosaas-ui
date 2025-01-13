@@ -332,7 +332,9 @@ const DynamicButtons = ({ buttons }) => {
     ),
     allocateDiscount: () => (
       <DiscountAllocationForm
-        popupLabel={<SafeFormatMessage id="Allocate-Discount" />}
+        popupLabel={
+          <SafeFormatMessage id={buttons[currentButtonIndex].label} />
+        }
         type={'edit'}
         visible={visible}
         setVisible={setVisible}

@@ -16,9 +16,13 @@ const useSharedFunctions = () => {
     getLocalizedString,
   }
 }
-export const getKeyByValueWithFormattedMessage = (obj, value) => {
+export const getKeyByValueWithFormattedMessage = (obj, value, formatted) => {
   const entry = Object.entries(obj).find(([key, val]) => val === value)
-  return entry ? SafeFormatMessage({ id: entry?.[0] }) : null
+  return entry
+    ? formatted
+      ? entry?.[0]
+      : SafeFormatMessage({ id: entry?.[0] })
+    : null
 }
 export const convertEnumToOptionsArray = (obj) => {
   return Object.entries(obj).map(([key, value]) => ({

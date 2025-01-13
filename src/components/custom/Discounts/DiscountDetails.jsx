@@ -8,20 +8,12 @@ import {
 } from '../../../store/slices/discountsSlice'
 import { Wrapper } from './DiscountDetails.styled'
 import UpperContent from '../Shared/UpperContent/UpperContent'
-import { FormattedMessage } from 'react-intl'
 import DynamicButtons from '../Shared/DynamicButtons/DynamicButtons'
 import { AiFillEdit } from 'react-icons/ai'
 import { BsFillTrash3Fill } from 'react-icons/bs'
 import { TabPanel, TabView } from 'primereact/tabview'
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  Dropdown,
-  Table,
-} from '@themesberg/react-bootstrap'
+import { Card, Table } from '@themesberg/react-bootstrap'
 import { DataTransform } from '../../../lib/sharedFun/Time'
-import DeleteConfirmation from '../global/DeleteConfirmation/DeleteConfirmation'
 import BreadcrumbComponent from '../Shared/Breadcrumb/Breadcrumb'
 import Label from '../Shared/label/Label'
 import DateLabel from '../Shared/DateLabel/DateLabel'
@@ -33,7 +25,6 @@ import {
 } from '../../../const/const'
 import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 import DiscountUsageHistory from './DiscountUsageHistory/DiscountUsageHistory'
-import { use } from 'react'
 import {
   convertEnumToOptionsArray,
   getKeyByValueWithFormattedMessage,
@@ -48,14 +39,11 @@ const DiscountDetails = () => {
   const [activeIndex, setActiveIndex] = useState(0)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { getDiscountById, deleteDiscount, deleteDiscountUsageHistoriesById } =
-    useRequest()
+  const { getDiscountById, deleteDiscount } = useRequest()
 
   const currentDiscount = useSelector(
     (state) => state.discountsSlice?.discounts?.[routeParams.id]
   )
-  const [usageHistories, setUsageHistories] = useState([])
-  const [confirm, setConfirm] = useState(false)
 
   useEffect(() => {
     fetchDiscountDetails()
@@ -130,7 +118,7 @@ const DiscountDetails = () => {
                   order: 5,
                   type: 'form',
                   id: routeParams.id,
-                  label: 'Allocate-Discount',
+                  label: 'Link-Discount',
                   component: 'allocateDiscount',
                   icon: (
                     <FontAwesomeIcon icon={faClipboardList} className="mx-2" />
@@ -142,7 +130,7 @@ const DiscountDetails = () => {
                   order: 5,
                   type: 'form',
                   id: routeParams.id,
-                  label: 'Requirements',
+                  label: 'Add-Discount-requirement',
                   component: 'DiscountRequirements',
                   icon: <FontAwesomeIcon icon={faLink} className="mx-2" />,
                   discountData: currentDiscount,
@@ -356,10 +344,13 @@ const DiscountDetails = () => {
             </TabPanel>
             {entityType && (
               <TabPanel
-                header={getKeyByValueWithFormattedMessage(
-                  entityTypes,
-                  entityType
-                )}
+                header={SafeFormatMessage({
+                  id: `Linked-${getKeyByValueWithFormattedMessage(
+                    entityTypes,
+                    entityType,
+                    true
+                  )}s`,
+                })}
               >
                 <DiscountLinkedEntities />
               </TabPanel>

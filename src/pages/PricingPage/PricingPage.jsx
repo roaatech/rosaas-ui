@@ -17,7 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBox, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 import { signinRedirectPath } from '../../store/slices/auth'
 import { setStep } from '../../store/slices/tenants'
-import { Wrapper } from './PricingPage.styled'
+import { RibbonWrapper, Wrapper } from './PricingPage.styled'
 import TrialLabel from '../../components/custom/tenant/TrialLabel/TrialLabel'
 import MarketplaceNavBar from '../../components/Sidebar/MarketplaceNavBar/MarketplaceNavBar'
 import SafeFormatMessage from '../../components/custom/Shared/SafeFormatMessage/SafeFormatMessage'
@@ -63,6 +63,15 @@ const PricingPage = ({
       setCurrency(paramCurrencyCode, params.get('currencyId'))
     }
   }, [paramLanguage, paramCurrencyCode])
+
+  const calculateDiscountPercent = (price, priceWithoutDiscount) => {
+    if (priceWithoutDiscount === 0) {
+      return 0 // Avoid division by zero
+    }
+    const discount = priceWithoutDiscount - price
+    const discountPercent = (discount / priceWithoutDiscount) * 100
+    return discountPercent.toFixed(2) // Return the value rounded to two decimal places
+  }
 
   const productSystemName = routeParams.productSystemName || ProductSystemName
   const productOwnerSystemName =
@@ -434,425 +443,442 @@ const PricingPage = ({
       formattedDescription = cleanedDescription
     }
 
+    const discountPercentage =
+      filteredPrices?.priceDetails &&
+      calculateDiscountPercent(
+        filteredPrices?.priceDetails.price,
+        filteredPrices?.priceDetails.priceWithoutDiscount
+      )
+
     return (
       <div>
-        {
-          <Card>
-            {/* //style={isAvailableForSelection ? {} : { minWidth: '340px' }}> */}
-            <Card.Header
-              style={{
-                transition: 'all 0.9s',
-                minHeight: '173px',
-                backgroundColor: 'rgb(255 201 102 / 8%)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                // alignItems: 'center',
-              }}
-              className=""
-            >
-              {' '}
-              <div
-                className="d-flex align-items-center justify-content-between fw-bold mt-2 "
-                style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 'bold',
-                }}
-              >
-                {listProduct?.[productId]?.trialType == 2 &&
-                listProduct?.[productId]?.trialPlanId &&
-                planId == listProduct?.[productId]?.trialPlanId ? (
-                  <SafeFormatMessage id="Trial" />
-                ) : (
-                  getLocalizedString(
-                    planList[planId]?.displayNameLocalizations
-                  )?.toUpperCase() ||
-                  planList[planId]?.displayName?.toUpperCase()
-                )}
-
-                {listProduct?.[productId]?.trialType == 3 &&
-                  planList[planId]?.trialPeriodInDays > 0 && (
-                    <div
-                      className={
-                        direction == 'rtl' ? 'rtl tab-header' : 'tab-header'
-                      }
-                    >
-                      <TrialLabel days={planList[planId]?.trialPeriodInDays} />
-                    </div>
-                  )}
-                {listProduct?.[productId]?.trialType == 2 &&
-                  planId == listProduct?.[productId]?.trialPlanId && (
-                    <div
-                      className={
-                        direction == 'rtl' ? 'rtl tab-header' : 'tab-header'
-                      }
-                    >
-                      <TrialLabel
-                        days={listProduct?.[productId]?.trialPeriodInDays}
-                      />
-                    </div>
-                  )}
+        {discountPercentage > 0 && (
+          <RibbonWrapper>
+            <div className="ribbon-container d-flex justify-content-center align-items-center ">
+              <div className="ribbon  m-0 p-0">
+                <h4 className="fw-bold mx-2 mt-1" style={{ color: 'white' }}>
+                  {discountPercentage} % <SafeFormatMessage id="Offer" />
+                </h4>
               </div>
-              <div className="d-flex align-items-center justify-content-between ">
-                {isAvailableForSelection ? (
-                  <div>
-                    {showOldPrice &&
-                      filteredPrices?.oldPriceDetails?.formattedPrice && (
-                        <div
-                          style={{
-                            textDecoration: 'line-through',
-                            color: 'var(--gray-600)',
-                          }}
-                          className={`${convertMargin('mr')}-1 `}
-                        >
-                          {' '}
-                          {filteredPrices?.oldPriceDetails?.formattedPrice}
-                        </div>
-                      )}
-                    <span
-                      style={{
-                        fontSize: '1.5rem',
-                        fontWeight: 'bold',
-                        transition: 'all 0.9s',
-                        // whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {filteredPrices?.priceDetails?.formattedPrice}
-                    </span>
-                    <span
-                      className={`mt-3 ${convertMargin('ml')}-1`}
-                      style={{
-                        transition: 'all 0.9s',
-                      }}
-                    >
-                      {' '}
-                      /
-                      {filteredPrices?.cycle && (
-                        <SafeFormatMessage id={cycle[filteredPrices?.cycle]} />
-                      )}
-                    </span>
-                    <div
-                      style={{
-                        color: 'var(--second-color) !important',
-                        fontSize: '1.2rem',
-                      }}
-                      className={`${convertMargin('mr')}-1 `}
-                    >
-                      {getLocalizedString(
-                        filteredPrices?.descriptionLocalizations
-                      )}
-                    </div>
+            </div>
+          </RibbonWrapper>
+        )}
+        <Card>
+          {/* //style={isAvailableForSelection ? {} : { minWidth: '340px' }}> */}
+          {/* <div
+              className="py-2 m-0 d-flex justify-content-center"
+              style={{ backgroundColor: 'var(--second-color' }}
+            >
+              <h4 className="fw-bold mx-2 mt-1" style={{ color: 'white' }}>
+                {discountPercentage} % <SafeFormatMessage id="Offer" />
+              </h4>
+            </div> */}
+
+          <Card.Header
+            style={{
+              transition: 'all 0.9s',
+              minHeight: '173px',
+              backgroundColor: 'rgb(255 201 102 / 8%)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              // alignItems: 'center',
+            }}
+            className="pt-0 mt-0"
+          >
+            <div
+              className="d-flex align-items-center justify-content-between fw-bold mt-2 "
+              style={{
+                fontSize: '1.5rem',
+                fontWeight: 'bold',
+              }}
+            >
+              {listProduct?.[productId]?.trialType == 2 &&
+              listProduct?.[productId]?.trialPlanId &&
+              planId == listProduct?.[productId]?.trialPlanId ? (
+                <SafeFormatMessage id="Trial" />
+              ) : (
+                getLocalizedString(
+                  planList[planId]?.displayNameLocalizations
+                )?.toUpperCase() || planList[planId]?.displayName?.toUpperCase()
+              )}
+
+              {listProduct?.[productId]?.trialType == 3 &&
+                planList[planId]?.trialPeriodInDays > 0 && (
+                  <div
+                    className={
+                      direction == 'rtl' ? 'rtl tab-header' : 'tab-header'
+                    }
+                  >
+                    <TrialLabel days={planList[planId]?.trialPeriodInDays} />
                   </div>
-                ) : (
+                )}
+              {listProduct?.[productId]?.trialType == 2 &&
+                planId == listProduct?.[productId]?.trialPlanId && (
+                  <div
+                    className={
+                      direction == 'rtl' ? 'rtl tab-header' : 'tab-header'
+                    }
+                  >
+                    <TrialLabel
+                      days={listProduct?.[productId]?.trialPeriodInDays}
+                    />
+                  </div>
+                )}
+            </div>
+            <div className="d-flex align-items-center justify-content-between ">
+              {isAvailableForSelection ? (
+                <div>
+                  {showOldPrice &&
+                    filteredPrices?.oldPriceDetails?.formattedPrice && (
+                      <div
+                        style={{
+                          textDecoration: 'line-through',
+                          color: 'var(--gray-600)',
+                        }}
+                        className={`${convertMargin('mr')}-1 `}
+                      >
+                        {' '}
+                        {filteredPrices?.oldPriceDetails?.formattedPrice}
+                      </div>
+                    )}
                   <span
                     style={{
                       fontSize: '1.5rem',
                       fontWeight: 'bold',
                       transition: 'all 0.9s',
                       // whiteSpace: 'nowrap',
-                      color: 'var(--second-color)',
                     }}
                   >
-                    <SafeFormatMessage id="Contact-Us" />
+                    {filteredPrices?.priceDetails?.formattedPrice}
                   </span>
-                )}
-              </div>
-            </Card.Header>
-            <Card.Body>
-              {uniqueFeatures?.map((feature) => (
-                <div key={feature.id}>
-                  <p>
-                    {featureStatusMap?.[feature.id]?.status ? (
-                      <span>
-                        <BsCheck2Circle
-                          style={{ color: 'var(--second-color)' }}
-                        />{' '}
-                        {getLocalizedString(
-                          featureStatusMap?.[feature.id]
-                            ?.descriptionLocalizations
-                        ) ||
-                          getLocalizedString(
-                            feature.displayNameLocalizations
-                          )}{' '}
-                      </span>
-                    ) : (
-                      <span>
-                        <BsXCircle style={{ color: 'var(--silver-gray)' }} />{' '}
-                        {getLocalizedString(feature.displayNameLocalizations)}
-                      </span>
-                    )}{' '}
-                  </p>
+                  <span
+                    className={`mt-3 ${convertMargin('ml')}-1`}
+                    style={{
+                      transition: 'all 0.9s',
+                    }}
+                  >
+                    {' '}
+                    /
+                    {filteredPrices?.cycle && (
+                      <SafeFormatMessage id={cycle[filteredPrices?.cycle]} />
+                    )}
+                  </span>
+                  <div
+                    style={{
+                      color: 'var(--second-color) !important',
+                      fontSize: '1.2rem',
+                    }}
+                    className={`${convertMargin('mr')}-1 `}
+                  >
+                    {getLocalizedString(
+                      filteredPrices?.descriptionLocalizations
+                    )}
+                  </div>
                 </div>
-              ))}
-            </Card.Body>
-            {listProduct?.[productId]?.trialType === 2 && (
-              <Card.Footer
-                style={{
-                  backgroundColor: 'var(--light-blue-2)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  minHeight: '120px',
-                }}
-              >
-                {/* planId !== listProduct?.[productId]?.trialPlanId && */}
-                <Form.Group className={` ${intl.locale === 'ar' ? 'rtl' : ''}`}>
-                  {planId == listProduct?.[productId]?.trialPlanId ? (
-                    <div
-                      className="font-small mb-1"
-                      style={{ fontWeight: '600' }}
-                    >
-                      <span style={{ color: 'var(--second-color)' }}>
-                        {listProduct?.[productId]?.trialPeriodInDays}{' '}
-                        {listProduct?.[productId]?.trialPeriodInDays <= 10 ? (
-                          <SafeFormatMessage id="Days" />
-                        ) : (
-                          <SafeFormatMessage id="Days-ar" />
+              ) : (
+                <span
+                  style={{
+                    fontSize: '1.5rem',
+                    fontWeight: 'bold',
+                    transition: 'all 0.9s',
+                    // whiteSpace: 'nowrap',
+                    color: 'var(--second-color)',
+                  }}
+                >
+                  <SafeFormatMessage id="Contact-Us" />
+                </span>
+              )}
+            </div>
+          </Card.Header>
+          <Card.Body>
+            {uniqueFeatures?.map((feature) => (
+              <div key={feature.id}>
+                <p>
+                  {featureStatusMap?.[feature.id]?.status ? (
+                    <span>
+                      <BsCheck2Circle
+                        style={{ color: 'var(--second-color)' }}
+                      />{' '}
+                      {getLocalizedString(
+                        featureStatusMap?.[feature.id]?.descriptionLocalizations
+                      ) ||
+                        getLocalizedString(
+                          feature.displayNameLocalizations
                         )}{' '}
-                      </span>
-                      <SafeFormatMessage id="Free-Trial-Plan" />{' '}
-                    </div>
+                    </span>
                   ) : (
-                    <Form.Check
-                      type="checkbox"
-                      label={
-                        <div className="mx-2">
-                          <SafeFormatMessage id="With" />{' '}
-                          <span style={{ color: 'var(--second-color)' }}>
-                            {listProduct?.[productId]?.trialPeriodInDays}{' '}
-                            {listProduct?.[productId]?.trialPeriodInDays <=
-                            10 ? (
-                              <SafeFormatMessage id="Days" />
-                            ) : (
-                              <SafeFormatMessage id="Days-ar" />
-                            )}{' '}
-                          </span>
-                          <SafeFormatMessage id="Free-Trial-Plan" />{' '}
-                        </div>
-                      }
-                      checked={startWithTrial[planId] || false}
-                      onChange={(event) =>
-                        handleStartWithTrialChange(event, planId)
-                      }
-                      className="font-small"
-                      style={{ cursor: 'pointer' }}
-                    />
-                  )}
-                  {startWithTrial[planId] && (
-                    <p className="font-small pb-0 mb-0">
-                      <BsCheck2Circle
-                        className={`check-circle ${convertMargin('mr')}-2`}
-                      />{' '}
-                      <SafeFormatMessage
-                        id="Cancel-Before"
-                        values={{ trialEndDate }}
-                      />{' '}
-                      {trialEndDate}{' '}
-                      <SafeFormatMessage
-                        id="Billing-Starts"
-                        values={{ trialEndDate }}
-                      />
-                      <br />{' '}
-                      <BsCheck2Circle
-                        className={`check-circle ${convertMargin('mr')}-2`}
-                      />{' '}
-                      <SafeFormatMessage id="Auto-Start-Billing-After-Trial" />
-                    </p>
-                  )}
-                </Form.Group>
-              </Card.Footer>
-            )}
+                    <span>
+                      <BsXCircle style={{ color: 'var(--silver-gray)' }} />{' '}
+                      {getLocalizedString(feature.displayNameLocalizations)}
+                    </span>
+                  )}{' '}
+                </p>
+              </div>
+            ))}
+          </Card.Body>
+          {listProduct?.[productId]?.trialType === 2 && (
             <Card.Footer
               style={{
-                // whiteSpace:
-                //   listProduct?.[productId]?.trialType === 2 ? 'nowrap' : '',
-                minHeight:
-                  listProduct?.[productId]?.trialType === 2
-                    ? '180px'
-                    : listProduct?.[productId]?.trialType === 3
-                      ? '137px'
-                      : '',
-                backgroundColor: !isAvailableForSelection
-                  ? 'rgb(255 201 102 / 8%)'
-                  : listProduct?.[productId]?.trialType == 3 &&
-                      planList[planId]?.trialPeriodInDays > 0
-                    ? 'var(--light-blue-2)'
-                    : '',
+                backgroundColor: 'var(--light-blue-2)',
                 display: 'flex',
                 flexDirection: 'column',
-                textAlign: !isAvailableForSelection ? 'center' : '',
                 justifyContent: 'center',
+                minHeight: '120px',
               }}
             >
-              {!isAvailableForSelection ? (
-                <div
-                  className="text-center text-seamlessly mt-4"
-                  style={{ whiteSpace: 'pre-wrap' }}
-                  dangerouslySetInnerHTML={{
-                    __html: formattedDescription,
-                  }}
-                />
-              ) : (
-                <>
-                  {planId !== listProduct?.[productId]?.trialPlanId ? (
-                    <>
-                      {listProduct?.[productId]?.trialType === 2 &&
-                        planId !== listProduct?.[productId]?.trialPlanId && (
-                          <Form.Group
-                            className={` mb-3 ${
-                              intl.locale === 'ar' ? 'rtl' : ''
-                            }`}
-                          >
-                            {startWithTrial[planId] && (
-                              <div
-                                style={{
-                                  color: 'var(--second-color)',
-                                  textAlign: 'justify',
-                                }}
-                                className="d-flex justify-content-center "
-                              >
-                                <span className="">
-                                  <BsStarFill
-                                    className={`${convertMargin('mr')}-2 mb-1`}
-                                  />
-                                  <SafeFormatMessage id="during-trial" />
-                                  {'  '}
-                                  <span className="fw-bold">
-                                    <SafeFormatMessage id="no-charges" />
-                                  </span>
-                                  {'  '}
-                                  <SafeFormatMessage id="card-info-securely-saved" />
-                                </span>
-                              </div>
-                            )}
-                          </Form.Group>
-                        )}
-                      {listProduct?.[productId]?.trialType !== 2 &&
-                        (!(
-                          listProduct?.[productId]?.trialType == 3 &&
-                          planList[planId]?.trialPeriodInDays > 0
-                        ) ? (
-                          <div className="small mb-3">
-                            <span
-                              className={`info-icon ${convertMargin('mr')}-1`}
+              {/* planId !== listProduct?.[productId]?.trialPlanId && */}
+              <Form.Group className={` ${intl.locale === 'ar' ? 'rtl' : ''}`}>
+                {planId == listProduct?.[productId]?.trialPlanId ? (
+                  <div
+                    className="font-small mb-1"
+                    style={{ fontWeight: '600' }}
+                  >
+                    <span style={{ color: 'var(--second-color)' }}>
+                      {listProduct?.[productId]?.trialPeriodInDays}{' '}
+                      {listProduct?.[productId]?.trialPeriodInDays <= 10 ? (
+                        <SafeFormatMessage id="Days" />
+                      ) : (
+                        <SafeFormatMessage id="Days-ar" />
+                      )}{' '}
+                    </span>
+                    <SafeFormatMessage id="Free-Trial-Plan" />{' '}
+                  </div>
+                ) : (
+                  <Form.Check
+                    type="checkbox"
+                    label={
+                      <div className="mx-2">
+                        <SafeFormatMessage id="With" />{' '}
+                        <span style={{ color: 'var(--second-color)' }}>
+                          {listProduct?.[productId]?.trialPeriodInDays}{' '}
+                          {listProduct?.[productId]?.trialPeriodInDays <= 10 ? (
+                            <SafeFormatMessage id="Days" />
+                          ) : (
+                            <SafeFormatMessage id="Days-ar" />
+                          )}{' '}
+                        </span>
+                        <SafeFormatMessage id="Free-Trial-Plan" />{' '}
+                      </div>
+                    }
+                    checked={startWithTrial[planId] || false}
+                    onChange={(event) =>
+                      handleStartWithTrialChange(event, planId)
+                    }
+                    className="font-small"
+                    style={{ cursor: 'pointer' }}
+                  />
+                )}
+                {startWithTrial[planId] && (
+                  <p className="font-small pb-0 mb-0">
+                    <BsCheck2Circle
+                      className={`check-circle ${convertMargin('mr')}-2`}
+                    />{' '}
+                    <SafeFormatMessage
+                      id="Cancel-Before"
+                      values={{ trialEndDate }}
+                    />{' '}
+                    {trialEndDate}{' '}
+                    <SafeFormatMessage
+                      id="Billing-Starts"
+                      values={{ trialEndDate }}
+                    />
+                    <br />{' '}
+                    <BsCheck2Circle
+                      className={`check-circle ${convertMargin('mr')}-2`}
+                    />{' '}
+                    <SafeFormatMessage id="Auto-Start-Billing-After-Trial" />
+                  </p>
+                )}
+              </Form.Group>
+            </Card.Footer>
+          )}
+          <Card.Footer
+            style={{
+              // whiteSpace:
+              //   listProduct?.[productId]?.trialType === 2 ? 'nowrap' : '',
+              minHeight:
+                listProduct?.[productId]?.trialType === 2
+                  ? '180px'
+                  : listProduct?.[productId]?.trialType === 3
+                    ? '137px'
+                    : '',
+              backgroundColor: !isAvailableForSelection
+                ? 'rgb(255 201 102 / 8%)'
+                : listProduct?.[productId]?.trialType == 3 &&
+                    planList[planId]?.trialPeriodInDays > 0
+                  ? 'var(--light-blue-2)'
+                  : '',
+              display: 'flex',
+              flexDirection: 'column',
+              textAlign: !isAvailableForSelection ? 'center' : '',
+              justifyContent: 'center',
+            }}
+          >
+            {!isAvailableForSelection ? (
+              <div
+                className="text-center text-seamlessly mt-4"
+                style={{ whiteSpace: 'pre-wrap' }}
+                dangerouslySetInnerHTML={{
+                  __html: formattedDescription,
+                }}
+              />
+            ) : (
+              <>
+                {planId !== listProduct?.[productId]?.trialPlanId ? (
+                  <>
+                    {listProduct?.[productId]?.trialType === 2 &&
+                      planId !== listProduct?.[productId]?.trialPlanId && (
+                        <Form.Group
+                          className={` mb-3 ${
+                            intl.locale === 'ar' ? 'rtl' : ''
+                          }`}
+                        >
+                          {startWithTrial[planId] && (
+                            <div
+                              style={{
+                                color: 'var(--second-color)',
+                                textAlign: 'justify',
+                              }}
+                              className="d-flex justify-content-center "
                             >
-                              <FontAwesomeIcon icon={faInfoCircle} />
-                            </span>{' '}
-                            <SafeFormatMessage id="start-your" />{' '}
-                            <strong style={{ color: 'var(--second-color)' }}>
-                              <SafeFormatMessage id="plan" />
-                            </strong>{' '}
-                            ,
-                            <span>
-                              {' '}
-                              <SafeFormatMessage id="then" />{' '}
-                              <strong style={{ color: 'var(--second-color)' }}>
-                                <SafeFormatMessage id="switch-plans" />{' '}
-                              </strong>
-                              <span
-                                className="info-icon"
-                                style={{
-                                  color: 'var(--info-color)',
-                                  marginLeft: '5px',
-                                }}
-                              >
-                                <i className="bi bi-info-circle"></i>
+                              <span className="">
+                                <BsStarFill
+                                  className={`${convertMargin('mr')}-2 mb-1`}
+                                />
+                                <SafeFormatMessage id="during-trial" />
+                                {'  '}
+                                <span className="fw-bold">
+                                  <SafeFormatMessage id="no-charges" />
+                                </span>
+                                {'  '}
+                                <SafeFormatMessage id="card-info-securely-saved" />
                               </span>
-                              <SafeFormatMessage id="seamlessly" />
-                            </span>
-                          </div>
-                        ) : (
-                          <p className="font-small pb-0 mb-2">
-                            <BsCheck2Circle
-                              className={`check-circle ${convertMargin(
-                                'mr'
-                              )}-2`}
-                            />{' '}
-                            <SafeFormatMessage
-                              id="Cancel-Before"
-                              values={{ trialEndDate }}
-                            />{' '}
-                            {trialEndDate}{' '}
-                            <SafeFormatMessage
-                              id="Billing-Starts"
-                              values={{ trialEndDate }}
-                            />
-                            <br />{' '}
-                            <BsCheck2Circle
-                              className={`check-circle ${convertMargin(
-                                'mr'
-                              )}-2`}
-                            />{' '}
-                            <SafeFormatMessage id="Auto-Start-Billing-After-Trial" />
-                          </p>
-                        ))}
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        className="w-100"
-                        onClick={() => {
-                          if (
-                            listProduct?.[productId]
-                              ?.isPlanSelectionRedirectionEnabled &&
-                            listProduct?.[productId]?.planSelectionRedirectUrl
-                          ) {
-                            window.top.location.href = `${
-                              listProduct?.[productId]?.planSelectionRedirectUrl
-                            }?plan-price=${
-                              filteredPrices.systemName
-                            }&currency-code=${!currencyCode || currencyCode == 'null' ? defaultCurrencyCode : currencyCode}&trial-enabled=${
-                              startWithTrial[planId] ||
-                              (listProduct?.[productId]?.trialType === 3 &&
-                                planList[planId]?.trialPeriodInDays > 0)
-                            }&language=${intl.locale}`
-                          } else if (
-                            startWithTrial[planId] ||
-                            (listProduct?.[productId]?.trialType === 3 &&
-                              planList[planId]?.trialPeriodInDays > 0)
-                          ) {
-                            navigate(
-                              `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}#start-with-trial`
-                            )
-                          } else {
-                            navigate(
-                              `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}`
-                            )
-                          }
-                        }}
-                      >
-                        <>
-                          <SafeFormatMessage id="Start-With" />{' '}
-                          {getLocalizedString(
-                            planList[planId]?.displayNameLocalizations
-                          )?.toUpperCase()}
-                        </>
-                      </Button>
-                    </>
-                  ) : (
-                    listProduct?.[productId]?.trialType == 2 && (
-                      <div className="text-center text-seamlessly mt-4">
-                        <div>
+                            </div>
+                          )}
+                        </Form.Group>
+                      )}
+                    {listProduct?.[productId]?.trialType !== 2 &&
+                      (!(
+                        listProduct?.[productId]?.trialType == 3 &&
+                        planList[planId]?.trialPeriodInDays > 0
+                      ) ? (
+                        <div className="small mb-3">
+                          <span
+                            className={`info-icon ${convertMargin('mr')}-1`}
+                          >
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                          </span>{' '}
                           <SafeFormatMessage id="start-your" />{' '}
                           <strong style={{ color: 'var(--second-color)' }}>
                             <SafeFormatMessage id="plan" />
-                          </strong>
-                          ,
-                        </div>
-                        <div>
-                          <SafeFormatMessage id="then" />{' '}
-                          <strong style={{ color: 'var(--second-color)' }}>
-                            <SafeFormatMessage id="switch-plans" />
                           </strong>{' '}
-                          <SafeFormatMessage id="seamlessly" />
+                          ,
+                          <span>
+                            {' '}
+                            <SafeFormatMessage id="then" />{' '}
+                            <strong style={{ color: 'var(--second-color)' }}>
+                              <SafeFormatMessage id="switch-plans" />{' '}
+                            </strong>
+                            <span
+                              className="info-icon"
+                              style={{
+                                color: 'var(--info-color)',
+                                marginLeft: '5px',
+                              }}
+                            >
+                              <i className="bi bi-info-circle"></i>
+                            </span>
+                            <SafeFormatMessage id="seamlessly" />
+                          </span>
                         </div>
+                      ) : (
+                        <p className="font-small pb-0 mb-2">
+                          <BsCheck2Circle
+                            className={`check-circle ${convertMargin('mr')}-2`}
+                          />{' '}
+                          <SafeFormatMessage
+                            id="Cancel-Before"
+                            values={{ trialEndDate }}
+                          />{' '}
+                          {trialEndDate}{' '}
+                          <SafeFormatMessage
+                            id="Billing-Starts"
+                            values={{ trialEndDate }}
+                          />
+                          <br />{' '}
+                          <BsCheck2Circle
+                            className={`check-circle ${convertMargin('mr')}-2`}
+                          />{' '}
+                          <SafeFormatMessage id="Auto-Start-Billing-After-Trial" />
+                        </p>
+                      ))}
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      className="w-100"
+                      onClick={() => {
+                        if (
+                          listProduct?.[productId]
+                            ?.isPlanSelectionRedirectionEnabled &&
+                          listProduct?.[productId]?.planSelectionRedirectUrl
+                        ) {
+                          window.top.location.href = `${
+                            listProduct?.[productId]?.planSelectionRedirectUrl
+                          }?plan-price=${
+                            filteredPrices.systemName
+                          }&currency-code=${!currencyCode || currencyCode == 'null' ? defaultCurrencyCode : currencyCode}&trial-enabled=${
+                            startWithTrial[planId] ||
+                            (listProduct?.[productId]?.trialType === 3 &&
+                              planList[planId]?.trialPeriodInDays > 0)
+                          }&language=${intl.locale}`
+                        } else if (
+                          startWithTrial[planId] ||
+                          (listProduct?.[productId]?.trialType === 3 &&
+                            planList[planId]?.trialPeriodInDays > 0)
+                        ) {
+                          navigate(
+                            `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}#start-with-trial`
+                          )
+                        } else {
+                          navigate(
+                            `/checkout/${productOwnerSystemName}/${productSystemName}/plan-price/${filteredPrices.systemName}`
+                          )
+                        }
+                      }}
+                    >
+                      <>
+                        <SafeFormatMessage id="Start-With" />{' '}
+                        {getLocalizedString(
+                          planList[planId]?.displayNameLocalizations
+                        )?.toUpperCase()}
+                      </>
+                    </Button>
+                  </>
+                ) : (
+                  listProduct?.[productId]?.trialType == 2 && (
+                    <div className="text-center text-seamlessly mt-4">
+                      <div>
+                        <SafeFormatMessage id="start-your" />{' '}
+                        <strong style={{ color: 'var(--second-color)' }}>
+                          <SafeFormatMessage id="plan" />
+                        </strong>
+                        ,
                       </div>
-                    )
-                  )}
-                </>
-              )}
-            </Card.Footer>
-          </Card>
-        }
+                      <div>
+                        <SafeFormatMessage id="then" />{' '}
+                        <strong style={{ color: 'var(--second-color)' }}>
+                          <SafeFormatMessage id="switch-plans" />
+                        </strong>{' '}
+                        <SafeFormatMessage id="seamlessly" />
+                      </div>
+                    </div>
+                  )
+                )}
+              </>
+            )}
+          </Card.Footer>
+        </Card>
       </div>
     )
   }

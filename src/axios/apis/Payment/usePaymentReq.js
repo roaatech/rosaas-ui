@@ -55,6 +55,12 @@ const usePaymentReq = () => {
   const checkOrderCurrencyChange = async (orderId, data) => {
     return await Request.put(`public/v1/Orders/${orderId}/Currency`, data)
   }
+  const validateDiscountCoupon = async (orderId, data) => {
+    return await Request.put(
+      `public/v1/Orders/${orderId}/Discount/Coupon`,
+      data
+    )
+  }
 
   return {
     getOrderById,
@@ -73,6 +79,7 @@ const usePaymentReq = () => {
     getInvoicesList,
     checkOrderCurrencyChange,
     getPaymentStripeDataBySubId,
+    validateDiscountCoupon,
   }
 }
 

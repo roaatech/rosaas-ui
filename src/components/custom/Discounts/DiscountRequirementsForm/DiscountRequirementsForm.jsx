@@ -129,8 +129,6 @@ const DiscountRequirementsForm = ({
             })
           )
         } else {
-          console.log({ ssssssssssssssss: discountId })
-
           const response = await editDiscountRequirementGeoLocation(
             discountId,
             {
@@ -228,26 +226,28 @@ const DiscountRequirementsForm = ({
           />
         </Modal.Header>
         <Modal.Body>
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <SafeFormatMessage id="DiscountRequirementType" />
-            </Form.Label>
-            <select
-              className="form-control"
-              value={discountrequirementType}
-              onChange={(e) => setDiscountRequirementType(e.target.value)}
-            >
-              <option value="">
-                <SafeFormatMessage id="Select-Option" />
-              </option>
-              {requirementTypeOptions &&
-                requirementTypeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-            </select>
-          </Form.Group>
+          {type == 'create' && (
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <SafeFormatMessage id="DiscountRequirementType" />
+              </Form.Label>
+              <select
+                className="form-control"
+                value={discountrequirementType}
+                onChange={(e) => setDiscountRequirementType(e.target.value)}
+              >
+                <option value="">
+                  <SafeFormatMessage id="Select-Option" />
+                </option>
+                {requirementTypeOptions &&
+                  requirementTypeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+              </select>
+            </Form.Group>
+          )}
           {discountrequirementType == 'GeoLocationDiscountRequirementRule' &&
             GeolocationModelBoy()}
         </Modal.Body>

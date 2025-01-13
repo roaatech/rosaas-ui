@@ -22,8 +22,9 @@ import { getKeyByValueWithFormattedMessage } from '../../Shared/SharedFunctions/
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
 import { BsFillTrash3Fill } from 'react-icons/bs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEllipsisH } from '@fortawesome/free-solid-svg-icons'
+import { faClipboardList, faEllipsisH } from '@fortawesome/free-solid-svg-icons'
 import DeleteConfirmation from '../../global/DeleteConfirmation/DeleteConfirmation'
+import DynamicButtons from '../../Shared/DynamicButtons/DynamicButtons'
 
 const DiscountLinkedEntities = () => {
   const dispatch = useDispatch()
@@ -153,6 +154,25 @@ const DiscountLinkedEntities = () => {
   return (
     <Wrapper>
       <Card border="light" className="shadow-sm border-0">
+        <div className="dynamicButtons pt-0 mt-0 mb-1 d-flex justify-content-end border-bottom pb-3">
+          <span className="mx-2">
+            <DynamicButtons
+              buttons={[
+                {
+                  order: 1,
+                  type: 'form',
+                  id: currentId,
+                  label: 'Link-Discount',
+                  component: 'allocateDiscount',
+                  icon: (
+                    <FontAwesomeIcon icon={faClipboardList} className="mx-2" />
+                  ),
+                  discountData: currentDiscount,
+                },
+              ]}
+            />
+          </span>
+        </div>
         <Card.Body className="p-0">
           <Table hover className="user-table align-items-center">
             <thead>

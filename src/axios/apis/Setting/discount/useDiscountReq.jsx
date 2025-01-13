@@ -84,6 +84,14 @@ const useDiscountReq = () => {
       `management/sadmin/v1/Discounts/${discountId}/RequirementRules/GeoLocation`
     )
   }
+  const getDiscountsLookup = async () => {
+    return await Request.get(`management/sadmin/v1/Discounts/Lookup`)
+  }
+  const getDiscountsLookupByListIdsArray = async (listIds) => {
+    return await Request.get(
+      `management/sadmin/v1/Discounts/Lookup/Ids?Ids=${listIds}`
+    )
+  }
   return {
     getDiscounts,
     createDiscount,
@@ -101,6 +109,8 @@ const useDiscountReq = () => {
     getDiscountRequirementByDiscountId,
     editDiscountRequirementGeoLocation,
     deleteDiscountRequirementGeoLocation,
+    getDiscountsLookup,
+    getDiscountsLookupByListIdsArray,
   }
 }
 

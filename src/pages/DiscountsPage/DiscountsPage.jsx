@@ -279,22 +279,6 @@ export default function DiscountsPage() {
                         onSelect={() => {
                           setCurrentId(data.id)
                           setVisible(true)
-                          setType('allocate')
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faClipboardList}
-                          className="mx-2"
-                        />
-                        <SafeFormatMessage
-                          id="Allocate-Discount"
-                          defaultMessage={'Allocate Discount'}
-                        />
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onSelect={() => {
-                          setCurrentId(data.id)
-                          setVisible(true)
                           setType('edit')
                         }}
                       >
