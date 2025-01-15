@@ -288,9 +288,6 @@ export default (props = {}) => {
   ])
 
   useEffect(() => {
-    if (userRole != 'superAdmin') {
-      return
-    }
     let query = `?pageSize=${100}&filters[0].Field=name&filters[0].Operator=contains`
     if (searchValue) query += `&filters[0].Value=${searchValue}`
     ;(async () => {
@@ -409,7 +406,17 @@ export default (props = {}) => {
                 {showComponent && (
                   <QuickActions setSearchValue={setSearchValues} />
                 )}
-
+                <NavItem
+                  key={'Dashboard'}
+                  link={`${Routes.Dashboard.path}`}
+                  isActive={
+                    location.pathname.includes(Routes.Dashboard.path)
+                      ? true
+                      : false
+                  }
+                  title={<SafeFormatMessage id="Dashboard" />}
+                  icon={<MdDashboard />}
+                />
                 {userRole == 'clientAdmin' && (
                   <NavItem
                     key={'details'}
@@ -474,17 +481,7 @@ export default (props = {}) => {
                     ) : null}
                   </>
                 )}
-                <NavItem
-                  key={'Dashboard'}
-                  link={`${Routes.Dashboard.path}`}
-                  isActive={
-                    location.pathname.includes(Routes.Dashboard.path)
-                      ? true
-                      : false
-                  }
-                  title={<SafeFormatMessage id="Dashboard" />}
-                  icon={<MdDashboard />}
-                />
+
                 <NavItem
                   key={'Tenants'}
                   link={`${Routes.Tenant.path}`}

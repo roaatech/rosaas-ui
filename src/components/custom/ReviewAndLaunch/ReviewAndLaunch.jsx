@@ -20,7 +20,11 @@ import SafeFormatMessage from '../Shared/SafeFormatMessage/SafeFormatMessage'
 import Label from '../Shared/label/Label'
 import { PublishStatus, visibilityStatus } from '../../../const/product'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
+import {
+  faToggleOff,
+  faToggleOn,
+  faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons'
 
 const ReviewAndLaunch = ({}) => {
   const { getProduct } = useRequest()
@@ -78,14 +82,22 @@ const ReviewAndLaunch = ({}) => {
                   </span>
                 </Col>
                 <Col md={6} className="d-flex justify-content-center">
-                  <span className="mx-2">
-                    <Label
-                      className={'clickable'}
-                      isClickable={true}
+                  <span className="mx-2 d-flex flex-column align-items-center">
+                    <Label {...PublishStatus[currentProduct?.isPublished]} />
+                    <FontAwesomeIcon
+                      cursor={'pointer'}
+                      icon={
+                        currentProduct?.isPublished ? faToggleOn : faToggleOff
+                      }
                       onClick={() =>
                         togglePublishProduct(currentProduct?.isPublished)
                       }
-                      {...PublishStatus[currentProduct?.isPublished]}
+                      className="my-1 font-small"
+                      style={{
+                        color: currentProduct?.isPublished
+                          ? 'var(--success)'
+                          : 'var(--danger)',
+                      }}
                     />
                   </span>
                 </Col>
@@ -99,13 +111,22 @@ const ReviewAndLaunch = ({}) => {
                   </span>
                 </Col>
                 <Col md={6} className="d-flex justify-content-center">
-                  <span className="mx-2">
-                    <Label
-                      isClickable={true}
+                  <span className="mx-2 d-flex flex-column align-items-center">
+                    <Label {...visibilityStatus[currentProduct?.isVisible]} />
+                    <FontAwesomeIcon
+                      icon={
+                        currentProduct?.isVisible ? faToggleOn : faToggleOff
+                      }
+                      cursor={'pointer'}
                       onClick={() =>
                         toggleVisibleProduct(currentProduct?.isVisible)
                       }
-                      {...visibilityStatus[currentProduct?.isVisible]}
+                      className="my-1 font-small"
+                      style={{
+                        color: currentProduct?.isVisible
+                          ? 'var(--success)'
+                          : 'var(--danger)',
+                      }}
                     />
                   </span>
                 </Col>

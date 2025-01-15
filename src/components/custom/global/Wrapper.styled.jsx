@@ -61,6 +61,8 @@ const GlobalStyles = createGlobalStyle`
   --unThemeColor:${(props) => (props.darkMode ? darkColor : lightColor)};
   --themeSecColor:${(props) => (props.darkMode ? darkColor : 'white')};
   --themeGray:${(props) => (props.darkMode ? '#565656' : '#eaedf2')};
+  --success:var(--green);
+  --danger:var(--red);
 
 /// theme override
 --bs-btn-border-color:#ffab03;

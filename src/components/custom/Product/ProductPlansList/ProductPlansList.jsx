@@ -143,7 +143,6 @@ export const ProductPlansList = ({
 
   useEffect(() => {
     if (!productId) return
-    console.log(productId)
     ;(async () => {
       const listData = await getProductPlans(productId)
       dispatch(setAllPlans({ productId, data: listData.data.data }))

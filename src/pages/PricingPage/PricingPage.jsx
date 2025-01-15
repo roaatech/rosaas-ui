@@ -38,8 +38,6 @@ const PricingPage = ({
   ProductSystemName,
   reviewAndLaunch,
 }) => {
-  console.log({ ProductOwnerSystemName, ProductSystemName, reviewAndLaunch })
-
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const routeParams = useParams()
@@ -167,23 +165,7 @@ const PricingPage = ({
   useEffect(() => {
     dispatch(setStep(1))
   }, [])
-  const [location, setLocation] = useState(null)
-  const [error, setError] = useState(null)
-  console.log({ location, error })
 
-  const handleGetLocation = async () => {
-    try {
-      const userLocation = await getUserLocation()
-      setLocation(userLocation)
-      setError(null) // Clear any previous errors
-    } catch (err) {
-      setError(err)
-      setLocation(null) // Clear previous location
-    }
-  }
-  useEffect(() => {
-    handleGetLocation()
-  }, [])
   if (userRole == undefined) userRole = 'notAuth'
 
   const listData = productData?.featurePlan

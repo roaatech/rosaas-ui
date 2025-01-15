@@ -237,7 +237,7 @@ export default (props) => {
                       >
                         <SafeFormatMessage id="Go-to-Marketplace" />
                       </Dropdown.Item> */}
-                      <Dropdown.Divider />
+                      {/* <Dropdown.Divider /> */}
 
                       <Dropdown.Item
                         className="fw-bold"

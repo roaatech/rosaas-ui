@@ -46,7 +46,6 @@ const DiscountRequirements = () => {
   const currentDiscountsRequirements =
     discountsRequirements?.[currentDiscountId]?.requirement
 
-  console.log({ currentDiscountsRequirements })
   const [popUpLable, setPopUpLable] = useState('')
   const [type, setType] = useState('')
   const [visible, setVisible] = useState(false)
@@ -68,7 +67,6 @@ const DiscountRequirements = () => {
       ;(async () => {
         const listData =
           await getDiscountRequirementByDiscountId(currentDiscountId)
-        console.log({ listData })
         dispatch(
           setDiscountRequirement({
             id: currentDiscountId,
@@ -80,7 +78,6 @@ const DiscountRequirements = () => {
     sendRequest()
   }, [currentDiscountId])
   const editForm = async (id, type) => {
-    console.log({ id })
     setPopUpLable('Edit-Specification')
     setType('edit')
     setCurrentId(id)

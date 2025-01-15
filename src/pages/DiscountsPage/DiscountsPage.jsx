@@ -111,11 +111,7 @@ export default function DiscountsPage() {
       ...discount,
     }))
   }, [listData])
-  console.log({
-    processedData: processedData,
-    processedDataId: processedData?.find((item) => item.id === currentId),
-    currentId,
-  })
+
   const [currentProcessedData, setCurrentProcessedData] = useState()
   useEffect(() => {
     if (currentId) {

@@ -125,7 +125,6 @@ const getRandomColor = () => {
 const UpdatedDashboard = () => {
   const [visibleHead, setVisibleHead] = useState(false)
   const [allSelectedData, setAllSelectedData] = useState([])
-  console.log({ allSelectedData: allSelectedData?.length })
 
   const [selectedFilters, setSelectedFilters] = useState([])
   const [isInitialized, setIsInitialized] = useState(false)
@@ -687,7 +686,7 @@ const UpdatedDashboard = () => {
               <FilterSearchContainer setAllSelectedData={setAllSelectedData} />
             </Col>
           </Row>
-          <Row className="mt-3">
+          <Row className="mt-3 justify-content-md-center">
             {userRole == 'superAdmin' && (
               <GenerateCard
                 count={

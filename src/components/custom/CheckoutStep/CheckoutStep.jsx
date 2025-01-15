@@ -43,9 +43,6 @@ const CheckoutPage = (data) => {
   const [appliedDiscountsIds, setAppliedDiscountsIds] = useState([])
   const [discountsList, setDiscountsList] = useState([])
   const [discountsAmountsList, setDiscountsAmountsList] = useState([])
-  console.log({ discountsAmounsList: discountsAmountsList })
-
-  console.log({ discountsList })
 
   const [trialPlanId, setTrialPlanId] = useState()
 
@@ -71,7 +68,6 @@ const CheckoutPage = (data) => {
   const [rememberCardInfo, setRememberCardInfo] = useState(false)
   const [autoRenewal, setAutoRenewal] = useState(false)
   const [discountCode, setDiscountCode] = useState('')
-  const [discountAmount, setDiscountAmount] = useState(0)
   const [isDiscountApplied, setIsDiscountApplied] = useState(false)
   const [discountCodeStatus, setDiscountCodeStatus] = useState(false)
   const [showDiscountAmount, setShowDiscountAmount] = useState(false)
@@ -82,7 +78,6 @@ const CheckoutPage = (data) => {
     paymentCheckout,
     getFeaturePlanPublic,
     getOrderByIdPublic,
-    getFeaturePlanListPublic,
     validateDiscountCoupon,
     getDiscountsLookupByListIdsArray,
   } = useRequest()

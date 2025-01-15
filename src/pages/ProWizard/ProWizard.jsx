@@ -68,7 +68,6 @@ const ProWizard = () => {
       const fetchProduct = async (productId) => {
         try {
           const response = await getProduct(productId)
-          console.log({ response, productId })
           dispatch(productInfo(response?.data?.data))
         } catch (error) {
           console.error('Error fetching product data:', error)
@@ -219,9 +218,6 @@ const ProWizard = () => {
       console.error("Invalid navigation type. Use 'next' or 'previous'.")
     }
   }
-  console.log(currentProductData?.featurePlan?.[selectedItemId])
-  const [activeIndex, setActiveIndex] = useState(0)
-  console.log({ activeIndex })
 
   return (
     <QuickSetupWrapper>

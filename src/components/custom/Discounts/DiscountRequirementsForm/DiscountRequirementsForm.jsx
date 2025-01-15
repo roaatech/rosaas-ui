@@ -44,9 +44,7 @@ const DiscountRequirementsForm = ({
   discountData,
   requirementType = '',
 }) => {
-  console.log({ discountData: discountData, currentId })
   const discountId = useParams().id
-  console.log({ discountId })
 
   const dispatch = useDispatch()
   const {

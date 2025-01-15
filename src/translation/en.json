@@ -1050,5 +1050,12 @@
   "Activate-Discount-For": "Activate Discount For",
   "Discount-Requirements": "Discount Requirements",
   "DiscountRequirementType": "Discount Requirement Type",
-  "Countries": "Countries"
+  "Countries": "Countries",
+  "User": "User",
+  "ProductOwner": "Product Owner",
+  "SubscriptionAutoRenewal": "Subscription Auto Renewal",
+  "SubscriptionPlanChanging": "Subscription Plan Changing",
+  "SubscriptionRenewal": "Subscription Renewal",
+  "Membership": "Membership",
+  "PlanPrice": "Plan Price"
 }

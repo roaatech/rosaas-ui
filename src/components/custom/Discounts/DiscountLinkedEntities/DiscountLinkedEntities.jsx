@@ -35,9 +35,11 @@ const DiscountLinkedEntities = () => {
   } = useRequest()
   const currentId = useParams().id
   const discountsData = useSelector((state) => state?.discountsSlice?.discounts)
+  let userInfo = useSelector((state) => state.auth.userInfo)
+  let userRole = userInfo.userType
+
   const [entityType, setEntityType] = useState(null)
   const [currentAllocationId, setCurrentAllocationId] = useState(null)
-
   const [confirm, setConfirm] = useState(false)
 
   const currentDiscount = discountsData[currentId]
@@ -168,6 +170,9 @@ const DiscountLinkedEntities = () => {
                     <FontAwesomeIcon icon={faClipboardList} className="mx-2" />
                   ),
                   discountData: currentDiscount,
+                  disable:
+                    entityType == entityTypes.ProductOwner &&
+                    userRole == 'clientAdmin',
                 },
               ]}
             />
@@ -215,6 +220,10 @@ const DiscountLinkedEntities = () => {
                               setCurrentAllocationId(entityId)
                               setConfirm(true)
                             }}
+                            disabled={
+                              entityType == entityTypes.ProductOwner &&
+                              userRole == 'clientAdmin'
+                            }
                           >
                             <BsFillTrash3Fill className="mx-2 text-danger" />
                             <SafeFormatMessage id="Delete" />

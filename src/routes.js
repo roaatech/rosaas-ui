@@ -356,7 +356,7 @@ Routes.TenantDetails = {
 }
 Routes.DiscountDetails = {
   path: `${Routes.DiscountsPage.path}/:id`,
-  component: DiscountDetails,
+  component: () => <POwnerChecker page={<DiscountDetails />} />,
   roles: ['superAdmin', 'clientAdmin'],
 }
 Routes.ProductsOwnersDetails = {

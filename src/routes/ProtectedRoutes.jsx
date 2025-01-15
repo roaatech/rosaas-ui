@@ -26,6 +26,7 @@ const POwnerChecker = ({ page }) => {
     if (!(userRole === 'clientAdmin') || !userInfo.id) {
       return
     }
+
     ;(async () => {
       const ProductOwnerRegistered = await isProductOwnerRegistered()
 

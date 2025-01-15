@@ -141,10 +141,9 @@ const CheckoutTenantReg = ({
             displayName: title,
           })
 
-          
-            setDisplayName(title)
-            setCurrentTenant(createTenant?.data.data.tenantId)
-            setHasToPay(createTenant?.data.data?.hasToPay) 
+          setDisplayName(title)
+          setCurrentTenant(createTenant?.data.data.tenantId)
+          setHasToPay(createTenant?.data.data?.hasToPay)
 
           // dispatch(setStep(2))
           const id = createTenant?.data?.data?.orderId
@@ -263,90 +262,98 @@ const CheckoutTenantReg = ({
 
   return (
     <Wrapper>
-      <Container className="card mt-3">
-        <Row>
-          <Col md={7} className="pr-3 border-right-1 border-light ">
-            {priceData && (
-              <Form onSubmit={formik.handleSubmit}>
-                <Card.Header>
-                  <Modal.Title className="h6">{popupLabel}</Modal.Title>
+      <Container className=" mt-3">
+        <Card style={{ backgroundColor: 'var(--themeBackground)' }}>
+          <Card.Body>
+            <Row>
+              <Col md={7} className="pr-3 border-right-1 border-light ">
+                {priceData && (
+                  <Form onSubmit={formik.handleSubmit}>
+                    <Card.Header>
+                      <Modal.Title className="h6">{popupLabel}</Modal.Title>
+                    </Card.Header>
+                    <Card.Body>
+                      {type === 'create' &&
+                        Array.isArray(filteredSpecificationsArray) &&
+                        filteredSpecificationsArray.length > 0 && (
+                          <>
+                            <SpecificationInput
+                              specifications={filteredSpecificationsArray}
+                              specificationValues={specificationValues}
+                              handleSpecificationChange={
+                                handleSpecificationChange
+                              }
+                              tenantData={tenantData}
+                              intl={intl}
+                              specValidationErrors={specValidationErrors}
+                            />
+                          </>
+                        )}
+
+                      {formik.errors.specifications && (
+                        <div className="text-danger">
+                          {formik.errors.specifications}
+                        </div>
+                      )}
+                    </Card.Body>
+                    <Card.Footer>
+                      <Button
+                        variant="secondary"
+                        type="submit"
+                        disabled={submitLoading}
+                      >
+                        <SafeFormatMessage id="Submit" />
+                      </Button>
+                    </Card.Footer>
+                  </Form>
+                )}
+              </Col>
+              <Col md={5}>
+                <Card.Header className="fw-bold">
+                  <SafeFormatMessage id="Your-Subscribe-Information" />
                 </Card.Header>
                 <Card.Body>
-                  {type === 'create' &&
-                    Array.isArray(filteredSpecificationsArray) &&
-                    filteredSpecificationsArray.length > 0 && (
-                      <>
-                        <SpecificationInput
-                          specifications={filteredSpecificationsArray}
-                          specificationValues={specificationValues}
-                          handleSpecificationChange={handleSpecificationChange}
-                          tenantData={tenantData}
-                          intl={intl}
-                          specValidationErrors={specValidationErrors}
-                        />
-                      </>
-                    )}
+                  {/* product */}
+                  <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-2 ">
+                    <div className=" w-50 fw-bold">
+                      <SafeFormatMessage id="Product" />
+                    </div>
+                    <div className=" card-stats">
+                      {priceData?.product?.displayName}
+                    </div>
+                  </div>
 
-                  {formik.errors.specifications && (
-                    <div className="text-danger">
-                      {formik.errors.specifications}
+                  {/* plan */}
+                  <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                    <div className=" w-50 fw-bold">
+                      <SafeFormatMessage id="Plan" />
+                    </div>
+                    <div className=" card-stats">
+                      {priceData?.plan?.systemName}
+                    </div>
+                  </div>
+
+                  {/* subsc */}
+                  {((priceData?.product?.trialType == 2 &&
+                    priceData?.product?.trialPlanId != priceData?.plan?.id) ||
+                    priceData?.product?.trialType != 2) && (
+                    <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
+                      <div className=" w-50 fw-bold">
+                        <SafeFormatMessage id="Subscription" />
+                      </div>
+                      {priceData && (
+                        <div className=" card-stats">
+                          {priceData?.priceDetails.formattedPrice} /{' '}
+                          <SafeFormatMessage id={cycle[priceData?.cycle]} />
+                        </div>
+                      )}
                     </div>
                   )}
                 </Card.Body>
-                <Card.Footer>
-                  <Button
-                    variant="secondary"
-                    type="submit"
-                    disabled={submitLoading}
-                  >
-                    <SafeFormatMessage id="Submit" />
-                  </Button>
-                </Card.Footer>
-              </Form>
-            )}
-          </Col>
-          <Col md={5}>
-            <Card.Header className="fw-bold">
-              <SafeFormatMessage id="Your-Subscribe-Information" />
-            </Card.Header>
-            <Card.Body>
-              {/* product */}
-              <div className="d-flex align-items-center justify-content-between border-bottom border-light pb-2 ">
-                <div className=" w-50 fw-bold">
-                  <SafeFormatMessage id="Product" />
-                </div>
-                <div className=" card-stats">
-                  {priceData?.product?.displayName}
-                </div>
-              </div>
-
-              {/* plan */}
-              <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
-                <div className=" w-50 fw-bold">
-                  <SafeFormatMessage id="Plan" />
-                </div>
-                <div className=" card-stats">{priceData?.plan?.systemName}</div>
-              </div>
-
-              {/* subsc */}
-              {((priceData?.product?.trialType == 2 &&
-                priceData?.product?.trialPlanId != priceData?.plan?.id) ||
-                priceData?.product?.trialType != 2) && (
-                <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
-                  <div className=" w-50 fw-bold">
-                    <SafeFormatMessage id="Subscription" />
-                  </div>
-                  {priceData && (
-                    <div className=" card-stats">
-                      {priceData?.priceDetails.formattedPrice} /{' '}
-                      <SafeFormatMessage id={cycle[priceData?.cycle]} />
-                    </div>
-                  )}
-                </div>
-              )}
-            </Card.Body>
-          </Col>
-        </Row>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
       </Container>
     </Wrapper>
   )

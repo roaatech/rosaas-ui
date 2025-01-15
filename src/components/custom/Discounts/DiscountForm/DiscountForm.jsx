@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   setAllDiscounts,
   discountInfo,
+  setDiscountAllocation,
 } from '../../../../store/slices/discountsSlice'
 import { Client_id } from '../../../../const'
 import SafeFormatMessage from '../../Shared/SafeFormatMessage/SafeFormatMessage'
@@ -16,7 +17,11 @@ import { MultiSelect } from 'primereact/multiselect'
 import { setAllPlansLookup } from '../../../../store/slices/products/productsSlice'
 import { useNavigate } from 'react-router-dom'
 import { convertEnumToOptionsArray } from '../../Shared/SharedFunctions/SharedFunctions'
-import { discountStatus, discountTypes } from '../../../../const/const'
+import {
+  discountStatus,
+  discountTypes,
+  entityTypes,
+} from '../../../../const/const'
 
 const DiscountForm = ({
   type, // 'create' or 'edit'
@@ -31,6 +36,7 @@ const DiscountForm = ({
     editDiscountRequest,
     getDiscountById,
     getPlanFilteredList,
+    linkEntitiesbyDiscountId,
   } = useRequest()
   const discountsData = useSelector((state) => state?.discountsSlice?.discounts)
   const discountData = discountsData?.[currentId]
@@ -45,6 +51,7 @@ const DiscountForm = ({
   const plansLookup = useSelector(
     (state) => state?.products.lookup?.plansLookup
   )
+
   useEffect(() => {
     if (plansLookup && Object.keys(plansLookup).length > 0) {
       return
@@ -63,6 +70,7 @@ const DiscountForm = ({
     }
     sendRequest()
   }, [Object.keys(plansLookup).length > 0])
+
   useEffect(() => {
     const fetchDiscountDetails = async () => {
       if (!currentId || type !== 'edit' || discountsData?.[currentId]) {
@@ -84,7 +92,6 @@ const DiscountForm = ({
         console.error('Error fetching discount details:', error)
       }
     }
-
     fetchDiscountDetails()
   }, [currentId, type])
 
@@ -196,6 +203,7 @@ const DiscountForm = ({
   let userInfo = useSelector((state) => state.auth.userInfo)
 
   let userRole = userInfo.userType
+
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -232,6 +240,32 @@ const DiscountForm = ({
               },
             })
           )
+          if (
+            userRole == 'clientAdmin' &&
+            values.discountType == discountTypes.assignedToProductOwners
+          ) {
+            const discountLinkPayload = {
+              entityType: entityTypes.ProductOwner,
+              entityIds: [userInfo.ProductOwnerInfo?.id],
+            }
+            try {
+              await linkEntitiesbyDiscountId(
+                response.data.data.id,
+                discountLinkPayload
+              )
+              dispatch(
+                setDiscountAllocation({
+                  id: response.data.data.id,
+                  data: discountLinkPayload.entityIds,
+                })
+              )
+              setSubmitting(false)
+              setVisible(false)
+              onUpdate && onUpdate()
+            } catch (error) {
+              console.error('Error submitting form:', error)
+            }
+          }
           setSubmitting(false)
           navigate(`./${response.data.data.id}`)
           setVisible(false)
