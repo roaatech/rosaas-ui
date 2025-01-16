@@ -197,9 +197,9 @@
   "Cannot-create-a-Plan's-Feature-while-it-is-subscribed.": "لا يمكن إنشاء ميزة الخطة بينما هي مشترك بها.",
 
   "Never": "أبدًا",
-  "Weekly": "أسبوعيًا",
-  "Monthly": "شهريًا",
-  "Annual": "سنويًا",
+  "Weekly": "أسبوعي",
+  "Monthly": "شهري",
+  "Annual": "سنوي",
   "Week": "أسبوع",
   "Month": "شهر",
   "Year": "سنة",
@@ -1050,5 +1050,6 @@
   "Activate-Discount-For": "تفعيل الخصم من أجل",
   "Discount-Requirements": "متطلبات الخصم",
   "DiscountRequirementType": "نوع متطلبات الخصم",
-  "Countries": "الدول"
+  "Countries": "الدول",
+  "Subscription-Duration": "فترة الاشتراك"
 }

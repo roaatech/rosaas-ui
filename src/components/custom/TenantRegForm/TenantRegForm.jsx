@@ -339,11 +339,10 @@ const CheckoutTenantReg = ({
                     priceData?.product?.trialType != 2) && (
                     <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                       <div className=" w-50 fw-bold">
-                        <SafeFormatMessage id="Subscription" />
+                        <SafeFormatMessage id="Subscription-Duration" />
                       </div>
                       {priceData && (
                         <div className=" card-stats">
-                           /{' '}
                           <SafeFormatMessage id={cycle[priceData?.cycle]} />
                         </div>
                       )}

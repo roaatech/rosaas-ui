@@ -1057,5 +1057,6 @@
   "SubscriptionPlanChanging": "Subscription Plan Changing",
   "SubscriptionRenewal": "Subscription Renewal",
   "Membership": "Membership",
-  "PlanPrice": "Plan Price"
+  "PlanPrice": "Plan Price",
+  "Subscription-Duration": "Subscription Duration"
 }

@@ -63,7 +63,6 @@ const CheckoutPage = (data) => {
     (element) => element !== '' && element !== 'start-with-trial'
   )
 
-  const navigate = useNavigate()
   const [paymentMethod, setPaymentMethod] = useState(2)
   const [rememberCardInfo, setRememberCardInfo] = useState(false)
   const [autoRenewal, setAutoRenewal] = useState(false)
@@ -309,7 +308,6 @@ const CheckoutPage = (data) => {
       }
     } catch (error) {
       console.error('Error applying discount code:', error)
-      // Handle errors (e.g., show error message)
     }
   }
   const [isAccordionOpen, setAccordionOpen] = useState(false)
@@ -409,7 +407,7 @@ const CheckoutPage = (data) => {
 
                             <div className="d-flex align-items-center justify-content-between border-bottom border-light py-3 ">
                               <div className=" w-50 fw-bold">
-                                <SafeFormatMessage id="Subscription" />
+                                <SafeFormatMessage id="Subscription-Duration" />
                                 <OverlayTrigger
                                   trigger={['hover', 'focus']}
                                   overlay={
@@ -431,7 +429,6 @@ const CheckoutPage = (data) => {
                                 </OverlayTrigger>
                               </div>
                               <div className=" card-stats w-50 align-text-center">
-                                {priceData?.calculatedPrice?.formattedPrice} ///{' '}
                                 {cycle[priceData?.cycle] && (
                                   <SafeFormatMessage
                                     id={cycle[priceData?.cycle]}
@@ -453,30 +450,6 @@ const CheckoutPage = (data) => {
                         }
                       >
                         <div>
-                          {/* {hasToPay && (
-                    <Form>
-                      <Form.Group className="mb-3">
-                        <Card.Header className="mb-3 fw-bold">
-                          <SafeFormatMessage id="Payment-Method" />
-                        </Card.Header>
-                        <Card.Body>
-                          <div>
-                            <Form.Check
-                              type="radio"
-                              label={
-                                <>
-                                  <FontAwesomeIcon icon={faCreditCard} /> Stripe
-                                </>
-                              }
-                              value={2}
-                              checked={paymentMethod === 2}
-                              onChange={() => setPaymentMethod(2)}
-                            />
-                          </div>
-                        </Card.Body>
-                      </Form.Group>
-                    </Form>
-                  )} */}
                           {/* Labels and prices table */}
                           <Card.Body>
                             {
@@ -500,7 +473,7 @@ const CheckoutPage = (data) => {
                                     <td className="display-cell">
                                       {
                                         orderData?.calculatedOrderTotal
-                                        .formattedUndiscountedPrice
+                                          .formattedUndiscountedPrice
                                       }
                                     </td>
                                   </tr>
@@ -517,7 +490,7 @@ const CheckoutPage = (data) => {
                                             {
                                               orderData?.calculatedOrderTotal
                                                 ?.formattedDiscountAmount
-                                            } 
+                                            }
                                           </span>
                                           <span
                                             onClick={toggleAccordion}
@@ -544,7 +517,7 @@ const CheckoutPage = (data) => {
                                                   (item) =>
                                                     item.discountId ===
                                                     discount.id
-                                                )?.formattedDiscountAmount} 
+                                                )?.formattedDiscountAmount}
                                             </td>
                                           </tr>
                                         ))}
@@ -712,92 +685,6 @@ const CheckoutPage = (data) => {
                             </div>
                           </Card.Body>
 
-                          {/* <Card.Body>
-                    {paymentMethod && hasToPay && (
-                      <div className="d-flex align-items-start justify-content-between py-3">
-                        <div className="">
-                          <p className="fw-bold">
-                            <SafeFormatMessage id="Order-Subtotal-Exclude-Tax" />
-                          </p>
-                          <p className="fw-bold">
-                            <SafeFormatMessage id="Order-Subtotal-Include-Tax" />
-                          </p>
-                          {isDiscountApplied && (
-                            <p className="fw-bold text-danger">
-                              <SafeFormatMessage id="Discount-Amount" />
-                            </p>
-                          )}
-
-                          {orderData?.orderItems[0]?.trialPeriodInDays ? (
-                            <>
-                              <p className="fw-bold">
-                                <SafeFormatMessage id="Due-Now" />
-                              </p>
-                              <p className="fw-bold ">
-                                <span className="p-0 mb-0">
-                                  <SafeFormatMessage id="After-Trial" />
-                                </span>
-                                <br />
-                                <span className="normal-text font-small fw-bold">
-                                  <SafeFormatMessage id="Ends-On" /> (
-                                  {trialEndDate})
-                                </span>
-                              </p>
-                            </>
-                          ) : (
-                            <p className="fw-bold">
-                              <SafeFormatMessage id="Total" />
-                            </p>
-                          )}
-                        </div>
-                        <div className="">
-                          <span className=" d-flex flex-column align-items-center">
-                            <p>
-                              {
-                                orderData?.orderSubtotalExclTaxDetails
-                                  .formattedPrice
-                              }
-                            </p>
-                            <p>
-                              {
-                                orderData?.orderSubtotalInclTaxDetails
-                                  .formattedPrice
-                              }
-                            </p>
-                            {isDiscountApplied && (
-                              <p className="fw-bold text-danger">
-                                - {discountAmount}
-                                {` (${orderData?.userCurrencyCode}) `}
-                              </p>
-                            )}
-                            {orderData?.orderItems[0]?.trialPeriodInDays ? (
-                              <p className="trial">
-                                0.00 {` (${orderData?.userCurrencyCode}) `}/{' '}
-                                {orderData?.orderItems[0]?.trialPeriodInDays}{' '}
-                                <SafeFormatMessage id="Days" />
-                              </p>
-                            ) : (
-                              ''
-                            )}
-                            {isDiscountApplied && (
-                              <p className="total fw-bold py-2 px-8">
-                                ${orderData?.orderTotal - discountAmount}
-                              </p>
-                            )}
-                            {
-                             
-                              !isDiscountApplied && (
-                                <p className="total fw-bold py-2 px-8">
-                                  {orderData?.calculatedOrderTotal.formattedPrice}
-                                </p>
-                              )
-                            }
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                    
-                  </Card.Body> */}
                           <Card.Footer>
                             {orderData?.orderItems[0]?.trialPeriodInDays ? (
                               <div className="free-trial-terms">
