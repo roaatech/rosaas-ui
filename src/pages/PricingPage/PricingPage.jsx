@@ -426,10 +426,10 @@ const PricingPage = ({
     }
 
     const discountPercentage =
-      filteredPrices?.priceDetails &&
+      filteredPrices?.calculatedPrice &&
       calculateDiscountPercent(
-        filteredPrices?.priceDetails.price,
-        filteredPrices?.priceDetails.priceWithoutDiscount
+        filteredPrices?.calculatedPrice.price,
+        filteredPrices?.calculatedPrice.undiscountedPrice
       )
 
     return (
@@ -512,7 +512,7 @@ const PricingPage = ({
               {isAvailableForSelection ? (
                 <div>
                   {showOldPrice &&
-                    filteredPrices?.oldPriceDetails?.formattedPrice && (
+                    filteredPrices?.calculatedOldPrice?.formattedPrice && (
                       <div
                         style={{
                           textDecoration: 'line-through',
@@ -521,7 +521,7 @@ const PricingPage = ({
                         className={`${convertMargin('mr')}-1 `}
                       >
                         {' '}
-                        {filteredPrices?.oldPriceDetails?.formattedPrice}
+                        {filteredPrices?.calculatedOldPrice?.formattedPrice}
                       </div>
                     )}
                   <span
@@ -532,7 +532,7 @@ const PricingPage = ({
                       // whiteSpace: 'nowrap',
                     }}
                   >
-                    {filteredPrices?.priceDetails?.formattedPrice}
+                    {filteredPrices?.calculatedPrice?.formattedPrice}
                   </span>
                   <span
                     className={`mt-3 ${convertMargin('ml')}-1`}

@@ -104,7 +104,7 @@ const CheckoutPage = (data) => {
       const order = await getOrderByIdPublic(orderID)
       setOrderData(order.data.data)
       setAppliedDiscountsIds(
-        order.data.data?.orderTotalDetails?.appliedDiscountsIds
+        order.data.data?.calculatedOrderTotal?.appliedDiscountsIds
       )
       setDiscountsAmountsList(order.data.data?.orderDiscounts)
 
@@ -431,7 +431,7 @@ const CheckoutPage = (data) => {
                                 </OverlayTrigger>
                               </div>
                               <div className=" card-stats w-50 align-text-center">
-                                {priceData?.priceDetails?.formattedPrice} /{' '}
+                                {priceData?.calculatedPrice?.formattedPrice} ///{' '}
                                 {cycle[priceData?.cycle] && (
                                   <SafeFormatMessage
                                     id={cycle[priceData?.cycle]}
@@ -488,8 +488,8 @@ const CheckoutPage = (data) => {
                                     </td>
                                     <td className="display-cell">
                                       {
-                                        orderData?.orderSubtotalExclTaxDetails
-                                          .formattedPrice
+                                        orderData?.calculatedOrderTotal
+                                          .formattedUndiscountedPrice
                                       }
                                     </td>
                                   </tr>
@@ -499,8 +499,8 @@ const CheckoutPage = (data) => {
                                     </td>
                                     <td className="display-cell">
                                       {
-                                        orderData?.orderSubtotalInclTaxDetails
-                                          .formattedPrice
+                                        orderData?.calculatedOrderTotal
+                                        .formattedUndiscountedPrice
                                       }
                                     </td>
                                   </tr>
@@ -515,10 +515,9 @@ const CheckoutPage = (data) => {
                                           <span className="text-danger">
                                             -{' '}
                                             {
-                                              orderData?.orderTotalDetails
-                                                ?.discountAmount
-                                            }{' '}
-                                            {` (${orderData?.userCurrencyCode})`}
+                                              orderData?.calculatedOrderTotal
+                                                ?.formattedDiscountAmount
+                                            } 
                                           </span>
                                           <span
                                             onClick={toggleAccordion}
@@ -545,8 +544,7 @@ const CheckoutPage = (data) => {
                                                   (item) =>
                                                     item.discountId ===
                                                     discount.id
-                                                )?.discountAmount}
-                                              {` (${orderData?.userCurrencyCode})`}
+                                                )?.formattedDiscountAmount} 
                                             </td>
                                           </tr>
                                         ))}
@@ -581,7 +579,7 @@ const CheckoutPage = (data) => {
                                         <td className="total fw-bold display-cell ">
                                           <div>
                                             {
-                                              orderData?.orderTotalDetails
+                                              orderData?.calculatedOrderTotal
                                                 .formattedPrice
                                             }
                                           </div>
@@ -596,7 +594,7 @@ const CheckoutPage = (data) => {
                                       <td className="total fw-bold display-cell ">
                                         {' '}
                                         {
-                                          orderData?.orderTotalDetails
+                                          orderData?.calculatedOrderTotal
                                             .formattedPrice
                                         }
                                       </td>
@@ -790,7 +788,7 @@ const CheckoutPage = (data) => {
                              
                               !isDiscountApplied && (
                                 <p className="total fw-bold py-2 px-8">
-                                  {orderData?.orderTotalDetails.formattedPrice}
+                                  {orderData?.calculatedOrderTotal.formattedPrice}
                                 </p>
                               )
                             }

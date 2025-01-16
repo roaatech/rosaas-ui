@@ -343,7 +343,7 @@ const CheckoutTenantReg = ({
                       </div>
                       {priceData && (
                         <div className=" card-stats">
-                          {priceData?.priceDetails.formattedPrice} /{' '}
+                           /{' '}
                           <SafeFormatMessage id={cycle[priceData?.cycle]} />
                         </div>
                       )}
